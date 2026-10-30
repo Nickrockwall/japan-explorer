@@ -1,0 +1,147 @@
+{
+  "capital": "Okayama",
+  "badge": {
+    "title": "Home of Momotarō"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Bizen Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Bitchū Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Mimasaka Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ukita Naoie and Hideie",
+      "Uragami Munekage",
+      "Mimura clan (Bitchū)",
+      "Mōri clan"
+    ],
+    "edo_domains": [
+      "Okayama Domain (Ikeda clan)",
+      "Tsuyama Domain (Matsudaira clan)",
+      "Bitchū-Matsuyama Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Okayama Prefecture was set up in 1871; in 1876 Oda Prefecture (Bitchū and eastern Bingo) and Hōjō Prefecture (Mimasaka) joined, while part of Bingo went to Hiroshima.",
+      "boundary_note": "Ancient Kibi was split into Bizen, Bitchū and Bingo; Okayama got the first two and Bingo went to Hiroshima. Mimasaka was carved out of Bizen in 713."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The kingdom of Kibi",
+      "summary": "Ancient Kibi was a regional power that could rival Yamato (witness the Tsukuriyama tumulus); in the 7th century it was split into Bizen, Bitchū and Bingo, and Mimasaka was carved from Bizen in 713."
+    },
+    {
+      "title": "Hōnen and Eisai",
+      "summary": "Hōnen, founder of Pure Land Buddhism, was born in Mimasaka and Eisai, founder of Rinzai Zen, in Bitchū; the swordsmiths of Osafune in Bizen began to rise."
+    },
+    {
+      "title": "Akamatsu vs. Yamana",
+      "summary": "The Akamatsu governed Bizen, while Mimasaka and other provinces changed hands between the Akamatsu and Yamana; 'Bizen Osafune' blades became famous throughout the land."
+    },
+    {
+      "title": "Ukita Naoie",
+      "summary": "Ukita Naoie rose by scheming; his son Hideie became one of Toyotomi's Five Elders and was exiled to Hachijōjima after Sekigahara."
+    },
+    {
+      "title": "Shizutani School",
+      "summary": "Ikeda Mitsumasa, lord of Okayama, founded the Shizutani School, the oldest surviving school for commoners; Kōrakuen was laid out as a daimyo garden."
+    },
+    {
+      "title": "Land of sunshine",
+      "summary": "Blessed with many days of almost no rain, Okayama calls itself 'Hare no Kuni'; the Mizushima industrial zone and the Kurashiki historical quarter sit side by side."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kōrakuen",
+      "note": "One of Japan's three great gardens"
+    },
+    {
+      "name": "Okayama Castle",
+      "note": "The black 'Crow Castle'"
+    },
+    {
+      "name": "Kurashiki Bikan district",
+      "note": "White-walled storehouses and willow-lined canals"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "White peaches",
+      "note": "Synonymous with Okayama"
+    },
+    {
+      "name": "Muscat grapes",
+      "note": "'Queen of fruits'"
+    },
+    {
+      "name": "Kibi dango",
+      "note": "Momotarō's dumplings"
+    }
+  ],
+  "dialect": {
+    "name": "Okayama dialect",
+    "features": "Sentences end in '-ja'; 'dēre' (very) is the signature word, and lately 'mongē' has caught on too.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "is…",
+        "note": ""
+      },
+      {
+        "meaning": "super, amazing",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This old man gazes over the Kibi plain from atop the Tsukuriyama tumulus. Legend says the tale of Momotarō fighting the ogres comes from Kibitsuhiko defeating the demon Ura — would you hear it?"
+  },
+  "regional_meme": [
+    {
+      "title": "Who owns Momotarō?",
+      "text": "Where was Momotarō from? Okayama, Kagawa and Inuyama in Aichi all claim him — and Ogre Island is said to be Megijima in Kagawa."
+    },
+    {
+      "title": "Land of sunshine",
+      "text": "Okayama prides itself on being 'Hare no Kuni', the sunny land — locals feel cheated when it rains."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Swallowtail butterfly (Ikeda clan)"
+  },
+  "hero_persona": {
+    "name": "Ukita Hideie",
+    "title": "One of Toyotomi's Five Elders · exile of Hachijōjima",
+    "self": "I",
+    "opening_line": "I am Ukita Hideie, once one of the Toyotomi Five Elders. After Sekigahara I was exiled to Hachijōjima and lived past eighty — I have tasted every rise and fall life has to offer.",
+    "tone_prompt": "gentle and refined like a young noble, full of longing for Okayama and for Hideyoshi"
+  },
+  "ramen": {
+    "style_name": "Kasaoka ramen",
+    "broth": "Shōyu (chicken bone and chicken fat)",
+    "noodles": "Thin straight noodles",
+    "toppings": "Simmered old-hen meat, scallions",
+    "highlight": "Old-hen meat instead of pork chashu — unique to Kasaoka, a chicken-farming town"
+  },
+  "sake": {
+    "brand": "Sake Hitosuji (酒一筋)",
+    "brewery": "Toshimori Shuzō",
+    "taste_profile": "Rich & dry: brewed with the revived Akaiwa Omachi rice, deep and rice-forward"
+  }
+}

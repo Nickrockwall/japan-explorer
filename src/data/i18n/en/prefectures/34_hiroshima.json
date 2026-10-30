@@ -1,0 +1,141 @@
+{
+  "capital": "Hiroshima",
+  "badge": {
+    "title": "Peace in Aki"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Aki Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Bingo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Mōri Motonari",
+      "Mōri Terumoto",
+      "Kobayakawa Takakage",
+      "Kikkawa Motoharu"
+    ],
+    "edo_domains": [
+      "Hiroshima Domain (Asano clan, 420,000 koku)",
+      "Fukuyama Domain (Abe clan)"
+    ],
+    "meiji_transition": {
+      "summary": "Hiroshima Prefecture was set up in 1871, and six districts of Bingo were transferred from Okayama in 1876, forming today's borders.",
+      "boundary_note": "Hiroshima = Aki + Bingo; the Fukuyama area belongs to Bingo, closely tied to Okayama, with a slightly different dialect."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Itsukushima Shrine",
+      "summary": "Legend dates Itsukushima Shrine to 593; Taira no Kiyomori rebuilt it on a grand scale in the 12th century, and its torii in the sea became a symbol."
+    },
+    {
+      "title": "The Aki Takeda and the Mōri",
+      "summary": "Itsukushima stayed under shogunal protection after the Taira fell; the Takeda governed Aki, and the Mōri's ancestors, a branch of the Ōe, received Yoshida estate in Aki."
+    },
+    {
+      "title": "The Mōri take root",
+      "summary": "The Mōri made Yoshida-Kōriyama Castle their base and formed a league with neighboring local lords; the Itsukushima area fell under Ōuchi influence."
+    },
+    {
+      "title": "The lesson of the three arrows",
+      "summary": "Mōri Motonari defeated Sue Harukata at Itsukushima in 1555 and gradually unified the Chūgoku region; legend says he taught his three sons unity with 'three arrows'. Terumoto built Hiroshima Castle in 1589."
+    },
+    {
+      "title": "The Asano of Hiroshima",
+      "summary": "After Fukushima Masanori was dispossessed, Asano Nagaakira took over Hiroshima; Fukuyama in Bingo went to a fudai lord, and Inland Sea port towns thrived."
+    },
+    {
+      "title": "City of peace",
+      "summary": "In the Meiji era Hiroshima became a military city (Ujina port, Kure naval district); the atomic bomb fell on 6 August 1945, and the city was rebuilt as a city of peace."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Itsukushima Shrine",
+      "note": "The great torii in the sea"
+    },
+    {
+      "name": "Atomic Bomb Dome",
+      "note": "World Heritage"
+    },
+    {
+      "name": "Onomichi",
+      "note": "Town of slopes and temples"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Hiroshima okonomiyaki",
+      "note": "Layered savory pancake"
+    },
+    {
+      "name": "Oysters",
+      "note": "Japan's top producer"
+    },
+    {
+      "name": "Momiji manjū",
+      "note": "Maple-leaf cakes of Miyajima"
+    }
+  ],
+  "dialect": {
+    "name": "Hiroshima dialect",
+    "features": "'-jaken' (because) is the signature; 'buchi' (very) and 'taigii' (a hassle) are everyday words.",
+    "phrases": [
+      {
+        "meaning": "because…, so…",
+        "note": ""
+      },
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "what a hassle, can't be bothered",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This old man has come to Miyajima just as the tide covers the feet of the great torii. On this very sea Mōri Motonari beat a larger army — would you hear of the Battle of Itsukushima?"
+  },
+  "regional_meme": [
+    {
+      "title": "Don't call it 'Hiroshima-style'",
+      "text": "In Hiroshima it's just 'okonomiyaki' — add 'Hiroshima-style' and the locals will correct you."
+    },
+    {
+      "title": "The Carp faith",
+      "text": "Hiroshima's love of the Carp baseball team is near-religious; on game days the whole city turns red."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Crossed hawk feathers (Asano clan)"
+  },
+  "hero_persona": {
+    "name": "Mōri Motonari",
+    "title": "The schemer · lesson of the three arrows",
+    "self": "I",
+    "opening_line": "I am Mōri Motonari. One arrow breaks easily; three together do not — step by step I rose from a petty lord of Aki to master of the Chūgoku region.",
+    "tone_prompt": "wily yet kindly, loves to talk of family unity and strategy"
+  },
+  "ramen": {
+    "style_name": "Onomichi ramen",
+    "broth": "Shōyu (chicken and dried sardine, with bits of back fat)",
+    "noodles": "Flat thin noodles",
+    "toppings": "Back-fat bits, chashu, scallions, bamboo shoots",
+    "highlight": "The savor of Inland Sea dried sardines with dots of back fat — soul food of a town of slopes"
+  },
+  "sake": {
+    "brand": "Kamotsuru (賀茂鶴)",
+    "brewery": "Kamotsuru Shuzō (Saijō)",
+    "taste_profile": "Rich & sweet: a venerable brewery of Saijō, home of the soft-water brewing method"
+  }
+}

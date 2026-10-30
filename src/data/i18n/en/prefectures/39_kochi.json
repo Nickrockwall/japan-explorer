@@ -1,0 +1,133 @@
+{
+  "capital": "Kōchi",
+  "badge": {
+    "title": "Ryōma of Tosa"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Tosa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Chōsokabe Motochika",
+      "Ichijō Kanesada (Tosa Ichijō clan)"
+    ],
+    "edo_domains": [
+      "Tosa Domain (Yamauchi clan, 240,000 koku)"
+    ],
+    "meiji_transition": {
+      "summary": "Kōchi Prefecture was set up in 1871 and absorbed Awa from 1876 to 1880.",
+      "boundary_note": "Kōchi = Tosa Province, squeezed between the Shikoku mountains and the Pacific — long isolated, which gave it a temperament all its own."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Land of distant exile",
+      "summary": "Tosa was a place of distant exile; Ki no Tsurayuki, governor of Tosa, wrote the 'Tosa Diary' (c. 935)."
+    },
+    {
+      "title": "The emperor who chose exile",
+      "summary": "In the Kamakura period Tosa was ruled by eastern vassals; after the Jōkyū War Retired Emperor Tsuchimikado volunteered for exile in Tosa and later moved to Awa."
+    },
+    {
+      "title": "The Hosokawa and the Tosa Ichijō",
+      "summary": "Tosa's governors were the Hosokawa; during the Ōnin War the former regent Ichijō Norifusa took refuge at Nakamura in Tosa, founding the 'Tosa Ichijō' line."
+    },
+    {
+      "title": "Master of Shikoku",
+      "summary": "Chōsokabe Motochika unified Shikoku with his part-time farmer-soldiers, the 'ichiryō gusoku', but submitted to Hideyoshi in 1585 and kept only Tosa."
+    },
+    {
+      "title": "Upper and lower samurai",
+      "summary": "When Yamauchi Kazutoyo took over Tosa, the old Chōsokabe retainers were reduced to 'gōshi' (rural samurai), creating a rigid divide — the background to the rise of the gōshi Sakamoto Ryōma."
+    },
+    {
+      "title": "Freedom and People's Rights",
+      "summary": "Sakamoto Ryōma brokered the Satsuma–Chōshū Alliance; in early Meiji Itagaki Taisuke launched the Freedom and People's Rights Movement from Kōchi."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kōchi Castle",
+      "note": "One of the original keeps"
+    },
+    {
+      "name": "Katsurahama",
+      "note": "Statue of Sakamoto Ryōma"
+    },
+    {
+      "name": "Shimanto River",
+      "note": "'Japan's last clear stream'"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Katsuo no tataki",
+      "note": "Bonito seared over a straw fire"
+    },
+    {
+      "name": "Yuzu",
+      "note": "Japan's top producer"
+    },
+    {
+      "name": "Tosa sake",
+      "note": "Dry and crisp"
+    }
+  ],
+  "dialect": {
+    "name": "Tosa dialect",
+    "features": "'-zeyo' and '-kini' became famous nationwide through dramas about Ryōma; a stubborn man is an 'igossō' and a spirited woman a 'hachikin'.",
+    "phrases": [
+      {
+        "meaning": "…I tell you! (emphatic)",
+        "note": ""
+      },
+      {
+        "meaning": "stubborn, upright Tosa man",
+        "note": ""
+      },
+      {
+        "meaning": "bold, capable Tosa woman",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I'm a pilgrim — the Tosa stretch is the longest and hardest, called 'the dōjō of ascetic practice'. Sakamoto Ryōma grew up on this very coast gazing at the Pacific — want to hear his story?"
+  },
+  "regional_meme": [
+    {
+      "title": "Bekuhai drinking games",
+      "text": "Kōchi people are legendary drinkers; at banquets they use 'bekuhai' cups with holes or pointed bottoms, so you can't put them down until they're empty."
+    },
+    {
+      "title": "Ryōma everywhere",
+      "text": "Ryōma airport, Ryōma sweets, Ryōma statues… Kōchi's love of Ryōma is everywhere."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Oak' character (Yamauchi's three oak leaves)"
+  },
+  "hero_persona": {
+    "name": "Sakamoto Ryōma",
+    "title": "Rōnin of Tosa · broker of the Satsuma–Chōshū Alliance",
+    "self": "I",
+    "opening_line": "I'm Sakamoto Ryōma! Japan needs a good scrubbing — leave it to me to bring Satsuma and Chōshū together!",
+    "tone_prompt": "bold, optimistic and broad-minded; ends sentences with Tosa dialect like '-zeyo' and '-kini'"
+  },
+  "ramen": {
+    "style_name": "Susaki nabeyaki ramen",
+    "broth": "Shōyu (chicken bone and chicken fat)",
+    "noodles": "Thin straight noodles",
+    "toppings": "Chicken, chikuwa, raw egg, scallions",
+    "highlight": "Served piping hot in an earthenware pot — finish by adding rice to the broth"
+  },
+  "sake": {
+    "brand": "Suigei (酔鯨)",
+    "brewery": "Suigei Shuzō",
+    "taste_profile": "Light & dry: the model of 'Tosa karakuchi', best with seared bonito"
+  }
+}

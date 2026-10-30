@@ -1,0 +1,140 @@
+{
+  "capital": "Miyazaki",
+  "badge": {
+    "title": "Myths of Hyūga"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Hyūga Province",
+        "portion": "most (excluding southwest Morokata District)",
+        "cross_prefectures": [
+          "Kagoshima"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Itō Yoshisuke",
+      "Shimazu Yoshihisa and Yoshihiro",
+      "Tsuchimochi clan"
+    ],
+    "edo_domains": [
+      "Nobeoka Domain",
+      "Takanabe Domain (Akizuki clan)",
+      "Obi Domain (Itō clan)",
+      "Sadowara Domain",
+      "Satsuma Domain lands (Morokata)"
+    ],
+    "meiji_transition": {
+      "summary": "Mimitsu and Miyakonojō prefectures merged into Miyazaki in 1873, which was absorbed into Kagoshima in 1876 and re-established in 1883.",
+      "boundary_note": "Southwest Morokata District of Hyūga belonged to the Satsuma Domain, and after Meiji part of it (Shibushi and others) went to Kagoshima — so Miyazaki is a little smaller than ancient Hyūga."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Descent of the heavenly grandson",
+      "summary": "Takachiho is the setting of the myth of the heavenly grandson's descent, and Emperor Jinmu's legendary eastern expedition set out from Hyūga; the Saitobaru tomb group is vast."
+    },
+    {
+      "title": "The Itō receive Hyūga",
+      "summary": "Descendants of Kudō Suketsune, the Itō, were granted stewardships in Hyūga and moved there for good in the Northern and Southern Courts era."
+    },
+    {
+      "title": "Itō and Shimazu",
+      "summary": "The Itō expanded across Hyūga and fought the Shimazu to the south for it, beginning a long rivalry."
+    },
+    {
+      "title": "Itō vs. Shimazu",
+      "summary": "Itō Yoshisuke once held the 'forty-eight castles of Itō', but lost to Shimazu Yoshihiro at Kizakibaru in 1572 and fled to the Ōtomo, triggering the 1578 Battle of Mimikawa."
+    },
+    {
+      "title": "A forest of small domains",
+      "summary": "Nobeoka, Takanabe, Obi and Sadowara stood side by side; Obi cedar and the Obi castle town survive today."
+    },
+    {
+      "title": "Sunny Miyazaki",
+      "summary": "Re-established in 1883; in the 1960s–70s it was Japan's honeymoon destination, and today it is known for mangoes and pro-baseball spring camps."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Takachiho Gorge",
+      "note": "Gorge of columnar basalt"
+    },
+    {
+      "name": "Aoshima Shrine",
+      "note": "The 'Devil's Washboard' wave-cut rocks"
+    },
+    {
+      "name": "Obi castle town",
+      "note": "'Little Kyoto of Kyūshū'"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Miyazaki beef",
+      "note": "Champion of the 'wagyu Olympics'"
+    },
+    {
+      "name": "Kanjuku mango",
+      "note": "'Egg of the Sun'"
+    },
+    {
+      "name": "Chicken nanban",
+      "note": "Fried chicken with tartar sauce"
+    }
+  ],
+  "dialect": {
+    "name": "Miyazaki dialect",
+    "features": "'Tege' (very) and 'yodakii', with a slow tone; around Morokata the speech is close to Satsuma's.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "…isn't it",
+        "note": ""
+      },
+      {
+        "meaning": "can't be bothered",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble interpreter has come to Takachiho Gorge, where legend says Amaterasu hid in the Heavenly Rock Cave — shall I begin in the age of the gods?"
+  },
+  "regional_meme": [
+    {
+      "title": "'Nothing but nature'",
+      "text": "Miyazaki is often told it has 'nothing but nature'; a former governor's line 'We've got to do something about Miyazaki' became a catchphrase."
+    },
+    {
+      "title": "Tegetege",
+      "text": "'Tegetege' — good enough is good enough: Miyazaki's laid-back philosophy."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Sun' character (Hyūga)"
+  },
+  "hero_persona": {
+    "name": "Komura Jutarō",
+    "title": "Diplomat from Obi",
+    "self": "I",
+    "opening_line": "I am Komura Jutarō, born in the Obi Domain. The Portsmouth peace talks, the revision of the unequal treaties — I spent my whole life at the negotiating table.",
+    "tone_prompt": "calm, practical and well-ordered, with a diplomat's sense of proportion"
+  },
+  "ramen": {
+    "style_name": "Miyazaki ramen",
+    "broth": "Tonkotsu-shōyu",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Chashu, scallions, pickled daikon",
+    "highlight": "Pickled daikon is often set out on the table as a side"
+  },
+  "sake": {
+    "brand": "Kuro Kirishima (黒霧島)",
+    "brewery": "Kirishima Shuzō",
+    "taste_profile": "Shōchū: sweet-potato shōchū made with black kōji, often Japan's best-seller"
+  }
+}

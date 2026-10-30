@@ -1,0 +1,151 @@
+{
+  "capital": "Nagasaki",
+  "badge": {
+    "title": "Window of Dejima"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Hizen Province",
+        "portion": "west",
+        "cross_prefectures": [
+          "Saga"
+        ]
+      },
+      {
+        "name": "Iki Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tsushima Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ōmura Sumitada (the first Christian daimyo)",
+      "Arima Harunobu",
+      "Matsura Takanobu (Hirado)",
+      "Sō Yoshitoshi (Tsushima)"
+    ],
+    "edo_domains": [
+      "Nagasaki magistracy (shogunal, Dejima)",
+      "Ōmura Domain",
+      "Hirado Domain",
+      "Shimabara Domain",
+      "Tsushima-Fuchū Domain (Sō clan)"
+    ],
+    "meiji_transition": {
+      "summary": "Nagasaki Prefecture was set up in 1871 and Iki and Tsushima were added in 1872; the Saga area was absorbed in 1876 and split off again in 1883.",
+      "boundary_note": "Nagasaki is western Hizen plus the islands of Iki and Tsushima; Tsushima lies only about 50 km from Busan and was long Japan's window on Korea."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Frontier guards and beacons",
+      "summary": "Tsushima and Iki were the front line of defense, with frontier guards (sakimori) and beacon towers; Japan's envoys to Tang China sailed from the Gotō Islands."
+    },
+    {
+      "title": "The tragedy of Tsushima and Iki",
+      "summary": "In the 1274 Mongol invasion Sō Sukekuni, deputy governor of Tsushima, and Taira no Kagetaka, deputy governor of Iki, were killed, and both islands suffered terribly."
+    },
+    {
+      "title": "The Sō and the wakō",
+      "summary": "The Sō of Tsushima controlled trade with Korea; in 1419 a Korean army attacked Tsushima (the Ōei Invasion). The seafolk of Matsura were among the main wakō pirates."
+    },
+    {
+      "title": "The Nanban trade",
+      "summary": "Portuguese ships reached Hirado in 1550, Ōmura Sumitada opened Nagasaki in 1571, and in 1580 Nagasaki was even donated to the Jesuits."
+    },
+    {
+      "title": "Window of the closed country",
+      "summary": "In 1641 the Dutch trading post moved to Dejima, making Nagasaki Japan's only window on Europe during the closed-country era; after the 1637 Shimabara Rebellion Christianity was banned, and hidden Christians kept their faith for over two centuries."
+    },
+    {
+      "title": "Shipbuilding and the atomic bomb",
+      "summary": "Mitsubishi's Nagasaki Shipyard drove modern industry; the atomic bomb fell on 9 August 1945; the hidden-Christian heritage sites became World Heritage in 2018."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Dejima",
+      "note": "The reconstructed Dutch trading post"
+    },
+    {
+      "name": "Ōura Church",
+      "note": "Among Japan's oldest surviving churches"
+    },
+    {
+      "name": "Gunkanjima (Hashima)",
+      "note": "Meiji industrial heritage"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Nagasaki champon",
+      "note": "Seafood noodle soup created by a Chinese immigrant"
+    },
+    {
+      "name": "Castella",
+      "note": "Sponge cake of Portuguese origin"
+    },
+    {
+      "name": "Shippoku cuisine",
+      "note": "A round-table feast blending Japanese, Chinese and Dutch"
+    }
+  ],
+  "dialect": {
+    "name": "Nagasaki dialect",
+    "features": "'-bai' and 'batten' (but); rich in loanwords from Portuguese, Dutch and Chinese, like 'giyaman' (glass).",
+    "phrases": [
+      {
+        "meaning": "but",
+        "note": ""
+      },
+      {
+        "meaning": "sure, all right",
+        "note": ""
+      },
+      {
+        "meaning": "seems like…",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Welcome to Dejima! On this little fan-shaped island this humble interpreter translated countless 'fūsetsugaki' reports from the Dutch for the shogunate. All the world's news in the closed-country era came in through here."
+  },
+  "regional_meme": [
+    {
+      "title": "City of slopes",
+      "text": "Nagasaki is famous for its hills — plenty of locals never learned to ride a bicycle."
+    },
+    {
+      "title": "The real castella",
+      "text": "Nagasaki people insist castella from anywhere else isn't the real thing — the coarse sugar on the bottom is its soul."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Ran' (Holland) character (Dejima)"
+  },
+  "hero_persona": {
+    "name": "Amakusa Shirō",
+    "title": "Young leader of the Shimabara Rebellion",
+    "self": "I",
+    "opening_line": "I am Amakusa Shirō Tokisada. The year I was sixteen, I held Hara Castle together with more than thirty thousand people… would you hear what happened that winter?",
+    "tone_prompt": "clear, steadfast and compassionate; miracle stories must be marked as legend, and religious incitement avoided"
+  },
+  "ramen": {
+    "style_name": "Nagasaki champon",
+    "broth": "Local (milky pork-and-chicken broth)",
+    "noodles": "Thick noodles made with tōakuku alkaline water",
+    "toppings": "Seafood, cabbage, fish cake, pork",
+    "highlight": "Nutritious noodles invented by the Chinese immigrant Chin Heijun for Chinese students"
+  },
+  "sake": {
+    "brand": "Rokujūyoshū (六十餘洲)",
+    "brewery": "Imari Shuzō",
+    "taste_profile": "Rich & sweet: an old brewery in Hasami (Nagasaki is better known for Iki barley shōchū)"
+  }
+}

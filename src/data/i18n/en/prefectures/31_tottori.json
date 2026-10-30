@@ -1,0 +1,140 @@
+{
+  "capital": "Tottori",
+  "badge": {
+    "title": "Sand Dunes of Inaba"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Inaba Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Hōki Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Yamana clan (governors)",
+      "Kikkawa Tsuneie",
+      "Amago clan",
+      "Mōri clan"
+    ],
+    "edo_domains": [
+      "Tottori Domain (Ikeda clan, 320,000 koku)"
+    ],
+    "meiji_transition": {
+      "summary": "Tottori Prefecture was set up in 1871, merged into Shimane in 1876 and split off again in 1881.",
+      "boundary_note": "Tottori = Inaba (east) + Hōki (west); it was swallowed by Shimane for five years and re-established because people resented having their prefectural office far away in Matsue."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The White Hare of Inaba",
+      "summary": "Setting of the Kojiki tale of the White Hare of Inaba; Ōtomo no Yakamochi, governor of Inaba, wrote the very last poem of the Man'yōshū here."
+    },
+    {
+      "title": "The emperor on Mount Senjō",
+      "summary": "In 1333 Nawa Nagatoshi welcomed Emperor Go-Daigo, escaped from Oki, at Mount Senjō in Hōki and helped him overthrow the shogunate."
+    },
+    {
+      "title": "Yamana, 'lord of a sixth'",
+      "summary": "The Yamana held Inaba, Hōki and other San'in provinces — at their height they were called 'Rokubun-no-ichi-dono', lords of a sixth of the realm."
+    },
+    {
+      "title": "The starvation of Tottori",
+      "summary": "In 1581 Hideyoshi starved out Tottori Castle; its commander Kikkawa Tsuneie took his own life to spare the lives of his men and surrendered the castle."
+    },
+    {
+      "title": "Ikeda, 320,000 koku",
+      "summary": "Ikeda Mitsunaka was given Tottori, and the Ikeda ruled Inaba and Hōki until the end of the Edo period."
+    },
+    {
+      "title": "Restored prefecture and dunes",
+      "summary": "Tottori was restored in 1881; it is Japan's least populous prefecture, and the Tottori Sand Dunes and 'Kitarō Road' are its calling cards."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tottori Sand Dunes",
+      "note": "Among Japan's largest coastal dunes"
+    },
+    {
+      "name": "Mount Daisen",
+      "note": "'Fuji of Hōki'"
+    },
+    {
+      "name": "Sanbutsu-ji Nageiredō",
+      "note": "A national-treasure hall perched on a cliff"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Matsuba crab",
+      "note": "Winter snow crab of the San'in coast"
+    },
+    {
+      "name": "Nijisseiki pears",
+      "note": "Tottori's signature fruit"
+    },
+    {
+      "name": "Dune rakkyō",
+      "note": "Scallions grown in sandy soil"
+    }
+  ],
+  "dialect": {
+    "name": "Tottori dialect",
+    "features": "Inaba speech differs from Hōki speech (close to Izumo's); 'darazu' means fool, with endings like '-dakee'.",
+    "phrases": [
+      {
+        "meaning": "fool",
+        "note": ""
+      },
+      {
+        "meaning": "because…",
+        "note": ""
+      },
+      {
+        "meaning": "huge, amazing",
+        "note": "Hōki"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This old man is a kataribe of Izumo, a teller of ancient tales. This is where the White Hare met the god Ōkuninushi in the Kojiki — and later, where Hideyoshi starved a castle into surrender…"
+  },
+  "regional_meme": [
+    {
+      "title": "No Starbucks, but dunes",
+      "text": "Tottori was once the only prefecture without a Starbucks; its governor quipped, 'We don't have Sutaba, but we have Sunaba (the sand pit)!'"
+    },
+    {
+      "title": "Tottori or Shimane?",
+      "text": "Outsiders can never remember which of Tottori and Shimane is on the left — the answer: Tottori is on the right (east)."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Hare' character (White Hare of Inaba)"
+  },
+  "hero_persona": {
+    "name": "Kikkawa Tsuneie",
+    "title": "The commander who died to save his garrison",
+    "self": "I",
+    "opening_line": "I am Kikkawa Tsuneie. Tottori Castle was surrounded and its food ran out… I traded my life for the lives of thousands of my soldiers, and I do not regret it.",
+    "tone_prompt": "solemn and quiet, with a strong sense of duty; grave when speaking of the siege"
+  },
+  "ramen": {
+    "style_name": "Tottori gyūkotsu ramen",
+    "broth": "Local (beef-bone shōyu)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, scallions, bean sprouts",
+    "highlight": "A rare beef-bone broth, sweet with the aroma of beef fat"
+  },
+  "sake": {
+    "brand": "Takaisami (鷹勇)",
+    "brewery": "Ōtani Shuzō",
+    "taste_profile": "Rich & dry: brewed with Daisen spring water, best served warm"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "capital": "Matsue",
+  "badge": {
+    "title": "Myths of Izumo"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Izumo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Iwami Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Oki Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Amago Tsunehisa and Haruhisa",
+      "Mōri Motonari (destroyed the Amago in 1566)",
+      "Kikkawa Motoharu",
+      "Yamanaka Shikanosuke (Amago restoration army)"
+    ],
+    "edo_domains": [
+      "Matsue Domain (Matsudaira clan)",
+      "Tsuwano Domain (Kamei clan)",
+      "Hamada Domain",
+      "Iwami Ginzan silver mine (shogunal land)"
+    ],
+    "meiji_transition": {
+      "summary": "Shimane and other prefectures were set up in 1871; in 1876 Hamada Prefecture (Iwami) joined and Tottori was absorbed, but Tottori split off again in 1881.",
+      "boundary_note": "Shimane = Izumo + Iwami + Oki. Eastern Izumo and western Iwami differ sharply: Izumo's dialect resembles the 'zūzū-ben' of Tōhoku, while Iwami's is close to Hiroshima's."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Izumo mythology",
+      "summary": "Izumo Taisha enshrines the god Ōkuninushi, and the Izumo Fudoki is the only gazetteer to survive almost intact; every tenth lunar month the gods gather here, so Izumo calls it 'the month with gods'."
+    },
+    {
+      "title": "Retired emperors on Oki",
+      "summary": "After the Jōkyū War Retired Emperor Go-Toba was exiled to Oki until his death; Emperor Go-Daigo was exiled there too in 1332, escaping the next year."
+    },
+    {
+      "title": "The Kyōgoku and the Amago",
+      "summary": "Izumo's governors were the Kyōgoku, whose deputies the Amago grew ever stronger; Iwami was held by the Ōuchi and the Masuda."
+    },
+    {
+      "title": "Amago and Mōri",
+      "summary": "Amago Tsunehisa, 'the master schemer', unified the San'in; in 1566 Gassan-Toda Castle fell to Mōri Motonari, and Yamanaka Shikanosuke vowed to restore the Amago — 'Grant me the seven hardships and eight sufferings'."
+    },
+    {
+      "title": "Iwami Ginzan",
+      "summary": "At its peak Iwami Ginzan produced a significant share of the world's silver; Matsudaira Fumai, seventh lord of Matsue, promoted the tea ceremony and wagashi."
+    },
+    {
+      "title": "Lafcadio Hearn",
+      "summary": "Koizumi Yakumo (Lafcadio Hearn) taught in Matsue and wrote 'Kwaidan'; Iwami Ginzan became World Heritage in 2007."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Izumo Taisha",
+      "note": "Shrine of the god Ōkuninushi"
+    },
+    {
+      "name": "Matsue Castle",
+      "note": "National-treasure keep"
+    },
+    {
+      "name": "Iwami Ginzan",
+      "note": "World Heritage silver mine"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Izumo soba",
+      "note": "Served in stacked 'warigo' bowls"
+    },
+    {
+      "name": "Lake Shinji clams",
+      "note": "One of Lake Shinji's seven delicacies"
+    },
+    {
+      "name": "Matsue wagashi",
+      "note": "One of Japan's three great confectionery towns"
+    }
+  ],
+  "dialect": {
+    "name": "Izumo dialect",
+    "features": "Izumo speech is strikingly similar to Tōhoku dialects ('zūzū-ben'); 'dandan' means thank you.",
+    "phrases": [
+      {
+        "meaning": "thank you",
+        "note": ""
+      },
+      {
+        "meaning": "because…",
+        "note": ""
+      },
+      {
+        "meaning": "fool",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This old man is a kataribe of Izumo. Every tenth lunar month the eight million gods meet here — so while the rest of Japan calls it 'the month without gods', only Izumo calls it 'the month with gods'. Would you hear this myth?"
+  },
+  "regional_meme": [
+    {
+      "title": "Where is Shimane?",
+      "text": "Shimane regularly tops surveys of 'the hardest prefecture to find on a map' — locals even made a self-mocking manga, 'The Great Secret of Shimane'."
+    },
+    {
+      "title": "The month with gods",
+      "text": "Elsewhere the tenth month is 'Kannazuki', the month without gods; only Izumo calls it 'Kamiarizuki' — all of Japan's gods are here for a meeting."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Kikkō (tortoise-shell) crest (Izumo Taisha)"
+  },
+  "hero_persona": {
+    "name": "Yamanaka Shikanosuke",
+    "title": "Valiant restorer of the Amago",
+    "self": "I",
+    "opening_line": "I am Yamanaka Shikanosuke Yukimori! 'Grant me the seven hardships and eight sufferings' — that is what I prayed to the moon to restore the house of Amago.",
+    "tone_prompt": "loyal, brave and tragic, with an iron will; fiery when recalling the fall of his lord's house"
+  },
+  "ramen": {
+    "style_name": "Matsue chūka soba",
+    "broth": "Shōyu (clear broth)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, scallions",
+    "highlight": "Shimane is famous for Izumo soba; ramen here is mostly clear-broth chūka soba"
+  },
+  "sake": {
+    "brand": "Ōroku (王禄)",
+    "brewery": "Ōroku Shuzō",
+    "taste_profile": "Rich & dry: unfiltered, undiluted and powerful"
+  }
+}

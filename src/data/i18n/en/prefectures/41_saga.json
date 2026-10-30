@@ -1,0 +1,139 @@
+{
+  "capital": "Saga",
+  "badge": {
+    "title": "Porcelain Town of Arita"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Hizen Province",
+        "portion": "east",
+        "cross_prefectures": [
+          "Nagasaki"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ryūzōji Takanobu",
+      "Nabeshima Naoshige",
+      "Shōni clan",
+      "Hata clan (Karatsu)"
+    ],
+    "edo_domains": [
+      "Saga Domain (Nabeshima clan, 350,000 koku)",
+      "Karatsu Domain",
+      "Hasunoike, Ogi and Kashima (Saga branch domains)"
+    ],
+    "meiji_transition": {
+      "summary": "Imari Prefecture was set up in 1871 and renamed Saga in 1872; in 1876 it was merged into Mizuma and then into Nagasaki, before being re-established in 1883.",
+      "boundary_note": "Ancient Hizen was split in two — the east went to Saga, the west to Nagasaki — and Saga was even absorbed into Nagasaki for seven years."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Yoshinogari and Hizen",
+      "summary": "Yoshinogari is among the largest moated settlements of the Yayoi period; the Hizen provincial capital lay at Yamato in today's Saga city."
+    },
+    {
+      "title": "The Matsura bands and the Mongols",
+      "summary": "The Hizen coast was a front line against the Mongol invasions, and the seafaring warrior bands of Matsura were very active."
+    },
+    {
+      "title": "The Shōni and the Ryūzōji",
+      "summary": "The Shōni were Hizen's main governors, and their vassals the Ryūzōji rose to power; the seafolk around Matsura were also drawn into wakō piracy."
+    },
+    {
+      "title": "The Bear of Hizen",
+      "summary": "Ryūzōji Takanobu, 'the Bear of Hizen', died at the Battle of Okitanawate in 1584, and his chief retainer Nabeshima Naoshige inherited real power."
+    },
+    {
+      "title": "The Nabeshima and Arita ware",
+      "summary": "The potter Yi Sam-pyeong found porcelain stone at Arita, and Arita (Imari) ware was shipped to Europe via Dejima; the Saga Domain built reverberatory furnaces, among the most technically advanced domains of the late Edo period."
+    },
+    {
+      "title": "Satchō Dohi",
+      "summary": "Saga was one of the four 'Satchō Dohi' domains that led the Restoration — home of Ōkuma Shigenobu and Etō Shinpei; the Saga Rebellion broke out in 1874."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Yoshinogari Site",
+      "note": "Great Yayoi settlement"
+    },
+    {
+      "name": "Arita pottery town",
+      "note": "Birthplace of Japanese porcelain"
+    },
+    {
+      "name": "Karatsu Castle",
+      "note": "'Maizuru Castle'"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Saga beef",
+      "note": "Top-grade black wagyu"
+    },
+    {
+      "name": "Arita ware",
+      "note": "Where Japanese porcelain began"
+    },
+    {
+      "name": "Yobuko squid",
+      "note": "Translucent live-squid sashimi"
+    }
+  ],
+  "dialect": {
+    "name": "Saga dialect",
+    "features": "'Gabai' (very) became famous through 'Saga no Gabai Bāchan'; endings like '-bai' and '-kusa'.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "…you know (sentence ending)",
+        "note": ""
+      },
+      {
+        "meaning": "well then, goodbye",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble interpreter came especially to see the kilns of Arita. That Imari plate in your hands may once have been loaded at Dejima and shipped to Holland — shall I tell you the story of porcelain?"
+  },
+  "regional_meme": [
+    {
+      "title": "The Saga song",
+      "text": "A comedian's song 'Saga-ken' sums up the self-mockery — 'Saga-ken, oh Saga-ken…' — and locals love it as much as it stings."
+    },
+    {
+      "title": "Squeezed between Fukuoka and Nagasaki",
+      "text": "Wedged between two 'big brothers', Saga is often asked: 'Saga… is that in Nagasaki?'"
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Apricot' character (Nabeshima gyōyō crest)"
+  },
+  "hero_persona": {
+    "name": "Ōkuma Shigenobu",
+    "title": "Founder of Waseda · twice prime minister",
+    "self": "I",
+    "opening_line": "I am Ōkuma Shigenobu! I founded Waseda University — and since a man lives to a hundred and twenty-five, I still have big things ahead of me!",
+    "tone_prompt": "optimistic and expansive, fond of grand statements; passionate about education and political reform"
+  },
+  "ramen": {
+    "style_name": "Saga ramen",
+    "broth": "Tonkotsu (mellow)",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Raw egg, nori, chashu",
+    "highlight": "A gentler pork-bone broth than Hakata's, often topped with a raw egg"
+  },
+  "sake": {
+    "brand": "Nabeshima (鍋島)",
+    "brewery": "Fukuchiyo Shuzō",
+    "taste_profile": "Rich & sweet: 2011 IWC champion sake — the byword for Saga sake"
+  }
+}

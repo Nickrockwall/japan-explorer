@@ -1,0 +1,138 @@
+{
+  "capital": "Kumamoto",
+  "badge": {
+    "title": "Land of Fire"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Higo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Sagara clan",
+      "Aso clan",
+      "Kikuchi clan",
+      "Sassa Narimasa",
+      "Katō Kiyomasa",
+      "Konishi Yukinaga"
+    ],
+    "edo_domains": [
+      "Kumamoto Domain (Hosokawa clan, 540,000 koku)",
+      "Hitoyoshi Domain (Sagara clan)"
+    ],
+    "meiji_transition": {
+      "summary": "Kumamoto and Yatsushiro prefectures were set up in 1871; Kumamoto was renamed Shirakawa in 1872, absorbed Yatsushiro in 1873, and was renamed Kumamoto again in 1876.",
+      "boundary_note": "Kumamoto = Higo Province; the Sagara of Hitoyoshi in the south ruled the same domain for some 700 years, from Kamakura to Meiji — almost unheard of in Japanese history."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Land of fire",
+      "summary": "Hizen and Higo were anciently called 'Hi no Kuni', the land of fire — the source of legends of Mount Aso and the mysterious 'shiranui' lights; Kikuchi Castle was an ancient Korean-style mountain fort."
+    },
+    {
+      "title": "The Kikuchi and the Mongol scrolls",
+      "summary": "The Kikuchi were a great power in Kyūshū; the Higo vassal Takezaki Suenaga fought hard against the Mongols and commissioned the 'Mōko Shūrai Ekotoba' scrolls."
+    },
+    {
+      "title": "Prince Kanenaga, Seisei Shōgun",
+      "summary": "The Kikuchi served the Southern Court's Prince Kanenaga as 'general for subduing the west', seizing Dazaifu in 1361 and briefly controlling Kyūshū, until defeated by Imagawa Ryōshun."
+    },
+    {
+      "title": "The Higo kokujin uprising",
+      "summary": "Higo was split among many local lords; in 1587 Hideyoshi gave it to Sassa Narimasa, whose rule sparked an uprising and cost him his life. Katō Kiyomasa and Konishi Yukinaga then divided Higo."
+    },
+    {
+      "title": "Kiyomasa and the Hosokawa",
+      "summary": "Katō Kiyomasa built the 'impregnable' Kumamoto Castle; the Hosokawa (Tadatoshi) took over in 1632, and Miyamoto Musashi wrote 'The Book of Five Rings' here in his last years."
+    },
+    {
+      "title": "The Satsuma Rebellion",
+      "summary": "In 1877 Saigō's army besieged Kumamoto Castle for over fifty days without success; the 2016 Kumamoto earthquakes badly damaged the castle, and restoration continues."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kumamoto Castle",
+      "note": "Its 'mushagaeshi' stone walls"
+    },
+    {
+      "name": "Mount Aso",
+      "note": "One of the world's largest calderas"
+    },
+    {
+      "name": "Suizenji Jōjuen",
+      "note": "Garden miniaturizing the Tōkaidō"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Basashi",
+      "note": "Horse-meat sashimi, a Kumamoto specialty"
+    },
+    {
+      "name": "Kumamoto ramen",
+      "note": "Pork-bone broth with burnt garlic oil"
+    },
+    {
+      "name": "Karashi renkon",
+      "note": "Fried lotus root stuffed with mustard miso"
+    }
+  ],
+  "dialect": {
+    "name": "Kumamoto dialect",
+    "features": "'-tai' and '-bai'; 'atozeki' (close the door behind you) is unique to Kumamoto, and a 'mokkosu' is a stubborn Kumamoto man.",
+    "phrases": [
+      {
+        "meaning": "close the door behind you",
+        "note": ""
+      },
+      {
+        "meaning": "stubborn, upright Kumamoto man",
+        "note": ""
+      },
+      {
+        "meaning": "…that's how it is",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble interpreter stands beneath the 'mushagaeshi' walls of Kumamoto Castle — curved stone that kept Saigō's army out for over fifty days. Shall I tell you how Katō Kiyomasa built it?"
+  },
+  "regional_meme": [
+    {
+      "title": "Director Kumamon",
+      "text": "Kumamon is officially Kumamoto Prefecture's 'Sales Director and Director of Happiness' — busier than most human civil servants."
+    },
+    {
+      "title": "Higo mokkosu",
+      "text": "Kumamoto men are famous for stubbornness: once they decide something, not even nine oxen can pull them back."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Kuyō (nine stars) crest (Hosokawa clan)"
+  },
+  "hero_persona": {
+    "name": "Katō Kiyomasa",
+    "title": "Master castle builder · 'Toranosuke'",
+    "self": "I",
+    "opening_line": "I am Katō Kazuenokami Kiyomasa! I hunted a tiger, they say, and I built a castle in Kumamoto — Saigō's men spent fifty days at these 'mushagaeshi' walls and never got over!",
+    "tone_prompt": "fierce and hearty, straightforward; bursting with pride about Kumamoto Castle; the tiger hunt is legend"
+  },
+  "ramen": {
+    "style_name": "Kumamoto ramen",
+    "broth": "Tonkotsu (pork and chicken bones)",
+    "noodles": "Medium-thick straight noodles",
+    "toppings": "Burnt garlic oil (mā-yu), fried garlic chips, wood-ear mushrooms, nori",
+    "highlight": "The black burnt-garlic oil is its soul — intensely fragrant"
+  },
+  "sake": {
+    "brand": "Kōro (香露)",
+    "brewery": "Kumamoto Prefectural Sake Research Institute",
+    "taste_profile": "Rich & sweet: birthplace of 'Kumamoto yeast' (Yeast No. 9)"
+  }
+}

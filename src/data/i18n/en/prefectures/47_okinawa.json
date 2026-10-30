@@ -1,0 +1,132 @@
+{
+  "capital": "Naha",
+  "badge": {
+    "title": "Ryukyu Kingdom"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Ryukyu Kingdom",
+        "portion": "entire (outside the ritsuryō system)",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Second Shō dynasty (King Shō Shin, King Shō Nei)"
+    ],
+    "edo_domains": [
+      "Ryukyu Kingdom (under Satsuma control after 1609, while paying tribute to Ming and Qing China)"
+    ],
+    "meiji_transition": {
+      "summary": "The Ryukyu Domain was created in 1872, and in 1879 the 'Ryukyu Disposition' abolished it and created Okinawa Prefecture; from 1945 to 1972 Okinawa was under US rule, returning to Japan in 1972.",
+      "boundary_note": "Ryukyu never had ritsuryō provinces; the Amami Islands were part of the Ryukyu Kingdom until Satsuma took them after 1609, and they still belong to Kagoshima."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Three Kingdoms and old Ryukyu",
+      "summary": "The Ryukyu Islands lay outside the ritsuryō state; from the 12th century local lords (aji) built stone castles (gusuku), and three kingdoms — Hokuzan, Chūzan and Nanzan — gradually formed."
+    },
+    {
+      "title": "Aji and gusuku",
+      "summary": "Lords across the islands built stone gusuku castles and vied for power; legend says the Eiso dynasty arose at Urasoe."
+    },
+    {
+      "title": "Three kingdoms and tribute",
+      "summary": "Hokuzan, Chūzan and Nanzan stood side by side and began paying tribute to Ming China from 1372, drawing Ryukyu into East Asian maritime trade."
+    },
+    {
+      "title": "The Ryukyu Kingdom",
+      "summary": "Shō Hashi unified the three kingdoms in 1429; under King Shō Shin power was centralized, and Ryukyu thrived in East Asian sea trade as a 'bridge between nations'."
+    },
+    {
+      "title": "Dual subordination",
+      "summary": "In 1609 Satsuma invaded Shuri; from then on Ryukyu paid tribute to China while under Satsuma's control — a unique 'dual subordination'."
+    },
+    {
+      "title": "Okinawa Prefecture",
+      "summary": "The prefecture was created by the Ryukyu Disposition of 1879; the 1945 Battle of Okinawa took a terrible toll on civilians, and US rule lasted until the 1972 reversion."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Shuri Castle",
+      "note": "Royal castle of the Ryukyu Kingdom"
+    },
+    {
+      "name": "Churaumi Aquarium",
+      "note": "The giant 'Kuroshio Sea' tank"
+    },
+    {
+      "name": "Sēfa-utaki",
+      "note": "Ryukyu's most sacred site"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Gōyā champurū",
+      "note": "Bitter-melon stir-fry, Okinawan home cooking"
+    },
+    {
+      "name": "Awamori",
+      "note": "Spirit distilled from Thai rice"
+    },
+    {
+      "name": "Okinawa soba",
+      "note": "Wheat noodles with braised pork belly"
+    }
+  ],
+  "dialect": {
+    "name": "Okinawan (Uchināguchi)",
+    "features": "The Ryukyuan languages share roots with Japanese but are barely mutually intelligible, with mainly three vowels (a, i, u); 'nankurunaisa' sums up the islanders' optimism.",
+    "phrases": [
+      {
+        "meaning": "hello",
+        "note": "used by men / by women"
+      },
+      {
+        "meaning": "welcome",
+        "note": ""
+      },
+      {
+        "meaning": "it'll all work out",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Haisai~ I'm a noro priestess who guards the sacred utaki. Ryukyu was never one of the ritsuryō provinces — we had our own king and our own sea. Shall I tell you about Shuri Castle, or the seafaring age of the 'bridge between nations'?"
+  },
+  "regional_meme": [
+    {
+      "title": "Okinawa time",
+      "text": "'Uchinā taimu' — meeting times in Okinawa tend to run a little late, and nobody minds much."
+    },
+    {
+      "title": "It gets cold in winter too",
+      "text": "When it drops to 15 °C, Okinawans pull out their down jackets — while mainland tourists stroll by in T-shirts."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Hidari-mitsudomoe (Shō clan)"
+  },
+  "hero_persona": {
+    "name": "Shō Hashi",
+    "title": "King who unified the Three Kingdoms of Ryukyu",
+    "self": "I",
+    "opening_line": "I am Shō Hashi. Hokuzan, Chūzan and Nanzan split the land for a century — I joined them into one, and from then on Ryukyu faced the sea of all nations!",
+    "tone_prompt": "broad-minded, bold and far-sighted; often speaks of sea trade and the 'bridge between nations'"
+  },
+  "ramen": {
+    "style_name": "Okinawa soba",
+    "broth": "Shio (pork bone and bonito)",
+    "noodles": "Thick wheat noodles (no buckwheat)",
+    "toppings": "Braised pork belly or soft-bone ribs, fish cake, pickled ginger",
+    "highlight": "No buckwheat, yet specially allowed to be called 'soba' — 17 October is 'Okinawa Soba Day'"
+  },
+  "sake": {
+    "brand": "Zanpa (残波)",
+    "brewery": "Higa Shuzō",
+    "taste_profile": "Awamori: Okinawa's 'island spirit', made from Thai rice with black kōji"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "capital": "Kagoshima",
+  "badge": {
+    "title": "Warriors of Satsuma"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Satsuma Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Ōsumi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Hyūga Province",
+        "portion": "southwest Morokata (Shibushi, etc.)",
+        "cross_prefectures": [
+          "Miyazaki"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Shimazu Yoshihisa",
+      "Shimazu Yoshihiro",
+      "Shimazu Toshihisa",
+      "Shimazu Iehisa"
+    ],
+    "edo_domains": [
+      "Satsuma Domain (Shimazu clan, 770,000 koku)"
+    ],
+    "meiji_transition": {
+      "summary": "Kagoshima Prefecture was set up in 1871 and absorbed Miyazaki in 1876 (split off in 1883); the Amami Islands also belong to Kagoshima.",
+      "boundary_note": "Kagoshima = Satsuma + Ōsumi + part of Hyūga, plus the Amami Islands — once part of the Ryukyu Kingdom, taken under Satsuma's direct control after 1609."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Hayato",
+      "summary": "The Hayato of southern Kyūshū resisted the court (the Hayato Rebellion of 720) before being brought into the ritsuryō system; Ōsumi was split from Hyūga in 713."
+    },
+    {
+      "title": "The Shimazu arrive",
+      "summary": "Koremune no Tadahisa was made steward of the Shimazu estate and governor of Satsuma, Ōsumi and Hyūga, taking the name Shimazu and beginning some seven centuries of rule."
+    },
+    {
+      "title": "The Shimazu unite Satsuma and Ōsumi",
+      "summary": "In the Northern and Southern Courts era the Shimazu split into the Sōshū and Ōshū branches; in the Muromachi period they gradually unified Satsuma and Ōsumi, while the Tanegashima clan held Tanegashima."
+    },
+    {
+      "title": "The four Shimazu brothers",
+      "summary": "Yoshihisa, Yoshihiro, Toshihisa and Iehisa nearly unified Kyūshū before submitting to Hideyoshi in 1587; at Sekigahara Yoshihiro broke straight through the Eastern lines in the 'Shimazu retreat'."
+    },
+    {
+      "title": "The Satsuma Domain",
+      "summary": "Satsuma trained its samurai through the 'gōjū' youth system and controlled the Ryukyu Kingdom to profit from trade with China; Zusho Hirosato carried out its financial reforms."
+    },
+    {
+      "title": "The Meiji Restoration",
+      "summary": "Saigō Takamori and Ōkubo Toshimichi drove the Restoration; in the 1877 Satsuma Rebellion Saigō died at Shiroyama. (Tanegashima, where firearms reached Japan in 1543, is also in the prefecture.)"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Sakurajima",
+      "note": "An active volcano island"
+    },
+    {
+      "name": "Sengan-en",
+      "note": "The Shimazu villa"
+    },
+    {
+      "name": "Yakushima",
+      "note": "World Natural Heritage, home of the Jōmon cedar"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kurobuta pork",
+      "note": "Home of Berkshire black pork"
+    },
+    {
+      "name": "Imo-jōchū",
+      "note": "Satsuma sweet-potato shōchū"
+    },
+    {
+      "name": "Satsuma-age",
+      "note": "Deep-fried fish cakes"
+    }
+  ],
+  "dialect": {
+    "name": "Satsuma dialect",
+    "features": "Famously hard to understand — said to have served as a code in the Bakumatsu era; 'Chesto!' is a battle cry, and 'oyattosaa' means good work.",
+    "phrases": [
+      {
+        "meaning": "good work, thanks for your effort",
+        "note": ""
+      },
+      {
+        "meaning": "Go for it! Charge!",
+        "note": ""
+      },
+      {
+        "meaning": "it's…!",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble interpreter is watching the smoke from Sakurajima — Satsuma folk live with volcanic ash every day. At Sekigahara, Shimazu Yoshihiro cut his way out straight through the enemy lines — shall I tell you?"
+  },
+  "regional_meme": [
+    {
+      "title": "Ashfall forecasts",
+      "text": "Kagoshima's weather report includes an 'ashfall forecast' for Sakurajima — check the wind before you hang out the laundry."
+    },
+    {
+      "title": "Satsuma hayato",
+      "text": "Kagoshima men are known for their uprightness — 'gironwa muyō' (no lectures, please) is the Satsuma spirit."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Maru-ni-jūji (Shimazu clan)"
+  },
+  "hero_persona": {
+    "name": "Saigō Takamori",
+    "title": "One of the three heroes of the Restoration",
+    "self": "I",
+    "opening_line": "I am Saigō Kichinosuke. 'Revere Heaven, love people' — for this country, I would give up both my life and my name.",
+    "tone_prompt": "generous, plain-spoken and loyal, with a Satsuma accent ('oidon', '-degowasu')"
+  },
+  "ramen": {
+    "style_name": "Kagoshima ramen",
+    "broth": "Tonkotsu (semi-cloudy, pork, chicken and vegetables)",
+    "noodles": "Medium-thick straight noodles",
+    "toppings": "Chashu, scallions, fried onion, bean sprouts",
+    "highlight": "Lighter than Hakata's — and pickled daikon and tea arrive as soon as you sit down"
+  },
+  "sake": {
+    "brand": "Mori Izō (森伊蔵)",
+    "brewery": "Mori Izō Shuzō",
+    "taste_profile": "Shōchū: one of the 'three Ms', a dream sweet-potato shōchū brewed in earthenware jars"
+  }
+}

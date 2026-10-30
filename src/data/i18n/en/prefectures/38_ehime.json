@@ -1,0 +1,139 @@
+{
+  "capital": "Matsuyama",
+  "badge": {
+    "title": "Iyo Citrus"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Iyo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Kōno clan",
+      "Saionji clan",
+      "Utsunomiya clan (of Iyo)",
+      "Murakami navy",
+      "Chōsokabe Motochika"
+    ],
+    "edo_domains": [
+      "Matsuyama Domain (Hisamatsu Matsudaira)",
+      "Uwajima Domain (Date clan)",
+      "Ōzu Domain",
+      "Imabari Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Sekitetsu and Kamiyama prefectures merged as Ehime in 1873; from 1876 to 1888 it briefly included Sanuki.",
+      "boundary_note": "Ehime = Iyo Province; the name comes from 'Ehime', the goddess-name of Iyo in the Kojiki (a beautiful maiden)."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The twin-named island of Iyo",
+      "summary": "The Kojiki calls Shikoku 'Iyo no Futana-shima', and names Iyo 'Ehime' — the origin of today's prefectural name; Dōgo Onsen appears in the Nihon Shoki."
+    },
+    {
+      "title": "Kōno Michiari and the Mongols",
+      "summary": "Kōno Michiari of Iyo fought fiercely against the Mongols in 1281 and became famous; Ippen, founder of the Ji sect, was also of the Kōno clan."
+    },
+    {
+      "title": "The Kōno and the Murakami navy",
+      "summary": "The Kōno held Iyo for generations, while the Murakami navy of the Inland Sea grew powerful, controlling the sea lanes and collecting tolls."
+    },
+    {
+      "title": "The Murakami navy",
+      "summary": "The missionary Luís Fróis called the Murakami 'the greatest pirates of Japan'; the Kōno ruled central Iyo."
+    },
+    {
+      "title": "The Date of Uwajima",
+      "summary": "Date Masamune's eldest son Hidemune was given Uwajima; Katō Yoshiaki built Matsuyama Castle, later held by the Matsudaira."
+    },
+    {
+      "title": "Botchan and Shiki",
+      "summary": "Masaoka Shiki was born in Matsuyama, and Natsume Sōseki set 'Botchan' there; the Shimanami Kaidō (fully opened 2006) links it to Hiroshima."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Dōgo Onsen Honkan",
+      "note": "One of Japan's oldest hot springs"
+    },
+    {
+      "name": "Matsuyama Castle",
+      "note": "One of the twelve original keeps"
+    },
+    {
+      "name": "Shimanami Kaidō",
+      "note": "Cycling route across the sea"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Iyokan and mikan",
+      "note": "A kingdom of citrus"
+    },
+    {
+      "name": "Taimeshi",
+      "note": "Uwajima-style raw sea bream over rice"
+    },
+    {
+      "name": "Imabari towels",
+      "note": "Synonymous with Japanese towels"
+    }
+  ],
+  "dialect": {
+    "name": "Iyo dialect",
+    "features": "A slow, leisurely tone; old Matsuyama's '-zonamoshi' is famous from 'Botchan', and '-ken' is common.",
+    "phrases": [
+      {
+        "meaning": "…you know (old Matsuyama politeness)",
+        "note": ""
+      },
+      {
+        "meaning": "thank you",
+        "note": ""
+      },
+      {
+        "meaning": "because…",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I'm a pilgrim, fresh out of Dōgo Onsen and feeling wonderful. The ships of the Murakami navy once came and went freely on this sea — want to hear some pirate stories?"
+  },
+  "regional_meme": [
+    {
+      "title": "Orange juice from the tap",
+      "text": "The Ehime legend: turn on the tap and mikan juice comes out — and at Matsuyama Airport it really does."
+    },
+    {
+      "title": "Iyo takes it easy",
+      "text": "Iyo people speak slowly — 'Iyo nonbiri', the easygoing Iyo — in contrast to the hot-tempered folk of Tosa."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Three' character (Kōno clan's tray-and-three crest)"
+  },
+  "hero_persona": {
+    "name": "Murakami Takeyoshi",
+    "title": "The greatest pirate in Japan",
+    "self": "I",
+    "opening_line": "I'm Murakami Takeyoshi, and the Inland Sea is my home! Even the missionaries call me Japan's greatest pirate — any ship passing through pays the toll.",
+    "tone_prompt": "hearty and bold, a true man of the sea, versed in currents and naval tactics"
+  },
+  "ramen": {
+    "style_name": "Yawatahama champon",
+    "broth": "Shio (chicken and bonito dashi)",
+    "noodles": "Medium-thick noodles",
+    "toppings": "Fish cake, vegetables, pork",
+    "highlight": "Unlike Nagasaki champon, the broth is clear, Japanese-style and gentle"
+  },
+  "sake": {
+    "brand": "Umenishiki (梅錦)",
+    "brewery": "Umenishiki Yamakawa",
+    "taste_profile": "Rich & sweet: in the sweet-sake tradition of the Inland Sea"
+  }
+}

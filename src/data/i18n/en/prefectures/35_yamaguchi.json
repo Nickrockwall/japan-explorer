@@ -1,0 +1,142 @@
+{
+  "capital": "Yamaguchi",
+  "badge": {
+    "title": "Chōshū and the Restoration"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Suō Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Nagato Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ōuchi Yoshitaka",
+      "Sue Harukata",
+      "Mōri Motonari"
+    ],
+    "edo_domains": [
+      "Chōshū Domain (Hagi Domain, Mōri clan)",
+      "Iwakuni Domain (Kikkawa clan)",
+      "Tokuyama Domain",
+      "Chōfu Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Yamaguchi merged with Iwakuni, Tokuyama, Kiyosue, Toyoura and other prefectures to form Yamaguchi Prefecture.",
+      "boundary_note": "Yamaguchi = Suō + Nagato, almost exactly the Mōri's lands in the Edo period — a textbook case where domain, province and prefecture coincide."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Nagato and Dan-no-ura",
+      "summary": "The Nagato provincial capital was at today's Shimonoseki; in 1185 the Taira were destroyed at Dan-no-ura and the child Emperor Antoku sank into the sea."
+    },
+    {
+      "title": "The Nagato Tandai",
+      "summary": "After the Mongol invasions the shogunate set up the Nagato Tandai to guard against another attack; the Ōuchi grew strong as provincial officials of Suō."
+    },
+    {
+      "title": "Yamaguchi, Kyoto of the west",
+      "summary": "Ōuchi Hiroyo made Yamaguchi his base and modeled its streets on Kyoto; Ōuchi Yoshihiro once held six provinces but died in the Ōei Rebellion of 1399."
+    },
+    {
+      "title": "Kyoto of the west",
+      "summary": "The Ōuchi made Yamaguchi a 'Kyoto of the west' and traded with Ming China and Korea; Francis Xavier preached here. In 1551 Sue Harukata rebelled, and was later destroyed by Mōri Motonari."
+    },
+    {
+      "title": "The Chōshū Domain",
+      "summary": "After Sekigahara the Mōri were cut back to Suō and Nagato with their seat at Hagi; Yoshida Shōin's Shōka Sonjuku school trained men like Takasugi Shinsaku and Itō Hirobumi."
+    },
+    {
+      "title": "Home of the Restoration",
+      "summary": "Chōshū allied with Satsuma to overthrow the shogunate; Yamaguchi has produced more prime ministers than any other prefecture."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kintai Bridge",
+      "note": "Five-arched wooden bridge"
+    },
+    {
+      "name": "Akiyoshidai and Akiyoshidō",
+      "note": "Japan's largest karst plateau and cave"
+    },
+    {
+      "name": "Hagi castle town",
+      "note": "Home of the Shōka Sonjuku"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Shimonoseki fugu",
+      "note": "Japan's pufferfish market"
+    },
+    {
+      "name": "Dassai",
+      "note": "Junmai daiginjō from Iwakuni"
+    },
+    {
+      "name": "Kawara soba",
+      "note": "Green-tea soba served on a hot roof tile"
+    }
+  ],
+  "dialect": {
+    "name": "Chōshū dialect",
+    "features": "'-choru' (is doing) and '-ccha'; the voices of Bakumatsu activists are often rendered in Chōshū dialect.",
+    "phrases": [
+      {
+        "meaning": "is doing…",
+        "note": ""
+      },
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "is…",
+        "note": "said to come from Chōshū speech, later the formal style of the old army"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This old man has heard the Heike's laments at Dan-no-ura. Centuries later, the young activists of Chōshū set out from here to topple the shogunate — would you hear of the Shōka Sonjuku?"
+  },
+  "regional_meme": [
+    {
+      "title": "Prefecture of prime ministers",
+      "text": "Yamaguchi has produced more prime ministers than any other prefecture — a point of local pride."
+    },
+    {
+      "title": "It's 'fuku', not 'fugu'",
+      "text": "Shimonoseki people call pufferfish 'fuku' (luck) instead of 'fugu', for good fortune."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Ichimonji mitsuboshi (Mōri clan)"
+  },
+  "hero_persona": {
+    "name": "Takasugi Shinsaku",
+    "title": "Founder of the Kiheitai",
+    "self": "I",
+    "opening_line": "I'm Takasugi Shinsaku. 'To make this dull world interesting' — that's why I founded the Kiheitai and rose up at Kōzan-ji.",
+    "tone_prompt": "free-spirited man of action, passionate and poetic; reverent toward his teacher Yoshida Shōin"
+  },
+  "ramen": {
+    "style_name": "Ube and Tokuyama tonkotsu ramen",
+    "broth": "Tonkotsu",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Chashu, scallions",
+    "highlight": "Yamaguchi sits just across the strait from Kyūshū, and tonkotsu culture has taken root in the west of the prefecture"
+  },
+  "sake": {
+    "brand": "Dassai (獺祭)",
+    "brewery": "Asahi Shuzō",
+    "taste_profile": "Light & sweet: Yamada Nishiki polished to 23%, with a lush fruity aroma famous worldwide"
+  }
+}

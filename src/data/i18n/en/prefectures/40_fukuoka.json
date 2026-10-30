@@ -1,0 +1,150 @@
+{
+  "capital": "Fukuoka",
+  "badge": {
+    "title": "Port of Hakata"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Chikuzen Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Chikugo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Buzen Province",
+        "portion": "west (Kiku, Tagawa, Miyako, Nakatsu…)",
+        "cross_prefectures": [
+          "Ōita"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ōtomo clan",
+      "Tachibana Dōsetsu and Tachibana Muneshige",
+      "Akizuki clan",
+      "Shimazu clan (advancing north)"
+    ],
+    "edo_domains": [
+      "Fukuoka Domain (Kuroda clan)",
+      "Kurume Domain (Arima clan)",
+      "Yanagawa Domain (Tachibana clan)",
+      "Kokura Domain (Ogasawara clan)"
+    ],
+    "meiji_transition": {
+      "summary": "Fukuoka Prefecture was set up in 1871; Kokura Prefecture (western Buzen) and Mizuma Prefecture (Chikugo) joined in 1876.",
+      "boundary_note": "Fukuoka = Chikuzen + Chikugo + western Buzen; eastern Buzen (Nakatsu, Usa) went to Ōita, so 'Buzen' was split in two."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Dazaifu",
+      "summary": "Dazaifu governed Kyūshū and handled foreign relations — 'the distant court'; Sugawara no Michizane was exiled here in 901."
+    },
+    {
+      "title": "The Mongol defense wall",
+      "summary": "Mongol fleets attacked in 1274 and 1281; the shogunate built a stone wall along Hakata Bay and set up the Chinzei Tandai in Hakata."
+    },
+    {
+      "title": "Kyūshū tandai and Hakata merchants",
+      "summary": "Imagawa Ryōshun, as Kyūshū tandai, subdued the Southern Court's forces; Hakata thrived on trade with Ming China and Korea, fought over by the Ōuchi and Shōni."
+    },
+    {
+      "title": "The struggle for Kyūshū",
+      "summary": "The Ōtomo, Ryūzōji and Shimazu fought for northern Kyūshū, and Tachibana Muneshige became famous for loyalty and valor; after subduing Kyūshū in 1587, Hideyoshi replanned Hakata ('Taikō machiwari')."
+    },
+    {
+      "title": "Kuroda, 520,000 koku",
+      "summary": "Kuroda Nagamasa was given Chikuzen and built Fukuoka Castle; samurai 'Fukuoka' and merchant 'Hakata' stood side by side as twin towns."
+    },
+    {
+      "title": "Industry and gateway",
+      "summary": "The government-run Yawata Steel Works opened in 1901, laying the foundation of Japan's heavy industry; Fukuoka became a gateway city facing Asia."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Dazaifu Tenmangū",
+      "note": "Shrine of Michizane, god of learning"
+    },
+    {
+      "name": "Fukuoka Castle ruins",
+      "note": "Maizuru Park"
+    },
+    {
+      "name": "Mojikō Retro",
+      "note": "Meiji- and Taishō-era port buildings"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Hakata ramen",
+      "note": "Thin noodles in pork-bone broth"
+    },
+    {
+      "name": "Mentaiko",
+      "note": "Spicy pollock roe"
+    },
+    {
+      "name": "Motsunabe",
+      "note": "Beef offal hot pot"
+    }
+  ],
+  "dialect": {
+    "name": "Hakata dialect",
+    "features": "'-to?', '-bai' and '-ken'; 'suitō yo' (I like you) is hailed as the cutest confession in Japan.",
+    "phrases": [
+      {
+        "meaning": "I like you",
+        "note": ""
+      },
+      {
+        "meaning": "…?  (question)",
+        "note": ""
+      },
+      {
+        "meaning": "good",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble interpreter of Dutch at Dejima has come to Hakata on official business. Dazaifu here was 'the distant court' that ran all of Kyūshū's foreign affairs — shall I tell you of Sugawara no Michizane?"
+  },
+  "regional_meme": [
+    {
+      "title": "Capital of Kyūshū",
+      "text": "Fukuoka people assume Fukuoka is the capital of Kyūshū — the other six prefectures: who agreed to that?"
+    },
+    {
+      "title": "Hakata vs. Fukuoka",
+      "text": "The station is 'Hakata' but the city is 'Fukuoka' — the Meiji-era vote on the city's name still rankles with Hakata people."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Umebachi (Dazaifu Tenmangū)"
+  },
+  "hero_persona": {
+    "name": "Tachibana Muneshige",
+    "title": "'Peerless in the West'",
+    "self": "I",
+    "opening_line": "I am Tachibana Muneshige. Lord Hideyoshi called me 'peerless in the west'. I lost my lands after Sekigahara and returned to Yanagawa twenty years later — all my life I believed in one word: righteousness.",
+    "tone_prompt": "composed and resolute, modest and principled; speaks of his father-in-law Tachibana Dōsetsu with deep respect"
+  },
+  "ramen": {
+    "style_name": "Hakata tonkotsu ramen",
+    "broth": "Tonkotsu (milky and rich)",
+    "noodles": "Very thin straight noodles",
+    "toppings": "Chashu, wood-ear mushrooms, scallions, pickled ginger, sesame",
+    "highlight": "Order your noodle firmness, like 'barikata' — then ask for a 'kaedama' refill"
+  },
+  "sake": {
+    "brand": "Shigemasu (繁桝)",
+    "brewery": "Takahashi Shōten",
+    "taste_profile": "Rich & sweet: an old house in Kyūshū's sweet-sake tradition"
+  }
+}

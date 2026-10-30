@@ -1,0 +1,145 @@
+{
+  "capital": "Ōita",
+  "badge": {
+    "title": "Hot Spring Prefecture"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Bungo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Buzen Province",
+        "portion": "east (Shimoge, Usa)",
+        "cross_prefectures": [
+          "Fukuoka"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ōtomo Sōrin (Yoshishige)",
+      "Ōtomo Yoshimune"
+    ],
+    "edo_domains": [
+      "Funai Domain",
+      "Nakatsu Domain (Okudaira clan)",
+      "Kitsuki Domain",
+      "Oka Domain",
+      "Usuki Domain",
+      "Hita (shogunal land)"
+    ],
+    "meiji_transition": {
+      "summary": "Ōita Prefecture was set up in 1871, and in 1876 the Shimoge and Usa districts of Kokura Prefecture were added.",
+      "boundary_note": "In the Edo period Bungo was split into eight small domains plus shogunal land — 'a land of small domains' — so dialect and customs still vary a lot across the prefecture."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Usa Jingū",
+      "summary": "Usa Jingū is the head shrine of all Hachiman shrines in Japan; the Kunisaki Peninsula developed the 'Rokugō Manzan' fusion of Shintō and Buddhism."
+    },
+    {
+      "title": "The Ōtomo arrive",
+      "summary": "The Kantō vassal Ōtomo Yoshinao was made governor of Bungo, and the Ōtomo ruled Bungo for some four hundred years."
+    },
+    {
+      "title": "The Ōtomo expand",
+      "summary": "The Ōtomo also governed Buzen and Chikugo and fought the Ōuchi and Shōni for northern Kyūshū; Usa Jingū flourished under their protection."
+    },
+    {
+      "title": "Ōtomo Sōrin",
+      "summary": "The Christian daimyo Ōtomo Sōrin controlled six provinces of northern Kyūshū at his peak and helped send the Tenshō boy envoys to Europe; after losing to the Shimazu at Mimikawa in 1578, the Ōtomo declined."
+    },
+    {
+      "title": "A land of small domains",
+      "summary": "After the Ōtomo were dispossessed, Bungo was divided among many small domains; Fukuzawa Yukichi of Nakatsu and the thinker Miura Baien came from here."
+    },
+    {
+      "title": "Hot Spring Prefecture",
+      "summary": "Beppu and Yufuin give Ōita Japan's largest number of hot-spring sources and greatest flow; it is also known for the 'One Village, One Product' movement."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Beppu 'hell' tour",
+      "note": "Hot springs of seven colors"
+    },
+    {
+      "name": "Yufuin",
+      "note": "Hot spring town beneath Mount Yufu"
+    },
+    {
+      "name": "Usa Jingū",
+      "note": "Head shrine of Hachiman"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Seki saba and Seki aji",
+      "note": "Line-caught mackerel and horse mackerel of the Hōyo Strait"
+    },
+    {
+      "name": "Dried shiitake",
+      "note": "Japan's top producer"
+    },
+    {
+      "name": "Toriten",
+      "note": "Chicken tempura, Ōita home cooking"
+    }
+  ],
+  "dialect": {
+    "name": "Ōita dialect",
+    "features": "'Yodakii' (can't be bothered) and 'shinken' (very) are signature words, with endings like '-cha' and '-ccha'.",
+    "phrases": [
+      {
+        "meaning": "too much trouble, can't be bothered",
+        "note": ""
+      },
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "…you know",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "While soaking in a Beppu hot spring, this humble interpreter heard that Ōtomo Sōrin once sent four boys all the way to Rome to meet the Pope — shall I tell you of the Tenshō embassy?"
+  },
+  "regional_meme": [
+    {
+      "title": "The 'Onsen Prefecture' trademark war",
+      "text": "Ōita branded itself 'Onsen-ken' (Hot Spring Prefecture) — and Gunma and other hot-spring giants protested at once: who said you could have it?"
+    },
+    {
+      "title": "Beppu's steam",
+      "text": "Hot-spring steam rises all over Beppu's streets; first-time visitors often think something's on fire."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Triple tomoe (Usa Jingū)"
+  },
+  "hero_persona": {
+    "name": "Ōtomo Sōrin",
+    "title": "Christian daimyo",
+    "self": "I",
+    "opening_line": "I am Ōtomo Sōrin, lord of Bungo. I once held six provinces of northern Kyūshū and sent young envoys all the way to Rome — would you hear of the wonders of the Nanban lands?",
+    "tone_prompt": "refined and lavish, insatiably curious; passionate about Nanban culture and the tea ceremony"
+  },
+  "ramen": {
+    "style_name": "Saiki ramen",
+    "broth": "Tonkotsu-shōyu",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Garlic, chashu, scallions",
+    "highlight": "Hearty ramen for fishing-port workers, with a generous hand on the garlic"
+  },
+  "sake": {
+    "brand": "Iichiko (いいちこ)",
+    "brewery": "Sanwa Shurui",
+    "taste_profile": "Shōchū: Ōita's signature barley shōchū, nicknamed 'the Napoleon of the shitamachi'"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "capital": "Tokushima",
+  "badge": {
+    "title": "Awa Odori"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Awa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Miyoshi Nagayoshi (Awa Miyoshi clan)",
+      "Hosokawa clan",
+      "Chōsokabe Motochika",
+      "Hachisuka Iemasa"
+    ],
+    "edo_domains": [
+      "Tokushima Domain (Hachisuka clan, also ruling Awaji)"
+    ],
+    "meiji_transition": {
+      "summary": "Myōdō Prefecture (including Awaji) was set up in 1871; in 1876 Awa joined Kōchi and Awaji went to Hyōgo, and Tokushima Prefecture was re-established in 1880.",
+      "boundary_note": "Tokushima = Awa Province; in the Edo period the Tokushima Domain also ruled Awaji, which went to Hyōgo after Meiji, so Awa and Awaji ended up in different prefectures."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Imbe of Awa",
+      "summary": "Awa's name is said to come from 'awa' (millet); the Imbe clan wove hemp cloth for court rituals here."
+    },
+    {
+      "title": "The Ogasawara enter Awa",
+      "summary": "After the Jōkyū War the Ogasawara became governors of Awa, and Awa's indigo dyeing began to develop."
+    },
+    {
+      "title": "Hosokawa and Miyoshi",
+      "summary": "Awa was governed by the Awa branch of the Hosokawa, and their retainers the Miyoshi rose to become masters of the Kinai."
+    },
+    {
+      "title": "The Miyoshi regime",
+      "summary": "Miyoshi Nagayoshi of Awa once controlled Kyoto and is called 'the first ruler of the realm'; later Chōsokabe Motochika unified Shikoku, and Hideyoshi sent Hachisuka Iemasa to take over."
+    },
+    {
+      "title": "Awa indigo",
+      "summary": "The Tokushima Domain grew rich on indigo dye and salt; the Awa Odori dance is said to have begun at the celebrations for the completion of Tokushima Castle."
+    },
+    {
+      "title": "Naruto",
+      "summary": "The Naruto whirlpools and the Ōnaruto Bridge (1985) became its emblems; during WWI German prisoners at the Bandō camp gave Japan's first performance of Beethoven's Ninth."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Naruto whirlpools",
+      "note": "Among the world's largest tidal whirlpools"
+    },
+    {
+      "name": "Iya vine bridges",
+      "note": "Hidden-valley bridges of mountain vines"
+    },
+    {
+      "name": "Ryōzen-ji",
+      "note": "Temple No. 1 of the Shikoku pilgrimage"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Sudachi",
+      "note": "Tokushima's tart citrus"
+    },
+    {
+      "name": "Awa indigo",
+      "note": "'Japan Blue'"
+    },
+    {
+      "name": "Tokushima ramen",
+      "note": "Pork-bone shōyu with a raw egg"
+    }
+  ],
+  "dialect": {
+    "name": "Awa dialect",
+    "features": "Endings like '-jo' and '-dee'; 'erai' means tired, and 'makemake' means full to overflowing.",
+    "phrases": [
+      {
+        "meaning": "…you know (sentence ending)",
+        "note": ""
+      },
+      {
+        "meaning": "full to overflowing",
+        "note": ""
+      },
+      {
+        "meaning": "tired",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I'm a pilgrim of the Shikoku route, just setting out from Temple No. 1, Ryōzen-ji. All eighty-eight temples make a 1,400-km walk — let's talk about Awa's past as we go, shall we?"
+  },
+  "regional_meme": [
+    {
+      "title": "The prefecture without trains",
+      "text": "Tokushima is the only prefecture in Japan with no electrified railway — every train is a diesel."
+    },
+    {
+      "title": "Awa Odori fever",
+      "text": "'The dancers are fools, the watchers are fools — if we're all fools, you might as well dance!' For four days of Obon the whole city goes wild."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Manji (Hachisuka clan)"
+  },
+  "hero_persona": {
+    "name": "Miyoshi Nagayoshi",
+    "title": "The first ruler of the realm",
+    "self": "I",
+    "opening_line": "I am Miyoshi Nagayoshi, of Awa. Before Nobunaga, I already held Kyoto and the home provinces — yet the world seldom remembers my name.",
+    "tone_prompt": "calm and cultured, skilled at linked verse; a little wistful at being forgotten by history"
+  },
+  "ramen": {
+    "style_name": "Tokushima ramen (brown style)",
+    "broth": "Tonkotsu-shōyu (deep brown)",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Sweet-spicy stir-fried pork belly, raw egg, bean sprouts",
+    "highlight": "Simmered pork instead of chashu, topped with a raw egg — often eaten with rice"
+  },
+  "sake": {
+    "brand": "Narutotai (鳴門鯛)",
+    "brewery": "Honke Matsuura Shuzōjō",
+    "taste_profile": "Light & dry: a crisp local sake from beside the Naruto Strait"
+  }
+}

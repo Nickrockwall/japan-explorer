@@ -1,0 +1,138 @@
+{
+  "capital": "Takamatsu",
+  "badge": {
+    "title": "Udon Prefecture"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Sanuki Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Sogō Masayasu",
+      "Kagawa clan",
+      "Kōzai clan",
+      "Chōsokabe Motochika",
+      "Ikoma Chikamasa"
+    ],
+    "edo_domains": [
+      "Takamatsu Domain (Matsudaira clan)",
+      "Marugame Domain (Kyōgoku clan)",
+      "Tadotsu Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Kagawa Prefecture was set up in 1871, merged into Myōdō in 1873, restored in 1875, merged into Ehime in 1876, and set up for the third time in 1888.",
+      "boundary_note": "Kagawa = Sanuki Province, Japan's smallest prefecture; it was merged away and restored three times in the Meiji era before becoming independent for good in 1888."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Kūkai's birthplace",
+      "summary": "Kūkai (Kōbō Daishi) was born near Zentsū-ji in Sanuki; in 821 he led the repair of the Mannō Pond."
+    },
+    {
+      "title": "The vengeful spirit of Sutoku",
+      "summary": "After the Hōgen Rebellion Retired Emperor Sutoku was exiled to Sanuki and died there, becoming a famous vengeful spirit; in the Kamakura period Sanuki was ruled by shogunal vassals."
+    },
+    {
+      "title": "Domain of the Hosokawa kanrei",
+      "summary": "Sanuki was ruled directly by the Keichō Hosokawa, the kanrei house, with the 'four guardians of the Hosokawa' — the Kagawa, Kōzai, Yasutomi and others — as deputies."
+    },
+    {
+      "title": "The Chōsokabe invasion",
+      "summary": "Sanuki's local lords allied with the Miyoshi; in the 1580s Chōsokabe Motochika swallowed Sanuki, which Hideyoshi took back in his Shikoku campaign."
+    },
+    {
+      "title": "The Konpira pilgrimage",
+      "summary": "Takamatsu (Matsudaira) and Marugame (Kyōgoku) split the province; the 'Konpira pilgrimage' rivaled the Ise pilgrimage as a common dream, and the 'three whites of Sanuki' — salt, sugar and cotton — underpinned the economy."
+    },
+    {
+      "title": "Great Seto Bridge",
+      "summary": "The Great Seto Bridge opened in 1988, linking Shikoku to Honshū; Kagawa styles itself 'Udon Prefecture' after Sanuki udon."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kotohira-gū",
+      "note": "785 stone steps"
+    },
+    {
+      "name": "Ritsurin Garden",
+      "note": "A daimyo garden"
+    },
+    {
+      "name": "Naoshima",
+      "note": "Island of contemporary art"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Sanuki udon",
+      "note": "Japan's top udon consumption"
+    },
+    {
+      "name": "Shōdoshima olives",
+      "note": "Birthplace of Japanese olives"
+    },
+    {
+      "name": "Honetsuki-dori",
+      "note": "Marugame's roast chicken leg on the bone"
+    }
+  ],
+  "dialect": {
+    "name": "Sanuki dialect",
+    "features": "Endings like '-ken' and '-mai'; 'mandegan' means everything, with an intonation close to Kansai's.",
+    "phrases": [
+      {
+        "meaning": "everything",
+        "note": ""
+      },
+      {
+        "meaning": "let's… (invitation)",
+        "note": ""
+      },
+      {
+        "meaning": "well then",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I'm a pilgrim — Master Kūkai was born right here at Zentsū-ji. How about a bowl of udon first, and then I'll tell you how this prefecture was 'founded three times'?"
+  },
+  "regional_meme": [
+    {
+      "title": "Udon Prefecture",
+      "text": "Kagawa once rebranded itself 'Udon Prefecture'; legend says udon broth flows from the taps here (some facilities really installed them)."
+    },
+    {
+      "title": "The gaming ordinance",
+      "text": "Kagawa passed an ordinance limiting how long children may play video games, sparking a nationwide debate."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Maru-kin crest (Kotohira-gū)"
+  },
+  "hero_persona": {
+    "name": "Kūkai",
+    "title": "Kōbō Daishi",
+    "self": "This humble monk",
+    "opening_line": "This humble monk is Kūkai, born in Sanuki. I went to Tang China to seek the Dharma and returned to found Shingon Buddhism — my footprints are at all eighty-eight temples of Shikoku.",
+    "tone_prompt": "profound and compassionate, learned and versatile; speaks of the Dharma, calligraphy and engineering (the Mannō Pond)"
+  },
+  "ramen": {
+    "style_name": "Sanuki ramen",
+    "broth": "Tonkotsu-shōyu",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, scallions",
+    "highlight": "Ramen keeps a low profile in Udon Prefecture — ask a local and they'll say 'go have udon instead'"
+  },
+  "sake": {
+    "brand": "Yorokobi Gaijin (悦凱陣)",
+    "brewery": "Maruo Honten",
+    "taste_profile": "Rich & dry: a full-bodied pure-rice sake from the temple town of Konpira"
+  }
+}
