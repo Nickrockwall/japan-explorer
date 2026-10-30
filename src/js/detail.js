@@ -48,9 +48,13 @@ export function playStamp(el, p, stampedAt) {
       <div class="seal-title">${esc(p.goshuin.title)}</div>
       <div class="seal-meta">${esc(t('seal.meta', { name: p.name.kanji }))}</div>
     </div>`;
-  // 详卡可滚动，浮层按其可视区域定位
+  // 浮层只盖住详卡在屏幕内可见的部分：窄屏时详卡随整页展开（高达数千像素），
+  // 直接用它的矩形会让印章落在屏幕外
   const r = el.getBoundingClientRect();
-  Object.assign(seal.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  const top = Math.max(r.top, 0), bottom = Math.min(r.bottom, innerHeight);
+  const left = Math.max(r.left, 0), right = Math.min(r.right, innerWidth);
+  const box = bottom - top > 200 ? { top, height: bottom - top } : { top: 0, height: innerHeight }; // 详卡几乎不可见时用整个屏幕
+  Object.assign(seal.style, { left: `${left}px`, top: `${box.top}px`, width: `${right - left}px`, height: `${box.height}px` });
   document.body.appendChild(seal);
   el.classList.remove('shake');
   void el.offsetWidth;
