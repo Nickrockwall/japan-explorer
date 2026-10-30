@@ -743,6 +743,17 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .battle-hud.folded .hud-nav { margin-top: 6px; }
 .battle-hud.folded .hud-head b { font-size: 15px; }
 
+/* 合战名将解说浮窗（仅窄屏显示，见下方媒体查询） */
+.battle-voice { display: none; }
+.bv-head { display: flex; align-items: center; gap: 8px; }
+.bv-ava { width: 30px; height: 30px; font-size: 15px; flex: none; }
+.bv-name { flex: 1; min-width: 0; font: 700 13px var(--serif); color: var(--kin); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bv-ask { flex: none; padding: 4px 10px; font-size: 12px; }
+.bv-text { overflow-y: auto; font-size: 13px; line-height: 1.65; color: var(--text); overscroll-behavior: contain; }
+.bv-text p { margin: 0 0 6px; }
+.bv-text .hint { display: none; }
+.bv-text.cursor::after { content: "▍"; color: var(--kin); animation: blink 1s steps(1) infinite; }
+
 /* ── 窄屏 ───────────────────────────── */
 @media (max-width: 900px), (max-height: 520px) and (orientation: landscape) { /* 横屏手机也上下堆叠 */
   /* 整页滚动：body 随内容增高，底部安全区边距才会落在页面末尾 */
@@ -757,6 +768,16 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
   .legend-items { max-width: none; }
   .detail { overflow: visible; }
   .map-hint { display: none; }
+  /* 合战：地图加高，底部显示名将解说 */
+  body.in-battle .map-pane { height: min(80vh, 680px); }
+  body.in-battle .map-legend { display: none; }
+  body.in-battle .battle-voice {
+    display: grid; grid-template-rows: auto minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); gap: 6px;
+    position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 5; max-height: 38%;
+    padding: 10px 12px; border-radius: 12px;
+    background: linear-gradient(180deg, rgba(36,26,24,.95), rgba(24,22,24,.95));
+    border: 1px solid rgba(212,163,115,.45); box-shadow: 0 8px 24px rgba(0,0,0,.5); backdrop-filter: blur(6px);
+  }
 }
 .gear { display: none; }
 .btn { white-space: nowrap; }

@@ -211,6 +211,7 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 风土图层：`history | ramen | sake`。非历史图层时隐藏滤镜与时代滑块，详卡顶部换成拉面解构图 / 酒标卡；切回历史图层时滤镜与时代原样恢复。
 - 时代滑块：拖动/点刻度/播放即进入「时空穿越」（`body.time-travel`），按时代 `prefecture_colors` 着色并在 `capital.coords` 放脉冲点；点任一滤镜或 × 退出。选中县时高亮对应 `timeline_stage`。
 - 合战沙盘：`startBattle` 记住当前视角并缩放到 `view`，按当前阶段（`setBattlePhase`）叠加 `lines`（polyline，箭头流动）、出阵点、要地标记与战场爆点；HUD 可点阶段条、上/下一阶段或自动推演（每 7 秒一段），每换一段向导以名将口吻解说；`body.in-battle` 隐藏工具条与滑块；向导切换为 `narrator`。退出（按钮或 Esc）恢复视角、图层、滤镜与向导。合战中地图点击被忽略。
+- 窄屏合战：向导在页面下方看不到，`setupBattleVoice` 用 MutationObserver 把向导最新一条 AI 发言（打字机与 LLM 流式输出都会同步）镜像到地图底部的 `#battle-voice` 浮窗，「提问 ↓」滚到输入框；合战期间地图区加高到 80vh。
 - 飞线 `effect.trailLength` 必须为 0：拖尾会开启 zlevel 运动模糊，缩放时留残影。
 - 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线用于正文。
 

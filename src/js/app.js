@@ -13,6 +13,32 @@ function updateCounter(set) {
   $('visited-bar').style.width = `${(set.size / 47) * 100}%`;
 }
 
+// 窄屏时页面上下堆叠，向导在地图下方很远，合战中看不到名将解说。
+// 把向导最新一条发言（含打字机效果与 LLM 流式输出）同步到地图底部的浮窗。
+const NARROW = '(max-width: 900px), (max-height: 520px) and (orientation: landscape)';
+function setupBattleVoice() {
+  const chat = $('chat');
+  const text = $('bv-text');
+  const sync = () => {
+    if (!document.body.classList.contains('in-battle')) return;
+    const last = [...chat.querySelectorAll('.msg.ai')].pop();
+    $('bv-name').textContent = $('guide-name').textContent;
+    const ava = $('bv-ava'), src = $('guide-avatar');
+    ava.textContent = src.textContent;
+    ava.className = `${src.className} bv-ava`;
+    ava.style.cssText = src.style.cssText;
+    text.innerHTML = last ? last.innerHTML : '';
+    text.classList.toggle('cursor', !!last?.classList.contains('cursor'));
+    text.scrollTop = text.scrollHeight;
+  };
+  new MutationObserver(sync).observe(chat, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class'] });
+  $('bv-ask').addEventListener('click', () => {
+    $('composer').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    $('chat-input').focus({ preventScroll: true });
+  });
+  return sync;
+}
+
 // 剪贴板接口不可用时（如部分 App 内置浏览器）的旧式复制
 function legacyCopy(text) {
   const ta = document.createElement('textarea');
@@ -287,6 +313,7 @@ async function main() {
     initialMode: uiPref.get('guideMode', 'scholar'),
   });
 
+  const syncVoice = setupBattleVoice();
   const detailEl = $('detail');
   const app = { currentId: null, layer: 'history', eraIdx: null, battle: null, phase: 0, savedView: null };
 
@@ -493,6 +520,12 @@ async function main() {
     updateLegend(map);
     guide.startBattle(b, prefs.get(b.battlefield.prefecture_id));
     setPhase(0, { narrate: false }); // 第一阶段由开场陈词引出，点“下一阶段”再逐段解说
+    syncVoice();
+    if (matchMedia(NARROW).matches) {
+      // 合战时地图区加高，需重算画布；并把地图滚到眼前
+      requestAnimationFrame(() => map.resize());
+      $('battle-hud').closest('.map-pane').scrollIntoView({ block: 'start' });
+    }
   }
   function exitBattle() {
     if (!app.battle) return;
@@ -504,6 +537,7 @@ async function main() {
     $('battle-hud').hidden = true;
     updateLegend(map);
     guide.endBattle();
+    if (matchMedia(NARROW).matches) requestAnimationFrame(() => map.resize());
   }
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {

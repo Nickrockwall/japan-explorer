@@ -119,6 +119,15 @@
           <button type="button" class="btn btn-primary" id="hud-next" data-i18n="hud.next">下一阶段 ›</button>
         </div>
       </div>
+      <!-- 窄屏合战时：向导在页面下方看不到，在地图底部同步显示名将的最新发言 -->
+      <div class="battle-voice" id="battle-voice">
+        <div class="bv-head">
+          <span class="avatar bv-ava" id="bv-ava" aria-hidden="true"></span>
+          <b class="bv-name" id="bv-name"></b>
+          <button type="button" class="btn btn-ghost bv-ask" id="bv-ask" data-i18n="bv.ask">提问 ↓</button>
+        </div>
+        <div class="bv-text" id="bv-text"></div>
+      </div>
       <div class="loading" id="loading" data-i18n="loading">正在展开古地图…</div>
     </section>
 
