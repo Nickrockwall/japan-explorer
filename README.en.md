@@ -20,13 +20,13 @@ The app is available in Chinese, English and Japanese.
 | **Time travel** | Drag the slider or press play to see the map and seat of power in nine eras, from Asuka to today |
 | **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
 | **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
-| **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, district, province and population. The search box finds municipalities too (kanji, kana or English) |
+| **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, district, province and population. The search box finds municipalities too (kanji, kana or English) with duplicates listed separately; place names on the map; the AI guide answers about the selected place; links can point straight at a municipality |
 | **Goshuin book** | Collect a stamp for every prefecture you visit — 47 family-crest seals in all |
 | **Local rivalries** | Light-hearted regional in-jokes and friendly rivalries |
 | **AI history guide** | A scholar whose persona changes by region (a Heian court lady, an ukiyo-e cat, a Ryukyu priestess…) ⇄ a famous local warlord speaking in the first person; works offline without an API key |
 | **Three languages** | 中文 / English / 日本語 — follows your browser language on first visit; switch any time in the top-right corner |
 | **Sharing** | A Share button on the detail card; links keep the region and language, e.g. `#pref=26&lang=en` opens Kyoto in English |
-| **Mobile & install** | Phone-friendly layout; "Add to Home Screen" opens it full-screen like an app, and pages you have viewed work offline |
+| **Mobile & install** | On phones, a bottom tab bar switches between Map, Details and Guide, each full-screen; "Add to Home Screen" opens it full-screen like an app, and pages you have viewed work offline |
 
 ## Connecting an AI (optional)
 

@@ -8,6 +8,21 @@ const OUTSIDE = '#4a4a53';
 const POP_STOPS = ['#2f3440', '#6f7f96', '#d4a373', '#c23531']; // 人口：少 → 多（对数刻度）
 const CREDIT = '「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 · Wikidata';
 
+// 地名标签的位置：最大一块多边形外环的面积加权中心
+function center(geometry) {
+  let best = null, bestA = 0;
+  for (const poly of geometry.coordinates) {
+    const ring = poly[0];
+    let a = 0, cx = 0, cy = 0;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const f = ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+      a += f; cx += (ring[j][0] + ring[i][0]) * f; cy += (ring[j][1] + ring[i][1]) * f;
+    }
+    if (Math.abs(a) > bestA) { bestA = Math.abs(a); best = [cx / (3 * a), cy / (3 * a)]; }
+  }
+  return best;
+}
+
 // 取景范围：排除构建时标记为 remote 的远岛（如小笠原），远岛仍可拖动查看
 function bounds(features) {
   const main = features.filter((f) => !f.properties.remote);
@@ -35,7 +50,7 @@ function ramp(k) {
 
 const fmtPop = (n) => (n == null ? '—' : n.toLocaleString(lang === 'zh' ? 'zh-CN' : lang));
 
-export function createMuniView(root, { onClose }) {
+export function createMuniView(root, { onClose, onSelect = () => {} }) {
   root.innerHTML = `
     <div class="muni-map"></div>
     <div class="muni-bar">
@@ -65,6 +80,7 @@ export function createMuniView(root, { onClose }) {
     const geo = await res.json();
     for (const f of geo.features) {
       f.properties.label = f.properties.name;
+      f.properties.at = center(f.geometry);
       f.properties.name = f.properties.code; // 名称可能重名（如北海道两个泊村），地图内部一律用代码
     }
     echarts.registerMap(`muni-${pid}`, geo);
@@ -155,7 +171,11 @@ export function createMuniView(root, { onClose }) {
           };
         }),
       },
-      series: [{ id: 'muni', data: feats.map((f) => ({ name: f.properties.code })) }],
+      series: [
+        { id: 'muni', data: feats.map((f) => ({ name: f.properties.code })) },
+        // 地名：按人口从多到少排，重叠时 ECharts 隐藏后面的，放大后显示更多；选中的由地图自身标注
+        { id: 'names', data: cur.labels.filter((p) => !selected.includes(p.code)).map((p) => ({ name: dn(p), value: p.at })) },
+      ],
     };
     chart.setOption(opt);
     root.querySelectorAll('.muni-modes button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === mode)));
@@ -186,12 +206,39 @@ export function createMuniView(root, { onClose }) {
         emphasis: { label: { show: true } },
         select: { disabled: true },
       },
-      series: [{ id: 'muni', type: 'map', geoIndex: 0, selectedMode: false, data: [] }],
+      series: [
+        { id: 'muni', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
+        {
+          id: 'names', type: 'scatter', coordinateSystem: 'geo', symbolSize: 0, silent: true, data: [],
+          label: { show: true, formatter: '{b}', color: '#f3ede2', fontSize: 11, fontFamily: 'Noto Serif SC',
+            textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5 },
+          labelLayout: { hideOverlap: true },
+        },
+      ],
     });
     chart.on('click', (x) => {
       if (x.seriesId !== 'muni') return;
       select(selected.length === 1 && selected[0] === x.name ? [] : [x.name]);
     });
+  }
+
+  // 选中项的摘要，交给 AI 向导（名称按界面语言，旧国为显示名）
+  function placeOf(codes, city) {
+    const one = codes.length === 1 ? cur.byCode.get(codes[0]) : null;
+    if (one) {
+      return {
+        name: dn(one), ja: one.label, kana: one.kana, en: one.en, city: one.city, district: one.district,
+        provinces: one.province ? [provName(one.province)] : [], partial: one.partial.map(provName),
+        pop: one.pop && fmtPop(one.pop), pop_year: one.pop_year,
+      };
+    }
+    if (!city || !codes.length) return null;
+    const wards = codes.map((c) => cur.byCode.get(c)).filter(Boolean);
+    return {
+      name: lang === 'en' && city.en ? city.en : city.name, ja: city.name, kana: city.kana, en: city.en, wards: wards.length,
+      provinces: [...new Set(wards.map((w) => w.province).filter(Boolean))].map(provName), partial: [],
+      pop: city.pop && fmtPop(city.pop), pop_year: city.pop_year,
+    };
   }
 
   // 单个代码显示该市区町村；多个代码（政令市的各区）配合 city 显示整市
@@ -205,6 +252,7 @@ export function createMuniView(root, { onClose }) {
     else if (shown) card.innerHTML = cityInfo(city);
     if (!shown) chart.setOption({ geo: { layoutCenter: ['50%', '54%'] } }); // 关闭详情卡时恢复搜索聚焦造成的上移
     render();
+    onSelect(selected, placeOf(codes, city));
   }
 
   // 拉近到选中范围（四周留出与范围同宽的余地，保留周边参照）
@@ -231,6 +279,7 @@ export function createMuniView(root, { onClose }) {
   return {
     get open() { return !root.hidden; },
     get prefId() { return cur?.pref.id ?? null; },
+    get selection() { return selected; },
     // focus：{ codes, city? }，由搜索传入，进入后直接选中并拉近
     async show(pref, focus = null) {
       root.hidden = false;
@@ -253,6 +302,7 @@ export function createMuniView(root, { onClose }) {
       cur = {
         pref, geo, provColor, bounds: bounds(geo.features),
         byCode: new Map(geo.features.map((f) => [f.properties.code, f.properties])),
+        labels: geo.features.map((f) => f.properties).filter((p) => p.at).sort((a, b) => (b.pop || 0) - (a.pop || 0)),
         popRange: [Math.min(...pops), Math.max(...pops)],
       };
       selected = [];

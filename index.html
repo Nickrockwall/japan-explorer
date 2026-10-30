@@ -76,8 +76,7 @@
         <div class="toolbar-row">
           <div class="layers" id="layers" role="tablist" data-i18n-aria="layers.aria" aria-label="风土图层"></div>
           <form class="search" id="search" role="search" autocomplete="off">
-            <input id="search-input" type="search" list="search-list" data-i18n-ph="search.ph" placeholder="搜县名 / 古国名，如 武藏、Kyoto">
-            <datalist id="search-list"></datalist>
+            <input id="search-input" type="search" enterkeyhint="search" data-i18n-ph="search.ph" placeholder="搜县名 / 古国名 / 市町村，如 武藏、丰田">
           </form>
         </div>
         <div class="filters" id="filters" role="tablist" data-i18n-aria="filters.aria" aria-label="时空滤镜"></div>
@@ -161,6 +160,22 @@
       </section>
     </aside>
   </main>
+
+  <!-- 手机 / 窄屏：地图 · 详情 · 向导 三页切换（宽屏隐藏） -->
+  <nav class="tabbar" id="tabbar" role="tablist" data-i18n-aria="tabs.aria" aria-label="视图">
+    <button type="button" role="tab" data-tab="map">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span data-i18n="tab.map">地图</span>
+    </button>
+    <button type="button" role="tab" data-tab="detail">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span><span data-i18n="tab.detail">详情</span><small id="tab-pref"></small></span>
+    </button>
+    <button type="button" role="tab" data-tab="guide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4zM8 9h8M8 12h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span data-i18n="tab.guide">向导</span>
+    </button>
+  </nav>
 
   <dialog class="book" id="book" aria-labelledby="book-h">
     <div class="book-inner">

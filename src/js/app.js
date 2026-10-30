@@ -5,6 +5,7 @@ import { renderDetail, renderWelcome, playStamp, highlightEra, esc } from './det
 import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
+import { createSearch, loadMuniIndex } from './search.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -17,7 +18,7 @@ function updateCounter(set) {
 // 窄屏时页面上下堆叠，向导在地图下方很远，合战中看不到名将解说。
 // 把向导最新一条发言（含打字机效果与 LLM 流式输出）同步到地图底部的浮窗。
 const NARROW = '(max-width: 900px), (max-height: 520px) and (orientation: landscape)';
-function setupBattleVoice() {
+function setupBattleVoice(onAsk) {
   const chat = $('chat');
   const text = $('bv-text');
   const sync = () => {
@@ -34,10 +35,37 @@ function setupBattleVoice() {
   };
   new MutationObserver(sync).observe(chat, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class'] });
   $('bv-ask').addEventListener('click', () => {
-    $('composer').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    onAsk();
     $('chat-input').focus({ preventScroll: true });
   });
   return sync;
+}
+
+// 窄屏三页切换：body[data-tab] = map | detail | guide；宽屏下标签栏隐藏、三块同时显示
+function setupTabs(onShowMap) {
+  const bar = $('tabbar');
+  const set = (tab) => {
+    document.body.dataset.tab = tab;
+    for (const b of bar.querySelectorAll('[data-tab]')) b.setAttribute('aria-selected', String(b.dataset.tab === tab));
+    if (tab === 'map') requestAnimationFrame(onShowMap); // 地图隐藏期间尺寸可能变过，回来时重算
+  };
+  bar.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-tab]');
+    if (b) set(b.dataset.tab);
+  });
+  set('map');
+  return {
+    set,
+    get current() { return document.body.dataset.tab; },
+    // 其他页有新内容时轻点一下提示（不切页、不打断）
+    ping(tab) {
+      if (!matchMedia(NARROW).matches || document.body.dataset.tab === tab) return;
+      const b = bar.querySelector(`[data-tab="${tab}"]`);
+      b.classList.remove('ping');
+      void b.offsetWidth;
+      b.classList.add('ping');
+    },
+  };
 }
 
 // 剪贴板接口不可用时（如部分 App 内置浏览器）的旧式复制
@@ -153,95 +181,6 @@ function setupSettings(guide, onResetVisited) {
 }
 
 // 县名 / 古国名搜索
-// 搜索时统一字形：简体字 / 异体字 → 日本新字体（中文用户可直接打「丰田」「冲绳」），片假名 → 平假名，去掉罗马字长音符号
-const KANJI_FOLD = Object.fromEntries([...(
-  '丰豊泽沢澤沢冈岡滨浜濱浜岛島嶋島嶌島桥橋关関东東长長广広门門马馬鸟鳥龙竜乐楽园園宫宮阳陽汉漢兴興叶葉鹤鶴尔爾纲綱织織罗羅纪紀' +
-  '贺賀绳縄冲沖爱愛枥栃儿児仓倉势勢张張贝貝历歴际際陆陸隐隠云雲风風飞飛驹駒骏駿远遠边辺邊辺达達连連进進运運还還鸭鴨盐塩艺芸' +
-  '节節苏蘇荣栄华華圣聖场場坛壇备備头頭宁寧实実宽寛对対层層岁歳师師带帯归帰录録德徳总総惠恵户戸挂掛摄摂斋斎时時杨楊样様梦夢' +
-  '检検气気涩渋渔漁满満灵霊热熱现現监監盘盤种種积積简簡纳納线線组組细細终終经経绘絵继継绫綾绵綿绿緑缘縁网網胜勝莲蓮营営补補' +
-  '见見观観证証诸諸财財贵貴赖頼车車轻軽辉輝钢鋼铁鉄铃鈴银銀锅鍋锦錦镜鏡间間阁閣队隊险険难難雾霧须須题題饭飯馆館舘館驿駅鱼魚' +
-  '鲸鯨鸣鳴鹰鷹齐斉龟亀渊淵汤湯泷滝濑瀬瀨瀬﨑崎嵜崎碕崎冨富曾曽于於庆慶应応卫衛县県乡郷义義亚亜产産传伝佛仏剑剣剧劇劳労单単' +
-  '卖売团団围囲图図圆円庄荘开開异異湾湾弯湾强強战戦无無晓暁术術杂雑权権极極构構标標树樹欢歓济済灾災独独狭狭猎猟环環电電确確' +
-  '稻稲竞競笔筆类類紧緊纯純纸紙结結绝絶统統编編缩縮职職肃粛脑脳药薬获獲规規视視觉覚认認让譲议議讲講论論访訪评評识識词詞译訳' +
-  '试試诗詩话話语語请請课課调調谈談货貨质質费費资資赏賞转転轮輪载載遗遺邻隣钟鐘钱銭铜銅铭銘镇鎮问問闻聞阴陰阵陣阶階陈陳韩韓' +
-  '顶頂顺順顾顧预預领領颜顔额額饮飲验験骑騎鲜鮮鸡鶏齿歯黑黒发発丽麗举挙书書亲親众衆优優价価侧側读読说説记記设設计計渡渡'
-).match(/../gu)].map((pair) => [...pair]));
-function fold(str) {
-  return (str || '').normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC').toLowerCase() // 再合成：避免「ば」被拆成「は+浊点」
-    .replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
-    .replace(/[^\x00-\x7f]/g, (c) => KANJI_FOLD[c] || c);
-}
-
-// 搜索框：都道府县 / 旧国（预载），市区町村（首次聚焦时才下载索引）
-function setupSearch(prefs, select, selectMuni) {
-  const list = $('search-list');
-  const entries = [...prefs.values()].map((p) => ({
-    id: p.id,
-    label: [...new Set([prefName(p), p.name.kanji, p.name.romaji])].join(' '),
-    hay: fold([p.name.zh, p.name.kanji, p.name.kana, p.name.romaji, p.slug,
-      ...p.historical_lineage.ritsuryo_provinces.map((x) => x.name.replace(/国$/, ''))].join(' ')),
-  }));
-  list.innerHTML = entries.map((e) => `<option value="${esc(e.label)}"></option>`).join('');
-
-  // 市区町村：[县id, 名称, 读音, 英文名, [代码…], 人口, 年份]
-  let munis = [];
-  let muniLoad = null;
-  const loadMunis = () => muniLoad ||= fetch('src/data/municipalities/index.json')
-    .then((r) => (r.ok ? r.json() : []))
-    .then((rows) => {
-      munis = rows.map((row) => {
-        const [pid, name, kana, en] = row;
-        const label = `${lang === 'en' && en ? en : name} · ${prefName(prefs.get(pid))}`;
-        return { row, label, name: fold(name), base: fold(name.replace(/(市|町|村|区)$/, '')), kana: fold(kana), en: fold(en), hay: fold(`${name} ${kana} ${en}`) };
-      });
-      list.insertAdjacentHTML('beforeend', munis.map((m) => `<option value="${esc(m.label)}"></option>`).join(''));
-    })
-    .catch(() => { muniLoad = null; });
-
-  // 市区町村排序：名称完全一致 > 去掉「市町村区」后一致或英文一致 > 名称/读音/英文开头 > 包含
-  const findMuni = (q) => {
-    let best = null, bestScore = 9;
-    for (const m of munis) {
-      const sc = m.name === q ? 0 : m.base === q || m.en === q ? 1
-        : m.name.startsWith(q) || m.kana.startsWith(q) || m.en.startsWith(q) ? 2 : m.hay.includes(q) ? 3 : 9;
-      const s2 = sc + (m.row[4].length > 1 ? 0 : 0.5) + Math.min(m.kana.length, 40) / 100; // 同分：整市优先，读音越短越接近
-      if (sc < 9 && s2 < bestScore) { best = m; bestScore = s2; }
-    }
-    return best;
-  };
-  const find = (raw) => {
-    const q = fold(raw.trim()).replace(/(县|府|都|国|県)$/, '');
-    if (!q) return null;
-    const exactPref = entries.find((e) => fold(e.label) === q) || entries.find((e) => e.hay.includes(q));
-    if (exactPref) return { pref: exactPref };
-    const m = findMuni(fold(raw.trim()));
-    return m ? { muni: m } : null;
-  };
-  const go = (hit) => {
-    if (hit.pref) select(hit.pref.id);
-    else selectMuni(hit.muni.row);
-    input.value = '';
-    input.blur();
-  };
-
-  const input = $('search-input');
-  input.addEventListener('focus', loadMunis, { once: true });
-  input.addEventListener('input', () => {
-    input.classList.remove('miss');
-    // 从下拉中选中完整选项时直接跳转
-    const pref = entries.find((e) => e.label === input.value);
-    const muni = !pref && munis.find((m) => m.label === input.value);
-    if (pref || muni) go(pref ? { pref } : { muni });
-  });
-  $('search').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await loadMunis();
-    const hit = find(input.value);
-    input.classList.toggle('miss', !hit);
-    if (hit) go(hit);
-  });
-}
-
 // 右侧上下比例拖动（仅宽屏）
 function setupSplitter(onResize) {
   const pane = document.querySelector('.side-pane');
@@ -373,7 +312,9 @@ async function main() {
     initialMode: uiPref.get('guideMode', 'scholar'),
   });
 
-  const syncVoice = setupBattleVoice();
+  const tabs = setupTabs(() => { map.resize(); muni.resize(); });
+  const narrow = () => matchMedia(NARROW).matches;
+  const syncVoice = setupBattleVoice(() => tabs.set('guide'));
   const detailEl = $('detail');
   const app = { currentId: null, layer: 'history', eraIdx: null, battle: null, phase: 0, savedView: null };
 
@@ -397,6 +338,8 @@ async function main() {
       renderCurrent();
       guide.setPrefecture(prefs.get(id));
       history.replaceState(null, '', stateHash(id));
+      $('tab-pref').textContent = prefName(prefs.get(id));
+      tabs.ping('detail');
       if (muni.open || pendingFocus) {
         const focus = pendingFocus;
         pendingFocus = null;
@@ -406,7 +349,19 @@ async function main() {
   });
 
   // ── 市区町村下钻 ──
-  const muni = createMuniView($('muni'), { onClose: () => closeMuni() });
+  // 下钻时的地址：#pref=23&lang=zh&muni=1&m=23211（m 为选中的团体代码，政令市整市为各区代码以 . 连接）
+  const muniHash = (id, codes = []) => `${stateHash(id)}&muni=1${codes.length ? `&m=${codes.join('.')}` : ''}`;
+  const muni = createMuniView($('muni'), {
+    onClose: () => closeMuni(),
+    onSelect: (codes, place) => {
+      if (!muni.open) return;
+      history.replaceState(null, '', muniHash(app.currentId, codes));
+      guide.setPlace(place); // 向导随之认得这个市区町村
+      if (place) tabs.ping('guide');
+    },
+  });
+  const searchForm = $('search');
+  const searchHome = searchForm.parentElement;
   let pendingFocus = null; // 搜索选中市区町村时，等选县完成后再聚焦
   function focusMuni([pid, name, kana, en, codes, pop, popYear]) {
     const focus = { codes, city: codes.length > 1 ? { name, kana, en, pop, pop_year: popYear } : null };
@@ -419,14 +374,18 @@ async function main() {
     if (app.battle) exitBattle();
     stopPlay();
     document.body.classList.add('muni-open');
+    // 搜索框搬进下钻顶栏，在市区町村地图里也能直接搜
+    $('muni').querySelector('.muni-modes').before(searchForm);
     muni.show(prefs.get(id), focus);
-    history.replaceState(null, '', `${stateHash(id)}&muni=1`);
-    if (matchMedia(NARROW).matches) $('muni').closest('.map-pane').scrollIntoView({ block: 'start', behavior: 'smooth' });
+    history.replaceState(null, '', muniHash(id, focus?.codes));
+    tabs.set('map');
   }
   function closeMuni() {
     if (!muni.open) return;
     muni.hide();
     document.body.classList.remove('muni-open');
+    searchHome.appendChild(searchForm);
+    guide.setPlace(null);
     map.resize(); // 窗口在下钻期间改过大小时，全国地图需要重算
     history.replaceState(null, '', stateHash(app.currentId));
   }
@@ -616,11 +575,7 @@ async function main() {
     guide.startBattle(b, prefs.get(b.battlefield.prefecture_id));
     setPhase(0, { narrate: false }); // 第一阶段由开场陈词引出，点“下一阶段”再逐段解说
     syncVoice();
-    if (matchMedia(NARROW).matches) {
-      // 合战时地图区加高，需重算画布；并把地图滚到眼前
-      requestAnimationFrame(() => map.resize());
-      $('battle-hud').closest('.map-pane').scrollIntoView({ block: 'start' });
-    }
+    if (narrow()) tabs.set('map');
   }
   function exitBattle() {
     if (!app.battle) return;
@@ -632,7 +587,6 @@ async function main() {
     $('battle-hud').hidden = true;
     updateLegend(map);
     guide.endBattle();
-    if (matchMedia(NARROW).matches) requestAnimationFrame(() => map.resize());
   }
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
@@ -644,7 +598,7 @@ async function main() {
   // ── 分享：手机用系统分享面板，电脑复制链接 ──
   detailEl.addEventListener('click', async (e) => {
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
-    const url = shareURL(app.currentId) + (muni.open ? '&muni=1' : '');
+    const url = muni.open ? `${location.origin}${location.pathname}${muniHash(app.currentId, muni.selection)}` : shareURL(app.currentId);
     const text = t('share.text', { name: prefName(prefs.get(app.currentId)) });
     if (navigator.share && matchMedia('(pointer: coarse)').matches) {
       try { await navigator.share({ title: 'Japan Explorer', text, url }); return; } catch (err) {
@@ -670,7 +624,7 @@ async function main() {
   const bookUI = createBook($('book'), prefs, { getBook: goshuinBook.get, onPick: (id) => map.onSelect(id) });
   $('btn-book').addEventListener('click', () => bookUI.open());
 
-  setupSearch(prefs, (id) => map.onSelect(id), focusMuni);
+  createSearch($('search'), { prefs, onPref: (id) => map.onSelect(id), onMuni: focusMuni });
   setupSplitter(() => map.resize());
   setupPersonaSwitch(guide);
 
@@ -700,10 +654,22 @@ async function main() {
 
   // 深链接：#pref=26 直接打开京都
   const m = location.hash.match(/pref=(\d+)/);
-  const wantMuni = /(^|[#&])muni=1/.test(location.hash); // 先读出来：onSelect 会改写地址栏
+  // 先读出来：onSelect 会改写地址栏
+  const wantMuni = /(^|[#&])muni=1/.test(location.hash);
+  const codes = (new URLSearchParams(location.hash.slice(1)).get('m') || '').split('.').filter((c) => /^\d{5}$/.test(c));
   if (m && prefs.has(+m[1])) {
     map.onSelect(+m[1]);
-    if (wantMuni) openMuni(+m[1]); // #pref=23&muni=1 直接打开市区町村地图
+    if (!wantMuni && narrow()) tabs.set('detail');
+    // #pref=23&muni=1&m=23211 直接打开市区町村地图并选中；政令市整市从索引里找回市名与人口
+    if (wantMuni) {
+      let focus = codes.length ? { codes } : null;
+      if (codes.length > 1) {
+        const rows = await loadMuniIndex().catch(() => []);
+        const row = rows.find((r) => r[4].join('.') === codes.join('.'));
+        if (row) focus.city = { name: row[1], kana: row[2], en: row[3], pop: row[5], pop_year: row[6] };
+      }
+      openMuni(+m[1], focus);
+    }
   }
 }
 

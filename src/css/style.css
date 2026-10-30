@@ -141,6 +141,23 @@ button, input, select { font: inherit; color: inherit; }
 .search input:focus { border-color: var(--kin); }
 .search input.miss { border-color: var(--shu); animation: nudge .3s; }
 @keyframes nudge { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* 搜索下拉 */
+.search { position: relative; }
+.search-pop {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 20; width: max(100%, 300px); max-width: calc(100vw - 32px);
+  margin: 0; padding: 4px; list-style: none; border-radius: 12px;
+  background: rgba(30,30,35,.98); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0,0,0,.55);
+}
+.search-pop[hidden] { display: none; }
+.search-pop li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; cursor: pointer; }
+.search-pop li.on, .search-pop li:hover { background: rgba(212,163,115,.14); }
+.sr-type { flex: none; min-width: 46px; text-align: center; font-size: 10.5px; padding: 1px 6px; border-radius: 9px; border: 1px solid var(--line); color: var(--text-2); }
+.sr-pref { border-color: var(--shu); color: #f0a09c; }
+.sr-prov { border-color: var(--kin); color: var(--kin); }
+.sr-city { border-color: #6f9fb8; color: #9cc3d8; }
+.sr-main { min-width: 0; display: grid; }
+.sr-main b { font: 700 13.5px var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sr-main small { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .loading {
   position: absolute; inset: 0; display: grid; place-items: center;
   color: var(--text-2); font: 500 15px var(--serif); letter-spacing: .2em;
@@ -756,6 +773,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 }
 .muni-back { padding: 6px 12px; font-size: 13px; background: rgba(24,24,28,.9); }
 .muni-title { flex: 1; min-width: 0; font: 700 16px var(--serif); letter-spacing: .04em; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.muni-bar .search input { width: 200px; }
 .muni-modes { display: inline-flex; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: rgba(24,24,28,.9); }
 .muni-modes button { border: 0; background: transparent; cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; color: var(--text-2); }
 .muni-modes button[aria-checked="true"] { background: var(--kin); color: var(--bg); font-weight: 700; }
@@ -798,28 +816,47 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .bv-text .hint { display: none; }
 .bv-text.cursor::after { content: "▍"; color: var(--kin); animation: blink 1s steps(1) infinite; }
 
+/* ── 窄屏底部标签栏（宽屏隐藏） ───────────────────────────── */
+.tabbar {
+  display: none; flex: none; border-top: 1px solid var(--line); background: rgba(22,22,26,.98);
+}
+.tabbar button {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px 7px;
+  border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 11.5px; line-height: 1.2;
+}
+.tabbar svg { width: 22px; height: 22px; }
+.tabbar button > span { display: grid; justify-items: center; max-width: 100%; }
+.tabbar small { font-size: 9.5px; color: var(--kin); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabbar small:empty { display: none; }
+.tabbar button[aria-selected="true"] { color: var(--kin); }
+.tabbar button[aria-selected="true"] svg { filter: drop-shadow(0 0 6px rgba(212,163,115,.45)); }
+.tabbar button.ping { animation: tab-ping 1.2s ease; }
+@keyframes tab-ping { 0%, 100% { color: var(--muted); } 30%, 60% { color: #fff; text-shadow: 0 0 10px var(--kin); } }
+
 /* ── 窄屏 ───────────────────────────── */
 @media (max-width: 900px), (max-height: 520px) and (orientation: landscape) { /* 横屏手机也上下堆叠 */
-  /* 整页滚动：body 随内容增高，底部安全区边距才会落在页面末尾 */
-  body { overflow: auto; height: auto; min-height: 100%; }
-  .layout { grid-template-columns: minmax(0, 1fr); }
-  .map-pane { height: min(62vh, 560px); border-right: 0; border-bottom: 1px solid var(--line); }
-  /* 拖动条隐藏后不占网格位，只剩 详卡 + 向导 两行 */
-  .side-pane { grid-template-rows: auto 72vh; }
+  /* 三页切换（见 app.js setupTabs）：地图 / 详情 / 向导各占满顶栏与标签栏之间，不再整页滚动 */
+  .layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .map-pane, .side-pane { grid-area: 1 / 1; border-right: 0; }
+  .side-pane { display: flex; flex-direction: column; }
+  .side-pane > .detail, .side-pane > .guide { flex: 1; min-height: 0; }
+  body[data-tab="map"] .side-pane, body[data-tab="detail"] .map-pane, body[data-tab="guide"] .map-pane,
+  body[data-tab="detail"] .guide, body[data-tab="guide"] .detail { display: none; }
+  .tabbar { display: flex; padding-bottom: var(--safe-b); } /* 标签栏铺到底部横条区域，按钮在其上方 */
+  body { padding-bottom: 0; }
   .splitter { display: none; }
   .map-hint { display: none; }
   .search input { width: 160px; }
   .legend-items { max-width: none; }
-  .detail { overflow: visible; }
-  .map-hint { display: none; }
   /* 市区町村：选中时详情卡占满底部，图例让位 */
   .muni-bar { top: 10px; left: 10px; right: 10px; gap: 8px; }
   .muni-title { flex-basis: 100%; order: 3; font-size: 14px; }
+  .muni-bar .search { flex: 1; min-width: 0; }
+  .muni-bar .search input { width: 100%; }
   .muni-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-width: none; }
   .muni.has-card .muni-legend { display: none; }
   .muni-legend { left: 10px; bottom: 10px; }
-  /* 合战：地图加高，底部显示名将解说 */
-  body.in-battle .map-pane { height: min(80vh, 680px); }
+  /* 合战：底部显示名将解说 */
   body.in-battle .map-legend { display: none; }
   body.in-battle .battle-voice {
     display: grid; grid-template-rows: auto minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); gap: 6px;
@@ -852,7 +889,8 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .ancient-title { font-size: 19px; }
   .hero { flex-wrap: wrap; }
   .hero-actions { flex-direction: row; width: calc(100% - 68px); margin-left: 68px; align-self: auto; }
-  .hero-actions .stamp-btn, .hero-actions .share-btn { flex: 1; align-self: auto; }
+  .hero-actions .stamp-btn, .hero-actions .share-btn { flex: 1 1 0; min-width: 0; align-self: auto; white-space: nowrap; padding-left: 6px; padding-right: 6px; }
+  .hero-actions .stamp-btn { flex-grow: 1.35; }
   .guide-head { flex-wrap: wrap; }
   .filters { overflow-x: auto; max-width: 100%; }
   .layers { overflow-x: auto; max-width: 100%; }
@@ -889,9 +927,24 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .tl .body { padding-left: 12px; }
   .chat, .quick, .composer { padding-left: 16px; padding-right: 16px; }
   /* 快捷提问单行横滑，给对话区留出高度 */
-  .side-pane { grid-template-rows: auto 82vh; }
   .quick { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .quick::-webkit-scrollbar { display: none; }
   .quick button { flex: none; white-space: nowrap; }
 }
 
+
+/* 横屏手机：高度只有 ~400px，顶栏压成一行、标签栏图标与文字横排，把高度留给内容 */
+@media (max-height: 520px) and (orientation: landscape) {
+  .topbar { flex-wrap: nowrap; padding: calc(4px + var(--safe-t)) 14px 4px; gap: 10px; }
+  .topbar-right { gap: 8px; }
+  .subtitle, .explore-counter .label { display: none; }
+  .brand { flex: 0 1 auto; }
+  .brand h1 { font-size: 16px; }
+  .brand-seal { width: 28px; height: 28px; font-size: 15px; }
+  .btn { padding: 5px 10px; }
+  .btn-book > [data-i18n], #btn-settings > [data-i18n] { display: none; }
+  .gear { display: inline; font-size: 15px; line-height: 1; }
+  .tabbar button { flex-direction: row; justify-content: center; gap: 6px; padding: 5px 4px; }
+  .tabbar svg { width: 18px; height: 18px; }
+  .tabbar small { display: none; }
+}

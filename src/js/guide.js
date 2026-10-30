@@ -53,6 +53,7 @@ const ROLE = {
     ctx: (p) => `用户此刻在地图上选中了「${p.name.kanji}（${p.name.zh}）」。下面是该地区的史料 JSON：`,
     battle: (P, b) => `你现在“附体”为历史人物 **${P.name}**（${b.narrator.title}），正身处「${b.name}」的战场，以第一人称说话，自称「${P.self}」。\n口吻：${P.voice}。\n以该人物在这场合战中的立场与见识回答；涉及其不可能知道的后世评价，用“据后世所传”之类的口吻带出。\n扮演仅限于语气与视角：不得美化杀戮，涉及兵力、动机等争议史实时注明“一说”。`,
     field: (f, provs) => `主战场所在地区：「${f.name.kanji}」（古：${provs}）。`,
+    place: (x) => `用户正在市区町村地图上查看「${x.ja}」（${x.kana}）：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（部分属 ${x.partial.join('・')}）` : ''}${x.district ? `，${x.district}` : ''}${x.pop ? `，人口约 ${x.pop}（${x.pop_year}）` : ''}。问题涉及此地时围绕它回答；上面史料里没有的具体地方史，要说明不确定，不得编造。`,
   },
   en: {
     hero: (P) => `You are now channeling the historical figure **${P.name}** (${P.title}). Speak in the first person.\nVoice: ${P.voice}.\nTell local history from this person's standpoint, knowledge and feelings; for events after their lifetime, frame them as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify massacres or persecution, and stay objective on disputed facts.`,
@@ -60,6 +61,7 @@ const ROLE = {
     ctx: (p) => `The user has selected ${p.name.romaji} (${p.name.kanji}) on the map. Records for this region (JSON):`,
     battle: (P, b) => `You are now channeling **${P.name}** (${b.narrator.title}) on the battlefield of ${b.name}. Speak in the first person.\nVoice: ${P.voice}.\nAnswer from this person's position in the battle; frame later judgments they could not know as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify killing, and mark disputed numbers or motives as "one account says".`,
     field: (f, provs) => `Main battlefield: ${f.name.romaji} (${f.name.kanji}; ancient: ${provs}).`,
+    place: (x) => `The user is looking at ${x.en || x.ja} (${x.ja}, ${x.kana}) on the municipal map: ancient province ${x.provinces.join(', ') || 'outside the ritsuryō system'}${x.partial.length ? ` (partly ${x.partial.join(', ')})` : ''}${x.district ? `, ${x.district}` : ''}${x.pop ? `, population about ${x.pop} (${x.pop_year})` : ''}. When a question concerns this place, focus on it; for local history not in the records above, say you are unsure rather than inventing details.`,
   },
   ja: {
     hero: (P) => `あなたは歴史上の人物 **${P.name}**（${P.title}）として一人称で話してください。自称は「${P.self}」。\n口調：${P.voice}。\nこの人物の立場・見識・感情から土地の歴史を語り、没後の出来事は「後世の伝えでは」といった形で述べてください。\n演じるのは口調と視点だけです。虐殺や迫害を美化せず、争いのある史実は客観的に扱ってください。`,
@@ -67,12 +69,13 @@ const ROLE = {
     ctx: (p) => `ユーザーはいま地図で「${p.name.kanji}」を選んでいます。この地域の史料（JSON）：`,
     battle: (P, b) => `あなたは歴史上の人物 **${P.name}**（${b.narrator.title}）として「${b.name}」の戦場にいます。一人称で話し、自称は「${P.self}」。\n口調：${P.voice}。\nこの合戦での立場と見識から答え、知り得ない後世の評価は「後世の伝えでは」と述べてください。\n演じるのは口調と視点だけです。殺戮を美化せず、兵力や動機など諸説ある点は「一説に」と明記してください。`,
     field: (f, provs) => `主戦場：「${f.name.kanji}」（旧国：${provs}）。`,
+    place: (x) => `ユーザーは市区町村地図で「${x.ja}」（${x.kana}）を見ています：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（一部は${x.partial.join('・')}）` : ''}${x.district ? `、${x.district}` : ''}${x.pop ? `、人口約${x.pop}（${x.pop_year}年）` : ''}。この土地に関する質問にはここを中心に答え、上の史料にない細かな郷土史は不確かだと明言し、創作しないでください。`,
   },
 };
 const R = ROLE[lang];
 const RULES = PROMPT_RULES[lang];
 
-export function buildSystemPrompt(p, P) {
+export function buildSystemPrompt(p, P, place = null) {
   const { guide, hero_persona, _translated, ...data } = p;
   return `${P.hero ? R.hero(P) : R.guide(P)}
 
@@ -80,8 +83,26 @@ ${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
-
+${place ? `\n${R.place(place)}\n` : ''}
 ${RULES.reply}. ${RULES.rules}`;
+}
+
+// 市区町村（下钻地图里的选中项）：借县史料里对该令制国的说明，拼出离线解答
+function placeAnswer(x, p, P) {
+  const { name } = x;
+  const more = `\n\n${t('o.place.more', { self: P.self })}\n\n${P.tail}`;
+  if (!x.provinces.length) return t('o.place.outside', { self: P.self, name }) + more;
+  const prov = x.provinces[0];
+  const entry = p.historical_lineage.ritsuryo_provinces.find((r) => r.name === prov);
+  const lines = [t('o.place', { self: P.self, name, prov, circuit: entry ? paren(label('circuit', entry.circuit)) : '' })];
+  // 一国只占一县（portion 为「全域」）时这句是废话，跳过
+  if (entry && !/^(全域|entire)/i.test(entry.portion)) lines.push(t('o.place.portion', { pref: prefName(p), prov, portion: entry.portion }));
+  if (x.partial.length) lines.push(t('o.place.partial', { list: joinList(x.partial) }));
+  if (x.city) lines.push(t('o.place.ward', { city: x.city }));
+  if (x.wards) lines.push(t('o.place.wards', { name, n: x.wards }));
+  if (x.district) lines.push(t('o.place.district', { district: x.district }));
+  if (x.pop) lines.push(t('o.place.pop', { pop: x.pop, year: x.pop_year }));
+  return lines.join('') + more;
 }
 
 // ── 离线解答（无 API Key 时由本地数据以角色口吻拼出） ──────────────
@@ -305,6 +326,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
   let pref = null;
   let personaMode = initialMode; // 'scholar' 博学史官 | 'hero' 名将附体
   let battle = null; // 合战沙盘进行中时：{ b, field }
+  let place = null; // 下钻地图里选中的市区町村
   let P = null;
   let history = [];
   let busy = false;
@@ -371,7 +393,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const myCtrl = (ctrl = new AbortController());
     let out = '';
     try {
-      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P);
+      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place);
       for await (const chunk of streamChat(cfg, system, history, myCtrl.signal)) {
         out += chunk;
         div.innerHTML = fmt(out);
@@ -395,7 +417,8 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     if (online()) { askLLM(text); return; }
     const ans = battle
       ? (key ? battleAnswer(key, battle.b, P) : battleFreeText(text, battle.b, P))
-      : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
+      : key === 'place' && place ? placeAnswer(place, pref, P)
+        : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
     typeOut(ans || t('g.fallback', { self: P.self }), offlineHint());
   }
 
@@ -431,8 +454,17 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       : t(P.hero ? 'g.t.hero' : 'g.t.scholar', { name: prefName(pref), provs: provs(pref) });
     chat.innerHTML = '';
     addMsg('sys', banner);
+    renderQuick();
+    input.disabled = false;
+    typeOut(P.opening);
+  }
+
+  // 快捷提问；下钻地图里选中市区町村时，最前面多一个「这里古时候属于哪里」
+  function renderQuick() {
     quick.innerHTML = '';
-    for (const q of battle ? battleQuestions() : quickQuestions(pref)) {
+    const qs = battle ? battleQuestions() : quickQuestions(pref);
+    if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
+    for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'bubble';
@@ -440,8 +472,6 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       b.addEventListener('click', () => ask(q.text, q.key));
       quick.appendChild(b);
     }
-    input.disabled = false;
-    typeOut(P.opening);
   }
 
   function showIntro() {
@@ -466,8 +496,17 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     refreshMode,
     showIntro,
     get mode() { return personaMode; },
+    // 下钻地图里选中的市区町村（null 表示没有）：不重置对话，只换快捷提问、补进 System Prompt
+    setPlace(x) {
+      const changed = (x?.ja || null) !== (place?.ja || null);
+      place = x;
+      if (!pref || battle || !P || !changed) return;
+      renderQuick();
+      if (x) addMsg('sys', esc(t('g.place.sys', { name: x.name })));
+    },
     setPrefecture(p) {
       pref = p;
+      place = null;
       if (battle) return; // 合战中不打断讲解，退出时再载入
       load(esc(t('g.b.switch', { name: prefName(p) })));
     },
