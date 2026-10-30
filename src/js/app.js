@@ -244,7 +244,7 @@ function setupHudFold() {
     btn.title = t(folded ? 'hud.expand' : 'hud.collapse');
     btn.textContent = folded ? '▸' : '▾';
   };
-  apply(!!uiPref.get('hudFolded', matchMedia('(max-width: 560px)').matches)); // 手机默认收起
+  apply(!!uiPref.get('hudFolded', matchMedia('(max-width: 560px), (max-height: 520px)').matches)); // 手机默认收起
   btn.addEventListener('click', () => {
     const folded = !hud.classList.contains('folded');
     uiPref.set('hudFolded', folded);
