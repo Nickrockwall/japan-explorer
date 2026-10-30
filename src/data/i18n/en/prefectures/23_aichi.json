@@ -1,0 +1,143 @@
+{
+  "capital": "Nagoya",
+  "badge": {
+    "title": "Home of the Three Unifiers"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Owari Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Mikawa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Oda Nobunaga",
+      "Toyotomi Hideyoshi",
+      "Matsudaira (Tokugawa) Ieyasu",
+      "Imagawa clan (Mikawa)"
+    ],
+    "edo_domains": [
+      "Owari Domain (Tokugawa Gosanke, Nagoya)",
+      "Okazaki Domain",
+      "Yoshida Domain",
+      "Kariya Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Owari became Nagoya Prefecture and Mikawa became Nukata Prefecture; Nagoya was renamed Aichi in 1872 and absorbed Nukata the same year.",
+      "boundary_note": "Owari and Mikawa are divided by the Sakai River and differ in dialect and temperament — people still speak of 'Owari vs. Mikawa'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Atsuta and Mikawa",
+      "summary": "Atsuta Shrine enshrines Kusanagi, one of the three sacred treasures; the Mikawa provincial capital lay in today's Toyokawa."
+    },
+    {
+      "title": "Atsuta and the Jōkyū War",
+      "summary": "Minamoto no Yoritomo's mother was a daughter of the Atsuta chief priest; in the Jōkyū War the Owari (Kiso) River area became a battleground between the shogunate and the court."
+    },
+    {
+      "title": "Shiba and Isshiki",
+      "summary": "Owari's governors were the Shiba, one of the three kanrei houses, with their deputies the Oda ruling in practice; Mikawa was held by the Isshiki and others while the Matsudaira rose in the Mikawa hills."
+    },
+    {
+      "title": "The three unifiers",
+      "summary": "Oda Nobunaga and Toyotomi Hideyoshi were born in Owari and Tokugawa Ieyasu at Okazaki in Mikawa — all three Sengoku unifiers came from here, and Okehazama and Nagashino were fought within the prefecture."
+    },
+    {
+      "title": "Owari, a Gosanke house",
+      "summary": "Ieyasu's son Yoshinao was given Owari; Nagoya Castle was built from 1610, and the whole town of Kiyosu was moved ('Kiyosu-goshi') to create Nagoya."
+    },
+    {
+      "title": "Industrial heart",
+      "summary": "Toyota and other manufacturers made Aichi Japan's top manufacturing prefecture; it hosted Expo 2005."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Nagoya Castle",
+      "note": "Castle of the golden shachihoko"
+    },
+    {
+      "name": "Atsuta Shrine",
+      "note": "Shrine of the sacred sword Kusanagi"
+    },
+    {
+      "name": "Okazaki Castle",
+      "note": "Birthplace of Tokugawa Ieyasu"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Miso katsu",
+      "note": "Pork cutlet with Hatchō miso sauce"
+    },
+    {
+      "name": "Hitsumabushi",
+      "note": "Nagoya-style eel over rice, eaten three ways"
+    },
+    {
+      "name": "Hatchō miso",
+      "note": "Okazaki's soybean miso"
+    }
+  ],
+  "dialect": {
+    "name": "Nagoya dialect",
+    "features": "Vowels merge (ai → ææ, as in '-dagyaa'); 'dera' means very, and a bicycle is a 'kettā mashīn'.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "it's…!",
+        "note": ""
+      },
+      {
+        "meaning": "pointy",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama. Nobunaga, Hideyoshi and Ieyasu all grew up drinking this water — shall I report on the surprise attack at Okehazama, or on Nagoya Castle's golden shachihoko?"
+  },
+  "regional_meme": [
+    {
+      "title": "Boring Nagoya?",
+      "text": "One survey named Nagoya 'the most boring city' — Nagoya struck back with 'Nagoya meshi', where everything gets miso."
+    },
+    {
+      "title": "Three-unifier pride",
+      "text": "Aichi people on Nobunaga, Hideyoshi and Ieyasu: 'The whole realm was won by people from here.'"
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Oda mokkō"
+  },
+  "hero_persona": {
+    "name": "Oda Nobunaga",
+    "title": "The Demon King of the Sixth Heaven",
+    "self": "I",
+    "opening_line": "I am Oda Kazusanosuke Nobunaga! Fifty years of human life, set against the heavens, are but a dream — if it's 'Tenka Fubu' you want to ask about, speak up.",
+    "tone_prompt": "commanding and decisive, terse, with an innovator's arrogance; disdains old custom"
+  },
+  "ramen": {
+    "style_name": "Nagoya 'Taiwan' ramen",
+    "broth": "Local (spicy soy broth)",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Spicy stir-fried minced pork, garlic chives, garlic",
+    "highlight": "A Nagoya original — there's no 'Taiwan ramen' in Taiwan"
+  },
+  "sake": {
+    "brand": "Kamoshibito Kuheiji (醸し人九平次)",
+    "brewery": "Banjō Jōzō",
+    "taste_profile": "Rich & sweet: bright sweet-tart notes, found in Paris's starred restaurants"
+  }
+}

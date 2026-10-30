@@ -1,0 +1,155 @@
+{
+  "capital": "Tsu",
+  "badge": {
+    "title": "Ise Grand Shrine"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Ise Province",
+        "portion": "most",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Iga Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Shima Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Kii Province",
+        "portion": "east (Kitamuro, Minamimuro)",
+        "cross_prefectures": [
+          "Wakayama"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Kitabatake clan (governors of Ise)",
+      "Iga Sōkoku Ikki",
+      "Kuki Yoshitaka (Shima navy)",
+      "Oda Nobukatsu"
+    ],
+    "edo_domains": [
+      "Tsu Domain (Tōdō clan, also ruling Iga)",
+      "Kuwana Domain",
+      "Kishū Domain lands (Matsusaka, Tamaru)",
+      "Toba Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Anotsu Prefecture (north) and Watarai Prefecture (south) were set up; Anotsu was renamed Mie in 1872 and Watarai joined in 1876.",
+      "boundary_note": "Mie spans four provinces — Ise, Iga, Shima and eastern Kii; the Kumano area belonged to Kii and shares roots with Wakayama, so the Kumano Kodō crosses both prefectures."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Grand Shrine and the Saikū",
+      "summary": "Ise Grand Shrine enshrines Amaterasu, the imperial ancestor, and the court sent an imperial princess to live at the Saikū as high priestess; Shima was a 'miketsukuni'."
+    },
+    {
+      "title": "Ise Shintō",
+      "summary": "After the Genpei War Ise, old Taira country, came under the shogunate; the Watarai family of the Outer Shrine developed 'Ise Shintō'."
+    },
+    {
+      "title": "The Kitabatake governors",
+      "summary": "The Kitabatake, key Southern Court vassals, ruled southern Ise as provincial governors from Taki, lasting into the Sengoku period."
+    },
+    {
+      "title": "Ninja of Iga",
+      "summary": "The samurai of Iga governed themselves as the 'Sōkoku Ikki' until crushed by the Oda in the 1581 Tenshō Iga War; Kuki Yoshitaka's iron-clad ships defeated the Mōri navy."
+    },
+    {
+      "title": "The Ise pilgrimage",
+      "summary": "'Once in a lifetime to Ise' became a common dream, with millions flocking there in 'okage-mairi' waves; Matsusaka merchants (the Mitsui) rose to prominence."
+    },
+    {
+      "title": "Pearls and industry",
+      "summary": "Mikimoto Kōkichi succeeded in culturing pearls at Toba; the Yokkaichi petrochemical complex also caused 'Yokkaichi asthma' pollution."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Ise Grand Shrine",
+      "note": "The Inner and Outer Shrines"
+    },
+    {
+      "name": "Iga-Ueno Castle",
+      "note": "Home of the ninja"
+    },
+    {
+      "name": "Meoto Iwa",
+      "note": "Wedded rocks joined by a sacred rope at Futami"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Matsusaka beef",
+      "note": "One of Japan's three great wagyu"
+    },
+    {
+      "name": "Ise lobster",
+      "note": "Specialty of Ise Bay"
+    },
+    {
+      "name": "Akafuku mochi",
+      "note": "Red-bean mochi of the Ise pilgrimage"
+    }
+  ],
+  "dialect": {
+    "name": "Ise dialect",
+    "features": "Mostly Kansai-style, ending in '-yanka' or '-damonde'; Iga speech is closer to Kyoto's.",
+    "phrases": [
+      {
+        "meaning": "to settle (sediment)",
+        "note": ""
+      },
+      {
+        "meaning": "…you know",
+        "note": "sentence ending"
+      },
+      {
+        "meaning": "tired",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I once traveled to Ise at the High Priestess's command… a thousand years ago now. The pilgrims still crowd to Ise today — shall I tell you of the Saikū, or of the Iga ninja?"
+  },
+  "regional_meme": [
+    {
+      "title": "Kansai or Tōkai?",
+      "text": "Is Mie part of Kansai or Tōkai? Weather, high-school baseball and TV stations all disagree, and Mie itself is split into two camps."
+    },
+    {
+      "title": "Ise-pilgrimage nonchalance",
+      "text": "'Ise Grand Shrine is our local shrine' — Mie people watch the flood of pilgrims with a shrug."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Hanabishi (Ise Grand Shrine)"
+  },
+  "hero_persona": {
+    "name": "Matsuo Bashō",
+    "title": "Saint of haiku · born in Iga",
+    "self": "I",
+    "opening_line": "I am Matsuo Bashō, born in Iga-Ueno. Some say I must have been a ninja — how else could I walk so far in a day? Heh — shall I share a haiku?",
+    "tone_prompt": "relaxed and wry, poetic, occasionally reciting a haiku; the 'Bashō was a ninja' theory is folklore and should be noted as such"
+  },
+  "ramen": {
+    "style_name": "Ise chūka soba",
+    "broth": "Shōyu (clear chicken stock)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, scallions",
+    "highlight": "Mie's noodle star is Ise udon; ramen here is mostly clear-broth chūka soba"
+  },
+  "sake": {
+    "brand": "Jikon (而今)",
+    "brewery": "Kiyashō Shuzō",
+    "taste_profile": "Rich & sweet: lively fruit and balanced sweet-tartness — very hard to find"
+  }
+}

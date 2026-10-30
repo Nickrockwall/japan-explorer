@@ -1,0 +1,143 @@
+{
+  "capital": "Fukui",
+  "badge": {
+    "title": "Dinosaurs of Echizen"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Echizen Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Wakasa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Asakura Yoshikage",
+      "Wakasa Takeda clan",
+      "Shibata Katsuie",
+      "Echizen Ikkō uprising"
+    ],
+    "edo_domains": [
+      "Fukui Domain (Echizen Matsudaira)",
+      "Obama Domain (Sakai clan)",
+      "Ōno Domain",
+      "Maruoka Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Fukui and other prefectures were set up in 1871; in 1876 Echizen joined Ishikawa and Wakasa joined Shiga, and in 1881 the two were reunited as Fukui.",
+      "boundary_note": "Reihoku (Echizen) and Reinan (Wakasa) are divided by the Kinome Pass and differ in speech and culture: Reinan leans toward Kyoto, Reihoku toward Hokuriku."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Koshi provinces split",
+      "summary": "Ancient Koshi was split in the late 7th century into Echizen, Etchū and Echigo; Wakasa, a 'miketsukuni', supplied seafood to the court."
+    },
+    {
+      "title": "Founding of Eihei-ji",
+      "summary": "In 1244 Dōgen founded Eihei-ji in Echizen, where the Sōtō school took root."
+    },
+    {
+      "title": "The Shiba and the Asakura",
+      "summary": "Echizen's governors were the Shiba, one of the three kanrei houses, while their deputies the Asakura grew stronger; during the Ōnin War Asakura Takakage seized Echizen."
+    },
+    {
+      "title": "Asakura of Ichijōdani",
+      "summary": "Five generations of the Asakura built a thriving castle town at Ichijōdani, destroyed by Oda Nobunaga in 1573; Shibata Katsuie then built Kitanoshō Castle."
+    },
+    {
+      "title": "The Echizen Matsudaira",
+      "summary": "Yūki Hideyasu, Ieyasu's second son, was given Echizen and founded the Fukui Domain; in the late Edo period its lord Matsudaira Shungaku promoted Hashimoto Sanai and Yuri Kimimasa."
+    },
+    {
+      "title": "Eyeglasses and dinosaurs",
+      "summary": "From late Meiji an eyeglass-frame industry grew (Sabae makes about 90% of Japan's frames), and Katsuyama has yielded a wealth of dinosaur fossils."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tōjinbō",
+      "note": "Cliffs of columnar basalt"
+    },
+    {
+      "name": "Eihei-ji",
+      "note": "Head temple of the Sōtō school"
+    },
+    {
+      "name": "Ichijōdani Asakura ruins",
+      "note": "A reconstructed Sengoku castle town"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Echizen crab",
+      "note": "Winter snow crab"
+    },
+    {
+      "name": "Echizen soba",
+      "note": "Soba with grated daikon"
+    },
+    {
+      "name": "Wakasa-nuri chopsticks",
+      "note": "Lacquered with shell and gold leaf"
+    }
+  ],
+  "dialect": {
+    "name": "Fukui dialect",
+    "features": "Reihoku speech has a distinctive rise and fall, ending in '-za' or '-no'; 'hoyahoya' means 'yes, yes'.",
+    "phrases": [
+      {
+        "meaning": "that's right",
+        "note": ""
+      },
+      {
+        "meaning": "shabby, poor quality",
+        "note": ""
+      },
+      {
+        "meaning": "full to the brim",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, just out of the Ichijōdani ruins. The Asakura castle town was once the 'little Kyoto' of Hokuriku — burned to the ground by Nobunaga overnight. Shall I tell you?"
+  },
+  "regional_meme": [
+    {
+      "title": "Where is Fukui?",
+      "text": "Fukui is often mistaken for Fukuoka or Fukushima; locals are used to saying 'It's Fukui! Glasses and dinosaurs!'"
+    },
+    {
+      "title": "Happiest in Japan",
+      "text": "Little known, yet Fukui tops the 'happiness ranking' year after year — locals say keeping a low profile is its own blessing."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Mitsumori mokkō (Asakura clan)"
+  },
+  "hero_persona": {
+    "name": "Shibata Katsuie",
+    "title": "'Demon Shibata' · chief retainer of the Oda",
+    "self": "I",
+    "opening_line": "I am Shibata Katsuie, called 'Demon Shibata'! I guard Echizen from Kitanoshō Castle — and you'd best not mention that monkey Hideyoshi.",
+    "tone_prompt": "fierce and blunt, loyal to a fault, more careful than he looks; utterly devoted to Nobunaga"
+  },
+  "ramen": {
+    "style_name": "Tsuruga ramen",
+    "broth": "Tonkotsu-shōyu (mixed chicken and pork bones)",
+    "noodles": "Medium-thin straight noodles",
+    "toppings": "Chashu, scallions",
+    "highlight": "Late-night ramen born at the street stalls in front of Tsuruga Station"
+  },
+  "sake": {
+    "brand": "Kokuryū (黒龍)",
+    "brewery": "Kokuryū Shuzō",
+    "taste_profile": "Light & dry: a pioneer of daiginjō, elegant and delicate"
+  }
+}

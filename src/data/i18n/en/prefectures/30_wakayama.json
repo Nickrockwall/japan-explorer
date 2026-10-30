@@ -1,0 +1,138 @@
+{
+  "capital": "Wakayama",
+  "badge": {
+    "title": "Kishū and Kumano"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Kii Province",
+        "portion": "most (excluding Kitamuro and Minamimuro)",
+        "cross_prefectures": [
+          "Mie"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Saika-shū (musket mercenaries)",
+      "Negoro-shū",
+      "Hatakeyama clan",
+      "Yukawa clan"
+    ],
+    "edo_domains": [
+      "Kishū Domain (Tokugawa Gosanke, 550,000 koku)",
+      "Shingū Domain (Mizuno clan, senior retainers of Kishū)"
+    ],
+    "meiji_transition": {
+      "summary": "Wakayama Prefecture was set up in 1871, and Tanabe, Shingū and other prefectures joined that year.",
+      "boundary_note": "Eastern Kii (Kitamuro and Minamimuro in Kumano) went to Mie, so 'Kumano' is split between today's Wakayama and Mie."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Kumano and Kōya",
+      "summary": "Kūkai founded Kongōbu-ji on Mount Kōya in 816; the Three Grand Shrines of Kumano became the sacred goal of retired emperors and nobles on the 'Kumano pilgrimage'."
+    },
+    {
+      "title": "Mount Kōya and Kumano",
+      "summary": "The Kumano pilgrimage stayed popular in the Kamakura period, and Mount Kōya's temple lands grew into a major power in Kii."
+    },
+    {
+      "title": "The Hatakeyama and Negoro-ji",
+      "summary": "Kii's governors were the Hatakeyama; Negoro-ji's warrior monks grew powerful — the origin of the later musket mercenaries."
+    },
+    {
+      "title": "Saika and Negoro",
+      "summary": "The Saika and Negoro bands, famed musket mercenaries, fought Nobunaga in the Ishiyama war; Hideyoshi subdued the region in his 1585 Kishū campaign."
+    },
+    {
+      "title": "The Kishū Tokugawa",
+      "summary": "Ieyasu's tenth son Yorinobu was given Kishū; its fifth lord Yoshimune later became the eighth shogun and carried out the Kyōhō Reforms."
+    },
+    {
+      "title": "Minakata Kumagusu",
+      "summary": "The naturalist Minakata Kumagusu was born here; the 'Sacred Sites and Pilgrimage Routes in the Kii Mountain Range' became World Heritage in 2004."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Mount Kōya",
+      "note": "Head temple of Shingon Buddhism"
+    },
+    {
+      "name": "Kumano Kodō",
+      "note": "World Heritage pilgrimage routes"
+    },
+    {
+      "name": "Nachi Falls",
+      "note": "A 133-meter drop"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kishū Nankō ume",
+      "note": "Japan's finest plums"
+    },
+    {
+      "name": "Arida mikan",
+      "note": "Japan's top mandarin producer"
+    },
+    {
+      "name": "Yuasa soy sauce",
+      "note": "Birthplace of Japanese soy sauce"
+    }
+  ],
+  "dialect": {
+    "name": "Wakayama dialect",
+    "features": "'Z' sounds often become 'd' ('zenzen' → 'denden'), honorifics are almost absent, and '-yoshi' and '-ra' are common.",
+    "phrases": [
+      {
+        "meaning": "not at all ('zenzen')",
+        "note": ""
+      },
+      {
+        "meaning": "we",
+        "note": "as in 'atera'"
+      },
+      {
+        "meaning": "let's… (invitation)",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I once walked the Kumano Kodō on a retired emperor's pilgrimage — a mountain road of more than twenty days. Shall I tell of the Three Grand Shrines of Kumano, or of Shogun Yoshimune's origins?"
+  },
+  "regional_meme": [
+    {
+      "title": "The forgotten Kansai",
+      "text": "Say 'Kansai' and people think Kyoto, Osaka, Kobe… Wakayama: 'And us!'"
+    },
+    {
+      "title": "Panda country",
+      "text": "Adventure World in Shirahama has raised many giant pandas — Wakayama considers itself Japan's panda homeland."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Yatagarasu (Kumano)"
+  },
+  "hero_persona": {
+    "name": "Tokugawa Yoshimune",
+    "title": "The 'Abarenbō Shōgun' · Kyōhō Reforms",
+    "self": "I",
+    "opening_line": "I am the eighth shogun, Tokugawa Yoshimune, of Kishū. On TV I ride a white horse in disguise punishing villains — that's fiction! The Kyōhō Reforms, though, were real.",
+    "tone_prompt": "practical and robust, approachable; keen on thrift, new rice fields and lifting the ban on Western books"
+  },
+  "ramen": {
+    "style_name": "Wakayama ramen",
+    "broth": "Tonkotsu-shōyu",
+    "noodles": "Thin straight noodles",
+    "toppings": "Chashu, naruto, scallions",
+    "highlight": "Mackerel 'haya-zushi' sits on every table — ramen with sushi is the local rule"
+  },
+  "sake": {
+    "brand": "Kid (紀土)",
+    "brewery": "Heiwa Shuzō",
+    "taste_profile": "Light & sweet: fresh fruity aroma, the signature of a young brewer"
+  }
+}

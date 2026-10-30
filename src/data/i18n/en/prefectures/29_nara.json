@@ -1,0 +1,136 @@
+{
+  "capital": "Nara",
+  "badge": {
+    "title": "Ancient Capital of Yamato"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Yamato Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Tsutsui Junkei",
+      "Matsunaga Hisahide",
+      "Kōfuku-ji monk-warriors"
+    ],
+    "edo_domains": [
+      "Kōriyama Domain (Yanagisawa clan)",
+      "Nara magistracy (shogunal)",
+      "Takatori Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Nara Prefecture was set up in 1871, absorbed into Sakai Prefecture in 1876 and with it into Osaka-fu in 1881, then re-established in 1887.",
+      "boundary_note": "Nara = Yamato Province; in Meiji it briefly vanished into Osaka-fu and was 'restored' only after years of petitioning by local people."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Heijō-kyō",
+      "summary": "The capital moved to Heijō-kyō in 710 and the Great Buddha of Tōdai-ji was consecrated in 752 — the height of the ritsuryō state; Hōryū-ji is the world's oldest surviving group of wooden buildings."
+    },
+    {
+      "title": "Rebuilding Tōdai-ji",
+      "summary": "After Taira no Shigehira burned Nara in 1180, Chōgen led the rebuilding of Tōdai-ji, and Unkei and Kaikei completed the Kongō Rikishi guardians in 1203."
+    },
+    {
+      "title": "The Southern Court at Yoshino",
+      "summary": "In 1336 Emperor Go-Daigo fled to Yoshino and founded the Southern Court, beginning over fifty years of rival courts; Kōfuku-ji ruled Nara as governor of Yamato."
+    },
+    {
+      "title": "Warlords of Yamato",
+      "summary": "Kōfuku-ji long served as Yamato's governor; in 1567 fighting between Matsunaga Hisahide and the Miyoshi Triumvirate burned Tōdai-ji's Great Buddha Hall, and in 1577 Hisahide took his own life at Shigisan Castle."
+    },
+    {
+      "title": "Province of temples",
+      "summary": "The Kōriyama Domain and the Nara magistrate shared rule; Nara-machi thrived on ink, bleached cloth and Nara-zuke pickles, and Nara's deer were protected."
+    },
+    {
+      "title": "Restoration and heritage",
+      "summary": "Nara Prefecture was re-established in 1887; Hōryū-ji became World Heritage in 1993 and the monuments of ancient Nara in 1998."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tōdai-ji",
+      "note": "The Great Buddha of Nara"
+    },
+    {
+      "name": "Hōryū-ji",
+      "note": "Founded by Prince Shōtoku"
+    },
+    {
+      "name": "Mount Yoshino",
+      "note": "30,000 mountain cherry trees"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kakinoha-zushi",
+      "note": "Pressed sushi in persimmon leaves"
+    },
+    {
+      "name": "Nara-zuke",
+      "note": "Vegetables pickled in sake lees"
+    },
+    {
+      "name": "Miwa sōmen",
+      "note": "Birthplace of hand-stretched sōmen"
+    }
+  ],
+  "dialect": {
+    "name": "Nara dialect",
+    "features": "A Kansai dialect with '-haru' and '-yaru' honorifics; yet around Totsukawa in the south a Tokyo-type accent survives — very rare in Kinki.",
+    "phrases": [
+      {
+        "meaning": "pray to the gods and Buddhas (said to children)",
+        "note": ""
+      },
+      {
+        "meaning": "is doing…",
+        "note": ""
+      },
+      {
+        "meaning": "no good",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "When I lived in Heijō-kyō, the Great Buddha of Tōdai-ji had only just opened its eyes — the most glorious moment of the ritsuryō state. Would you hear the Great Buddha's story?"
+  },
+  "regional_meme": [
+    {
+      "title": "Nothing good to eat in Nara?",
+      "text": "'Nara ni umai mono nashi' — one remark by the writer Shiga Naoya has haunted Nara for a century."
+    },
+    {
+      "title": "More deer than people",
+      "text": "The deer of Nara Park bow for crackers — and butt you if you don't hand them over."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Wisteria' character (Kasuga Taisha's hanging wisteria)"
+  },
+  "hero_persona": {
+    "name": "Prince Shōtoku",
+    "title": "The sage of Asuka",
+    "self": "I",
+    "opening_line": "I am Prince Umayado, known as Shōtoku Taishi. 'Harmony is to be valued' — the first article of the Seventeen-Article Constitution still lives in Japanese hearts.",
+    "tone_prompt": "serene and wise, gentle and dignified, speaks of Buddhism and government; legends such as hearing ten people at once should be noted as legends"
+  },
+  "ramen": {
+    "style_name": "Tenri ramen",
+    "broth": "Local (spicy cabbage-and-soy broth)",
+    "noodles": "Medium-thick noodles",
+    "toppings": "Heaps of spicy stir-fried napa cabbage, garlic chives, pork",
+    "highlight": "Spicy cabbage ramen that began at street stalls — Nara's late-night soul food"
+  },
+  "sake": {
+    "brand": "Kaze no Mori (風の森)",
+    "brewery": "Yuchō Shuzō",
+    "taste_profile": "Rich & sweet: unfiltered, undiluted and lightly fizzy; Nara's Shōryaku-ji is considered the birthplace of refined sake"
+  }
+}

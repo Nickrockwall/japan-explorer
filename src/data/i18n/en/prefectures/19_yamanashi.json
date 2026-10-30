@@ -1,0 +1,134 @@
+{
+  "capital": "Kōfu",
+  "badge": {
+    "title": "Tiger of Kai"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Kai Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Takeda Shingen",
+      "Takeda Katsuyori"
+    ],
+    "edo_domains": [
+      "Kōfu Domain (Yanagisawa Yoshiyasu and others)",
+      "Kōfu Kinban (shogunal land)"
+    ],
+    "meiji_transition": {
+      "summary": "Kōfu Prefecture was created in 1871 and renamed Yamanashi the same year.",
+      "boundary_note": "Yamanashi exactly matches Kai Province — a basin ringed by mountains whose borders haven't moved in a thousand years. The name comes from the ancient 'Yamanashi District'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The black horses of Kai",
+      "summary": "Kai was famous for its 'black horses of Kai', raised on imperial pastures for the court."
+    },
+    {
+      "title": "The Kai Genji Takeda",
+      "summary": "Takeda Nobuyoshi of the Kai Genji fought in the Genpei War and the Takeda became governors of Kai; in 1274 Nichiren founded Kuon-ji on Mount Minobu."
+    },
+    {
+      "title": "The Uesugi Zenshū Rebellion",
+      "summary": "In the 1416 Uesugi Zenshū Rebellion Takeda Nobumitsu was killed, leaving Kai without a governor and splintered among local lords."
+    },
+    {
+      "title": "Takeda Shingen",
+      "summary": "Takeda Shingen, who said 'people are the castle, people are the wall', built the Shingen levee and issued Kōshū gold and a house code; his son Katsuyori was destroyed in 1582."
+    },
+    {
+      "title": "Shogunal Kōfu",
+      "summary": "Kai became a bastion guarding Edo's west, ruled for a time by Yanagisawa Yoshiyasu and later directly by the shogunate under the Kōfu Kinban."
+    },
+    {
+      "title": "Grapes and Fuji",
+      "summary": "Wine and crystal crafts developed in the Meiji era; tourism boomed at the Fuji Five Lakes on Mount Fuji's north slope."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Fuji Five Lakes",
+      "note": "Fuji reflected in Lake Kawaguchi"
+    },
+    {
+      "name": "Takeda Shrine",
+      "note": "Site of the Tsutsujigasaki residence"
+    },
+    {
+      "name": "Shōsenkyō",
+      "note": "Granite gorge"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Hōtō",
+      "note": "Flat noodles stewed with pumpkin in miso"
+    },
+    {
+      "name": "Kōshū wine",
+      "note": "Birthplace of Japanese wine"
+    },
+    {
+      "name": "Shingen mochi",
+      "note": "Mochi with kinako and black syrup"
+    }
+  ],
+  "dialect": {
+    "name": "Kōshū dialect",
+    "features": "Endings like '-zura', '-jan' and '-ke'; 'Te!' as an exclamation of surprise is distinctive.",
+    "phrases": [
+      {
+        "meaning": "…right?",
+        "note": ""
+      },
+      {
+        "meaning": "Oh my! (surprise)",
+        "note": ""
+      },
+      {
+        "meaning": "to get carried away",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, once a spy under Lord Shingen's 'Mitsumono'. Under the banner of Fūrinkazan, every mountain in Kai is a castle wall — shall I tell you of the Shingen levee?"
+  },
+  "regional_meme": [
+    {
+      "title": "Who owns Mount Fuji?",
+      "text": "Does Mount Fuji belong to Yamanashi or Shizuoka? The two argue endlessly — and above the eighth station there's still no prefectural border at all!"
+    },
+    {
+      "title": "No sea, but…",
+      "text": "Landlocked Yamanashi is one of Japan's biggest tuna-eating prefectures."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Takeda bishi"
+  },
+  "hero_persona": {
+    "name": "Takeda Shingen",
+    "title": "Tiger of Kai · Fūrinkazan",
+    "self": "I",
+    "opening_line": "I am Takeda Shingen. Swift as the wind, silent as the forest, fierce as fire, immovable as the mountain — people are the castle, people are the wall. Will you ask of war, or of governing?",
+    "tone_prompt": "calm and dignified, uses metaphors to explain strategy and flood control; speaks of his rival Kenshin with respect"
+  },
+  "ramen": {
+    "style_name": "Kōfu chūka soba",
+    "broth": "Shōyu (clear chicken stock)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, bamboo shoots",
+    "highlight": "Yamanashi's noodle stars are hōtō and Yoshida udon; ramen here is a simple chūka soba"
+  },
+  "sake": {
+    "brand": "Shichiken (七賢)",
+    "brewery": "Yamanashi Meijō",
+    "taste_profile": "Light & sweet: brewed with Southern Alps spring water, soft and smooth"
+  }
+}

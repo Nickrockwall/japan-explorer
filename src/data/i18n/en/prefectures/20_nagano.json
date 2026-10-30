@@ -1,0 +1,139 @@
+{
+  "capital": "Nagano",
+  "badge": {
+    "title": "Mountain Province of Shinano"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Shinano Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Murakami Yoshikiyo",
+      "Ogasawara Nagatoki",
+      "Suwa clan",
+      "Takeda Shingen",
+      "Sanada Masayuki"
+    ],
+    "edo_domains": [
+      "Matsushiro Domain (Sanada clan)",
+      "Matsumoto Domain",
+      "Ueda Domain",
+      "Takatō Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 northern Shinano became Nagano Prefecture while central and southern Shinano plus Hida became Chikuma Prefecture; Chikuma's Shinano part joined Nagano in 1876.",
+      "boundary_note": "Nagano ≈ Shinano; but the north and the central-south long feuded, even sparking a movement to split the prefecture — the prefectural song 'Shinano no Kuni' is what holds everyone together."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Shinano provincial capital",
+      "summary": "The Shinano provincial capital later moved to Matsumoto (Chikuma District); Zenkō-ji, said to date from the 7th century, became a nationwide center of faith."
+    },
+    {
+      "title": "Shinano and the Nakasendai Rebellion",
+      "summary": "Shinano's governors were mostly Hōjō kin and the Suwa were Hōjō retainers; in 1335 the Suwa rallied behind Hōjō Tokiyuki in the Nakasendai Rebellion."
+    },
+    {
+      "title": "The Battle of Ōtō",
+      "summary": "The Ogasawara held Shinano, but local lords like the Murakami, Suwa and Takanashi were strong; at the 1400 Battle of Ōtō the governor was beaten by their alliance."
+    },
+    {
+      "title": "Kawanakajima",
+      "summary": "Takeda Shingen conquered most of Shinano and fought Uesugi Kenshin five times at Kawanakajima; Sanada Masayuki twice repelled the Tokugawa at Ueda Castle."
+    },
+    {
+      "title": "The Kiso road of the Nakasendō",
+      "summary": "The Nakasendō ran through the Kiso Valley, where Tsumago and Narai thrived; the Sanada held Matsushiro until the end of the Edo period, and Sakuma Shōzan came from there."
+    },
+    {
+      "title": "Winter Olympics prefecture",
+      "summary": "Okaya's silk industry once earned Japan's foreign currency; Nagano hosted the 1998 Winter Olympics."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Matsumoto Castle",
+      "note": "National-treasure five-tier keep"
+    },
+    {
+      "name": "Zenkō-ji",
+      "note": "'Visit Zenkō-ji once in a lifetime'"
+    },
+    {
+      "name": "Kamikōchi",
+      "note": "Kappa Bridge in the Northern Alps"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Shinshū soba",
+      "note": "Home of highland buckwheat"
+    },
+    {
+      "name": "Nozawana pickles",
+      "note": "Everyday Shinshū pickles"
+    },
+    {
+      "name": "Apples",
+      "note": "Japan's second-largest producer"
+    }
+  ],
+  "dialect": {
+    "name": "Shinshū dialect",
+    "features": "'Zuku' (get-up-and-go) is the signature word, with endings like '-zura' and '-dani'; the north, center and south differ quite a bit.",
+    "phrases": [
+      {
+        "meaning": "drive, diligence ('zuku ga nai' = lazy)",
+        "note": ""
+      },
+      {
+        "meaning": "to prepare",
+        "note": ""
+      },
+      {
+        "meaning": "…right?",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, hurrying here from the Sanada's Ueda Castle. Shinano was the fiercest mountain battleground of the Sengoku era — the mist over Kawanakajima hasn't lifted yet. Which battle shall I report?"
+  },
+  "regional_meme": [
+    {
+      "title": "Capital wars and the prefectural song",
+      "text": "Nagano and Matsumoto fought over the prefectural capital for a century; the cure is the prefectural song 'Shinano no Kuni', which nearly everyone in Nagano can sing."
+    },
+    {
+      "title": "Education prefecture",
+      "text": "Shinshū people pride themselves on valuing education — 'Shinshū kyōiku' is a badge of honor."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Rokumonsen (Sanada clan)"
+  },
+  "hero_persona": {
+    "name": "Sanada Yukimura",
+    "title": "'The finest warrior in Japan'",
+    "self": "I",
+    "opening_line": "I am Sanada Saemonnosuke Nobushige, though people call me Yukimura. At the Summer Siege of Osaka I charged straight at Ieyasu's headquarters — the six coins are the fare across the river of death.",
+    "tone_prompt": "loyal and brave, unafraid of death; proud when speaking of his father Masayuki and Ueda Castle"
+  },
+  "ramen": {
+    "style_name": "Shinshū miso ramen",
+    "broth": "Miso (Shinshū rice miso)",
+    "noodles": "Medium-thick curly noodles",
+    "toppings": "Bean sprouts, chashu, scallions",
+    "highlight": "Seasoned with local Shinshū miso — milder than Sapporo's"
+  },
+  "sake": {
+    "brand": "Masumi (真澄)",
+    "brewery": "Miyasaka Jōzō",
+    "taste_profile": "Light & dry: birthplace of 'Yeast No. 7', the benchmark of Shinshū sake"
+  }
+}

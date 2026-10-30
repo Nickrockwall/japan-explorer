@@ -1,0 +1,148 @@
+{
+  "capital": "Osaka",
+  "badge": {
+    "title": "Kitchen of the Realm"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Settsu Province",
+        "portion": "east (Osaka, Toyono, Mishima)",
+        "cross_prefectures": [
+          "Hyōgo"
+        ]
+      },
+      {
+        "name": "Kawachi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Izumi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ishiyama Hongan-ji",
+      "Miyoshi Nagayoshi",
+      "Toyotomi Hideyoshi"
+    ],
+    "edo_domains": [
+      "Osaka jōdai and city magistrates (shogunal)",
+      "Kishiwada Domain",
+      "Takatsuki Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Osaka-fu was set up in 1868; Sakai Prefecture (Izumi, Kawachi, Yamato) joined in 1881, and Yamato split off as Nara in 1887.",
+      "boundary_note": "Settsu Province is cut in two by the prefectural border — the east belongs to Osaka, the west (Kobe, Amagasaki, Nishinomiya…) to Hyōgo."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Naniwa Palace",
+      "summary": "Naniwa-tsu was the ancient gateway port; Naniwa Nagara-Toyosaki Palace was built after 645, and Daisen Kofun (attributed to Emperor Nintoku) is Japan's largest keyhole tomb."
+    },
+    {
+      "title": "Kusunoki Masashige",
+      "summary": "Kusunoki Masashige of Kawachi rose for Emperor Go-Daigo, holding off the shogunate's armies with clever tactics at Akasaka and Chihaya castles (1331–33)."
+    },
+    {
+      "title": "The Hatakeyama and Sakai",
+      "summary": "Masashige died at Minatogawa (1336) and his son Masatsura at Shijō-Nawate (1348); Kawachi was later ruled by the Hatakeyama, and Sakai rose as a port for trade with Ming China."
+    },
+    {
+      "title": "Ishiyama Hongan-ji",
+      "summary": "Ishiyama Hongan-ji, head temple of the Ikkō sect, held out against Nobunaga for ten years (1570–1580); Hideyoshi built Osaka Castle on its site, and the Toyotomi fell in the Summer Siege of 1615."
+    },
+    {
+      "title": "Kitchen of the realm",
+      "summary": "Osaka became Japan's logistics hub, lined with the domains' warehouses; the Dōjima Rice Exchange saw the world's first futures trading, and townspeople's culture flourished."
+    },
+    {
+      "title": "Greater Osaka",
+      "summary": "In 1925 Osaka city briefly outnumbered Tokyo — 'Dai-Ōsaka'; it hosted world expos in 1970 and 2025."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Osaka Castle",
+      "note": "Site of Hideyoshi's castle"
+    },
+    {
+      "name": "Daisen Kofun",
+      "note": "Mozu-Furuichi tomb group, World Heritage"
+    },
+    {
+      "name": "Dōtonbori",
+      "note": "The Glico running-man sign"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Takoyaki",
+      "note": "Osaka's people's food"
+    },
+    {
+      "name": "Okonomiyaki",
+      "note": "Kansai-style savory pancake"
+    },
+    {
+      "name": "Kushikatsu",
+      "note": "'No double dipping'"
+    }
+  ],
+  "dialect": {
+    "name": "Osaka dialect",
+    "features": "Fast-paced and full of humor; 'ōkini' (thanks) and 'nande yanen' (why?!) are badges of its comic-retort culture.",
+    "phrases": [
+      {
+        "meaning": "thank you",
+        "note": ""
+      },
+      {
+        "meaning": "Why?! (comic retort)",
+        "note": ""
+      },
+      {
+        "meaning": "super, very",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Though I lived in Heian-kyō, I often sailed down to Naniwa-tsu. Later Lord Hideyoshi built the realm's greatest castle at Osaka — would you hear of its rise and fall?"
+  },
+  "regional_meme": [
+    {
+      "title": "No retort, no fun",
+      "text": "In Osaka, a joke with no comeback is the ultimate rudeness — 'nande yanen' is everyday etiquette."
+    },
+    {
+      "title": "Which side of the escalator?",
+      "text": "Osakans stand on the right of escalators, Tokyoites on the left — a classic Kantō–Kansai rivalry topic."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Go-shichi no kiri (Toyotomi clan)"
+  },
+  "hero_persona": {
+    "name": "Toyotomi Hideyoshi",
+    "title": "Unifier of the realm · the Taikō",
+    "self": "I",
+    "opening_line": "I am the Taikō, Toyotomi Hideyoshi! From a farm boy in Owari to ruler of the realm — and Osaka Castle is my masterpiece, glittering with gold!",
+    "tone_prompt": "cheerful and outgoing, loves to show off, approachable yet shrewd; full of Osaka-merchant warmth"
+  },
+  "ramen": {
+    "style_name": "Takaida-style ramen",
+    "broth": "Shōyu (dark soy)",
+    "noodles": "Very thick straight noodles",
+    "toppings": "Chashu, scallions, bamboo shoots",
+    "highlight": "Workers' ramen from Takaida in East Osaka — dark broth, fat noodles"
+  },
+  "sake": {
+    "brand": "Akishika (秋鹿)",
+    "brewery": "Akishika Shuzō",
+    "taste_profile": "Rich & dry: home-grown rice, all pure-rice, strongly aged character"
+  }
+}

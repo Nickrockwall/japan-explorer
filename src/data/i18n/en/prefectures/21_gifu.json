@@ -1,0 +1,143 @@
+{
+  "capital": "Gifu",
+  "badge": {
+    "title": "Tenka Fubu"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Mino Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Hida Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Saitō Dōsan",
+      "Saitō Yoshitatsu and Tatsuoki",
+      "Oda Nobunaga",
+      "Mitsuki (Anegakōji) clan (Hida)"
+    ],
+    "edo_domains": [
+      "Ōgaki Domain",
+      "Kanō Domain",
+      "Iwamura Domain",
+      "Hida shogunal land (Takayama Jin'ya)"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Mino became Gifu Prefecture while Hida belonged to Chikuma Prefecture; Hida joined Gifu in 1876.",
+      "boundary_note": "Mino (plains) and Hida (mountains) differ greatly in culture; locals still distinguish 'Gifu' from 'Hida'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Fuwa Barrier",
+      "summary": "The Fuwa Barrier on the Tōsandō was one of the three ancient barriers — the 'seki' in 'Kantō' and 'Kansai' originally meant barriers like this."
+    },
+    {
+      "title": "The Toki of Mino",
+      "summary": "The Seiwa Genji Toki took root in Mino; in the 1221 Jōkyū War the Mino–Owari area became a battleground between the court and the shogunate."
+    },
+    {
+      "title": "The Toki at their height",
+      "summary": "Toki Yoriyasu was at one point governor of Mino, Owari and Ise; despite the Toki Yasuyuki Rebellion the Toki kept Mino, while their deputies the Saitō grew stronger."
+    },
+    {
+      "title": "Tenka Fubu",
+      "summary": "Saitō Dōsan, 'the Viper of Mino', rose from below; in 1567 Oda Nobunaga took Inabayama Castle, renamed it Gifu and began using his 'Tenka Fubu' seal. Sekigahara (1600) was fought here too."
+    },
+    {
+      "title": "Shogunal Hida",
+      "summary": "Hida was put under direct shogunal rule for its timber and minerals; Takayama Jin'ya is the only surviving intendant's office. Mino was a patchwork of small domains and shogunal land."
+    },
+    {
+      "title": "Shirakawa-gō",
+      "summary": "The gasshō villages of Shirakawa-gō became World Heritage in 1995; Seki cutlery and Mino washi carry old traditions forward."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Shirakawa-gō gasshō village",
+      "note": "World Heritage"
+    },
+    {
+      "name": "Gifu Castle",
+      "note": "Nobunaga's castle atop Mount Kinka"
+    },
+    {
+      "name": "Sekigahara battlefield",
+      "note": "Where the realm was decided"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Hida beef",
+      "note": "Marbled wagyu"
+    },
+    {
+      "name": "Mino washi",
+      "note": "1,300 years of papermaking"
+    },
+    {
+      "name": "Seki cutlery",
+      "note": "A blade town rivaling Solingen"
+    }
+  ],
+  "dialect": {
+    "name": "Mino and Hida dialects",
+    "features": "Mino speech is close to Nagoya's, ending in '-yao' or '-yamon'; Hida speech uses '-yasa'.",
+    "phrases": [
+      {
+        "meaning": "tired (not 'great')",
+        "note": ""
+      },
+      {
+        "meaning": "unbearable, stuffed",
+        "note": ""
+      },
+      {
+        "meaning": "…right?",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama. From atop Gifu Castle, Lord Nobunaga once looked out over the whole Nōbi Plain and inscribed the words 'Tenka Fubu' here. Shall I tell you?"
+  },
+  "regional_meme": [
+    {
+      "title": "Nagoya's back garden",
+      "text": "People in southern Gifu say they're 'going to Nagoya' so often they're teased as 'Gifu-prefecture Nagoyans'."
+    },
+    {
+      "title": "Shirakawa-gō is too famous",
+      "text": "Foreign tourists know Shirakawa-gō but have no idea it's in Gifu."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Toki bellflower"
+  },
+  "hero_persona": {
+    "name": "Saitō Dōsan",
+    "title": "The Viper of Mino",
+    "self": "I",
+    "opening_line": "I am Saitō Dōsan. From oil merchant to lord of Mino — they call me 'the Viper'. Hmph, in an age of chaos, what's wrong with rising from below?",
+    "tone_prompt": "shrewd and cunning with a warlord's air, yet full of praise for his son-in-law Nobunaga's talent"
+  },
+  "ramen": {
+    "style_name": "Takayama ramen",
+    "broth": "Shōyu (chicken and bonito; tare boiled with the stock)",
+    "noodles": "Thin curly noodles",
+    "toppings": "Chashu, bamboo shoots, scallions",
+    "highlight": "Locals call it 'chūka soba' — simmering the tare together with the stock is unique"
+  },
+  "sake": {
+    "brand": "Michisakari (三千盛)",
+    "brewery": "Michisakari",
+    "taste_profile": "Light & dry: a Mino sake famed for being 'ultra-dry'"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "capital": "Toyama",
+  "badge": {
+    "title": "Tateyama and the Medicine Town"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Etchū Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Jinbo Nagamoto",
+      "Shiina Yasutane",
+      "Uesugi Kenshin",
+      "Sassa Narimasa"
+    ],
+    "edo_domains": [
+      "Toyama Domain (Kaga branch, Maeda clan)",
+      "Kaga Domain lands (most of Etchū)"
+    ],
+    "meiji_transition": {
+      "summary": "Toyama Prefecture, set up in 1871, was renamed Niikawa, merged into Ishikawa in 1876 and re-established as Toyama in 1883.",
+      "boundary_note": "Toyama ≈ Etchū Province; but in the Edo period most of Etchū was ruled directly by the Kaga Domain, with only the area around Toyama a branch domain — Etchū long answered to Kanazawa."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Ōtomo no Yakamochi in Etchū",
+      "summary": "Appointed governor of Etchū in 746, Ōtomo no Yakamochi wrote over 200 Man'yōshū poems here; the provincial office stood at Fushiki in today's Takaoka."
+    },
+    {
+      "title": "Etchū under the Hōjō",
+      "summary": "Etchū's governors were mostly the Nagoe branch of the Hōjō; the 1183 Battle of Kurikara Pass had already secured Minamoto dominance in Hokuriku."
+    },
+    {
+      "title": "The Hatakeyama and the Ikkō sect",
+      "summary": "The Hatakeyama, one of the three kanrei houses, held Etchū while deputies like the Jinbo and Shiina ruled in practice; after Rennyo's preaching the Ikkō sect took root in Tonami."
+    },
+    {
+      "title": "Sassa Narimasa's snow crossing",
+      "summary": "Sassa Narimasa held Toyama Castle against Hideyoshi and, legend says, crossed the Tateyama range in midwinter (the 'Sara-sara-goe') to seek Ieyasu's help — but in the end he submitted."
+    },
+    {
+      "title": "Etchū medicine peddlers",
+      "summary": "Maeda Masatoshi, second lord of Toyama, promoted the medicine 'Hangontan'; under the 'use first, pay later' system Toyama's peddlers traveled all over Japan."
+    },
+    {
+      "title": "Hydropower and aluminum",
+      "summary": "Toyama broke away from Ishikawa in 1883; hydropower on the Kurobe River (Kurobe Dam, 1963) fed heavy industries such as aluminum."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tateyama Kurobe Alpine Route",
+      "note": "The 'Yuki-no-Ōtani' snow walls"
+    },
+    {
+      "name": "Gokayama gasshō villages",
+      "note": "World Heritage"
+    },
+    {
+      "name": "Takaoka Great Buddha",
+      "note": "One of Japan's three great Buddhas"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Shiro-ebi (white shrimp)",
+      "note": "The jewel of Toyama Bay"
+    },
+    {
+      "name": "Masu-zushi",
+      "note": "Pressed trout sushi in bamboo leaves"
+    },
+    {
+      "name": "Firefly squid",
+      "note": "Tiny squid that glow on spring nights"
+    }
+  ],
+  "dialect": {
+    "name": "Toyama dialect",
+    "features": "Sentences end in '-cha' and '-gaize'; 'kitokito' — fresh and lively — is a local trademark word.",
+    "phrases": [
+      {
+        "meaning": "fresh, lively",
+        "note": ""
+      },
+      {
+        "meaning": "emphatic sentence ending",
+        "note": ""
+      },
+      {
+        "meaning": "fool",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, just over the snow walls of Tateyama. Sassa Narimasa crossed here too, they say… though he did it in the dead of winter. Shall I tell you the legend?"
+  },
+  "regional_meme": [
+    {
+      "title": "Hokuriku ranking wars",
+      "text": "In what order do the three Hokuriku prefectures go? Toyama says 'Toyama, Ishikawa, Fukui'; Ishikawa says 'Ishikawa, Toyama, Fukui'…"
+    },
+    {
+      "title": "Savings and big houses",
+      "text": "Toyama people are known for high home ownership, big houses and big savings — 'Japan's thriftiest prefecture'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Medicine' character (Etchū medicine peddlers)"
+  },
+  "hero_persona": {
+    "name": "Sassa Narimasa",
+    "title": "The general who crossed Tateyama in the snow",
+    "self": "I",
+    "opening_line": "I am Sassa Narimasa. To urge Lord Ieyasu to keep fighting Hideyoshi, I crossed the Tateyama range in midwinter — can you understand such stubbornness?",
+    "tone_prompt": "obstinate and fiery, refuses to give in; bitter whenever Hideyoshi comes up"
+  },
+  "ramen": {
+    "style_name": "Toyama black ramen",
+    "broth": "Shōyu (dark, strong soy)",
+    "noodles": "Thick straight noodles",
+    "toppings": "Coarse black pepper, scallions, bamboo shoots, chashu",
+    "highlight": "Pitch-black and astonishingly salty — originally a 'rice-companion soup' for manual laborers"
+  },
+  "sake": {
+    "brand": "Tateyama (立山)",
+    "brewery": "Tateyama Shuzō",
+    "taste_profile": "Light & dry: crisp and clean, great with Toyama Bay fish"
+  }
+}

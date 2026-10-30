@@ -1,0 +1,150 @@
+{
+  "capital": "Shizuoka",
+  "badge": {
+    "title": "Sunpu and Fuji"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Izu Province",
+        "portion": "entire (excluding the Izu Islands)",
+        "cross_prefectures": [
+          "Tokyo"
+        ]
+      },
+      {
+        "name": "Suruga Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tōtōmi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Imagawa Yoshimoto",
+      "Hōjō Sōun (Izu)",
+      "Tokugawa Ieyasu",
+      "Takeda clan (Suruga)"
+    ],
+    "edo_domains": [
+      "Sunpu (shogunal land, Ieyasu's retirement seat)",
+      "Hamamatsu Domain",
+      "Kakegawa Domain",
+      "Numazu Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1868 the Tokugawa main house was moved to Sunpu (Shizuoka Domain), which became Shizuoka Prefecture in 1871; Hamamatsu Prefecture (Tōtōmi) and the Izu part of Ashigara Prefecture joined in 1876.",
+      "boundary_note": "Shizuoka was stitched from three provinces — Izu in the east, Suruga in the center, Tōtōmi in the west — about 155 km end to end, and the three still differ in dialect and daily life."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Three provinces side by side",
+      "summary": "Tōtōmi, Suruga and Izu lined the Tōkaidō; 'Tōtōmi' means 'the distant freshwater lake' (Lake Hamana), as opposed to 'Ōmi' (Lake Biwa)."
+    },
+    {
+      "title": "The Hōjō of Izu",
+      "summary": "The Hōjō came from Hōjō in Izu; Minamoto no Yoritomo rose from his exile in Izu, and in 1193 held the great 'Fuji no Makigari' hunt at the foot of Mount Fuji."
+    },
+    {
+      "title": "The Imagawa of Suruga",
+      "summary": "The Imagawa, an Ashikaga branch, held Suruga for generations; men like Imagawa Ryōshun excelled in letters and arms, and Sunpu became a key hub of the Tōkai."
+    },
+    {
+      "title": "Imagawa and Ieyasu",
+      "summary": "Imagawa Yoshimoto, 'the best bowman of the Tōkaidō', fell at Okehazama in 1560; Tokugawa Ieyasu, based at Hamamatsu, was badly beaten by Takeda Shingen at Mikatagahara in 1572."
+    },
+    {
+      "title": "The retired shogun at Sunpu",
+      "summary": "After stepping down Ieyasu retired to Sunpu and steered the early shogunate; 22 Tōkaidō post towns lay here, and the Hakone and Arai barriers checked travelers."
+    },
+    {
+      "title": "Tea and the Tokugawa",
+      "summary": "Tokugawa Yoshinobu retired to Shizuoka and former shogunal retainers cleared the Makinohara tea fields; Shizuoka tea now leads Japan, and Yamaha and Suzuki began in Hamamatsu."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Mount Fuji",
+      "note": "World Cultural Heritage"
+    },
+    {
+      "name": "Kunōzan Tōshō-gū",
+      "note": "Ieyasu's first resting place"
+    },
+    {
+      "name": "Nirayama reverberatory furnace",
+      "note": "Late-Edo cannon foundry, World Heritage"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Shizuoka tea",
+      "note": "Long Japan's top producer"
+    },
+    {
+      "name": "Lake Hamana eel",
+      "note": "Birthplace of eel farming"
+    },
+    {
+      "name": "Sakura shrimp",
+      "note": "Pink shrimp found only in Suruga Bay"
+    }
+  ],
+  "dialect": {
+    "name": "Shizuoka dialect",
+    "features": "'-dara', '-zura' and '-dani'; Enshū's 'yaramaika!' (let's do it!) sums up Hamamatsu's pioneering spirit.",
+    "phrases": [
+      {
+        "meaning": "Let's do it! Let's give it a go!",
+        "note": "Enshū area"
+      },
+      {
+        "meaning": "piping hot",
+        "note": ""
+      },
+      {
+        "meaning": "…right?",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama. Lord Ieyasu said, 'Life is a long journey with a heavy load — do not hurry.' He spent his last years here at Sunpu Castle. Shall I tell you of that crushing defeat at Mikatagahara?"
+  },
+  "regional_meme": [
+    {
+      "title": "Who owns Mount Fuji?",
+      "text": "Shizuoka: 'Mount Fuji is ours!' The argument with Yamanashi never ends — and there's still no border near the summit."
+    },
+    {
+      "title": "Too long east to west",
+      "text": "Eastern Shizuoka sounds like Kantō, the west like Nagoya — people at either end think the other side is 'from another prefecture'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Futatsu-hikiryō (Imagawa clan)"
+  },
+  "hero_persona": {
+    "name": "Tokugawa Ieyasu",
+    "title": "Tōshō Daigongen · retired shogun of Sunpu",
+    "self": "I",
+    "opening_line": "I am Tokugawa Ieyasu. Life is a long journey with a heavy load — do not hurry. I spent my last years at Sunpu. Would you ask how I endured to the very end?",
+    "tone_prompt": "calm, patient and far-sighted; speaks slowly and often counsels endurance"
+  },
+  "ramen": {
+    "style_name": "Fujieda asa-rā (morning ramen)",
+    "broth": "Shōyu (sweet, Japanese-style)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, bamboo shoots, scallions",
+    "highlight": "Tea farmers eat it after early-morning work: one hot bowl and one cold bowl of 'morning ramen'"
+  },
+  "sake": {
+    "brand": "Isojiman (磯自慢)",
+    "brewery": "Isojiman Shuzō",
+    "taste_profile": "Light & sweet: the crisp fruity aroma typical of Shizuoka ginjō"
+  }
+}

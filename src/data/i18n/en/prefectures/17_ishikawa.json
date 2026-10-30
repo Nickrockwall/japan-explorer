@@ -1,0 +1,140 @@
+{
+  "capital": "Kanazawa",
+  "badge": {
+    "title": "Kaga, a Million Koku"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Kaga Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Noto Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Kaga Ikkō uprising ('the province held by the peasants')",
+      "Hatakeyama clan of Noto",
+      "Maeda Toshiie"
+    ],
+    "edo_domains": [
+      "Kaga Domain (Maeda clan, 1.02 million koku)",
+      "Daishōji Domain (branch)"
+    ],
+    "meiji_transition": {
+      "summary": "Kanazawa Prefecture was renamed Ishikawa in 1872; in 1876 it absorbed Etchū and northern Echizen, but Echizen left in 1881 and Etchū in 1883, returning it to Kaga plus Noto.",
+      "boundary_note": "From 1876 to 1881 'Greater Ishikawa' spanned four provinces — Kaga, Noto, Etchū and Echizen — one of the most populous prefectures of early Meiji."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Kaga splits off",
+      "summary": "Noto was split from Echizen in 718 and Kaga in 823 — the last ritsuryō province ever created."
+    },
+    {
+      "title": "The Togashi and Noto",
+      "summary": "Local warriors such as the Togashi of Kaga were granted land; Noto's governors were mostly Hōjō kin."
+    },
+    {
+      "title": "The Togashi and Rennyo",
+      "summary": "The Togashi held Kaga; in the late Muromachi period Rennyo preached at Yoshizaki in Echizen and Kaga's believers multiplied — the seeds of the later 'province of the peasants'."
+    },
+    {
+      "title": "Province held by the peasants",
+      "summary": "In 1488 the Ikkō uprising overthrew the governor Togashi Masachika, and Kaga was self-governed by Hongan-ji believers for nearly a century until Shibata Katsuie subdued it in 1580."
+    },
+    {
+      "title": "Kaga, a million koku",
+      "summary": "The Maeda, largest of the outer lords, deliberately poured money into arts and crafts to allay shogunal suspicion, making Kanazawa a 'little Kyoto'."
+    },
+    {
+      "title": "City of crafts",
+      "summary": "Kutani ware, gold leaf and Kaga yūzen live on; the Hokuriku Shinkansen reached Kanazawa in 2015, and the 2024 Noto Peninsula earthquake caused severe damage."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kenroku-en",
+      "note": "One of Japan's three great gardens"
+    },
+    {
+      "name": "Higashi Chaya district",
+      "note": "Kanazawa's old teahouse quarter"
+    },
+    {
+      "name": "Shiroyone Senmaida",
+      "note": "Seaside terraced rice fields of Noto"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kanazawa gold leaf",
+      "note": "Over 90% of Japan's output"
+    },
+    {
+      "name": "Kutani ware",
+      "note": "Richly colored porcelain"
+    },
+    {
+      "name": "Jibu-ni",
+      "note": "Kaga's simmered duck dish"
+    }
+  ],
+  "dialect": {
+    "name": "Kanazawa dialect",
+    "features": "The polite invitation '-masshi' is well known; its strong rises and falls are called the lilting Hokuriku accent.",
+    "phrases": [
+      {
+        "meaning": "please do… ('tabemasshi' = please eat)",
+        "note": ""
+      },
+      {
+        "meaning": "thank you, sorry to trouble you",
+        "note": ""
+      },
+      {
+        "meaning": "fool",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, sent to infiltrate Kanazawa Castle… just kidding. Did you know Kaga was ruled by its peasants for nearly a century, long before the Maeda's million koku?"
+  },
+  "regional_meme": [
+    {
+      "title": "Little Kyoto rivalry",
+      "text": "Kanazawa calls itself a 'little Kyoto', which Kyoto doesn't quite accept — and Kanazawa would rather just be Kanazawa anyway."
+    },
+    {
+      "title": "Thunder and yellowtail",
+      "text": "Yellowtail is fattest when winter thunder rolls; Hokuriku people call that thunder 'buri-okoshi' — the yellowtail wake-up call."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Kaga umebachi (Maeda clan)"
+  },
+  "hero_persona": {
+    "name": "Maeda Toshiie",
+    "title": "Founder of Kaga's million koku · 'Mataza of the spear'",
+    "self": "I",
+    "opening_line": "I am Maeda Matazaemon Toshiie! In my youth I was a notorious kabukimono; later I became lord of Kaga's million koku — what can I do for you?",
+    "tone_prompt": "hearty and loyal, with traces of his wild youth; deeply respectful of his wife Matsu"
+  },
+  "ramen": {
+    "style_name": "Kanazawa 8ban yasai ramen",
+    "broth": "Shio (clear chicken-and-pork stock)",
+    "noodles": "Medium-thick curly noodles",
+    "toppings": "Heaps of stir-fried vegetables, naruto stamped with an '8'",
+    "highlight": "Born at a chain shop on Route 8 — the naruto in the bowl carries an '8'"
+  },
+  "sake": {
+    "brand": "Kikuhime (菊姫)",
+    "brewery": "Kikuhime",
+    "taste_profile": "Rich & dry: yamahai-brewed, heavy and full"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "capital": "Niigata",
+  "badge": {
+    "title": "Rice Country of Echigo"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Echigo Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Sado Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Uesugi Kenshin",
+      "Uesugi Kagekatsu",
+      "Honma clan (Sado)"
+    ],
+    "edo_domains": [
+      "Nagaoka Domain (Makino clan)",
+      "Shibata Domain",
+      "Takada Domain",
+      "Sado gold mine (shogunal land)"
+    ],
+    "meiji_transition": {
+      "summary": "Niigata and other prefectures were set up in 1871; Kashiwazaki joined in 1873 and Aikawa (Sado) in 1876, and Higashikanbara District came over from Fukushima in 1886, forming today's borders.",
+      "boundary_note": "Niigata = Echigo + Sado; but Higashikanbara District belonged to the Aizu Domain (Iwashiro) and moved from Fukushima only in 1886, so the prefecture reaches a little east of ancient Echigo."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Echigo and exile to Sado",
+      "summary": "The Echigo provincial capital lay near today's Jōetsu; Sado was a place of 'distant exile', receiving Retired Emperor Juntoku, Nichiren and Zeami."
+    },
+    {
+      "title": "Exiles of Sado",
+      "summary": "Echigo's governors were mostly Hōjō kin; after the Jōkyū War Retired Emperor Juntoku was exiled to Sado, and Nichiren followed in 1271."
+    },
+    {
+      "title": "Echigo Uesugi and the Nagao",
+      "summary": "The Uesugi held the governorship of Echigo while their deputies, the Nagao, gradually took real power — Uesugi Kenshin was born a Nagao."
+    },
+    {
+      "title": "The Dragon of Echigo",
+      "summary": "Nagao Kagetora (Uesugi Kenshin) unified Echigo and faced Takeda Shingen five times at Kawanakajima; his successor Kagekatsu was moved to Aizu in 1598."
+    },
+    {
+      "title": "Gold and the Kitamaebune",
+      "summary": "The Sado gold mine became the shogunate's treasury; Niigata was a key port of call for the Kitamaebune, and the Nagaoka and Shibata domains developed the Echigo Plain."
+    },
+    {
+      "title": "The Hokuetsu Boshin War",
+      "summary": "Kawai Tsugunosuke of Nagaoka fought the new government with Gatling guns; in the mid-Meiji era Niigata was briefly Japan's most populous prefecture."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Sado Gold Mine",
+      "note": "Dōyū no Wareto, the split gold vein"
+    },
+    {
+      "name": "Kasugayama Castle ruins",
+      "note": "Uesugi Kenshin's castle"
+    },
+    {
+      "name": "Yahiko Shrine",
+      "note": "Chief shrine of Echigo"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Uonuma Koshihikari",
+      "note": "Japan's top rice"
+    },
+    {
+      "name": "Sake",
+      "note": "More breweries than any other prefecture"
+    },
+    {
+      "name": "Sasa dango",
+      "note": "Mugwort dumplings wrapped in bamboo leaves"
+    }
+  ],
+  "dialect": {
+    "name": "Niigata dialect",
+    "features": "'-iya' and '-teba' add emphasis and 'dasuke' means 'so'; the Sado dialect keeps a Kansai flavor.",
+    "phrases": [
+      {
+        "meaning": "so, therefore",
+        "note": ""
+      },
+      {
+        "meaning": "you (respectful)",
+        "note": ""
+      },
+      {
+        "meaning": "I told you…!",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am Kazama, messenger of the Echigo wind. Lord Kenshin waving his war fan at Kasugayama is still Echigo's pride — shall I report on Kawanakajima, or on the Sado gold mine?"
+  },
+  "regional_meme": [
+    {
+      "title": "Where do we belong?",
+      "text": "Is Niigata Kantō? Chūbu? Hokuriku? Tōhoku? Weather forecasts, high-school baseball and power companies all disagree — even locals can't say."
+    },
+    {
+      "title": "Rice and sake",
+      "text": "Niigata people are convinced their Koshihikari and sake are Japan's best; a proper meal starts with white rice."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Bi' character banner (Uesugi Kenshin)"
+  },
+  "hero_persona": {
+    "name": "Uesugi Kenshin",
+    "title": "Dragon of Echigo · avatar of Bishamonten",
+    "self": "I",
+    "opening_line": "I am Uesugi Kenshin, avatar of Bishamonten. I never fight for personal gain — even when Shingen ran short of salt, I let it through. Shall I tell you of Kawanakajima?",
+    "tone_prompt": "lofty and righteous with an otherworldly air; terse and solemn, often speaking of 'righteousness'"
+  },
+  "ramen": {
+    "style_name": "Tsubame-Sanjō seabura ramen",
+    "broth": "Shōyu (topped with pork back fat)",
+    "noodles": "Extra-thick noodles",
+    "toppings": "Diced onion, chashu, lots of back fat",
+    "highlight": "Invented so craftsmen's deliveries wouldn't go soggy or cold — the back fat covers the soup like snow"
+  },
+  "sake": {
+    "brand": "Hakkaisan (八海山)",
+    "brewery": "Hakkai Jōzō",
+    "taste_profile": "Light & dry: the very symbol of 'tanrei karakuchi', clean and sharp"
+  }
+}

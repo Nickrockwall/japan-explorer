@@ -1,0 +1,137 @@
+{
+  "capital": "Ōtsu",
+  "badge": {
+    "title": "Lake Province of Ōmi"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Ōmi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Azai Nagamasa",
+      "Rokkaku clan",
+      "Kyōgoku clan",
+      "Oda Nobunaga (Azuchi Castle)"
+    ],
+    "edo_domains": [
+      "Hikone Domain (Ii clan)",
+      "Zeze Domain",
+      "Minakuchi Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Ōtsu and Nagahama prefectures were created, merging as Shiga in 1872; from 1876 to 1881 Wakasa and Echizen's Tsuruga District were briefly part of Shiga.",
+      "boundary_note": "Shiga = Ōmi Province. 'Ōmi' means the freshwater lake near the capital (Lake Biwa), as opposed to 'Tōtōmi' (Lake Hamana)."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Ōmi Ōtsu Palace",
+      "summary": "Emperor Tenji moved the capital to Ōmi Ōtsu Palace in 667; Saichō founded Enryaku-ji on Mount Hiei in 788."
+    },
+    {
+      "title": "The Sasaki of Ōmi",
+      "summary": "The Uda Genji Sasaki held the governorship of Ōmi; from them came the Rokkaku and Kyōgoku houses."
+    },
+    {
+      "title": "Rokkaku and Kyōgoku",
+      "summary": "The Rokkaku governed southern Ōmi, the Kyōgoku the north; Sasaki Dōyo of the Kyōgoku was a famous 'basara' lord of the Northern and Southern Courts era."
+    },
+    {
+      "title": "Azuchi Castle",
+      "summary": "Azai Nagamasa held Odani Castle (Battle of Anegawa, 1570); in 1576 Nobunaga built Azuchi Castle, whose keep set the model for early-modern castles, burned after the Honnō-ji Incident in 1582."
+    },
+    {
+      "title": "Ōmi merchants",
+      "summary": "The Ii of Hikone led the fudai lords, and the great elder Ii Naosuke signed the commercial treaties; Ōmi merchants, devoted to 'sanpō yoshi' (good for seller, buyer and society), spread across Japan."
+    },
+    {
+      "title": "The Lake Biwa Canal",
+      "summary": "The 1890 Lake Biwa Canal brought water and hydropower to Kyoto; Lake Biwa supplies about 14.5 million people in Kinki."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Hikone Castle",
+      "note": "National-treasure keep"
+    },
+    {
+      "name": "Enryaku-ji on Mount Hiei",
+      "note": "Head temple of Tendai Buddhism"
+    },
+    {
+      "name": "Shirahige Shrine",
+      "note": "A torii standing in Lake Biwa"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Ōmi beef",
+      "note": "One of Japan's three great wagyu"
+    },
+    {
+      "name": "Funazushi",
+      "note": "Ancient fermented sushi"
+    },
+    {
+      "name": "Shigaraki ware",
+      "note": "Home of the raccoon-dog statues"
+    }
+  ],
+  "dialect": {
+    "name": "Ōmi dialect",
+    "features": "A Kansai dialect with '-haru' and '-hen' endings, more direct than Kyoto speech; 'hokasu' means to throw away.",
+    "phrases": [
+      {
+        "meaning": "to throw away",
+        "note": ""
+      },
+      {
+        "meaning": "to do (light honorific)",
+        "note": ""
+      },
+      {
+        "meaning": "to be tired",
+        "note": "not 'heartwarming'"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I once followed Emperor Tenji's carriage to the Ōmi Ōtsu Palace, and I still remember the shimmer of Lake Biwa. Lord Nobunaga's Azuchi Castle stood by the lake too — which tale would you hear?"
+  },
+  "regional_meme": [
+    {
+      "title": "Kansai water wars",
+      "text": "A Shiga person's trump card in any argument: 'Keep it up and we'll shut the Lake Biwa sluice gates — no water for Kyoto and Osaka!'"
+    },
+    {
+      "title": "Lake Biwa's size",
+      "text": "Lake Biwa covers about a sixth of Shiga; locals give directions by 'which side of the lake'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Igeta (Ii clan)"
+  },
+  "hero_persona": {
+    "name": "Ishida Mitsunari",
+    "title": "Commander of the Western Army · a man of righteousness",
+    "self": "I",
+    "opening_line": "I am Ishida Jibu-no-shō Mitsunari, of Ōmi. They say no one liked me — but all I wanted was to protect the late Taikō's realm.",
+    "tone_prompt": "earnest and rigid, principled and socially awkward, but unwavering in loyalty to the Toyotomi"
+  },
+  "ramen": {
+    "style_name": "Ōmi champon",
+    "broth": "Shio (bonito-and-kombu dashi)",
+    "noodles": "Medium-thick noodles",
+    "toppings": "Cabbage, bean sprouts, pork, wood-ear mushrooms",
+    "highlight": "Clear golden dashi with heaps of vegetables — add vinegar to change the taste"
+  },
+  "sake": {
+    "brand": "Shichihonyari (七本鎗)",
+    "brewery": "Tomita Shuzō",
+    "taste_profile": "Rich & dry: named for the Seven Spears of Shizugatake, mellower with age"
+  }
+}

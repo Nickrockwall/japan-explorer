@@ -1,0 +1,152 @@
+{
+  "capital": "Kyoto",
+  "badge": {
+    "title": "Thousand-Year Capital"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Yamashiro Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tango Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tanba Province",
+        "portion": "east (Kuwata, Funai, Ikaruga, Amata)",
+        "cross_prefectures": [
+          "Hyōgo"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ashikaga shoguns of the Muromachi shogunate",
+      "Hosokawa clan",
+      "Miyoshi Nagayoshi",
+      "Oda Nobunaga",
+      "Toyotomi Hideyoshi"
+    ],
+    "edo_domains": [
+      "Kyoto Shoshidai and city magistrates (shogunal)",
+      "Yodo Domain",
+      "Miyazu Domain",
+      "Fukuchiyama Domain",
+      "Tanabe (Maizuru) Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Kyoto-fu was established in 1868 and absorbed neighboring prefectures in 1871; in 1876 the five Tango districts and Tanba's Amata District came over from Toyooka Prefecture, giving today's long north–south shape.",
+      "boundary_note": "Kyoto Prefecture combines Yamashiro (the basin), eastern Tanba and Tango (the Sea of Japan coast) — which is why it stretches from Kyoto city all the way to Amanohashidate."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Heian-kyō",
+      "summary": "In 794 Emperor Kanmu moved the capital to Heian-kyō, the imperial seat for the next thousand years; The Tale of Genji and The Pillow Book were born here."
+    },
+    {
+      "title": "The Rokuhara Tandai",
+      "summary": "Power moved east to Kamakura, but Kyoto remained the seat of the court; after the 1221 Jōkyū War the shogunate set up the Rokuhara Tandai to watch over it."
+    },
+    {
+      "title": "Kitayama and Higashiyama cultures",
+      "summary": "Ashikaga Takauji opened his shogunate in Kyoto; Yoshimitsu built the Golden Pavilion (1397) and Yoshimasa, in his later years, the Silver Pavilion — the Kitayama and Higashiyama cultures in turn."
+    },
+    {
+      "title": "The Ōnin War",
+      "summary": "The Ōnin War of 1467 reduced Kyoto to ashes and began the Sengoku era; Nobunaga's march on the capital, the Honnō-ji Incident and Hideyoshi's Jurakudai all played out here."
+    },
+    {
+      "title": "City of the emperor",
+      "summary": "With politics gone east, Kyoto became the city of the emperor, nobles, temples and crafts, where Nishijin weaving and Kyō-yūzen flourished; in the late Edo period loyalists and the Shinsengumi clashed here."
+    },
+    {
+      "title": "The old capital reborn",
+      "summary": "After the emperor moved east in 1869, Kyoto revived with the Lake Biwa Canal and Japan's first streetcar; its historic monuments became World Heritage in 1994."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kiyomizu-dera",
+      "note": "The 'Kiyomizu stage'"
+    },
+    {
+      "name": "Fushimi Inari Taisha",
+      "note": "A thousand torii gates"
+    },
+    {
+      "name": "Amanohashidate",
+      "note": "One of the Three Views of Japan"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Uji matcha",
+      "note": "Famed Uji tea"
+    },
+    {
+      "name": "Kyō-tsukemono",
+      "note": "Senmaizuke, sugukizuke, shibazuke"
+    },
+    {
+      "name": "Yatsuhashi",
+      "note": "Cinnamon-flavored Kyoto sweet"
+    }
+  ],
+  "dialect": {
+    "name": "Kyō-kotoba (Kyoto speech)",
+    "features": "Soft and indirect, with '-dosu' and '-haru' endings; people speak obliquely — 'Would you like some bubuzuke?' may actually mean 'time to go home'.",
+    "phrases": [
+      {
+        "meaning": "welcome",
+        "note": ""
+      },
+      {
+        "meaning": "elegant, refined",
+        "note": ""
+      },
+      {
+        "meaning": "Would you like some tea over rice?",
+        "note": "a polite hint that it's time to leave"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I witnessed the great fires of Heian-kyō. Which tale of the past would you like to hear?"
+  },
+  "regional_meme": [
+    {
+      "title": "Kyoto's 'last war'",
+      "text": "Old Kyotoites are said to mean the Ōnin War (1467) by 'the last war'; the 'bubuzuke' hint to leave is another classic."
+    },
+    {
+      "title": "'That's not Kyoto'",
+      "text": "To people in central Kyoto, the north of the prefecture (Tango, Tanba) — and even the city's outskirts — 'aren't really Kyoto'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Sixteen-petal chrysanthemum (Imperial)"
+  },
+  "hero_persona": {
+    "name": "Akechi Mitsuhide",
+    "title": "Rebel of the Honnō-ji Incident",
+    "self": "I",
+    "opening_line": "I am Akechi Hyūga-no-kami Mitsuhide. 'The enemy is at Honnō-ji'… why did I raise my army? Everyone has a theory — would you hear mine?",
+    "tone_prompt": "refined and somber, cultured; speaks obliquely of the Honnō-ji Incident; note that there is no settled view of his motives"
+  },
+  "ramen": {
+    "style_name": "Kyoto seabura shōyu ramen",
+    "broth": "Shōyu (chicken and pork bone with back fat)",
+    "noodles": "Thin straight noodles",
+    "toppings": "Kujō green onion, chashu, back fat",
+    "highlight": "Kyotoites actually love rich flavors — both back-fat shōyu and thick chicken paitan were born here"
+  },
+  "sake": {
+    "brand": "Gekkeikan (月桂冠)",
+    "brewery": "Gekkeikan (Fushimi)",
+    "taste_profile": "Light & sweet: the soft 'feminine sake' of Fushimi's soft water"
+  }
+}

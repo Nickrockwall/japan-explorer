@@ -1,0 +1,165 @@
+{
+  "capital": "Kobe",
+  "badge": {
+    "title": "Prefecture of Five Provinces"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Settsu Province",
+        "portion": "west (Kobe, Amagasaki, Nishinomiya…)",
+        "cross_prefectures": [
+          "Osaka"
+        ]
+      },
+      {
+        "name": "Harima Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tajima Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Tanba Province",
+        "portion": "west (Hikami, Taki)",
+        "cross_prefectures": [
+          "Kyoto"
+        ]
+      },
+      {
+        "name": "Awaji Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Akamatsu clan",
+      "Bessho Nagaharu (Miki Castle)",
+      "Yamana clan (Tajima)",
+      "Hatano Hideharu (Tanba)",
+      "Kuroda Yoshitaka (Kanbei)"
+    ],
+    "edo_domains": [
+      "Himeji Domain",
+      "Amagasaki Domain",
+      "Akashi Domain",
+      "Izushi Domain",
+      "Sasayama Domain",
+      "Tokushima Domain lands (Awaji)"
+    ],
+    "meiji_transition": {
+      "summary": "Hyōgo Prefecture (western Settsu) was set up in 1868; in 1876 Shikama Prefecture (Harima), part of Toyooka Prefecture (Tajima and western Tanba) and Awaji from Myōdō Prefecture were added — the 'prefecture of five provinces'.",
+      "boundary_note": "Hyōgo is the only prefecture spanning five ritsuryō provinces and facing both the Sea of Japan and the Inland Sea; Awaji belonged to the Tokushima Domain and joined Hyōgo only in 1876."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Awaji and Fukuhara",
+      "summary": "Awaji is the first island born in the creation myth; in 1180 Taira no Kiyomori briefly moved the capital to Fukuhara (today's Kobe)."
+    },
+    {
+      "title": "Ichi-no-Tani and the vassals",
+      "summary": "The 1184 Battle of Ichi-no-Tani was fought in western Settsu; in the Kamakura period Harima and other provinces were ruled by eastern warriors such as Kajiwara Kagetoki."
+    },
+    {
+      "title": "Akamatsu and the Kakitsu Incident",
+      "summary": "Akamatsu Norimura (Enshin) won Harima for his part in toppling the shogunate; in 1441 Akamatsu Mitsusuke assassinated shogun Ashikaga Yoshinori (the Kakitsu Incident), after which the Yamana took over."
+    },
+    {
+      "title": "The Harima campaign",
+      "summary": "In his western campaign Hideyoshi starved out Miki Castle ('the starving of Miki'); Kuroda Kanbei served as his strategist, and Himeji Castle became the base for subduing the west."
+    },
+    {
+      "title": "The White Heron Castle",
+      "summary": "Ikeda Terumasa rebuilt Himeji Castle into today's heron-white keep; the Akō Domain's Asano affair — the 'Chūshingura' — became famous nationwide."
+    },
+    {
+      "title": "Kobe opens",
+      "summary": "Kobe opened as a port in 1868, leaving cosmopolitan traces in the Kitano foreigners' houses and Nankinmachi; the city was rebuilt after the 1995 Great Hanshin–Awaji Earthquake."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Himeji Castle",
+      "note": "World Heritage 'White Heron Castle'"
+    },
+    {
+      "name": "Arima Onsen",
+      "note": "One of Japan's three oldest hot springs"
+    },
+    {
+      "name": "Takeda Castle ruins",
+      "note": "'Castle in the sky'"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kobe beef",
+      "note": "World-famous Tajima-line wagyu"
+    },
+    {
+      "name": "Akashiyaki",
+      "note": "Egg dumplings dipped in broth"
+    },
+    {
+      "name": "Nada Gogō sake",
+      "note": "Japan's foremost sake district"
+    }
+  ],
+  "dialect": {
+    "name": "Banshū and Kobe dialects",
+    "features": "Banshū speech is famously rough ('dabo' = fool), Kobe speech uses '-tō' for ongoing actions, and Tajima speech is close to Tottori's.",
+    "phrases": [
+      {
+        "meaning": "What are you doing?",
+        "note": "Kobe"
+      },
+      {
+        "meaning": "fool",
+        "note": "Banshū"
+      },
+      {
+        "meaning": "…isn't it?",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "By my count, Hyōgo is stitched from five provinces — Settsu, Harima, Tajima, Tanba and Awaji. How greedy! Shall I begin with the White Heron Castle, or with Taira no Kiyomori's Fukuhara capital?"
+  },
+  "regional_meme": [
+    {
+      "title": "'I'm from Kobe'",
+      "text": "Hyōgo people rarely say they're 'from Hyōgo' — they're 'from Kobe' or 'from Himeji'. Five provinces, five identities."
+    },
+    {
+      "title": "A five-province civil war",
+      "text": "Settsu, Harima, Tajima, Tanba and Awaji are so different that the prefecture is teased as 'five countries holding a UN summit'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "'Heron' character (White Heron Castle)"
+  },
+  "hero_persona": {
+    "name": "Kuroda Kanbei",
+    "title": "Genius strategist",
+    "self": "I",
+    "opening_line": "I am Kuroda Kanbei Yoshitaka. I spent a year in the dungeon of Arioka Castle and came out lame — but this head still works fine. What stratagem do you need?",
+    "tone_prompt": "wise and cool-headed, far-sighted; speaks in questions and step-by-step reasoning"
+  },
+  "ramen": {
+    "style_name": "Himeji station ekisoba",
+    "broth": "Shio (Japanese bonito broth)",
+    "noodles": "Yellow Chinese-style noodles",
+    "toppings": "Tempura, fried tofu, scallions",
+    "highlight": "A curious hybrid of udon broth and ramen noodles — the standing noodle stall of Himeji Station"
+  },
+  "sake": {
+    "brand": "Kiku-Masamune (菊正宗)",
+    "brewery": "Kiku-Masamune Shuzō (Nada)",
+    "taste_profile": "Rich & dry: the 'masculine sake' of Nada's Miyamizu water, the model of kimoto dry sake"
+  }
+}
