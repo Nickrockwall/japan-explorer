@@ -9,7 +9,19 @@ export const LANGS = {
   ja: { label: '日本語', short: '日', html: 'ja' },
 };
 
+// 链接里的语言：#pref=26&lang=ja 或 ?lang=ja
+function fromURL() {
+  const h = new URLSearchParams(location.hash.slice(1)).get('lang');
+  const q = new URLSearchParams(location.search).get('lang');
+  return LANGS[h] ? h : LANGS[q] ? q : null;
+}
+
 function detect() {
+  const url = fromURL();
+  if (url) {
+    uiPref.set('lang', url); // 记住链接指定的语言
+    return url;
+  }
   const saved = uiPref.get('lang', null);
   if (LANGS[saved]) return saved;
   for (const l of navigator.languages || [navigator.language || '']) {
@@ -26,7 +38,26 @@ export const lang = detect();
 export function setLang(l) {
   if (!LANGS[l] || l === lang) return;
   uiPref.set('lang', l);
+  // 地址栏里的 lang 优先级最高，切换时一并改掉，否则重新载入后又会回到旧语言
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.has('lang') || h.has('pref')) {
+    h.set('lang', l);
+    location.hash = h.toString();
+  }
   location.reload();
+}
+
+// 当前页面状态的地址片段：#pref=26&lang=ja
+export function stateHash(prefId) {
+  const h = new URLSearchParams();
+  if (prefId) h.set('pref', prefId);
+  h.set('lang', lang);
+  return `#${h.toString()}`;
+}
+
+// 可分享的完整链接
+export function shareURL(prefId) {
+  return `${location.origin}${location.pathname}${stateHash(prefId)}`;
 }
 
 // ── 界面词典 ──────────────
@@ -70,6 +101,7 @@ const D = {
     'w.p2': `在左侧地图上点选任意地区，查看它的<b>古今双名</b>、<b>六个时代</b>的沿革、名胜物产与方言，并和随地区更换身份的<b>时空案内人</b>聊聊。`,
     'w.outside': `令制外：虾夷地 · 琉球`,
     'untranslated': `本地区内容翻译中，暂以中文显示`,
+    'share': `分享`, 'share.title': `分享这个地区（链接会带上当前语言）`, 'share.copied': `链接已复制，快发给朋友吧`, 'share.text': `{name} · Japan Explorer — 日本47都道府县古今变迁图鉴`, 'share.fail': `复制失败，请手动复制地址栏的链接`,
     'stamp.do': `打卡盖印`, 'stamp.done': `已盖印 · {date}`, 'seal.meta': `奉拝 · {name}`,
     'st.region': `地方`, 'st.capital': `厅所在地`, 'st.pop': `人口`, 'st.area': `面积`,
     'meme.h': `地域修罗场`, 'meme.sub': `地缘梗速览 · 玩笑话，别当真`,
@@ -159,6 +191,7 @@ const D = {
     'w.p2': `Click any region on the map to see its <b>ancient and modern names</b>, its history across <b>six eras</b>, landmarks, local food and dialect — and chat with the <b>time-travel guide</b>, who changes identity wherever you go.`,
     'w.outside': `Outside the system: Ezo · Ryukyu`,
     'untranslated': `Translation in progress — this region is shown in Chinese for now`,
+    'share': `Share`, 'share.title': `Share this region (the link keeps the current language)`, 'share.copied': `Link copied — send it to a friend!`, 'share.text': `{name} · Japan Explorer — Japan's 47 prefectures through the ages`, 'share.fail': `Couldn't copy — please copy the address bar instead`,
     'stamp.do': `Get stamp`, 'stamp.done': `Stamped · {date}`, 'seal.meta': `Hōhai · {name}`,
     'st.region': `Region`, 'st.capital': `Capital`, 'st.pop': `Population`, 'st.area': `Area`,
     'meme.h': `Local Rivalries`, 'meme.sub': `Regional in-jokes · all in good fun`,
@@ -246,6 +279,7 @@ const D = {
     'w.p2': `左の地図で地域をクリックすると、<b>旧国名と現在の名前</b>、<b>六つの時代</b>の歩み、名所や名物、方言が見られます。地域ごとに姿を変える<b>時空案内人</b>とも話してみましょう。`,
     'w.outside': `令制外：蝦夷地 · 琉球`,
     'untranslated': `この地域は翻訳作業中のため、中国語で表示しています`,
+    'share': `共有`, 'share.title': `この地域を共有（リンクに今の言語が含まれます）`, 'share.copied': `リンクをコピーしました。友だちに送ってみましょう`, 'share.text': `{name} · Japan Explorer — 日本47都道府県 今昔図鑑`, 'share.fail': `コピーできませんでした。アドレスバーのリンクをコピーしてください`,
     'stamp.do': `御朱印をいただく`, 'stamp.done': `参拝済み · {date}`, 'seal.meta': `奉拝 · {name}`,
     'st.region': `地方`, 'st.capital': `県庁所在地`, 'st.pop': `人口`, 'st.area': `面積`,
     'meme.h': `地域の修羅場`, 'meme.sub': `ご当地あるある · 冗談としてどうぞ`,

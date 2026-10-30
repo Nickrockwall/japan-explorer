@@ -6,7 +6,9 @@
 
 - 原生 HTML5 + CSS3 + 原生 ES Modules，无构建工具、无 npm 依赖，纯静态运行。
 - 地图：Apache ECharts 5.5.1（jsdelivr CDN，失败时回退 unpkg → npmmirror 国内镜像），用 `echarts.registerMap` 注册本地 GeoJSON。
-- 深链接：`index.html#pref=26` 直接打开对应地区。
+- 深链接：`index.html#pref=26&lang=ja` 直接打开对应地区并指定语言（`lang` 可省略；链接里的语言优先于本地设置并会被记住）。选中地区时地址栏自动写成这种形式，详卡「分享」按钮复制/分享的就是它。
+- **数据打包（改数据后必做）**：`python tools/build_bundle.py` 把每种语言的 47 县 + 合战/时代数据合并成 `src/data/bundle/{zh,en,ja}.json`（每种语言 1 个请求）。前端优先读 bundle，读不到才回退为逐个文件加载——所以**改了 JSON 却忘记重新打包，线上会继续显示旧内容**。
+- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。改动应用外壳文件列表（`SHELL`）时把 `VERSION` 加一。图标在 `src/assets/icons/`，分享卡片封面 `src/assets/og-cover.png`（1200×630）。
 - 必须通过 HTTP 服务器访问（`fetch` 读取 JSON），不能直接双击 `file://` 打开：
   - `python3 -m http.server 8000`（Windows 用 `python`）或 `npx serve .`
 - 浏览器本地存储（`localStorage`）：
@@ -154,6 +156,7 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 
 - 雅致和风 × 深色科技仪表盘：底色 `#18181c`，朱红 `#c23531`（选中/强调），青金 `#d4a373`（已探索/次强调）。
 - 布局：顶栏 + 左 58% 地图 + 右 42%（上：详卡，下：向导，中间拖动条可调比例 20–80%）；窄屏改为上下堆叠。
+- 响应式断点：≤900px 上下堆叠（拖动条隐藏，`side-pane` 只剩 详卡 + 向导 两行网格——不要写成三行，否则向导会落进 0 高的行里）；≤560px 为手机：顶栏两行、按钮只留图标、时代刻度换成当前时代名、快捷提问单行横滑、合战面板默认折叠、地图用 `MOBILE_VIEW` 放大视角。改界面后用 390×844 尺寸截图检查。
 
 ## 时空滤镜
 

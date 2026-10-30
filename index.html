@@ -2,13 +2,35 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Japan Explorer · 日本47都道府县古今变迁图鉴</title>
-  <meta name="description" content="在日本全图上探索47都道府县与68令制国的古今变迁，并与AI历史向导对话。">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2318181c'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23c23531'/%3E%3C/svg%3E">
+  <meta name="description" content="在日本全图上探索47都道府县与68令制国的古今变迁，并与AI历史向导对话。Explore Japan's 47 prefectures and 68 ancient provinces. 47都道府県と旧国の今昔をめぐる。">
+  <meta name="theme-color" content="#18181c">
+
+  <!-- 分享预览卡片（微信以外的大多数平台读取 Open Graph） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Japan Explorer">
+  <meta property="og:url" content="https://nickrockwall.github.io/japan-explorer/">
+  <meta property="og:title" content="Japan Explorer · 日本47都道府县古今变迁图鉴">
+  <meta property="og:description" content="点开地图，看今天的47都道府县曾是哪些古国；合战沙盘、拉面地酒、御朱印打卡，还有会换身份的AI历史向导。中文 / English / 日本語">
+  <meta property="og:image" content="https://nickrockwall.github.io/japan-explorer/src/assets/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://nickrockwall.github.io/japan-explorer/src/assets/og-cover.png">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="src/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="src/assets/icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Japan Explorer">
+
+  <!-- 字体不阻塞首屏：Google Fonts 在部分地区访问慢，加载失败时回退系统字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="src/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
   <script>
@@ -41,7 +63,7 @@
         <span class="book-ico" aria-hidden="true">印</span><span data-i18n="btn.book">御朱印帐</span> (<b id="goshuin-count">0</b>/47)
       </button>
       <button class="btn btn-ghost" id="btn-settings" type="button">
-        <span class="dot" id="api-dot"></span><span data-i18n="btn.settings">API 设置</span>
+        <span class="dot" id="api-dot"></span><span class="gear" aria-hidden="true">⚙</span><span data-i18n="btn.settings">API 设置</span>
       </button>
       <div class="lang-switch" id="lang-switch" role="radiogroup" data-i18n-aria="lang.aria" aria-label="界面语言"></div>
     </div>
@@ -210,5 +232,11 @@ python3 -m http.server 8000      # Windows 可用 python</pre>
     }
   </script>
   <script type="module" src="src/js/app.js"></script>
+  <script>
+    // PWA 离线缓存（仅 http(s)；localhost 也注册，便于本地测试）
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
 </body>
 </html>

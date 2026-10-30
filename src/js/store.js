@@ -8,9 +8,21 @@ async function fetchJSON(url) {
   return res.json();
 }
 
+// 优先读取 tools/build_bundle.py 生成的单文件包（每种语言 1 个请求）；
+// 包不存在时回退为逐个文件加载
+export async function loadAll(lang = 'zh', merge = (b) => b) {
+  const geoP = fetchJSON('src/assets/geojson/japan.json');
+  try {
+    const b = await fetchJSON(`src/data/bundle/${lang}.json`);
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])) };
+  } catch {
+    return loadFiles(lang, merge);
+  }
+}
+
 // lang 不是中文时，按 src/data/i18n/manifest.json 载入已翻译的覆盖层并合并；
 // 未翻译的县保持中文，并标记 _translated = false
-export async function loadAll(lang = 'zh', merge = (b) => b) {
+async function loadFiles(lang, merge) {
   const [index, geo, events, manifest] = await Promise.all([
     fetchJSON('src/data/index.json'),
     fetchJSON('src/assets/geojson/japan.json'),

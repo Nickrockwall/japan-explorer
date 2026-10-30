@@ -4,13 +4,44 @@ import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
-import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic } from './i18n.js';
+import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
 function updateCounter(set) {
   $('visited-count').textContent = set.size;
   $('visited-bar').style.width = `${(set.size / 47) * 100}%`;
+}
+
+// 剪贴板接口不可用时（如部分 App 内置浏览器）的旧式复制
+function legacyCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { /* 忽略 */ }
+  ta.remove();
+  return ok;
+}
+
+// 底部轻提示
+let toastTimer = null;
+function toast(msg) {
+  let el = $('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
 }
 
 function updateGoshuinCount() {
@@ -213,7 +244,7 @@ function setupHudFold() {
     btn.title = t(folded ? 'hud.expand' : 'hud.collapse');
     btn.textContent = folded ? '▸' : '▾';
   };
-  apply(!!uiPref.get('hudFolded', false));
+  apply(!!uiPref.get('hudFolded', matchMedia('(max-width: 560px)').matches)); // 手机默认收起
   btn.addEventListener('click', () => {
     const folded = !hud.classList.contains('folded');
     uiPref.set('hudFolded', folded);
@@ -278,7 +309,7 @@ async function main() {
       map.select(id);
       renderCurrent();
       guide.setPrefecture(prefs.get(id));
-      history.replaceState(null, '', `#pref=${id}`);
+      history.replaceState(null, '', stateHash(id));
     },
   });
 
@@ -477,6 +508,24 @@ async function main() {
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && app.battle && !document.querySelector('dialog[open]')) exitBattle();
+  });
+
+  // ── 分享：手机用系统分享面板，电脑复制链接 ──
+  detailEl.addEventListener('click', async (e) => {
+    if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
+    const url = shareURL(app.currentId);
+    const text = t('share.text', { name: prefName(prefs.get(app.currentId)) });
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      try { await navigator.share({ title: 'Japan Explorer', text, url }); return; } catch (err) {
+        if (err.name === 'AbortError') return; // 用户取消
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast(t('share.copied'));
+    } catch {
+      toast(t(legacyCopy(url) ? 'share.copied' : 'share.fail'));
+    }
   });
 
   // ── 打卡盖印 ──

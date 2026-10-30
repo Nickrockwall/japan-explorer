@@ -176,7 +176,13 @@ export function renderDetail(el, p, { stampedAt, focus } = {}) {
         </div>
         <div class="badge-title">「${esc(p.badge.title)}」</div>
       </div>
-      ${stampButton(p, stampedAt)}
+      <div class="hero-actions">
+        ${stampButton(p, stampedAt)}
+        <button class="share-btn" type="button" data-act="share" title="${esc(t('share.title'))}" aria-label="${esc(t('share'))}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.8-4M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>${t('share')}</span>
+        </button>
+      </div>
     </div>
 
     <div class="stats">

@@ -12,6 +12,9 @@ const COLOR = {
 };
 
 export const DEFAULT_VIEW = { center: [135, 34.6], zoom: 1.26 };
+// 手机竖屏：地图区窄而高，放大并把中心移向本州中部
+const MOBILE_VIEW = { center: [136.6, 36.4], zoom: 1.6 };
+const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : DEFAULT_VIEW);
 
 // 分类配色；显示名由 i18n 的 label() 按当前语言给出
 const cats = (group, colors) => Object.fromEntries(Object.entries(colors).map(([k, c]) => [k, [label(group, k), c]]));
@@ -293,8 +296,8 @@ export function createMap(el, geo, prefs, { onSelect }) {
       map: 'japan',
       roam: true,
       // GeoJSON 含小笠原等远岛，范围很大；默认视角对准本土四岛 + 冲绳
-      center: DEFAULT_VIEW.center,
-      zoom: DEFAULT_VIEW.zoom,
+      center: homeView().center,
+      zoom: homeView().zoom,
       scaleLimit: { min: 0.8, max: 40 },
       layoutCenter: ['50%', '50%'],
       layoutSize: '100%',
@@ -344,7 +347,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
     endBattle(view) {
       state.battle = null;
       render();
-      setView(view || DEFAULT_VIEW);
+      setView(view || homeView());
     },
     get state() { return { ...state }; },
     // 当前图例：{ caption, items: [label, color, count?][] }

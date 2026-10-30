@@ -1,0 +1,17 @@
+{
+  "name": "Japan Explorer · 日本47都道府县古今变迁图鉴",
+  "short_name": "Japan Explorer",
+  "description": "在日本全图上探索47都道府县与68令制国的古今变迁。Explore Japan's 47 prefectures through the ages.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#18181c",
+  "theme_color": "#18181c",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "src/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "src/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "src/assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
