@@ -37,6 +37,13 @@
 
 填好后可以先点「连接测试」。Key 只保存在你自己的浏览器里，请求由浏览器直接发往你填写的接口，本站不经手。
 
+## 手机上打开
+
+用手机浏览器打开 https://nickrockwall.github.io/japan-explorer/ 即可。想加到桌面：
+
+- **iPhone（Safari）**：点分享按钮 →「添加到主屏幕」
+- **Android（Chrome）**：点 ⋮ →「添加到主屏幕」或「安装应用」
+
 ## 本地运行
 
 ```bash
