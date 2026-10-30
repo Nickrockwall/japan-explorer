@@ -1,0 +1,139 @@
+{
+  "capital": "Sendai",
+  "badge": {
+    "title": "Castle of the One-Eyed Dragon"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Mutsu Province",
+        "portion": "central-south (core of Rikuzen Province from 1868)",
+        "cross_prefectures": [
+          "Aomori",
+          "Iwate",
+          "Akita",
+          "Fukushima"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Date Masamune",
+      "Ōsaki clan",
+      "Kasai clan"
+    ],
+    "edo_domains": [
+      "Sendai Domain (Date clan, 620,000 koku)"
+    ],
+    "meiji_transition": {
+      "summary": "Sendai Prefecture was created in 1871 and renamed Miyagi in 1872; parts of Iwai and Fukushima prefectures were added in 1876, forming today's borders.",
+      "boundary_note": "Nearly all of Miyagi was Date land under the Sendai Domain, but the domain also reached into southern Iwate — so 'the Date's 620,000 koku' was bigger than today's Miyagi."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Taga Castle",
+      "summary": "Taga Castle, founded in 724, was both the Mutsu provincial capital and the Chinjufu headquarters — the court's front line in the northeast; its stele is one of Japan's three great ancient steles."
+    },
+    {
+      "title": "Commissioner of Ōshū",
+      "summary": "Kasai Kiyoshige was appointed Ōshū Sōbugyō to hold Mutsu, while the Taga provincial office remained the administrative center."
+    },
+    {
+      "title": "The Ōsaki as Ōshū tandai",
+      "summary": "The Muromachi shogunate created the post of Ōshū tandai, held by the Ōsaki, a branch of the Shiba; the Date grew steadily stronger in the south."
+    },
+    {
+      "title": "Masamune the One-Eyed Dragon",
+      "summary": "Date Masamune briefly unified southern Ōshū but was cut back by Hideyoshi for arriving late to the siege of Odawara; after the Ōsaki–Kasai uprising he received their old lands — the basis of Miyagi."
+    },
+    {
+      "title": "Sendai, 620,000 koku",
+      "summary": "Masamune built Sendai (Aoba) Castle in 1601 and in 1613 sent Hasekura Tsunenaga's Keichō embassy all the way to Rome; the domain opened new rice fields that fed Edo."
+    },
+    {
+      "title": "City of learning and recovery",
+      "summary": "Tōhoku Imperial University (today's Tōhoku University) made Sendai the hub of the northeast; the 2011 earthquake and tsunami devastated the coast."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Matsushima",
+      "note": "One of the Three Views of Japan, with over 260 islets"
+    },
+    {
+      "name": "Sendai Castle ruins",
+      "note": "Date Masamune's equestrian statue overlooks the city"
+    },
+    {
+      "name": "Zuihōden",
+      "note": "Masamune's mausoleum in brilliant Momoyama style"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Gyūtan (beef tongue)",
+      "note": "Sendai's postwar specialty"
+    },
+    {
+      "name": "Zunda mochi",
+      "note": "Mochi coated in sweet mashed edamame"
+    },
+    {
+      "name": "Sasa kamaboko",
+      "note": "Grilled fish cake shaped like a bamboo leaf"
+    }
+  ],
+  "dialect": {
+    "name": "Sendai dialect",
+    "features": "The sentence-ending '-daccha' is its trademark; it keeps many old words and sounds soft yet firm.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "'…you know'",
+        "note": "sentence-ending particle"
+      },
+      {
+        "meaning": "embarrassed, shy",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk stands before the Taga Castle stele, where the court once met the Emishi frontier. Later the One-Eyed Dragon, Date Masamune, built his castle here — which shall I tell first, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "'Capital of Tōhoku'",
+      "text": "Sendai likes to call itself the center of the northeast — the other five Tōhoku prefectures reply, 'You're just bigger.'"
+    },
+    {
+      "title": "Date-otoko",
+      "text": "In Japanese a 'date-otoko' is a dashing dandy — said to come from the flamboyant outfits of Date Masamune's troops."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Bamboo-and-sparrow crest (Date clan)"
+  },
+  "hero_persona": {
+    "name": "Date Masamune",
+    "title": "The One-Eyed Dragon · founder of the Sendai Domain",
+    "self": "I",
+    "opening_line": "I am the One-Eyed Dragon of Ōshū, Date Masamune! Had I been born twenty years earlier, who knows who would rule the realm — what would you ask of me?",
+    "tone_prompt": "bold, unrestrained and a little vain, with flamboyant style; now and then laments being 'born too late'"
+  },
+  "ramen": {
+    "style_name": "Sendai spicy miso ramen",
+    "broth": "Miso (spicy)",
+    "noodles": "Medium-thick curly noodles",
+    "toppings": "Chashu, scallions, a ball of spicy miso",
+    "highlight": "A ball of spicy miso sits in the bowl — stir it in as you go and set your own heat level"
+  },
+  "sake": {
+    "brand": "Urakasumi",
+    "brewery": "Saura",
+    "taste_profile": "Light & dry: clean and delicate, perfect with Sanriku seafood"
+  }
+}

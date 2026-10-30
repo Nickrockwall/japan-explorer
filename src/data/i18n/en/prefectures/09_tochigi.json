@@ -1,0 +1,138 @@
+{
+  "capital": "Utsunomiya",
+  "badge": {
+    "title": "Tōshō-gū of Nikkō"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Shimotsuke Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Utsunomiya clan",
+      "Nasu clan",
+      "Sano clan",
+      "Oyama clan"
+    ],
+    "edo_domains": [
+      "Utsunomiya Domain",
+      "Nikkō (Tōshō-gū estate)",
+      "Ashikaga Domain",
+      "Mibu Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1873 Utsunomiya and Tochigi prefectures merged as Tochigi; in 1884 the prefectural office moved from Tochigi town to Utsunomiya.",
+      "boundary_note": "Today's Tochigi almost exactly matches ancient Shimotsuke — a rare case of province and prefecture lining up; yet the prefecture is named after the southern town of Tochigi, not its capital."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Shimotsuke Yakushi-ji",
+      "summary": "Shimotsuke Yakushi-ji had an ordination platform, one of the 'three ordination platforms of the realm' with Tōdai-ji and Kanzeon-ji in Tsukushi."
+    },
+    {
+      "title": "Ashikaga and Utsunomiya",
+      "summary": "The Ashikaga took root in Ashikaga estate in Shimotsuke; the Utsunomiya clan's poetry circle rivaled those of Kyoto and Kamakura."
+    },
+    {
+      "title": "Revival of the Ashikaga Gakkō",
+      "summary": "In 1439 the Kantō kanrei Uesugi Norizane revived the Ashikaga Gakkō, making it the highest school in eastern Japan; the Utsunomiya, Nasu and Oyama stood side by side."
+    },
+    {
+      "title": "Utsunomiya and Nasu",
+      "summary": "Old houses like the Utsunomiya and Nasu maneuvered between the Hōjō and Satake; Francis Xavier called the Ashikaga Gakkō 'the university of Bandō'."
+    },
+    {
+      "title": "Tōshō-gū",
+      "summary": "Tokugawa Ieyasu was buried at Nikkō; the third shogun Iemitsu rebuilt the Tōshō-gū on a grand scale, and imperial envoys and the Nikkō Kaidō made it the shogunate's sacred site."
+    },
+    {
+      "title": "A new capital",
+      "summary": "The prefectural office moved to Utsunomiya in 1884; Tanaka Shōzō's direct appeal to the emperor over the Ashio copper mine pollution is seen as the start of Japan's anti-pollution movement."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Nikkō Tōshō-gū",
+      "note": "World Heritage site with the 'three monkeys' and 'sleeping cat' carvings"
+    },
+    {
+      "name": "Kegon Falls",
+      "note": "97-meter waterfall flowing out of Lake Chūzenji"
+    },
+    {
+      "name": "Ashikaga Gakkō",
+      "note": "Ruins of Japan's oldest school"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Utsunomiya gyōza",
+      "note": "The city of dumplings"
+    },
+    {
+      "name": "Tochiotome strawberries",
+      "note": "Japan's top strawberry producer"
+    },
+    {
+      "name": "Mashiko ware",
+      "note": "Thick, rustic folk pottery"
+    }
+  ],
+  "dialect": {
+    "name": "Tochigi dialect",
+    "features": "Like Ibaraki's, an accentless dialect; sentences end in '-daiji' or '-danbe', with an even tone.",
+    "phrases": [
+      {
+        "meaning": "it's fine, no problem",
+        "note": ""
+      },
+      {
+        "meaning": "good-for-nothing, fool",
+        "note": ""
+      },
+      {
+        "meaning": "…isn't it",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ I just napped beside the 'sleeping cat' at Nikkō Tōshō-gū. This is where Tokugawa Ieyasu rests — want to hear how Iemitsu made it gleam with gold?"
+  },
+  "regional_meme": [
+    {
+      "title": "Tochigi or Gunma?",
+      "text": "Outsiders constantly mix up Tochigi and Gunma; people from both insist 'we're nothing alike'."
+    },
+    {
+      "title": "The gyōza throne",
+      "text": "Utsunomiya and Hamamatsu fight every year over the title of 'Japan's top gyōza consumer'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Triple tomoe (Utsunomiya clan)"
+  },
+  "hero_persona": {
+    "name": "Ashikaga Takauji",
+    "title": "First Muromachi shogun",
+    "self": "I",
+    "opening_line": "I am Ashikaga Takauji, of Ashikaga estate in Shimotsuke. Founding a shogunate, two courts at war… friend and foe were hard to tell apart in my life. Which part would you ask about?",
+    "tone_prompt": "generous and open-minded yet torn; harbors complicated feelings toward Emperor Go-Daigo"
+  },
+  "ramen": {
+    "style_name": "Sano ramen",
+    "broth": "Shōyu (clear chicken stock)",
+    "noodles": "Flat, wide noodles pressed with green bamboo",
+    "toppings": "Chashu, bamboo shoots, spinach",
+    "highlight": "Kneaded with a green bamboo pole — soft, moist noodles in a light, clear broth"
+  },
+  "sake": {
+    "brand": "Senkin (仙禽)",
+    "brewery": "Senkin",
+    "taste_profile": "Rich & sweet: sweet-tart like white wine — a revivalist of wooden-vat brewing"
+  }
+}

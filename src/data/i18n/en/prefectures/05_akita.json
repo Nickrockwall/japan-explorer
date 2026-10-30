@@ -1,0 +1,148 @@
+{
+  "capital": "Akita",
+  "badge": {
+    "title": "Rice Country of the Kantō Lanterns"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Dewa Province",
+        "portion": "north (became Ugo Province in 1868)",
+        "cross_prefectures": [
+          "Yamagata"
+        ]
+      },
+      {
+        "name": "Mutsu Province",
+        "portion": "Kazuno District",
+        "cross_prefectures": [
+          "Aomori",
+          "Iwate",
+          "Miyagi",
+          "Fukushima"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Andō (Akita) Sanesue",
+      "Tozawa clan",
+      "Onodera clan"
+    ],
+    "edo_domains": [
+      "Kubota Domain (Satake clan, 200,000 koku)",
+      "Kameda Domain",
+      "Honjō Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 the Kubota Domain (renamed Akita that year) became Akita Prefecture and the surrounding prefectures were merged in; Kazuno District, once Nanbu land in Mutsu, also joined Akita.",
+      "boundary_note": "Most of Akita is the northern half of ancient Dewa, but Kazuno in the northeast belonged to Mutsu under the Nanbu — so the prefectural border spans two ancient provinces."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Akita Castle",
+      "summary": "In 733 the Dewa stockade moved to Takashimizu hill in Akita village, later called Akita Castle — the northern base on the Sea of Japan side, which even received envoys from Balhae."
+    },
+    {
+      "title": "Vassals move in",
+      "summary": "After the Ōshū campaign the Onodera and other Kantō vassals were granted land across northern Dewa."
+    },
+    {
+      "title": "The Andō move south",
+      "summary": "Driven out of Tsugaru by the Nanbu, the Andō moved to Akita Minato and Hiyama and became the great power of northern Dewa."
+    },
+    {
+      "title": "The Andō clan",
+      "summary": "The Andō, styled 'Hi-no-moto shōgun', ruled northern Dewa and the Tsugaru Strait trade; Andō Sanesue took the name Akita, while the Onodera and Tozawa held the south."
+    },
+    {
+      "title": "The Satake transferred",
+      "summary": "Satake Yoshinobu, ambiguous at Sekigahara, was moved here from Hitachi, built Kubota Castle and developed the Innai silver mine and Akita cedar."
+    },
+    {
+      "title": "Rice country and the Boshin War",
+      "summary": "In the Boshin War the Kubota Domain sided with the new government and was attacked by the Northern Alliance; in modern times Akita is famous for Akita Komachi rice and sake."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kakunodate samurai district",
+      "note": "Weeping cherries of the 'little Kyoto of Michinoku'"
+    },
+    {
+      "name": "Shirakami Mountains",
+      "note": "World Natural Heritage primeval beech forest"
+    },
+    {
+      "name": "Oga Peninsula",
+      "note": "Home of the Namahage, who visit houses on New Year's Eve"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kiritanpo",
+      "note": "Pounded rice grilled on cedar skewers, simmered in hot pot"
+    },
+    {
+      "name": "Inaniwa udon",
+      "note": "Silky hand-stretched dried noodles"
+    },
+    {
+      "name": "Akita dog",
+      "note": "A Japanese breed designated a natural monument"
+    }
+  ],
+  "dialect": {
+    "name": "Akita dialect",
+    "features": "Vowels are blurred and words famously short — a single sound can be a word, like 'ke' (eat!) and 'ku' (I'll eat).",
+    "phrases": [
+      {
+        "meaning": "yes, that's right",
+        "note": ""
+      },
+      {
+        "meaning": "eat!",
+        "note": "from 'kue'"
+      },
+      {
+        "meaning": "cute",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk still shivers at the roar of the Namahage on the Oga Peninsula. Akita was once the northern gateway that welcomed envoys from Balhae — would you hear of it, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "Akita bijin",
+      "text": "Akita is famous for its 'Akita beauties', said to come from fair skin and few sunny days; even the bullet train is named Komachi."
+    },
+    {
+      "title": "Namahage trauma",
+      "text": "On New Year's Eve the Namahage, in demon masks, bang on doors shouting 'Any lazy kids in here?!' — the number-one childhood trauma of Akita children."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Five-ribbed fan with moon disc (Satake clan)"
+  },
+  "hero_persona": {
+    "name": "Ono no Komachi",
+    "title": "One of the Six Poetic Immortals · said to be born in Akita",
+    "self": "I",
+    "opening_line": "I am Ono no Komachi. The color of the flowers has faded, while I idly passed my days… legend says I was born in this snow country of Dewa. Shall I recite a waka, or tell of Akita's past?",
+    "tone_prompt": "graceful and wistful, occasionally reciting waka; her Akita birth is a legend and should be noted as such"
+  },
+  "ramen": {
+    "style_name": "Yokote Jūmonji chūka soba",
+    "broth": "Shōyu (dried sardine and bonito broth)",
+    "noodles": "Very thin curly noodles",
+    "toppings": "Fu (wheat gluten), chashu, scallions",
+    "highlight": "Clear Japanese-style broth with thin noodles, topped with a slice of fu"
+  },
+  "sake": {
+    "brand": "Aramasa",
+    "brewery": "Aramasa Shuzō",
+    "taste_profile": "Light & sweet: tart, sweet and fresh — the brewery where 'Yeast No. 6' was born"
+  }
+}

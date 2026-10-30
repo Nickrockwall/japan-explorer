@@ -1,0 +1,141 @@
+{
+  "capital": "Morioka",
+  "badge": {
+    "title": "Golden Hiraizumi"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Mutsu Province",
+        "portion": "central-north (became Rikuchū Province in 1868)",
+        "cross_prefectures": [
+          "Aomori",
+          "Miyagi",
+          "Akita",
+          "Fukushima"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Nanbu Nobunao",
+      "Kasai clan",
+      "Hienuki and Waga clans"
+    ],
+    "edo_domains": [
+      "Morioka Domain (Nanbu clan)",
+      "Ichinoseki Domain (Tamura clan, a Sendai branch)",
+      "Sendai Domain lands (south of the prefecture)"
+    ],
+    "meiji_transition": {
+      "summary": "Morioka and other domains became prefectures in 1871, and Morioka Prefecture was renamed Iwate in 1872; part of Iwai Prefecture joined in 1876, settling the borders.",
+      "boundary_note": "In 1868 Mutsu was split into five provinces — Mutsu, Rikuchū, Rikuzen, Iwashiro and Iwaki; Iwate roughly matches Rikuchū, but Hiraizumi in the south belonged to the Date's Sendai Domain in the Edo period, so domain and prefectural borders don't line up."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Aterui and Hiraizumi",
+      "summary": "In 802 the Emishi leader Aterui surrendered to Sakanoue no Tamuramaro; in the 12th century the Ōshū Fujiwara, rich in placer gold, built Chūson-ji's Golden Hall at Hiraizumi, rivaling Kyoto."
+    },
+    {
+      "title": "After the Ōshū campaign",
+      "summary": "In 1189 Minamoto no Yoritomo destroyed the Ōshū Fujiwara and Hiraizumi declined; Kantō vassals such as the Kasai were granted land here."
+    },
+    {
+      "title": "Nanbu and Kasai",
+      "summary": "The Nanbu backed the Southern Court; in the Muromachi period the Nanbu in the north, the Kasai in the south, and the Waga and Hienuki stood side by side."
+    },
+    {
+      "title": "Rise of the Nanbu",
+      "summary": "The Sannohe Nanbu expanded south; Nanbu Nobunao kept his lands under Hideyoshi's settlement of Ōshū, while the south became the battleground of the Kasai–Ōsaki uprising."
+    },
+    {
+      "title": "Morioka, 200,000 koku",
+      "summary": "The Nanbu ruled from Morioka Castle, living off copper and the famous Nanbu horses, but cold summers brought frequent famines; the Sanhei uprising was among the largest peasant revolts of the Edo period."
+    },
+    {
+      "title": "Land of poets",
+      "summary": "Miyazawa Kenji and Ishikawa Takuboku were born here; the 2011 Great East Japan Earthquake and tsunami devastated the Sanriku coast, and rebuilding continues."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Chūson-ji Golden Hall",
+      "note": "Completed 1124, heart of the Hiraizumi World Heritage site"
+    },
+    {
+      "name": "Morioka Castle Ruins Park",
+      "note": "Nanbu castle with well-preserved stone walls"
+    },
+    {
+      "name": "Jōdogahama",
+      "note": "White rhyolite beach in Sanriku Fukkō National Park"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Wanko soba",
+      "note": "Morioka's one-bite bowls of soba, refilled until you give up"
+    },
+    {
+      "name": "Nanbu ironware",
+      "note": "Cast-iron teapots from Morioka and Mizusawa"
+    },
+    {
+      "name": "Morioka reimen",
+      "note": "Chewy cold noodles inspired by Korean naengmyeon"
+    }
+  ],
+  "dialect": {
+    "name": "Nanbu dialect",
+    "features": "Sentences often end in '-be' or '-ssu', with a gentle tone; along the coast at Kuji 'jejeje' expresses surprise — a phrase made famous nationwide by the TV drama 'Amachan'.",
+    "phrases": [
+      {
+        "meaning": "Oh my! (surprise)",
+        "note": "Kuji area"
+      },
+      {
+        "meaning": "welcome",
+        "note": ""
+      },
+      {
+        "meaning": "yes (polite)",
+        "note": "equivalent to 'gozaimasu'"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk has come from bowing before the Golden Hall of Chūson-ji. Eight hundred years ago the gold here made even Kyoto envious — shall I tell you of the three generations of the Fujiwara, or of Aterui, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "Just smaller than Shikoku",
+      "text": "Iwate is the largest prefecture on Honshū — about 80% the size of Shikoku. Driving across it always takes longer than you think."
+    },
+    {
+      "title": "The wanko soba challenge",
+      "text": "A server stands beside you shouting 'Hai, janjan!' and keeps tossing noodles into your bowl; you only surrender by closing the lid. The record is over 500 bowls."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Nanbu crane (mukai-tsuru crest)"
+  },
+  "hero_persona": {
+    "name": "Aterui",
+    "title": "Emishi hero · chief of Isawa",
+    "self": "I",
+    "opening_line": "I am Aterui, guardian of the land of Isawa. The court's armies came again and again — would you hear what we fought for?",
+    "tone_prompt": "steadfast and plain, devoted to his homeland, neither servile nor arrogant toward the court; note that the sources on him are scarce"
+  },
+  "ramen": {
+    "style_name": "Sanriku clear-broth chūka soba",
+    "broth": "Shōyu (clear chicken-and-seafood stock)",
+    "noodles": "Thin curly noodles",
+    "toppings": "Chashu, bamboo shoots, nori",
+    "highlight": "Iwate has no nationally famous ramen style; the Sanriku coast prefers light soy broths, and Morioka reimen is the real noodle star"
+  },
+  "sake": {
+    "brand": "Nanbu Bijin",
+    "brewery": "Nanbu Bijin",
+    "taste_profile": "Light & sweet: soft fruity aroma — the signature brand of the Nanbu brewers' guild"
+  }
+}

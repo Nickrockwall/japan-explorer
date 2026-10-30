@@ -1,0 +1,140 @@
+{
+  "capital": "Aomori",
+  "badge": {
+    "title": "Apple Country of the Far North"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Mutsu Province",
+        "portion": "northern tip",
+        "cross_prefectures": [
+          "Iwate",
+          "Miyagi",
+          "Akita",
+          "Fukushima"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Nanbu clan (Sannohe Castle)",
+      "Tsugaru Tamenobu (Ōura clan, broke away from the Nanbu)"
+    ],
+    "edo_domains": [
+      "Hirosaki Domain (Tsugaru clan)",
+      "Hachinohe Domain (a Nanbu branch)",
+      "Kuroishi Domain (a Tsugaru branch)"
+    ],
+    "meiji_transition": {
+      "summary": "After the 1871 abolition of the domains, Hirosaki, Hachinohe, Kuroishi, Tonami, Shichinohe and others were merged that year into Hirosaki Prefecture, whose seat soon moved to Aomori and was renamed Aomori Prefecture; Ninohe District, once Nanbu land, went to Iwate.",
+      "boundary_note": "Ancient Mutsu was vast, covering the whole Pacific side of Tōhoku; today's Aomori is just its northern tip. The old domain border between Tsugaru (west) and Nanbu (east) is still a dividing line of dialect and temperament."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "North of Mutsu",
+      "summary": "The court pushed its stockades up the Pacific side, but the tip of Honshū long remained Emishi land, coming under the Ōshū Fujiwara only in the 12th century."
+    },
+    {
+      "title": "The Andō and Tosaminato",
+      "summary": "The Andō clan of Tsugaru ran northern maritime trade from Tosaminato and held the hereditary post of 'Ezo kanrei'."
+    },
+    {
+      "title": "The Nanbu move north",
+      "summary": "The Nanbu pushed into Tsugaru, and in the mid-15th century the Andō were driven across to Ezo; Tosaminato gradually declined."
+    },
+    {
+      "title": "Tsugaru breaks away",
+      "summary": "Ōura Tamenobu, a Nanbu retainer, seized Tsugaru by force and won Toyotomi Hideyoshi's recognition by submitting first — the start of a centuries-long Tsugaru–Nanbu feud."
+    },
+    {
+      "title": "Hirosaki castle town",
+      "summary": "The Tsugaru governed from Hirosaki Castle and reclaimed the Iwaki River plain; the Hachinohe Domain lived off its port and fisheries. The Tenmei famine of the 1780s hit the region hard."
+    },
+    {
+      "title": "Apples and the Seikan Tunnel",
+      "summary": "Western apples were introduced in the Meiji era and Aomori is now Japan's top producer; the Seikan Tunnel opened in 1988, linking Honshū and Hokkaidō under the sea."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Sannai-Maruyama Site",
+      "note": "A large Jōmon settlement from about 5,900–4,200 years ago"
+    },
+    {
+      "name": "Hirosaki Castle",
+      "note": "One of the twelve original castle keeps; famous for cherry blossoms"
+    },
+    {
+      "name": "Lake Towada & Oirase Stream",
+      "note": "A caldera lake and a shaded riverside walk"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Aomori apples",
+      "note": "About 60% of Japan's apples"
+    },
+    {
+      "name": "Ōma tuna",
+      "note": "Top-grade bluefin caught on single lines in the Tsugaru Strait"
+    },
+    {
+      "name": "Tsugaru-nuri",
+      "note": "Lacquerware built up layer by layer and polished into mottled patterns"
+    }
+  ],
+  "dialect": {
+    "name": "Tsugaru dialect",
+    "features": "Famously terse, with weakened vowels and voiced consonants; the exchange 'Dosa?' 'Yusa.' (Where to? The bathhouse.) is called the shortest conversation in Japan.",
+    "phrases": [
+      {
+        "meaning": "Where to? — The bathhouse.",
+        "note": "reputedly Japan's shortest conversation"
+      },
+      {
+        "meaning": "I / you",
+        "note": ""
+      },
+      {
+        "meaning": "sorry, thank you",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk has walked north to the very end of Mutsu. Here lie a centuries-old feud between Tsugaru and Nanbu, and a great Jōmon village from five thousand years ago — where would you like to begin, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "Tsugaru vs. Nanbu",
+      "text": "In the same prefecture, western Tsugaru and eastern Nanbu have held a grudge since the Sengoku period; people from the two areas are said to still needle each other over drinks."
+    },
+    {
+      "title": "Japan's shortest conversation",
+      "text": "'Dosa?' 'Yusa.' — Where to? The bathhouse. In a Tsugaru winter it's too cold to open your mouth."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Manji (Tsugaru clan banner)"
+  },
+  "hero_persona": {
+    "name": "Tsugaru Tamenobu",
+    "title": "Founder of the Tsugaru Domain · warlord of the far north",
+    "self": "I",
+    "opening_line": "I am Tsugaru Tamenobu. The Nanbu? My former masters. This land of Tsugaru I took with my own hands.",
+    "tone_prompt": "ambitious, bold and blunt; triumphant and provocative whenever the Nanbu come up"
+  },
+  "ramen": {
+    "style_name": "Tsugaru niboshi ramen",
+    "broth": "Shōyu (rich dried-sardine stock)",
+    "noodles": "Medium-thin straight or flat noodles",
+    "toppings": "Chashu, scallions, bamboo shoots",
+    "highlight": "Stock boiled from heaps of dried sardines, bitter and intense — Aomori is called 'the holy land of niboshi'"
+  },
+  "sake": {
+    "brand": "Denshu",
+    "brewery": "Nishida Shuzōten",
+    "taste_profile": "Rich & dry: full rice aroma with a clean finish — a byword for pure-rice sake"
+  }
+}

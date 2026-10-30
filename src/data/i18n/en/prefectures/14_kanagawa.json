@@ -1,0 +1,143 @@
+{
+  "capital": "Yokohama",
+  "badge": {
+    "title": "Kamakura and the Open Port"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Sagami Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Musashi Province",
+        "portion": "south (Kawasaki, most of Yokohama)",
+        "cross_prefectures": [
+          "Saitama",
+          "Tokyo"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Later Hōjō clan (Odawara Castle)",
+      "Miura clan (Arai Castle, destroyed by the Hōjō in 1516)"
+    ],
+    "edo_domains": [
+      "Odawara Domain",
+      "Direct shogunal rule (Uraga magistracy)",
+      "Kanazawa (Mutsuura) Domain"
+    ],
+    "meiji_transition": {
+      "summary": "Kanagawa-fu became Kanagawa Prefecture in 1868; the Sagami part of Ashigara Prefecture joined in 1876, and the three Tama districts went to Tokyo in 1893.",
+      "boundary_note": "Kanagawa is all of Sagami plus southern Musashi — Yokohama and Kawasaki are really 'Musashi', not 'Sagami'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Warriors of Sagami",
+      "summary": "In the late Heian period Bandō warriors such as the Miura and Ōba rose in Sagami, laying the groundwork for Minamoto no Yoritomo to enter Kamakura in 1180 and found warrior rule."
+    },
+    {
+      "title": "Kamakura, city of the samurai",
+      "summary": "Yoritomo opened his shogunate and Kamakura became the political center of Japan; Hōjō regent rule lasted over a century, and the Great Buddha of Kamakura was cast in this period."
+    },
+    {
+      "title": "The Kamakura-fu",
+      "summary": "The Muromachi shogunate set up the Kamakura-fu, where the Kamakura kubō descended from Ashikaga Motouji ruled the Kantō with the Uesugi as kanrei; it declined after the Eikyō War of 1438."
+    },
+    {
+      "title": "Five generations of the Later Hōjō",
+      "summary": "Ise Sōzui (Hōjō Sōun) seized Odawara and five generations of the Hōjō ruled the Kantō for a century; Odawara Castle surrendered to Hideyoshi's vast army in 1590."
+    },
+    {
+      "title": "The Tōkaidō and the Black Ships",
+      "summary": "Post towns lined the Tōkaidō; in 1853 Perry's Black Ships arrived at Uraga, and the next year the Japan–US Treaty of Peace and Amity was signed in Yokohama."
+    },
+    {
+      "title": "Yokohama opens",
+      "summary": "Yokohama opened as a port in 1859, becoming Japan's window on the West; Japan's first railway (Shinbashi–Yokohama) opened in 1872."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Great Buddha of Kamakura (Kōtoku-in)",
+      "note": "Open-air bronze Amida Buddha"
+    },
+    {
+      "name": "Hakone",
+      "note": "Barrier-station ruins and hot spring towns"
+    },
+    {
+      "name": "Yokohama Chinatown",
+      "note": "Japan's largest Chinatown"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Hato sablé",
+      "note": "Kamakura's dove-shaped butter cookies"
+    },
+    {
+      "name": "Odawara kamaboko",
+      "note": "Fish cake made since the Edo period"
+    },
+    {
+      "name": "Kiyōken shūmai",
+      "note": "Yokohama Station's famous cold-eaten dumplings"
+    }
+  ],
+  "dialect": {
+    "name": "Kanagawa speech",
+    "features": "Largely close to standard Japanese; '-jan' spread nationwide via Yokohama, and western Sagami once used '-be' and '-dabe'.",
+    "phrases": [
+      {
+        "meaning": "…isn't it?",
+        "note": ""
+      },
+      {
+        "meaning": "born-and-bred Yokohaman",
+        "note": ""
+      },
+      {
+        "meaning": "…right",
+        "note": "Shōnan / Sagami area"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ The day the Black Ships came, I was lying on a roof in Uraga! Kanagawa has Kamakura's samurai and Yokohama's foreigners — which side do you want to see first?"
+  },
+  "regional_meme": [
+    {
+      "title": "'I'm from Yokohama'",
+      "text": "Yokohama people introduce themselves as 'from Yokohama', never 'from Kanagawa' — much to the annoyance of other Kanagawans."
+    },
+    {
+      "title": "Borders by the sea",
+      "text": "Shōnan, Yokohama, Kawasaki, Sagami… each goes its own way, and a shared 'Kanagawa identity' is surprisingly thin."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Triple scale crest (Hōjō clan)"
+  },
+  "hero_persona": {
+    "name": "Minamoto no Yoritomo",
+    "title": "Founder of the Kamakura shogunate",
+    "self": "I",
+    "opening_line": "I am Minamoto no Yoritomo, who founded the house of the warriors at Kamakura. From exile in Izu to head of all the samurai — would you know how I walked that road?",
+    "tone_prompt": "calm, suspicious and far-sighted; restrained and dignified in speech"
+  },
+  "ramen": {
+    "style_name": "Yokohama iekei ramen",
+    "broth": "Tonkotsu-shōyu (rich)",
+    "noodles": "Thick, short straight noodles",
+    "toppings": "Chashu, spinach, three sheets of nori",
+    "highlight": "Order 'firm noodles, strong flavor, extra oil' — and eat it with a bowl of rice, as is tradition"
+  },
+  "sake": {
+    "brand": "Tanzawa-san (丹沢山)",
+    "brewery": "Kawanishiya Shuzōten",
+    "taste_profile": "Rich & dry: aged pure-rice sake, best served warm"
+  }
+}

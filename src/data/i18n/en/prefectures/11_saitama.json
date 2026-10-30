@@ -1,0 +1,139 @@
+{
+  "capital": "Saitama",
+  "badge": {
+    "title": "Little Edo of Musashi"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Musashi Province",
+        "portion": "north",
+        "cross_prefectures": [
+          "Tokyo",
+          "Kanagawa"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Later Hōjō clan",
+      "Ōgigayatsu Uesugi (Kawagoe Castle)",
+      "Narita clan (Oshi Castle)"
+    ],
+    "edo_domains": [
+      "Kawagoe Domain",
+      "Oshi Domain",
+      "Iwatsuki Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1871 Saitama Prefecture (east) and Iruma Prefecture (west) were created; Iruma merged with Gunma into Kumagaya Prefecture in 1873, and in 1876 Kumagaya's Musashi part joined Saitama, fixing its borders.",
+      "boundary_note": "Ancient Musashi spanned today's Tokyo, Saitama and eastern Kanagawa; Saitama is only its northern half, named after the old 'Saitama District'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Northern Musashi",
+      "summary": "The Musashi provincial capital was at today's Fuchū in Tokyo, and the Saitama area was split among several districts; the inscribed iron sword from the Inariyama tumulus is a key 5th-century source."
+    },
+    {
+      "title": "The Musashi Seven Bands",
+      "summary": "Small warrior bands such as the Tan and Kodama — the 'Seven Bands of Musashi' — formed the backbone of the shogunate; Hatakeyama Shigetada was hailed as the model Bandō warrior."
+    },
+    {
+      "title": "Kamakura-fu and the Uesugi",
+      "summary": "Musashi was under the direct rule of the Kamakura-fu; Ōta Dōkan, steward of the Ōgigayatsu Uesugi, built Kawagoe and other strongholds amid a struggle with the Yamanouchi Uesugi and the Koga kubō."
+    },
+    {
+      "title": "Kawagoe and Oshi",
+      "summary": "In 1546 Hōjō Ujiyasu crushed the two Uesugi and the Koga kubō with a smaller force at the night battle of Kawagoe; in 1590 Oshi Castle held out against Ishida Mitsunari's flooding attack — 'the floating castle'."
+    },
+    {
+      "title": "Little Edo, Kawagoe",
+      "summary": "The Kawagoe Domain guarded the approaches to Edo and was linked to it by boats on the Shingashi River — hence 'Little Edo'."
+    },
+    {
+      "title": "Commuter suburb",
+      "summary": "The borders were fixed in 1876; after the war Saitama grew rapidly as a bedroom community of greater Tokyo, now fifth in population."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kawagoe 'Bell of Time'",
+      "note": "Bell tower amid old storehouse-style streets"
+    },
+    {
+      "name": "Nagatoro",
+      "note": "Rocky riverbed of the Arakawa and river rafting"
+    },
+    {
+      "name": "Sakitama Kofun Group",
+      "note": "Home of the Inariyama tumulus"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Sōka senbei",
+      "note": "Soy-glazed rice crackers of the Nikkō Kaidō"
+    },
+    {
+      "name": "Fukaya leeks",
+      "note": "Sweet, tender white-stemmed leeks"
+    },
+    {
+      "name": "Sayama tea",
+      "note": "'Color from Shizuoka, aroma from Uji, flavor from Sayama'"
+    }
+  ],
+  "dialect": {
+    "name": "Saitama dialect",
+    "features": "A western Kantō dialect largely close to standard Japanese; '-be' and '-danbe' linger in the north and in Chichibu.",
+    "phrases": [
+      {
+        "meaning": "…isn't it",
+        "note": ""
+      },
+      {
+        "meaning": "tired, can't be bothered",
+        "note": ""
+      },
+      {
+        "meaning": "annoying",
+        "note": "originally a dialect word of Tama and Saitama"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ I just slipped out from under Kawagoe's 'Bell of Time'. Did you know Oshi Castle didn't fall even when Ishida Mitsunari flooded it? Want to hear?"
+  },
+  "regional_meme": [
+    {
+      "title": "'Tonde Saitama'",
+      "text": "The film line 'Just feed Saitama people grass' made Saitama both furious and amused; 'Dasaitama' (uncool Saitama) is a classic self-deprecating joke."
+    },
+    {
+      "title": "Saitama vs. Chiba",
+      "text": "The two 'bedroom-town twins' of the Kantō are always comparing: who's more like Tokyo? Whose specialties are more famous?"
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Yakumo crest (Hikawa Shrine)"
+  },
+  "hero_persona": {
+    "name": "Shibusawa Eiichi",
+    "title": "Father of Japanese capitalism",
+    "self": "I",
+    "opening_line": "I am Shibusawa Eiichi, a farmer's son from Fukaya. I founded over five hundred companies — but what I'd most like to talk about is 'The Analects and the Abacus'.",
+    "tone_prompt": "practical and earnest, balancing morality and economics; loves examples from business"
+  },
+  "ramen": {
+    "style_name": "Tonkotsu-gyokai tsukemen",
+    "broth": "Pork bone & seafood (rich)",
+    "noodles": "Very thick straight noodles (dipping style)",
+    "toppings": "Chashu, bamboo shoots, fish powder",
+    "highlight": "Rich pork-and-seafood dipping noodles are hugely popular around Ōmiya; the prefecture also has quirky local styles like 'Nyannyan stamina'"
+  },
+  "sake": {
+    "brand": "Shinkame (神亀)",
+    "brewery": "Shinkame Shuzō",
+    "taste_profile": "Rich & dry: all pure-rice, best warmed after aging"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "capital": "Maebashi",
+  "badge": {
+    "title": "Dry Winds of Jōshū"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Kōzuke Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Kantō kanrei Yamanouchi Uesugi (Uesugi Norimasa)",
+      "Nagano Narimasa (Minowa Castle)",
+      "Sanada Masayuki (Numata)",
+      "Contested by the Takeda, Hōjō and Uesugi"
+    ],
+    "edo_domains": [
+      "Maebashi Domain",
+      "Takasaki Domain",
+      "Tatebayashi Domain",
+      "Numata Domain"
+    ],
+    "meiji_transition": {
+      "summary": "The first Gunma Prefecture was set up in 1871, merged with Iruma into Kumagaya Prefecture in 1873, and the second Gunma Prefecture was established in 1876; after a long tug of war between Takasaki and Maebashi, the office settled in Maebashi.",
+      "boundary_note": "Gunma basically equals ancient Kōzuke. Kōzuke was a 'province of an imperial prince', nominally governed by a prince while the deputy ran it in practice."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "A prince's province",
+      "summary": "Kōzuke, like Hitachi and Kazusa, was nominally governed by an imperial prince; the Tago stele, one of Japan's three great ancient steles, records the creation of Tago District in 711."
+    },
+    {
+      "title": "Nitta Yoshisada rises",
+      "summary": "In 1333 Nitta Yoshisada raised troops at Ikushina Shrine in Kōzuke, marched south, took Kamakura and ended the Kamakura shogunate."
+    },
+    {
+      "title": "The Kantō kanrei Uesugi",
+      "summary": "The governorship of Kōzuke was held by the Yamanouchi Uesugi, hereditary Kantō kanrei, based at Hirai Castle; the Nitta declined with the Southern Court."
+    },
+    {
+      "title": "Three giants collide",
+      "summary": "After the Hōjō drove out the Kantō kanrei Uesugi Norimasa, Kōzuke was fought over by Uesugi Kenshin, Takeda Shingen and Hōjō Ujiyasu; a dispute over Numata indirectly triggered Hideyoshi's Odawara campaign."
+    },
+    {
+      "title": "The Nakasendō and silkworms",
+      "summary": "The Nakasendō crossed the province and its post towns thrived; sericulture and raw silk became the main source of rural income."
+    },
+    {
+      "title": "Tomioka Silk Mill",
+      "summary": "The government-run Tomioka Silk Mill opened in 1872 with French technology; listed as World Heritage in 2014, it symbolizes Japan's modernization."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tomioka Silk Mill",
+      "note": "World Heritage; where Japan's modern silk industry began"
+    },
+    {
+      "name": "Kusatsu Onsen",
+      "note": "Famed for its yubatake and the yumomi water-stirring"
+    },
+    {
+      "name": "Oze",
+      "note": "High moorland of skunk cabbage blooms"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Shimonita leeks",
+      "note": "Thick, sweet 'lord's leeks'"
+    },
+    {
+      "name": "Konnyaku",
+      "note": "Japan's top konjac producer"
+    },
+    {
+      "name": "Takasaki daruma",
+      "note": "Red wishing dolls"
+    }
+  ],
+  "dialect": {
+    "name": "Jōshū dialect",
+    "features": "Direct and plainspoken, ending in '-danbe' or '-nan'; 'kakā denka to karakkaze' (bossy wives and dry winds) is Jōshū's proverbial specialty.",
+    "phrases": [
+      {
+        "meaning": "very",
+        "note": ""
+      },
+      {
+        "meaning": "…isn't it",
+        "note": ""
+      },
+      {
+        "meaning": "the wife rules the house",
+        "note": "from women's key role in silk farming"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ The dry Jōshū wind is making my whiskers shake. This land was fought over by Kenshin, Shingen and Ujiyasu — which of the three shall I start with?"
+  },
+  "regional_meme": [
+    {
+      "title": "Gunmā, the unexplored land",
+      "text": "Online, Gunma is jokingly called 'Gunmā' — an uncharted jungle you need a passport to enter. Gunma turned it into a tourism campaign."
+    },
+    {
+      "title": "Jōmō karuta",
+      "text": "Nearly every child in Gunma can recite the 'Jōmō karuta' card game by heart — completely baffling to outsiders."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Ōnakaguro (Nitta clan)"
+  },
+  "hero_persona": {
+    "name": "Nitta Yoshisada",
+    "title": "The general who brought down the Kamakura shogunate",
+    "self": "I",
+    "opening_line": "I am Nitta Yoshisada. I raised my army in Kōzuke, fought all the way into Kamakura and ended a hundred and fifty years of Hōjō rule!",
+    "tone_prompt": "upright and fierce, loyal to his word; spirited when recounting the fall of Kamakura"
+  },
+  "ramen": {
+    "style_name": "Jōshū chūka soba",
+    "broth": "Shōyu (clear chicken stock)",
+    "noodles": "Medium-thin noodles",
+    "toppings": "Chashu, bamboo shoots, scallions",
+    "highlight": "Gunma is known for its flour-food culture (yaki-manjū, himokawa); its ramen is a simple chūka soba"
+  },
+  "sake": {
+    "brand": "Mizubashō (水芭蕉)",
+    "brewery": "Nagai Shuzō",
+    "taste_profile": "Light & dry: brewed from Oze snowmelt, clear and elegant"
+  }
+}

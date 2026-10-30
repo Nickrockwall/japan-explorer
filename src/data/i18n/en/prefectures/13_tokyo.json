@@ -1,0 +1,144 @@
+{
+  "capital": "Shinjuku (Metropolitan Government)",
+  "badge": {
+    "title": "Edo, City of a Million"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Musashi Province",
+        "portion": "central (Edo, Tama)",
+        "cross_prefectures": [
+          "Saitama",
+          "Kanagawa"
+        ]
+      },
+      {
+        "name": "Izu Province",
+        "portion": "Izu Islands",
+        "cross_prefectures": [
+          "Shizuoka"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Later Hōjō clan (Edo Castle as a branch castle)",
+      "Ōgigayatsu Uesugi (Ōta Dōkan built Edo Castle)"
+    ],
+    "edo_domains": [
+      "Direct shogunal rule (city magistrates governed Edo)",
+      "Hachiōji Sennin Dōshin (guards of the Kōshū approach)"
+    ],
+    "meiji_transition": {
+      "summary": "Edo was renamed Tokyo in 1868 and Tokyo Prefecture created in 1871; the three Tama districts came over from Kanagawa in 1893, and in 1943 the prefecture and city merged into the Tokyo Metropolis.",
+      "boundary_note": "Tokyo's Tama area originally belonged to Kanagawa and was moved to Tokyo in 1893 to control the Tamagawa Aqueduct's water source; the Izu Islands belonged to ancient Izu, and the Ogasawara Islands were confirmed as Japanese only in 1876."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Musashi provincial capital",
+      "summary": "The Musashi provincial capital was at today's Fuchū, where Ōkunitama Shrine served as its chief shrine; the city of Kokubunji takes its name from the Musashi provincial temple."
+    },
+    {
+      "title": "The Edo clan and Bubaigawara",
+      "summary": "The Edo clan of the Chichibu Taira held Edo village; in 1333 Nitta Yoshisada defeated the shogunate army at Bubaigawara (today's Fuchū)."
+    },
+    {
+      "title": "Musashi under the Kamakura-fu",
+      "summary": "Musashi was ruled directly by the Kamakura-fu; the Toshima, Edo and other Chichibu Taira houses declined as the Ōgigayatsu Uesugi moved in."
+    },
+    {
+      "title": "Ōta Dōkan builds a castle",
+      "summary": "Ōta Dōkan built Edo Castle in 1457; Edo later passed to the Later Hōjō, and in 1590 Tokugawa Ieyasu was given the Kantō and moved into Edo."
+    },
+    {
+      "title": "A city of a million",
+      "summary": "The Tokugawa made Edo their seat of government; alternate attendance made it one of the world's largest cities in the 18th century, and townspeople's culture and ukiyo-e flourished."
+    },
+    {
+      "title": "Imperial capital Tokyo",
+      "summary": "Renamed Tokyo in 1868 as the emperor moved east; it survived the Great Kantō Earthquake and the firebombing, and hosted the Olympics in 1964 and 2021."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Sensō-ji",
+      "note": "Kaminarimon and Nakamise — Tokyo's oldest temple"
+    },
+    {
+      "name": "Imperial Palace (Edo Castle site)",
+      "note": "Remains of the shoguns' castle"
+    },
+    {
+      "name": "Tokyo Skytree",
+      "note": "634 m — a pun on 'Musashi'"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Edomae sushi",
+      "note": "Nigiri began as Edo's fast food"
+    },
+    {
+      "name": "Monjayaki",
+      "note": "Tsukishima's griddle dish of the old downtown"
+    },
+    {
+      "name": "Ningyō-yaki",
+      "note": "Asakusa's little filled sponge cakes"
+    }
+  ],
+  "dialect": {
+    "name": "Edo dialect and Yamanote speech",
+    "features": "Downtown Edo speech swaps 'hi' and 'shi' (so 'asahi' becomes 'asashi') and is brisk; the uptown Yamanote speech became the basis of modern standard Japanese.",
+    "phrases": [
+      {
+        "meaning": "What are you talking about!",
+        "note": "an Edokko catchphrase"
+      },
+      {
+        "meaning": "Don't come back!",
+        "note": "literally 'come back the day before yesterday'"
+      },
+      {
+        "meaning": "is (polite)",
+        "note": "honorific of uptown ladies"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow! I hopped right out of Hiroshige's 'One Hundred Famous Views of Edo'! Edo was one of the biggest cities in the world in the 18th century — which street's gossip do you want?"
+  },
+  "regional_meme": [
+    {
+      "title": "Three-generation Edokko",
+      "text": "To be a true 'Edokko', three generations of your family must have lived downtown — being born in Tokyo isn't enough."
+    },
+    {
+      "title": "Is Tama even Tokyo?",
+      "text": "People in the 23 wards often treat the Tama area as 'the countryside'. Tama residents: we're Tokyoites too!"
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Triple hollyhock (Tokugawa shogunal house)"
+  },
+  "hero_persona": {
+    "name": "Katsu Kaishū",
+    "title": "Shogunate official behind the bloodless surrender of Edo",
+    "self": "I",
+    "opening_line": "I'm Katsu Rintarō, called Kaishū. I had one talk with that fellow Saigō, and a million people in Edo were spared the cannons — want to hear about the negotiation?",
+    "tone_prompt": "breezy Edokko tone, sharp-tongued, boastful but worldly; loves commenting on Bakumatsu figures"
+  },
+  "ramen": {
+    "style_name": "Tokyo shōyu ramen (Ogikubo chūka soba)",
+    "broth": "Shōyu (clear chicken-and-seafood stock)",
+    "noodles": "Medium-thin curly noodles",
+    "toppings": "Chashu, bamboo shoots, naruto, nori, scallions",
+    "highlight": "The archetype of 'Tokyo ramen': clear soy broth and a slice of naruto — the taste of the Shōwa era"
+  },
+  "sake": {
+    "brand": "Sawanoi (澤乃井)",
+    "brewery": "Ozawa Shuzō",
+    "taste_profile": "Light & dry: brewed from the underground waters of the Okutama gorge — a rare Tokyo sake"
+  }
+}

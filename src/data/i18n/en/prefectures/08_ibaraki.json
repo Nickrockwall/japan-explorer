@@ -1,0 +1,145 @@
+{
+  "capital": "Mito",
+  "badge": {
+    "title": "Mito Kōmon"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Hitachi Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Shimōsa Province",
+        "portion": "north (Yūki, Sashima, etc.)",
+        "cross_prefectures": [
+          "Chiba"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Satake Yoshishige and Yoshinobu",
+      "Oda clan (of Hitachi)",
+      "Yūki clan",
+      "Edo clan (of Hitachi)"
+    ],
+    "edo_domains": [
+      "Mito Domain (one of the three Tokugawa houses)",
+      "Tsuchiura Domain",
+      "Koga Domain",
+      "Kasama Domain"
+    ],
+    "meiji_transition": {
+      "summary": "After 1871 the area was reorganized into Niihari, Ibaraki and Inba prefectures, settling in 1875 as Ibaraki (all of Hitachi plus northern Shimōsa).",
+      "boundary_note": "Rerouting the Tone River eastward made it the border with Chiba, so northern Shimōsa (Koga, Yūki, etc.) ended up in Ibaraki."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Hitachi no Kuni Fudoki",
+      "summary": "The Hitachi Fudoki is one of only five surviving provincial gazetteers; Kashima Shrine is the head of the eastern war-god cult."
+    },
+    {
+      "title": "Shinran in Hitachi",
+      "summary": "Vassals such as the Hitachi Daijō and the Satake were active; Shinran preached for nearly twenty years at his Inada hermitage and wrote the Kyōgyōshinshō."
+    },
+    {
+      "title": "The Jinnō Shōtōki",
+      "summary": "During the Northern and Southern Courts era Kitabatake Chikafusa held Oda and Seki castles in Hitachi and wrote the Jinnō Shōtōki; the Satake rose as Northern Court governors."
+    },
+    {
+      "title": "Satake, 'Tarō of Bandō'",
+      "summary": "Satake Yoshishige, called 'Tarō of Bandō', held out against the Later Hōjō and largely unified Hitachi; his son Yoshinobu was moved to Akita in 1602."
+    },
+    {
+      "title": "The Mito school",
+      "summary": "Tokugawa Mitsukuni began compiling the Dai Nihon-shi, founding the Mito school whose reverence for the emperor shaped the late-Edo 'sonnō jōi' movement."
+    },
+    {
+      "title": "City of science",
+      "summary": "From the 1960s Tsukuba Science City was built, home to JAXA and other institutes; the Kashima coastal industrial zone grew alongside it."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Kairakuen",
+      "note": "One of Japan's three great gardens, with 3,000 plum trees"
+    },
+    {
+      "name": "Kashima Shrine",
+      "note": "One of the three great shrines of the east"
+    },
+    {
+      "name": "Hitachi Seaside Park",
+      "note": "Hills of blue nemophila"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Mito nattō",
+      "note": "Synonymous with Mito"
+    },
+    {
+      "name": "Ankō nabe",
+      "note": "Monkfish hot pot of the winter Hitachi coast"
+    },
+    {
+      "name": "Kasama ware",
+      "note": "Free-spirited Kantō pottery"
+    }
+  ],
+  "dialect": {
+    "name": "Ibaraki dialect",
+    "features": "An accentless dialect with heavy voicing ('ka' sounds close to 'ga'); thought blunt, but honest at heart.",
+    "phrases": [
+      {
+        "meaning": "right?",
+        "note": ""
+      },
+      {
+        "meaning": "sloppy, careless",
+        "note": ""
+      },
+      {
+        "meaning": "irritated, annoyed",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ I'm Shōfuku, a cat who escaped from an ukiyo-e print. Mito Kōmon's Dai Nihon-shi took over two hundred years to write — want to hear how it stirred up the end of the shogunate?"
+  },
+  "regional_meme": [
+    {
+      "title": "Last in charm",
+      "text": "Ibaraki has long ranked last in the 'prefectural attractiveness' survey — and its people have turned that into a running joke."
+    },
+    {
+      "title": "The pronunciation war",
+      "text": "It's 'Ibaraki', not 'Ibaragi'! Voicing that 'ki' is one of the things Ibaraki people mind most."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Triple hollyhock (Mito Tokugawa house)"
+  },
+  "hero_persona": {
+    "name": "Tokugawa Mitsukuni",
+    "title": "Mito Kōmon · compiler of the Dai Nihon-shi",
+    "self": "I",
+    "opening_line": "I am Mitsukuni of Mito. People say I wandered the provinces in disguise punishing villains — that's theater. The history project, though, is entirely true.",
+    "tone_prompt": "gentle yet dignified, devoted to scholarship and history; jokes now and then about the TV 'Mito Kōmon'"
+  },
+  "ramen": {
+    "style_name": "Mito stamina ramen",
+    "broth": "Local (sweet-spicy soy sauce gravy)",
+    "noodles": "Medium-thick noodles (served hot or cold)",
+    "toppings": "Pumpkin, cabbage and liver stir-fried in a sweet-spicy gravy",
+    "highlight": "Hardly any soup — just a big ladle of sweet-spicy 'stamina' gravy on top"
+  },
+  "sake": {
+    "brand": "Gō no Homare (郷乃誉)",
+    "brewery": "Sudō Honke",
+    "taste_profile": "Light & dry: an elegant pure-rice sake from one of Japan's oldest breweries"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "capital": "Chiba",
+  "badge": {
+    "title": "The Bōsō Peninsula"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Awa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Kazusa Province",
+        "portion": "entire",
+        "cross_prefectures": []
+      },
+      {
+        "name": "Shimōsa Province",
+        "portion": "south",
+        "cross_prefectures": [
+          "Ibaraki"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Satomi Yoshitaka",
+      "Chiba clan",
+      "Later Hōjō clan",
+      "Masaki clan"
+    ],
+    "edo_domains": [
+      "Sakura Domain",
+      "Sekiyado Domain",
+      "Ōtaki Domain",
+      "A patchwork of shogunal and bannermen's lands"
+    ],
+    "meiji_transition": {
+      "summary": "In 1873 Kisarazu and Inba prefectures merged into Chiba; in 1875 northern Shimōsa, north of the Tone River, went to Ibaraki.",
+      "boundary_note": "Chiba spans three provinces: all of Awa and Kazusa and southern Shimōsa. 'Upper' Kazusa lies south of 'Lower' Shimōsa because in ancient times travelers crossed by sea from Sagami — the side nearer Kyoto was 'upper'."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "The Kazusa–Shimōsa puzzle",
+      "summary": "The ancient Tōkaidō crossed by sea from the Miura Peninsula into Bōsō, so the south, nearer the capital, was 'Kazusa' (upper) and the north 'Shimōsa' (lower); Kazusa was a prince's province."
+    },
+    {
+      "title": "Chiba Tsunetane",
+      "summary": "Chiba Tsunetane was among the first to join Minamoto no Yoritomo, and the Chiba became governors of Shimōsa and key shogunal vassals; Nichiren was born at Kominato in Awa."
+    },
+    {
+      "title": "Chiba family strife",
+      "summary": "In the Kyōtoku War the Chiba split and the main line was destroyed; the Satomi of Awa began to rise."
+    },
+    {
+      "title": "The Satomi of Southern Bōsō",
+      "summary": "The Satomi rose in Awa and fought the Hōjō for control of Edo Bay; their story later inspired Kyokutei Bakin's epic novel 'Nansō Satomi Hakkenden'."
+    },
+    {
+      "title": "Edo's kitchen",
+      "summary": "Small domains and bannermen's fiefs crowded the area; soy sauce from Chōshi and Noda and sardine fertilizer from Kujūkuri underpinned Edo's economy."
+    },
+    {
+      "title": "Airport and coast",
+      "summary": "The Keiyō industrial zone and Narita International Airport (1978) transformed the area — and Tokyo Disney Resort is in Chiba too."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Naritasan Shinshō-ji",
+      "note": "One of the Kantō's foremost temples of Fudō Myōō"
+    },
+    {
+      "name": "Mount Nokogiri",
+      "note": "Rocky peak of Bōsō with the Nihon-ji Great Buddha"
+    },
+    {
+      "name": "Sawara canal town",
+      "note": "Old canal-side streets, home of Inō Tadataka"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Peanuts",
+      "note": "Japan's top producer"
+    },
+    {
+      "name": "Chōshi soy sauce",
+      "note": "A soy sauce town since the Edo period"
+    },
+    {
+      "name": "Katsuura tantanmen",
+      "note": "Chili-oil noodle soup to warm up fishermen"
+    }
+  ],
+  "dialect": {
+    "name": "Bōsō dialect",
+    "features": "Northern Shimōsa speech is close to Ibaraki's, southern Awa uses '-be' and '-dappe'; 'oppesu' means to push.",
+    "phrases": [
+      {
+        "meaning": "push",
+        "note": ""
+      },
+      {
+        "meaning": "get angry",
+        "note": ""
+      },
+      {
+        "meaning": "…isn't it",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "Meow~ The Bōsō sea breeze is so salty. Do you know why 'upper' Kazusa lies south of 'lower' Shimōsa? Let me tell you about the ancient sea route~"
+  },
+  "regional_meme": [
+    {
+      "title": "Tokyo Disney is in Chiba",
+      "text": "'Tokyo' Disney, 'Tokyo' Bay, Narita 'Tokyo' Airport… Chiba people: actually, they're all ours."
+    },
+    {
+      "title": "Chiba-Shiga-Saga",
+      "text": "The classic self-mocking chant 'Chiba, Shiga, Saga' lumps the three together as the prefectures with a 'subtle presence'."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Moon-and-star crest (Chiba clan)"
+  },
+  "hero_persona": {
+    "name": "Inō Tadataka",
+    "title": "First to map Japan by survey",
+    "self": "I",
+    "opening_line": "I am Inō Tadataka. I only began studying astronomy at fifty, and before seventy-two I had measured Japan's coastline on foot — the map you're looking at owes something to my work.",
+    "tone_prompt": "calm and precise, fond of surveying and numbers; often says it's never too late to learn"
+  },
+  "ramen": {
+    "style_name": "Takeoka-style ramen",
+    "broth": "Shōyu (chashu braising liquid diluted with hot water)",
+    "noodles": "Dried thin noodles",
+    "toppings": "Chunks of chashu, raw diced onion",
+    "highlight": "No stock at all! Braising sauce from the chashu is thinned with boiling water and poured over dried noodles — born as fishermen's food"
+  },
+  "sake": {
+    "brand": "Fudō (不動)",
+    "brewery": "Nabeten",
+    "taste_profile": "Light & dry: crisp sake from the gates of Naritasan"
+  }
+}

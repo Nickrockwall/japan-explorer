@@ -1,0 +1,139 @@
+{
+  "capital": "Yamagata",
+  "badge": {
+    "title": "Banks of the Mogami River"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Dewa Province",
+        "portion": "south (became Uzen Province in 1868)",
+        "cross_prefectures": [
+          "Akita"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Mogami Yoshiaki",
+      "Date clan (Okitama District)",
+      "Uesugi clan (Shōnai and Okitama, Toyotomi era)"
+    ],
+    "edo_domains": [
+      "Yonezawa Domain (Uesugi clan)",
+      "Shōnai Domain (Sakai clan)",
+      "Yamagata Domain",
+      "Shinjō Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1876 Yamagata, Okitama and Tsuruoka prefectures merged into today's Yamagata Prefecture.",
+      "boundary_note": "Today's Yamagata roughly equals early-Meiji Uzen Province, but in the Edo period Shōnai (Sakai), Yonezawa (Uesugi) and Yamagata were separate domains, and local identities remain strong."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Founding of Dewa",
+      "summary": "Dewa Province was created in 712 with its first capital in Shōnai; the mountain temple Risshaku-ji was founded by Ennin in 860."
+    },
+    {
+      "title": "The Ōe at Sagae",
+      "summary": "The family of the shogunate grandee Ōe no Hiromoto received Sagae estate; temples such as Risshaku-ji continued to flourish."
+    },
+    {
+      "title": "Birth of the Mogami",
+      "summary": "In 1356 Shiba Kaneyori entered Yamagata as Ushū tandai; his descendants took the name Mogami, while Okitama fell to the Date."
+    },
+    {
+      "title": "Mogami Yoshiaki",
+      "summary": "Mogami Yoshiaki unified Murayama and Mogami and, at the 1600 'Northern Sekigahara' (Siege of Hasedō), held off the Uesugi, earning 570,000 koku."
+    },
+    {
+      "title": "Uesugi Yōzan",
+      "summary": "The Yonezawa Domain was near bankruptcy until its ninth lord, Uesugi Yōzan, pushed thrift and new industries (Yonezawa weaving) — 'If you try, it can be done.' River traffic on the Mogami flourished."
+    },
+    {
+      "title": "Three prefectures as one",
+      "summary": "Three prefectures merged in early Meiji; the Mogami River, cherries and hot springs became its emblems, and it is the setting of the drama 'Oshin'."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Yamadera (Risshaku-ji)",
+      "note": "Where Bashō wrote of cicadas' voices seeping into the rocks"
+    },
+    {
+      "name": "Ginzan Onsen",
+      "note": "Taishō-romantic wooden inns"
+    },
+    {
+      "name": "Zaō 'snow monsters'",
+      "note": "Rime-coated trees of winter"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Cherries (Satō Nishiki)",
+      "note": "Japan's top cherry producer"
+    },
+    {
+      "name": "Yonezawa beef",
+      "note": "One of Japan's three great wagyu"
+    },
+    {
+      "name": "Imoni",
+      "note": "Taro stew parties on autumn riverbanks"
+    }
+  ],
+  "dialect": {
+    "name": "Yamagata dialects",
+    "features": "Shōnai speech, shaped by the Kitamaebune trade, has a Kyoto flavor, while inland speech is closer to Tōhoku; around Yonezawa 'oshōshina' means thank you.",
+    "phrases": [
+      {
+        "meaning": "thank you",
+        "note": "Yonezawa / Okitama"
+      },
+      {
+        "meaning": "that's right",
+        "note": ""
+      },
+      {
+        "meaning": "cute",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk is resting on Yamadera's thousand stone steps, hearing the cicadas seep into the rocks… would you like to know how Uesugi Yōzan saved the bankrupt Yonezawa Domain, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "The imoni wars",
+      "text": "Within Yamagata, inland cooks use soy sauce and beef, Shōnai uses miso and pork — the autumn riverside taro stew is a non-negotiable factional war."
+    },
+    {
+      "title": "Ramen prefecture",
+      "text": "Yamagata people's per-capita ramen spending has long been among Japan's highest; even chilled ramen is a local specialty."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Bamboo-and-sparrow crest (Uesugi clan)"
+  },
+  "hero_persona": {
+    "name": "Uesugi Yōzan",
+    "title": "Restorer of the Yonezawa Domain",
+    "self": "I",
+    "opening_line": "I am Uesugi Harunori, known as Yōzan. If you try, it can be done; if you don't, it cannot — even a bankrupt domain can be reborn. Shall I tell you how I lived frugally?",
+    "tone_prompt": "modest and disciplined, patient and encouraging, often urging thrift and hard work"
+  },
+  "ramen": {
+    "style_name": "Yonezawa ramen",
+    "broth": "Shōyu (chicken and dried sardine)",
+    "noodles": "Thin, strongly curled, hand-kneaded high-hydration noodles",
+    "toppings": "Chashu, bamboo shoots, naruto",
+    "highlight": "Famous for its thin curly noodles; Yamagata city also has 'hiyashi ramen' served ice-cold"
+  },
+  "sake": {
+    "brand": "Juyondai (十四代)",
+    "brewery": "Takagi Shuzō",
+    "taste_profile": "Rich & sweet: lush fruity aroma and sweetness — the dream sake that started the 'fragrant and full' trend"
+  }
+}

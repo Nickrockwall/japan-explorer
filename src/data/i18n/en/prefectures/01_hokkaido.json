@@ -1,0 +1,134 @@
+{
+  "capital": "Sapporo",
+  "badge": {
+    "title": "Pioneer of the Northern Frontier"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Ezo",
+        "portion": "entire (outside the ritsuryō system)",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "Kakizaki clan (later the Matsumae)",
+      "Ainu chieftains"
+    ],
+    "edo_domains": [
+      "Matsumae Domain (a 'no-rice-yield' domain founded on Ainu trade rights)",
+      "Direct shogunal rule (taken over twice, in 1799 and 1855)"
+    ],
+    "meiji_transition": {
+      "summary": "In 1869 the Kaitakushi (Development Commission) was set up, Ezo was renamed Hokkaidō and divided into 11 provinces such as Oshima, Shiribeshi and Ishikari; in 1882 the commission was replaced by Hakodate, Sapporo and Nemuro prefectures, merged into the Hokkaidō Agency in 1886.",
+      "boundary_note": "No ritsuryō province ever existed here. The name 'Hokkaidō' was proposed by the explorer Matsuura Takeshirō; provinces and districts were drawn only in 1869, and Hokkaidō became a self-governing body equal to the prefectures only in 1947."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Beyond the realm",
+      "summary": "Ezo lay outside the ritsuryō state. The Satsumon and Okhotsk cultures of the Ainu's ancestors flourished here, linked to Honshū mainly by trade."
+    },
+    {
+      "title": "Ezo kanrei",
+      "summary": "The Kamakura shogunate made the Andō clan of Tsugaru 'Ezo kanrei', in charge of trade with the Ainu; Japanese settlers began crossing to the southern Oshima Peninsula."
+    },
+    {
+      "title": "Tosaminato and the Watari-tō",
+      "summary": "Tosaminato, controlled by the Andō, prospered, and more Japanese settlers ('Watari-tō') came and went in Ezo, bringing both trade and friction with the Ainu."
+    },
+    {
+      "title": "The twelve forts of Dōnan",
+      "summary": "Japanese settlers built the 'twelve forts of Dōnan' at the tip of the Oshima Peninsula. In 1457 the Ainu chief Koshamain rose up; Takeda Nobuhiro put down the revolt and founded the Kakizaki (Matsumae) line."
+    },
+    {
+      "title": "Matsumae and the trading posts",
+      "summary": "The Matsumae Domain monopolized trade with the Ainu, which later became the merchant-run 'basho ukeoi' system; Shakushain's War broke out in 1669."
+    },
+    {
+      "title": "The Kaitakushi and the tondenhei",
+      "summary": "The Meiji government set up the Kaitakushi, brought in American farming methods and soldier-settlers (tondenhei), laid out Sapporo on a grid, and opened coal mines and railways."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Sapporo Clock Tower",
+      "note": "Drill hall of the Sapporo Agricultural College, completed 1878"
+    },
+    {
+      "name": "Goryōkaku",
+      "note": "Western-style star fort completed in 1864, where the Hakodate War ended in 1869"
+    },
+    {
+      "name": "Shiretoko Peninsula",
+      "note": "World Natural Heritage site of drift ice and brown bears"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Sea urchin & king crab",
+      "note": "Cold-water seafood of the Sea of Okhotsk and the Sea of Japan"
+    },
+    {
+      "name": "Yūbari melon",
+      "note": "The leading brand of orange-fleshed melon"
+    },
+    {
+      "name": "Jingisukan (grilled mutton)",
+      "note": "A local dish born of the pioneer-era sheep industry"
+    }
+  ],
+  "dialect": {
+    "name": "Hokkaidō dialect",
+    "features": "A blend of Tōhoku dialects and the speech of settlers from all over Japan; the intonation is flat and close to standard Japanese, with a rich vocabulary for the cold.",
+    "phrases": [
+      {
+        "meaning": "very, super",
+        "note": "'Namara umai!' = super tasty"
+      },
+      {
+        "meaning": "well then / see you",
+        "note": "common when parting"
+      },
+      {
+        "meaning": "bitterly freezing",
+        "note": "for cold of −20 to −30 °C"
+      }
+    ]
+  },
+  "guide": {
+    "opening": "I am the Snowy Owl, just flown in from the coast of drift ice. For over a thousand years this land lay outside the ritsuryō realm — shall I begin with the Ainu, or with the pioneers of the Kaitakushi?"
+  },
+  "regional_meme": [
+    {
+      "title": "'Naichi' and 'the tested land'",
+      "text": "Hokkaidō people call Honshū 'naichi' (the inland), and the prefecture once really used 'Tamesareru daichi' — 'the land that tests you' — as a slogan."
+    },
+    {
+      "title": "A warped sense of distance",
+      "text": "'Let's just pop over to Hakodate' — it's a four-hour drive from Sapporo. Underestimating Hokkaidō's size is every visitor's classic mistake."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Hokushin flag · five-pointed star (Kaitakushi)"
+  },
+  "hero_persona": {
+    "name": "Hijikata Toshizō",
+    "title": "Vice-commander of the Shinsengumi · last stand at Hakodate",
+    "self": "I",
+    "opening_line": "I am Hijikata Toshizō, vice-commander of the Shinsengumi. I fought my way north from Kyoto, and Goryōkaku is my final battlefield. Ask what you will.",
+    "tone_prompt": "cool and laconic with a warrior's bearing; short, forceful sentences; now and then lets slip how he misses Kondō Isami and his Shinsengumi comrades"
+  },
+  "ramen": {
+    "style_name": "Sapporo miso ramen",
+    "broth": "Miso (pork-and-chicken stock with stir-fried miso)",
+    "noodles": "Medium-thick curly yellow noodles, low hydration and chewy",
+    "toppings": "Stir-fried bean sprouts and onion, corn, butter, chashu",
+    "highlight": "A layer of hot lard seals in the heat, so it stays warm even below freezing"
+  },
+  "sake": {
+    "brand": "Otokoyama",
+    "brewery": "Otokoyama Brewery (Asahikawa)",
+    "taste_profile": "Light & dry: crisp and clean — a hard-edged northern sake"
+  }
+}

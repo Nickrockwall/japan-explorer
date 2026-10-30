@@ -1,0 +1,143 @@
+{
+  "capital": "Fukushima",
+  "badge": {
+    "title": "Samurai Spirit of Aizu"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "Mutsu Province",
+        "portion": "south (became Iwashiro and Iwaki provinces in 1868)",
+        "cross_prefectures": [
+          "Aomori",
+          "Iwate",
+          "Miyagi",
+          "Akita"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "Ashina clan",
+      "Date Masamune (destroyed the Ashina at Suriagehara, 1589)",
+      "Sōma clan",
+      "Gamō Ujisato (Aizu, 920,000 koku)"
+    ],
+    "edo_domains": [
+      "Aizu Domain (Aizu Matsudaira)",
+      "Nihonmatsu Domain",
+      "Shirakawa Domain",
+      "Sōma Nakamura Domain"
+    ],
+    "meiji_transition": {
+      "summary": "In 1876 Fukushima, Wakamatsu and Iwasaki prefectures merged into today's Fukushima, Japan's third-largest prefecture by area; Higashikanbara District went to Niigata in 1886.",
+      "boundary_note": "The prefecture is divided into Aizu (western Iwashiro), Nakadōri (eastern Iwashiro) and Hamadōri (Iwaki) — matching the two provinces and three prefectures of early Meiji, with clearly different climates and cultures."
+    }
+  },
+  "history_timeline": [
+    {
+      "title": "Barrier of Shirakawa",
+      "summary": "The Shirakawa and Nakoso barriers, two of the three barriers of Ōshū, marked the entrance to Mutsu and became famous places in waka poetry."
+    },
+    {
+      "title": "Ashina, Sōma, Yūki",
+      "summary": "After the Ōshū campaign a branch of the Miura (later the Ashina) entered Aizu, the Sōma took Hamadōri and the Yūki took Shirakawa."
+    },
+    {
+      "title": "Ashina and Date",
+      "summary": "In the Northern and Southern Courts era Yūki Munehiro of Shirakawa was a key Southern Court vassal; in the Muromachi period the Ashina of Aizu and the Date of southern Ōshū became the two great powers."
+    },
+    {
+      "title": "Battle of Suriagehara",
+      "summary": "In 1589 Date Masamune defeated the Ashina and took Aizu, only to lose it to Hideyoshi the next year; Gamō Ujisato moved in, built Tsuruga Castle and promoted lacquerware and sake."
+    },
+    {
+      "title": "The Aizu Matsudaira",
+      "summary": "Hoshina Masayuki, half-brother of Tokugawa Iemitsu, founded the Aizu Domain, set down its fifteen house rules and schooled samurai children by the 'Juu no okite', forging a strict bushidō."
+    },
+    {
+      "title": "Tragedy of the Boshin War",
+      "summary": "In the 1868 Aizu War the boys of the Byakkotai took their own lives on Iimoriyama; after the 2011 nuclear accident, Hamadōri went through long evacuations and recovery."
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Tsuruga Castle (Aizu-Wakamatsu)",
+      "note": "Red-tiled keep that held out for a month in the Boshin War"
+    },
+    {
+      "name": "Ōuchi-juku",
+      "note": "Edo-era post town of thatched roofs"
+    },
+    {
+      "name": "Lake Inawashiro",
+      "note": "The 'Mirror of Heaven' lake beneath Mount Bandai"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "Kitakata ramen",
+      "note": "One of Japan's three great ramen"
+    },
+    {
+      "name": "Peaches",
+      "note": "Summer fruit of the Fukushima basin"
+    },
+    {
+      "name": "Akabeko",
+      "note": "Aizu's red bobble-head cow toy"
+    }
+  ],
+  "dialect": {
+    "name": "Aizu dialect",
+    "features": "An accentless dialect; sentences end in '-dabe' or '-nai', and the Aizu area is rich in honorifics.",
+    "phrases": [
+      {
+        "meaning": "What must not be done must not be done",
+        "note": "famous line from Aizu's 'Juu no okite'"
+      },
+      {
+        "meaning": "no problem",
+        "note": ""
+      },
+      {
+        "meaning": "right?",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "opening": "This humble monk has passed the Barrier of Shirakawa — truly, we are in Ōshū now. The tale of the Byakkotai still echoes over Aizu's Tsuruga Castle — would you hear it, kind patron?"
+  },
+  "regional_meme": [
+    {
+      "title": "'The last war'",
+      "text": "Old people in Aizu are said to mean the 1868 Boshin War by 'the last war'; the Aizu–Yamaguchi (Chōshū) grudge is still a topic."
+    },
+    {
+      "title": "The three tears of Aizu",
+      "text": "Newcomers to Aizu cry first at the coldness, then at the warmth once they're accepted, and finally when they have to leave."
+    }
+  ],
+  "goshuin": {
+    "crest_name": "Aizu hollyhock (Aizu Matsudaira)"
+  },
+  "hero_persona": {
+    "name": "Niijima Yae",
+    "title": "Gunner of Aizu · the Joan of Arc of the Bakumatsu",
+    "self": "I",
+    "opening_line": "I am Yamamoto Yae, later wife of Niijima Jō. When Tsuruga Castle was besieged, I shouldered a Spencer rifle to defend it — would you hear about that month?",
+    "tone_prompt": "resolute and forthright, daring; grows passionate when speaking of Aizu and the Byakkotai"
+  },
+  "ramen": {
+    "style_name": "Kitakata ramen",
+    "broth": "Shōyu (pork bone and dried sardine)",
+    "noodles": "Flat, thick, curly high-hydration noodles",
+    "toppings": "A bowl full of chashu, scallions, bamboo shoots",
+    "highlight": "One of Japan's three great ramen — locals even eat it for breakfast ('asa-rā')"
+  },
+  "sake": {
+    "brand": "Hiroki (飛露喜)",
+    "brewery": "Hiroki Shuzō Honten",
+    "taste_profile": "Rich & sweet: full umami with clarity"
+  }
+}
