@@ -1,0 +1,185 @@
+{
+  "id": 34,
+  "slug": "hiroshima",
+  "name": {
+    "kanji": "広島県",
+    "kana": "ひろしまけん",
+    "romaji": "Hiroshima",
+    "zh": "广岛县"
+  },
+  "region": "中国",
+  "capital": "广岛市",
+  "badge": {
+    "icon": "🕊️",
+    "title": "安艺和平"
+  },
+  "stats": {
+    "population_k": 2800,
+    "area_km2": 8479,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "安艺国",
+        "kana": "あき",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "备后国",
+        "kana": "びんご",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "毛利元就",
+      "毛利辉元",
+      "小早川隆景",
+      "吉川元春"
+    ],
+    "edo_domains": [
+      "广岛藩（浅野氏42万石）",
+      "福山藩（阿部氏）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年广岛县设立，1876年备后六郡由冈山县划入，形成今日县域。",
+      "boundary_note": "广岛=安艺+备后；福山一带属备后，与冈山往来密切，方言也略有差异。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "严岛神社",
+      "summary": "严岛神社传说始建于593年，平清盛12世纪大规模营造，海上大鸟居成为象征。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "安艺武田与毛利",
+      "summary": "严岛神社在平氏灭亡后仍受幕府保护；安艺守护为武田氏，毛利氏祖先（大江氏一族）受封安艺吉田庄。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "毛利氏扎根",
+      "summary": "毛利氏以安艺吉田郡山城为据点，与周边国人结成国人一揆；严岛一带受大内氏影响。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "三矢之训",
+      "summary": "毛利元就1555年严岛之战击败陶晴贤，逐步统一中国地方；传说以“三支箭”教诲三子团结。1589年辉元筑广岛城。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "浅野广岛",
+      "summary": "福岛正则被改易后，浅野长晟入主广岛；备后福山藩由谱代大名统治，濑户内海港町繁荣。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "和平之城",
+      "summary": "明治时期成为军都（宇品港、吴镇守府）；1945年8月6日原子弹爆炸，此后重建为和平之城。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "严岛神社",
+      "note": "海上大鸟居"
+    },
+    {
+      "name": "原爆圆顶馆",
+      "note": "世界遗产"
+    },
+    {
+      "name": "尾道",
+      "note": "坡道与寺庙之城"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "广岛烧",
+      "note": "层叠式什锦煎饼"
+    },
+    {
+      "name": "牡蛎",
+      "note": "产量全国第一"
+    },
+    {
+      "name": "红叶馒头",
+      "note": "宫岛的枫叶形点心"
+    }
+  ],
+  "dialect": {
+    "name": "广岛弁",
+    "features": "「〜じゃけん」（因为）是代表，「ぶち」（非常）、「たいぎい」（麻烦）常用。",
+    "phrases": [
+      {
+        "phrase": "〜じゃけん",
+        "meaning": "因为……所以",
+        "note": ""
+      },
+      {
+        "phrase": "ぶち",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "たいぎい",
+        "meaning": "麻烦、懒得",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chugoku",
+    "opening": "老朽来到宫岛，潮水正好淹没大鸟居的脚。毛利元就在这片海上以少胜多——想听严岛之战吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "不准叫“广岛风”",
+      "text": "在广岛只能叫“お好み焼き”，加上“广岛风”三个字会被当地人纠正。"
+    },
+    {
+      "title": "鲤鱼队信仰",
+      "text": "广岛人对职业棒球“鲤鱼队”的热爱近乎宗教，比赛日全城一片红。"
+    }
+  ],
+  "goshuin": {
+    "title": "安芸和平",
+    "crest_name": "违鹰羽（浅野氏）",
+    "crest_icon": "takanoha"
+  },
+  "hero_persona": {
+    "name": "毛利元就",
+    "title": "谋神·三矢之训",
+    "self": "吾",
+    "opening_line": "吾乃毛利元就。一支箭易折，三支箭难断——吾从安艺的小领主，一步步成为中国地方之主。",
+    "tone_prompt": "老谋深算而慈祥，喜欢讲家族团结与谋略"
+  },
+  "map_filters": {
+    "sengoku_1572": "mori",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "尾道拉面",
+    "broth": "酱油（鸡骨＋小鱼干，浮背脂粒）",
+    "noodles": "平打细面",
+    "toppings": "背脂粒、叉烧、葱、笋干",
+    "highlight": "濑户内小鱼干的鲜味加上点点背脂，坡道城市的灵魂食物",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "贺茂鹤",
+    "brewery": "贺茂鹤酒造（西条）",
+    "taste_profile": "浓醇甘口：软水酿造法的故乡西条的老字号",
+    "quadrant": "nojun_amakuchi",
+    "famous": false
+  }
+}

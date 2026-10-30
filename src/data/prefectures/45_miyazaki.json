@@ -1,0 +1,182 @@
+{
+  "id": 45,
+  "slug": "miyazaki",
+  "name": {
+    "kanji": "宮崎県",
+    "kana": "みやざきけん",
+    "romaji": "Miyazaki",
+    "zh": "宫崎县"
+  },
+  "region": "九州·冲绳",
+  "capital": "宫崎市",
+  "badge": {
+    "icon": "🌞",
+    "title": "日向神话"
+  },
+  "stats": {
+    "population_k": 1070,
+    "area_km2": 7735,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "日向国",
+        "kana": "ひゅうが",
+        "circuit": "西海道",
+        "portion": "大部（诸县郡西南部除外）",
+        "cross_prefectures": [
+          "鹿儿岛县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "伊东义祐",
+      "岛津义久·义弘",
+      "土持氏"
+    ],
+    "edo_domains": [
+      "延冈藩",
+      "高锅藩（秋月氏）",
+      "饫肥藩（伊东氏）",
+      "佐土原藩",
+      "萨摩藩领（诸县）"
+    ],
+    "meiji_transition": {
+      "summary": "1873年美美津县与都城县合并为宫崎县，1876年并入鹿儿岛县，1883年再设。",
+      "boundary_note": "日向国西南部诸县郡曾属萨摩藩，明治后其中一部分（志布志等）划给鹿儿岛，所以宫崎比古日向国略小。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "天孙降临",
+      "summary": "高千穗是天孙降临神话的舞台，神武东征传说从日向出发；西都原古坟群规模庞大。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "伊东氏受封",
+      "summary": "工藤祐经的子孙伊东氏受封日向的地头职，南北朝时正式移居日向。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "伊东与岛津",
+      "summary": "伊东氏在日向扩张势力，与南方的岛津氏争夺日向，形成长期对立。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "伊东与岛津",
+      "summary": "伊东义祐一度据有“伊东四十八城”，1572年木崎原之战败于岛津义弘，后投奔大友，引发1578年耳川之战。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "小藩林立",
+      "summary": "延冈、高锅、饫肥、佐土原诸藩并立，饫肥杉与饫肥城下町保留至今。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "南国宫崎",
+      "summary": "1883年再设县；1960–70年代成为新婚旅行胜地，近年以芒果与职业棒球春训闻名。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "高千穗峡",
+      "note": "柱状节理峡谷"
+    },
+    {
+      "name": "青岛神社",
+      "note": "“鬼之洗衣板”海蚀台"
+    },
+    {
+      "name": "饫肥城下町",
+      "note": "“九州小京都”"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "宫崎牛",
+      "note": "和牛奥运会冠军"
+    },
+    {
+      "name": "完熟芒果",
+      "note": "“太阳之蛋”"
+    },
+    {
+      "name": "南蛮鸡",
+      "note": "浇塔塔酱的炸鸡"
+    }
+  ],
+  "dialect": {
+    "name": "宫崎弁",
+    "features": "「てげ」（非常）、「よだきい」，语调较缓；诸县一带接近萨摩方言。",
+    "phrases": [
+      {
+        "phrase": "てげ",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "〜ちゃが",
+        "meaning": "……呢",
+        "note": ""
+      },
+      {
+        "phrase": "よだきい",
+        "meaning": "懒得",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kyushu",
+    "opening": "鄙人来到高千穗峡，传说天照大神躲进天岩户的故事就发生在这一带——要从神话时代讲起吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "“只有大自然”",
+      "text": "宫崎常被说“除了大自然什么都没有”；前知事一句“得想办法改变宫崎”成了流行语。"
+    },
+    {
+      "title": "てげてげ",
+      "text": "“てげてげ”＝差不多就行，宫崎人的悠闲哲学。"
+    }
+  ],
+  "goshuin": {
+    "title": "日向神話",
+    "crest_name": "“日”字（日向）",
+    "crest_icon": "char:日"
+  },
+  "hero_persona": {
+    "name": "小村寿太郎",
+    "title": "饫肥出身的外交官",
+    "self": "我",
+    "opening_line": "我是小村寿太郎，生于饫肥藩。朴次茅斯和谈、修改不平等条约——我这一生都在谈判桌上。",
+    "tone_prompt": "冷静务实、条理清晰，言谈间带外交官的分寸"
+  },
+  "map_filters": {
+    "sengoku_1572": "gunyu",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "宫崎拉面",
+    "broth": "豚骨酱油",
+    "noodles": "中细直面",
+    "toppings": "叉烧、葱、腌萝卜",
+    "highlight": "桌上常放腌萝卜作小菜",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "黑雾岛",
+    "brewery": "雾岛酒造",
+    "taste_profile": "烧酎：黑曲酿造的芋烧酎，销量常居全国前列",
+    "quadrant": "shochu",
+    "famous": true
+  }
+}

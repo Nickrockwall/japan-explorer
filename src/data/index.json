@@ -1,0 +1,378 @@
+[
+  {
+    "id": 1,
+    "slug": "hokkaido",
+    "file": "01_hokkaido.json",
+    "kanji": "北海道",
+    "zh": "北海道",
+    "region": "北海道"
+  },
+  {
+    "id": 2,
+    "slug": "aomori",
+    "file": "02_aomori.json",
+    "kanji": "青森県",
+    "zh": "青森县",
+    "region": "东北"
+  },
+  {
+    "id": 3,
+    "slug": "iwate",
+    "file": "03_iwate.json",
+    "kanji": "岩手県",
+    "zh": "岩手县",
+    "region": "东北"
+  },
+  {
+    "id": 4,
+    "slug": "miyagi",
+    "file": "04_miyagi.json",
+    "kanji": "宮城県",
+    "zh": "宫城县",
+    "region": "东北"
+  },
+  {
+    "id": 5,
+    "slug": "akita",
+    "file": "05_akita.json",
+    "kanji": "秋田県",
+    "zh": "秋田县",
+    "region": "东北"
+  },
+  {
+    "id": 6,
+    "slug": "yamagata",
+    "file": "06_yamagata.json",
+    "kanji": "山形県",
+    "zh": "山形县",
+    "region": "东北"
+  },
+  {
+    "id": 7,
+    "slug": "fukushima",
+    "file": "07_fukushima.json",
+    "kanji": "福島県",
+    "zh": "福岛县",
+    "region": "东北"
+  },
+  {
+    "id": 8,
+    "slug": "ibaraki",
+    "file": "08_ibaraki.json",
+    "kanji": "茨城県",
+    "zh": "茨城县",
+    "region": "关东"
+  },
+  {
+    "id": 9,
+    "slug": "tochigi",
+    "file": "09_tochigi.json",
+    "kanji": "栃木県",
+    "zh": "栃木县",
+    "region": "关东"
+  },
+  {
+    "id": 10,
+    "slug": "gunma",
+    "file": "10_gunma.json",
+    "kanji": "群馬県",
+    "zh": "群马县",
+    "region": "关东"
+  },
+  {
+    "id": 11,
+    "slug": "saitama",
+    "file": "11_saitama.json",
+    "kanji": "埼玉県",
+    "zh": "埼玉县",
+    "region": "关东"
+  },
+  {
+    "id": 12,
+    "slug": "chiba",
+    "file": "12_chiba.json",
+    "kanji": "千葉県",
+    "zh": "千叶县",
+    "region": "关东"
+  },
+  {
+    "id": 13,
+    "slug": "tokyo",
+    "file": "13_tokyo.json",
+    "kanji": "東京都",
+    "zh": "东京都",
+    "region": "关东"
+  },
+  {
+    "id": 14,
+    "slug": "kanagawa",
+    "file": "14_kanagawa.json",
+    "kanji": "神奈川県",
+    "zh": "神奈川县",
+    "region": "关东"
+  },
+  {
+    "id": 15,
+    "slug": "niigata",
+    "file": "15_niigata.json",
+    "kanji": "新潟県",
+    "zh": "新潟县",
+    "region": "中部"
+  },
+  {
+    "id": 16,
+    "slug": "toyama",
+    "file": "16_toyama.json",
+    "kanji": "富山県",
+    "zh": "富山县",
+    "region": "中部"
+  },
+  {
+    "id": 17,
+    "slug": "ishikawa",
+    "file": "17_ishikawa.json",
+    "kanji": "石川県",
+    "zh": "石川县",
+    "region": "中部"
+  },
+  {
+    "id": 18,
+    "slug": "fukui",
+    "file": "18_fukui.json",
+    "kanji": "福井県",
+    "zh": "福井县",
+    "region": "中部"
+  },
+  {
+    "id": 19,
+    "slug": "yamanashi",
+    "file": "19_yamanashi.json",
+    "kanji": "山梨県",
+    "zh": "山梨县",
+    "region": "中部"
+  },
+  {
+    "id": 20,
+    "slug": "nagano",
+    "file": "20_nagano.json",
+    "kanji": "長野県",
+    "zh": "长野县",
+    "region": "中部"
+  },
+  {
+    "id": 21,
+    "slug": "gifu",
+    "file": "21_gifu.json",
+    "kanji": "岐阜県",
+    "zh": "岐阜县",
+    "region": "中部"
+  },
+  {
+    "id": 22,
+    "slug": "shizuoka",
+    "file": "22_shizuoka.json",
+    "kanji": "静岡県",
+    "zh": "静冈县",
+    "region": "中部"
+  },
+  {
+    "id": 23,
+    "slug": "aichi",
+    "file": "23_aichi.json",
+    "kanji": "愛知県",
+    "zh": "爱知县",
+    "region": "中部"
+  },
+  {
+    "id": 24,
+    "slug": "mie",
+    "file": "24_mie.json",
+    "kanji": "三重県",
+    "zh": "三重县",
+    "region": "近畿"
+  },
+  {
+    "id": 25,
+    "slug": "shiga",
+    "file": "25_shiga.json",
+    "kanji": "滋賀県",
+    "zh": "滋贺县",
+    "region": "近畿"
+  },
+  {
+    "id": 26,
+    "slug": "kyoto",
+    "file": "26_kyoto.json",
+    "kanji": "京都府",
+    "zh": "京都府",
+    "region": "近畿"
+  },
+  {
+    "id": 27,
+    "slug": "osaka",
+    "file": "27_osaka.json",
+    "kanji": "大阪府",
+    "zh": "大阪府",
+    "region": "近畿"
+  },
+  {
+    "id": 28,
+    "slug": "hyogo",
+    "file": "28_hyogo.json",
+    "kanji": "兵庫県",
+    "zh": "兵库县",
+    "region": "近畿"
+  },
+  {
+    "id": 29,
+    "slug": "nara",
+    "file": "29_nara.json",
+    "kanji": "奈良県",
+    "zh": "奈良县",
+    "region": "近畿"
+  },
+  {
+    "id": 30,
+    "slug": "wakayama",
+    "file": "30_wakayama.json",
+    "kanji": "和歌山県",
+    "zh": "和歌山县",
+    "region": "近畿"
+  },
+  {
+    "id": 31,
+    "slug": "tottori",
+    "file": "31_tottori.json",
+    "kanji": "鳥取県",
+    "zh": "鸟取县",
+    "region": "中国"
+  },
+  {
+    "id": 32,
+    "slug": "shimane",
+    "file": "32_shimane.json",
+    "kanji": "島根県",
+    "zh": "岛根县",
+    "region": "中国"
+  },
+  {
+    "id": 33,
+    "slug": "okayama",
+    "file": "33_okayama.json",
+    "kanji": "岡山県",
+    "zh": "冈山县",
+    "region": "中国"
+  },
+  {
+    "id": 34,
+    "slug": "hiroshima",
+    "file": "34_hiroshima.json",
+    "kanji": "広島県",
+    "zh": "广岛县",
+    "region": "中国"
+  },
+  {
+    "id": 35,
+    "slug": "yamaguchi",
+    "file": "35_yamaguchi.json",
+    "kanji": "山口県",
+    "zh": "山口县",
+    "region": "中国"
+  },
+  {
+    "id": 36,
+    "slug": "tokushima",
+    "file": "36_tokushima.json",
+    "kanji": "徳島県",
+    "zh": "德岛县",
+    "region": "四国"
+  },
+  {
+    "id": 37,
+    "slug": "kagawa",
+    "file": "37_kagawa.json",
+    "kanji": "香川県",
+    "zh": "香川县",
+    "region": "四国"
+  },
+  {
+    "id": 38,
+    "slug": "ehime",
+    "file": "38_ehime.json",
+    "kanji": "愛媛県",
+    "zh": "爱媛县",
+    "region": "四国"
+  },
+  {
+    "id": 39,
+    "slug": "kochi",
+    "file": "39_kochi.json",
+    "kanji": "高知県",
+    "zh": "高知县",
+    "region": "四国"
+  },
+  {
+    "id": 40,
+    "slug": "fukuoka",
+    "file": "40_fukuoka.json",
+    "kanji": "福岡県",
+    "zh": "福冈县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 41,
+    "slug": "saga",
+    "file": "41_saga.json",
+    "kanji": "佐賀県",
+    "zh": "佐贺县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 42,
+    "slug": "nagasaki",
+    "file": "42_nagasaki.json",
+    "kanji": "長崎県",
+    "zh": "长崎县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 43,
+    "slug": "kumamoto",
+    "file": "43_kumamoto.json",
+    "kanji": "熊本県",
+    "zh": "熊本县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 44,
+    "slug": "oita",
+    "file": "44_oita.json",
+    "kanji": "大分県",
+    "zh": "大分县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 45,
+    "slug": "miyazaki",
+    "file": "45_miyazaki.json",
+    "kanji": "宮崎県",
+    "zh": "宫崎县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 46,
+    "slug": "kagoshima",
+    "file": "46_kagoshima.json",
+    "kanji": "鹿児島県",
+    "zh": "鹿儿岛县",
+    "region": "九州·冲绳"
+  },
+  {
+    "id": 47,
+    "slug": "okinawa",
+    "file": "47_okinawa.json",
+    "kanji": "沖縄県",
+    "zh": "冲绳县",
+    "region": "九州·冲绳"
+  }
+]

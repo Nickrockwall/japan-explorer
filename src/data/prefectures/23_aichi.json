@@ -1,0 +1,187 @@
+{
+  "id": 23,
+  "slug": "aichi",
+  "name": {
+    "kanji": "愛知県",
+    "kana": "あいちけん",
+    "romaji": "Aichi",
+    "zh": "爱知县"
+  },
+  "region": "中部",
+  "capital": "名古屋市",
+  "badge": {
+    "icon": "🏯",
+    "title": "三英杰故乡"
+  },
+  "stats": {
+    "population_k": 7542,
+    "area_km2": 5173,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "尾张国",
+        "kana": "おわり",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "三河国",
+        "kana": "みかわ",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "织田信长",
+      "丰臣秀吉",
+      "松平（德川）家康",
+      "今川氏（三河）"
+    ],
+    "edo_domains": [
+      "尾张藩（德川御三家·名古屋）",
+      "冈崎藩",
+      "吉田藩",
+      "刈谷藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年尾张设名古屋县、三河设额田县，1872年名古屋县改称爱知县，同年额田县并入。",
+      "boundary_note": "尾张与三河以境川为界，方言、气质皆不同，至今仍有“尾张 vs 三河”的说法。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "热田与三河",
+      "summary": "热田神宫供奉三神器之一的草薙剑；三河国府位于今丰川市。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "热田与承久之乱",
+      "summary": "源赖朝的生母是热田大宫司之女；承久之乱中，尾张川（木曾川）一带成为幕府军与京方交战之地。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "斯波与一色",
+      "summary": "尾张守护为三管领斯波氏，守护代织田氏实际统治；三河守护为一色氏等，松平氏在三河山间兴起。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "三英杰",
+      "summary": "织田信长、丰臣秀吉生于尾张，德川家康生于三河冈崎，战国三英杰皆出于此；桶狭间、长篠之战都在县内。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "御三家尾张",
+      "summary": "家康之子义直封尾张，1610年起筑名古屋城，通过“清洲越”整体迁城建起名古屋城下町。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "工业心脏",
+      "summary": "丰田等制造业让爱知成为日本制造业产值第一的县；2005年举办爱知世博会。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "名古屋城",
+      "note": "金鯱之城"
+    },
+    {
+      "name": "热田神宫",
+      "note": "草薙剑的神宫"
+    },
+    {
+      "name": "冈崎城",
+      "note": "德川家康诞生之城"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "味噌炸猪排",
+      "note": "浇八丁味噌酱的炸猪排"
+    },
+    {
+      "name": "鳗鱼饭三吃（ひつまぶし）",
+      "note": "名古屋式鳗鱼饭"
+    },
+    {
+      "name": "八丁味噌",
+      "note": "冈崎的豆味噌"
+    }
+  ],
+  "dialect": {
+    "name": "名古屋弁",
+    "features": "元音融合明显（ai→ææ，如「だぎゃあ」），「でら」表示非常，自行车叫「けったマシーン」。",
+    "phrases": [
+      {
+        "phrase": "でら",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "〜だぎゃあ",
+        "meaning": "是……啊",
+        "note": ""
+      },
+      {
+        "phrase": "ときんときん",
+        "meaning": "尖尖的",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chubu",
+    "opening": "在下风间。信长、秀吉、家康三位都是喝这里的水长大的——想听桶狭间奇袭，还是名古屋城的金鯱？"
+  },
+  "regional_meme": [
+    {
+      "title": "名古屋没意思？",
+      "text": "某次调查中名古屋被评为“最没意思的城市”，名古屋人反而用“名古屋饭”逆袭——一切都要加味噌。"
+    },
+    {
+      "title": "三英杰自豪",
+      "text": "爱知人提起信长、秀吉、家康：天下都是我们这儿的人打下来的。"
+    }
+  ],
+  "goshuin": {
+    "title": "天下布武",
+    "crest_name": "织田木瓜",
+    "crest_icon": "mokko"
+  },
+  "hero_persona": {
+    "name": "织田信长",
+    "title": "第六天魔王",
+    "self": "余",
+    "opening_line": "余乃织田上总介信长！人间五十年，与下天相比，如梦又似幻——要问天下布武之事，尽管开口。",
+    "tone_prompt": "霸气果断、言简意赅、带革新者的傲气，不拘旧俗"
+  },
+  "map_filters": {
+    "sengoku_1572": "oda",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "名古屋台湾拉面",
+    "broth": "特色（辣味酱油汤）",
+    "noodles": "中细直面",
+    "toppings": "辣炒肉末、韭菜、大蒜",
+    "highlight": "名古屋原创——台湾其实没有“台湾拉面”",
+    "category": "other"
+  },
+  "sake": {
+    "brand": "酿人九平次",
+    "brewery": "万乘酿造",
+    "taste_profile": "浓醇甘口：酸甜明快，常见于巴黎星级餐厅",
+    "quadrant": "nojun_amakuchi",
+    "famous": false
+  }
+}

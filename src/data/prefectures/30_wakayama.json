@@ -1,0 +1,180 @@
+{
+  "id": 30,
+  "slug": "wakayama",
+  "name": {
+    "kanji": "和歌山県",
+    "kana": "わかやまけん",
+    "romaji": "Wakayama",
+    "zh": "和歌山县"
+  },
+  "region": "近畿",
+  "capital": "和歌山市",
+  "badge": {
+    "icon": "🍊",
+    "title": "纪州熊野"
+  },
+  "stats": {
+    "population_k": 923,
+    "area_km2": 4725,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "纪伊国",
+        "kana": "きい",
+        "circuit": "南海道",
+        "portion": "大部（除北牟娄·南牟娄）",
+        "cross_prefectures": [
+          "三重县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "杂贺众（铁炮佣兵）",
+      "根来众",
+      "畠山氏",
+      "汤川氏"
+    ],
+    "edo_domains": [
+      "纪州藩（德川御三家55万石）",
+      "新宫藩（水野氏，纪州藩附家老）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年和歌山县设立，田边、新宫等县同年并入。",
+      "boundary_note": "纪伊国东部（熊野的北牟娄·南牟娄）划给了三重县，所以“熊野”被今天的和歌山与三重一分为二。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "熊野与高野",
+      "summary": "空海816年开创高野山金刚峰寺；熊野三山成为上皇贵族“熊野诣”的圣地。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "高野山与熊野",
+      "summary": "熊野诣在镰仓时代依然兴盛；高野山的寺领不断扩大，成为纪伊的一大势力。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "畠山氏与根来寺",
+      "summary": "纪伊守护为畠山氏；根来寺僧兵势力壮大，成为日后铁炮佣兵的源头。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "杂贺与根来",
+      "summary": "杂贺众、根来众以铁炮佣兵著称，参与石山合战对抗信长；1585年秀吉纪州征伐平定此地。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "纪州德川",
+      "summary": "家康第十子赖宣封纪州，第五代藩主吉宗后来成为八代将军，推行享保改革。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "南方熊楠",
+      "summary": "博物学家南方熊楠出身于此；2004年“纪伊山地的灵场与参拜道”列入世界遗产。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "高野山",
+      "note": "真言宗总本山"
+    },
+    {
+      "name": "熊野古道",
+      "note": "世界遗产参拜道"
+    },
+    {
+      "name": "那智瀑布",
+      "note": "落差133米"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "南高梅",
+      "note": "日本第一的梅子"
+    },
+    {
+      "name": "有田蜜柑",
+      "note": "蜜柑产量全国第一"
+    },
+    {
+      "name": "汤浅酱油",
+      "note": "日本酱油发祥地"
+    }
+  ],
+  "dialect": {
+    "name": "和歌山弁",
+    "features": "ざ行常发成だ行（「ぜんぜん」→「でんでん」），几乎不用敬语，句尾「〜よし」「〜ら」常见。",
+    "phrases": [
+      {
+        "phrase": "でんでん",
+        "meaning": "完全（ぜんぜん）",
+        "note": ""
+      },
+      {
+        "phrase": "〜ら",
+        "meaning": "我们",
+        "note": "如「あてら」"
+      },
+      {
+        "phrase": "〜よし",
+        "meaning": "……吧（劝诱）",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kinki",
+    "opening": "妾身随上皇的“熊野诣”走过熊野古道——那可是要走二十多天的山路。想听熊野三山，还是吉宗将军的出身？"
+  },
+  "regional_meme": [
+    {
+      "title": "被遗忘的关西",
+      "text": "提到关西，大家想到京都、大阪、神户……和歌山县民：“还有我们啊！”"
+    },
+    {
+      "title": "熊猫之乡",
+      "text": "白浜的冒险乐园曾养育众多大熊猫，和歌山人自认是“日本熊猫的故乡”。"
+    }
+  ],
+  "goshuin": {
+    "title": "熊野詣",
+    "crest_name": "八咫乌（熊野）",
+    "crest_icon": "char:烏"
+  },
+  "hero_persona": {
+    "name": "德川吉宗",
+    "title": "暴坊将军·享保改革",
+    "self": "余",
+    "opening_line": "余乃第八代将军德川吉宗，出身纪州。电视剧里余常骑白马微服惩恶——那可是戏！不过享保改革是真的。",
+    "tone_prompt": "务实刚健、平易近人，热衷节俭、新田开发与洋书解禁的话题"
+  },
+  "map_filters": {
+    "sengoku_1572": "gunyu",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "和歌山拉面",
+    "broth": "豚骨酱油",
+    "noodles": "细直面",
+    "toppings": "叉烧、鸣门卷、葱",
+    "highlight": "桌上摆着鲭鱼押寿司“早寿司”，吃面配寿司是本地规矩",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "纪土",
+    "brewery": "平和酒造",
+    "taste_profile": "淡丽甘口：清新果香，年轻酿酒师的代表作",
+    "quadrant": "tanrei_amakuchi",
+    "famous": false
+  }
+}

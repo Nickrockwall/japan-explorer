@@ -1,0 +1,175 @@
+{
+  "id": 39,
+  "slug": "kochi",
+  "name": {
+    "kanji": "高知県",
+    "kana": "こうちけん",
+    "romaji": "Kochi",
+    "zh": "高知县"
+  },
+  "region": "四国",
+  "capital": "高知市",
+  "badge": {
+    "icon": "🐋",
+    "title": "土佐龙马"
+  },
+  "stats": {
+    "population_k": 692,
+    "area_km2": 7104,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "土佐国",
+        "kana": "とさ",
+        "circuit": "南海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "长宗我部元亲",
+      "一条兼定（土佐一条氏）"
+    ],
+    "edo_domains": [
+      "土佐藩（山内氏24万石）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年高知县设立，1876–1880年曾兼并阿波。",
+      "boundary_note": "高知=土佐国，被四国山地与太平洋夹在中间，自古相对孤立，因此形成了独特的气质。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "远流之地",
+      "summary": "土佐是远流之地；纪贯之任土佐守后写下《土佐日记》（约935年）。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "自请流放的上皇",
+      "summary": "镰仓期土佐由关东御家人统治；承久之乱后土御门上皇自请流放土佐，后迁至阿波。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "细川氏与土佐一条氏",
+      "summary": "土佐守护为细川氏；应仁之乱中前关白一条教房避难土佐中村，形成“土佐一条氏”。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "四国霸者",
+      "summary": "长宗我部元亲以“一领具足”半农半兵统一四国，1585年降伏秀吉，仅保留土佐一国。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "上士与乡士",
+      "summary": "山内一丰入主土佐，旧长宗我部系家臣被降为“乡士”，形成上士与乡士的森严等级，这也是幕末乡士坂本龙马崛起的背景。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "自由民权",
+      "summary": "坂本龙马促成萨长同盟；明治初期板垣退助在高知发起自由民权运动。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "高知城",
+      "note": "现存天守之一"
+    },
+    {
+      "name": "桂滨",
+      "note": "坂本龙马像"
+    },
+    {
+      "name": "四万十川",
+      "note": "“日本最后的清流”"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "炙烤鲣鱼（鰹のたたき）",
+      "note": "稻草火炙烤"
+    },
+    {
+      "name": "柚子",
+      "note": "产量全国第一"
+    },
+    {
+      "name": "土佐酒",
+      "note": "辛口淡丽"
+    }
+  ],
+  "dialect": {
+    "name": "土佐弁",
+    "features": "「〜ぜよ」「〜きに」因龙马题材作品而全国闻名；倔强的男人叫「いごっそう」，豪爽的女人叫「はちきん」。",
+    "phrases": [
+      {
+        "phrase": "〜ぜよ",
+        "meaning": "……啊！（加强语气）",
+        "note": ""
+      },
+      {
+        "phrase": "いごっそう",
+        "meaning": "倔强刚直的土佐男儿",
+        "note": ""
+      },
+      {
+        "phrase": "はちきん",
+        "meaning": "豪爽能干的土佐女子",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "shikoku",
+    "opening": "我是遍路旅人，土佐的路最长最险，被称为“修行的道场”。坂本龙马就是在这片海边望着太平洋长大的——想听他的故事吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "可杯酒令",
+      "text": "高知人酒量惊人，宴会用“べく杯”——杯底有洞或尖底，不喝完放不下。"
+    },
+    {
+      "title": "到处是龙马",
+      "text": "龙马的机场、龙马的点心、龙马的铜像……高知人对龙马的爱无处不在。"
+    }
+  ],
+  "goshuin": {
+    "title": "土佐龍馬",
+    "crest_name": "“柏”字（山内三柏）",
+    "crest_icon": "char:柏"
+  },
+  "hero_persona": {
+    "name": "坂本龙马",
+    "title": "土佐脱藩浪士·萨长同盟推手",
+    "self": "わし",
+    "opening_line": "わしは坂本龙马ぜよ！日本得洗个大澡才行——萨摩和长州，就由わし来牵线吧！",
+    "tone_prompt": "豪放乐观、眼界开阔，句尾常带土佐弁“〜ぜよ”“〜きに”"
+  },
+  "map_filters": {
+    "sengoku_1572": "chosokabe",
+    "bakumatsu": "satcho"
+  },
+  "ramen": {
+    "style_name": "须崎锅烧拉面",
+    "broth": "酱油（鸡骨鸡油）",
+    "noodles": "细直面",
+    "toppings": "鸡肉、竹轮、生鸡蛋、葱",
+    "highlight": "盛在砂锅里滚烫上桌，最后泡饭收尾",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "醉鲸",
+    "brewery": "醉鲸酒造",
+    "taste_profile": "淡丽辛口：“土佐辛口”的代表，配炙烤鲣鱼最佳",
+    "quadrant": "tanrei_karakuchi",
+    "famous": true
+  }
+}

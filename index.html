@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Japan Explorer · 日本47都道府县古今变迁图鉴</title>
+  <meta name="description" content="在日本全图上探索47都道府县与68令制国的古今变迁，并与AI历史向导对话。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2318181c'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23c23531'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script>
+    // CDN 回退：jsdelivr → unpkg → npmmirror（国内镜像）
+    window.echarts || document.write('<script src="https://unpkg.com/echarts@5.5.1/dist/echarts.min.js"><\/script>');
+  </script>
+  <script>
+    window.echarts || document.write('<script src="https://registry.npmmirror.com/echarts/5.5.1/files/dist/echarts.min.js"><\/script>');
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-seal" aria-hidden="true">古</div>
+      <div>
+        <h1>Japan Explorer</h1>
+        <p class="subtitle">日本47都道府县古今变迁图鉴 · 五畿七道 ⇄ 都道府县</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="explore-counter" title="点击地图上的任意地区即记为已探索">
+        <span class="label">全日本探索</span>
+        <span class="count"><b id="visited-count">0</b> / 47</span>
+        <div class="progress"><div class="progress-bar" id="visited-bar"></div></div>
+      </div>
+      <button class="btn btn-battle" id="btn-battle" type="button" title="在地图上推演经典合战">
+        <span class="book-ico battle-ico" aria-hidden="true">戦</span>合战演武
+      </button>
+      <button class="btn btn-book" id="btn-book" type="button" title="查看已收集的御朱印">
+        <span class="book-ico" aria-hidden="true">印</span>御朱印帐 (<b id="goshuin-count">0</b>/47)
+      </button>
+      <button class="btn btn-ghost" id="btn-settings" type="button">
+        <span class="dot" id="api-dot"></span>API 设置
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="map-pane" aria-label="日本地图">
+      <div id="map" class="map"></div>
+      <div class="map-toolbar">
+        <div class="toolbar-row">
+          <div class="layers" id="layers" role="tablist" aria-label="风土图层"></div>
+          <form class="search" id="search" role="search" autocomplete="off">
+            <input id="search-input" type="search" list="search-list" placeholder="搜县名 / 古国名，如 武藏、Kyoto">
+            <datalist id="search-list"></datalist>
+          </form>
+        </div>
+        <div class="filters" id="filters" role="tablist" aria-label="时空滤镜"></div>
+      </div>
+
+      <div class="map-legend" id="legend">
+        <div class="legend-caption" id="legend-caption"></div>
+        <div class="legend-items" id="legend-items"></div>
+      </div>
+
+      <div class="era-banner" id="era-banner" aria-live="polite"></div>
+
+      <div class="timebar" id="timebar">
+        <button type="button" class="tb-play" id="tb-play" aria-label="播放时代变迁">▶</button>
+        <div class="tb-track">
+          <input type="range" id="tb-range" min="0" max="8" step="1" value="0" aria-label="时代">
+          <div class="tb-ticks" id="tb-ticks"></div>
+        </div>
+        <div class="tb-info">
+          <b id="tb-era">时空穿越</b>
+          <span id="tb-capital">拖动滑块，穿越九个时代</span>
+        </div>
+        <button type="button" class="tb-exit" id="tb-exit" title="回到当下" aria-label="退出时空穿越" hidden>×</button>
+      </div>
+
+      <div class="battle-hud" id="battle-hud" hidden>
+        <div class="hud-head">
+          <span class="hud-tag">合战沙盘</span>
+          <b id="hud-title"></b>
+          <button type="button" class="btn btn-primary hud-exit" id="hud-exit">退出合战沙盘</button>
+        </div>
+        <div class="hud-sides" id="hud-sides"></div>
+        <ol class="hud-phases" id="hud-phases" aria-label="推演阶段"></ol>
+        <p class="hud-brief" id="hud-brief" aria-live="polite"></p>
+        <div class="hud-nav">
+          <button type="button" class="btn btn-ghost" id="hud-prev">‹ 上一阶段</button>
+          <button type="button" class="btn btn-ghost" id="hud-auto">▶ 自动推演</button>
+          <button type="button" class="btn btn-primary" id="hud-next">下一阶段 ›</button>
+        </div>
+      </div>
+      <div class="loading" id="loading">正在展开古地图…</div>
+    </section>
+
+    <aside class="side-pane">
+      <section class="detail" id="detail" aria-label="地区风土与历史详卡"></section>
+
+      <div class="splitter" id="splitter" role="separator" aria-orientation="horizontal" aria-label="拖动调整上下比例" tabindex="0"></div>
+
+      <section class="guide" aria-label="AI 历史向导">
+        <div class="guide-head">
+          <div class="avatar" id="guide-avatar">案</div>
+          <div class="guide-id">
+            <div class="guide-name" id="guide-name">时空案内人</div>
+            <div class="guide-title" id="guide-title">请先在地图上选择一个地区</div>
+          </div>
+          <div class="persona-switch" id="persona-switch" role="radiogroup" aria-label="向导模式">
+            <button type="button" role="radio" data-mode="scholar">博学史官</button>
+            <button type="button" role="radio" data-mode="hero">名将附体</button>
+          </div>
+          <span class="mode-chip" id="guide-mode">离线模式</span>
+        </div>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <div class="quick" id="quick"></div>
+        <form class="composer" id="composer">
+          <input id="chat-input" type="text" autocomplete="off" placeholder="向案内人提问，例如：江户时代这里谁说了算？" disabled>
+          <button class="btn btn-primary" type="submit" id="btn-send" disabled>送出</button>
+        </form>
+      </section>
+    </aside>
+  </main>
+
+  <dialog class="book" id="book" aria-labelledby="book-h">
+    <div class="book-inner">
+      <header class="book-head">
+        <div>
+          <h2 id="book-h">御朱印帐</h2>
+          <p class="book-progress"></p>
+        </div>
+        <button type="button" class="book-close" aria-label="关闭">×</button>
+      </header>
+      <nav class="book-tabs" aria-label="按地方筛选"></nav>
+      <div class="book-grid"></div>
+    </div>
+  </dialog>
+
+  <dialog class="battles" id="battles" aria-labelledby="battles-h">
+    <div class="battles-inner">
+      <header class="battles-head">
+        <div>
+          <h2 id="battles-h">合战演武</h2>
+          <p>选择一场合战，在地图上推演两军进军与交锋</p>
+        </div>
+        <button type="button" class="book-close battles-close" aria-label="关闭">×</button>
+      </header>
+      <div class="battle-list" id="battle-list"></div>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="settings">
+    <form method="dialog" class="modal-body" id="settings-form">
+      <h2>接入 AI 案内人</h2>
+      <p class="muted">Key 只保存在本浏览器的 localStorage，请求从浏览器直接发往你填写的接口。</p>
+      <label>接口类型
+        <select name="provider" id="cfg-provider">
+          <option value="claude">Claude API（Anthropic）</option>
+          <option value="openai">OpenAI 兼容接口</option>
+          <option value="gemini">Gemini 原生（Google AI Studio）</option>
+        </select>
+      </label>
+      <label>Base URL
+        <input name="baseUrl" id="cfg-base" type="url" placeholder="https://api.anthropic.com/v1">
+      </label>
+      <label>模型
+        <input name="model" id="cfg-model" type="text" placeholder="claude-sonnet-5-5">
+      </label>
+      <label>API Key
+        <input name="apiKey" id="cfg-key" type="password" placeholder="sk-…" autocomplete="off">
+      </label>
+      <div class="test-row">
+        <button class="btn btn-ghost" type="button" id="btn-test">测试连接</button>
+        <p class="test-result" id="cfg-test-result" aria-live="polite"></p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" value="clear" type="submit">清除 Key</button>
+        <button class="btn btn-ghost" value="reset-visited" type="submit">重置探索与御朱印</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost" value="cancel" type="submit">取消</button>
+        <button class="btn btn-primary" value="save" type="submit">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="fileproto" id="fileproto" role="alertdialog" aria-labelledby="fileproto-h" hidden>
+    <div class="fileproto-card">
+      <div class="seal" aria-hidden="true">止</div>
+      <h2 id="fileproto-h">请经由本地服务器开启</h2>
+      <p id="fileproto-msg">直接双击打开（file:// 协议）时，浏览器出于安全限制会拦截地图与史料的读取。<br>请在项目目录下启动一个本地服务器：</p>
+      <pre>cd japan-explorer
+python3 -m http.server 8000      # Windows 可用 python</pre>
+      <pre>npx serve .</pre>
+      <p class="then">然后在浏览器访问 <b>http://localhost:8000</b>（npx serve 默认为 <b>:3000</b>）</p>
+    </div>
+  </div>
+  <script>
+    // file:// 下 ES Module 与 fetch 均被拦截，app.js 不会执行，必须在这里用普通脚本提示
+    if (location.protocol === 'file:') {
+      document.getElementById('fileproto').hidden = false;
+      document.getElementById('loading').textContent = '';
+    }
+  </script>
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

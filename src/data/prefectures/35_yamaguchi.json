@@ -1,0 +1,186 @@
+{
+  "id": 35,
+  "slug": "yamaguchi",
+  "name": {
+    "kanji": "山口県",
+    "kana": "やまぐちけん",
+    "romaji": "Yamaguchi",
+    "zh": "山口县"
+  },
+  "region": "中国",
+  "capital": "山口市",
+  "badge": {
+    "icon": "🏯",
+    "title": "长州维新"
+  },
+  "stats": {
+    "population_k": 1342,
+    "area_km2": 6113,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "周防国",
+        "kana": "すおう",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "长门国",
+        "kana": "ながと",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "大内义隆",
+      "陶晴贤",
+      "毛利元就"
+    ],
+    "edo_domains": [
+      "长州藩（萩藩，毛利氏）",
+      "岩国藩（吉川氏）",
+      "德山藩",
+      "长府藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年山口县与岩国、德山、清末、丰浦等县合并为山口县。",
+      "boundary_note": "山口=周防+长门，与江户时期毛利氏的领地几乎完全一致，是藩界、国界、县界三者重合的典型。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "长门与坛之浦",
+      "summary": "长门国府在今下关；1185年坛之浦之战平氏灭亡，年幼的安德天皇沉入海中。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "长门探题",
+      "summary": "元寇之后幕府在长门设“长门探题”防备蒙古再次来袭；大内氏作为周防在厅官人逐渐壮大。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "西之京山口",
+      "summary": "大内弘世以山口为本据，仿照京都营建城下町；大内义弘一度领有六国，1399年应永之乱中败死。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "西之京",
+      "summary": "大内氏以山口为“西之京”，经营对明、朝鲜贸易，沙勿略曾在此传教；1551年陶晴贤叛变，后被毛利元就所灭。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "长州藩",
+      "summary": "关原战败后毛利氏被削减至周防·长门两国，以萩为藩厅；吉田松阴的松下村塾培养出高杉晋作、伊藤博文等人。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "维新之乡",
+      "summary": "长州与萨摩结盟推翻幕府；山口出身的首相人数居全国之首。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "锦带桥",
+      "note": "五连木造拱桥"
+    },
+    {
+      "name": "秋吉台·秋芳洞",
+      "note": "日本最大的喀斯特台地"
+    },
+    {
+      "name": "萩城下町",
+      "note": "松下村塾所在"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "下关河豚",
+      "note": "河豚的集散地"
+    },
+    {
+      "name": "獭祭",
+      "note": "岩国的纯米大吟酿"
+    },
+    {
+      "name": "瓦荞麦面",
+      "note": "在热瓦片上吃的茶荞麦"
+    }
+  ],
+  "dialect": {
+    "name": "长州弁",
+    "features": "「〜ちょる」（正在）、「〜っちゃ」，幕末志士的口吻常以长州弁再现。",
+    "phrases": [
+      {
+        "phrase": "〜ちょる",
+        "meaning": "正在……",
+        "note": ""
+      },
+      {
+        "phrase": "ぶち",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "〜であります",
+        "meaning": "是……",
+        "note": "一说源自长州弁，后成为旧军队用语"
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chugoku",
+    "opening": "老朽在坛之浦听过平家的哀歌。几百年后，长州的年轻志士又从这里出发推翻了幕府——要听松下村塾吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "首相之县",
+      "text": "山口出身的首相人数全国第一，县民提起来很是自豪。"
+    },
+    {
+      "title": "是“ふく”不是“ふぐ”",
+      "text": "下关人把河豚叫“ふく”（福），为了讨个好彩头。"
+    }
+  ],
+  "goshuin": {
+    "title": "長州維新",
+    "crest_name": "一文字三星（毛利氏）",
+    "crest_icon": "mitsuboshi"
+  },
+  "hero_persona": {
+    "name": "高杉晋作",
+    "title": "奇兵队创始人",
+    "self": "僕",
+    "opening_line": "僕は高杉晋作。“让无趣的世间变得有趣”——组建奇兵队、功山寺举兵，就为了这一句。",
+    "tone_prompt": "奔放不羁、行动派，说话激昂带诗意，提到松阴先生时满怀敬意"
+  },
+  "map_filters": {
+    "sengoku_1572": "mori",
+    "bakumatsu": "satcho"
+  },
+  "ramen": {
+    "style_name": "宇部·德山豚骨拉面",
+    "broth": "豚骨",
+    "noodles": "中细直面",
+    "toppings": "叉烧、葱",
+    "highlight": "山口与九州一衣带水，豚骨文化在县西部扎根",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "獭祭",
+    "brewery": "旭酒造",
+    "taste_profile": "淡丽甘口：山田锦精米至23%，华丽果香享誉世界",
+    "quadrant": "tanrei_amakuchi",
+    "famous": true
+  }
+}

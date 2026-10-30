@@ -1,0 +1,180 @@
+{
+  "id": 37,
+  "slug": "kagawa",
+  "name": {
+    "kanji": "香川県",
+    "kana": "かがわけん",
+    "romaji": "Kagawa",
+    "zh": "香川县"
+  },
+  "region": "四国",
+  "capital": "高松市",
+  "badge": {
+    "icon": "🍜",
+    "title": "乌冬县"
+  },
+  "stats": {
+    "population_k": 950,
+    "area_km2": 1877,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "赞岐国",
+        "kana": "さぬき",
+        "circuit": "南海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "十河存保",
+      "香川氏",
+      "香西氏",
+      "长宗我部元亲",
+      "生驹亲正"
+    ],
+    "edo_domains": [
+      "高松藩（松平氏）",
+      "丸龟藩（京极氏）",
+      "多度津藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年香川县设立，1873年并入名东县，1875年再设，1876年并入爱媛县，1888年第三次设县。",
+      "boundary_note": "香川=赞岐国，是面积最小的县；明治时三度被并、三度设县，最终1888年才稳定独立。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "空海故乡",
+      "summary": "空海（弘法大师）生于赞岐善通寺一带；821年空海主持修复满浓池。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "崇德院的怨灵",
+      "summary": "保元之乱后崇德上皇流放赞岐并死于此地，成为著名的怨灵传说；镰仓期赞岐由御家人统治。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "细川京兆家的领国",
+      "summary": "赞岐由管领细川京兆家直接统治，香川、香西、安富等“细川四天王”在当地任守护代。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "长宗我部入侵",
+      "summary": "赞岐豪族与三好氏结盟，1580年代长宗我部元亲吞并赞岐，后被秀吉四国征伐收回。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "金毘罗参",
+      "summary": "高松藩松平家与丸龟藩京极家分治；“金毘罗参”与伊势参宫并列为庶民向往之旅，“赞岐三白”（盐、糖、棉）支撑经济。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "濑户大桥",
+      "summary": "1988年濑户大桥开通，四国与本州相连；香川以赞岐乌冬自称“乌冬县”。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "金刀比罗宫",
+      "note": "785级石阶"
+    },
+    {
+      "name": "栗林公园",
+      "note": "大名庭园"
+    },
+    {
+      "name": "直岛",
+      "note": "现代艺术之岛"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "赞岐乌冬",
+      "note": "消费量全国第一"
+    },
+    {
+      "name": "小豆岛橄榄",
+      "note": "日本橄榄的发祥地"
+    },
+    {
+      "name": "骨付鸡",
+      "note": "丸龟的带骨烤鸡腿"
+    }
+  ],
+  "dialect": {
+    "name": "赞岐弁",
+    "features": "句尾「〜けん」「〜まい」，「まんでがん」意为全部；语调接近关西。",
+    "phrases": [
+      {
+        "phrase": "まんでがん",
+        "meaning": "全部",
+        "note": ""
+      },
+      {
+        "phrase": "〜まい",
+        "meaning": "……吧（劝诱）",
+        "note": ""
+      },
+      {
+        "phrase": "ほな",
+        "meaning": "那么",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "shikoku",
+    "opening": "我是遍路旅人，空海大师的故乡就在这里的善通寺。先来碗乌冬，然后我给你讲讲“三度设县”的故事？"
+  },
+  "regional_meme": [
+    {
+      "title": "乌冬县",
+      "text": "香川曾自称“乌冬县”；传说县内水龙头会流出乌冬汤（某些设施真的装过）。"
+    },
+    {
+      "title": "游戏条例",
+      "text": "香川县出台过限制孩子玩游戏时长的条例，引发全国热议。"
+    }
+  ],
+  "goshuin": {
+    "title": "讃岐饂飩",
+    "crest_name": "丸金纹（金刀比罗宫）",
+    "crest_icon": "char:金"
+  },
+  "hero_persona": {
+    "name": "空海",
+    "title": "弘法大师",
+    "self": "贫僧",
+    "opening_line": "贫僧空海，生于赞岐。入唐求法，归来开创真言宗——四国八十八所，都留有贫僧的足迹。",
+    "tone_prompt": "深邃慈悲、博学多才，谈佛法也谈书法与工程（满浓池）"
+  },
+  "map_filters": {
+    "sengoku_1572": "miyoshi",
+    "bakumatsu": "sabaku"
+  },
+  "ramen": {
+    "style_name": "赞岐的拉面",
+    "broth": "豚骨酱油",
+    "noodles": "中细面",
+    "toppings": "叉烧、葱",
+    "highlight": "乌冬县的拉面存在感微妙——县民的答案通常是“去吃乌冬吧”",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "悦凯阵",
+    "brewery": "丸尾本店",
+    "taste_profile": "浓醇辛口：金毘罗门前町的浓醇纯米",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "id": 27,
+  "slug": "osaka",
+  "name": {
+    "kanji": "大阪府",
+    "kana": "おおさかふ",
+    "romaji": "Osaka",
+    "zh": "大阪府"
+  },
+  "region": "近畿",
+  "capital": "大阪市",
+  "badge": {
+    "icon": "🏯",
+    "title": "天下厨房"
+  },
+  "stats": {
+    "population_k": 8838,
+    "area_km2": 1905,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "摄津国",
+        "kana": "せっつ",
+        "circuit": "畿内",
+        "portion": "东部（大阪·丰能·三岛）",
+        "cross_prefectures": [
+          "兵库县"
+        ]
+      },
+      {
+        "name": "河内国",
+        "kana": "かわち",
+        "circuit": "畿内",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "和泉国",
+        "kana": "いずみ",
+        "circuit": "畿内",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "石山本愿寺",
+      "三好长庆",
+      "丰臣秀吉"
+    ],
+    "edo_domains": [
+      "大坂城代·大坂町奉行（天领）",
+      "岸和田藩",
+      "高槻藩"
+    ],
+    "meiji_transition": {
+      "summary": "1868年大阪府设立，1881年堺县（和泉·河内·大和）并入，1887年大和分出为奈良县。",
+      "boundary_note": "摄津国被府界一分为二——东半属大阪，西半（神户·尼崎·西宫等）属兵库。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "难波宫",
+      "summary": "难波津是古代对外港口，645年后营建难波长柄丰碕宫；大仙古坟（传仁德天皇陵）是日本最大的前方后圆坟。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "楠木正成",
+      "summary": "河内的楠木正成响应后醍醐天皇起兵，在赤坂城、千早城以奇策抗击幕府大军（1331–33）。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "畠山与堺",
+      "summary": "楠木正成战死凑川（1336），其子正行战死四条畷（1348）；室町期河内由三管领畠山氏统治，堺作为对明贸易港兴起。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "石山本愿寺",
+      "summary": "一向宗总本山石山本愿寺与信长对抗十年（1570–1580）；秀吉在遗址上筑大坂城，1615年大坂夏之阵丰臣氏灭亡。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "天下厨房",
+      "summary": "大坂成为全国物流中心，诸藩藏屋敷云集，堂岛米会所诞生了世界最早的期货交易；町人文化兴盛。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "大大阪",
+      "summary": "1925年大阪市人口一度超过东京，号称“大大阪”；1970年、2025年两度举办世博会。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "大阪城",
+      "note": "丰臣秀吉筑城的故地"
+    },
+    {
+      "name": "大仙古坟",
+      "note": "世界遗产百舌鸟·古市古坟群"
+    },
+    {
+      "name": "道顿堀",
+      "note": "固力果跑步人招牌"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "章鱼烧",
+      "note": "大阪平民美食"
+    },
+    {
+      "name": "大阪烧",
+      "note": "关西式什锦煎饼"
+    },
+    {
+      "name": "串炸",
+      "note": "“禁止二次蘸酱”"
+    }
+  ],
+  "dialect": {
+    "name": "大阪弁",
+    "features": "节奏快、富幽默感，「おおきに」（谢谢）「なんでやねん」（为啥啊）是吐槽文化的标志。",
+    "phrases": [
+      {
+        "phrase": "おおきに",
+        "meaning": "谢谢",
+        "note": ""
+      },
+      {
+        "phrase": "なんでやねん",
+        "meaning": "为啥啊！",
+        "note": "吐槽"
+      },
+      {
+        "phrase": "めっちゃ",
+        "meaning": "非常",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kinki",
+    "opening": "妾身虽惯居平安京，也常乘舟到难波津。后来秀吉公在这里筑起天下第一的大坂城——你想听那座城的兴亡吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "不吐槽就冷场",
+      "text": "在大阪，说了笑话没人吐槽是最大的失礼；“なんでやねん”是日常礼仪。"
+    },
+    {
+      "title": "电梯站哪边",
+      "text": "大阪人乘自动扶梯站右边，东京人站左边——这是关东关西对立的经典话题。"
+    }
+  ],
+  "goshuin": {
+    "title": "天下台所",
+    "crest_name": "五七桐（丰臣氏）",
+    "crest_icon": "char:桐"
+  },
+  "hero_persona": {
+    "name": "丰臣秀吉",
+    "title": "天下人·太阁",
+    "self": "吾",
+    "opening_line": "吾乃太阁丰臣秀吉！从尾张的农家小子一路爬到天下人——大坂城可是吾的杰作，金光闪闪的那种！",
+    "tone_prompt": "开朗外向、爱炫耀、平易近人又精明，常用大阪商人式的热情"
+  },
+  "map_filters": {
+    "sengoku_1572": "ikko",
+    "bakumatsu": "tenryo"
+  },
+  "ramen": {
+    "style_name": "高井田系拉面",
+    "broth": "酱油（浓口酱油）",
+    "noodles": "极粗直面",
+    "toppings": "叉烧、葱、笋干",
+    "highlight": "东大阪高井田的工人拉面，汤黑面粗",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "秋鹿",
+    "brewery": "秋鹿酒造",
+    "taste_profile": "浓醇辛口：自种酒米、全量纯米，熟成感强",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

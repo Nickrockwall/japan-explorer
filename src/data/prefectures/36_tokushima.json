@@ -1,0 +1,177 @@
+{
+  "id": 36,
+  "slug": "tokushima",
+  "name": {
+    "kanji": "徳島県",
+    "kana": "とくしまけん",
+    "romaji": "Tokushima",
+    "zh": "德岛县"
+  },
+  "region": "四国",
+  "capital": "德岛市",
+  "badge": {
+    "icon": "💃",
+    "title": "阿波舞"
+  },
+  "stats": {
+    "population_k": 720,
+    "area_km2": 4147,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "阿波国",
+        "kana": "あわ",
+        "circuit": "南海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "三好长庆（阿波三好氏）",
+      "细川氏",
+      "长宗我部元亲",
+      "蜂须贺家政"
+    ],
+    "edo_domains": [
+      "德岛藩（蜂须贺氏，兼领淡路）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年设名东县（含淡路），1876年阿波并入高知县、淡路划归兵库，1880年再设德岛县。",
+      "boundary_note": "德岛=阿波国；但江户时德岛藩还统治淡路岛，明治后淡路被划给兵库，阿波与淡路从此分属两县。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "阿波忌部",
+      "summary": "阿波之名据说源自“粟”，忌部氏为朝廷织造祭祀用的麻布（荒妙）。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "小笠原氏入阿波",
+      "summary": "承久之乱后小笠原氏入阿波任守护；阿波的蓝染业开始发展。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "细川与三好",
+      "summary": "阿波守护为细川氏（阿波细川家），其家臣三好氏兴起，日后成为畿内霸主。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "三好政权",
+      "summary": "阿波出身的三好长庆一度控制京都，被称为“最初的天下人”；后长宗我部元亲统一四国，秀吉派蜂须贺家政入主。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "阿波蓝",
+      "summary": "德岛藩以蓝染（阿波蓝）与盐致富；阿波舞相传始于德岛城落成的庆典。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "鸣门",
+      "summary": "鸣门漩涡与大鸣门桥（1985）成为名片；一战时板东俘虏收容所的德国战俘演奏了日本首次《欢乐颂》。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "鸣门漩涡",
+      "note": "世界最大级的潮流漩涡"
+    },
+    {
+      "name": "祖谷葛藤桥",
+      "note": "秘境的藤蔓吊桥"
+    },
+    {
+      "name": "灵山寺",
+      "note": "四国遍路第一番札所"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "酸橘（すだち）",
+      "note": "德岛的柑橘"
+    },
+    {
+      "name": "阿波蓝染",
+      "note": "“Japan Blue”"
+    },
+    {
+      "name": "德岛拉面",
+      "note": "猪骨酱油加生鸡蛋"
+    }
+  ],
+  "dialect": {
+    "name": "阿波弁",
+    "features": "句尾「〜じょ」「〜でえ」，「えらい」是累，「まけまけ」是满得快溢出来。",
+    "phrases": [
+      {
+        "phrase": "〜じょ",
+        "meaning": "……哦",
+        "note": "句尾"
+      },
+      {
+        "phrase": "まけまけ",
+        "meaning": "满得溢出来",
+        "note": ""
+      },
+      {
+        "phrase": "えらい",
+        "meaning": "累",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "shikoku",
+    "opening": "我是四国遍路的旅人，刚从第一番札所灵山寺出发。八十八所走完要一千四百公里，咱们边走边聊阿波的往事吧？"
+  },
+  "regional_meme": [
+    {
+      "title": "没有电车的县",
+      "text": "德岛是日本唯一没有电气化铁路的县，县内火车全是柴油车。"
+    },
+    {
+      "title": "阿波舞狂热",
+      "text": "“跳舞的傻瓜、看舞的傻瓜，同样是傻瓜，不跳就亏了！”——盂兰盆节四天，全城疯狂。"
+    }
+  ],
+  "goshuin": {
+    "title": "阿波踊",
+    "crest_name": "卍纹（蜂须贺氏）",
+    "crest_icon": "manji"
+  },
+  "hero_persona": {
+    "name": "三好长庆",
+    "title": "最初的天下人",
+    "self": "余",
+    "opening_line": "余乃三好长庆，出身阿波。信长之前，余已掌控京都与畿内——世人却很少记得余的名字。",
+    "tone_prompt": "沉稳风雅、善连歌，对自己被历史遗忘略带感慨"
+  },
+  "map_filters": {
+    "sengoku_1572": "miyoshi",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "德岛拉面（茶系）",
+    "broth": "豚骨酱油（深茶色）",
+    "noodles": "中细直面",
+    "toppings": "甜辣炒猪五花、生鸡蛋、豆芽",
+    "highlight": "用炖肉代替叉烧，再打一颗生蛋，常配白饭",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "鸣门鲷",
+    "brewery": "本家松浦酒造场",
+    "taste_profile": "淡丽辛口：鸣门海峡旁的清爽地酒",
+    "quadrant": "tanrei_karakuchi",
+    "famous": false
+  }
+}

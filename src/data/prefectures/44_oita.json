@@ -1,0 +1,189 @@
+{
+  "id": 44,
+  "slug": "oita",
+  "name": {
+    "kanji": "大分県",
+    "kana": "おおいたけん",
+    "romaji": "Oita",
+    "zh": "大分县"
+  },
+  "region": "九州·冲绳",
+  "capital": "大分市",
+  "badge": {
+    "icon": "♨️",
+    "title": "温泉县"
+  },
+  "stats": {
+    "population_k": 1124,
+    "area_km2": 6341,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "丰后国",
+        "kana": "ぶんご",
+        "circuit": "西海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "丰前国",
+        "kana": "ぶぜん",
+        "circuit": "西海道",
+        "portion": "东部（下毛·宇佐）",
+        "cross_prefectures": [
+          "福冈县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "大友宗麟（义镇）",
+      "大友义统"
+    ],
+    "edo_domains": [
+      "府内藩",
+      "中津藩（奥平氏）",
+      "杵筑藩",
+      "冈藩",
+      "臼杵藩",
+      "日田（天领）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年大分县设立，1876年小仓县的下毛、宇佐二郡并入。",
+      "boundary_note": "江户时丰后被分为八个小藩与天领，号称“小藩分立”，至今县内各地的方言与风俗差异很大。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "宇佐神宫",
+      "summary": "宇佐神宫是全国八幡宫的总本宫；国东半岛发展出“六乡满山”的神佛习合文化。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "大友氏入部",
+      "summary": "关东御家人大友能直受封丰后守护，大友氏由此统治丰后约四百年。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "大友氏扩张",
+      "summary": "大友氏兼任丰前、筑后守护，与大内、少贰氏争夺北九州；宇佐神宫在其保护下延续。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "大友宗麟",
+      "summary": "吉利支丹大名大友宗麟鼎盛时控制北九州六国，参与派遣天正遣欧少年使节；1578年耳川之战败于岛津后衰落。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "小藩分立",
+      "summary": "大友氏被改易后丰后被分为众多小藩；中津藩出身的福泽谕吉、思想家三浦梅园均出自此地。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "温泉县",
+      "summary": "别府、由布院的温泉源泉数与涌出量皆为日本第一；以“一村一品”运动闻名。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "别府地狱巡游",
+      "note": "七色温泉“地狱”"
+    },
+    {
+      "name": "由布院",
+      "note": "由布岳下的温泉乡"
+    },
+    {
+      "name": "宇佐神宫",
+      "note": "八幡宫总本宫"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "关鲭·关竹荚鱼",
+      "note": "丰予海峡的一本钓"
+    },
+    {
+      "name": "干香菇",
+      "note": "产量全国第一"
+    },
+    {
+      "name": "鸡肉天妇罗",
+      "note": "大分的家常菜"
+    }
+  ],
+  "dialect": {
+    "name": "大分弁",
+    "features": "「よだきい」（懒得）、「しんけん」（非常）是代表词，句尾「〜ちゃ」「〜っちゃ」。",
+    "phrases": [
+      {
+        "phrase": "よだきい",
+        "meaning": "懒得做、麻烦",
+        "note": ""
+      },
+      {
+        "phrase": "しんけん",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "〜ちゃ",
+        "meaning": "……啊",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kyushu",
+    "opening": "鄙人在别府泡温泉时听说，大友宗麟曾派四位少年远赴罗马觐见教皇——想听天正遣欧使节的故事吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "温泉县商标之争",
+      "text": "大分自称“温泉县”（おんせん県），群马等温泉大县当场抗议：凭什么你独占？"
+    },
+    {
+      "title": "别府的烟",
+      "text": "别府街头到处冒着温泉蒸汽，外地人第一次来常以为着火了。"
+    }
+  ],
+  "goshuin": {
+    "title": "温泉県",
+    "crest_name": "三巴纹（宇佐神宫）",
+    "crest_icon": "tomoe"
+  },
+  "hero_persona": {
+    "name": "大友宗麟",
+    "title": "吉利支丹大名",
+    "self": "余",
+    "opening_line": "余乃大友宗麟，丰后之主。曾坐拥北九州六国，派少年使节远赴罗马——你想听南蛮的见闻吗？",
+    "tone_prompt": "风雅豪奢、好奇心强，热衷南蛮文化与茶道"
+  },
+  "map_filters": {
+    "sengoku_1572": "otomo",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "佐伯拉面",
+    "broth": "豚骨酱油",
+    "noodles": "中细直面",
+    "toppings": "大蒜、叉烧、葱",
+    "highlight": "渔港工人的重口味拉面，大蒜放得很豪迈",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "いいちこ",
+    "brewery": "三和酒类",
+    "taste_profile": "烧酎：大分麦烧酎的代表，人称“下町的拿破仑”",
+    "quadrant": "shochu",
+    "famous": true
+  }
+}

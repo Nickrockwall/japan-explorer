@@ -1,0 +1,194 @@
+{
+  "id": 32,
+  "slug": "shimane",
+  "name": {
+    "kanji": "島根県",
+    "kana": "しまねけん",
+    "romaji": "Shimane",
+    "zh": "岛根县"
+  },
+  "region": "中国",
+  "capital": "松江市",
+  "badge": {
+    "icon": "⛩️",
+    "title": "出云神话"
+  },
+  "stats": {
+    "population_k": 671,
+    "area_km2": 6708,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "出云国",
+        "kana": "いずも",
+        "circuit": "山阴道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "石见国",
+        "kana": "いわみ",
+        "circuit": "山阴道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "隐岐国",
+        "kana": "おき",
+        "circuit": "山阴道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "尼子经久·晴久",
+      "毛利元就（1566年灭尼子）",
+      "吉川元春",
+      "山中鹿介（尼子再兴军）"
+    ],
+    "edo_domains": [
+      "松江藩（松平氏）",
+      "津和野藩（龟井氏）",
+      "滨田藩",
+      "石见银山（天领）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年设岛根县等，1876年滨田县（石见）并入并兼并鸟取，1881年鸟取分离。",
+      "boundary_note": "岛根=出云+石见+隐岐。东部出云与西部石见文化迥异：出云方言近东北的“ズーズー弁”，石见则近广岛的山阳方言。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "出云神话",
+      "summary": "出云大社供奉大国主神，《出云国风土记》是唯一几乎完整留存的风土记；每年旧历十月诸神集于出云，称“神在月”。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "隐岐的上皇",
+      "summary": "承久之乱后后鸟羽上皇被流放隐岐直至去世；1332年后醍醐天皇亦被流放于此，次年脱逃。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "京极与尼子",
+      "summary": "出云守护为京极氏，守护代尼子氏逐渐壮大；石见则由大内氏与益田氏等控制。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "尼子与毛利",
+      "summary": "“谋圣”尼子经久统一山阴；1566年月山富田城被毛利元就攻陷，山中鹿介立誓“愿赐我七难八苦”以图复兴。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "石见银山",
+      "summary": "石见银山产量一度占世界白银的相当比例；松江藩七代藩主松平不昧推广茶道与和果子。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "小泉八云",
+      "summary": "小泉八云（Lafcadio Hearn）在松江任教，写下《怪谈》；2007年石见银山列入世界遗产。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "出云大社",
+      "note": "大国主神的神殿"
+    },
+    {
+      "name": "松江城",
+      "note": "国宝天守"
+    },
+    {
+      "name": "石见银山",
+      "note": "世界遗产"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "出云荞麦面",
+      "note": "割子荞麦"
+    },
+    {
+      "name": "宍道湖蚬贝",
+      "note": "宍道湖七珍之一"
+    },
+    {
+      "name": "松江和果子",
+      "note": "日本三大果子之都"
+    }
+  ],
+  "dialect": {
+    "name": "出云弁",
+    "features": "出云方言与东北方言惊人相似（“ズーズー弁”），「だんだん」意为谢谢。",
+    "phrases": [
+      {
+        "phrase": "だんだん",
+        "meaning": "谢谢",
+        "note": ""
+      },
+      {
+        "phrase": "〜だけん",
+        "meaning": "因为……",
+        "note": ""
+      },
+      {
+        "phrase": "だらず",
+        "meaning": "笨蛋",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chugoku",
+    "opening": "老朽是出云的语部。每年旧历十月，八百万神明都会来这里开会，所以别处叫“神无月”，只有出云叫“神在月”——想听这段神话吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "岛根在哪？",
+      "text": "在“日本最难找到的县”调查中常名列前茅，岛根人干脆出了自嘲漫画《岛根的大秘密》。"
+    },
+    {
+      "title": "神在月",
+      "text": "十月别处叫“神无月”，只有出云叫“神在月”——全日本的神都来这里开会了。"
+    }
+  ],
+  "goshuin": {
+    "title": "出雲神話",
+    "crest_name": "龟甲纹（出云大社）",
+    "crest_icon": "kikko"
+  },
+  "hero_persona": {
+    "name": "山中鹿介",
+    "title": "尼子再兴之勇将",
+    "self": "某",
+    "opening_line": "某乃山中鹿介幸盛！“愿赐我七难八苦”——为了复兴尼子家，某向月亮这样祈祷过。",
+    "tone_prompt": "忠勇悲壮、意志如铁，谈到主家灭亡时慷慨激昂"
+  },
+  "map_filters": {
+    "sengoku_1572": "mori",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "松江中华そば",
+    "broth": "酱油（清汤）",
+    "noodles": "中细面",
+    "toppings": "叉烧、葱",
+    "highlight": "岛根以出云荞麦著称，拉面以清汤中华そば为主",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "王禄",
+    "brewery": "王禄酒造",
+    "taste_profile": "浓醇辛口：无过滤生原酒，力道十足",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

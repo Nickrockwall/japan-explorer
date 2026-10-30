@@ -1,0 +1,187 @@
+{
+  "id": 21,
+  "slug": "gifu",
+  "name": {
+    "kanji": "岐阜県",
+    "kana": "ぎふけん",
+    "romaji": "Gifu",
+    "zh": "岐阜县"
+  },
+  "region": "中部",
+  "capital": "岐阜市",
+  "badge": {
+    "icon": "🗡️",
+    "title": "天下布武"
+  },
+  "stats": {
+    "population_k": 1979,
+    "area_km2": 10621,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "美浓国",
+        "kana": "みの",
+        "circuit": "东山道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "飞驒国",
+        "kana": "ひだ",
+        "circuit": "东山道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "斋藤道三",
+      "斋藤义龙·龙兴",
+      "织田信长",
+      "三木（姉小路）氏（飞驒）"
+    ],
+    "edo_domains": [
+      "大垣藩",
+      "加纳藩",
+      "岩村藩",
+      "飞驒天领（高山阵屋）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年美浓设岐阜县，飞驒则属筑摩县，1876年飞驒划入岐阜县。",
+      "boundary_note": "美浓（平原）与飞驒（山地）文化迥异，县内至今习惯以“岐阜”与“飞驒”区分两地。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "不破关",
+      "summary": "东山道的不破关是古代“三关”之一，“关东”“关西”的“关”最初即指此类关口。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "美浓土岐氏",
+      "summary": "清和源氏土岐氏在美浓扎根；1221年承久之乱中美浓、尾张一带成为京方与幕府军的战场。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "土岐氏的全盛",
+      "summary": "土岐赖康一度兼任美浓、尾张、伊势三国守护，其后虽遭“土岐康行之乱”打击，仍世袭美浓守护；守护代斋藤氏渐强。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "天下布武",
+      "summary": "“美浓蝮蛇”斋藤道三以下克上；1567年织田信长攻下稻叶山城改称岐阜，开始使用“天下布武”印；1600年关原之战也在县内。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "飞驒天领",
+      "summary": "飞驒因木材与矿产被幕府直辖，高山阵屋是现存唯一的代官所建筑；美浓则小藩与天领交错。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "白川乡",
+      "summary": "白川乡合掌造聚落1995年列入世界遗产；关市刀具、美浓和纸延续传统。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "白川乡合掌村",
+      "note": "世界遗产"
+    },
+    {
+      "name": "岐阜城",
+      "note": "金华山顶的信长居城"
+    },
+    {
+      "name": "关原古战场",
+      "note": "“天下分目”之地"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "飞驒牛",
+      "note": "霜降和牛"
+    },
+    {
+      "name": "美浓和纸",
+      "note": "1300年的造纸传统"
+    },
+    {
+      "name": "关之刃物",
+      "note": "与德国索林根齐名的刀具之乡"
+    }
+  ],
+  "dialect": {
+    "name": "美浓弁·飞驒弁",
+    "features": "美浓方言近名古屋腔，句尾「〜やお」「〜やもん」；飞驒方言则带「〜やさ」「〜な」。",
+    "phrases": [
+      {
+        "phrase": "えらい",
+        "meaning": "累",
+        "note": "而非“了不起”"
+      },
+      {
+        "phrase": "ずつない",
+        "meaning": "难受、吃撑了",
+        "note": ""
+      },
+      {
+        "phrase": "〜やお",
+        "meaning": "……吧",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chubu",
+    "opening": "在下风间。站在岐阜城头，信长公曾俯瞰整个浓尾平原，在这里刻下“天下布武”四个字。想听这段吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "名古屋的后花园",
+      "text": "岐阜南部的县民常说“去名古屋”，以至于被调侃为“岐阜县名古屋都民”。"
+    },
+    {
+      "title": "白川乡太出名",
+      "text": "外国游客只知道白川乡，不知道它属于岐阜县。"
+    }
+  ],
+  "goshuin": {
+    "title": "天下布武",
+    "crest_name": "土岐桔梗",
+    "crest_icon": "kikyo"
+  },
+  "hero_persona": {
+    "name": "斋藤道三",
+    "title": "美浓蝮蛇",
+    "self": "吾",
+    "opening_line": "吾乃斋藤道三，从卖油商人爬到美浓国主——世人称吾为“蝮蛇”。哼，乱世之中，下克上有何不可？",
+    "tone_prompt": "精明狡黠、带枭雄气，却对女婿信长的才华赞不绝口"
+  },
+  "map_filters": {
+    "sengoku_1572": "oda",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "高山拉面",
+    "broth": "酱油（鸡骨＋鲣节，酱汁与汤同煮）",
+    "noodles": "细卷缩面",
+    "toppings": "叉烧、笋干、葱",
+    "highlight": "当地叫“中华そば”，酱汁与高汤一起熬煮是独特做法",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "三千盛",
+    "brewery": "三千盛",
+    "taste_profile": "淡丽辛口：以“超辛口”著称的美浓地酒",
+    "quadrant": "tanrei_karakuchi",
+    "famous": false
+  }
+}

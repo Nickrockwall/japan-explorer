@@ -1,0 +1,196 @@
+{
+  "id": 12,
+  "slug": "chiba",
+  "name": {
+    "kanji": "千葉県",
+    "kana": "ちばけん",
+    "romaji": "Chiba",
+    "zh": "千叶县"
+  },
+  "region": "关东",
+  "capital": "千叶市",
+  "badge": {
+    "icon": "🌊",
+    "title": "房总半岛"
+  },
+  "stats": {
+    "population_k": 6284,
+    "area_km2": 5157,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "安房国",
+        "kana": "あわ",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "上总国",
+        "kana": "かずさ",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "下总国",
+        "kana": "しもうさ",
+        "circuit": "东海道",
+        "portion": "南部",
+        "cross_prefectures": [
+          "茨城县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "里见义尧",
+      "千叶氏",
+      "后北条氏",
+      "正木氏"
+    ],
+    "edo_domains": [
+      "佐仓藩",
+      "关宿藩",
+      "大多喜藩",
+      "天领与旗本领交错"
+    ],
+    "meiji_transition": {
+      "summary": "1873年木更津县与印旛县合并为千叶县，1875年利根川以北的下总北部划归茨城。",
+      "boundary_note": "千叶跨三国：安房、上总全部和下总南部。上总在下总之南，是因为古代从相模渡海入房总，靠近京都一侧为“上”。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "上总·下总之谜",
+      "summary": "古代东海道从三浦半岛渡海入房总，近京的南部称“上总”、北部称“下总”；上总为亲王任国。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "千叶常胤",
+      "summary": "千叶常胤率先投奔源赖朝，千叶氏成为下总守护与幕府重臣；日莲生于安房小凑。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "千叶氏内乱",
+      "summary": "享德之乱中千叶氏一族分裂，本宗被灭；安房的里见氏开始崛起。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "南总里见",
+      "summary": "里见氏在安房起家，与北条争夺江户湾制海权；其事迹后来被曲亭马琴写成长篇小说《南总里见八犬传》。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "江户的厨房",
+      "summary": "小藩与旗本领密布；铫子、野田酱油与九十九里滨的沙丁鱼肥料（干鰯）支撑着江户的经济。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "空港与临海",
+      "summary": "京叶工业地带与成田国际机场（1978）带来巨变，东京迪士尼度假区也在千叶。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "成田山新胜寺",
+      "note": "关东屈指的不动明王灵场"
+    },
+    {
+      "name": "锯山",
+      "note": "房总的岩石山与日本寺大佛"
+    },
+    {
+      "name": "佐原水乡",
+      "note": "伊能忠敬故乡的运河老街"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "落花生",
+      "note": "产量全国第一"
+    },
+    {
+      "name": "铫子酱油",
+      "note": "江户以来的酱油之乡"
+    },
+    {
+      "name": "胜浦担担面",
+      "note": "渔夫暖身的辣油汤面"
+    }
+  ],
+  "dialect": {
+    "name": "房总方言",
+    "features": "北部下总近茨城方言，南部安房多用「〜べ」「〜だっぺ」；「おっぺす」意为推。",
+    "phrases": [
+      {
+        "phrase": "おっぺす",
+        "meaning": "推",
+        "note": ""
+      },
+      {
+        "phrase": "ごせっぱらやける",
+        "meaning": "生气、恼火",
+        "note": ""
+      },
+      {
+        "phrase": "〜だっぺ",
+        "meaning": "……吧",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kanto",
+    "opening": "喵～房总的海风好咸。你知道为什么“上总”在“下总”的南边吗？咱给你讲讲古人渡海的路线～"
+  },
+  "regional_meme": [
+    {
+      "title": "东京迪士尼在千叶",
+      "text": "“东京”迪士尼、“东京”湾、成田“东京”机场……千叶人：其实都在我们这儿。"
+    },
+    {
+      "title": "千叶滋贺佐贺",
+      "text": "日本经典自嘲口令“千叶滋贺佐贺”，三县并列为“存在感微妙”的代表。"
+    }
+  ],
+  "goshuin": {
+    "title": "房総月星",
+    "crest_name": "月星纹（千叶氏）",
+    "crest_icon": "tsukiboshi"
+  },
+  "hero_persona": {
+    "name": "伊能忠敬",
+    "title": "实测日本全图第一人",
+    "self": "老朽",
+    "opening_line": "老朽伊能忠敬。五十岁才开始学天文，七十二岁前用双脚量遍了日本的海岸——你此刻看的地图，正是老朽的心血。",
+    "tone_prompt": "沉稳严谨，热爱测量与数字，常说“活到老学到老”"
+  },
+  "map_filters": {
+    "sengoku_1572": "gunyu",
+    "bakumatsu": "tenryo"
+  },
+  "ramen": {
+    "style_name": "竹冈式拉面",
+    "broth": "酱油（卤叉烧的酱汁兑热水）",
+    "noodles": "干燥细面",
+    "toppings": "切块叉烧、生洋葱丁",
+    "highlight": "不熬汤！用卤叉烧的酱汁兑开水配干面，源自渔夫饭",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "不动",
+    "brewery": "锅店",
+    "taste_profile": "淡丽辛口：成田山门前的酒，清冽爽口",
+    "quadrant": "tanrei_karakuchi",
+    "famous": false
+  }
+}

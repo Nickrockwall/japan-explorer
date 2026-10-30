@@ -1,0 +1,203 @@
+{
+  "id": 24,
+  "slug": "mie",
+  "name": {
+    "kanji": "三重県",
+    "kana": "みえけん",
+    "romaji": "Mie",
+    "zh": "三重县"
+  },
+  "region": "近畿",
+  "capital": "津市",
+  "badge": {
+    "icon": "⛩️",
+    "title": "伊势神宫"
+  },
+  "stats": {
+    "population_k": 1770,
+    "area_km2": 5774,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "伊势国",
+        "kana": "いせ",
+        "circuit": "东海道",
+        "portion": "大部",
+        "cross_prefectures": []
+      },
+      {
+        "name": "伊贺国",
+        "kana": "いが",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "志摩国",
+        "kana": "しま",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "纪伊国",
+        "kana": "きい",
+        "circuit": "南海道",
+        "portion": "东部（北牟娄·南牟娄）",
+        "cross_prefectures": [
+          "和歌山县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "北畠氏（伊势国司）",
+      "伊贺惣国一揆",
+      "九鬼嘉隆（志摩水军）",
+      "织田信雄"
+    ],
+    "edo_domains": [
+      "津藩（藤堂氏，兼领伊贺）",
+      "桑名藩",
+      "纪州藩领（松阪·田丸）",
+      "鸟羽藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年北部设安浓津县、南部设度会县，1872年安浓津县改称三重县，1876年度会县并入。",
+      "boundary_note": "三重跨四国：伊势、伊贺、志摩与纪伊东部；熊野市一带原属纪伊国，与和歌山同源，熊野古道也因此跨越两县。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "神宫与斋宫",
+      "summary": "伊势神宫供奉皇祖神天照大神，朝廷派皇女为斋王居于斋宫；志摩是“御食国”。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "伊势神道",
+      "summary": "平氏故地伊势在源平合战后归幕府控制；伊势神宫外宫的度会氏提出“伊势神道”。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "北畠国司",
+      "summary": "南朝重臣北畠氏以伊势国司身份统治南伊势，以多气为本据，一直延续到战国。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "伊贺忍者",
+      "summary": "伊贺地侍组成“惣国一揆”自治，1581年天正伊贺之乱被织田军镇压；九鬼嘉隆的铁甲船击败毛利水军。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "伊势参宫",
+      "summary": "“一生一次参拜伊势”成为庶民梦想，“御荫参”时数百万人涌向伊势；松阪商人（三井家）崛起。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "珍珠与工业",
+      "summary": "御木本幸吉在鸟羽成功养殖珍珠；四日市石油化学工业区也引发了“四日市哮喘”公害。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "伊势神宫",
+      "note": "内宫与外宫"
+    },
+    {
+      "name": "伊贺上野城",
+      "note": "忍者之乡"
+    },
+    {
+      "name": "夫妇岩",
+      "note": "二见浦的注连绳巨石"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "松阪牛",
+      "note": "日本三大和牛之一"
+    },
+    {
+      "name": "伊势龙虾",
+      "note": "伊势湾的名产"
+    },
+    {
+      "name": "赤福饼",
+      "note": "伊势参宫的红豆麻糬"
+    }
+  ],
+  "dialect": {
+    "name": "伊势弁",
+    "features": "近畿腔为主，句尾「〜やんか」「〜だもんで」；伊贺方言更接近京都。",
+    "phrases": [
+      {
+        "phrase": "とごる",
+        "meaning": "沉淀",
+        "note": ""
+      },
+      {
+        "phrase": "〜やに",
+        "meaning": "……呀",
+        "note": "句尾"
+      },
+      {
+        "phrase": "えらい",
+        "meaning": "累",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kinki",
+    "opening": "妾身曾奉斋王之命前往伊势……那已是千年前的事了。如今伊势参宫的人潮依旧，你想听斋宫的故事，还是伊贺的忍者？"
+  },
+  "regional_meme": [
+    {
+      "title": "近畿？东海？",
+      "text": "三重算关西还是东海？气象、高中棒球、电视台各说各话，三重人自己也分成两派。"
+    },
+    {
+      "title": "伊势参宫的余裕",
+      "text": "“伊势神宫是我们家的”——三重人对外地人蜂拥参拜一脸淡定。"
+    }
+  ],
+  "goshuin": {
+    "title": "伊勢神宮",
+    "crest_name": "花菱纹（伊势神宫）",
+    "crest_icon": "hanabishi"
+  },
+  "hero_persona": {
+    "name": "松尾芭蕉",
+    "title": "俳圣·伊贺出身",
+    "self": "我",
+    "opening_line": "我是松尾芭蕉，生于伊贺上野。有人说我其实是忍者，否则怎能一天走那么多路？呵呵——要不要听一句俳句？",
+    "tone_prompt": "闲淡幽默、富有诗意，偶尔吟一句俳句；“芭蕉忍者说”为俗说，需说明"
+  },
+  "map_filters": {
+    "sengoku_1572": "oda",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "伊势中华そば",
+    "broth": "酱油（鸡骨清汤）",
+    "noodles": "中细面",
+    "toppings": "叉烧、葱",
+    "highlight": "三重的面食主角是伊势乌冬，拉面以清汤中华そば为主",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "而今",
+    "brewery": "木屋正酒造",
+    "taste_profile": "浓醇甘口：鲜活果香与酸甜平衡，一瓶难求",
+    "quadrant": "nojun_amakuchi",
+    "famous": true
+  }
+}

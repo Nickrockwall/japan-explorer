@@ -1,0 +1,184 @@
+{
+  "id": 31,
+  "slug": "tottori",
+  "name": {
+    "kanji": "鳥取県",
+    "kana": "とっとりけん",
+    "romaji": "Tottori",
+    "zh": "鸟取县"
+  },
+  "region": "中国",
+  "capital": "鸟取市",
+  "badge": {
+    "icon": "🏜️",
+    "title": "因幡砂丘"
+  },
+  "stats": {
+    "population_k": 553,
+    "area_km2": 3507,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "因幡国",
+        "kana": "いなば",
+        "circuit": "山阴道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "伯耆国",
+        "kana": "ほうき",
+        "circuit": "山阴道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "山名氏（守护）",
+      "吉川经家",
+      "尼子氏",
+      "毛利氏"
+    ],
+    "edo_domains": [
+      "鸟取藩（池田氏32万石）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年鸟取县设立，1876年并入岛根县，1881年分离再设。",
+      "boundary_note": "鸟取=因幡（东）+伯耆（西）；明治时被岛根合并了五年，因县厅远在松江、民怨甚深而复县。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "因幡白兔",
+      "summary": "《古事记》“因幡之白兔”传说的舞台；因幡国守大伴家持在此写下《万叶集》的最后一首歌。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "船上山的天皇",
+      "summary": "1333年名和长年在伯耆船上山迎接自隐岐脱逃的后醍醐天皇，助其倒幕。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "六分一殿山名氏",
+      "summary": "山名氏领有因幡、伯耆等山阴多国，盛时号称“六分一殿”（领有全国六分之一的国）。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "鸟取饥杀",
+      "summary": "1581年秀吉对鸟取城实施“饥杀”围困，城主吉川经家为保全城兵性命切腹开城。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "池田三十二万石",
+      "summary": "池田光仲入封鸟取，统治因幡、伯耆两国直到幕末。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "复县与砂丘",
+      "summary": "1881年复县；鸟取是人口最少的县，鸟取砂丘与“鬼太郎之路”成为观光名片。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "鸟取砂丘",
+      "note": "日本最大级的海岸砂丘"
+    },
+    {
+      "name": "大山",
+      "note": "“伯耆富士”"
+    },
+    {
+      "name": "三佛寺投入堂",
+      "note": "断崖上的国宝佛堂"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "松叶蟹",
+      "note": "冬季山阴的雪蟹"
+    },
+    {
+      "name": "二十世纪梨",
+      "note": "鸟取的代表水果"
+    },
+    {
+      "name": "砂丘薤",
+      "note": "沙地栽培的藠头"
+    }
+  ],
+  "dialect": {
+    "name": "鸟取弁",
+    "features": "因州弁与伯耆弁（近出云）不同；「だらず」＝笨蛋，句尾「〜だけぇ」。",
+    "phrases": [
+      {
+        "phrase": "だらず",
+        "meaning": "笨蛋",
+        "note": ""
+      },
+      {
+        "phrase": "〜だけぇ",
+        "meaning": "因为……",
+        "note": ""
+      },
+      {
+        "phrase": "がいな",
+        "meaning": "巨大的、厉害的",
+        "note": "伯耆"
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chugoku",
+    "opening": "老朽是出云的语部，专讲古事。这片土地是《古事记》里白兔与大国主神相遇之地，后来却发生了秀吉“饥杀”的惨剧……"
+  },
+  "regional_meme": [
+    {
+      "title": "没有星巴克，有砂丘",
+      "text": "鸟取曾是全国唯一没有星巴克的县，知事说：“スタバはないけど、スナバ（砂场）はある！”"
+    },
+    {
+      "title": "鸟取还是岛根？",
+      "text": "外县人永远分不清鸟取和岛根谁在左边——答案：鸟取在右（东）。"
+    }
+  ],
+  "goshuin": {
+    "title": "因幡白兎",
+    "crest_name": "“兎”字（因幡白兔）",
+    "crest_icon": "char:兎"
+  },
+  "hero_persona": {
+    "name": "吉川经家",
+    "title": "为城兵切腹的城主",
+    "self": "我",
+    "opening_line": "我是吉川经家。鸟取城被围，城中断粮……我以一命换数千兵卒之命，并不后悔。",
+    "tone_prompt": "悲壮沉静、重责任，谈到饥杀之战时语气沉重"
+  },
+  "map_filters": {
+    "sengoku_1572": "mori",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "鸟取牛骨拉面",
+    "broth": "特色（牛骨酱油）",
+    "noodles": "中细面",
+    "toppings": "叉烧、葱、豆芽",
+    "highlight": "少见的牛骨汤底，香甜带牛油香",
+    "category": "other"
+  },
+  "sake": {
+    "brand": "鹰勇",
+    "brewery": "大谷酒造",
+    "taste_profile": "浓醇辛口：大山伏流水，适合温饮",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

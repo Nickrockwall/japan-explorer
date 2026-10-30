@@ -1,0 +1,193 @@
+{
+  "id": 46,
+  "slug": "kagoshima",
+  "name": {
+    "kanji": "鹿児島県",
+    "kana": "かごしまけん",
+    "romaji": "Kagoshima",
+    "zh": "鹿儿岛县"
+  },
+  "region": "九州·冲绳",
+  "capital": "鹿儿岛市",
+  "badge": {
+    "icon": "🌋",
+    "title": "萨摩隼人"
+  },
+  "stats": {
+    "population_k": 1588,
+    "area_km2": 9187,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "萨摩国",
+        "kana": "さつま",
+        "circuit": "西海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "大隅国",
+        "kana": "おおすみ",
+        "circuit": "西海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "日向国",
+        "kana": "ひゅうが",
+        "circuit": "西海道",
+        "portion": "诸县郡西南部（志布志等）",
+        "cross_prefectures": [
+          "宫崎县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "岛津义久",
+      "岛津义弘",
+      "岛津岁久",
+      "岛津家久"
+    ],
+    "edo_domains": [
+      "萨摩藩（岛津氏77万石）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年鹿儿岛县设立，1876年合并宫崎（1883年分离）；奄美群岛也划归鹿儿岛。",
+      "boundary_note": "鹿儿岛=萨摩+大隅+日向一部，还包括奄美群岛——奄美原属琉球王国，1609年后被萨摩直接控制。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "隼人",
+      "summary": "南九州的隼人与朝廷对抗（720年隼人之乱），后被纳入律令体制；大隅国于713年从日向分出。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "岛津氏入部",
+      "summary": "惟宗忠久受任岛津庄地头与萨摩、大隅、日向守护，改称岛津氏，开启约七百年的统治。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "岛津氏统一萨隅",
+      "summary": "南北朝时岛津氏分为总州家与奥州家相争，室町期逐渐统一萨摩、大隅；种子岛氏控制种子岛。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "岛津四兄弟",
+      "summary": "义久、义弘、岁久、家久四兄弟几乎统一九州，1587年降伏秀吉；关原之战中义弘以“岛津退却”正面突破东军。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "萨摩藩",
+      "summary": "萨摩藩以“乡中教育”锻炼武士，控制琉球王国以获取对华贸易利益；调所广乡推动财政改革。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "明治维新",
+      "summary": "西乡隆盛、大久保利通推动维新；1877年西南战争中西乡战死于城山。（1543年铁炮传入的种子岛也在县内。）"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "樱岛",
+      "note": "活火山岛"
+    },
+    {
+      "name": "仙岩园",
+      "note": "岛津家别邸"
+    },
+    {
+      "name": "屋久岛",
+      "note": "世界自然遗产，绳文杉"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "黑猪",
+      "note": "“黑豚”的故乡"
+    },
+    {
+      "name": "芋烧酒",
+      "note": "萨摩番薯烧酒"
+    },
+    {
+      "name": "萨摩炸鱼饼（さつま揚げ）",
+      "note": "鱼浆油炸"
+    }
+  ],
+  "dialect": {
+    "name": "萨摩弁",
+    "features": "以难懂著称，据说幕末曾起到“暗号”的作用；「チェスト！」是加油的喊声，「おやっとさあ」＝辛苦了。",
+    "phrases": [
+      {
+        "phrase": "おやっとさあ",
+        "meaning": "辛苦了",
+        "note": ""
+      },
+      {
+        "phrase": "チェスト！",
+        "meaning": "加油！冲！",
+        "note": ""
+      },
+      {
+        "phrase": "〜じゃっど",
+        "meaning": "是……啊",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kyushu",
+    "opening": "鄙人望着樱岛喷出的烟——萨摩人每天都在火山灰里生活。岛津义弘当年在关原以敌阵为退路杀出重围，想听吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "降灰预报",
+      "text": "鹿儿岛的天气预报会播报樱岛的“降灰预报”——晒衣服之前先看风向。"
+    },
+    {
+      "title": "萨摩隼人",
+      "text": "鹿儿岛男人以刚直闻名，“议论は无用”（别讲大道理）是萨摩风骨。"
+    }
+  ],
+  "goshuin": {
+    "title": "薩摩隼人",
+    "crest_name": "丸十字（岛津氏）",
+    "crest_icon": "juji"
+  },
+  "hero_persona": {
+    "name": "西乡隆盛",
+    "title": "维新三杰",
+    "self": "おいどん",
+    "opening_line": "おいどんは西乡吉之助でごわす。敬天爱人——为了这个国家，命也好名也好，都可以不要。",
+    "tone_prompt": "宽厚质朴、重情义，语带萨摩腔（おいどん、〜でごわす）"
+  },
+  "map_filters": {
+    "sengoku_1572": "shimazu",
+    "bakumatsu": "satcho"
+  },
+  "ramen": {
+    "style_name": "鹿儿岛拉面",
+    "broth": "豚骨（半浊，猪骨鸡骨蔬菜）",
+    "noodles": "中粗直面",
+    "toppings": "叉烧、葱、炸葱、豆芽",
+    "highlight": "比博多清淡，入座先端上腌萝卜和茶",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "森伊藏",
+    "brewery": "森伊藏酒造",
+    "taste_profile": "烧酎：“3M”之一的梦幻芋烧酎，甕壶酿造",
+    "quadrant": "shochu",
+    "famous": true
+  }
+}

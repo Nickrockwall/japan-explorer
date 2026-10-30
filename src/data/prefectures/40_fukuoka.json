@@ -1,0 +1,196 @@
+{
+  "id": 40,
+  "slug": "fukuoka",
+  "name": {
+    "kanji": "福岡県",
+    "kana": "ふくおかけん",
+    "romaji": "Fukuoka",
+    "zh": "福冈县"
+  },
+  "region": "九州·冲绳",
+  "capital": "福冈市",
+  "badge": {
+    "icon": "🏮",
+    "title": "博多海港"
+  },
+  "stats": {
+    "population_k": 5135,
+    "area_km2": 4987,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "筑前国",
+        "kana": "ちくぜん",
+        "circuit": "西海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "筑后国",
+        "kana": "ちくご",
+        "circuit": "西海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "丰前国",
+        "kana": "ぶぜん",
+        "circuit": "西海道",
+        "portion": "西部（企救·田川·京都·仲津等）",
+        "cross_prefectures": [
+          "大分县"
+        ]
+      }
+    ],
+    "sengoku_daimyo": [
+      "大友氏",
+      "立花道雪·立花宗茂",
+      "秋月氏",
+      "岛津氏（北上）"
+    ],
+    "edo_domains": [
+      "福冈藩（黑田氏）",
+      "久留米藩（有马氏）",
+      "柳川藩（立花氏）",
+      "小仓藩（小笠原氏）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年福冈县设立，1876年小仓县（丰前西部）与三潴县（筑后）并入。",
+      "boundary_note": "福冈=筑前+筑后+丰前西半；丰前东半（中津、宇佐）归大分，因此“丰前”被一分为二。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "大宰府",
+      "summary": "大宰府统辖九州并负责外交，被称为“远之朝廷”；菅原道真901年被贬至此。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "元寇防垒",
+      "summary": "1274年、1281年两度元军来袭，幕府在博多湾筑起石垒（元寇防垒），并设镇西探题于博多。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "九州探题与博多商人",
+      "summary": "今川了俊任九州探题平定南朝势力；博多作为日明、日朝贸易港繁荣，大内氏与少贰氏争夺不休。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "九州争霸",
+      "summary": "大友、龙造寺、岛津三强争夺北九州，立花宗茂以忠勇闻名；1587年秀吉平定九州后在博多实施“太阁町割”。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "黑田五十二万石",
+      "summary": "黑田长政入封筑前，筑福冈城，武士町“福冈”与商人町“博多”双城并存。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "工业与门户",
+      "summary": "1901年官营八幡制铁所开工，奠定日本重工业基础；福冈成为面向亚洲的门户都市。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "太宰府天满宫",
+      "note": "学问之神菅原道真"
+    },
+    {
+      "name": "福冈城迹",
+      "note": "舞鹤公园"
+    },
+    {
+      "name": "门司港怀旧区",
+      "note": "明治大正的港町建筑"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "博多拉面",
+      "note": "细面猪骨汤"
+    },
+    {
+      "name": "明太子",
+      "note": "辣味鳕鱼子"
+    },
+    {
+      "name": "博多内脏锅",
+      "note": "牛肠锅"
+    }
+  ],
+  "dialect": {
+    "name": "博多弁",
+    "features": "「〜と？」「〜ばい」「〜けん」，「すいとうよ」（喜欢你）被誉为最可爱的告白。",
+    "phrases": [
+      {
+        "phrase": "すいとうよ",
+        "meaning": "喜欢你",
+        "note": ""
+      },
+      {
+        "phrase": "〜と？",
+        "meaning": "……吗？",
+        "note": ""
+      },
+      {
+        "phrase": "よか",
+        "meaning": "好",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "kyushu",
+    "opening": "鄙人是长崎出岛的荷兰语通词，奉命来博多公干。这里的大宰府自古是“远之朝廷”，管着整个九州的外交——想听菅原道真的故事吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "九州的首都",
+      "text": "福冈人默认福冈是九州首都，其他六县：谁同意了？"
+    },
+    {
+      "title": "博多 vs 福冈",
+      "text": "站名叫博多、市名叫福冈——明治时为城市名称投票，结果至今仍让博多人耿耿于怀。"
+    }
+  ],
+  "goshuin": {
+    "title": "博多海港",
+    "crest_name": "梅钵（太宰府天满宫）",
+    "crest_icon": "umebachi"
+  },
+  "hero_persona": {
+    "name": "立花宗茂",
+    "title": "西国无双",
+    "self": "某",
+    "opening_line": "某乃立花宗茂。秀吉公称某为“西国无双”。关原后失领，二十年后又回到柳川——某一生只信一个“义”字。",
+    "tone_prompt": "沉着刚毅、谦逊重义，谈及岳父立花道雪时满怀敬意"
+  },
+  "map_filters": {
+    "sengoku_1572": "otomo",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "博多豚骨拉面",
+    "broth": "豚骨（乳白浓厚）",
+    "noodles": "极细直面",
+    "toppings": "叉烧、木耳、葱、红姜、芝麻",
+    "highlight": "可点“バリカタ”等硬度，面吃完再加“替玉”",
+    "category": "tonkotsu"
+  },
+  "sake": {
+    "brand": "繁桝",
+    "brewery": "高桥商店",
+    "taste_profile": "浓醇甘口：九州甘口传统中的老铺",
+    "quadrant": "nojun_amakuchi",
+    "famous": false
+  }
+}

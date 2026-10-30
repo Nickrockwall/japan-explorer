@@ -1,0 +1,184 @@
+{
+  "id": 17,
+  "slug": "ishikawa",
+  "name": {
+    "kanji": "石川県",
+    "kana": "いしかわけん",
+    "romaji": "Ishikawa",
+    "zh": "石川县"
+  },
+  "region": "中部",
+  "capital": "金泽市",
+  "badge": {
+    "icon": "🎨",
+    "title": "加贺百万石"
+  },
+  "stats": {
+    "population_k": 1133,
+    "area_km2": 4186,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "加贺国",
+        "kana": "かが",
+        "circuit": "北陆道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "能登国",
+        "kana": "のと",
+        "circuit": "北陆道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "加贺一向一揆（“百姓所持之国”）",
+      "能登畠山氏",
+      "前田利家"
+    ],
+    "edo_domains": [
+      "加贺藩（前田氏102万石）",
+      "大圣寺藩（支藩）"
+    ],
+    "meiji_transition": {
+      "summary": "1872年金泽县改称石川县；1876年一度兼并越中与越前岭北，1881年越前分离、1883年越中分离，回到加贺+能登。",
+      "boundary_note": "1876–1881年的“大石川县”曾横跨加贺、能登、越中、越前四国，是明治初期人口最多的县之一。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "加贺分立",
+      "summary": "能登国718年从越前分出，加贺国823年分立，是令制国中最晚设立的国。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "富樫氏与能登",
+      "summary": "加贺富樫氏等地方武士受封；能登多由北条一门担任守护。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "富樫氏与莲如",
+      "summary": "富樫氏世袭加贺守护；室町后期莲如在越前吉崎布教，加贺门徒急增，为日后的“百姓之国”埋下伏笔。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "百姓所持之国",
+      "summary": "1488年一向一揆推翻守护富樫政亲，加贺由本愿寺门徒自治近百年，直到1580年被柴田胜家平定。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "加贺百万石",
+      "summary": "前田家是最大的外样大名，刻意发展工艺文化以消除幕府猜疑，金泽因此成为“小京都”。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "工艺之都",
+      "summary": "九谷烧、金箔、加贺友禅延续至今；2015年北陆新干线通至金泽；2024年能登半岛地震造成严重灾害。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "兼六园",
+      "note": "日本三名园之一"
+    },
+    {
+      "name": "东茶屋街",
+      "note": "金泽的花街老屋"
+    },
+    {
+      "name": "白米千枚田",
+      "note": "能登临海梯田"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "金泽金箔",
+      "note": "占全国产量九成以上"
+    },
+    {
+      "name": "九谷烧",
+      "note": "浓艳五彩的瓷器"
+    },
+    {
+      "name": "治部煮",
+      "note": "加贺的鸭肉炖菜"
+    }
+  ],
+  "dialect": {
+    "name": "金泽弁",
+    "features": "敬语式劝诱「〜まっし」广为人知；声调起伏大，被形容为抑扬顿挫的北陆腔。",
+    "phrases": [
+      {
+        "phrase": "〜まっし",
+        "meaning": "请……吧",
+        "note": "如「食べまっし」＝请吃吧"
+      },
+      {
+        "phrase": "きのどくな",
+        "meaning": "谢谢，过意不去",
+        "note": ""
+      },
+      {
+        "phrase": "だら",
+        "meaning": "笨蛋",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chubu",
+    "opening": "在下风间，奉命潜入金泽城……开玩笑的。你知道吗，加贺曾由百姓自治了快一百年，比前田家百万石还早呢。"
+  },
+  "regional_meme": [
+    {
+      "title": "小京都之争",
+      "text": "金泽人自认“小京都”，京都人却不太承认；金泽人反而更想被称为“金泽”本身。"
+    },
+    {
+      "title": "雷与鰤鱼",
+      "text": "冬天打雷时鰤鱼最肥，北陆人把冬雷叫“鰤起こし”——打雷了，该吃鰤鱼了。"
+    }
+  ],
+  "goshuin": {
+    "title": "加賀百万石",
+    "crest_name": "加贺梅钵（前田氏）",
+    "crest_icon": "umebachi"
+  },
+  "hero_persona": {
+    "name": "前田利家",
+    "title": "加贺百万石藩祖·枪之又左",
+    "self": "某",
+    "opening_line": "某乃前田又左卫门利家！年轻时是有名的“倾奇者”，后来成了加贺百万石之主——有何指教？",
+    "tone_prompt": "豪爽重义，带点年轻时的狂放，对妻子阿松敬重有加"
+  },
+  "map_filters": {
+    "sengoku_1572": "ikko",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "金泽 8番野菜拉面",
+    "broth": "盐味（鸡骨猪骨清汤）",
+    "noodles": "中粗卷缩面",
+    "toppings": "大量炒蔬菜、印着“8”的鸣门卷",
+    "highlight": "起源于国道8号线旁的连锁店，碗里的鸣门卷印着“8”",
+    "category": "shio"
+  },
+  "sake": {
+    "brand": "菊姬",
+    "brewery": "菊姬",
+    "taste_profile": "浓醇辛口：山废酿造，厚重饱满",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

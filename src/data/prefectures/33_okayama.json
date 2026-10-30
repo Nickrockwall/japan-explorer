@@ -1,0 +1,193 @@
+{
+  "id": 33,
+  "slug": "okayama",
+  "name": {
+    "kanji": "岡山県",
+    "kana": "おかやまけん",
+    "romaji": "Okayama",
+    "zh": "冈山县"
+  },
+  "region": "中国",
+  "capital": "冈山市",
+  "badge": {
+    "icon": "🍑",
+    "title": "桃太郎乡"
+  },
+  "stats": {
+    "population_k": 1888,
+    "area_km2": 7114,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "备前国",
+        "kana": "びぜん",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "备中国",
+        "kana": "びっちゅう",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "美作国",
+        "kana": "みまさか",
+        "circuit": "山阳道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "宇喜多直家·秀家",
+      "浦上宗景",
+      "三村氏（备中）",
+      "毛利氏"
+    ],
+    "edo_domains": [
+      "冈山藩（池田氏）",
+      "津山藩（松平氏）",
+      "备中松山藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年冈山县设立，1876年小田县（备中及备后东部）与北条县（美作）并入，备后部分则划归广岛。",
+      "boundary_note": "古“吉备国”分为备前、备中、备后三国，冈山得到前两者，备后归广岛；美作则是713年从备前分出的。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "吉备王国",
+      "summary": "古代吉备曾是可与大和匹敌的地方势力（造山古坟），7世纪分为备前、备中、备后三国，713年又从备前分出美作。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "法然与荣西",
+      "summary": "净土宗开祖法然生于美作，临济宗开祖荣西生于备中；备前长船的刀匠开始崛起。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "赤松与山名之争",
+      "summary": "备前守护为赤松氏，美作等国在赤松与山名之间多次易手；“备前长船”之刀名满天下。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "宇喜多直家",
+      "summary": "宇喜多直家以谋略崛起，其子秀家成为丰臣五大老之一，关原战败后被流放八丈岛。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "闲谷学校",
+      "summary": "冈山藩主池田光政设立现存最古老的庶民学校闲谷学校；后乐园作为大名庭园建成。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "晴天之国",
+      "summary": "降水量1毫米以下的日子多，号称“晴れの国”；水岛工业区与仓敷美观地区并存。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "后乐园",
+      "note": "日本三名园之一"
+    },
+    {
+      "name": "冈山城",
+      "note": "黑色的“乌城”"
+    },
+    {
+      "name": "仓敷美观地区",
+      "note": "白壁与柳树的运河"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "白桃",
+      "note": "冈山的代名词"
+    },
+    {
+      "name": "麝香葡萄",
+      "note": "“水果女王”"
+    },
+    {
+      "name": "吉备团子",
+      "note": "桃太郎的团子"
+    }
+  ],
+  "dialect": {
+    "name": "冈山弁",
+    "features": "句尾「〜じゃ」，「でーれー」（非常）是代表词，近年「もんげー」也走红。",
+    "phrases": [
+      {
+        "phrase": "でーれー",
+        "meaning": "非常",
+        "note": ""
+      },
+      {
+        "phrase": "〜じゃ",
+        "meaning": "是……",
+        "note": ""
+      },
+      {
+        "phrase": "もんげー",
+        "meaning": "超级厉害",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chugoku",
+    "opening": "老朽在造山古坟上远眺吉备平原。传说桃太郎打鬼的原型，就是吉备津彦命讨伐温罗——要听吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "桃太郎归属之争",
+      "text": "桃太郎的故乡在哪？冈山、香川、爱知犬山都说是自己——鬼岛还在香川的女木岛。"
+    },
+    {
+      "title": "晴天之国",
+      "text": "冈山以降水量1毫米以下的日子多自称“晴れの国”，下雨天县民反而觉得吃亏。"
+    }
+  ],
+  "goshuin": {
+    "title": "桃太郎郷",
+    "crest_name": "扬羽蝶（池田氏）",
+    "crest_icon": "char:蝶"
+  },
+  "hero_persona": {
+    "name": "宇喜多秀家",
+    "title": "丰臣五大老·八丈岛的流人",
+    "self": "吾",
+    "opening_line": "吾乃宇喜多秀家，曾为丰臣五大老之一。关原之后被流放八丈岛，活到八十多岁——人生起落，吾都尝过。",
+    "tone_prompt": "温文尔雅的贵公子气质，对故乡冈山与秀吉满怀思念"
+  },
+  "map_filters": {
+    "sengoku_1572": "gunyu",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "笠冈拉面",
+    "broth": "酱油（鸡骨鸡油）",
+    "noodles": "细直面",
+    "toppings": "煮老母鸡肉、葱",
+    "highlight": "用老母鸡肉代替猪叉烧，养鸡业兴盛的笠冈独有",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "酒一筋",
+    "brewery": "利守酒造",
+    "taste_profile": "浓醇辛口：复活“赤磐雄町”酒米，米味厚重",
+    "quadrant": "nojun_karakuchi",
+    "famous": false
+  }
+}

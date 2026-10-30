@@ -1,0 +1,176 @@
+{
+  "id": 19,
+  "slug": "yamanashi",
+  "name": {
+    "kanji": "山梨県",
+    "kana": "やまなしけん",
+    "romaji": "Yamanashi",
+    "zh": "山梨县"
+  },
+  "region": "中部",
+  "capital": "甲府市",
+  "badge": {
+    "icon": "⛩️",
+    "title": "甲斐之虎"
+  },
+  "stats": {
+    "population_k": 810,
+    "area_km2": 4465,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "甲斐国",
+        "kana": "かい",
+        "circuit": "东海道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "武田信玄",
+      "武田胜赖"
+    ],
+    "edo_domains": [
+      "甲府藩（柳泽吉保等）",
+      "甲府勤番（天领）"
+    ],
+    "meiji_transition": {
+      "summary": "1871年甲府县设立，同年改称山梨县。",
+      "boundary_note": "山梨与甲斐国完全重合，四面环山的盆地让边界千年不变；县名来自古代的“山梨郡”。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "甲斐黑驹",
+      "summary": "甲斐以“甲斐之黑驹”名马闻名，设有御牧向朝廷进贡御马。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "甲斐源氏武田",
+      "summary": "甲斐源氏武田信义参与源平合战，武田氏成为甲斐守护；1274年日莲在身延山开创久远寺。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "上杉禅秀之乱",
+      "summary": "1416年上杉禅秀之乱中武田信满败死，甲斐一度陷入守护缺位的混乱，国人割据。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "武田信玄",
+      "summary": "武田信玄以“人是城、人是墙”著称，修筑信玄堤治水，推行甲州金与《甲州法度之次第》；1582年武田胜赖败亡。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "甲府天领",
+      "summary": "甲斐成为拱卫江户西侧的要地，一度由柳泽吉保统治，后改由幕府直辖、置甲府勤番。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "葡萄与富士",
+      "summary": "明治时期发展葡萄酒与水晶工艺；富士山北麓的富士五湖观光繁荣。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "富士五湖",
+      "note": "河口湖倒映富士"
+    },
+    {
+      "name": "武田神社",
+      "note": "踯躅崎馆遗址"
+    },
+    {
+      "name": "昇仙峡",
+      "note": "花岗岩溪谷"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "馎饦（ほうとう）",
+      "note": "南瓜味噌宽面锅"
+    },
+    {
+      "name": "甲州葡萄酒",
+      "note": "日本葡萄酒的发祥地"
+    },
+    {
+      "name": "信玄饼",
+      "note": "黄豆粉黑蜜麻糬"
+    }
+  ],
+  "dialect": {
+    "name": "甲州弁",
+    "features": "句尾「〜ずら」「〜じゃん」「〜け」，表示惊讶的「てっ！」很有特色。",
+    "phrases": [
+      {
+        "phrase": "〜ずら",
+        "meaning": "……吧",
+        "note": ""
+      },
+      {
+        "phrase": "てっ！",
+        "meaning": "哎呀！（惊讶）",
+        "note": ""
+      },
+      {
+        "phrase": "ちょびちょびする",
+        "meaning": "得意忘形",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chubu",
+    "opening": "在下风间，曾在信玄公的“三ツ者”手下当差。风林火山的旗帜下，甲斐的每一座山都是城墙——要听信玄堤的故事吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "富士山归属之争",
+      "text": "富士山属于山梨还是静冈？两县争论不休——实际上山顶八合目以上至今都没有划定县界！"
+    },
+    {
+      "title": "海没有，但……",
+      "text": "山梨没有海，却是日本最爱吃金枪鱼的县之一。"
+    }
+  ],
+  "goshuin": {
+    "title": "甲斐之虎",
+    "crest_name": "武田菱",
+    "crest_icon": "bishi"
+  },
+  "hero_persona": {
+    "name": "武田信玄",
+    "title": "甲斐之虎·风林火山",
+    "self": "吾",
+    "opening_line": "吾乃武田信玄。其疾如风，其徐如林，侵掠如火，不动如山——人是城、人是墙，你想问兵法还是治国？",
+    "tone_prompt": "沉稳威严，善用比喻讲兵法与治水，偶提宿敌谦信时语带敬意"
+  },
+  "map_filters": {
+    "sengoku_1572": "takeda",
+    "bakumatsu": "tenryo"
+  },
+  "ramen": {
+    "style_name": "甲府中华そば",
+    "broth": "酱油（鸡骨清汤）",
+    "noodles": "中细面",
+    "toppings": "叉烧、笋干",
+    "highlight": "山梨面食的主角是馎饦与吉田乌冬，拉面以朴素中华そば为主",
+    "category": "shoyu"
+  },
+  "sake": {
+    "brand": "七贤",
+    "brewery": "山梨铭酿",
+    "taste_profile": "淡丽甘口：南阿尔卑斯伏流水，柔和顺口",
+    "quadrant": "tanrei_amakuchi",
+    "famous": false
+  }
+}

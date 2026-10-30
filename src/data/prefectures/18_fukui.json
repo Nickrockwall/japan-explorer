@@ -1,0 +1,187 @@
+{
+  "id": 18,
+  "slug": "fukui",
+  "name": {
+    "kanji": "福井県",
+    "kana": "ふくいけん",
+    "romaji": "Fukui",
+    "zh": "福井县"
+  },
+  "region": "中部",
+  "capital": "福井市",
+  "badge": {
+    "icon": "🦖",
+    "title": "越前恐龙"
+  },
+  "stats": {
+    "population_k": 767,
+    "area_km2": 4191,
+    "source": "2020年国势调查（约数）"
+  },
+  "historical_lineage": {
+    "ritsuryo_provinces": [
+      {
+        "name": "越前国",
+        "kana": "えちぜん",
+        "circuit": "北陆道",
+        "portion": "全域",
+        "cross_prefectures": []
+      },
+      {
+        "name": "若狭国",
+        "kana": "わかさ",
+        "circuit": "北陆道",
+        "portion": "全域",
+        "cross_prefectures": []
+      }
+    ],
+    "sengoku_daimyo": [
+      "朝仓义景",
+      "若狭武田氏",
+      "柴田胜家",
+      "越前一向一揆"
+    ],
+    "edo_domains": [
+      "福井藩（越前松平氏）",
+      "小浜藩（酒井氏）",
+      "大野藩",
+      "丸冈藩"
+    ],
+    "meiji_transition": {
+      "summary": "1871年设福井县等，1876年越前并入石川县、若狭并入滋贺县，1881年两地合并重设福井县。",
+      "boundary_note": "岭北（越前）与岭南（若狭）以木芽岭为界，语言文化都不同：岭南更接近京都，岭北则属北陆。"
+    }
+  },
+  "history_timeline": [
+    {
+      "era": "律令",
+      "period": "7–12世纪",
+      "title": "越国分裂",
+      "summary": "古“越国”7世纪末分为越前、越中、越后；若狭作为“御食国”向朝廷进贡海产。"
+    },
+    {
+      "era": "镰仓",
+      "period": "1185–1333",
+      "title": "永平寺开创",
+      "summary": "1244年道元在越前开创永平寺，曹洞宗由此扎根。"
+    },
+    {
+      "era": "室町",
+      "period": "1336–1467",
+      "title": "斯波氏与朝仓氏",
+      "summary": "越前守护为三管领之一斯波氏，守护代朝仓氏实力渐强，应仁之乱中朝仓孝景夺取越前。"
+    },
+    {
+      "era": "战国",
+      "period": "1467–1590",
+      "title": "朝仓一乘谷",
+      "summary": "朝仓氏五代在一乘谷建立繁华的城下町，1573年被织田信长所灭；柴田胜家随后筑北之庄城。"
+    },
+    {
+      "era": "江户",
+      "period": "1603–1868",
+      "title": "越前松平",
+      "summary": "结城秀康（家康次子）封越前，开创福井藩；幕末藩主松平春岳重用桥本左内、由利公正。"
+    },
+    {
+      "era": "近现代",
+      "period": "1868–",
+      "title": "眼镜与恐龙",
+      "summary": "明治后期起发展眼镜框产业（鲭江占全国约九成），胜山一带出土大量恐龙化石。"
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "东寻坊",
+      "note": "柱状节理的海崖"
+    },
+    {
+      "name": "永平寺",
+      "note": "曹洞宗大本山"
+    },
+    {
+      "name": "一乘谷朝仓氏遗迹",
+      "note": "复原的战国城下町"
+    }
+  ],
+  "specialties": [
+    {
+      "name": "越前蟹",
+      "note": "冬季的松叶蟹"
+    },
+    {
+      "name": "越前荞麦面",
+      "note": "配萝卜泥的荞麦面"
+    },
+    {
+      "name": "若狭涂筷",
+      "note": "贝壳与金箔的漆筷"
+    }
+  ],
+  "dialect": {
+    "name": "福井弁",
+    "features": "岭北方言声调起伏独特，句尾常用「〜ざ」「〜の」；「ほやほや」表示同意。",
+    "phrases": [
+      {
+        "phrase": "ほやの",
+        "meaning": "是啊",
+        "note": ""
+      },
+      {
+        "phrase": "おぞい",
+        "meaning": "破旧、质量差",
+        "note": ""
+      },
+      {
+        "phrase": "つるつるいっぱい",
+        "meaning": "满满当当（快溢出来）",
+        "note": ""
+      }
+    ]
+  },
+  "guide": {
+    "persona": "chubu",
+    "opening": "在下风间，刚从一乘谷的遗迹出来。朝仓家的城下町曾是北陆的小京都，一夜之间被信长烧光——要听吗？"
+  },
+  "regional_meme": [
+    {
+      "title": "福井在哪里？",
+      "text": "福井常被误认为福冈或福岛，县民早已习惯“是福井！眼镜和恐龙的福井！”"
+    },
+    {
+      "title": "幸福度第一",
+      "text": "知名度低，但“幸福度排名”常年全国第一——县民表示：低调才是福。"
+    }
+  ],
+  "goshuin": {
+    "title": "越前恐竜",
+    "crest_name": "三盛木瓜（朝仓氏）",
+    "crest_icon": "mokko"
+  },
+  "hero_persona": {
+    "name": "柴田胜家",
+    "title": "鬼柴田·织田家首席家老",
+    "self": "吾",
+    "opening_line": "吾乃柴田胜家，人称“鬼柴田”！在北之庄城守着越前——秀吉那猴子的事，你最好别提。",
+    "tone_prompt": "刚猛直率、重义气，粗中有细，对信长忠诚至极"
+  },
+  "map_filters": {
+    "sengoku_1572": "asakura",
+    "bakumatsu": "shinseifu"
+  },
+  "ramen": {
+    "style_name": "敦贺拉面",
+    "broth": "豚骨酱油（鸡骨猪骨混合）",
+    "noodles": "中细直面",
+    "toppings": "叉烧、葱",
+    "highlight": "敦贺站前屋台起家的深夜拉面",
+    "category": "other"
+  },
+  "sake": {
+    "brand": "黑龙",
+    "brewery": "黑龙酒造",
+    "taste_profile": "淡丽辛口：大吟酿的先驱，清雅细腻",
+    "quadrant": "tanrei_karakuchi",
+    "famous": true
+  }
+}
