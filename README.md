@@ -1,13 +1,12 @@
 # Japan Explorer · 日本47都道府县古今变迁图鉴
 
+**中文** | [English](README.en.md) | [日本語](README.ja.md)
+
 **▶ 在线体验：https://nickrockwall.github.io/japan-explorer/**
 
 ![Japan Explorer](src/assets/og-cover.png)
 
 在日本全图上点选任意都道府县，看它在古代属于哪些令制国、从律令到近现代经历了什么；拖动时间轴穿越九个时代，在沙盘上推演经典合战，再和随地区更换身份的 AI 历史向导聊一聊。
-
-> Explore Japan's 47 prefectures and the 68 ancient provinces behind them — in Chinese, English or Japanese.
-> 47都道府県と旧国の今昔をめぐる歴史地図。中国語・英語・日本語に対応。
 
 ## 能玩什么
 
