@@ -20,7 +20,7 @@ The app is available in Chinese, English and Japanese.
 | **Time travel** | Drag the slider or press play to see the map and seat of power in nine eras, from Asuka to today |
 | **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
 | **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
-| **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, district, province and population |
+| **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, district, province and population. The search box finds municipalities too (kanji, kana or English) |
 | **Goshuin book** | Collect a stamp for every prefecture you visit — 47 family-crest seals in all |
 | **Local rivalries** | Light-hearted regional in-jokes and friendly rivalries |
 | **AI history guide** | A scholar whose persona changes by region (a Heian court lady, an ukiyo-e cat, a Ryukyu priestess…) ⇄ a famous local warlord speaking in the first person; works offline without an API key |

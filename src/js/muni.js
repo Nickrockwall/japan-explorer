@@ -56,7 +56,7 @@ export function createMuniView(root, { onClose }) {
   let chart = null;
   let cur = null; // { pref, geo, byCode, provColor, popRange }
   let mode = 'prov';
-  let selected = null;
+  let selected = []; // 选中的团体代码；政令市整市为其全部区
 
   async function load(pid) {
     if (cache.has(pid)) return cache.get(pid);
@@ -95,10 +95,27 @@ export function createMuniView(root, { onClose }) {
     const body = rows.map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${v}</b></div>`).join('');
     const head = `<div class="muni-name">${esc(dn(p))}</div>${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}`;
     if (!full) return head + body;
-    const wl = lang === 'zh' ? 'zh' : lang;
-    const q = lang === 'en' ? `${p.en || p.label} ${cur.pref.name.romaji}` : p.label;
-    return `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>${head}${body}
-      <a class="muni-wiki" href="https://${wl}.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}" target="_blank" rel="noopener">${t('muni.wiki')} ↗</a>`;
+    return closeBtn() + head + body + wiki(p.label, p.en);
+  }
+
+  const closeBtn = () => `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>`;
+  function wiki(ja, en) {
+    const q = lang === 'en' ? `${en || ja} ${cur.pref.name.romaji}` : ja;
+    return `<a class="muni-wiki" href="https://${lang}.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}" target="_blank" rel="noopener">${t('muni.wiki')} ↗</a>`;
+  }
+
+  // 政令市整市：汇总各区
+  function cityInfo(city) {
+    const wards = selected.map((c) => cur.byCode.get(c)).filter(Boolean);
+    const provs = [...new Set(wards.map((w) => w.province))];
+    const sub = [city.kana, lang !== 'en' && city.en ? city.en : null].filter(Boolean).join(' · ');
+    const rows = [
+      [t('muni.wardsLabel'), t('muni.wards', { n: wards.length })],
+      [t('muni.province'), provs.map(provName).join('・')],
+      [t('muni.pop'), city.pop ? t('muni.popYear', { n: fmtPop(city.pop), y: city.pop_year }) : '—'],
+    ].map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('');
+    return `${closeBtn()}<div class="muni-name">${esc(lang === 'en' && city.en ? city.en : city.name)}</div>
+      ${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}${rows}${wiki(city.name, city.en)}`;
   }
 
   function legend() {
@@ -127,14 +144,14 @@ export function createMuniView(root, { onClose }) {
         regions: feats.map((f) => {
           const p = f.properties;
           const c = color(p);
-          const on = p.code === selected;
+          const on = selected.includes(p.code);
           return {
             name: p.code,
             itemStyle: on
               ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.5)', shadowBlur: 10 }
               : { areaColor: c, borderColor: '#18181c', borderWidth: 0.5, shadowBlur: 0 },
             emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.25), borderColor: '#fff', borderWidth: 1.2 } },
-            label: { show: on },
+            label: { show: on && selected.length === 1 },
           };
         }),
       },
@@ -173,17 +190,32 @@ export function createMuniView(root, { onClose }) {
     });
     chart.on('click', (x) => {
       if (x.seriesId !== 'muni') return;
-      select(x.name === selected ? null : x.name);
+      select(selected.length === 1 && selected[0] === x.name ? [] : [x.name]);
     });
   }
 
-  function select(code) {
-    selected = code;
-    const p = code && cur.byCode.get(code);
-    card.hidden = !p;
-    root.classList.toggle('has-card', !!p);
-    if (p) card.innerHTML = info(p, { full: true });
+  // 单个代码显示该市区町村；多个代码（政令市的各区）配合 city 显示整市
+  function select(codes, city = null) {
+    selected = codes;
+    const one = codes.length === 1 ? cur.byCode.get(codes[0]) : null;
+    const shown = !!(one || (city && codes.length));
+    card.hidden = !shown;
+    root.classList.toggle('has-card', shown);
+    if (one) card.innerHTML = info(one, { full: true });
+    else if (shown) card.innerHTML = cityInfo(city);
+    if (!shown) chart.setOption({ geo: { layoutCenter: ['50%', '54%'] } }); // 关闭详情卡时恢复搜索聚焦造成的上移
     render();
+  }
+
+  // 拉近到选中范围（四周留出与范围同宽的余地，保留周边参照）
+  function zoomTo(codes) {
+    const feats = cur.geo.features.filter((f) => codes.includes(f.properties.code));
+    if (!feats.length) return;
+    const [[x0, y1], [x1, y0]] = bounds(feats);
+    const pad = Math.max(x1 - x0, y1 - y0) + 0.04;
+    // 窄屏时详情卡盖住地图下半部：缩放不变，把地图中心上移，让选中区域落在卡片上方
+    const lift = !card.hidden && root.clientWidth <= 600;
+    chart.setOption({ geo: { boundingCoords: [[x0 - pad, y1 + pad], [x1 + pad, y0 - pad]], layoutCenter: ['50%', lift ? '30%' : '54%'] } });
   }
 
   window.addEventListener('resize', () => !root.hidden && chart?.resize());
@@ -192,14 +224,15 @@ export function createMuniView(root, { onClose }) {
     const b = e.target.closest('button');
     if (!b) return;
     if (b.dataset.act === 'close') onClose();
-    else if (b.dataset.act === 'unselect') select(null);
+    else if (b.dataset.act === 'unselect') select([]);
     else if (b.dataset.mode && b.dataset.mode !== mode) { mode = b.dataset.mode; render(); }
   });
 
   return {
     get open() { return !root.hidden; },
     get prefId() { return cur?.pref.id ?? null; },
-    async show(pref) {
+    // focus：{ codes, city? }，由搜索传入，进入后直接选中并拉近
+    async show(pref, focus = null) {
       root.hidden = false;
       $('.muni-title').textContent = '';
       const loading = $('.muni-loading');
@@ -222,13 +255,17 @@ export function createMuniView(root, { onClose }) {
         byCode: new Map(geo.features.map((f) => [f.properties.code, f.properties])),
         popRange: [Math.min(...pops), Math.max(...pops)],
       };
-      selected = null;
+      selected = [];
       card.hidden = true;
       root.classList.remove('has-card');
       const title = lang === 'en' ? pref.name.romaji : pref.name.kanji;
       $('.muni-title').textContent = `${title} · ${t('muni.count', { n: geo.features.length })}`;
       initChart();
       render();
+      if (focus) {
+        select(focus.codes, focus.city);
+        zoomTo(focus.codes);
+      }
     },
     hide() {
       root.hidden = true;

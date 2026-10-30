@@ -11,7 +11,7 @@
   partial   Wikidata 沿「町村 → 郡 → 国」及「合并前的町村」(P1365) 查到的其他旧国，表示部分区域属于
   运行结束会列出对照表与 Wikidata 不一致的条目，供人工复核
 
-输出 src/data/municipalities/NN.json（GeoJSON，每县一个，进入下钻时才加载）。
+输出 src/data/municipalities/NN.json（GeoJSON，每县一个，进入下钻时才加载）与 index.json（搜索索引）。
 """
 import csv
 import io
@@ -147,6 +147,7 @@ def main():
     index = {e['id']: e for e in json.load(open(os.path.join(DATA, 'index.json'), encoding='utf-8'))}
     stats = {}
     summary = []
+    search = []  # [县id, 名称, 读音, 英文名, [团体代码…], 人口, 人口年份]
     for pid in range(1, 48):
         e = index[pid]
         base = json.load(open(os.path.join(DATA, 'prefectures', e['file']), encoding='utf-8'))
@@ -241,11 +242,23 @@ def main():
                 if ja and ja not in names:
                     names[ja] = {'zh': ja, 'ja': ja, 'en': EN_NAMES.get(ja, ja)}
         out = {'type': 'FeatureCollection', 'pref': pid, 'provinces': names, 'features': feats}
+        wards = {}
+        for f in feats:
+            p = f['properties']
+            search.append([pid, p['name'], p['kana'], p['en'], [p['code']], None, None])
+            if p['city']:
+                wards.setdefault(p['city'], []).append(p['code'])
+        for city, codes in wards.items():
+            w = next((v for v in wd.values() if v['ja'] == city), {})
+            search.append([pid, city, w.get('kana', ''), w.get('en', ''), codes, w.get('pop'), w.get('pop_year')])
         path = os.path.join(OUT, f'{pid:02d}.json')
         with open(path, 'w', encoding='utf-8') as fp:
             json.dump(out, fp, ensure_ascii=False, separators=(',', ':'))
         summary.append(f'{pid:02d} {e["kanji"]}: {len(feats)} 区域, {os.path.getsize(path) // 1024} KB')
         print(summary[-1], flush=True)
+    with open(os.path.join(OUT, 'index.json'), 'w', encoding='utf-8') as fp:
+        json.dump(search, fp, ensure_ascii=False, separators=(',', ':'))
+    print(f'搜索索引 {len(search)} 条, {os.path.getsize(os.path.join(OUT, "index.json")) // 1024} KB')
     print('各旧国的市区町村数:', len(stats), '国')
     print(f'需要复核 {len(MISMATCH)} 条：')
     print(chr(10).join(MISMATCH))
