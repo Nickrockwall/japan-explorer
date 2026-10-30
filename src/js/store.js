@@ -8,14 +8,25 @@ async function fetchJSON(url) {
   return res.json();
 }
 
-export async function loadAll() {
-  const [index, geo, events] = await Promise.all([
+// lang 不是中文时，按 src/data/i18n/manifest.json 载入已翻译的覆盖层并合并；
+// 未翻译的县保持中文，并标记 _translated = false
+export async function loadAll(lang = 'zh', merge = (b) => b) {
+  const [index, geo, events, manifest] = await Promise.all([
     fetchJSON('src/data/index.json'),
     fetchJSON('src/assets/geojson/japan.json'),
     fetchJSON('src/data/historical_events.json'),
+    lang === 'zh' ? null : fetchJSON('src/data/i18n/manifest.json'),
   ]);
-  const prefs = await Promise.all(index.map((e) => fetchJSON(`src/data/prefectures/${e.file}`)));
-  return { index, geo, events, prefs: new Map(prefs.map((p) => [p.id, p])) };
+  const done = new Set(manifest?.[lang]?.prefectures || []);
+  const dir = `src/data/i18n/${lang}`;
+  const prefs = await Promise.all(index.map(async (e) => {
+    const base = await fetchJSON(`src/data/prefectures/${e.file}`);
+    if (lang === 'zh') return { ...base, _translated: true };
+    if (!done.has(e.id)) return { ...base, _translated: false };
+    return { ...merge(base, await fetchJSON(`${dir}/prefectures/${e.file}`)), _translated: true };
+  }));
+  const ev = manifest?.[lang]?.events ? merge(events, await fetchJSON(`${dir}/historical_events.json`)) : events;
+  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])) };
 }
 
 function read(key, fallback) {

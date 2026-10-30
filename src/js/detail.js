@@ -1,5 +1,6 @@
 // 右上：地区风土与历史详卡
 import { crestSVG } from './crests.js';
+import { t, label, lang, prefName, joinList } from './i18n.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -9,11 +10,11 @@ const CIRCUITS = ['畿内', '东海道', '东山道', '北陆道', '山阴道', 
 export function renderWelcome(el) {
   el.innerHTML = `
     <div class="welcome">
-      <div class="badge-title">五畿七道 · 六十八国</div>
-      <h2>今日的 47 都道府县，<br>曾是怎样的古国版图？</h2>
-      <p>公元 7 世纪，律令国家把列岛划分为“五畿七道”与六十八个令制国。千年之后，明治政府废藩置县，又拼出了今天的都道府县——有的县恰好等于一国，有的县却由五国拼成，有的古国被一分为二。</p>
-      <p>在左侧地图上点选任意地区，查看它的<b>古今双名</b>、<b>律令→战国→江户→近现代</b>沿革、名胜物产与方言，并和随地区更换身份的<b>时空案内人</b>聊聊。</p>
-      <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${c}</span>`).join('')}<span class="circuit-tag">令制外：虾夷地 · 琉球</span></div>
+      <div class="badge-title">${t('w.badge')}</div>
+      <h2>${t('w.h')}</h2>
+      <p>${t('w.p1')}</p>
+      <p>${t('w.p2')}</p>
+      <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
     </div>`;
 }
 
@@ -24,10 +25,17 @@ const fmtDate = (iso) => {
   return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
 };
 
+// 人口：中文“百万/万”，日语“万人”，英语“M/K”
+function fmtPop(k) {
+  if (lang === 'en') return k >= 1000 ? `${(k / 1000).toFixed(2)}M` : `${k}K`;
+  if (lang === 'ja') return `${Math.round(k / 10).toLocaleString()}万人`;
+  return k >= 1000 ? `${(k / 1000).toFixed(2)}百万` : `${(k / 10).toFixed(1)}万`;
+}
+
 function stampButton(p, stampedAt) {
   return stampedAt
-    ? `<button class="stamp-btn done" type="button" disabled>${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}已盖印 · ${fmtDate(stampedAt)}</button>`
-    : `<button class="stamp-btn" type="button" data-act="stamp">${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}打卡盖印</button>`;
+    ? `<button class="stamp-btn done" type="button" disabled>${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}${t('stamp.done', { date: fmtDate(stampedAt) })}</button>`
+    : `<button class="stamp-btn" type="button" data-act="stamp">${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}${t('stamp.do')}</button>`;
 }
 
 // 盖印动效：朱印落下 + 面板微震 + 设备振动
@@ -38,7 +46,7 @@ export function playStamp(el, p, stampedAt) {
     <div class="seal-face">
       ${crestSVG(p.goshuin.crest_icon, 'crest seal-crest')}
       <div class="seal-title">${esc(p.goshuin.title)}</div>
-      <div class="seal-meta">奉拝 · ${esc(p.name.kanji)}</div>
+      <div class="seal-meta">${esc(t('seal.meta', { name: p.name.kanji }))}</div>
     </div>`;
   // 详卡可滚动，浮层按其可视区域定位
   const r = el.getBoundingClientRect();
@@ -60,9 +68,9 @@ const RAMEN_BROTH = {
   shio: ['#cfe7e2', '#9fc8c2'], other: ['#9a86c0', '#5f4f86'],
 };
 const SAKE_QUAD = {
-  nojun_karakuchi: { label: '浓醇辛口', x: 0.78, y: 0.22 }, tanrei_karakuchi: { label: '淡丽辛口', x: 0.78, y: 0.78 },
-  nojun_amakuchi: { label: '浓醇甘口', x: 0.22, y: 0.22 }, tanrei_amakuchi: { label: '淡丽甘口', x: 0.22, y: 0.78 },
-  shochu: { label: '烧酎·泡盛', x: null, y: null },
+  nojun_karakuchi: { x: 0.78, y: 0.22 }, tanrei_karakuchi: { x: 0.78, y: 0.78 },
+  nojun_amakuchi: { x: 0.22, y: 0.22 }, tanrei_amakuchi: { x: 0.22, y: 0.78 },
+  shochu: { x: null, y: null },
 };
 
 // 拉面构造解构图：碗的剖面 + 三层标注
@@ -72,8 +80,8 @@ function ramenFocus(p) {
   const noodles = Array.from({ length: 5 }, (_, i) =>
     `<path d="M40 ${92 + i * 6} q10 -5 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#f3d98a" stroke-width="2.6" stroke-linecap="round" opacity="${0.95 - i * 0.1}"/>`).join('');
   return `
-    <section class="focus focus-ramen" aria-label="拉面构造解构">
-      <div class="focus-h"><span class="focus-tag">拉面流派图鉴</span><b>${esc(r.style_name)}</b></div>
+    <section class="focus focus-ramen" aria-label="${t('ramen.tag')}">
+      <div class="focus-h"><span class="focus-tag">${t('ramen.tag')}</span><b>${esc(r.style_name)}</b></div>
       <div class="ramen-wrap">
         <svg class="bowl" viewBox="0 0 200 150" aria-hidden="true">
           <defs><linearGradient id="soup-${p.id}" x1="0" y1="0" x2="0" y2="1">
@@ -90,9 +98,9 @@ function ramenFocus(p) {
           <path d="M70 140 h60 l-6 8 h-48z" fill="#2a2a30"/>
         </svg>
         <dl class="ramen-parts">
-          <div><dt><i style="background:#c9925c"></i>浇头</dt><dd>${esc(r.toppings)}</dd></div>
-          <div><dt><i style="background:#f3d98a"></i>面体</dt><dd>${esc(r.noodles)}</dd></div>
-          <div><dt><i style="background:${soup}"></i>汤头</dt><dd>${esc(r.broth)}</dd></div>
+          <div><dt><i style="background:#c9925c"></i>${t('ramen.top')}</dt><dd>${esc(r.toppings)}</dd></div>
+          <div><dt><i style="background:#f3d98a"></i>${t('ramen.noodle')}</dt><dd>${esc(r.noodles)}</dd></div>
+          <div><dt><i style="background:${soup}"></i>${t('ramen.broth')}</dt><dd>${esc(r.broth)}</dd></div>
         </dl>
       </div>
       <p class="focus-note">${esc(r.highlight)}</p>
@@ -103,15 +111,16 @@ function ramenFocus(p) {
 function sakeFocus(p) {
   const s = p.sake;
   const q = SAKE_QUAD[s.quadrant] || SAKE_QUAD.shochu;
+  const quad = label('sk', s.quadrant);
   const chart = q.x == null
-    ? '<div class="quad-none">烧酎·泡盛<br><small>不按清酒甘辛象限计</small></div>'
+    ? `<div class="quad-none">${esc(quad)}<br><small>${t('sake.shochu.note')}</small></div>`
     : `<div class="quad">
-        <span class="ax ax-t">浓醇</span><span class="ax ax-b">淡丽</span><span class="ax ax-l">甘口</span><span class="ax ax-r">辛口</span>
+        <span class="ax ax-t">${t('ax.rich')}</span><span class="ax ax-b">${t('ax.light')}</span><span class="ax ax-l">${t('ax.sweet')}</span><span class="ax ax-r">${t('ax.dry')}</span>
         <i class="quad-dot" style="left:${q.x * 100}%;top:${q.y * 100}%"></i>
       </div>`;
   return `
-    <section class="focus focus-sake" aria-label="代表地酒">
-      <div class="focus-h"><span class="focus-tag">地酒名酿地图</span><b>${esc(q.label)}</b>${s.famous ? '<span class="famous">全国名酿</span>' : ''}</div>
+    <section class="focus focus-sake" aria-label="${t('fudo.sake')}">
+      <div class="focus-h"><span class="focus-tag">${t('sake.tag')}</span><b>${esc(quad)}</b>${s.famous ? `<span class="famous">${t('sake.famous')}</span>` : ''}</div>
       <div class="sake-wrap">
         <div class="sake-label"><span class="brand">${esc(s.brand)}</span><span class="brewery">${esc(s.brewery)}</span></div>
         ${chart}
@@ -122,12 +131,12 @@ function sakeFocus(p) {
 
 function fudoSection(p) {
   return `
-    <div class="section-h">风土 <small>Ramen & Sake</small></div>
+    <div class="section-h">${t('sec.fudo')} <small>Ramen & Sake</small></div>
     <div class="fudo">
       <div class="fudo-card"><span class="fudo-ico" aria-hidden="true">🍜</span><div>
-        <div class="fudo-k">在地拉面</div><b>${esc(p.ramen.style_name)}</b><p>${esc(p.ramen.highlight)}</p></div></div>
+        <div class="fudo-k">${t('fudo.ramen')}</div><b>${esc(p.ramen.style_name)}</b><p>${esc(p.ramen.highlight)}</p></div></div>
       <div class="fudo-card"><span class="fudo-ico" aria-hidden="true">🍶</span><div>
-        <div class="fudo-k">代表地酒</div><b>${esc(p.sake.brand)}</b><small>${esc(p.sake.brewery)}</small><p>${esc(p.sake.taste_profile)}</p></div></div>
+        <div class="fudo-k">${t('fudo.sake')}</div><b>${esc(p.sake.brand)}</b><small>${esc(p.sake.brewery)}</small><p>${esc(p.sake.taste_profile)}</p></div></div>
     </div>`;
 }
 
@@ -144,7 +153,7 @@ export function highlightEra(el, era) {
     hit.classList.add('era-hl');
     hit.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   } else {
-    tl.insertAdjacentHTML('afterbegin', `<div class="era-note">⏳ ${esc(era.short)}：本县时间轴未单列此时代，可在地图上看该时代的全国格局。</div>`);
+    tl.insertAdjacentHTML('afterbegin', `<div class="era-note">${esc(t('era.note', { era: era.short }))}</div>`);
   }
 }
 
@@ -152,15 +161,14 @@ export function renderDetail(el, p, { stampedAt, focus } = {}) {
   const L = p.historical_lineage;
   const provs = L.ritsuryo_provinces;
   const ancient = provs.map((x) => esc(x.name)).join(' · ');
-  const fmtPop = p.stats.population_k >= 1000
-    ? `${(p.stats.population_k / 1000).toFixed(2)}百万`
-    : `${(p.stats.population_k / 10).toFixed(1)}万`;
+  const stageRow = (era, html) => `<div class="lineage-row"><span class="k">${esc(label('stage', era))}</span>${html}</div>`;
 
   el.innerHTML = `
+    ${p._translated === false ? `<div class="untranslated">🌐 ${t('untranslated')}</div>` : ''}
     <div class="hero">
       <div class="hero-badge" aria-hidden="true">${esc(p.badge.icon)}</div>
       <div class="hero-main">
-        <div class="ancient-title">${ancient}<span class="arrow">→</span>${esc(p.name.zh)}</div>
+        <div class="ancient-title">${ancient}<span class="arrow">→</span>${esc(prefName(p))}</div>
         <div class="modern-title">
           <span class="kanji">${esc(p.name.kanji)}</span>
           <span class="kana">${esc(p.name.kana)}</span>
@@ -172,61 +180,61 @@ export function renderDetail(el, p, { stampedAt, focus } = {}) {
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="k">地方</div><div class="v">${esc(p.region)}</div></div>
-      <div class="stat"><div class="k">厅所在地</div><div class="v" title="${esc(p.capital)}">${esc(p.capital)}</div></div>
-      <div class="stat"><div class="k">人口</div><div class="v" title="${esc(p.stats.source)}">${fmtPop}</div></div>
-      <div class="stat"><div class="k">面积</div><div class="v">${p.stats.area_km2.toLocaleString()} km²</div></div>
+      <div class="stat"><div class="k">${t('st.region')}</div><div class="v">${esc(label('region', p.region))}</div></div>
+      <div class="stat"><div class="k">${t('st.capital')}</div><div class="v" title="${esc(p.capital)}">${esc(p.capital)}</div></div>
+      <div class="stat"><div class="k">${t('st.pop')}</div><div class="v" title="${esc(p.stats.source)}">${fmtPop(p.stats.population_k)}</div></div>
+      <div class="stat"><div class="k">${t('st.area')}</div><div class="v">${p.stats.area_km2.toLocaleString()} km²</div></div>
     </div>
 
     ${focus === 'ramen' ? ramenFocus(p) : focus === 'sake' ? sakeFocus(p) : ''}
 
     <details class="meme" ${focus ? '' : 'open'}>
-      <summary><span class="meme-h">地域修罗场</span><small>地缘梗速览 · 玩笑话，别当真</small></summary>
+      <summary><span class="meme-h">${t('meme.h')}</span><small>${t('meme.sub')}</small></summary>
       ${p.regional_meme.map((m) => `
         <div class="meme-item"><b>${esc(m.title)}</b><p>${esc(m.text)}</p></div>`).join('')}
     </details>
 
-    <div class="section-h">令制国对照 <small>Ritsuryō Provinces</small></div>
+    <div class="section-h">${t('sec.prov')} <small>Ritsuryō Provinces</small></div>
     <div class="provinces">
       ${provs.map((x) => `
         <div class="prov ${x.circuit === '令制外' ? 'outside' : ''}">
           <span class="n">${esc(x.name)}</span><span class="kana">${esc(x.kana)}</span>
-          <span class="meta"><span class="circ">${esc(x.circuit)}</span> · ${esc(x.portion)}</span>
-          ${x.cross_prefectures?.length ? `<span class="cross" title="该国古地今分属多县">跨界 · 亦属 ${x.cross_prefectures.map(esc).join('、')}</span>` : ''}
+          <span class="meta"><span class="circ">${esc(label('circuit', x.circuit))}</span> · ${esc(x.portion)}</span>
+          ${x.cross_prefectures?.length ? `<span class="cross" title="${t('cross.title')}">${esc(t('cross', { list: joinList(x.cross_prefectures) }))}</span>` : ''}
         </div>`).join('')}
     </div>
 
-    <div class="section-h">历代统治者 <small>Lineage</small></div>
+    <div class="section-h">${t('sec.lineage')} <small>Lineage</small></div>
     <div class="lineage">
-      <div class="lineage-row"><span class="k">战国</span><div class="pills">${list(L.sengoku_daimyo)}</div></div>
-      <div class="lineage-row"><span class="k">江户</span><div class="pills">${list(L.edo_domains)}</div></div>
-      <div class="lineage-row"><span class="k">明治</span><div>${esc(L.meiji_transition.summary)}</div></div>
+      ${stageRow('战国', `<div class="pills">${list(L.sengoku_daimyo)}</div>`)}
+      ${stageRow('江户', `<div class="pills">${list(L.edo_domains)}</div>`)}
+      <div class="lineage-row"><span class="k">${t('row.meiji')}</span><div>${esc(L.meiji_transition.summary)}</div></div>
     </div>
-    <div class="note"><b>古界线 vs 今县界：</b>${esc(L.meiji_transition.boundary_note)}</div>
+    <div class="note"><b>${t('note.border')}</b>${esc(L.meiji_transition.boundary_note)}</div>
 
-    <div class="section-h">历史时间轴 <small>点击展开</small></div>
+    <div class="section-h">${t('sec.timeline')} <small>${t('sec.timeline.sub')}</small></div>
     <div class="timeline">
-      ${p.history_timeline.map((t, i) => `
-        <details class="tl" data-stage="${esc(t.era)}" ${i === 0 ? 'open' : ''}>
-          <summary><span class="era">${esc(t.era)}</span><span class="t">${esc(t.title)}</span><span class="period">${esc(t.period)}</span></summary>
-          <div class="body">${esc(t.summary)}</div>
+      ${p.history_timeline.map((tl, i) => `
+        <details class="tl" data-stage="${esc(tl.era)}" ${i === 0 ? 'open' : ''}>
+          <summary><span class="era">${esc(label('stage', tl.era))}</span><span class="t">${esc(tl.title)}</span><span class="period">${esc(tl.period)}</span></summary>
+          <div class="body">${esc(tl.summary)}</div>
         </details>`).join('')}
     </div>
 
     <div class="two-col">
       <div>
-        <div class="section-h">名胜 <small>Landmarks</small></div>
+        <div class="section-h">${t('sec.landmarks')} <small>Landmarks</small></div>
         <ul class="items">${p.landmarks.map((x) => `<li><span class="n">${esc(x.name)}</span><span class="d">${esc(x.note)}</span></li>`).join('')}</ul>
       </div>
       <div>
-        <div class="section-h">物产 <small>Specialties</small></div>
+        <div class="section-h">${t('sec.specialties')} <small>Specialties</small></div>
         <ul class="items">${p.specialties.map((x) => `<li><span class="n">${esc(x.name)}</span><span class="d">${esc(x.note)}</span></li>`).join('')}</ul>
       </div>
     </div>
 
     ${fudoSection(p)}
 
-    <div class="section-h">方言速览 <small>${esc(p.dialect.name)}</small></div>
+    <div class="section-h">${t('sec.dialect')} <small>${esc(p.dialect.name)}</small></div>
     <div class="dialect-box">
       <p class="feat">${esc(p.dialect.features)}</p>
       ${p.dialect.phrases.map((x) => `

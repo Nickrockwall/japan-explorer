@@ -1,8 +1,10 @@
 // 御朱印帐：47 格收集册，可按地方筛选
 import { crestSVG } from './crests.js';
 import { esc } from './detail.js';
+import { t, label, prefName } from './i18n.js';
 
-const REGIONS = ['全部', '北海道', '东北', '关东', '中部', '近畿', '中国', '四国', '九州·冲绳'];
+const ALL = '*';
+const REGIONS = [ALL, '北海道', '东北', '关东', '中部', '近畿', '中国', '四国', '九州·冲绳'];
 
 const fmtDate = (iso) => {
   const d = new Date(iso);
@@ -13,19 +15,22 @@ export function createBook(dialog, prefs, { getBook, onPick }) {
   const tabs = dialog.querySelector('.book-tabs');
   const grid = dialog.querySelector('.book-grid');
   const progress = dialog.querySelector('.book-progress');
-  let region = '全部';
+  let region = ALL;
+  const regionName = (r) => (r === ALL ? t('book.all') : label('region', r));
 
   function render() {
     const book = getBook();
     const all = [...prefs.values()];
-    const list = region === '全部' ? all : all.filter((p) => p.region === region);
+    const list = region === ALL ? all : all.filter((p) => p.region === region);
     const got = list.filter((p) => book[p.id]).length;
-    progress.textContent = `${region === '全部' ? '全国' : region} 已收集 ${got} / ${list.length}`;
+    progress.textContent = t('book.progress', {
+      scope: region === ALL ? t('book.nation') : regionName(region), n: got, total: list.length,
+    });
 
     tabs.innerHTML = REGIONS.map((r) => {
-      const inR = r === '全部' ? all : all.filter((p) => p.region === r);
+      const inR = r === ALL ? all : all.filter((p) => p.region === r);
       const n = inR.filter((p) => book[p.id]).length;
-      return `<button type="button" class="book-tab ${r === region ? 'on' : ''}" data-region="${r}">${r}<small>${n}/${inR.length}</small></button>`;
+      return `<button type="button" class="book-tab ${r === region ? 'on' : ''}" data-region="${esc(r)}">${esc(regionName(r))}<small>${n}/${inR.length}</small></button>`;
     }).join('');
 
     grid.innerHTML = list.map((p) => {
@@ -34,12 +39,12 @@ export function createBook(dialog, prefs, { getBook, onPick }) {
         ? `<button type="button" class="slot got" data-id="${p.id}" title="${esc(p.goshuin.crest_name)}">
              <span class="slot-seal">${crestSVG(p.goshuin.crest_icon, 'crest')}</span>
              <span class="slot-title">${esc(p.goshuin.title)}</span>
-             <span class="slot-name">${esc(p.name.kanji)}</span>
+             <span class="slot-name">${esc(prefName(p))}</span>
              <span class="slot-date">${fmtDate(at)}</span>
            </button>`
-        : `<button type="button" class="slot" data-id="${p.id}" title="尚未盖印：点击前往">
-             <span class="slot-empty">未</span>
-             <span class="slot-name">${esc(p.name.kanji)}</span>
+        : `<button type="button" class="slot" data-id="${p.id}" title="${esc(t('book.empty.title'))}">
+             <span class="slot-empty">${esc(t('book.empty'))}</span>
+             <span class="slot-name">${esc(prefName(p))}</span>
              <span class="slot-date">—</span>
            </button>`;
     }).join('');

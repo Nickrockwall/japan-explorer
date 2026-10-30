@@ -1,5 +1,6 @@
 // 右下：AI 历史向导（时空案内人）
 import { esc } from './detail.js';
+import { t, lang, label, prefName, joinList, PERSONA_TEXT, PROMPT_RULES } from './i18n.js';
 
 export const PERSONAS = {
   hokkaido: { name: '白枭', title: '雪原旅人', self: '在下', avatar: '枭', color: '#8fb8c9',
@@ -31,83 +32,101 @@ export function personaFor(p, mode) {
       voice: h.tone_prompt, tail: `——${h.name}`, opening: h.opening_line,
     };
   }
-  return { hero: false, ...PERSONAS[p.guide.persona], opening: p.guide.opening };
+  const base = PERSONAS[p.guide.persona];
+  return { hero: false, ...base, ...(PERSONA_TEXT[lang]?.[p.guide.persona] || {}), opening: p.guide.opening };
 }
 
 export function quickQuestions(p) {
-  const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name).join('、');
+  const provs = joinList(p.historical_lineage.ritsuryo_provinces.map((x) => x.name));
   return [
-    { key: 'daimyo', text: '战国时这里战况如何？' },
-    { key: 'dialect', text: `用${p.dialect.name}和我打声招呼` },
-    { key: 'border', text: `古代的${provs}和今天的界线有什么不同？` },
+    { key: 'daimyo', text: t('q.daimyo') },
+    { key: 'dialect', text: t('q.dialect', { dialect: p.dialect.name }) },
+    { key: 'border', text: t('q.border', { provs }) },
   ];
 }
 
-export function buildSystemPrompt(p, P) {
-  const { guide, hero_persona, ...data } = p;
-  const role = P.hero
-    ? `你现在“附体”为历史人物 **${P.name}**（${P.title}），以第一人称说话，自称「${P.self}」。
-口吻：${P.voice}。
-以该人物的立场、见识与情感讲述当地历史；涉及其身后才发生的事，用“据后世所传”之类的口吻带出。
-扮演仅限于语气与视角：不得美化屠杀、迫害等暴行，涉及争议史实时保持客观。`
-    : `你是「时空案内人」——日本历史地理向导。当前身份：${P.title}「${P.name}」，自称「${P.self}」。
-口吻：${P.voice}。`;
-  return `${role}
+// System Prompt 的角色段，按界面语言书写
+const ROLE = {
+  zh: {
+    hero: (P) => `你现在“附体”为历史人物 **${P.name}**（${P.title}），以第一人称说话，自称「${P.self}」。\n口吻：${P.voice}。\n以该人物的立场、见识与情感讲述当地历史；涉及其身后才发生的事，用“据后世所传”之类的口吻带出。\n扮演仅限于语气与视角：不得美化屠杀、迫害等暴行，涉及争议史实时保持客观。`,
+    guide: (P) => `你是「时空案内人」——日本历史地理向导。当前身份：${P.title}「${P.name}」，自称「${P.self}」。\n口吻：${P.voice}。`,
+    ctx: (p) => `用户此刻在地图上选中了「${p.name.kanji}（${p.name.zh}）」。下面是该地区的史料 JSON：`,
+    battle: (P, b) => `你现在“附体”为历史人物 **${P.name}**（${b.narrator.title}），正身处「${b.name}」的战场，以第一人称说话，自称「${P.self}」。\n口吻：${P.voice}。\n以该人物在这场合战中的立场与见识回答；涉及其不可能知道的后世评价，用“据后世所传”之类的口吻带出。\n扮演仅限于语气与视角：不得美化杀戮，涉及兵力、动机等争议史实时注明“一说”。`,
+    field: (f, provs) => `主战场所在地区：「${f.name.kanji}」（古：${provs}）。`,
+  },
+  en: {
+    hero: (P) => `You are now channeling the historical figure **${P.name}** (${P.title}). Speak in the first person.\nVoice: ${P.voice}.\nTell local history from this person's standpoint, knowledge and feelings; for events after their lifetime, frame them as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify massacres or persecution, and stay objective on disputed facts.`,
+    guide: (P) => `You are the "Time-Travel Guide", a guide to Japanese history and geography. Current identity: ${P.title} "${P.name}".\nVoice: ${P.voice}.`,
+    ctx: (p) => `The user has selected ${p.name.romaji} (${p.name.kanji}) on the map. Records for this region (JSON):`,
+    battle: (P, b) => `You are now channeling **${P.name}** (${b.narrator.title}) on the battlefield of ${b.name}. Speak in the first person.\nVoice: ${P.voice}.\nAnswer from this person's position in the battle; frame later judgments they could not know as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify killing, and mark disputed numbers or motives as "one account says".`,
+    field: (f, provs) => `Main battlefield: ${f.name.romaji} (${f.name.kanji}; ancient: ${provs}).`,
+  },
+  ja: {
+    hero: (P) => `あなたは歴史上の人物 **${P.name}**（${P.title}）として一人称で話してください。自称は「${P.self}」。\n口調：${P.voice}。\nこの人物の立場・見識・感情から土地の歴史を語り、没後の出来事は「後世の伝えでは」といった形で述べてください。\n演じるのは口調と視点だけです。虐殺や迫害を美化せず、争いのある史実は客観的に扱ってください。`,
+    guide: (P) => `あなたは日本の歴史と地理の案内人「時空案内人」です。現在の姿：${P.title}「${P.name}」、自称は「${P.self}」。\n口調：${P.voice}。`,
+    ctx: (p) => `ユーザーはいま地図で「${p.name.kanji}」を選んでいます。この地域の史料（JSON）：`,
+    battle: (P, b) => `あなたは歴史上の人物 **${P.name}**（${b.narrator.title}）として「${b.name}」の戦場にいます。一人称で話し、自称は「${P.self}」。\n口調：${P.voice}。\nこの合戦での立場と見識から答え、知り得ない後世の評価は「後世の伝えでは」と述べてください。\n演じるのは口調と視点だけです。殺戮を美化せず、兵力や動機など諸説ある点は「一説に」と明記してください。`,
+    field: (f, provs) => `主戦場：「${f.name.kanji}」（旧国：${provs}）。`,
+  },
+};
+const R = ROLE[lang];
+const RULES = PROMPT_RULES[lang];
 
-用户此刻在地图上选中了「${p.name.kanji}（${p.name.zh}）」。下面是该地区的史料 JSON，涵盖古代令制国（五畿七道）、战国大名、江户诸藩、明治废藩置县后的县域变迁、名胜物产、方言与地缘梗：
+export function buildSystemPrompt(p, P) {
+  const { guide, hero_persona, _translated, ...data } = p;
+  return `${P.hero ? R.hero(P) : R.guide(P)}
+
+${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
 
-回答规则：
-1. 用中文回答，可点缀日语原词并用括号注明读音或意思；保持上述人设口吻，但不要喧宾夺主。
-2. 优先依据史料作答；史料之外的知识可以补充，但存疑之处标注“据传”或“一说”，不要编造具体年份与人名。
-3. 篇幅约 150–300 字，多给具体的年份、人物、地名；需要时可用 **加粗** 标出关键词。
-4. 若用户问到其他地区，可简要回答，并建议在地图上点选那个地区以切换向导。`;
+${RULES.reply}. ${RULES.rules}`;
 }
 
 // ── 离线解答（无 API Key 时由本地数据以角色口吻拼出） ──────────────
+const paren = (x) => (x ? t('o.paren', { x }) : '');
+const bullet = (head, body) => `· **${head}**${t('o.eq')}${body}`;
+
 function offlineAnswer(key, p, P) {
   const L = p.historical_lineage;
-  const stage = (era) => p.history_timeline.find((t) => t.era === era);
+  const stage = (era) => p.history_timeline.find((x) => x.era === era);
   const sengoku = stage('战国');
   const edo = stage('江户');
   if (key === 'daimyo') {
-    const lead = P.hero
-      ? `${P.self}所知的战国，这片土地上的风云人物有 **${L.sengoku_daimyo.join('、')}**。`
-      : `${P.self}记得，战国时这片土地上活跃着 **${L.sengoku_daimyo.join('、')}**。`;
+    const lead = t(P.hero ? 'o.daimyo.hero' : 'o.daimyo', { self: P.self, list: joinList(L.sengoku_daimyo) });
     return `${lead}\n\n【${sengoku.title}】${sengoku.summary}\n\n` +
-      `到了江户时代，这里由 **${L.edo_domains.join('、')}** 治理——${edo.summary}\n\n${P.tail}`;
+      `${t('o.edo', { list: joinList(L.edo_domains), summary: edo.summary })}\n\n${P.tail}`;
   }
   if (key === 'dialect') {
     const [hello, ...rest] = p.dialect.phrases;
-    return `「**${hello.phrase}**」！——${P.self}用${p.dialect.name}向你问好，意思是“${hello.meaning}”${hello.note ? `（${hello.note}）` : ''}。\n\n` +
-      `再教你两句：\n${rest.map((x) => `· 「**${x.phrase}**」＝${x.meaning}${x.note ? `（${x.note}）` : ''}`).join('\n')}\n\n` +
+    return `${t('o.hello', { phrase: hello.phrase, self: P.self, dialect: p.dialect.name, meaning: hello.meaning, note: paren(hello.note) })}\n\n` +
+      `${t('o.more')}\n${rest.map((x) => `· 「**${x.phrase}**」${t('o.eq')}${x.meaning}${paren(x.note)}`).join('\n')}\n\n` +
       `${p.dialect.features}\n\n${P.tail}`;
   }
   if (key === 'border') {
     const provs = L.ritsuryo_provinces
-      .map((x) => `· **${x.name}**（${x.kana}）— ${x.circuit}，${x.portion}` +
-        (x.cross_prefectures?.length ? `；此国今跨界，另一部分属于${x.cross_prefectures.join('、')}` : '')).join('\n');
-    return `${P.self}来给你摊开古地图：今天的${p.name.zh}在律令时代对应——\n${provs}\n\n` +
-      `${L.meiji_transition.boundary_note}\n\n` +
-      `【明治的县域变迁】${L.meiji_transition.summary}\n\n${P.tail}`;
+      .map((x) => `· **${x.name}**（${x.kana}）— ${label('circuit', x.circuit)} · ${x.portion}` +
+        (x.cross_prefectures?.length ? t('o.cross', { list: joinList(x.cross_prefectures) }) : '')).join('\n');
+    return `${t('o.border', { self: P.self, name: prefName(p) })}\n${provs}\n\n` +
+      `${L.meiji_transition.boundary_note}\n\n${t('o.meiji', { x: L.meiji_transition.summary })}\n\n${P.tail}`;
   }
   return null;
 }
 
+const kw = (key) => new RegExp(t(key), 'i');
+
 // 自由输入时，离线模式按关键词挑一个最接近的预置解答
 function offlineFreeText(text, p, P) {
-  if (/大名|战国|战况|武将|藩|江户|谁/.test(text)) return offlineAnswer('daimyo', p, P);
-  if (/方言|招呼|怎么说|口音|话/.test(text)) return offlineAnswer('dialect', p, P);
-  if (/界|令制|国|古代|明治|县/.test(text)) return offlineAnswer('border', p, P);
-  if (/梗|段子|偏见|吐槽|修罗场|笑话/.test(text)) {
-    return `说到这里的“地域修罗场”，${P.self}可听过不少：\n` +
-      `${p.regional_meme.map((m) => `· **${m.title}**：${m.text}`).join('\n')}\n\n——玩笑话，别当真。${P.tail}`;
+  if (kw('kw.daimyo').test(text)) return offlineAnswer('daimyo', p, P);
+  if (kw('kw.dialect').test(text)) return offlineAnswer('dialect', p, P);
+  if (kw('kw.border').test(text)) return offlineAnswer('border', p, P);
+  if (kw('kw.meme').test(text)) {
+    return `${t('o.meme', { self: P.self })}\n${p.regional_meme.map((m) => bullet(m.title, m.text)).join('\n')}\n\n${t('o.meme.end')}${P.tail}`;
   }
-  if (/名胜|景点|好玩|去哪|特产|好吃|美食|物产/.test(text)) {
-    return `${P.self}推荐你看看：\n${p.landmarks.map((x) => `· **${x.name}**：${x.note}`).join('\n')}\n\n` +
-      `再尝尝：\n${p.specialties.map((x) => `· **${x.name}**：${x.note}`).join('\n')}\n\n${P.tail}`;
+  if (kw('kw.tour').test(text)) {
+    return `${t('o.see', { self: P.self })}\n${p.landmarks.map((x) => bullet(x.name, x.note)).join('\n')}\n\n` +
+      `${t('o.taste')}\n${p.specialties.map((x) => bullet(x.name, x.note)).join('\n')}\n\n${P.tail}`;
   }
   return null;
 }
@@ -123,45 +142,37 @@ function battlePersona(b) {
   };
 }
 
-const BATTLE_QUESTIONS = [
-  { key: 'b_turn', text: '这场仗的胜负关键是什么？' },
-  { key: 'b_forces', text: '双方兵力各有多少？' },
-  { key: 'b_after', text: '战后天下格局如何变化？' },
-];
+const battleQuestions = () => ['b_turn', 'b_forces', 'b_after'].map((key) => ({ key, text: t(`q.${key}`) }));
 
 function buildBattlePrompt(b, field, P) {
   const { narrator, ...battle } = b;
-  return `你现在“附体”为历史人物 **${P.name}**（${b.narrator.title}），正身处「${b.name}」的战场，以第一人称说话，自称「${P.self}」。
-口吻：${P.voice}。
-以该人物在这场合战中的立场与见识回答；涉及其不可能知道的后世评价，用“据后世所传”之类的口吻带出。
-扮演仅限于语气与视角：不得美化杀戮，涉及兵力、动机等争议史实时注明“一说”。
+  return `${R.battle(P, b)}
 
-战役史料：
 <battle>
 ${JSON.stringify(battle, null, 1)}
 </battle>
-主战场所在地区：「${field.name.kanji}」（古：${field.historical_lineage.ritsuryo_provinces.map((x) => x.name).join('、')}）。
+${R.field(field, joinList(field.historical_lineage.ritsuryo_provinces.map((x) => x.name)))}
 
-回答规则：中文，150–300 字，多给具体的时间、人物、地名；可用 **加粗** 标出关键词。`;
+${RULES.reply}. ${RULES.rules}`;
 }
 
 function battleAnswer(key, b, P) {
   const k = b.key_points;
-  const sides = b.factions.map((f) => `**${f.name}**（${f.leader}）`).join(' 对 ');
-  if (key === 'b_turn') return `${P.self}来说说这一仗的要害：\n\n${k.turning_point}\n\n${sides}，胜负就在这里分出。\n\n${P.tail}`;
+  const sides = b.factions.map((f) => `**${f.name}**（${f.leader}）`).join(t('o.b.vs'));
+  if (key === 'b_turn') return `${t('o.b.turn', { self: P.self, x: k.turning_point, sides })}\n\n${P.tail}`;
   if (key === 'b_forces') {
-    return `两军阵容如下：\n${b.factions.map((f) => `· **${f.name}**（${f.leader}）：${f.strength}`).join('\n')}\n\n${k.forces}\n\n${P.tail}`;
+    return `${t('o.b.forces')}\n${b.factions.map((f) => bullet(`${f.name}（${f.leader}）`, f.strength)).join('\n')}\n\n${k.forces}\n\n${P.tail}`;
   }
-  if (key === 'b_after') return `此战之后——\n\n${k.aftermath}\n\n【战况速览】${b.brief}\n\n${P.tail}`;
+  if (key === 'b_after') return `${t('o.b.after', { x: k.aftermath, brief: b.brief })}\n\n${P.tail}`;
   return null;
 }
 
 function battleFreeText(text, b, P) {
-  if (/关键|转折|为什么|怎么赢|怎么输|胜负/.test(text)) return battleAnswer('b_turn', b, P);
-  if (/兵力|多少人|人数|规模/.test(text)) return battleAnswer('b_forces', b, P);
-  if (/之后|结果|影响|格局|后来/.test(text)) return battleAnswer('b_after', b, P);
-  if (/路线|进军|行军|从哪/.test(text)) {
-    return `各军进军路线：\n${b.march_routes.map((r) => `· **${r.from.name}** → ${r.to.name}：${r.desc}`).join('\n')}\n\n${P.tail}`;
+  if (kw('kw.b.turn').test(text)) return battleAnswer('b_turn', b, P);
+  if (kw('kw.b.forces').test(text)) return battleAnswer('b_forces', b, P);
+  if (kw('kw.b.after').test(text)) return battleAnswer('b_after', b, P);
+  if (kw('kw.b.routes').test(text)) {
+    return `${t('o.b.routes')}\n${b.march_routes.map((r) => `· **${r.from.name}** → ${r.to.name}：${r.desc}`).join('\n')}\n\n${P.tail}`;
   }
   return null;
 }
@@ -233,16 +244,16 @@ export async function* streamChat(rawCfg, system, messages, signal) {
   }
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
-    const err = new Error(`接口返回 ${res.status}：${detail.slice(0, 300)}`);
+    const err = new Error(t('api.status', { s: res.status, x: detail.slice(0, 300) }));
     err.status = res.status;
     throw err;
   }
   for await (const ev of readSSE(res)) {
     if (cfg.provider === 'claude') {
       if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') yield ev.delta.text;
-      else if (ev.type === 'error') throw new Error(ev.error?.message || '流式响应出错');
+      else if (ev.type === 'error') throw new Error(ev.error?.message || t('api.stream'));
     } else if (cfg.provider === 'gemini') {
-      if (ev.error) throw new Error(ev.error.message || '流式响应出错');
+      if (ev.error) throw new Error(ev.error.message || t('api.stream'));
       const parts = ev.candidates?.[0]?.content?.parts || [];
       // 跳过思考过程（thought），只输出正文
       const t = parts.filter((x) => !x.thought).map((x) => x.text || '').join('');
@@ -260,27 +271,27 @@ export async function testConnection(cfg) {
   const timer = setTimeout(() => ctrl.abort(), 30000);
   let out = '';
   try {
-    for await (const t of streamChat(cfg, '你是测试助手。', [{ role: 'user', content: '用不超过15个字向我问好。' }], ctrl.signal)) {
+    for await (const t of streamChat(cfg, t('tc.sys'), [{ role: 'user', content: t('tc.ask') }], ctrl.signal)) {
       out += t;
     }
-    if (!out.trim()) return { ok: false, msg: '连接成功但模型没有返回文字，请换一个模型试试。' };
-    return { ok: true, msg: `连接成功 ✓ 模型回复：「${out.trim().slice(0, 60)}」` };
+    if (!out.trim()) return { ok: false, msg: t('tc.empty') };
+    return { ok: true, msg: t('tc.ok', { x: out.trim().slice(0, 60) }) };
   } catch (err) {
     const s = err.status;
     const hint =
-      err.name === 'AbortError' ? '30 秒无响应，请检查 Base URL 与网络。'
+      err.name === 'AbortError' ? t('tc.timeout')
       // Gemini 对无效 Key 返回 400 而非 401，按错误内容判断
       : /api[ _-]?key|invalid.*key|unauthori[sz]ed|authentication/i.test(err.message)
-        ? 'API Key 无效：请重新复制 Key，注意不要带空格或漏字符。'
-      : s === 400 ? '请求被拒（400）：多半是模型名写错，或该模型不支持此接口。'
-      : s === 401 || s === 403 ? 'Key 无效或无权限（401/403）：请重新复制 API Key，注意不要带空格。'
-      : s === 404 ? '找不到接口或模型（404）：请检查 Base URL 和模型名。'
-      : s === 429 ? '额度用完或请求太频繁（429）：免费额度通常次日恢复，或换一个额度更高的模型。'
-      : s >= 500 ? `服务端错误（${s}）：稍后再试。`
+        ? t('tc.key')
+      : s === 400 ? t('tc.400')
+      : s === 401 || s === 403 ? t('tc.401')
+      : s === 404 ? t('tc.404')
+      : s === 429 ? t('tc.429')
+      : s >= 500 ? t('tc.5xx', { s })
       : /Failed to fetch|NetworkError|Load failed/i.test(err.message)
-        ? '请求没有发出去：Base URL 写错、网络不通，或该接口不允许浏览器跨域调用。'
+        ? t('tc.net')
         : '';
-    return { ok: false, msg: `${hint}\n详情：${err.message}`.trim() };
+    return { ok: false, msg: `${hint}\n${t('tc.detail', { x: err.message })}`.trim() };
   } finally {
     clearTimeout(timer);
   }
@@ -313,7 +324,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
   }
 
   const offlineHint = () =>
-    `<span class="hint">（离线模式 · 预置解答）<a data-act="settings">接入 API</a> 即可与${P.hero ? esc(P.name) : '案内人'}无限畅聊。</span>`;
+    `<span class="hint">${t('g.hint', { who: P.hero ? esc(P.name) : t('g.guide') })}</span>`;
 
   chat.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="settings"]')) openSettings();
@@ -371,7 +382,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       if (err.name === 'AbortError') return;
       history.pop();
       div.classList.add('err');
-      div.innerHTML = `${fmt(out)}${out ? '\n\n' : ''}⚠ 调用失败：${esc(err.message)}\n<span class="hint">请检查 <a data-act="settings">API 设置</a>（Key、Base URL、模型名，以及接口是否允许浏览器跨域）。</span>`;
+      div.innerHTML = `${fmt(out)}${out ? '\n\n' : ''}${esc(t('g.fail', { msg: err.message }))}\n<span class="hint">${t('g.fail.hint')}</span>`;
     } finally {
       div.classList.remove('cursor');
       if (!myCtrl.signal.aborted) setBusy(false);
@@ -385,7 +396,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const ans = battle
       ? (key ? battleAnswer(key, battle.b, P) : battleFreeText(text, battle.b, P))
       : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
-    typeOut(ans || `${P.self}一时答不上这个问题……离线时${P.self}只记得几段旧事，试试下面的快捷提问吧。`, offlineHint());
+    typeOut(ans || t('g.fallback', { self: P.self }), offlineHint());
   }
 
   form.addEventListener('submit', (e) => {
@@ -398,7 +409,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
 
   function refreshMode() {
     const cfg = getConfig();
-    mode.textContent = cfg?.apiKey ? `在线 · ${cfg.model}` : '离线模式';
+    mode.textContent = cfg?.apiKey ? t('chip.online', { model: cfg.model }) : t('chip.offline');
     mode.classList.toggle('online', !!cfg?.apiKey);
   }
 
@@ -416,14 +427,12 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     name.textContent = `${P.title} · ${P.name}`;
     const provs = (q) => q.historical_lineage.ritsuryo_provinces.map((x) => x.name).join('·');
     title.textContent = battle
-      ? `合战沙盘：${battle.b.name} · 主战场 ${battle.field.name.kanji}`
-      : P.hero
-        ? `名将附体中：${pref.name.kanji}（${provs(pref)}）`
-        : `正在为你讲述：${pref.name.kanji}（${provs(pref)}）`;
+      ? t('g.t.battle', { battle: battle.b.name, field: prefName(battle.field) })
+      : t(P.hero ? 'g.t.hero' : 'g.t.scholar', { name: prefName(pref), provs: provs(pref) });
     chat.innerHTML = '';
     addMsg('sys', banner);
     quick.innerHTML = '';
-    for (const q of battle ? BATTLE_QUESTIONS : quickQuestions(pref)) {
+    for (const q of battle ? battleQuestions() : quickQuestions(pref)) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'bubble';
@@ -444,14 +453,13 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     avatar.textContent = '案';
     avatar.style.removeProperty('--persona');
     avatar.classList.remove('hero');
-    name.textContent = '时空案内人';
-    title.textContent = '请先在地图上选择一个地区';
+    name.textContent = t('guide.name');
+    title.textContent = t('guide.pick');
     quick.innerHTML = '';
     input.disabled = true;
     send.disabled = true;
     chat.innerHTML = '';
-    addMsg('ai', fmt('我是**时空案内人**。我会随你所到之处更换身份——在江户是浮世绘里的猫，在京都是平安朝的女官，在长崎是出岛的兰学通词……\n\n' +
-      '切换到**名将附体**，还能请来织田信长、坂本龙马、伊达政宗亲自开讲；打开**合战演武**，名将们还会在沙盘上为你复盘经典战役。请先在左侧地图上点选一个地区吧。'));
+    addMsg('ai', fmt(t('g.intro')));
   }
 
   return {
@@ -461,33 +469,31 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     setPrefecture(p) {
       pref = p;
       if (battle) return; // 合战中不打断讲解，退出时再载入
-      load(`— 时空切换至 ${esc(p.name.kanji)} · 已载入该地史料 —`);
+      load(esc(t('g.b.switch', { name: prefName(p) })));
     },
     setMode(m) {
       personaMode = m === 'hero' ? 'hero' : 'scholar';
       if (pref && !battle) {
-        load(personaMode === 'hero'
-          ? `— 名将附体：${esc(pref.hero_persona.name)} 降临 —`
-          : '— 恢复博学史官模式 —');
+        load(esc(personaMode === 'hero' ? t('g.b.hero', { name: pref.hero_persona.name }) : t('g.b.scholar')));
       }
     },
     // 合战沙盘：切换为该战役核心名将的口吻
     startBattle(b, field) {
       battle = { b, field };
-      load(`— 合战沙盘：${esc(b.name)} · ${esc(b.narrator.name)} 登场 —`);
+      load(esc(t('g.b.battle', { battle: b.name, name: b.narrator.name })));
     },
     // 合战推演换阶段：名将解说本阶段战况（本地脚本，不调用 API）
     narrate(phase, i, total) {
       if (!battle) return;
       ctrl?.abort();
       finishTyping?.();
-      addMsg('sys', `— 第 ${i + 1} / ${total} 阶段 · ${esc(phase.title)}（${esc(phase.time)}）—`);
+      addMsg('sys', esc(t('g.b.phase', { i: i + 1, n: total, title: phase.title, time: phase.time })));
       typeOut(`${phase.line}\n\n【${phase.title}】${phase.desc}`);
     },
     endBattle() {
       if (!battle) return;
       battle = null;
-      if (pref) load(`— 退出合战沙盘 · 回到 ${esc(pref.name.kanji)} —`);
+      if (pref) load(esc(t('g.b.exit', { name: prefName(pref) })));
       else showIntro();
     },
   };

@@ -1,6 +1,7 @@
 // ECharts 日本全图：geo 坐标系 + 时空滤镜 / 时代滑块 / 风土图层 / 合战沙盘
 // 底图用 geo 组件渲染（regions 着色），map 系列挂在 geo 上（geoIndex）负责点击与悬停；
 // 首都脉冲、进军飞线、战场爆点、酒樽徽记都叠加在同一个 geo 坐标系里。
+import { t, label, prefName } from './i18n.js';
 const COLOR = {
   base: '#2e2e36',
   visited: 'rgba(212,163,115,0.55)',
@@ -12,74 +13,58 @@ const COLOR = {
 
 export const DEFAULT_VIEW = { center: [135, 34.6], zoom: 1.26 };
 
+// 分类配色；显示名由 i18n 的 label() 按当前语言给出
+const cats = (group, colors) => Object.fromEntries(Object.entries(colors).map(([k, c]) => [k, [label(group, k), c]]));
+
 // 历史版图下的滤镜；key(p) 从县数据取分类键
 export const FILTERS = {
-  explore: {
-    label: '探索进度',
-    caption: '点击地区即记为已探索',
-  },
+  explore: { label: label('filter', 'explore'), caption: label('filterCap', 'explore') },
   region: {
-    label: '现代区划',
-    caption: '八地方区分',
+    label: label('filter', 'region'), caption: label('filterCap', 'region'),
     key: (p) => p.region,
-    cats: {
-      北海道: ['北海道', '#6f9fb8'], 东北: ['东北', '#7a9a6a'], 关东: ['关东', '#c9925c'], 中部: ['中部', '#9a86b8'],
-      近畿: ['近畿', '#c25a56'], 中国: ['中国', '#b8a04f'], 四国: ['四国', '#4f9c94'], '九州·冲绳': ['九州·冲绳', '#b86a8e'],
-    },
+    cats: cats('region', {
+      北海道: '#6f9fb8', 东北: '#7a9a6a', 关东: '#c9925c', 中部: '#9a86b8',
+      近畿: '#c25a56', 中国: '#b8a04f', 四国: '#4f9c94', '九州·冲绳': '#b86a8e',
+    }),
   },
   circuit: {
-    label: '五畿七道',
-    caption: '按县内主要令制国所属之道着色',
+    label: label('filter', 'circuit'), caption: label('filterCap', 'circuit'),
     key: (p) => p.historical_lineage.ritsuryo_provinces[0].circuit,
-    cats: {
-      畿内: ['畿内', '#c23531'], 东海道: ['东海道', '#d4a373'], 东山道: ['东山道', '#7a9a6a'], 北陆道: ['北陆道', '#6f9fb8'],
-      山阴道: ['山阴道', '#8a7fb5'], 山阳道: ['山阳道', '#c9784f'], 南海道: ['南海道', '#4f9c94'], 西海道: ['西海道', '#b86a8e'],
-      令制外: ['令制外（虾夷·琉球）', '#4a4a53'],
-    },
+    cats: cats('circuit', {
+      畿内: '#c23531', 东海道: '#d4a373', 东山道: '#7a9a6a', 北陆道: '#6f9fb8',
+      山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 令制外: '#4a4a53',
+    }),
   },
   sengoku: {
-    label: '战国势力',
-    caption: '1572年（元龟三年）·信玄西上前夕，按县内主导势力着色',
+    label: label('filter', 'sengoku'), caption: label('filterCap', 'sengoku'),
     key: (p) => p.map_filters.sengoku_1572,
-    cats: {
-      oda: ['织田·德川同盟', '#c23531'], takeda: ['武田', '#e0843c'], uesugi: ['上杉', '#4f86b8'], hojo: ['后北条', '#7aa05a'],
-      date: ['伊达', '#8a6fc2'], satake: ['佐竹与北关东诸将', '#5aa3a0'], ou: ['奥羽诸侯', '#7d8796'], asakura: ['朝仓', '#c9a94f'],
-      ikko: ['一向宗（本愿寺）', '#9c6a48'], miyoshi: ['三好·松永', '#c46f9e'], mori: ['毛利', '#3b8f6a'],
-      chosokabe: ['长宗我部', '#d4b483'], otomo: ['大友', '#6a7fd0'], ryuzoji: ['龙造寺', '#a8505c'], shimazu: ['岛津', '#2f7f9f'],
-      gunyu: ['诸势力割据', '#4a4a53'], outside: ['虾夷·琉球', '#33333a'],
-    },
+    cats: cats('sg', {
+      oda: '#c23531', takeda: '#e0843c', uesugi: '#4f86b8', hojo: '#7aa05a', date: '#8a6fc2', satake: '#5aa3a0',
+      ou: '#7d8796', asakura: '#c9a94f', ikko: '#9c6a48', miyoshi: '#c46f9e', mori: '#3b8f6a', chosokabe: '#d4b483',
+      otomo: '#6a7fd0', ryuzoji: '#a8505c', shimazu: '#2f7f9f', gunyu: '#4a4a53', outside: '#33333a',
+    }),
   },
   bakumatsu: {
-    label: '幕末阵营',
-    caption: '戊辰战争（1868–69）时县内主导势力的立场',
+    label: label('filter', 'bakumatsu'), caption: label('filterCap', 'bakumatsu'),
     key: (p) => p.map_filters.bakumatsu,
-    cats: {
-      satcho: ['雄藩倒幕（萨长土肥）', '#c23531'], shinseifu: ['新政府方（归附诸藩）', '#d98b6a'],
-      sabaku: ['佐幕方（含奥羽越列藩同盟）', '#4f6fa8'], tenryo: ['天领直辖', '#d4a373'], outside: ['琉球王国', '#3a3a42'],
-    },
+    cats: cats('bk', { satcho: '#c23531', shinseifu: '#d98b6a', sabaku: '#4f6fa8', tenryo: '#d4a373', outside: '#3a3a42' }),
   },
 };
 
 // 风土图层
 export const LAYERS = {
-  history: { label: '历史版图' },
+  history: { label: label('layer', 'history') },
   ramen: {
-    label: '拉面流派图鉴',
-    caption: '按汤底大类着色 · 点击地区查看拉面构造',
+    label: label('layer', 'ramen'), caption: label('layerCap', 'ramen'),
     key: (p) => p.ramen.category,
-    cats: {
-      tonkotsu: ['豚骨系（乳白）', '#ece3d0'], shoyu: ['酱油（透红）', '#a8433a'], miso: ['味噌（金黄）', '#d9a441'],
-      shio: ['盐味·和风（淡青）', '#9fd0cc'], other: ['特色·混合系', '#7d6fa8'],
-    },
+    cats: cats('rm', { tonkotsu: '#ece3d0', shoyu: '#a8433a', miso: '#d9a441', shio: '#9fd0cc', other: '#7d6fa8' }),
   },
   sake: {
-    label: '地酒名酿地图',
-    caption: '按风味象限着色 · 酒樽徽记为全国知名铭柄',
+    label: label('layer', 'sake'), caption: label('layerCap', 'sake'),
     key: (p) => p.sake.quadrant,
-    cats: {
-      nojun_karakuchi: ['浓醇辛口', '#b5734a'], tanrei_karakuchi: ['淡丽辛口', '#6f9fb8'],
-      nojun_amakuchi: ['浓醇甘口', '#c9a94f'], tanrei_amakuchi: ['淡丽甘口', '#9cc28a'], shochu: ['烧酎·泡盛', '#8a6fc2'],
-    },
+    cats: cats('sk', {
+      nojun_karakuchi: '#b5734a', tanrei_karakuchi: '#6f9fb8', nojun_amakuchi: '#c9a94f', tanrei_amakuchi: '#9cc28a', shochu: '#8a6fc2',
+    }),
   },
 };
 
@@ -111,12 +96,14 @@ function centroid(geometry) {
 export function createMap(el, geo, prefs, { onSelect }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
+  const names = new Map(); // id → 当前语言的显示名
   const idByName = new Map();
   const center = new Map();
   for (const f of geo.features) {
     const { id, name } = f.properties;
     if (name !== prefs.get(id)?.name.kanji) console.warn('GeoJSON 名称未对齐', id, name);
     nameById.set(id, name);
+    names.set(id, prefs.get(id) ? prefName(prefs.get(id)) : name);
     idByName.set(name, id);
     center.set(id, centroid(f.geometry));
   }
@@ -154,7 +141,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
         name,
         itemStyle: { areaColor: field ? '#5a2422' : COLOR.muted, borderColor: field ? '#e0443c' : '#34343c', borderWidth: field ? 1.6 : 0.6, shadowBlur: 0 },
         emphasis: { itemStyle: { areaColor: field ? '#6e2c29' : '#30303a' } },
-        label: { show: field },
+        label: { show: field, formatter: () => names.get(id) },
       };
     }
     if (!sc) {
@@ -162,7 +149,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
         name,
         itemStyle: { areaColor: active ? COLOR.active : visitedSet.has(id) ? COLOR.visited : COLOR.base, borderColor: COLOR.border, borderWidth: 0.8, shadowBlur: 0 },
         emphasis: { itemStyle: { areaColor: COLOR.hover, borderColor: '#d4a373', borderWidth: 1.2 } },
-        label: { show: active },
+        label: { show: active, formatter: () => names.get(id) },
       };
     }
     const c = sc.cat(id)?.[1] || COLOR.base;
@@ -173,7 +160,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
         : { areaColor: c, borderColor: COLOR.border, borderWidth: 0.8, shadowBlur: 0 },
       // 悬停时提亮本色，避免盖住分类色
       emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.6 } },
-      label: { show: active },
+      label: { show: active, formatter: () => names.get(id) },
     };
   }
 
@@ -186,7 +173,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
       symbolSize: 14,
       itemStyle: { color: '#ffd27a', shadowBlur: 16, shadowColor: '#ffb648' },
       label: { show: true, position: 'right', color: '#ffe3a8', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.7)', textBorderWidth: 3, formatter: '中枢 · {b}' },
+        textBorderColor: 'rgba(0,0,0,.7)', textBorderWidth: 3, formatter: (x) => t('capital.label', { name: x.name }) },
       data: e ? [{ name: e.capital.name, value: e.capital.coords, desc: e.capital.description }] : [],
     };
   }
@@ -278,27 +265,28 @@ export function createMap(el, geo, prefs, { onSelect }) {
       borderColor: '#3a3a42',
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (params) => {
-        if (params.seriesId === 'capital') return `<b>中枢：${params.name}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
-        if (params.seriesId === 'routes') return `<b>${params.data.from} 出阵</b><br><span style="color:#b4ada3">${params.name}</span>`;
+        if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
+        if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#b4ada3">${params.name}</span>`;
         if (params.seriesId === 'barrels') {
           const p = prefs.get(params.data.pid);
-          return `<b>🍶 ${p.sake.brand}</b> · ${p.name.kanji}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
+          return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
         }
         if (['origins', 'impact', 'markers'].includes(params.seriesId)) return `<b>${params.name}</b>`;
         const p = prefs.get(params.value);
         if (!p) return '';
         const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name).join(' · ');
-        const seen = visitedSet.has(p.id) ? '<span style="color:#d4a373">✓ 已探索</span>' : '';
+        const sub = p.name.kanji === names.get(p.id) ? p.name.romaji : p.name.kanji;
+        const seen = visitedSet.has(p.id) ? `<span style="color:#d4a373">${t('tip.visited')}</span>` : '';
         const sc = state.battle ? null : scheme();
         const cat = sc?.cat(p.id);
         let extra = cat
           ? `<div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${cat[1]};margin-right:6px"></span>${sc.label}：${cat[0]}</div>`
           : '';
         if (state.layer === 'ramen' && !state.battle) extra += `<div style="color:#d4a373">🍜 ${p.ramen.style_name}</div>`;
-        if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#d4a373">🍶 ${p.sake.brand}（${p.sake.brewery}）</div>`;
-        return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${p.badge.icon} ${p.name.kanji} ${seen}</div>
-          <div style="color:#b4ada3">${p.region} · ${p.name.romaji}</div>
-          <div style="color:#d4a373;margin-top:3px">古：${provs}</div>${extra}`;
+        if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#d4a373">🍶 ${p.sake.brand} · ${p.sake.brewery}</div>`;
+        return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${p.badge.icon} ${names.get(p.id)} ${seen}</div>
+          <div style="color:#b4ada3">${label('region', p.region)} · ${sub}</div>
+          <div style="color:#d4a373;margin-top:3px">${t('tip.ancient', { list: provs })}</div>${extra}`;
       },
     },
     geo: {
@@ -311,7 +299,8 @@ export function createMap(el, geo, prefs, { onSelect }) {
       layoutCenter: ['50%', '50%'],
       layoutSize: '100%',
       itemStyle: { areaColor: COLOR.base, borderColor: COLOR.border, borderWidth: 0.8 },
-      label: { color: '#fff', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2 },
+      label: { color: '#fff', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2,
+        formatter: (x) => names.get(idByName.get(x.name)) || x.name },
       emphasis: { label: { show: true, color: '#fff', fontSize: 12 } },
       select: { disabled: true },
     },
@@ -361,7 +350,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
     // 当前图例：{ caption, items: [label, color, count?][] }
     legend() {
       if (state.battle) {
-        return { caption: `${state.battle.name} · 合战沙盘`, items: state.battle.factions.map((f) => [`${f.name}（${f.leader}）`, f.color]) };
+        return { caption: t('hud.legend', { name: state.battle.name }), items: state.battle.factions.map((f) => [`${f.name} · ${f.leader}`, f.color]) };
       }
       let caption;
       let cats;
@@ -378,7 +367,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
             .filter((x) => x[2]),
         };
       } else if (state.filter === 'explore') {
-        return { caption: FILTERS.explore.caption, items: [['未探索', COLOR.base], ['已探索', COLOR.visited], ['当前', COLOR.active]] };
+        return { caption: FILTERS.explore.caption, items: [[t('lg.unvisited'), COLOR.base], [t('lg.visited'), COLOR.visited], [t('lg.active'), COLOR.active]] };
       } else {
         ({ caption, cats, key } = FILTERS[state.filter]);
       }

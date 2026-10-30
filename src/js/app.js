@@ -4,6 +4,7 @@ import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
+import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -50,9 +51,9 @@ function setupSettings(guide, onResetVisited) {
       apiKey: key.value.trim(),
     };
     result.className = 'test-result';
-    if (!cfg.apiKey) { result.classList.add('bad'); result.textContent = '请先填写 API Key。'; return; }
+    if (!cfg.apiKey) { result.classList.add('bad'); result.textContent = t('set.needkey'); return; }
     btn.disabled = true;
-    result.textContent = '正在测试…';
+    result.textContent = t('set.testing');
     const r = await testConnection(cfg);
     result.classList.add(r.ok ? 'ok' : 'bad');
     result.textContent = r.msg;
@@ -98,7 +99,7 @@ function setupSearch(prefs, select) {
   const list = $('search-list');
   const entries = [...prefs.values()].map((p) => ({
     id: p.id,
-    label: `${p.name.zh} ${p.name.kanji} ${p.name.romaji}`,
+    label: [...new Set([prefName(p), p.name.kanji, p.name.romaji])].join(' '),
     hay: [p.name.zh, p.name.kanji, p.name.kana, p.name.romaji, p.slug,
       ...p.historical_lineage.ritsuryo_provinces.map((x) => x.name.replace(/国$/, ''))].join(' ').toLowerCase(),
   }));
@@ -185,27 +186,59 @@ function setupPersonaSwitch(guide) {
 function showEraBanner(era) {
   const el = $('era-banner');
   el.innerHTML = `<small>${esc(era.years)}</small><h3>${esc(era.short)}</h3>
-    <p class="cap">中枢：${esc(era.capital.name)}</p><p>${esc(era.banner)}</p>`;
+    <p class="cap">${esc(t('capital', { name: era.capital.name }))}</p><p>${esc(era.banner)}</p>`;
   el.classList.remove('show');
   void el.offsetWidth;
   el.classList.add('show');
 }
 
+// 界面语言切换（切换后重新载入页面，地址栏的 #pref 会保留）
+function setupLangSwitch() {
+  const box = $('lang-switch');
+  box.innerHTML = Object.entries(LANGS).map(([k, l]) =>
+    `<button type="button" role="radio" data-lang="${k}" aria-checked="${k === lang}" class="${k === lang ? 'on' : ''}" title="${l.label}">${l.short}</button>`).join('');
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-lang]');
+    if (b) setLang(b.dataset.lang);
+  });
+}
+
+// 合战面板折叠：收起后只留标题栏、阶段条与翻页按钮
+function setupHudFold() {
+  const hud = $('battle-hud');
+  const btn = $('hud-fold');
+  const apply = (folded) => {
+    hud.classList.toggle('folded', folded);
+    btn.setAttribute('aria-expanded', String(!folded));
+    btn.title = t(folded ? 'hud.expand' : 'hud.collapse');
+    btn.textContent = folded ? '▸' : '▾';
+  };
+  apply(!!uiPref.get('hudFolded', false));
+  btn.addEventListener('click', () => {
+    const folded = !hud.classList.contains('folded');
+    uiPref.set('hudFolded', folded);
+    apply(folded);
+  });
+}
+
 async function main() {
   const loading = $('loading');
+  applyStatic();
+  setupLangSwitch();
+  setupHudFold();
   let data;
   try {
-    data = await loadAll();
+    data = await loadAll(lang, deepMerge);
   } catch (err) {
     loading.textContent = '';
-    $('fileproto-msg').innerHTML = `史料读取失败（${err.message.replace(/[<>&]/g, '')}）。<br>请确认是在项目根目录启动的本地服务器：`;
+    $('fileproto-msg').innerHTML = t('err.load', { msg: err.message.replace(/[<>&]/g, '') });
     $('fileproto').hidden = false;
     console.error(err);
     return;
   }
   if (typeof echarts === 'undefined') {
     loading.classList.add('error');
-    loading.textContent = 'ECharts 未能从 CDN 加载，请检查网络连接。';
+    loading.textContent = t('err.echarts');
     return;
   }
 
@@ -253,7 +286,7 @@ async function main() {
   const range = $('tb-range');
   const playBtn = $('tb-play');
   $('tb-ticks').innerHTML = eras.map((e, i) =>
-    `<button type="button" data-i="${i}" title="${esc(e.name)}">${esc(e.short.replace('时代', ''))}</button>`).join('');
+    `<button type="button" data-i="${i}" title="${esc(e.name)}">${esc(label('eraTick', e.key))}</button>`).join('');
   let playTimer = null;
 
   function setEra(i, { banner = true } = {}) {
@@ -265,12 +298,12 @@ async function main() {
     if (era) {
       range.value = i;
       $('tb-era').textContent = era.name;
-      $('tb-capital').textContent = `中枢：${era.capital.name}`;
+      $('tb-capital').textContent = t('capital', { name: era.capital.name });
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.toggle('on', +b.dataset.i === i));
       if (banner) showEraBanner(era);
     } else {
-      $('tb-era').textContent = '时空穿越';
-      $('tb-capital').textContent = '拖动滑块，穿越九个时代';
+      $('tb-era').textContent = t('tb.idle');
+      $('tb-capital').textContent = t('tb.idle.cap');
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.remove('on'));
     }
     syncFilterButtons();
@@ -282,14 +315,14 @@ async function main() {
     clearInterval(playTimer);
     playTimer = null;
     playBtn.textContent = '▶';
-    playBtn.setAttribute('aria-label', '播放时代变迁');
+    playBtn.setAttribute('aria-label', t('tb.play'));
   }
   function togglePlay() {
     if (playTimer) { stopPlay(); return; }
     let i = app.eraIdx == null || app.eraIdx >= eras.length - 1 ? 0 : app.eraIdx + 1;
     setEra(i);
     playBtn.textContent = '❚❚';
-    playBtn.setAttribute('aria-label', '暂停');
+    playBtn.setAttribute('aria-label', t('tb.pause'));
     playTimer = setInterval(() => {
       i += 1;
       if (i >= eras.length) { stopPlay(); return; }
@@ -358,7 +391,7 @@ async function main() {
       <span class="bc-year">${b.year}</span>
       <span class="bc-name">${esc(b.name.replace(/\s*\(.*\)$/, ''))}</span>
       <span class="bc-field">⚔ ${esc(b.battlefield.name)}</span>
-      <span class="bc-sides">${b.factions.map((f) => `<i style="--c:${f.color}">${esc(f.name)}·${esc(f.leader.split('（')[0].split('等')[0])}</i>`).join('<em>vs</em>')}</span>
+      <span class="bc-sides">${b.factions.map((f) => `<i style="--c:${f.color}">${esc(f.name)} · ${esc(f.leader.split(/[（(]/)[0].replace(/等$/, ''))}</i>`).join('<em>vs</em>')}</span>
       <span class="bc-brief">${esc(b.brief)}</span>
     </button>`).join('');
   $('battle-list').addEventListener('click', (e) => {
@@ -377,7 +410,7 @@ async function main() {
   function stopAuto() {
     clearInterval(phaseTimer);
     phaseTimer = null;
-    $('hud-auto').textContent = '▶ 自动推演';
+    $('hud-auto').textContent = t('hud.auto');
   }
   function setPhase(i, { narrate = true } = {}) {
     const b = app.battle;
@@ -405,7 +438,7 @@ async function main() {
     if (phaseTimer) { stopAuto(); return; }
     const n = app.battle.phases.length;
     if (app.phase >= n - 1) setPhase(0); else setPhase(app.phase + 1);
-    $('hud-auto').textContent = '❚❚ 暂停推演';
+    $('hud-auto').textContent = t('hud.pause');
     phaseTimer = setInterval(() => {
       if (!app.battle || app.phase >= app.battle.phases.length - 1) { stopAuto(); return; }
       setPhase(app.phase + 1);
@@ -495,5 +528,5 @@ main().catch((err) => {
   const loading = $('loading');
   loading.classList.remove('hidden');
   loading.classList.add('error');
-  loading.textContent = `初始化失败：${err.message}`;
+  loading.textContent = t('err.init', { msg: err.message });
 });

@@ -677,6 +677,41 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .quad-none { justify-self: center; text-align: center; font: 700 15px var(--serif); color: #b9a3e0; }
 .quad-none small { font: 400 11px var(--sans); color: var(--muted); }
 
+/* ── 多语言 ───────────────────────────── */
+/* 日语界面优先用日文字形（戦・沢・県），中文界面保持简体字形 */
+:root[lang="ja"] {
+  --serif: "Noto Serif JP", "Noto Serif SC", "Yu Mincho", serif;
+  --sans: "Noto Sans JP", "Noto Sans SC", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+}
+:root[lang="en"] .subtitle, :root[lang="en"] .brand h1 { letter-spacing: .01em; }
+/* 英文时代名较长，刻度字号收小以免相连 */
+:root[lang="en"] .tb-ticks button { font-size: 9.5px; letter-spacing: -.01em; }
+.lang-switch {
+  display: inline-flex; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); flex: none;
+}
+.lang-switch button {
+  border: 0; background: transparent; cursor: pointer; min-width: 30px; padding: 4px 7px; border-radius: 6px;
+  font: 700 12px var(--sans); color: var(--muted);
+}
+.lang-switch button:hover { color: var(--kin); }
+.lang-switch button.on { background: var(--kin); color: var(--bg); }
+.untranslated {
+  margin: -6px 0 12px; padding: 6px 10px; border-radius: var(--r-sm); font-size: 12px;
+  color: #b9d3e6; background: rgba(93,138,168,.14); border: 1px dashed rgba(93,138,168,.5);
+}
+
+/* 合战面板折叠 */
+.hud-fold {
+  flex: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 13px; line-height: 1;
+  border: 1px solid var(--line); background: transparent; color: var(--text-2);
+}
+.hud-fold:hover { border-color: var(--kin); color: var(--kin); }
+.battle-hud.folded { padding: 8px 12px; }
+.battle-hud.folded .hud-sides, .battle-hud.folded .hud-brief { display: none; }
+.battle-hud.folded .hud-phases { margin: 8px 0 0; }
+.battle-hud.folded .hud-nav { margin-top: 6px; }
+.battle-hud.folded .hud-head b { font-size: 15px; }
+
 /* ── 窄屏 ───────────────────────────── */
 @media (max-width: 900px) {
   body { overflow: auto; }

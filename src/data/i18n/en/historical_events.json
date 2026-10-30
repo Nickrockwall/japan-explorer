@@ -1,0 +1,860 @@
+{
+  "timeline_eras": [
+    {
+      "name": "Asuka period (592–710)",
+      "short": "Asuka period",
+      "capital": {
+        "name": "Asuka, Yamato",
+        "description": "Empress Suiko built her palaces in Asuka; Prince Shōtoku introduced the twelve cap ranks and the Seventeen-Article Constitution"
+      },
+      "banner": "The Taika Reforms — the ritsuryō state takes shape in Asuka",
+      "legend": [
+        {
+          "label": "Yamato core (Kinai)"
+        },
+        {
+          "label": "Lands under kuni-no-miyatsuko / hyō rule"
+        },
+        {
+          "label": "Tsukushi · overseas frontline"
+        },
+        {
+          "label": "Frontier (Emishi · Hayato)"
+        },
+        {
+          "label": "Beyond the realm"
+        }
+      ]
+    },
+    {
+      "name": "Nara period (710–794)",
+      "short": "Nara period",
+      "capital": {
+        "name": "Heijō-kyō, Yamato",
+        "description": "The capital moved to Heijō-kyō in 710 and the Great Buddha of Tōdai-ji was consecrated — the high point of the ritsuryō state"
+      },
+      "banner": "The Five Home Provinces and Seven Circuits take shape, each province with its own capital",
+      "legend": [
+        {
+          "label": "Kinai"
+        },
+        {
+          "label": "Tōkaidō"
+        },
+        {
+          "label": "Tōsandō"
+        },
+        {
+          "label": "Hokurikudō"
+        },
+        {
+          "label": "San'indō"
+        },
+        {
+          "label": "San'yōdō"
+        },
+        {
+          "label": "Nankaidō"
+        },
+        {
+          "label": "Saikaidō"
+        },
+        {
+          "label": "Fortified frontier (Emishi lands)"
+        },
+        {
+          "label": "Beyond the realm"
+        }
+      ]
+    },
+    {
+      "name": "Heian period (794–1185)",
+      "short": "Heian period",
+      "capital": {
+        "name": "Heian-kyō, Yamashiro",
+        "description": "Emperor Kanmu moved the capital to Heian-kyō in 794; it stayed the imperial seat for over a thousand years"
+      },
+      "banner": "Cloistered rule and the rise of the samurai — on the eve of the Genpei War (c. 1180)",
+      "legend": [
+        {
+          "label": "Court · cloistered emperors (Kinai)"
+        },
+        {
+          "label": "Taira power (west)"
+        },
+        {
+          "label": "Minamoto · eastern warriors"
+        },
+        {
+          "label": "Ōshū Fujiwara"
+        },
+        {
+          "label": "Beyond the realm"
+        }
+      ]
+    },
+    {
+      "name": "Kamakura period (1185–1333)",
+      "short": "Kamakura period",
+      "capital": {
+        "name": "Kamakura, Sagami",
+        "description": "Minamoto no Yoritomo founded the first warrior government with Kamakura as its base"
+      },
+      "banner": "Warrior rule is born and the Kantō becomes the new political center",
+      "legend": [
+        {
+          "label": "Shogunate heartland (Kantō)"
+        },
+        {
+          "label": "Eastern constables (Kōshin'etsu, Tōkai, Hokuriku)"
+        },
+        {
+          "label": "Ōshū (under direct shogunal control)"
+        },
+        {
+          "label": "Rokuhara Tandai (west)"
+        },
+        {
+          "label": "Chinzei Tandai (Kyūshū)"
+        },
+        {
+          "label": "Ezo kanrei (Andō clan)"
+        },
+        {
+          "label": "Ryukyu"
+        }
+      ]
+    },
+    {
+      "name": "Muromachi period (1336–1467)",
+      "short": "Muromachi period",
+      "capital": {
+        "name": "Muromachi, Kyoto (Flower Palace)",
+        "description": "Ashikaga Yoshimitsu built the \"Flower Palace\"; the Northern and Southern Courts were reunited in 1392"
+      },
+      "banner": "Shugo daimyo hold the provinces while Kyoto and the Kamakura-fu stand side by side (c. 1400)",
+      "legend": [
+        {
+          "label": "Shogunate · Kyoto"
+        },
+        {
+          "label": "Provinces of the three kanrei houses (Hosokawa, Shiba, Hatakeyama)"
+        },
+        {
+          "label": "Provinces of the shishiki houses (Yamana, Akamatsu, Kyōgoku…)"
+        },
+        {
+          "label": "Kamakura-fu (ten Kantō provinces)"
+        },
+        {
+          "label": "Ōu tandai · local lords"
+        },
+        {
+          "label": "Other constables & temples (Ōuchi, Imagawa, Toki, Uesugi, Kōfuku-ji…)"
+        },
+        {
+          "label": "Kyūshū tandai & lords (Shōni, Ōtomo, Shimazu)"
+        },
+        {
+          "label": "Beyond the realm (Ezo · Three Kingdoms of Ryukyu)"
+        }
+      ]
+    },
+    {
+      "name": "Sengoku period (1467–1590)",
+      "short": "Sengoku period",
+      "capital": {
+        "name": "Kyoto (Nijō Palace)",
+        "description": "Kyoto remained the nominal center, but real power lay with Oda Nobunaga and the other warlords"
+      },
+      "banner": "Warring lords — the balance of power in 1572, on the eve of Shingen's westward campaign",
+      "legend": [
+        {
+          "label": "Oda–Tokugawa alliance"
+        },
+        {
+          "label": "Takeda"
+        },
+        {
+          "label": "Uesugi"
+        },
+        {
+          "label": "Later Hōjō"
+        },
+        {
+          "label": "Date"
+        },
+        {
+          "label": "Satake & northern Kantō lords"
+        },
+        {
+          "label": "Lords of Ōu"
+        },
+        {
+          "label": "Asakura"
+        },
+        {
+          "label": "Ikkō sect (Hongan-ji)"
+        },
+        {
+          "label": "Miyoshi & Matsunaga"
+        },
+        {
+          "label": "Mōri"
+        },
+        {
+          "label": "Chōsokabe"
+        },
+        {
+          "label": "Ōtomo"
+        },
+        {
+          "label": "Ryūzōji"
+        },
+        {
+          "label": "Shimazu"
+        },
+        {
+          "label": "Fragmented local powers"
+        },
+        {
+          "label": "Ezo · Ryukyu"
+        }
+      ]
+    },
+    {
+      "name": "Edo period (1603–1868)",
+      "short": "Edo period",
+      "capital": {
+        "name": "Edo Castle, Musashi",
+        "description": "Tokugawa Ieyasu founded the Edo shogunate in 1603 and Edo grew into a city of a million"
+      },
+      "banner": "The bakuhan system: shogunal lands, related houses, hereditary vassals and outer lords",
+      "legend": [
+        {
+          "label": "Tenryō · shogunal domain"
+        },
+        {
+          "label": "Shinpan (Gosanke, Echizen, Aizu…)"
+        },
+        {
+          "label": "Fudai daimyo"
+        },
+        {
+          "label": "Tozama daimyo"
+        },
+        {
+          "label": "Ryukyu (under Satsuma control)"
+        }
+      ]
+    },
+    {
+      "name": "Meiji period (1868–1912)",
+      "short": "Meiji period",
+      "capital": {
+        "name": "Tokyo (Imperial Palace)",
+        "description": "Edo was renamed Tokyo in 1868 and the emperor moved east"
+      },
+      "banner": "Domains abolished, ports opened, industry promoted",
+      "legend": [
+        {
+          "label": "The three fu (Tokyo, Kyoto, Osaka)"
+        },
+        {
+          "label": "Treaty ports (Niigata, Yokohama, Kobe, Nagasaki)"
+        },
+        {
+          "label": "Homes of the domain cliques (Satsuma, Chōshū, Tosa, Hizen)"
+        },
+        {
+          "label": "Industrial showcases (Tomioka, Yawata)"
+        },
+        {
+          "label": "Hokkaidō Development Commission (incl. treaty port Hakodate)"
+        },
+        {
+          "label": "Okinawa Prefecture (annexed 1879)"
+        },
+        {
+          "label": "Other prefectures"
+        }
+      ]
+    },
+    {
+      "name": "Present day (1945–)",
+      "short": "Present day",
+      "capital": {
+        "name": "Tokyo (Nagatachō)",
+        "description": "Nagatachō, home of the National Diet — the political heart of modern Japan"
+      },
+      "banner": "Postwar Japan: eight regions and 47 prefectures",
+      "legend": [
+        {
+          "label": "Hokkaidō"
+        },
+        {
+          "label": "Tōhoku"
+        },
+        {
+          "label": "Kantō"
+        },
+        {
+          "label": "Chūbu"
+        },
+        {
+          "label": "Kinki"
+        },
+        {
+          "label": "Chūgoku"
+        },
+        {
+          "label": "Shikoku"
+        },
+        {
+          "label": "Kyūshū & Okinawa"
+        }
+      ]
+    }
+  ],
+  "historic_battles": [
+    {
+      "name": "Battle of Okehazama (1560)",
+      "battlefield": {
+        "name": "Okehazama, Owari"
+      },
+      "factions": [
+        {
+          "name": "Oda army",
+          "leader": "Oda Nobunaga",
+          "strength": "c. 2,000–3,000 (one account)"
+        },
+        {
+          "name": "Imagawa army",
+          "leader": "Imagawa Yoshimoto",
+          "strength": "c. 25,000 (claimed 40,000)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kiyosu Castle"
+          },
+          "to": {
+            "name": "Okehazama"
+          },
+          "desc": "Set out from Kiyosu → prayed for victory at Atsuta Shrine → Zenshōji fort → charged into Okehazama"
+        },
+        {
+          "from": {
+            "name": "Sunpu"
+          },
+          "to": {
+            "name": "Okehazama"
+          },
+          "desc": "Marched west from Sunpu through Tōtōmi and Mikawa, camped at Kutsukake Castle, then advanced"
+        }
+      ],
+      "brief": "In 1560 Imagawa Yoshimoto led a huge army into Owari. Under cover of a sudden storm, Oda Nobunaga struck the Imagawa headquarters and killed Yoshimoto. The victory made Nobunaga's name; the Imagawa declined and Matsudaira Motoyasu (Ieyasu) broke free.",
+      "key_points": {
+        "turning_point": "Shielded by heavy rain, the Oda force fell on Yoshimoto's resting headquarters (accounts differ between a flanking surprise attack and a frontal assault).",
+        "forces": "Oda c. 2,000–3,000; Imagawa c. 25,000, claimed 40,000 (figures vary).",
+        "aftermath": "With Yoshimoto dead, Matsudaira Motoyasu left the Imagawa and in 1562 allied with Nobunaga (the Kiyosu Alliance); Nobunaga set out on his path to unify the realm."
+      },
+      "narrator": {
+        "name": "Oda Nobunaga",
+        "title": "\"The Fool of Owari\"",
+        "self": "I",
+        "opening": "Fifty years of human life, set against the heavens, are but a dream — all troops, hear me! Use this storm and take Yoshimoto's head!",
+        "tone": "domineering and decisive, terse, with the wild edge of an all-or-nothing gamble"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "5th month, 1560",
+          "desc": "Imagawa Yoshimoto entered Owari with his main army and camped at Kutsukake Castle; his vanguard under Matsudaira Motoyasu ran supplies into the isolated Ōdaka Castle.",
+          "line": "Imagawa's horde has reached Kutsukake… and my retainers beg me to hole up in the castle? Hmph.",
+          "markers": [
+            {
+              "name": "Kutsukake Castle"
+            },
+            {
+              "name": "Ōdaka Castle"
+            }
+          ]
+        },
+        {
+          "title": "Battle begins",
+          "time": "Dawn, 19th day, 5th month",
+          "desc": "The Imagawa took the Marune and Washizu forts. At dawn Nobunaga danced \"Atsumori\", rode out of Kiyosu with a handful of horsemen and gathered his men at Atsuta Shrine.",
+          "line": "Fifty years of human life… Bring my horse! Ride with me!",
+          "markers": [
+            {
+              "name": "Marune fort"
+            },
+            {
+              "name": "Atsuta Shrine"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Noon, 19th day",
+          "desc": "A sudden downpour let the Oda force close in unseen and strike the Imagawa headquarters resting on Okehazama-yama.",
+          "line": "Heaven is with me! Ride the storm straight at Yoshimoto's camp — one target only: his head!",
+          "markers": [
+            {
+              "name": "Imagawa headquarters"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon, 19th day",
+          "desc": "Mōri Shinsuke struck down Imagawa Yoshimoto and the Imagawa army broke. Matsudaira Motoyasu returned to Okazaki and declared independence, later allying with Nobunaga.",
+          "line": "Yoshimoto is dead! …After today, the whole realm will know the name Oda of Owari.",
+          "markers": [
+            {
+              "name": "Okazaki Castle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fourth Battle of Kawanakajima (1561)",
+      "battlefield": {
+        "name": "Hachimanbara, Kawanakajima, Shinano"
+      },
+      "factions": [
+        {
+          "name": "Takeda army",
+          "leader": "Takeda Shingen",
+          "strength": "c. 20,000 (one account)"
+        },
+        {
+          "name": "Uesugi army",
+          "leader": "Uesugi Kenshin",
+          "strength": "c. 13,000 (one account)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Tsutsujigasaki (Kōfu)"
+          },
+          "to": {
+            "name": "Hachimanbara"
+          },
+          "desc": "Left Kōfu for Kaizu Castle; a detachment raided Saijosan by night while the main army deployed at Hachimanbara"
+        },
+        {
+          "from": {
+            "name": "Kasugayama Castle"
+          },
+          "to": {
+            "name": "Hachimanbara"
+          },
+          "desc": "Left Kasugayama, camped on Saijosan by way of Zenkō-ji, saw through the plan and crossed the river by night"
+        }
+      ],
+      "brief": "In the fourth clash at Kawanakajima the Takeda split their army to raid Saijosan by night (the \"woodpecker\" tactic). Kenshin saw through it, slipped down the mountain overnight and fell on Shingen's headquarters out of the fog at Hachimanbara. Both sides suffered heavily and the result was a draw.",
+      "key_points": {
+        "turning_point": "Kenshin saw through the \"woodpecker\" plan and came down first; when the Takeda detachment returned the battle became a deadlock. The famous duel in which Kenshin rode alone into Shingen's camp is legend.",
+        "forces": "Takeda c. 20,000; Uesugi c. 13,000 (figures vary).",
+        "aftermath": "Takeda Nobushige and Yamamoto Kansuke were killed; northern Shinano stayed largely under Takeda control and the rivalry went on to a fifth encounter."
+      },
+      "narrator": {
+        "name": "Uesugi Kenshin",
+        "title": "The Dragon of Echigo",
+        "self": "I",
+        "opening": "The fog is lifting — Shingen, your woodpecker pecked at an empty tree! Kuruma-gakari formation, follow me into Hachimanbara!",
+        "tone": "lofty and righteous with an otherworldly air, terse and solemn; mark the duel and similar tales as legend"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "8th month, 1561",
+          "desc": "Kenshin camped on Saijosan with about 13,000 men, deep in Takeda territory, directly threatening Kaizu Castle.",
+          "line": "Here I sit on Saijosan — let us see how Shingen answers.",
+          "markers": [
+            {
+              "name": "Saijosan"
+            },
+            {
+              "name": "Kaizu Castle"
+            }
+          ]
+        },
+        {
+          "title": "Battle begins",
+          "time": "Night of the 9th day, 9th month",
+          "desc": "Shingen adopted Yamamoto Kansuke's \"woodpecker\" plan: a detachment would raid Saijosan by night while the main army waited at Hachimanbara for the Uesugi to be driven down.",
+          "line": "More cooking smoke than usual over Kaizu… Shingen, you strike tonight, don't you?",
+          "markers": [
+            {
+              "name": "Kaizu Castle"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Dawn, 10th day",
+          "desc": "Kenshin saw through the plan and quietly crossed the Chikuma River overnight. When the fog lifted, the Uesugi were already upon Shingen's headquarters, attacking in rotating waves.",
+          "line": "The fog has lifted — Shingen, I am right before your eyes!",
+          "markers": [
+            {
+              "name": "Amenomiya ford"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon, 10th day",
+          "desc": "The Takeda detachment returned and the Uesugi, caught front and rear, withdrew. Takeda Nobushige and Yamamoto Kansuke were killed; losses were heavy on both sides and the outcome was undecided.",
+          "line": "This battle settled nothing… but I have nothing to be ashamed of.",
+          "markers": [
+            {
+              "name": "Zenkō-ji"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Sekigahara (1600)",
+      "battlefield": {
+        "name": "Sekigahara, Mino"
+      },
+      "factions": [
+        {
+          "name": "Eastern army",
+          "leader": "Tokugawa Ieyasu",
+          "strength": "c. 75,000 (one account)"
+        },
+        {
+          "name": "Western army",
+          "leader": "Ishida Mitsunari",
+          "strength": "c. 80,000 incl. non-combatants (one account)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Edo Castle"
+          },
+          "to": {
+            "name": "Sekigahara"
+          },
+          "desc": "Ieyasu led the main army west along the Tōkaidō via Kiyosu to Akasaka in Mino"
+        },
+        {
+          "from": {
+            "name": "Edo Castle"
+          },
+          "to": {
+            "name": "Sekigahara"
+          },
+          "desc": "Hidetada took 30,000+ men along the Nakasendō, was held up at Ueda Castle by Sanada Masayuki and missed the battle"
+        },
+        {
+          "from": {
+            "name": "Sawayama Castle"
+          },
+          "to": {
+            "name": "Sekigahara"
+          },
+          "desc": "Mitsunari moved from Sawayama into Ōgaki Castle, then marched through the rainy night to deploy at Sekigahara"
+        },
+        {
+          "from": {
+            "name": "Osaka Castle"
+          },
+          "to": {
+            "name": "Sekigahara"
+          },
+          "desc": "The western generals first took Fushimi Castle, then marched east to join Mitsunari"
+        }
+      ],
+      "brief": "After Toyotomi Hideyoshi's death, Tokugawa Ieyasu and Ishida Mitsunari came to blows. On the 15th day of the 9th month, 1600, they met at Sekigahara; Kobayakawa Hideaki and others defected from the West, and the East won within half a day. Ieyasu took the realm and founded the Edo shogunate three years later.",
+      "key_points": {
+        "turning_point": "Kobayakawa Hideaki turned on Ōtani Yoshitsugu's position and Wakisaka and three others followed in a chain of defections; the Mōri and Kikkawa never moved. Ieyasu's \"prodding volley\" at Matsuo-yama is one account.",
+        "forces": "East c. 75,000; West c. 80,000, though far fewer actually fought (figures vary).",
+        "aftermath": "Mitsunari was executed and western daimyo were stripped or reduced; Ieyasu became shogun in 1603, and the Toyotomi fell at the Summer Siege of Osaka in 1615."
+      },
+      "narrator": {
+        "name": "Tokugawa Ieyasu",
+        "title": "Commander of the Eastern Army",
+        "self": "I",
+        "opening": "Today decides the realm. Is Kingo Chūnagon still sitting on the fence? — Pass the order: fire on Matsuo-yama and help him make up his mind!",
+        "tone": "calm and patient with hidden impatience; the \"prodding volley\" is one account and should be marked so"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "7th–8th months, 1600",
+          "desc": "While Ieyasu marched against the Uesugi, Mitsunari raised his army; the West took Fushimi Castle, while Hidetada's detachment on the Nakasendō was pinned at Ueda Castle by Sanada Masayuki.",
+          "line": "So Mitsunari has made his move… is Hidetada still tangled up with the Sanada?",
+          "markers": [
+            {
+              "name": "Fushimi Castle"
+            },
+            {
+              "name": "Ueda Castle"
+            }
+          ]
+        },
+        {
+          "title": "Battle begins",
+          "time": "Night of the 14th day, 9th month",
+          "desc": "Ieyasu reached Akasaka in Mino; the western main force abandoned Ōgaki Castle, marched through the rainy night to Sekigahara and deployed around Sasao-yama.",
+          "line": "Mitsunari has left Ōgaki? Good — we settle it at Sekigahara.",
+          "markers": [
+            {
+              "name": "Ōgaki Castle"
+            },
+            {
+              "name": "Akasaka, Mino"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Noon, 15th day",
+          "desc": "The battle began once the morning fog lifted, and the West held the upper hand at first. At noon Kobayakawa Hideaki came down from Matsuo-yama against Ōtani Yoshitsugu, and Wakisaka and three others defected in turn.",
+          "line": "The banners on Matsuo-yama are moving… Kingo has finally made up his mind!",
+          "markers": [
+            {
+              "name": "Matsuo-yama"
+            },
+            {
+              "name": "Sasao-yama (Mitsunari's camp)"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon, 15th day",
+          "desc": "The West collapsed; Mitsunari fled, was captured and executed. Shimazu Yoshihiro broke out straight through the Eastern lines. The realm now belonged to Ieyasu.",
+          "line": "Decided in half a day. …The realm belongs, at last, to the Tokugawa.",
+          "markers": [
+            {
+              "name": "Ise road (Shimazu's escape)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Dan-no-ura (1185)",
+      "battlefield": {
+        "name": "Dan-no-ura, Nagato"
+      },
+      "factions": [
+        {
+          "name": "Minamoto",
+          "leader": "Minamoto no Yoshitsune",
+          "strength": "c. 840 ships (Azuma Kagami)"
+        },
+        {
+          "name": "Taira",
+          "leader": "Taira no Tomomori",
+          "strength": "c. 500 ships (one account)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Yashima"
+          },
+          "to": {
+            "name": "Dan-no-ura"
+          },
+          "desc": "After Yashima, Yoshitsune's fleet sailed west and gathered ships in Suō"
+        },
+        {
+          "from": {
+            "name": "Funai, Bungo"
+          },
+          "to": {
+            "name": "Akamagaseki"
+          },
+          "desc": "Minamoto no Noriyori had already secured northern Kyūshū, cutting off the Taira retreat"
+        },
+        {
+          "from": {
+            "name": "Ichi-no-Tani"
+          },
+          "to": {
+            "name": "Dan-no-ura"
+          },
+          "desc": "Beaten at Ichi-no-Tani and Yashima, the Taira made a last stand from Hikoshima"
+        }
+      ],
+      "brief": "The final battle of the Genpei War. The Taira, holding Hikoshima, met Yoshitsune's fleet in the Kanmon Strait. When the battle turned, the Taira were crushed; the child Emperor Antoku went into the sea with his grandmother Nii-no-Ama, and the Taira clan was destroyed.",
+      "key_points": {
+        "turning_point": "In the afternoon the current turned and the Minamoto went on the offensive (the tidal explanation is the common view, though recently disputed); the Tale of the Heike says Yoshitsune ordered his men to shoot the enemy's oarsmen and helmsmen.",
+        "forces": "Minamoto c. 840 ships, Taira c. 500 (per the Azuma Kagami and others; figures vary).",
+        "aftermath": "The Taira were destroyed and the sacred sword sank into the sea; Minamoto no Yoritomo established warrior rule and the Kamakura period began."
+      },
+      "narrator": {
+        "name": "Minamoto no Yoshitsune",
+        "title": "The Minamoto's brilliant general",
+        "self": "I",
+        "opening": "The tide is about to turn! All hands — shoot the helmsmen and oarsmen on the Heike ships first! Today the Heike come to their end.",
+        "tone": "young, bold and sharp, with a genius's pride and a touch of loneliness"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "2nd–3rd months, 1185",
+          "desc": "Beaten at Yashima, the Taira held Hikoshima in Nagato; Minamoto no Noriyori already controlled northern Kyūshū, cutting off their retreat.",
+          "line": "The Heike have nowhere left to go — my brother Noriyori to the west, my fleet to the east.",
+          "markers": [
+            {
+              "name": "Hikoshima"
+            }
+          ]
+        },
+        {
+          "title": "Battle begins",
+          "time": "Morning, 24th day, 3rd month",
+          "desc": "The fleets clashed in the Kanmon Strait. In the morning the current ran east, and the Taira, riding it, had the upper hand.",
+          "line": "The current is against us… hold on until it turns!",
+          "markers": [
+            {
+              "name": "Manju-shima"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Afternoon, 24th day",
+          "desc": "The current turned (the common view) and the Minamoto went on the attack; the Tale of the Heike says Yoshitsune had his men shoot the Taira oarsmen and helmsmen.",
+          "line": "The tide has turned! Shoot the helmsmen first — leave their ships dead in the water!",
+          "markers": [
+            {
+              "name": "Hayatomo Strait"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Evening, 24th day",
+          "desc": "The Taira were routed. Nii-no-Ama leapt into the sea with the young Emperor Antoku, Taira no Tomomori followed, and the Taira clan was no more.",
+          "line": "…The end of the Heike. Yet the sacred sword lies at the bottom of the sea — what will my brother say?",
+          "markers": [
+            {
+              "name": "Akama Shrine (Emperor Antoku)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Satsuma Rebellion (1877)",
+      "battlefield": {
+        "name": "Tabaruzaka, Higo"
+      },
+      "factions": [
+        {
+          "name": "Satsuma army",
+          "leader": "Saigō Takamori",
+          "strength": "c. 30,000 (one account)"
+        },
+        {
+          "name": "Government army",
+          "leader": "Yamagata Aritomo et al. (commander-in-chief Prince Arisugawa Taruhito)",
+          "strength": "c. 60,000 in total (one account)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kagoshima"
+          },
+          "to": {
+            "name": "Tabaruzaka"
+          },
+          "desc": "Set out through the February snow, marched north via Hitoyoshi to besiege Kumamoto Castle, then sent troops north to block the relief force"
+        },
+        {
+          "from": {
+            "name": "Hakata"
+          },
+          "to": {
+            "name": "Tabaruzaka"
+          },
+          "desc": "The main government army came south from Fukuoka via Nankan and Takase toward Tabaruzaka"
+        },
+        {
+          "from": {
+            "name": "Nagasaki"
+          },
+          "to": {
+            "name": "Kumamoto Castle"
+          },
+          "desc": "A rear force landed by sea near Yatsushiro and marched north to relieve Kumamoto Castle"
+        }
+      ],
+      "brief": "When the Meiji government abolished samurai privileges, disaffected Satsuma samurai rose under Saigō Takamori. Unable to take Kumamoto Castle, they fought government forces at Tabaruzaka for seventeen days and nights before falling back; Saigō died at Shiroyama, ending Japan's last civil war.",
+      "key_points": {
+        "turning_point": "Tani Tateki held Kumamoto Castle for over fifty days; in seventeen days of fighting at Tabaruzaka the government's numbers, supplies and modern rifles wore down the Satsuma army, and the rear landing left it attacked from both sides.",
+        "forces": "Satsuma c. 30,000; government forces c. 60,000 in total (figures vary).",
+        "aftermath": "Saigō took his own life at Shiroyama in Kagoshima on 24 September; armed samurai resistance ended and political struggle shifted to the Freedom and People's Rights Movement."
+      },
+      "narrator": {
+        "name": "Saigō Takamori",
+        "title": "Commander of the Satsuma army",
+        "self": "I",
+        "opening": "We go only to question the government… Kumamoto Castle is merely on our way — everyone, march north with me!",
+        "tone": "generous and plain-spoken, deeply loyal, with an undertone of tragedy"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "February 1877",
+          "desc": "Saigō Takamori led the Satsuma army out of Kagoshima through unusually heavy snow, heading north via Hitoyoshi toward Kumamoto Castle.",
+          "line": "We are only going to Tokyo to question the government — Kumamoto Castle is just on the way.",
+          "markers": [
+            {
+              "name": "Hitoyoshi"
+            }
+          ]
+        },
+        {
+          "title": "Battle begins",
+          "time": "From 22 February",
+          "desc": "Tani Tateki and the Kumamoto garrison held the castle; unable to storm it, the Satsuma army settled into a long siege.",
+          "line": "The Kumamoto garrison… so stubborn.",
+          "markers": [
+            {
+              "name": "Kumamoto Castle"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "4–20 March",
+          "desc": "At Tabaruzaka the Satsuma army held off the government relief force for seventeen days and nights; the government broke through with superior numbers and supplies, sending in its sword-wielding Battōtai as well.",
+          "line": "The rain keeps falling, men and horses soaked… can we not get past Tabaruzaka?",
+          "markers": [
+            {
+              "name": "Tabaruzaka"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "April–September",
+          "desc": "The rear force landed near Yatsushiro and the siege of Kumamoto Castle was lifted on 14 April. The Satsuma army fell back south, and on 24 September Saigō took his own life at Shiroyama in Kagoshima.",
+          "line": "…Shin-don, this is far enough.",
+          "markers": [
+            {
+              "name": "Shiroyama"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
