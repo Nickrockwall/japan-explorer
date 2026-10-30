@@ -4,7 +4,7 @@
 
 **▶ Try it online: https://nickrockwall.github.io/japan-explorer/**
 
-![Japan Explorer](src/assets/og-cover.png)
+![Japan Explorer](src/assets/og-cover-en.png)
 
 Tap any prefecture on the map of Japan to see which ancient provinces it once belonged to and how it changed from the ritsuryō era to the present day. Drag the timeline through nine historical periods, replay famous battles on a sandbox map, and chat with an AI history guide whose persona changes from region to region.
 

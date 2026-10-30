@@ -4,7 +4,7 @@
 
 **▶ オンラインで遊ぶ：https://nickrockwall.github.io/japan-explorer/**
 
-![Japan Explorer](src/assets/og-cover.png)
+![Japan Explorer](src/assets/og-cover-ja.png)
 
 日本地図から好きな都道府県を選ぶと、そこが昔どの令制国だったのか、律令の世から現代までどう移り変わってきたのかがわかります。タイムラインを動かして九つの時代を旅し、沙盤の上で名だたる合戦を再現し、地方ごとに姿を変える AI 歴史案内人とおしゃべりもできます。
 
