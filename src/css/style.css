@@ -63,6 +63,7 @@ button, input, select { font: inherit; color: inherit; }
   flex: none;
 }
 .brand { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 260px; }
+.brand > div { min-width: 0; } /* 让副标题的省略号生效 */
 .brand-seal {
   width: 38px; height: 38px; flex: none;
   display: grid; place-items: center;
@@ -743,6 +744,49 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .battle-hud.folded .hud-nav { margin-top: 6px; }
 .battle-hud.folded .hud-head b { font-size: 15px; }
 
+/* ── 市区町村下钻 ───────────────────────────── */
+.muni { position: absolute; inset: 0; z-index: 6; background: var(--bg); }
+.muni[hidden] { display: none; }
+body.muni-open .map-toolbar, body.muni-open .timebar, body.muni-open .era-banner,
+body.muni-open #legend, body.muni-open .battle-hud { display: none; }
+.muni-map { position: absolute; inset: 0; }
+.muni-bar {
+  position: absolute; top: 12px; left: 16px; right: 16px; z-index: 2;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.muni-back { padding: 6px 12px; font-size: 13px; background: rgba(24,24,28,.9); }
+.muni-title { flex: 1; min-width: 0; font: 700 16px var(--serif); letter-spacing: .04em; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.muni-modes { display: inline-flex; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: rgba(24,24,28,.9); }
+.muni-modes button { border: 0; background: transparent; cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; color: var(--text-2); }
+.muni-modes button[aria-checked="true"] { background: var(--kin); color: var(--bg); font-weight: 700; }
+.muni-legend { bottom: 14px; max-width: min(420px, calc(100% - 32px)); }
+.muni-legend .legend-items i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.muni-ramp { height: 8px; border-radius: 4px; margin: 4px 0 2px; width: 220px; max-width: 100%; }
+.muni-ramp-l { display: flex; justify-content: space-between; width: 220px; max-width: 100%; font-size: 11px; color: var(--muted); }
+.muni-credit { margin-top: 6px; font-size: 10px; color: var(--muted); line-height: 1.4; }
+.muni-card {
+  position: absolute; right: 16px; bottom: 14px; z-index: 3; width: 290px; max-width: calc(100% - 32px);
+  padding: 14px 16px; border-radius: 12px; background: rgba(30,30,35,.96); border: 1px solid rgba(212,163,115,.45);
+  box-shadow: 0 10px 28px rgba(0,0,0,.5);
+}
+.muni-card[hidden] { display: none; }
+.muni-card-x {
+  position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--text-2); font-size: 15px; line-height: 1;
+}
+.muni-name { font: 900 19px var(--serif); padding-right: 30px; }
+.muni-sub { color: var(--text-2); font-size: 12px; margin-bottom: 8px; }
+.muni-row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; padding: 4px 0; border-top: 1px solid var(--line-soft); font-size: 12.5px; }
+.muni-row span { color: var(--muted); }
+.muni-row b { font-weight: 500; }
+.muni-row small { display: block; color: var(--kin); font-size: 11.5px; }
+.muni-wiki { display: inline-block; margin-top: 8px; font-size: 12.5px; color: var(--kin); }
+.muni-tip .muni-name { font-size: 15px; padding: 0; }
+.muni-tip .muni-sub { margin-bottom: 4px; }
+.muni-tip .muni-row { grid-template-columns: 52px minmax(0, 1fr); padding: 2px 0; font-size: 12px; }
+.muni-loading { position: absolute; inset: 0; display: grid; place-items: center; }
+.muni-loading[hidden] { display: none; }
+
 /* 合战名将解说浮窗（仅窄屏显示，见下方媒体查询） */
 .battle-voice { display: none; }
 .bv-head { display: flex; align-items: center; gap: 8px; }
@@ -768,6 +812,12 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
   .legend-items { max-width: none; }
   .detail { overflow: visible; }
   .map-hint { display: none; }
+  /* 市区町村：选中时详情卡占满底部，图例让位 */
+  .muni-bar { top: 10px; left: 10px; right: 10px; gap: 8px; }
+  .muni-title { flex-basis: 100%; order: 3; font-size: 14px; }
+  .muni-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-width: none; }
+  .muni.has-card .muni-legend { display: none; }
+  .muni-legend { left: 10px; bottom: 10px; }
   /* 合战：地图加高，底部显示名将解说 */
   body.in-battle .map-pane { height: min(80vh, 680px); }
   body.in-battle .map-legend { display: none; }

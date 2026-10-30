@@ -186,6 +186,10 @@ export function renderDetail(el, p, { stampedAt, focus } = {}) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.8-4M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           <span>${t('share')}</span>
         </button>
+        <button class="share-btn" type="button" data-act="muni" title="${esc(t('muni.open.title'))}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <span>${t('muni.open')}</span>
+        </button>
       </div>
     </div>
 

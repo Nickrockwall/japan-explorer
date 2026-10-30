@@ -215,6 +215,16 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 飞线 `effect.trailLength` 必须为 0：拖尾会开启 zlevel 运动模糊，缩放时留残影。
 - 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线用于正文。
 
+## 市区町村下钻（muni.js）
+
+- 详卡「市区町村」按钮或链接 `#pref=23&muni=1` 进入：在地图区上层叠一张独立的 ECharts 地图（`#muni`，`body.muni-open` 隐藏工具条/滑块/图例），全国地图不动。开始合战会自动关闭下钻，Esc 退出。
+- 数据 `src/data/municipalities/NN.json`（GeoJSON，每县一个，进入时才加载）由 `python -X utf8 tools/build_municipalities.py [缓存目录]` 生成：
+  - 边界：国土数値情報（行政区域）经 smartnews-smri/japan-topography 简化 1%，坐标保留 3 位小数；**必须注明「国土数値情報（行政区域データ）」（国土交通省）を加工して作成**（图例与 README 已写）。
+  - 读音 / 英文名 / 人口：Wikidata（P1814 / en label / P1082），缺的在脚本 `MANUAL` 里手补。
+  - `province`（主要旧国，决定配色）：多国县取自人工对照表 `tools/province_overrides.json`（`default` + 例外名单，`"-"` = 令制外），单国县即该国。`partial`：Wikidata 沿「町村→郡→国」与「合并前町村 P1365」查到的其他旧国，只保留本县令制国列表里有的；对照表 `partial` 写了就以人工为准（空列表 = 排除误报）。脚本结束会列出对照表与 Wikidata 不一致的条目，需人工复核。
+  - `remote`：远离本土的岛（北方领土、伊豆诸岛与小笠原、奄美与吐噶喇），不参与初始取景。
+- 地图内部以团体代码作为区域名（同县可能重名，如北海道两个泊村），显示名用 `label`。
+
 ## 约定
 
 - 跨界令制国（陆奥、出羽、武藏、摄津、丹波、纪伊、肥前、丰前、日向、伊豆、下总）在 `cross_prefectures` 中注明，前端卡片显示「跨界」小标签。

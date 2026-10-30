@@ -4,6 +4,7 @@ import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
+import { createMuniView } from './muni.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -337,7 +338,29 @@ async function main() {
       renderCurrent();
       guide.setPrefecture(prefs.get(id));
       history.replaceState(null, '', stateHash(id));
+      if (muni.open) openMuni(id);
     },
+  });
+
+  // ── 市区町村下钻 ──
+  const muni = createMuniView($('muni'), { onClose: () => closeMuni() });
+  function openMuni(id) {
+    if (app.battle) exitBattle();
+    stopPlay();
+    document.body.classList.add('muni-open');
+    muni.show(prefs.get(id));
+    history.replaceState(null, '', `${stateHash(id)}&muni=1`);
+    if (matchMedia(NARROW).matches) $('muni').closest('.map-pane').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+  function closeMuni() {
+    if (!muni.open) return;
+    muni.hide();
+    document.body.classList.remove('muni-open');
+    map.resize(); // 窗口在下钻期间改过大小时，全国地图需要重算
+    history.replaceState(null, '', stateHash(app.currentId));
+  }
+  detailEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="muni"]') && app.currentId) openMuni(app.currentId);
   });
 
   // ── 时空穿越滑块 ──
@@ -504,6 +527,7 @@ async function main() {
   });
 
   function startBattle(b) {
+    closeMuni();
     stopPlay();
     stopAuto();
     if (app.battle) map.endBattle(app.savedView);
@@ -541,13 +565,15 @@ async function main() {
   }
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && app.battle && !document.querySelector('dialog[open]')) exitBattle();
+    if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+    if (app.battle) exitBattle();
+    else closeMuni();
   });
 
   // ── 分享：手机用系统分享面板，电脑复制链接 ──
   detailEl.addEventListener('click', async (e) => {
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
-    const url = shareURL(app.currentId);
+    const url = shareURL(app.currentId) + (muni.open ? '&muni=1' : '');
     const text = t('share.text', { name: prefName(prefs.get(app.currentId)) });
     if (navigator.share && matchMedia('(pointer: coarse)').matches) {
       try { await navigator.share({ title: 'Japan Explorer', text, url }); return; } catch (err) {
@@ -603,7 +629,11 @@ async function main() {
 
   // 深链接：#pref=26 直接打开京都
   const m = location.hash.match(/pref=(\d+)/);
-  if (m && prefs.has(+m[1])) map.onSelect(+m[1]);
+  const wantMuni = /(^|[#&])muni=1/.test(location.hash); // 先读出来：onSelect 会改写地址栏
+  if (m && prefs.has(+m[1])) {
+    map.onSelect(+m[1]);
+    if (wantMuni) openMuni(+m[1]); // #pref=23&muni=1 直接打开市区町村地图
+  }
 }
 
 main().catch((err) => {
