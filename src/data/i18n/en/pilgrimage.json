@@ -17,11 +17,23 @@
   "scene": "Over a summer of making a home-made movie, Komoro's station, Kaikoen park and streets become the story's stage.",
   "tips": "Kaikoen, the Komoro Castle site beside the station, is worth a visit; the series displays are in the station and tourist facilities."
  },
+ "aquatope-nanjo": {
+  "work": "The Aquatope on White Sand",
+  "place": "Nanjō City",
+  "scene": "Two girls meet at a small aquarium in Okinawa, in Nanjō in the south of the main island.",
+  "tips": "Nanjō has the World Heritage site Sēfa-utaki, a sacred place of prayer — keep silent and don't touch the rocks or offerings."
+ },
  "atsuhime-edojo": {
   "work": "Atsuhime",
   "place": "Edo Castle site (East Gardens of the Imperial Palace)",
   "scene": "Atsuhime of Satsuma marries into the shogun's family, lives through the end of the shogunate in the Ōoku, and helps bring about the bloodless surrender of Edo Castle.",
   "tips": "The East Gardens are free to enter (closed some days), with the keep foundation and Honmaru site; bags are checked at the gate."
+ },
+ "barakamon-goto": {
+  "work": "Barakamon",
+  "place": "Gotō Islands (Fukue Island)",
+  "scene": "A calligrapher \"exiled\" to the Gotō Islands finds his own style again amid the island children's mischief; the author is from Gotō.",
+  "tips": "Reach Gotō by boat or plane. There are many churches on the islands — follow church rules and keep quiet when visiting."
  },
  "battery-tsuyama": {
   "work": "Battery",
@@ -52,6 +64,12 @@
   "place": "Sanjō City",
   "scene": "High-school girls build things by hand in a DIY club, set in Sanjō, a city famous for blades and metalwork that collaborates with the series.",
   "tips": "Sanjō is a city of craftspeople — try forging a small knife at a local smithing workshop. Factories are working sites; don't enter without permission."
+ },
+ "dmc-inukai": {
+  "work": "Detroit Metal City",
+  "place": "Inukai, Bungo-Ōno City",
+  "scene": "Negishi Sōichi dreams of trendy pop but ends up fronting a death-metal band; his family home is in Inukai, Ōita.",
+  "tips": "Inukai is a quiet town on the Ōno River; Harajiri Falls and Chinda Falls are nearby."
  },
  "eupho-uji": {
   "work": "Sound! Euphonium",
@@ -131,6 +149,12 @@
   "scene": "A hospitalized boy and a seriously ill girl, in the author's hometown of Ise.",
   "tips": "Combine it with a visit to Ise Jingū. The hospital is modeled on a real one — please don't go in to take photos."
  },
+ "hikarukimi-dazaifu": {
+  "work": "Dear Radiance (Hikaru Kimi e)",
+  "place": "Dazaifu Government Office site",
+  "scene": "Late in life Murasaki Shikibu (\"Mahiro\") travels to Dazaifu, where her husband Nobutaka once served; the drama's closing Kyushu chapter unfolds here.",
+  "tips": "The site is an open historic park whose foundation stones hint at the old scale; Dazaifu Tenmangū is within walking distance."
+ },
  "hitodenashi-iyo": {
   "work": "I Want to Eat You, Inhuman (Watashi o Tabetai, Hitodenashi)",
   "place": "Iyo City (Chūyo region)",
@@ -155,6 +179,12 @@
   "scene": "The Classics Club's everyday mysteries take place in Kamiyama, modeled on Hida-Takayama, with its old streets, shrines and festivals.",
   "tips": "Takayama's old streets are crowded — keep the narrow lanes clear when taking photos. The school is modeled on a real high school; don't enter the grounds."
  },
+ "idaten-kanakuri": {
+  "work": "Idaten",
+  "place": "Kanakuri Shisō birthplace museum (Nagomi Town)",
+  "scene": "Kanakuri Shisō, Japan's first Olympic marathon runner and hero of the drama's first half, was born in Nagomi, Kumamoto; his birthplace is one of its settings.",
+  "tips": "The museum tells his life story; at certain times of year the nearby Futamata bridges cast a heart-shaped shadow at noon."
+ },
  "ieyasu-iga": {
   "work": "What Will You Do, Ieyasu? (Dōsuru Ieyasu)",
   "place": "Iga-Ueno Castle",
@@ -172,6 +202,12 @@
   "place": "Mount Haruna (model for Mount Akina)",
   "scene": "Mount Akina, where Takumi delivers tofu, is modeled on Mount Haruna; its run of hairpin bends is the series' most iconic setting.",
   "tips": "These are public roads — never imitate the racing. Lake Haruna and Ikaho Onsen are best enjoyed slowly."
+ },
+ "irozuku-nagasaki": {
+  "work": "Iroduku: The World in Colors",
+  "place": "Nagasaki City",
+  "scene": "Hitomi, a young witch sent back from 2078 to 2018, rediscovers color among Nagasaki's slopes, harbor and Western-style houses.",
+  "tips": "Nagasaki is all slopes — wear comfortable shoes. The houses around Glover Garden overlook the harbor; the night view is famous too."
  },
  "kageki-takarazuka": {
   "work": "Kageki Shojo!!",
@@ -202,6 +238,12 @@
   "place": "Himeji Castle",
   "scene": "Kuroda Kanbei came from Harima and offered Himeji Castle to Hashiba Hideyoshi as his base for conquering western Japan.",
   "tips": "Expect queues to climb the keep of this World Heritage castle — go early in high season. Stairs inside are steep and shoes come off."
+ },
+ "kanbei-nakatsu": {
+  "work": "Gunshi Kanbei",
+  "place": "Nakatsu Castle",
+  "scene": "After the conquest of Kyushu Kanbei received Buzen and built Nakatsu Castle — the drama's \"Nakatsu in Buzen\" chapter.",
+  "tips": "The castle stands at the mouth of the Yamakuni River; its walls show both Kuroda- and Hosokawa-era masonry. Nakatsu fried chicken is famous."
  },
  "kanbei-takamatsu": {
   "work": "Gunshi Kanbei",
@@ -329,6 +371,12 @@
   "scene": "Ryōtan-ji in Iinoya is the family temple of the Ii, and the story of the woman lord Ii Naotora protecting her clan centers on this area.",
   "tips": "The temple garden is celebrated — please be quiet inside. Iinoya-gū shrine and related memorials are nearby."
  },
+ "natsume-hitoyoshi": {
+  "work": "Natsume's Book of Friends",
+  "place": "Hitoyoshi City",
+  "scene": "Natsume, who can see yōkai, and his cat Nyanko-sensei; the author is from Kumamoto, and the countryside around Hitoyoshi and Kuma is one of its models.",
+  "tips": "Hitoyoshi has a pilgrimage map of the series; the Kuma River and Aoi Aso Shrine are well worth seeing."
+ },
  "omohide-yamagata": {
   "work": "Only Yesterday",
   "place": "Yamagata (safflower country)",
@@ -340,6 +388,12 @@
   "place": "Inage Seaside Park",
   "scene": "Hikigaya Hachiman is a high-schooler who proudly calls himself a Chiba fan; Chiba City's seafront and streets appear again and again.",
   "tips": "The artificial beach at Inage Seaside Park is a fine place for sunset. The series' school is modeled on a real high school — please don't enter the grounds."
+ },
+ "oshinoko-takachiho": {
+  "work": "Oshi no Ko",
+  "place": "Takachiho Town",
+  "scene": "In the first episode the story begins at a rural hospital in Miyazaki, and shrines and scenery around Takachiho appear.",
+  "tips": "Boats in Takachiho Gorge have long queues — plan ahead in peak season. Yokagura night dances are a local tradition; watch quietly."
  },
  "ponyo-tomonoura": {
   "work": "Ponyo",
@@ -353,11 +407,29 @@
   "scene": "Girls in Nikko form an ice hockey team; the series works with the local pro team, the H.C. Tochigi Nikko Ice Bucks, whose home rink is this arena.",
   "tips": "Catching a live game in season gives the best atmosphere; Tōshō-gū and Kegon Falls fit into the same day."
  },
+ "robonotes-tanegashima": {
+  "work": "Robotics;Notes",
+  "place": "Tanegashima",
+  "scene": "The robotics club of Tanegashima Central High dreams of building a giant robot; the island's space center and coast are the story's stage.",
+  "tips": "The space center's science museum is free; on launch days the island is packed, so book lodging early."
+ },
+ "ryomaden-kameyama": {
+  "work": "Ryōmaden",
+  "place": "Kameyama Shachū Memorial Museum",
+  "scene": "In Nagasaki Ryōma founded Kameyama Shachū, Japan's first trading company; it is the base for the drama's later Nagasaki chapters.",
+  "tips": "The museum sits in a hillside residential area up the stone steps of \"Ryōma Street\" — please be quiet among the homes."
+ },
  "ryomaden-katsurahama": {
   "work": "Ryōmaden",
   "place": "Katsurahama",
   "scene": "Sakamoto Ryōma came from Tosa, and the drama begins with his youth there; the Ryōma statue facing the Pacific at Katsurahama and the Ryōma museum are must-sees for fans.",
   "tips": "The waves and currents at Katsurahama are strong — swimming is forbidden. The Sakamoto Ryōma Memorial Museum is close by."
+ },
+ "ryukyu-shurijo": {
+  "work": "Ryūkyū no Kaze",
+  "place": "Shuri Castle",
+  "scene": "Set when Satsuma invaded the Ryukyu Kingdom in the 17th century; Shuri Castle, the royal palace, is the drama's center stage.",
+  "tips": "The main hall is being rebuilt after the 2019 fire, and the restoration work can be viewed. There are many slopes — guard against heat in summer."
  },
  "sanadamaru-numata": {
   "work": "Sanada Maru",
@@ -383,6 +455,18 @@
   "scene": "The author, Yaguchi Takao, was born in Masuda, Yokote; the clear streams and mountain villages of the series come from his hometown. The museum holds a large collection of his original art.",
   "tips": "Masuda is a traditional district of \"uchigura\" storehouse homes, worth a stroll. Follow the no-photo signs in the original-art galleries."
  },
+ "segodon-nobeoka": {
+  "work": "Segodon",
+  "place": "Mount Enodake (Nobeoka City)",
+  "scene": "At the end of the Satsuma Rebellion, Saigō disbanded his army near Kitagawa in Nobeoka, burned his uniform and broke out over Mount Enodake.",
+  "tips": "Mount Enodake has hiking trails but they are rough — go in company and carry water. Nobeoka also has a museum at Saigō's last camp."
+ },
+ "segodon-shiroyama": {
+  "work": "Segodon",
+  "place": "Shiroyama (Kagoshima City)",
+  "scene": "At the end of the Satsuma Rebellion, Saigō Takamori fell back to Shiroyama in his home town of Kagoshima, where his life ended.",
+  "tips": "The Shiroyama lookout faces Sakurajima across Kinkō Bay; the hill has the Saigō cave and other sites — watch for snakes and bees on the paths."
+ },
  "seiten-fukaya": {
   "work": "Reach Beyond the Blue Sky (Seiten o Tsuke)",
   "place": "Shibusawa Eiichi Memorial Museum (Fukaya)",
@@ -406,6 +490,12 @@
   "place": "Obihiro Agricultural High School",
   "scene": "The story's Ezo Agricultural High School is modeled on the author's alma mater, Obihiro Agricultural High, with its vast pastures and school buildings.",
   "tips": "This is a working school: it is not open to casual visitors. View it from the public road, stay out of the pastures and do not photograph students."
+ },
+ "sketchbook-dazaifu": {
+  "work": "Sketchbook ~full color's~",
+  "place": "Dazaifu",
+  "scene": "Quiet art-club member Sora Kajiwara and her friends sketch their everyday world around Dazaifu in Fukuoka.",
+  "tips": "Umegae-mochi cakes on the Dazaifu Tenmangū approach are the local treat. Weekends and exam season are crowded — go early."
  },
  "slamdunk-kamakurakokomae": {
   "work": "Slam Dunk",
@@ -455,6 +545,12 @@
   "scene": "Tamako, daughter of a mochi shop, and everyday life on a shopping street modeled on Kyoto's Demachi Masugata arcade.",
   "tips": "It's where locals do their shopping — don't block shop fronts for photos. Buying something is the best kind of pilgrimage."
  },
+ "teibo-ashikita": {
+  "work": "Diary of Our Days at the Breakwater",
+  "place": "Ashikita Town",
+  "scene": "A girl who moves to a seaside town joins the \"breakwater club\" and learns to fish; the town is modeled on the Ashikita area of Kumamoto.",
+  "tips": "Wear a life jacket when fishing from the breakwater, watch for big waves, stay out of closed piers, and take your rubbish and bait home."
+ },
  "tenchijin-kasugayama": {
   "work": "Tenchijin",
   "place": "Kasugayama Castle site",
@@ -466,6 +562,12 @@
   "place": "Yonezawa Castle site (Uesugi Shrine)",
   "scene": "Naoe Kanetsugu serves Uesugi Kagekatsu; after Sekigahara the Uesugi were reduced to Yonezawa, where Kanetsugu spent the rest of his life.",
   "tips": "Uesugi Shrine and the Keishōden treasure house on the castle grounds hold the clan's heirlooms. Don't miss Yonezawa beef."
+ },
+ "tobuga-saga": {
+  "work": "Tobu ga Gotoku",
+  "place": "Saga Castle (Honmaru History Museum)",
+  "scene": "A Restoration history of Saigō Takamori and Ōkubo Toshimichi that also depicts the Saga Rebellion, raised by Etō Shinpei in the early Meiji years.",
+  "tips": "The rebuilt palace is a free history museum with guides; the camphor trees along the castle moat are magnificent."
  },
  "toshiie-kanazawa": {
   "work": "Toshiie and Matsu",
@@ -556,5 +658,11 @@
   "place": "Kan'onji City",
   "scene": "The girls of the Hero Club live in Kan'onji, Kagawa, whose seaside and shrines appear again and again.",
   "tips": "The Zenigata sand coin carving is best seen from Mount Kotohiki. The school is modeled on a real junior high — don't enter the grounds."
+ },
+ "zombiesaga-karatsu": {
+  "work": "Zombie Land Saga",
+  "place": "Karatsu Castle",
+  "scene": "Girls revived as zombies form the idol group Franchouchou to revitalize Saga; Karatsu and places across the prefecture appear, and Saga works with the series.",
+  "tips": "Karatsu Castle overlooks the Niji-no-Matsubara pine grove and Karatsu Bay. Tie-in events are held around the prefecture — follow venue rules."
  }
 }
