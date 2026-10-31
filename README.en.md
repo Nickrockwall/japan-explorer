@@ -33,16 +33,43 @@ The app is available in Chinese, English and Japanese.
 
 ## 📜 Patch Notes
 
-> Adventurers, a new version has arrived. Latest first.
+> Adventurers, a new version has arrived. Here are all past announcements (latest first).
 
-- **v2.0 "Pilgrimage" expansion** — New layer with 111 anime and taiga-drama spots across all 47 prefectures; glowing pins, type filter, scene & tips cards, and two new guide voices (🔥 otaku, 🎬 drama critic). Every spot verified against Wikipedia.
-- **v1.9 "Shield & Portal"** — Automated checks: every update must pass data checks and 51 browser tests before going live. Fixed the map hanging on blocked CDNs, layout jumps between eras, and the phone search list running off-screen.
-- **v1.8 "Map of a Thousand Towns"** — Drill-down map of 1,900+ municipalities, Meiji-era districts, smarter search (kanji, kana, English), and a Map / Details / Guide tab bar on phones.
-- **v1.7 "Pocket Scroll"** — Install to home screen, offline support, shareable links with language, phone layout overhaul.
-- **v1.6 "Trilingual Pass"** — English and Japanese unlocked.
-- **v1.5 "Battle Sandbox"** — Five famous battles in four phases, plus the nine-era time slider.
-- **v1.4 "Food Atlas"** — Ramen and sake layers.
-- **v1.0 "Launch"** — 47 prefectures ⇄ 68 provinces, timelines, goshuin book and the AI history guide.
+### 🌸 v2.0 "Pilgrimage" Expansion
+- **New layer "Pilgrimage" unlocked!** 111 anime pilgrimage spots and NHK taiga-drama locations across all 47 prefectures
+- Pins glow and breathe: sakura pink for anime, antique gold for taiga dramas; filter by All / Anime / Taiga
+- Tap a pin and the camera glides in, opening a card with the scene and pilgrim's tips
+- New "Pilgrimage Guide" in the detail panel; the AI guide learns two new voices: 🔥 hot-blooded otaku and 🎬 drama critic
+- Every coordinate and work–place link verified against Wikipedia — about 10 fake pilgrimage sites were purged by the system
+
+### 🛡️ v1.9 "Shield & Portal"
+- New automated check system: every update must pass data checks and 51 live browser tests — **no pass, no release**
+- Fixed: the map freezing on networks where CDNs are blocked (the map engine now ships with the site; loads in 0.5s)
+- Fixed: legend and banner jumping when switching eras; the search list running off-screen on phones
+
+### 🗺️ v1.8 "Map of a Thousand Towns"
+- Drill-down map opened: 1,900+ municipalities, colored by ancient province or population, with place names
+- Added Meiji-era former districts; the province table cross-checked at about 1,350 municipalities
+- Search upgraded: kanji (simplified too), kana and English; duplicate names listed separately; share links straight to a municipality
+- Phones now switch between Map / Details / Guide tabs
+
+### 📱 v1.7 "Pocket Scroll"
+- Add to Home Screen, works offline; share links carry the language
+- Phone layout overhaul, notch-safe and landscape-ready
+- Data bundling: first load down from about 100 requests to 2
+
+### 🌏 v1.6 "Trilingual Pass"
+- English and Japanese unlocked, all 47 prefectures fully translated; first visit follows your browser language
+
+### ⚔️ v1.5 "Battle Sandbox"
+- Five famous battles replayed in four phases — deployment, opening, turning point, outcome — narrated by the commanders
+- Time-travel slider: nine eras from Asuka to today
+
+### 🍜 v1.4 "Food Atlas"
+- Two new layers: the ramen atlas and the sake map
+
+### 🏯 v1.0 "Launch"
+- 47 prefectures ⇄ 68 ancient provinces, six-stage timelines, the goshuin book, and an AI history guide that changes persona by region
 
 ## Connecting an AI (optional)
 
