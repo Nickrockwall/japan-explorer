@@ -23,6 +23,12 @@
   "scene": "Atsuhime of Satsuma marries into the shogun's family, lives through the end of the shogunate in the Ōoku, and helps bring about the bloodless surrender of Edo Castle.",
   "tips": "The East Gardens are free to enter (closed some days), with the keep foundation and Honmaru site; bags are checked at the gate."
  },
+ "battery-tsuyama": {
+  "work": "Battery",
+  "place": "Tsuyama City",
+  "scene": "Prodigy pitcher Harada Takumi and catcher Nagakura Gō, a boys' baseball story set around the Mimasaka region of Okayama.",
+  "tips": "The tall stone walls of Tsuyama Castle (Kakuzan Park) and its spring blossoms are famous; Tsuyama's hormone udon is the local dish."
+ },
  "bocchi-shimokitazawa": {
   "work": "Bocchi the Rock!",
   "place": "Shimokitazawa",
@@ -34,6 +40,12 @@
   "place": "Iwafune Station",
   "scene": "In the first episode, \"Cherry Blossom\", the station where Takaki waits through the heavy snow is Iwafune on the JR Ryōmō Line.",
   "tips": "It is a working station: don't linger on the platform for photos or get in passengers' way. A snowy winter day is closest to the film's mood."
+ },
+ "conan-hokuei": {
+  "work": "Detective Conan (Case Closed)",
+  "place": "Gosho Aoyama Manga Factory (Hokuei Town)",
+  "scene": "Creator Gosho Aoyama was born in Hokuei, Tottori; the museum shows original art and a recreation of his studio, and the town calls itself \"Conan Town\".",
+  "tips": "The \"Conan Street\" from Yura Station to the museum has statues and puzzles along the way. Weekends are busy — go early."
  },
  "diy-sanjo": {
   "work": "Do It Yourself!!",
@@ -47,11 +59,23 @@
   "scene": "The Kitauji High concert band story is set in Uji; the riverside, Uji Bridge and the Mount Daikichi lookout are famous scenes.",
   "tips": "The Uji riverside is a pleasant walk; the Daikichi lookout needs a short climb. The school is modeled on a real high school — don't enter the grounds."
  },
+ "eva-ubeshinkawa": {
+  "work": "Evangelion: 3.0+1.0 Thrice Upon a Time",
+  "place": "Ube-Shinkawa Station",
+  "scene": "Director Hideaki Anno's hometown is Ube; the station in the film's final scene is Ube-Shinkawa.",
+  "tips": "There are displays related to the film near the station. It is a working station — don't get in the way of passengers or trains."
+ },
  "flying-witch-hirosaki": {
   "work": "Flying Witch",
   "place": "Hirosaki Castle (Hirosaki Park)",
   "scene": "Makoto, a witch in training, moves in with relatives in Hirosaki; the castle town, Mount Iwaki and the apple orchards run through the whole series.",
   "tips": "Hirosaki Park's spring blossoms and the town's Western-style buildings make a lovely walk. The homes in the series are ordinary houses — please don't disturb residents."
+ },
+ "free-iwami": {
+  "work": "Free!",
+  "place": "Iwami Town",
+  "scene": "A coming-of-age story of a swim club; the seaside town of Iwatobi is modeled on Iwami in Tottori, whose coast and station appear in the series.",
+  "tips": "Iwami's Uradome coast is beautiful — take a sightseeing boat past the rock formations. Swim only at official beaches."
  },
  "furinkazan-takeda": {
   "work": "Fūrin Kazan",
@@ -89,6 +113,12 @@
   "scene": "A story centered on the Shinsengumi, which in its later part follows them to Aizu; Mount Iimori is where the young Byakkotai met their tragic end in the Boshin War.",
   "tips": "The hill has the Byakkotai graves and the unusual Sazaedō hall — please be respectful. The stone steps are steep; a paid escalator is available."
  },
+ "hanamoyu-shoka": {
+  "work": "Burning Flower (Hana Moyu)",
+  "place": "Shōka Sonjuku (Hagi City)",
+  "scene": "The heroine is Fumi, sister of Yoshida Shōin, who taught Takasugi Shinsaku, Kusaka Genzui and other Restoration activists at Shōka Sonjuku in Hagi.",
+  "tips": "Shōka Sonjuku stands in the grounds of Shōin Shrine and is a World Heritage site; Hagi's castle town is great to explore by bicycle."
+ },
  "hanasaku-yuwaku": {
   "work": "Hanasaku Iroha",
   "place": "Yuwaku Onsen",
@@ -100,6 +130,12 @@
   "place": "Ise City",
   "scene": "A hospitalized boy and a seriously ill girl, in the author's hometown of Ise.",
   "tips": "Combine it with a visit to Ise Jingū. The hospital is modeled on a real one — please don't go in to take photos."
+ },
+ "hitodenashi-iyo": {
+  "work": "I Want to Eat You, Inhuman (Watashi o Tabetai, Hitodenashi)",
+  "place": "Iyo City (Chūyo region)",
+  "scene": "A girl living alone meets a 'non-human' girl who says she came from the sea; the seaside town draws partly on the author's home area around Iyo City in Ehime.",
+  "tips": "Iyo's Futami coast is famous for sunsets, and Shimonada is a well-known seaside station. The station is tiny — don't get in passengers' way on the platform."
  },
  "homura-esashi": {
   "work": "Homura Tatsu",
@@ -155,11 +191,29 @@
   "scene": "The spiritual center of the Kamakura shogunate; Minamoto no Sanetomo's assassination on its great stone steps is one of the drama's most shocking turns.",
   "tips": "Walk from Kamakura Station along the Dankazura approach. New Year and weekends are packed — weekday mornings are best."
  },
+ "kamiari-izumo": {
+  "work": "The Child of Kamiari Month",
+  "place": "Izumo Taisha",
+  "scene": "A girl runs all the way to Izumo to meet the eight million gods; Izumo Taisha, Lake Shinji and Matsue all appear in the film.",
+  "tips": "Izumo Taisha's etiquette is \"two bows, four claps, one bow\". During Kamiari-zuki (the tenth lunar month) welcoming rites draw big crowds."
+ },
  "kanbei-himeji": {
   "work": "Gunshi Kanbei",
   "place": "Himeji Castle",
   "scene": "Kuroda Kanbei came from Harima and offered Himeji Castle to Hashiba Hideyoshi as his base for conquering western Japan.",
   "tips": "Expect queues to climb the keep of this World Heritage castle — go early in high season. Stairs inside are steep and shoes come off."
+ },
+ "kanbei-takamatsu": {
+  "work": "Gunshi Kanbei",
+  "place": "Bitchū-Takamatsu Castle site (Okayama City)",
+  "scene": "Kanbei's plan to flood Bitchū-Takamatsu Castle; in the middle of the siege comes word of the Honnō-ji Incident, launching the drama's great march back east.",
+  "tips": "The castle site is now a park where you can see the lie of the land used for the dam; a nearby museum explains the flooding siege."
+ },
+ "kashin-uwajima": {
+  "work": "Kashin",
+  "place": "Uwajima Castle",
+  "scene": "The hero, Murata Zōroku (later Ōmura Masujirō), is invited to Uwajima, where he studies Dutch learning and builds an experimental steamship.",
+  "tips": "Uwajima Castle's keep is one of Japan's original surviving keeps; the stone steps up are steep. Uwajima's sea-bream rice is the local specialty."
  },
  "keion-toyosato": {
   "work": "K-On!",
@@ -185,11 +239,29 @@
   "scene": "After leaving Mino, Akechi Mitsuhide drifted to Echizen and served Asakura Yoshikage; the drama's Echizen years center on Ichijōdani.",
   "tips": "A Sengoku-period street has been reconstructed, giving a feel for a castle town. The site is large — allow half a day."
  },
+ "kirin-shozui": {
+  "work": "Awaiting Kirin (Kirin ga Kuru)",
+  "place": "Shōzui Castle site (Aizumi Town)",
+  "scene": "The Miyoshi, who dominate the capital region in the drama, were based at Shōzui Castle in Awa — the clan rose from Awa to march on Kyoto.",
+  "tips": "The castle site lies around Kenshō-ji temple, with an excavated historic park next to it; Tokushima is also famous for indigo dyeing workshops."
+ },
+ "kiyomori-itsukushima": {
+  "work": "Taira no Kiyomori",
+  "place": "Itsukushima Shrine",
+  "scene": "Taira no Kiyomori was devoted to Itsukushima Shrine and rebuilt it on a grand scale; the great torii in the sea and the corridors symbolize the glory of the Taira.",
+  "tips": "At low tide you can walk up to the great torii — check the tide tables. Please don't feed the island's deer."
+ },
  "kiyomori-todaiji": {
   "work": "Taira no Kiyomori",
   "place": "Tōdai-ji",
   "scene": "The Taira clashed with the great temples of Nara, ending in Taira no Shigehira burning the city and Tōdai-ji's Great Buddha Hall — a scene the drama portrays.",
   "tips": "Tōdai-ji's Great Buddha Hall and the deer of Nara Park are musts; feed deer only special crackers, and mind small children — deer can butt."
+ },
+ "konosekai-kure": {
+  "work": "In This Corner of the World",
+  "place": "Kure City",
+  "scene": "Suzu marries into a family in the naval port of Kure and lives an ordinary life through the war; Kure's streets, harbor and warships are drawn in loving detail.",
+  "tips": "The Yamato Museum tells the story of Kure as a naval port. The slopes and neighborhoods in the film are residential — walk quietly."
  },
  "kunitori-gifu": {
   "work": "Kunitori Monogatari",
@@ -215,6 +287,12 @@
   "scene": "The Hiiragi sisters' family shrine is modeled on Washinomiya Shrine, often seen as one of the starting points of Japan's anime pilgrimage boom.",
   "tips": "It is a real shrine with normal shrine etiquette. The anime-illustrated ema plaques are a highlight, but please don't read out or photograph other people's wishes."
  },
+ "maimai-hofu": {
+  "work": "Mai Mai Miracle",
+  "place": "Hōfu City (Suō provincial office site)",
+  "scene": "In Hōfu in the 1950s, the girl Shinko imagines the Suō provincial capital of a thousand years ago; the wheat fields around the provincial office site are central to the film.",
+  "tips": "The provincial office site is a historic park next to Hōfu Tenmangū. The wheat fields are farmland — view them from the road."
+ },
  "maruko-shimizu": {
   "work": "Chibi Maruko-chan",
   "place": "Shimizu (Chibi Maruko-chan Land)",
@@ -232,6 +310,12 @@
   "place": "Ōtsuchi Town",
   "scene": "After the 2011 earthquake, girls start a new life in the \"Mayoiga\" house of a seaside town modeled on Ōtsuchi, which collaborated with the film.",
   "tips": "This area was rebuilt after the disaster; visit with respect. The coastal reconstruction memorials tell the town's story."
+ },
+ "motonari-gassantoda": {
+  "work": "Mōri Motonari",
+  "place": "Gassan-Toda Castle site (Yasugi)",
+  "scene": "The home castle of the Amago, Motonari's greatest rivals; the struggle for Gassan-Toda is the key to his conquest of western Honshu in the drama.",
+  "tips": "The trails up the mountain castle are steep — wear proper shoes. The top overlooks the Yasugi plain and Lake Naka; the Adachi Museum gardens are nearby."
  },
  "nagiasu-kumano": {
   "work": "Nagi-Asu: A Lull in the Sea",
@@ -257,11 +341,23 @@
   "scene": "Hikigaya Hachiman is a high-schooler who proudly calls himself a Chiba fan; Chiba City's seafront and streets appear again and again.",
   "tips": "The artificial beach at Inage Seaside Park is a fine place for sunset. The series' school is modeled on a real high school — please don't enter the grounds."
  },
+ "ponyo-tomonoura": {
+  "work": "Ponyo",
+  "place": "Tomonoura (Fukuyama City)",
+  "scene": "Hayao Miyazaki stayed in Tomonoura while developing the film, and the harbor town inspired its seaside setting.",
+  "tips": "Tomonoura's old port and stone lantern are full of atmosphere; the streets are narrow, so make way for cars and residents. The town is known for Homeishu liqueur."
+ },
  "praore-nikko": {
   "work": "Pride of Orange",
   "place": "Nikko Kirifuri Ice Arena",
   "scene": "Girls in Nikko form an ice hockey team; the series works with the local pro team, the H.C. Tochigi Nikko Ice Bucks, whose home rink is this arena.",
   "tips": "Catching a live game in season gives the best atmosphere; Tōshō-gū and Kegon Falls fit into the same day."
+ },
+ "ryomaden-katsurahama": {
+  "work": "Ryōmaden",
+  "place": "Katsurahama",
+  "scene": "Sakamoto Ryōma came from Tosa, and the drama begins with his youth there; the Ryōma statue facing the Pacific at Katsurahama and the Ryōma museum are must-sees for fans.",
+  "tips": "The waves and currents at Katsurahama are strong — swimming is forbidden. The Sakamoto Ryōma Memorial Museum is close by."
  },
  "sanadamaru-numata": {
   "work": "Sanada Maru",
@@ -341,6 +437,18 @@
   "scene": "The hero, Ashikaga Takauji, came from the Ashikaga of Ashikaga Estate in Shimotsuke; Bannaji stands on the site of their residence.",
   "tips": "The temple keeps its moat and earthen walls, the layout of a warrior's residence. The neighboring Ashikaga School is said to be Japan's oldest school."
  },
+ "taiheiki-senjosan": {
+  "work": "Taiheiki",
+  "place": "Mount Senjō (Kotoura Town)",
+  "scene": "After Emperor Go-Daigo escaped from Oki, Nawa Nagatoshi of Hōki sheltered him on Mount Senjō and repelled the shogunate — the episode \"The Emperor's Escape\" portrays it.",
+  "tips": "Mount Senjō is known for its screen-like cliffs; the trail is fairly demanding. Cherry blossoms and fresh green at the foot are lovely in spring."
+ },
+ "takagi-shodoshima": {
+  "work": "Teasing Master Takagi-san",
+  "place": "Shōdoshima (Tonoshō Town)",
+  "scene": "Takagi teases Nishikata every day on Shōdoshima, the author's home island; its shores and ports appear throughout.",
+  "tips": "Reach Shōdoshima by ferry. The island has a pilgrimage map of the series; drive or cycle safely around it."
+ },
  "tamako-demachi": {
   "work": "Tamako Market",
   "place": "Demachi Masugata Shopping Street",
@@ -370,6 +478,18 @@
   "place": "Jōhana (Nanto City)",
   "scene": "Nanto is home to the studio P.A.WORKS; Jōhana's old streets, station and Hikiyama festival all appear in the series.",
   "tips": "Jōhana is a quiet town of old streets, best explored on foot. Trains on the Jōhana Line are infrequent — check times in advance."
+ },
+ "uchoten-kinchou": {
+  "work": "The Eccentric Family 2",
+  "place": "Kinchō Shrine (Komatsushima City)",
+  "scene": "In this tale of a tanuki family, Shikoku's tanuki legends appear too; Kinchō Shrine in Komatsushima enshrines Kinchō, the legendary tanuki general.",
+  "tips": "Komatsushima has a giant tanuki statue that makes a great photo spot; please worship quietly at the shrine."
+ },
+ "umigakikoeru-kochi": {
+  "work": "Ocean Waves",
+  "place": "Around Kōchi Castle",
+  "scene": "A Studio Ghibli coming-of-age film: Taku, now at university in Tokyo, looks back on his high-school days in Kōchi, with the castle and city woven through.",
+  "tips": "Kōchi Castle's keep and main palace are originals; the Sunday market below the castle is famous."
  },
  "wug-sendai": {
   "work": "Wake Up, Girls!",
@@ -419,10 +539,22 @@
   "scene": "At Kurikara Pass, Kiso Yoshinaka routed the Taira army with his \"fire oxen\" stratagem; the drama portrays this battle that turned the Genpei War.",
   "tips": "The battlefield is in the hills with sloping paths, loveliest when the double cherries bloom in spring. The road is narrow — drive carefully."
  },
+ "yoshitsune-yashima": {
+  "work": "Yoshitsune",
+  "place": "Yashima",
+  "scene": "Minamoto no Yoshitsune launched a surprise attack on the Taira at Yashima, scene of the famous moment when Nasu no Yoichi shoots down the fan.",
+  "tips": "The summit overlooks the old battlefield and the Seto Inland Sea, especially lovely at sunset; Yashima-ji on top is a Shikoku pilgrimage temple."
+ },
  "yurucamp-motosu": {
   "work": "Laid-Back Camp",
   "place": "Lake Motosu",
   "scene": "The lakeside where Rin camps alone and meets Nadeshiko in the first episode is Lake Motosu, with its view of Mount Fuji.",
   "tips": "Camp only at proper campsites and take all your rubbish home. Winter by the lake is bitterly cold; never light fires where they're banned."
+ },
+ "yuyuyu-kanonji": {
+  "work": "Yuki Yuna Is a Hero",
+  "place": "Kan'onji City",
+  "scene": "The girls of the Hero Club live in Kan'onji, Kagawa, whose seaside and shrines appear again and again.",
+  "tips": "The Zenigata sand coin carving is best seen from Mount Kotohiki. The school is modeled on a real junior high — don't enter the grounds."
  }
 }
