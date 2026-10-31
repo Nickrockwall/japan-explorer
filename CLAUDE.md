@@ -17,6 +17,7 @@
   - `je.api` — LLM 接口配置 `{provider, baseUrl, model, apiKey}`（仅存于用户浏览器）
   - `je.goshuin` — 御朱印 `{ [id]: 盖印时间 ISO }`
   - `je.ui.filter` / `je.ui.guideMode` / `je.ui.split` / `je.ui.layer` — 当前滤镜、向导模式（scholar|hero）、右侧上下比例（%）、风土图层（history|ramen|sake）
+  - `je.ui.audio` — 声音 `{muted, bgm, bgmVol, sfxVol}`（默认音效开、背景音乐关）
 
 ## 目录结构
 
@@ -30,6 +31,7 @@ src/js/detail.js               右上：地区风土与历史详卡
 src/js/guide.js                右下：AI 案内人（史官/名将双模式、快捷提问、离线解答、LLM 流式调用）
 src/js/goshuin.js              御朱印帐弹窗（47 格、按地方筛选）
 src/js/crests.js               家纹/神纹 SVG 印纹库（crestSVG(code)）
+src/js/audio.js                和风音频单例：Web Audio 合成音效与背景音乐（可选 mp3 见 src/assets/audio/）
 src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, nam, nam_ja；name = 规范汉字全称如「京都府」，须与县数据 name.kanji 及 ECharts series.data.name 严格一致）
 src/data/index.json            47 县清单（id, slug, file, kanji, zh, region）
 src/data/historical_events.json  全国共享：timeline_eras（9 个时代）+ historic_battles（5 场合战）
@@ -254,13 +256,22 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 图层：底图调暗（`LAYERS.pilgrimage.dim`），`spots` effectScatter 图钉（动漫粉 `#ff7eb6` / 大河古金 `#e0b04c`，`SPOT_COLOR`），子分类「全部 / 动漫 / 大河剧」（`#pil-filter`，`map.setSpotType`）；点图钉 → `openSpot`：选中所在县、`map.focusSpot` 拉近、弹出 `#pil-card`；Esc / × 关闭。详卡底部「圣地巡礼志」（`pilgrimageSection`，经 `renderDetail` 的 `extra` 传入），点条目在地图上定位。
 - 向导：巡礼图层下 `guide.setPilgrimage(本县巡礼点)`，快捷提问最前面加「这里有哪些圣地？」；离线由 `pilAnswer` 回答（动漫部分热血漫迷口吻、大河剧部分剧评人口吻）；在线把巡礼点写进 System Prompt（`PIL_RULE`）。
 
+## 声音（audio.js）
+
+- 单例 `audio`：`play(name)`、`toggleMute()` / `setMuted()`、`setMusic(on)`、`setVolume('bgm'|'sfx', 0–1)`、`onChange(fn)`、`debug()`（测试用）。
+- 浏览器自动播放限制：首次 `pointerdown` / `keydown` / `touchstart` 才创建 AudioContext；监听一直保留，用于恢复被系统挂起的 context。解锁前调用 `play` 静默忽略（深链接打开时不会出声）。
+- 默认全部实时合成：`click` 竹筒轻击（选县、选市区町村、点巡礼图钉、跨到另一个时代）、`stamp` 太鼓一击（盖印）、`battle` 太鼓两击 + 法螺贝（开始合战）、`drum` 太鼓「咚咚」（合战推进到 `impact: true` 的阶段）。各音效有最短间隔（`SFX[].gap`），连点不叠音。
+- 背景音乐：都节音阶（E F A B C）随机游走的古筝拨弦 + E/B 持续低音 + 合成混响，不循环；默认关，在设置弹窗「声音」区块开启（改动立即生效，不随保存/取消）。开启 + 未静音 + 页面在前台才播放，切后台淡出后停止。
+- 想用录好的 mp3：放进 `src/assets/audio/`，在 audio.js 顶部 `FILES` 登记（不自动探测，免得 404 进控制台），加载/播放失败自动退回合成。
+- 任何音频错误只 `console.warn`，不得抛出；smoke 的 `audio_broken` 场景删掉 AudioContext 后走一遍盖印、合战、开音乐。
+
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否覆盖全部 `src/js`、仓库里有无 `__pycache__` / 测试页等杂物。
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

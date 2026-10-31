@@ -58,6 +58,15 @@
       <button class="btn btn-book" id="btn-book" type="button" data-i18n-title="btn.book.title" title="查看已收集的御朱印">
         <span class="book-ico" aria-hidden="true">印</span><span data-i18n="btn.book">御朱印帐</span> (<b id="goshuin-count">0</b>/47)
       </button>
+      <button class="btn btn-ghost btn-sound" id="btn-sound" type="button" aria-pressed="false" data-i18n-aria="snd.mute" aria-label="静音">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
+          <g class="waves" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <path d="M15 9.2c1.3 1.6 1.3 4 0 5.6"/><path d="M17.6 6.8c2.6 2.9 2.6 7.5 0 10.4"/>
+          </g>
+          <path class="slash" d="M15.5 9l5 6M20.5 9l-5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
       <button class="btn btn-ghost" id="btn-settings" type="button">
         <span class="dot" id="api-dot"></span><span class="gear" aria-hidden="true">⚙</span><span data-i18n="btn.settings">API 设置</span>
       </button>
@@ -229,6 +238,14 @@
         <button class="btn btn-ghost" type="button" id="btn-test" data-i18n="set.test">测试连接</button>
         <p class="test-result" id="cfg-test-result" aria-live="polite"></p>
       </div>
+      <!-- 声音：改动立即生效，不随「保存 / 取消」 -->
+      <fieldset class="sound-set">
+        <legend data-i18n="snd.h">声音</legend>
+        <label class="check-row"><input type="checkbox" id="snd-bgm"><span data-i18n="snd.bgm">背景音乐（和风古筝）</span></label>
+        <label><span data-i18n="snd.bgmVol">音乐音量</span><input type="range" id="snd-bgm-vol" min="0" max="100" step="1"></label>
+        <label><span data-i18n="snd.sfxVol">音效音量</span><input type="range" id="snd-sfx-vol" min="0" max="100" step="1"></label>
+        <p class="muted" data-i18n="snd.note">顶栏喇叭可一键静音。iPhone 拨到静音模式时，网页声音可能被系统静音。</p>
+      </fieldset>
       <div class="modal-actions">
         <button class="btn btn-ghost" value="clear" type="submit" data-i18n="set.clear">清除 Key</button>
         <button class="btn btn-ghost" value="reset-visited" type="submit" data-i18n="set.reset">重置探索与御朱印</button>

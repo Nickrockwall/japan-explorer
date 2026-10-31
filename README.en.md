@@ -27,6 +27,7 @@ The app is available in Chinese, English and Japanese.
 | **Goshuin book** | Collect a stamp for every prefecture you visit — 47 family-crest seals in all |
 | **Local rivalries** | Light-hearted regional in-jokes and friendly rivalries |
 | **AI history guide** | A scholar whose persona changes by region (a Heian court lady, an ukiyo-e cat, a Ryukyu priestess…) ⇄ a famous local warlord speaking in the first person; works offline without an API key |
+| **Japanese-style sound** | A bamboo tap when you pick a region or change era, a deep taiko hit when you stamp, taiko and a conch-shell horn when a battle begins, and drums at each clash; optional background music (koto improvising in the miyako-bushi scale, never the same twice) can be turned on in Settings. Everything is synthesised live in the browser — no audio files; the speaker in the top bar mutes all |
 | **Three languages** | 中文 / English / 日本語 — follows your browser language on first visit; switch any time in the top-right corner |
 | **Sharing** | A Share button on the detail card; links keep the region and language, e.g. `#pref=26&lang=en` opens Kyoto in English |
 | **Mobile & install** | On phones, a bottom tab bar switches between Map, Details and Guide, each full-screen; "Add to Home Screen" opens it full-screen like an app, and pages you have viewed work offline |
@@ -34,6 +35,13 @@ The app is available in Chinese, English and Japanese.
 ## 📜 Patch Notes
 
 > Adventurers, a new version has arrived. Here are all past announcements (latest first).
+
+### 🥁 v2.1 "Taiko & Koto"
+- **Sound effects are live!** A bamboo *tok* on the map, a *dong* of taiko on every stamp, a conch-shell horn to open each battle and war drums at every clash
+- New background music: koto improvising in the miyako-bushi scale, never repeating (off by default — turn it on under Sound in ⚙ Settings, with separate music and effects volume)
+- New speaker button in the top bar: one-tap mute, remembered; music fades out when the tab goes to the background
+- All sounds are synthesised live in the browser, zero downloads; if audio fails, the map keeps working (covered by a dedicated test)
+- Note: on iPhone, the silent switch may mute web audio
 
 ### 🌸 v2.0 "Pilgrimage" Expansion
 - **New layer "Pilgrimage" unlocked!** 111 anime pilgrimage spots and NHK taiga-drama locations across all 47 prefectures

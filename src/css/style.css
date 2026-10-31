@@ -97,6 +97,17 @@ button, input, select { font: inherit; color: inherit; }
 .btn-primary { background: var(--shu); border-color: var(--shu); color: #fff; }
 .btn-primary:hover:not(:disabled) { background: #d23d39; color: #fff; border-color: #d23d39; }
 .btn-ghost { background: transparent; }
+/* 声音按钮：喇叭 + 音波 ⇄ 斜杠 */
+.btn-sound { padding: 6px 9px; color: var(--text-2); }
+.btn-sound svg { width: 20px; height: 20px; display: block; }
+.btn-sound .slash { display: none; }
+.btn-sound.muted { color: var(--muted); }
+.btn-sound.muted .waves { display: none; }
+.btn-sound.muted .slash { display: inline; }
+.btn-sound:not(.muted) .waves path { animation: sound-wave 2.4s ease-in-out infinite; }
+.btn-sound:not(.muted) .waves path + path { animation-delay: .3s; }
+@keyframes sound-wave { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .btn-sound .waves path { animation: none !important; } }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
 .dot.on { background: #6fbf73; box-shadow: 0 0 8px #6fbf73; }
 
@@ -357,6 +368,12 @@ body.resizing { cursor: row-resize; user-select: none; }
 .test-result:empty { display: none; }
 .test-result.ok { color: #8fd18f; }
 .test-result.bad { color: #f0b4b2; }
+.sound-set { border: 1px solid var(--line); border-radius: var(--r-sm); margin: 4px 0 0; padding: 10px 14px 12px; display: grid; gap: 10px; }
+.sound-set legend { padding: 0 6px; font: 700 13px var(--serif); color: var(--kin); }
+.sound-set .muted { margin: 0; font-size: 11.5px; }
+.modal .check-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer; }
+.modal input[type="checkbox"] { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--shu); }
+.modal input[type="range"] { padding: 0; border: 0; background: none; accent-color: var(--kin); width: 100%; }
 .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .modal-actions .spacer { flex: 1; }
 
@@ -927,7 +944,8 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .brand h1 { font-size: 17px; }
   .brand-seal { width: 32px; height: 32px; font-size: 17px; }
   .lang-switch { order: 1; }
-  .explore-counter, .btn-battle, .btn-book, #btn-settings { order: 2; }
+  .explore-counter, .btn-battle, .btn-book, .btn-sound, #btn-settings { order: 2; }
+  .btn-sound { flex: none; padding: 6px 7px; }
   .explore-counter { flex: none; }
   .explore-counter .label { display: none; }
   .explore-counter .count b { font-size: 17px; }

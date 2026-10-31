@@ -7,6 +7,7 @@ import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
+import { audio } from './audio.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -181,7 +182,37 @@ function setupSettings(guide, onResetVisited) {
   return open;
 }
 
-// 县名 / 古国名搜索
+// 声音：顶栏喇叭一键静音；设置弹窗里的「声音」区块开关背景音乐、调音量（改动立即生效）
+function setupSound() {
+  const btn = $('btn-sound');
+  const bgm = $('snd-bgm');
+  const bgmVol = $('snd-bgm-vol');
+  const sfxVol = $('snd-sfx-vol');
+  const sync = (s) => {
+    btn.classList.toggle('muted', s.muted);
+    btn.setAttribute('aria-pressed', String(s.muted));
+    btn.title = t(s.muted ? 'snd.unmute' : 'snd.mute');
+    btn.setAttribute('aria-label', btn.title);
+    bgm.checked = s.bgm;
+    bgmVol.value = Math.round(s.bgmVol * 100);
+    sfxVol.value = Math.round(s.sfxVol * 100);
+  };
+  audio.onChange(sync);
+  sync(audio.state());
+  btn.addEventListener('click', () => {
+    audio.toggleMute();
+    audio.play('click');
+  });
+  bgm.addEventListener('change', () => {
+    const on = bgm.checked;
+    audio.setMusic(on);
+    if (on && audio.state().muted) audio.setMuted(false); // 打开音乐时顺便取消静音
+  });
+  bgmVol.addEventListener('input', () => audio.setVolume('bgm', bgmVol.value / 100));
+  sfxVol.addEventListener('input', () => audio.setVolume('sfx', sfxVol.value / 100));
+  sfxVol.addEventListener('change', () => audio.play('click')); // 松手时试听
+}
+
 // 右侧上下比例拖动（仅宽屏）
 function setupSplitter(onResize) {
   const pane = document.querySelector('.side-pane');
@@ -283,6 +314,7 @@ async function main() {
   applyStatic();
   setupLangSwitch();
   setupHudFold();
+  setupSound();
   let data;
   try {
     data = await loadAll(lang, deepMerge);
@@ -339,6 +371,7 @@ async function main() {
     map.focusSpot(null);
   }
   function openSpot(s) {
+    audio.play('click');
     if (app.battle) exitBattle();
     closeMuni();
     if (app.layer !== 'pilgrimage') applyLayer('pilgrimage');
@@ -364,6 +397,7 @@ async function main() {
     onSelect(id) {
       if (app.battle) exitBattle();
       if (id === app.currentId) return;
+      audio.play('click');
       closeSpot();
       app.currentId = id;
       const set = visited.add(id);
@@ -393,7 +427,7 @@ async function main() {
       if (!muni.open) return;
       history.replaceState(null, '', muniHash(app.currentId, codes));
       guide.setPlace(place); // 向导随之认得这个市区町村
-      if (place) tabs.ping('guide');
+      if (place) { tabs.ping('guide'); audio.play('click'); }
     },
   });
   const searchForm = $('search');
@@ -437,6 +471,7 @@ async function main() {
   let playTimer = null;
 
   function setEra(i, { banner = true } = {}) {
+    if (i != null && i !== app.eraIdx) audio.play('click'); // 拖动滑块时只在跨到另一个时代时响
     app.eraIdx = i;
     const era = i == null ? null : eras[i];
     map.setEra(era);
@@ -586,8 +621,10 @@ async function main() {
     const b = app.battle;
     if (!b) return;
     const n = b.phases.length;
+    const prev = app.phase;
     app.phase = Math.max(0, Math.min(n - 1, i));
     const ph = b.phases[app.phase];
+    if (narrate && ph.impact && app.phase !== prev) audio.play('drum'); // 交战爆点出现时擂鼓
     map.setBattlePhase(app.phase);
     phaseBox.querySelectorAll('li').forEach((li, k) => {
       li.classList.toggle('done', k < app.phase);
@@ -623,6 +660,7 @@ async function main() {
     const saved = map.startBattle(b);
     if (!app.battle) app.savedView = saved;
     app.battle = b;
+    audio.play('battle');
     document.body.classList.add('in-battle');
     $('hud-title').textContent = b.name;
     $('hud-sides').innerHTML = b.factions.map((f) =>
@@ -676,6 +714,7 @@ async function main() {
   // ── 打卡盖印 ──
   detailEl.addEventListener('click', (e) => {
     if (!e.target.closest('[data-act="stamp"]') || !app.currentId) return;
+    audio.play('stamp');
     const book = goshuinBook.stamp(app.currentId);
     playStamp(detailEl, prefs.get(app.currentId), book[app.currentId]);
     updateGoshuinCount();

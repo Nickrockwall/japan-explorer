@@ -31,6 +31,10 @@ IGNORE = re.compile(r'navigator\.vibrate|mobile-web-app-capable|fonts\.(googleap
 SEARCH = {'zh': '丰田', 'en': 'Toyota', 'ja': 'とよた'}
 # 模拟国内网络：这些外部服务请求失败时，页面仍须正常打开（地图库等必须随站点发布）
 BLOCKED_ABROAD = ('cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com')
+# 模拟声音整个不可用（不支持 Web Audio、媒体播放被拒）：页面必须照常运行
+NO_AUDIO = '''delete window.AudioContext; delete window.webkitAudioContext;
+HTMLMediaElement.prototype.play = function () { return Promise.reject(new Error('blocked')); };'''
+AUDIO_DEBUG = "async () => (await import('./src/js/audio.js')).audio.debug()"
 # 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
 ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
 
@@ -52,9 +56,11 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_, china=False):
+    def open(self, hash_, china=False, no_audio=False):
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
                                        service_workers='block')
+        if no_audio:
+            ctx.add_init_script(NO_AUDIO)
         page = ctx.new_page()
         if china:
             page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
@@ -78,6 +84,9 @@ class Case:
         assert page_kanji == '京都府', f'详卡标题是 {page_kanji!r}'
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
+
+    def deeplink_any(self, page):
+        assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
     def no_overflow(self, page):
         over = page.evaluate('document.scrollingElement.scrollWidth - innerWidth')
@@ -176,6 +185,39 @@ class Case:
         page.wait_for_timeout(3500)
         assert '热血漫迷' in page.locator('#chat .msg.ai').last.text_content(), '离线巡礼解说没有用漫迷口吻'
 
+    def sound(self, page):
+        # 盖印、时代、合战都应触发音效；喇叭一键静音并记住；设置里能开背景音乐
+        self.tab(page, 'detail')
+        page.click('.stamp-btn')
+        self.tab(page, 'map')
+        page.click('#btn-battle')
+        page.click('#battles .battle-card >> nth=0')
+        page.wait_for_selector('#battle-hud:not([hidden])')
+        page.click('#hud-exit')
+        d = page.evaluate(AUDIO_DEBUG)
+        assert d['ready'], f'首次点击后音频没有解锁：{d}'
+        assert d['played'].get('stamp') == 1 and d['played'].get('battle') == 1, f'音效没有触发：{d}'
+        page.click('#btn-sound')
+        assert page.get_attribute('#btn-sound', 'aria-pressed') == 'true', '喇叭没有切到静音'
+        assert '"muted":true' in page.evaluate("localStorage.getItem('je.ui.audio')"), '静音状态没有保存'
+        page.click('#btn-settings')
+        page.check('#snd-bgm')
+        page.wait_for_timeout(300)
+        d = page.evaluate(AUDIO_DEBUG)
+        assert d['music'], f'勾选背景音乐后没有播放：{d}'
+        assert page.get_attribute('#btn-sound', 'aria-pressed') == 'false', '打开音乐时应自动取消静音'
+
+    def audio_broken(self, page):
+        # 声音不可用时：各处照常可点，只在控制台警告
+        self.stamp(page)
+        self.tab(page, 'map')
+        self.battle(page)
+        page.click('#btn-sound')
+        page.click('#btn-settings')
+        page.check('#snd-bgm')
+        page.wait_for_timeout(300)
+        assert not page.evaluate(AUDIO_DEBUG)['ready']
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -193,7 +235,8 @@ def plan(lang):
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
-                  ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage'])]
+                  ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
+                  ('sound', 'pref=13', ['sound']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 
@@ -213,7 +256,7 @@ def main():
                     total += 1
                     page = None
                     try:
-                        page = c.open(hash_, china=name == 'china')
+                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken')
                         for step in steps:
                             getattr(c, step)(page)
                         page.wait_for_timeout(300)
