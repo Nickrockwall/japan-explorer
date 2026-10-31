@@ -71,9 +71,15 @@ python tools/build_bundle.py
 
 データ構造とプロジェクトの決まりごとは [CLAUDE.md](CLAUDE.md)（中国語）にまとめています。
 
-## 自動チェック
+## 自動チェックと公開
 
-GitHub に push するたびに自動で実行されます（上のバッジ）。手元でも実行できます。
+GitHub に push すると順に実行されます。
+
+1. **データチェック**（数秒）：項目と値、三か国語の訳文の構造、バンドルの更新漏れ、市区町村と対応表の整合など
+2. **画面テスト**（約 2 分）：実際のブラウザで PC / タブレット / スマホ × 中英日の主な操作をひととおり確認
+3. **公開**：`main` で、かつ 1・2 がどちらも通ったときだけ GitHub Pages に公開。失敗したときはサイトは前の版のままで、失敗時のスクリーンショットは Actions の実行ページからダウンロードできます
+
+結果は上のバッジまたは [Actions ページ](https://github.com/Nickrockwall/japan-explorer/actions) で確認できます。手元でも実行できます。
 
 ```bash
 python -X utf8 tools/check_data.py        # データとリポジトリの整合性（数秒）
@@ -87,7 +93,7 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 - 地図：[Apache ECharts](https://echarts.apache.org/) 5.5.1（CDN から読み込み、ミラーへのフォールバックあり）
 - データ：言語ごとに一つの JSON にまとめ（`src/data/bundle/`）、初回表示に必要なデータのリクエストは二つだけ
 - PWA：`manifest.webmanifest` と `sw.js` によるオフラインキャッシュ
-- 公開：GitHub Pages。`main` ブランチに push すると自動で反映
+- 公開：GitHub Pages（GitHub Actions から公開）。`main` に push するとまず自動チェックが走り、**すべて通ったときだけ公開**。失敗したときはサイトは前の版のまま
 
 ## おことわり
 

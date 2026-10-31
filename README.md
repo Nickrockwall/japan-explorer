@@ -69,9 +69,15 @@ python tools/build_bundle.py
 
 数据结构、字段含义与各项约定见 [CLAUDE.md](CLAUDE.md)。
 
-## 自动检查
+## 自动检查与发布
 
-每次推送到 GitHub 都会自动运行（结果见上方徽章）；本地改完也可以先跑一遍：
+推送到 GitHub 后会依次运行：
+
+1. **数据检查**（几秒）：字段与取值、三语译文结构、数据包是否过期、市区町村与对照表是否对得上等
+2. **界面测试**（约 2 分钟）：用真实浏览器在电脑 / 平板 / 手机三种尺寸、中英日三种语言下把主要操作走一遍
+3. **发布**：只有 main 分支、且前两步都通过时才发布到 GitHub Pages；失败时网站保持上一版，失败截图可在 Actions 页面下载
+
+结果见上方徽章或 [Actions 页面](https://github.com/Nickrockwall/japan-explorer/actions)。本地改完也可以先跑一遍：
 
 ```bash
 python -X utf8 tools/check_data.py        # 数据与仓库一致性，几秒
@@ -85,7 +91,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 - 地图：[Apache ECharts](https://echarts.apache.org/) 5.5.1（CDN 加载，带国内镜像回退）
 - 数据：每种语言打包成单个 JSON（`src/data/bundle/`），首屏只需 2 个数据请求
 - PWA：`manifest.webmanifest` + `sw.js` 离线缓存
-- 部署：GitHub Pages，推送到 `main` 分支即自动上线
+- 部署：GitHub Pages，由 GitHub Actions 发布——推送到 main 后先自动检查，**全部通过才上线**，任何一项失败网站都保持上一版
 
 ## 说明
 

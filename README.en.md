@@ -71,9 +71,15 @@ python tools/build_bundle.py
 
 The data schema and project conventions are documented in [CLAUDE.md](CLAUDE.md) (in Chinese).
 
-## Automated checks
+## Automated checks and deployment
 
-They run on every push to GitHub (see the badge above); you can also run them locally:
+Every push to GitHub runs, in order:
+
+1. **Data checks** (a few seconds): fields and values, translation structure, stale bundles, municipalities vs. the province table, and more
+2. **UI tests** (~2 min): a real browser walks through the main features on desktop / tablet / phone in Chinese, English and Japanese
+3. **Deploy**: only for `main`, and only when both previous steps pass; otherwise the site stays on the previous version, and failure screenshots can be downloaded from the run
+
+See the badge above or the [Actions page](https://github.com/Nickrockwall/japan-explorer/actions). You can also run the checks locally:
 
 ```bash
 python -X utf8 tools/check_data.py        # data & repo consistency, a few seconds
@@ -87,7 +93,7 @@ python -X utf8 tests/smoke.py             # UI smoke tests: desktop / tablet / p
 - Map: [Apache ECharts](https://echarts.apache.org/) 5.5.1, loaded from a CDN with fallback mirrors
 - Data: one bundled JSON file per language (`src/data/bundle/`), so first load needs only two data requests
 - PWA: `manifest.webmanifest` + an offline cache in `sw.js`
-- Hosting: GitHub Pages — every push to `main` goes live automatically
+- Hosting: GitHub Pages, published by GitHub Actions — a push to `main` is checked first and **goes live only if every check passes**; if anything fails, the site stays on the previous version
 
 ## Notes
 

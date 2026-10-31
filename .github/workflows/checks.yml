@@ -1,9 +1,15 @@
-# 每次推送 / PR：先跑数据检查（几秒），通过后再用真实浏览器跑界面冒烟测试（约 3 分钟）
+# 每次推送 / PR：先跑数据检查（几秒），通过后再用真实浏览器跑界面冒烟测试（约 2 分钟）。
+# 推送到 main 且两项都通过时才发布到 GitHub Pages；任何一项失败，网站保持上一版。
+# （仓库 Settings → Pages → Source 须设为「GitHub Actions」）
 name: Checks
 
 on:
   push:
   pull_request:
+  workflow_dispatch: # 可在 Actions 页面手动重跑（例如重新发布）
+
+permissions:
+  contents: read
 
 jobs:
   data:
@@ -36,3 +42,30 @@ jobs:
         with:
           name: smoke-screenshots
           path: tests/artifacts/
+
+  deploy:
+    # 只有 main 分支的推送（或手动运行）才发布；PR 与其他分支只做检查
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: [data, ui]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble site (only what the page needs — no tools/ or tests/)
+        run: |
+          mkdir _site
+          cp -r index.html manifest.webmanifest sw.js src _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
