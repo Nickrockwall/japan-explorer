@@ -1,7 +1,7 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { loadAll, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
-import { renderDetail, renderWelcome, playStamp, highlightEra, esc } from './detail.js';
+import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
@@ -315,6 +315,7 @@ async function main() {
   setupLangSwitch();
   setupHudFold();
   setupSound();
+  $('settings-legal').innerHTML = legalHTML();
   let data;
   try {
     data = await loadAll(lang, deepMerge);

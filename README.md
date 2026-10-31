@@ -146,6 +146,16 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 
 史实、地缘梗、拉面与地酒等内容按通行说法整理，部分为近似表达（如按县内主导势力着色），存疑处已标注“一说 / 据传”，适合轻松浏览，不宜作为学术引用。
 
-地图数据来自 [dataofjapan/land](https://github.com/dataofjapan/land)。
+全国地图：出典「地球地図日本」（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换为 GeoJSON。
 
 市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。
+
+## 版权与许可
+
+© 2026 Nickrockwall
+
+- **代码**（HTML / CSS / JS / Python 工具与测试）：[MIT](LICENSE)——可自由使用、修改、商用，保留版权声明即可
+- **内容**（史料文字、人设与解答文字、译文、封面与图标）：[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hans)——注明「Japan Explorer by Nickrockwall」并附本项目链接即可转载、改编，**不得商用**；商用请先通过 GitHub Issue 联系
+- **第三方素材**按各自条款：ECharts（Apache-2.0）、地图边界（地球地図日本 / 国土数値情報）、Wikidata（CC0）、旧郡数据（日文维基百科，CC BY-SA 4.0）
+
+范围与第三方清单详见 [LICENSE-CONTENT.md](LICENSE-CONTENT.md)。

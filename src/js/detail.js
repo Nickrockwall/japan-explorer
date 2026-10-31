@@ -15,7 +15,14 @@ export function renderWelcome(el) {
       <p>${t('w.p1')}</p>
       <p>${t('w.p2')}</p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
+      <p class="legal">${legalHTML()}</p>
     </div>`;
+}
+
+// 版权与许可：代码 MIT、内容 CC BY-NC 4.0；全国地图须注明出典（地球地図日本）
+const REPO = 'https://github.com/Nickrockwall/japan-explorer';
+export function legalHTML() {
+  return `© 2026 Nickrockwall · ${t('legal.lic')} · <a href="${REPO}/blob/main/LICENSE-CONTENT.md" target="_blank" rel="noopener">${t('legal.more')}</a><br>${t('legal.map')}`;
 }
 
 const list = (items) => items.map((x) => `<span class="pill">${esc(x)}</span>`).join('');

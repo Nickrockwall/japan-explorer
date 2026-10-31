@@ -148,6 +148,16 @@ python -X utf8 tests/smoke.py             # UI smoke tests: desktop / tablet / p
 
 History, local in-jokes, ramen and sake entries follow commonly accepted accounts. Some are approximations (for example, each prefecture is colored by its dominant power), and uncertain points are marked "according to one account" or "legend has it". The app is meant for casual exploration, not academic citation.
 
-Map data: [dataofjapan/land](https://github.com/dataofjapan/land).
+National map: source 「地球地図日本」 (Global Map Japan, Geospatial Information Authority of Japan), converted to GeoJSON by [dataofjapan/land](https://github.com/dataofjapan/land).
 
 Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`.
+
+## Copyright & License
+
+© 2026 Nickrockwall
+
+- **Code** (HTML / CSS / JS / Python tools and tests): [MIT](LICENSE) — use, modify and use commercially; just keep the copyright notice
+- **Content** (historical text, guide personas and answers, translations, cover images and icons): [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — share and adapt with credit to "Japan Explorer by Nickrockwall" and a link to this project, **non-commercial only**; for commercial use, open a GitHub issue first
+- **Third-party material** keeps its own terms: ECharts (Apache-2.0), map boundaries (Global Map Japan / 国土数値情報), Wikidata (CC0), former-district data (Japanese Wikipedia, CC BY-SA 4.0)
+
+See [LICENSE-CONTENT.md](LICENSE-CONTENT.md) for the full scope and third-party list.

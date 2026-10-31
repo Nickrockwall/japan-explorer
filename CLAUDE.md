@@ -285,3 +285,4 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 新增或修改县数据时保持 schema 一致，`history_timeline` 必须恰好 6 段（律令/镰仓/室町/战国/江户/近现代）。
 - 史实以通行说法为准，存疑处用“据传”标注。
 - 不引入构建工具；新增模块用原生 ES Modules `import`。
+- 版权与许可：© 2026 Nickrockwall；代码 MIT（`LICENSE`，保持纯 MIT 原文以便 GitHub 识别），内容 CC BY-NC 4.0，范围与第三方清单在 `LICENSE-CONTENT.md`。新增第三方素材时登记到该表，并在 README 三语「说明」与界面上注明出处。全国地图须注明「出典：地球地図日本」（欢迎卡与设置弹窗底部的 `legalHTML()`）。来自维基百科的数据是 CC BY-SA 4.0，不能并入 NC 内容。

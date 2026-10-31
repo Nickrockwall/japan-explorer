@@ -148,6 +148,16 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 
 史実・ご当地ネタ・ラーメン・地酒などは一般的な説に基づいてまとめています。一部は近似的な表現です（たとえば県内の主な勢力で色分けしています）。はっきりしない点には「一説に」「伝承では」と記しています。気軽に楽しむためのもので、学術的な引用には向きません。
 
-地図データ：[dataofjapan/land](https://github.com/dataofjapan/land)
+全国地図：出典「地球地図日本」（国土地理院）。[dataofjapan/land](https://github.com/dataofjapan/land) による GeoJSON 変換版を使用。
 
 市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。
+
+## 著作権とライセンス
+
+© 2026 Nickrockwall
+
+- **コード**（HTML / CSS / JS / Python のツールとテスト）：[MIT](LICENSE)。著作権表示を残せば、改変・商用利用も自由です
+- **コンテンツ**（歴史の文章、案内人の人物設定と回答文、翻訳、カバー画像とアイコン）：[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.ja)。「Japan Explorer by Nickrockwall」とこのプロジェクトへのリンクを記せば転載・改変できますが、**営利目的は不可**です。商用は GitHub の Issue でご相談ください
+- **第三者の素材**はそれぞれの条件に従います：ECharts（Apache-2.0）、地図の境界（地球地図日本・国土数値情報）、Wikidata（CC0）、旧郡データ（日本語版 Wikipedia、CC BY-SA 4.0）
+
+範囲と第三者素材の一覧は [LICENSE-CONTENT.md](LICENSE-CONTENT.md) をご覧ください。

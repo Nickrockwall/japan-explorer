@@ -374,6 +374,9 @@ body.resizing { cursor: row-resize; user-select: none; }
 .modal .check-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer; }
 .modal input[type="checkbox"] { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--shu); }
 .modal input[type="range"] { padding: 0; border: 0; background: none; accent-color: var(--kin); width: 100%; }
+.legal { margin: 0; font-size: 11px; line-height: 1.6; color: var(--muted); }
+.legal a { color: var(--kin); text-decoration: none; white-space: nowrap; border-bottom: 1px dotted currentColor; }
+.welcome .legal { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--line); }
 .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .modal-actions .spacer { flex: 1; }
 
