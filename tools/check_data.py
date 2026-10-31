@@ -214,7 +214,7 @@ def check_pilgrimage():
             err(where, f'type 必须是 anime / taiga：{s["type"]}')
         if s['pref'] not in geom:
             err(where, f'pref 非法：{s["pref"]}')
-        elif not near(s['coords'], geom[s['pref']]):
+        elif not near(s['coords'], geom[s['pref']], s.get('tolerance_km', 3) / 111):
             err(where, f'坐标 {s["coords"]} 不在第 {s["pref"]} 号县内')
     for pid in data['done']:
         types = {s['type'] for s in data['spots'] if s['pref'] == pid}

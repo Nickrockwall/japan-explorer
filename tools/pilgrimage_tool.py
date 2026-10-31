@@ -89,7 +89,8 @@ def inside(pt, geom):
 
 
 def near(pt, geom, tol=0.03):
-    """离岸的岛、海边的地标可能落在简化后的海岸线外：容许约 3 公里"""
+    """离岸的岛、海边的地标可能落在简化后的海岸线外：默认容许约 3 公里；
+    更远的离岛在巡礼点上写 tolerance_km（并用 tolerance_note 说明原因）"""
     return any(inside((pt[0] + dx, pt[1] + dy), geom) for dx in (-tol, 0, tol) for dy in (-tol, 0, tol))
 
 
@@ -137,7 +138,7 @@ def verify(write=False):
                 s['coords'], changed = new, changed + 1
         elif not c and s.get('coords_src') != 'manual':
             problems.append(f'{sid}: 地点条目「{s["place_wiki"]}」没有坐标，需手填 coords 并标 coords_src: manual')
-        if s.get('coords') and not near(s['coords'], pref_geom[s['pref']]):
+        if s.get('coords') and not near(s['coords'], pref_geom[s['pref']], s.get('tolerance_km', 3) / 111):
             problems.append(f'{sid}: 坐标 {s["coords"]} 不在第 {s["pref"]} 号县内')
         title = re.sub(r'\s*\(.+\)$', '', s['work_wiki'])
         ok = any(k in work_text.get(s['work_wiki'], '') for k in s['evidence']) or title in place_text.get(s['place_wiki'], '')

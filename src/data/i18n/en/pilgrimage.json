@@ -1,4 +1,10 @@
 {
+ "abenobashi-abeno": {
+  "work": "Magical Shopping Arcade Abenobashi",
+  "place": "Abeno",
+  "scene": "Set in an old shopping arcade in Abeno, Osaka, where two kids defend their streets through one alternate world after another.",
+  "tips": "Today's Abeno is full of high-rises — go up Abeno Harukas for a view over Osaka. Tennōji Zoo and Tsūtenkaku are nearby."
+ },
  "anohana-chichibu": {
   "work": "Anohana: The Flower We Saw That Day",
   "place": "Old Chichibu Bridge",
@@ -35,6 +41,12 @@
   "scene": "High-school girls build things by hand in a DIY club, set in Sanjō, a city famous for blades and metalwork that collaborates with the series.",
   "tips": "Sanjō is a city of craftspeople — try forging a small knife at a local smithing workshop. Factories are working sites; don't enter without permission."
  },
+ "eupho-uji": {
+  "work": "Sound! Euphonium",
+  "place": "Uji Bridge (Uji City)",
+  "scene": "The Kitauji High concert band story is set in Uji; the riverside, Uji Bridge and the Mount Daikichi lookout are famous scenes.",
+  "tips": "The Uji riverside is a pleasant walk; the Daikichi lookout needs a short climb. The school is modeled on a real high school — don't enter the grounds."
+ },
  "flying-witch-hirosaki": {
   "work": "Flying Witch",
   "place": "Hirosaki Castle (Hirosaki Park)",
@@ -65,6 +77,12 @@
   "scene": "In late-Meiji Hokkaido, Abashiri Prison holds a key to the hunt for the hidden gold; the museum's radial cell blocks are the very ones the story draws on.",
   "tips": "The grounds are large with a lot of outdoor walking — dress warmly and watch for ice in winter. It is a historical site, so keep your voice down."
  },
+ "gou-odani": {
+  "work": "Gō: Princesses of the Warring States",
+  "place": "Odani Castle site",
+  "scene": "The three daughters of Azai Nagamasa and Oichi — Chacha, Hatsu and Gō — were born at Odani Castle, where the drama begins and where they first saw a castle fall.",
+  "tips": "Odani is a steep mountain castle; the climb takes one to two hours, so wear proper shoes. The museum at the foot explains the Azai family first."
+ },
  "hakuouki-iimoriyama": {
   "work": "Hakuōki",
   "place": "Mount Iimori",
@@ -76,6 +94,12 @@
   "place": "Yuwaku Onsen",
   "scene": "Ohana grows up working at the inn Kissuisō; the spa town is modeled on Yuwaku Onsen outside Kanazawa, which even started holding the series' Bonbori Festival for real.",
   "tips": "Yuwaku is a quiet mountain spa — don't wander into inns' private areas for photos. It gets crowded during the autumn Bonbori Festival."
+ },
+ "hantsuki-ise": {
+  "work": "Half a Moon Rises in the Sky (Hanbun no Tsuki ga Noboru Sora)",
+  "place": "Ise City",
+  "scene": "A hospitalized boy and a seriously ill girl, in the author's hometown of Ise.",
+  "tips": "Combine it with a visit to Ise Jingū. The hospital is modeled on a real one — please don't go in to take photos."
  },
  "homura-esashi": {
   "work": "Homura Tatsu",
@@ -95,6 +119,12 @@
   "scene": "The Classics Club's everyday mysteries take place in Kamiyama, modeled on Hida-Takayama, with its old streets, shrines and festivals.",
   "tips": "Takayama's old streets are crowded — keep the narrow lanes clear when taking photos. The school is modeled on a real high school; don't enter the grounds."
  },
+ "ieyasu-iga": {
+  "work": "What Will You Do, Ieyasu? (Dōsuru Ieyasu)",
+  "place": "Iga-Ueno Castle",
+  "scene": "After the Honnō-ji Incident, Ieyasu fled from Sakai back to Mikawa over the Iga mountains — the drama's tense \"crossing of Iga\" passes through this land of ninja.",
+  "tips": "Iga-Ueno Castle's tall stone walls are striking, and the Iga-ryū Ninja Museum below has live ninja demonstrations."
+ },
  "ieyasu-okazaki": {
   "work": "What Will You Do, Ieyasu? (Dōsuru Ieyasu)",
   "place": "Okazaki Castle",
@@ -107,6 +137,12 @@
   "scene": "Mount Akina, where Takumi delivers tofu, is modeled on Mount Haruna; its run of hairpin bends is the series' most iconic setting.",
   "tips": "These are public roads — never imitate the racing. Lake Haruna and Ikaho Onsen are best enjoyed slowly."
  },
+ "kageki-takarazuka": {
+  "work": "Kageki Shojo!!",
+  "place": "Takarazuka Grand Theater",
+  "scene": "Girls who dream of becoming stars of a revue company modeled on the Takarazuka Revue; the town and its \"Hana no Michi\" promenade appear.",
+  "tips": "Hana no Michi is a nice walk. Near the theater, please don't follow or photograph performers and students."
+ },
  "kamakuradono-awa": {
   "work": "The 13 Lords of the Shogun",
   "place": "Awa (Minamoto no Yoritomo landing site, Kyonan)",
@@ -118,6 +154,18 @@
   "place": "Tsurugaoka Hachimangū",
   "scene": "The spiritual center of the Kamakura shogunate; Minamoto no Sanetomo's assassination on its great stone steps is one of the drama's most shocking turns.",
   "tips": "Walk from Kamakura Station along the Dankazura approach. New Year and weekends are packed — weekday mornings are best."
+ },
+ "kanbei-himeji": {
+  "work": "Gunshi Kanbei",
+  "place": "Himeji Castle",
+  "scene": "Kuroda Kanbei came from Harima and offered Himeji Castle to Hashiba Hideyoshi as his base for conquering western Japan.",
+  "tips": "Expect queues to climb the keep of this World Heritage castle — go early in high season. Stairs inside are steep and shoes come off."
+ },
+ "keion-toyosato": {
+  "work": "K-On!",
+  "place": "Old Toyosato Elementary School buildings",
+  "scene": "Sakuragaoka High, where the five members of the light music club study, is modeled on the old Toyosato Elementary School in Shiga — especially its staircase with the tortoise-and-hare statues.",
+  "tips": "The old buildings are open to the public with a fan space; they are a town facility, so keep to the opening hours and house rules."
  },
  "kiminonawa-hidafurukawa": {
   "work": "Your Name.",
@@ -137,11 +185,23 @@
   "scene": "After leaving Mino, Akechi Mitsuhide drifted to Echizen and served Asakura Yoshikage; the drama's Echizen years center on Ichijōdani.",
   "tips": "A Sengoku-period street has been reconstructed, giving a feel for a castle town. The site is large — allow half a day."
  },
+ "kiyomori-todaiji": {
+  "work": "Taira no Kiyomori",
+  "place": "Tōdai-ji",
+  "scene": "The Taira clashed with the great temples of Nara, ending in Taira no Shigehira burning the city and Tōdai-ji's Great Buddha Hall — a scene the drama portrays.",
+  "tips": "Tōdai-ji's Great Buddha Hall and the deer of Nara Park are musts; feed deer only special crackers, and mind small children — deer can butt."
+ },
  "kunitori-gifu": {
   "work": "Kunitori Monogatari",
   "place": "Gifu Castle (Mount Kinka)",
   "scene": "Two generations of \"stealing a province\": Saitō Dōsan ruled from Inabayama Castle, which Oda Nobunaga took and renamed Gifu.",
   "tips": "Ride the Mount Kinka ropeway up; the keep looks out over the Nōbi plain. Cormorant fishing on the Nagara River is famous in summer."
+ },
+ "kyokai-narapark": {
+  "work": "Beyond the Boundary (Kyōkai no Kanata)",
+  "place": "Nara Park",
+  "scene": "A girl spirit warrior and a half-yōmu boy fight in Nara and Kashihara; summer scenes around Nara Park appear in the series.",
+  "tips": "Nara Park's deer are wild animals — feed them only the special deer crackers and watch out for headbutts. The school is modeled on a real high school; don't enter the grounds."
  },
  "lovelive-uchiura": {
   "work": "Love Live! Sunshine!!",
@@ -173,6 +233,12 @@
   "scene": "After the 2011 earthquake, girls start a new life in the \"Mayoiga\" house of a seaside town modeled on Ōtsuchi, which collaborated with the film.",
   "tips": "This area was rebuilt after the disaster; visit with respect. The coastal reconstruction memorials tell the town's story."
  },
+ "nagiasu-kumano": {
+  "work": "Nagi-Asu: A Lull in the Sea",
+  "place": "Kumano City",
+  "scene": "A story of children from an undersea village and a seaside town; the harbor town on land is modeled on the Kumano area of Mie.",
+  "tips": "Kumano's coastline is spectacular — see Shichiri-mihama beach and Shishi-iwa rock. Fishing ports are workplaces; don't get in the way."
+ },
  "naotora-ryotanji": {
   "work": "Naotora: The Lady Warlord",
   "place": "Ryōtan-ji (Iinoya)",
@@ -203,6 +269,12 @@
   "scene": "Numata Castle, contested by the Sanada and the Hōjō, is a key setting; the dispute became Hideyoshi's pretext for attacking the Hōjō.",
   "tips": "The castle site is now Numata Park, overlooking river terraces; the nearby Nagurumi Castle site belongs to the same story."
  },
+ "sanadamaru-osaka": {
+  "work": "Sanada Maru",
+  "place": "Osaka Castle",
+  "scene": "The title \"Sanada Maru\" is the outwork Sanada Nobushige built on the south side of Osaka Castle in the Winter Siege; the drama climaxes in the Siege of Osaka.",
+  "tips": "Osaka Castle Park is huge and the keep is a museum; Sankō Shrine south of the castle has sites linked to the Sanada Maru."
+ },
  "sanadamaru-ueda": {
   "work": "Sanada Maru",
   "place": "Ueda Castle site",
@@ -220,6 +292,12 @@
   "place": "Shibusawa Eiichi Memorial Museum (Fukaya)",
   "scene": "The life of Shibusawa Eiichi, \"father of Japanese capitalism\", born in Chiaraijima village in Musashi — today's Fukaya.",
   "tips": "His family home, Naka-no-ie, is nearby. Fukaya leeks are the local specialty, best in winter."
+ },
+ "shinsengumi-mibu": {
+  "work": "Shinsengumi!",
+  "place": "Mibu-dera",
+  "scene": "When Kondō Isami and his men came to Kyoto they were quartered in Mibu — first known as the \"Mibu rōnin\" — and trained and gathered at Mibu-dera.",
+  "tips": "The temple has the graves of Shinsengumi members (Mibuzuka); the nearby former Yagi residence, their headquarters, is open to visitors."
  },
  "shishi-goryokaku": {
   "work": "The Age of Lions (Shishi no Jidai)",
@@ -239,6 +317,12 @@
   "scene": "The crossing in the anime opening, with the Enoden train passing in front of the sea, has become a must-see for fans from around the world.",
   "tips": "It is extremely crowded. Locals repeatedly ask visitors not to stand in the road for photos, not to block trains or cars, and not to make noise near homes."
  },
+ "summertime-tomogashima": {
+  "work": "Summer Time Rendering",
+  "place": "Tomogashima (Wakayama City)",
+  "scene": "The hero returns to \"Hitogashima\", an island off Wakayama City, for a childhood friend's funeral; the island is modeled on Tomogashima.",
+  "tips": "Boats leave from Kada port, with few sailings that stop in bad weather. The island has old gun batteries and hilly paths — bring water."
+ },
  "summerwars-ueda": {
   "work": "Summer Wars",
   "place": "Ueda City",
@@ -256,6 +340,12 @@
   "place": "Bannaji (site of the Ashikaga residence)",
   "scene": "The hero, Ashikaga Takauji, came from the Ashikaga of Ashikaga Estate in Shimotsuke; Bannaji stands on the site of their residence.",
   "tips": "The temple keeps its moat and earthen walls, the layout of a warrior's residence. The neighboring Ashikaga School is said to be Japan's oldest school."
+ },
+ "tamako-demachi": {
+  "work": "Tamako Market",
+  "place": "Demachi Masugata Shopping Street",
+  "scene": "Tamako, daughter of a mochi shop, and everyday life on a shopping street modeled on Kyoto's Demachi Masugata arcade.",
+  "tips": "It's where locals do their shopping — don't block shop fronts for photos. Buying something is the best kind of pilgrimage."
  },
  "tenchijin-kasugayama": {
   "work": "Tenchijin",
@@ -310,6 +400,12 @@
   "place": "Tatebayashi",
   "scene": "Four girls set out for Antarctica; the hometown and daily life of the lead, Tamaki Mari, are drawn from Tatebayashi.",
   "tips": "The station and the streets and riverbanks of Tatebayashi appear in the series. Tatebayashi is famously hot in summer — guard against heatstroke."
+ },
+ "yoshimune-wakayama": {
+  "work": "Hachidai Shōgun Yoshimune",
+  "place": "Wakayama Castle",
+  "scene": "Tokugawa Yoshimune, lord of Kishū, became the eighth shogun and launched the Kyōhō Reforms; his home was Wakayama Castle.",
+  "tips": "The keep overlooks Wakayama City and the Kinokawa River; the castle's Momijidani garden is a quiet Japanese garden."
  },
  "yoshinobu-kodokan": {
   "work": "Tokugawa Yoshinobu",
