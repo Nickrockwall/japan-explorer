@@ -31,6 +31,19 @@ The app is available in Chinese, English and Japanese.
 | **Sharing** | A Share button on the detail card; links keep the region and language, e.g. `#pref=26&lang=en` opens Kyoto in English |
 | **Mobile & install** | On phones, a bottom tab bar switches between Map, Details and Guide, each full-screen; "Add to Home Screen" opens it full-screen like an app, and pages you have viewed work offline |
 
+## 📜 Patch Notes
+
+> Adventurers, a new version has arrived. Latest first.
+
+- **v2.0 "Pilgrimage" expansion** — New layer with 111 anime and taiga-drama spots across all 47 prefectures; glowing pins, type filter, scene & tips cards, and two new guide voices (🔥 otaku, 🎬 drama critic). Every spot verified against Wikipedia.
+- **v1.9 "Shield & Portal"** — Automated checks: every update must pass data checks and 51 browser tests before going live. Fixed the map hanging on blocked CDNs, layout jumps between eras, and the phone search list running off-screen.
+- **v1.8 "Map of a Thousand Towns"** — Drill-down map of 1,900+ municipalities, Meiji-era districts, smarter search (kanji, kana, English), and a Map / Details / Guide tab bar on phones.
+- **v1.7 "Pocket Scroll"** — Install to home screen, offline support, shareable links with language, phone layout overhaul.
+- **v1.6 "Trilingual Pass"** — English and Japanese unlocked.
+- **v1.5 "Battle Sandbox"** — Five famous battles in four phases, plus the nine-era time slider.
+- **v1.4 "Food Atlas"** — Ramen and sake layers.
+- **v1.0 "Launch"** — 47 prefectures ⇄ 68 provinces, timelines, goshuin book and the AI history guide.
+
 ## Connecting an AI (optional)
 
 You can use the app without an AI service: quick questions and common questions are answered from local data, in the guide's voice. For free-form conversation, click **API Settings** in the top-right corner and enter your own key:
