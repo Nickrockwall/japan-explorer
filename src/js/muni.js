@@ -100,18 +100,26 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
     return p.province ? cur.provColor.get(p.province) : OUTSIDE;
   }
 
+  const oldList = (ods, max = 6) => {
+    const shown = ods.slice(0, max).map(([n, part]) => esc(n) + (part ? `<i>${t('muni.oldPart')}</i>` : '')).join('・');
+    return ods.length > max ? `${shown} ${t('muni.oldMore', { n: ods.length - max })}` : shown;
+  };
+
   function info(p, { full = false } = {}) {
     const sub = [p.kana, lang !== 'en' && p.en ? p.en : null].filter(Boolean).join(' · ');
     const rows = [];
-    if (p.city) rows.push([t('muni.ward'), p.city]);
-    if (p.district) rows.push([t('muni.district'), p.district]);
+    // 由古到今：所属市 → 旧国 → 旧郡（明治）→ 现属郡 → 人口
+    if (p.city) rows.push([t('muni.ward'), esc(p.city)]);
     const prov = p.province ? provName(p.province) : t('muni.outside');
     rows.push([t('muni.province'), p.partial.length ? `${prov}<small>${esc(t('muni.partial', { list: p.partial.map(provName).join('・') }))}</small>` : prov]);
+    if (p.old_districts?.length) rows.push([t('muni.old'), oldList(p.old_districts, full ? 8 : 4)]);
+    if (p.district) rows.push([t('muni.district'), esc(p.district)]);
     rows.push([t('muni.pop'), p.pop ? t('muni.popYear', { n: fmtPop(p.pop), y: p.pop_year }) : '—']);
     const body = rows.map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${v}</b></div>`).join('');
     const head = `<div class="muni-name">${esc(dn(p))}</div>${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}`;
     if (!full) return head + body;
-    return closeBtn() + head + body + wiki(p.label, p.en);
+    const note = p.old_districts?.length ? `<div class="muni-note">${esc(t('muni.oldNote'))}</div>` : '';
+    return closeBtn() + head + body + note + wiki(p.label, p.en);
   }
 
   const closeBtn = () => `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>`;
@@ -130,8 +138,10 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
       [t('muni.province'), provs.map(provName).join('・')],
       [t('muni.pop'), city.pop ? t('muni.popYear', { n: fmtPop(city.pop), y: city.pop_year }) : '—'],
     ].map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('');
+    const ods = cur.geo.cities?.[city.name] || [];
+    const old = ods.length ? `<div class="muni-row"><span>${esc(t('muni.old'))}</span><b>${oldList(ods, 8)}</b></div><div class="muni-note">${esc(t('muni.oldNote'))}</div>` : '';
     return `${closeBtn()}<div class="muni-name">${esc(lang === 'en' && city.en ? city.en : city.name)}</div>
-      ${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}${rows}${wiki(city.name, city.en)}`;
+      ${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}${rows}${old}${wiki(city.name, city.en)}`;
   }
 
   function legend() {
@@ -229,6 +239,7 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
       return {
         name: dn(one), ja: one.label, kana: one.kana, en: one.en, city: one.city, district: one.district,
         provinces: one.province ? [provName(one.province)] : [], partial: one.partial.map(provName),
+        old: (one.old_districts || []).map(([n]) => n),
         pop: one.pop && fmtPop(one.pop), pop_year: one.pop_year,
       };
     }
@@ -237,6 +248,7 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
     return {
       name: lang === 'en' && city.en ? city.en : city.name, ja: city.name, kana: city.kana, en: city.en, wards: wards.length,
       provinces: [...new Set(wards.map((w) => w.province).filter(Boolean))].map(provName), partial: [],
+      old: (cur.geo.cities?.[city.name] || []).map(([n]) => n),
       pop: city.pop && fmtPop(city.pop), pop_year: city.pop_year,
     };
   }

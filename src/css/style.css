@@ -798,6 +798,8 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .muni-row span { color: var(--muted); }
 .muni-row b { font-weight: 500; }
 .muni-row small { display: block; color: var(--kin); font-size: 11.5px; }
+.muni-row b i { font-style: normal; color: var(--muted); font-size: 11px; }
+.muni-note { margin-top: 6px; font-size: 10.5px; line-height: 1.5; color: var(--muted); }
 .muni-wiki { display: inline-block; margin-top: 8px; font-size: 12.5px; color: var(--kin); }
 .muni-tip .muni-name { font-size: 15px; padding: 0; }
 .muni-tip .muni-sub { margin-bottom: 4px; }

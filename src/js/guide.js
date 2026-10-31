@@ -53,7 +53,7 @@ const ROLE = {
     ctx: (p) => `用户此刻在地图上选中了「${p.name.kanji}（${p.name.zh}）」。下面是该地区的史料 JSON：`,
     battle: (P, b) => `你现在“附体”为历史人物 **${P.name}**（${b.narrator.title}），正身处「${b.name}」的战场，以第一人称说话，自称「${P.self}」。\n口吻：${P.voice}。\n以该人物在这场合战中的立场与见识回答；涉及其不可能知道的后世评价，用“据后世所传”之类的口吻带出。\n扮演仅限于语气与视角：不得美化杀戮，涉及兵力、动机等争议史实时注明“一说”。`,
     field: (f, provs) => `主战场所在地区：「${f.name.kanji}」（古：${provs}）。`,
-    place: (x) => `用户正在市区町村地图上查看「${x.ja}」（${x.kana}）：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（部分属 ${x.partial.join('・')}）` : ''}${x.district ? `，${x.district}` : ''}${x.pop ? `，人口约 ${x.pop}（${x.pop_year}）` : ''}。问题涉及此地时围绕它回答；上面史料里没有的具体地方史，要说明不确定，不得编造。`,
+    place: (x) => `用户正在市区町村地图上查看「${x.ja}」（${x.kana}）：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（部分属 ${x.partial.join('・')}）` : ''}${x.district ? `，现属${x.district}` : ''}${x.old?.length ? `，明治时期旧郡：${x.old.join('・')}（据维基百科整理，可能不全）` : ''}${x.pop ? `，人口约 ${x.pop}（${x.pop_year}）` : ''}。问题涉及此地时围绕它回答；上面史料里没有的具体地方史，要说明不确定，不得编造。`,
   },
   en: {
     hero: (P) => `You are now channeling the historical figure **${P.name}** (${P.title}). Speak in the first person.\nVoice: ${P.voice}.\nTell local history from this person's standpoint, knowledge and feelings; for events after their lifetime, frame them as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify massacres or persecution, and stay objective on disputed facts.`,
@@ -61,7 +61,7 @@ const ROLE = {
     ctx: (p) => `The user has selected ${p.name.romaji} (${p.name.kanji}) on the map. Records for this region (JSON):`,
     battle: (P, b) => `You are now channeling **${P.name}** (${b.narrator.title}) on the battlefield of ${b.name}. Speak in the first person.\nVoice: ${P.voice}.\nAnswer from this person's position in the battle; frame later judgments they could not know as "later generations say…".\nThe role-play is limited to tone and perspective: never glorify killing, and mark disputed numbers or motives as "one account says".`,
     field: (f, provs) => `Main battlefield: ${f.name.romaji} (${f.name.kanji}; ancient: ${provs}).`,
-    place: (x) => `The user is looking at ${x.en || x.ja} (${x.ja}, ${x.kana}) on the municipal map: ancient province ${x.provinces.join(', ') || 'outside the ritsuryō system'}${x.partial.length ? ` (partly ${x.partial.join(', ')})` : ''}${x.district ? `, ${x.district}` : ''}${x.pop ? `, population about ${x.pop} (${x.pop_year})` : ''}. When a question concerns this place, focus on it; for local history not in the records above, say you are unsure rather than inventing details.`,
+    place: (x) => `The user is looking at ${x.en || x.ja} (${x.ja}, ${x.kana}) on the municipal map: ancient province ${x.provinces.join(', ') || 'outside the ritsuryō system'}${x.partial.length ? ` (partly ${x.partial.join(', ')})` : ''}${x.district ? `, today in ${x.district}` : ''}${x.old?.length ? `, Meiji-era districts: ${x.old.join(', ')} (from Wikipedia, may be incomplete)` : ''}${x.pop ? `, population about ${x.pop} (${x.pop_year})` : ''}. When a question concerns this place, focus on it; for local history not in the records above, say you are unsure rather than inventing details.`,
   },
   ja: {
     hero: (P) => `あなたは歴史上の人物 **${P.name}**（${P.title}）として一人称で話してください。自称は「${P.self}」。\n口調：${P.voice}。\nこの人物の立場・見識・感情から土地の歴史を語り、没後の出来事は「後世の伝えでは」といった形で述べてください。\n演じるのは口調と視点だけです。虐殺や迫害を美化せず、争いのある史実は客観的に扱ってください。`,
@@ -69,7 +69,7 @@ const ROLE = {
     ctx: (p) => `ユーザーはいま地図で「${p.name.kanji}」を選んでいます。この地域の史料（JSON）：`,
     battle: (P, b) => `あなたは歴史上の人物 **${P.name}**（${b.narrator.title}）として「${b.name}」の戦場にいます。一人称で話し、自称は「${P.self}」。\n口調：${P.voice}。\nこの合戦での立場と見識から答え、知り得ない後世の評価は「後世の伝えでは」と述べてください。\n演じるのは口調と視点だけです。殺戮を美化せず、兵力や動機など諸説ある点は「一説に」と明記してください。`,
     field: (f, provs) => `主戦場：「${f.name.kanji}」（旧国：${provs}）。`,
-    place: (x) => `ユーザーは市区町村地図で「${x.ja}」（${x.kana}）を見ています：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（一部は${x.partial.join('・')}）` : ''}${x.district ? `、${x.district}` : ''}${x.pop ? `、人口約${x.pop}（${x.pop_year}年）` : ''}。この土地に関する質問にはここを中心に答え、上の史料にない細かな郷土史は不確かだと明言し、創作しないでください。`,
+    place: (x) => `ユーザーは市区町村地図で「${x.ja}」（${x.kana}）を見ています：旧国 ${x.provinces.join('・') || '令制外'}${x.partial.length ? `（一部は${x.partial.join('・')}）` : ''}${x.district ? `、現在は${x.district}` : ''}${x.old?.length ? `、明治の旧郡：${x.old.join('・')}（Wikipedia による整理・不完全な場合あり）` : ''}${x.pop ? `、人口約${x.pop}（${x.pop_year}年）` : ''}。この土地に関する質問にはここを中心に答え、上の史料にない細かな郷土史は不確かだと明言し、創作しないでください。`,
   },
 };
 const R = ROLE[lang];
@@ -101,6 +101,7 @@ function placeAnswer(x, p, P) {
   if (x.city) lines.push(t('o.place.ward', { city: x.city }));
   if (x.wards) lines.push(t('o.place.wards', { name, n: x.wards }));
   if (x.district) lines.push(t('o.place.district', { district: x.district }));
+  if (x.old?.length) lines.push(t('o.place.old', { list: joinList(x.old.slice(0, 5)) }));
   if (x.pop) lines.push(t('o.place.pop', { pop: x.pop, year: x.pop_year }));
   return lines.join('') + more;
 }

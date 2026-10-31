@@ -18,7 +18,7 @@
 | **时空穿越** | 拖动滑块或自动播放，看飞鸟到现代九个时代的版图与政权中枢 |
 | **合战演武** | 桶狭间、川中岛、关原、坛之浦、西南战争——布阵 → 开战 → 转折 → 结局四阶段沙盘推演，名将亲自解说 |
 | **风土图层** | 拉面流派图鉴（含一碗拉面的解构图）、地酒名酿地图 |
-| **市区町村地图** | 点进任一县，看全部 1,900 多个市区町村，按古代令制国或人口着色；悬停可看读音、所属郡、旧国与人口。搜索框可直接搜市町村（支持简体字、假名、英文），重名分条列出；地图上显示地名；选中后 AI 向导也能就此回答；链接可直接分享到某个市町村 |
+| **市区町村地图** | 点进任一县，看全部 1,900 多个市区町村，按古代令制国或人口着色；悬停可看读音、旧国、明治时期的旧郡、现属郡与人口。搜索框可直接搜市町村（支持简体字、假名、英文），重名分条列出；地图上显示地名；选中后 AI 向导也能就此回答；链接可直接分享到某个市町村 |
 | **御朱印帐** | 每到一县打卡盖印，收集 47 枚家纹印章 |
 | **地域修罗场** | 各县的地缘梗与互相吐槽，轻松向 |
 | **AI 历史向导** | 博学史官（按地区换人设：平安女官、浮世绘猫、琉球祝女……）⇄ 名将附体（第一人称扮演本地名将）；不接 API 也能离线问答 |
@@ -81,4 +81,4 @@ python tools/build_bundle.py
 
 地图数据来自 [dataofjapan/land](https://github.com/dataofjapan/land)。
 
-市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表与 Wikidata 整理（`tools/province_overrides.json`），横跨多国时取主要部分。重新生成：`python -X utf8 tools/build_municipalities.py`。
+市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。

@@ -30,6 +30,10 @@ GEO_URL = 'https://raw.githubusercontent.com/smartnews-smri/japan-topography/mai
 SPARQL = 'https://query.wikidata.org/sparql'
 with open(os.path.join(os.path.dirname(__file__), 'province_overrides.json'), encoding='utf-8') as _f:
     OVERRIDES = json.load(_f)
+# 旧郡对照（tools/fetch_districts.py 从维基百科「郡域」整理；不存在时跳过旧郡）
+_dpath = os.path.join(os.path.dirname(__file__), 'districts.json')
+DISTRICTS = json.load(open(_dpath, encoding='utf-8')) if os.path.exists(_dpath) else {}
+GUN_CHECK = []  # 旧郡所属旧国与对照表不一致的条目
 # Wikidata 缺读音等字段的条目，人工补充（团体代码前 5 位 → 字段）
 MANUAL = {
     '01209': {'kana': 'ゆうばりし'}, '01303': {'kana': 'とうべつちょう'}, '01399': {'kana': 'きょうごくちょう'},
@@ -233,6 +237,20 @@ def main():
             if f['properties']['name'] in REMOTE.get(pid, []) and not (pid == 1 and f['properties']['district'] not in ('色丹郡', '国後郡', '択捉郡', '紗那郡', '蘂取郡')):
                 f['properties']['remote'] = True
         feats.sort(key=lambda f: f['properties']['code'])
+        # 旧郡：[[郡名, 是否只含一部分]]，整体所属的排在前面；政令市只写到市一级的记在 out['cities']
+        gun_of, city_gun = {}, {}
+        for gun, v in DISTRICTS.get(str(pid), {}).items():
+            for n, part in v['municipalities'].items():
+                target = city_gun if n.endswith('市') and any(f['properties']['city'] == n for f in feats) else gun_of
+                target.setdefault(n, []).append([gun, part, v.get('province')])
+        for f in feats:
+            p = f['properties']
+            gs = sorted(gun_of.get(p['name'], []), key=lambda g: (g[1], g[0]))
+            p['old_districts'] = [[g[0], g[1]] for g in gs]
+            # 独立核对：整体属于某旧郡时，该郡的旧国应等于主要旧国
+            whole = {g[2] for g in gs if not g[1] and g[2]}
+            if p['province'] and whole and p['province'] not in whole:
+                GUN_CHECK.append(f'{pid:02d} {p["name"]}: 对照表={p["province"]} 旧郡={[g[0] + "(" + str(g[2]) + ")" for g in gs if not g[1]]}')
         names = {}
         lineage_sets = (base, ja_base, en_base)
         for i, ja in enumerate(ja_lineage):
@@ -241,7 +259,8 @@ def main():
             for ja in [f['properties']['province'], *f['properties']['partial']]:
                 if ja and ja not in names:
                     names[ja] = {'zh': ja, 'ja': ja, 'en': EN_NAMES.get(ja, ja)}
-        out = {'type': 'FeatureCollection', 'pref': pid, 'provinces': names, 'features': feats}
+        out = {'type': 'FeatureCollection', 'pref': pid, 'provinces': names, 'features': feats,
+               'cities': {c: [[g[0], g[1]] for g in sorted(gs, key=lambda g: g[0])] for c, gs in city_gun.items()}}
         wards = {}
         for f in feats:
             p = f['properties']
@@ -262,6 +281,8 @@ def main():
     print('各旧国的市区町村数:', len(stats), '国')
     print(f'需要复核 {len(MISMATCH)} 条：')
     print(chr(10).join(MISMATCH))
+    print(f'旧郡核对：{len(GUN_CHECK)} 条整体所属旧郡的旧国与对照表不一致')
+    print(chr(10).join(GUN_CHECK))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,9417 @@
+{
+ "_doc": "旧郡 → 今天的市区町村（值为 true 表示只含其一部分）。由 tools/fetch_districts.py 从日文维基百科「郡域」一节整理，可人工修正。",
+ "1": {
+  "三石郡": {
+   "title": "三石郡",
+   "province": null,
+   "municipalities": {
+    "新ひだか町": true
+   }
+  },
+  "上川郡": {
+   "title": "上川郡 (十勝国)",
+   "province": null,
+   "municipalities": {
+    "新得町": false,
+    "清水町": false,
+    "芽室町": true
+   }
+  },
+  "上磯郡": {
+   "title": "上磯郡",
+   "province": null,
+   "municipalities": {
+    "北斗市": true,
+    "木古内町": false,
+    "知内町": false
+   }
+  },
+  "中川郡": {
+   "title": "中川郡 (十勝国)",
+   "province": null,
+   "municipalities": {
+    "上士幌町": true,
+    "中札内村": true,
+    "士幌町": true,
+    "帯広市": true,
+    "幕別町": false,
+    "更別村": true,
+    "本別町": false,
+    "池田町": false,
+    "豊頃町": false,
+    "足寄町": true,
+    "陸別町": true,
+    "音更町": true
+   }
+  },
+  "久遠郡": {
+   "title": "久遠郡",
+   "province": null,
+   "municipalities": {
+    "せたな町": false
+   }
+  },
+  "亀田郡": {
+   "title": "亀田郡",
+   "province": null,
+   "municipalities": {
+    "七飯町": false,
+    "函館市": true,
+    "北斗市": true
+   }
+  },
+  "二海郡": {
+   "title": "二海郡",
+   "province": null,
+   "municipalities": {
+    "八雲町": false
+   }
+  },
+  "余市郡": {
+   "title": "余市郡",
+   "province": null,
+   "municipalities": {
+    "仁木町": false,
+    "余市町": false,
+    "赤井川村": false
+   }
+  },
+  "利尻郡": {
+   "title": "利尻郡",
+   "province": null,
+   "municipalities": {
+    "利尻富士町": false,
+    "利尻町": false
+   }
+  },
+  "勇払郡": {
+   "title": "勇払郡",
+   "province": null,
+   "municipalities": {
+    "むかわ町": false,
+    "占冠村": false,
+    "厚真町": false,
+    "安平町": false,
+    "苫小牧市": false
+   }
+  },
+  "十勝郡": {
+   "title": "十勝郡",
+   "province": null,
+   "municipalities": {
+    "浦幌町": false,
+    "豊頃町": true
+   }
+  },
+  "千歳郡": {
+   "title": "千歳郡",
+   "province": null,
+   "municipalities": {
+    "千歳市": false,
+    "恵庭市": false
+   }
+  },
+  "占守郡": {
+   "title": "占守郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "厚岸郡": {
+   "title": "厚岸郡",
+   "province": null,
+   "municipalities": {
+    "厚岸町": false,
+    "根室市": true,
+    "標茶町": true,
+    "浜中町": false
+   }
+  },
+  "厚田郡": {
+   "title": "厚田郡",
+   "province": null,
+   "municipalities": {
+    "石狩市": true
+   }
+  },
+  "古宇郡": {
+   "title": "古宇郡",
+   "province": null,
+   "municipalities": {
+    "泊村": false,
+    "神恵内村": false
+   }
+  },
+  "古平郡": {
+   "title": "古平郡",
+   "province": null,
+   "municipalities": {
+    "古平町": false
+   }
+  },
+  "国後郡": {
+   "title": "国後郡",
+   "province": null,
+   "municipalities": {
+    "泊村": false,
+    "留夜別村": false
+   }
+  },
+  "増毛郡": {
+   "title": "増毛郡",
+   "province": null,
+   "municipalities": {
+    "増毛町": false
+   }
+  },
+  "夕張郡": {
+   "title": "夕張郡",
+   "province": null,
+   "municipalities": {
+    "夕張市": false,
+    "栗山町": false,
+    "由仁町": false,
+    "長沼町": false
+   }
+  },
+  "天塩郡": {
+   "title": "天塩郡",
+   "province": null,
+   "municipalities": {
+    "天塩町": false,
+    "幌延町": false,
+    "豊富町": false,
+    "遠別町": false
+   }
+  },
+  "太櫓郡": {
+   "title": "太櫓郡",
+   "province": null,
+   "municipalities": {
+    "せたな町": true
+   }
+  },
+  "奥尻郡": {
+   "title": "奥尻郡",
+   "province": null,
+   "municipalities": {
+    "奥尻町": false
+   }
+  },
+  "宗谷郡": {
+   "title": "宗谷郡",
+   "province": null,
+   "municipalities": {
+    "猿払村": false,
+    "稚内市": true
+   }
+  },
+  "室蘭郡": {
+   "title": "室蘭郡",
+   "province": null,
+   "municipalities": {
+    "室蘭市": false
+   }
+  },
+  "寿都郡": {
+   "title": "寿都郡",
+   "province": null,
+   "municipalities": {
+    "寿都町": false,
+    "黒松内町": false
+   }
+  },
+  "小樽郡": {
+   "title": "小樽郡",
+   "province": null,
+   "municipalities": {
+    "小樽市": true
+   }
+  },
+  "山越郡": {
+   "title": "山越郡",
+   "province": null,
+   "municipalities": {
+    "八雲町": true,
+    "長万部町": false
+   }
+  },
+  "岩内郡": {
+   "title": "岩内郡",
+   "province": null,
+   "municipalities": {
+    "共和町": false,
+    "岩内町": false,
+    "泊村": true
+   }
+  },
+  "島牧郡": {
+   "title": "島牧郡",
+   "province": null,
+   "municipalities": {
+    "島牧村": false
+   }
+  },
+  "川上郡": {
+   "title": "川上郡",
+   "province": null,
+   "municipalities": {
+    "弟子屈町": false,
+    "標茶町": false
+   }
+  },
+  "常呂郡": {
+   "title": "常呂郡",
+   "province": null,
+   "municipalities": {
+    "佐呂間町": false,
+    "北見市": false,
+    "置戸町": false,
+    "訓子府町": false
+   }
+  },
+  "幌別郡": {
+   "title": "幌別郡",
+   "province": null,
+   "municipalities": {
+    "登別市": false
+   }
+  },
+  "幌泉郡": {
+   "title": "幌泉郡",
+   "province": null,
+   "municipalities": {
+    "えりも町": false
+   }
+  },
+  "広尾郡": {
+   "title": "広尾郡",
+   "province": null,
+   "municipalities": {
+    "大樹町": false,
+    "幕別町": true,
+    "広尾町": false
+   }
+  },
+  "当縁郡": {
+   "title": "当縁郡",
+   "province": null,
+   "municipalities": {
+    "大樹町": false,
+    "幕別町": true,
+    "豊頃町": true
+   }
+  },
+  "得撫郡": {
+   "title": "得撫郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "忍路郡": {
+   "title": "忍路郡",
+   "province": null,
+   "municipalities": {
+    "小樽市": true
+   }
+  },
+  "択捉郡": {
+   "title": "択捉郡",
+   "province": null,
+   "municipalities": {
+    "留別村": false
+   }
+  },
+  "振別郡": {
+   "title": "振別郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "斜里郡": {
+   "title": "斜里郡",
+   "province": null,
+   "municipalities": {
+    "小清水町": false,
+    "斜里町": false,
+    "清里町": false
+   }
+  },
+  "新冠郡": {
+   "title": "新冠郡",
+   "province": null,
+   "municipalities": {
+    "新冠町": false
+   }
+  },
+  "新知郡": {
+   "title": "新知郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "日高郡": {
+   "title": "日高郡 (北海道)",
+   "province": null,
+   "municipalities": {
+    "新ひだか町": false
+   }
+  },
+  "有珠郡": {
+   "title": "有珠郡",
+   "province": null,
+   "municipalities": {
+    "伊達市": true,
+    "喜茂別町": true,
+    "壮瞥町": false,
+    "洞爺湖町": true
+   }
+  },
+  "札幌郡": {
+   "title": "札幌郡",
+   "province": null,
+   "municipalities": {
+    "北広島市": false,
+    "札幌市中央区": true,
+    "札幌市北区": true,
+    "札幌市南区": true,
+    "札幌市厚別区": true,
+    "札幌市手稲区": true,
+    "札幌市東区": true,
+    "札幌市清田区": true,
+    "札幌市白石区": true,
+    "札幌市西区": true,
+    "札幌市豊平区": true,
+    "江別市": true
+   }
+  },
+  "松前郡": {
+   "title": "松前郡",
+   "province": null,
+   "municipalities": {
+    "松前町": false,
+    "福島町": false
+   }
+  },
+  "枝幸郡": {
+   "title": "枝幸郡",
+   "province": null,
+   "municipalities": {
+    "中頓別町": false,
+    "枝幸町": false,
+    "浜頓別町": false
+   }
+  },
+  "根室郡": {
+   "title": "根室郡",
+   "province": null,
+   "municipalities": {
+    "別海町": true,
+    "根室市": true
+   }
+  },
+  "様似郡": {
+   "title": "様似郡",
+   "province": null,
+   "municipalities": {
+    "様似町": false
+   }
+  },
+  "標津郡": {
+   "title": "標津郡",
+   "province": null,
+   "municipalities": {
+    "中標津町": false,
+    "標津町": false
+   }
+  },
+  "樺戸郡": {
+   "title": "樺戸郡",
+   "province": null,
+   "municipalities": {
+    "新十津川町": false,
+    "月形町": false,
+    "浦臼町": false
+   }
+  },
+  "檜山郡": {
+   "title": "檜山郡",
+   "province": null,
+   "municipalities": {
+    "上ノ国町": false,
+    "厚沢部町": false,
+    "江差町": false
+   }
+  },
+  "歌棄郡": {
+   "title": "歌棄郡",
+   "province": null,
+   "municipalities": {
+    "寿都町": true,
+    "黒松内町": true
+   }
+  },
+  "沙流郡": {
+   "title": "沙流郡",
+   "province": null,
+   "municipalities": {
+    "平取町": false,
+    "日高町": false
+   }
+  },
+  "河東郡": {
+   "title": "河東郡",
+   "province": null,
+   "municipalities": {
+    "上士幌町": false,
+    "士幌町": false,
+    "清水町": true,
+    "芽室町": true,
+    "音更町": false,
+    "鹿追町": false
+   }
+  },
+  "河西郡": {
+   "title": "河西郡",
+   "province": null,
+   "municipalities": {
+    "中札内村": false,
+    "帯広市": true,
+    "更別村": false,
+    "清水町": true,
+    "芽室町": false
+   }
+  },
+  "津軽郡": {
+   "title": "津軽郡 (北海道)",
+   "province": null,
+   "municipalities": {
+    "松前町": false
+   }
+  },
+  "浜益郡": {
+   "title": "浜益郡",
+   "province": null,
+   "municipalities": {
+    "石狩市": true
+   }
+  },
+  "浦河郡": {
+   "title": "浦河郡",
+   "province": null,
+   "municipalities": {
+    "浦河町": false
+   }
+  },
+  "瀬棚郡": {
+   "title": "瀬棚郡",
+   "province": null,
+   "municipalities": {
+    "せたな町": true,
+    "今金町": false
+   }
+  },
+  "爾志郡": {
+   "title": "爾志郡",
+   "province": null,
+   "municipalities": {
+    "乙部町": false,
+    "八雲町": true
+   }
+  },
+  "留萌郡": {
+   "title": "留萌郡",
+   "province": null,
+   "municipalities": {
+    "小平町": false,
+    "留萌市": false
+   }
+  },
+  "白糠郡": {
+   "title": "白糠郡",
+   "province": null,
+   "municipalities": {
+    "白糠町": false,
+    "釧路市": true
+   }
+  },
+  "白老郡": {
+   "title": "白老郡",
+   "province": null,
+   "municipalities": {
+    "白老町": false
+   }
+  },
+  "目梨郡": {
+   "title": "目梨郡",
+   "province": null,
+   "municipalities": {
+    "標津町": true,
+    "羅臼町": false
+   }
+  },
+  "石狩郡": {
+   "title": "石狩郡",
+   "province": null,
+   "municipalities": {
+    "小樽市": true,
+    "当別町": false,
+    "新篠津村": false,
+    "江別市": true,
+    "石狩市": true
+   }
+  },
+  "磯谷郡": {
+   "title": "磯谷郡",
+   "province": null,
+   "municipalities": {
+    "寿都町": true,
+    "蘭越町": false
+   }
+  },
+  "礼文郡": {
+   "title": "礼文郡",
+   "province": null,
+   "municipalities": {
+    "礼文町": false
+   }
+  },
+  "福島郡": {
+   "title": "福島郡",
+   "province": null,
+   "municipalities": {
+    "知内町": false,
+    "福島町": false
+   }
+  },
+  "積丹郡": {
+   "title": "積丹郡",
+   "province": null,
+   "municipalities": {
+    "積丹町": false
+   }
+  },
+  "空知郡": {
+   "title": "空知郡",
+   "province": null,
+   "municipalities": {
+    "三笠市": true,
+    "上富良野町": false,
+    "上砂川町": false,
+    "中富良野町": false,
+    "南富良野町": false,
+    "南幌町": false,
+    "奈井江町": false,
+    "富良野市": true,
+    "岩見沢市": true,
+    "歌志内市": true,
+    "深川市": true,
+    "滝川市": true,
+    "砂川市": true,
+    "美唄市": true,
+    "芦別市": true,
+    "赤平市": true
+   }
+  },
+  "紋別郡": {
+   "title": "紋別郡",
+   "province": null,
+   "municipalities": {
+    "湧別町": false,
+    "滝上町": false,
+    "紋別市": false,
+    "興部町": false,
+    "西興部村": false,
+    "遠軽町": false,
+    "雄武町": false
+   }
+  },
+  "紗那郡": {
+   "title": "紗那郡",
+   "province": null,
+   "municipalities": {
+    "紗那村": false
+   }
+  },
+  "網尻郡": {
+   "title": "網尻郡",
+   "province": null,
+   "municipalities": {
+    "津別町": true,
+    "美幌町": true
+   }
+  },
+  "網走郡": {
+   "title": "網走郡",
+   "province": null,
+   "municipalities": {
+    "大空町": false,
+    "津別町": false,
+    "網走市": true,
+    "美幌町": false
+   }
+  },
+  "美国郡": {
+   "title": "美国郡",
+   "province": null,
+   "municipalities": {
+    "積丹町": true
+   }
+  },
+  "色丹郡": {
+   "title": "色丹郡",
+   "province": null,
+   "municipalities": {
+    "色丹村": false
+   }
+  },
+  "花咲郡": {
+   "title": "花咲郡",
+   "province": null,
+   "municipalities": {
+    "根室市": true,
+    "色丹村": true
+   }
+  },
+  "苫前郡": {
+   "title": "苫前郡",
+   "province": null,
+   "municipalities": {
+    "初山別村": false,
+    "羽幌町": false,
+    "苫前町": false
+   }
+  },
+  "茅部郡": {
+   "title": "茅部郡",
+   "province": null,
+   "municipalities": {
+    "八雲町": true,
+    "函館市": true,
+    "森町": false,
+    "鹿部町": false
+   }
+  },
+  "蘂取郡": {
+   "title": "蘂取郡",
+   "province": null,
+   "municipalities": {
+    "蘂取村": false
+   }
+  },
+  "虻田郡": {
+   "title": "虻田郡",
+   "province": null,
+   "municipalities": {
+    "ニセコ町": false,
+    "京極町": false,
+    "倶知安町": false,
+    "喜茂別町": false,
+    "洞爺湖町": false,
+    "留寿都村": false,
+    "真狩村": false,
+    "豊浦町": false,
+    "長万部町": true
+   }
+  },
+  "足寄郡": {
+   "title": "足寄郡",
+   "province": null,
+   "municipalities": {
+    "足寄町": false,
+    "陸別町": false
+   }
+  },
+  "野付郡": {
+   "title": "野付郡",
+   "province": null,
+   "municipalities": {
+    "中標津町": true,
+    "別海町": false,
+    "標津町": true
+   }
+  },
+  "釧路郡": {
+   "title": "釧路郡",
+   "province": null,
+   "municipalities": {
+    "釧路市": true,
+    "釧路町": false
+   }
+  },
+  "阿寒郡": {
+   "title": "阿寒郡",
+   "province": null,
+   "municipalities": {
+    "釧路市": true,
+    "鶴居村": false
+   }
+  },
+  "雨竜郡": {
+   "title": "雨竜郡",
+   "province": null,
+   "municipalities": {
+    "北竜町": false,
+    "妹背牛町": false,
+    "幌加内町": false,
+    "沼田町": false,
+    "深川市": true,
+    "秩父別町": false,
+    "雨竜町": false
+   }
+  },
+  "静内郡": {
+   "title": "静内郡",
+   "province": null,
+   "municipalities": {
+    "新ひだか町": true
+   }
+  },
+  "高島郡": {
+   "title": "高島郡 (北海道)",
+   "province": null,
+   "municipalities": {
+    "小樽市": true
+   }
+  }
+ },
+ "2": {
+  "三戸郡": {
+   "title": "三戸郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "三戸町": false,
+    "五戸町": false,
+    "八戸市": false,
+    "南部町": false,
+    "新郷村": false,
+    "田子町": false,
+    "階上町": false
+   }
+  },
+  "上北郡": {
+   "title": "上北郡",
+   "province": null,
+   "municipalities": {
+    "おいらせ町": false,
+    "七戸町": false,
+    "三沢市": false,
+    "六ヶ所村": false,
+    "六戸町": false,
+    "十和田市": false,
+    "東北町": false,
+    "横浜町": false,
+    "野辺地町": false
+   }
+  },
+  "下北郡": {
+   "title": "下北郡",
+   "province": null,
+   "municipalities": {
+    "むつ市": false,
+    "佐井村": false,
+    "大間町": false,
+    "東通村": false,
+    "風間浦村": false
+   }
+  },
+  "中津軽郡": {
+   "title": "中津軽郡",
+   "province": null,
+   "municipalities": {
+    "弘前市": true,
+    "西目屋村": false
+   }
+  },
+  "北津軽郡": {
+   "title": "北津軽郡",
+   "province": null,
+   "municipalities": {
+    "中泊町": false,
+    "五所川原市": true,
+    "板柳町": false,
+    "青森市": true,
+    "鶴田町": false
+   }
+  },
+  "北郡": {
+   "title": "北郡",
+   "province": "陸奥国",
+   "municipalities": {}
+  },
+  "南津軽郡": {
+   "title": "南津軽郡",
+   "province": null,
+   "municipalities": {
+    "大鰐町": false,
+    "平川市": false,
+    "弘前市": true,
+    "板柳町": true,
+    "田舎館村": false,
+    "藤崎町": false,
+    "青森市": true,
+    "黒石市": false
+   }
+  },
+  "山辺郡": {
+   "title": "山辺郡 (陸奥国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "平賀郡": {
+   "title": "平賀郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "東津軽郡": {
+   "title": "東津軽郡",
+   "province": null,
+   "municipalities": {
+    "今別町": false,
+    "外ヶ浜町": false,
+    "平内町": false,
+    "蓬田村": false,
+    "青森市": true
+   }
+  },
+  "津軽郡": {
+   "title": "津軽郡 (陸奥国)",
+   "province": "陸奥国",
+   "municipalities": {}
+  },
+  "田舎郡": {
+   "title": "田舎郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "糠部郡": {
+   "title": "糠部郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "西津軽郡": {
+   "title": "西津軽郡",
+   "province": null,
+   "municipalities": {
+    "つがる市": false,
+    "五所川原市": true,
+    "深浦町": false,
+    "鰺ヶ沢町": false,
+    "鶴田町": true
+   }
+  },
+  "鼻和郡": {
+   "title": "鼻和郡",
+   "province": null,
+   "municipalities": {}
+  }
+ },
+ "3": {
+  "上閉伊郡": {
+   "title": "上閉伊郡",
+   "province": null,
+   "municipalities": {
+    "大槌町": false,
+    "遠野市": false,
+    "釜石市": true
+   }
+  },
+  "下閉伊郡": {
+   "title": "下閉伊郡",
+   "province": null,
+   "municipalities": {
+    "宮古市": false,
+    "山田町": false,
+    "岩泉町": false,
+    "普代村": false,
+    "田野畑村": false
+   }
+  },
+  "中閉伊郡": {
+   "title": "中閉伊郡",
+   "province": null,
+   "municipalities": {
+    "宮古市": true
+   }
+  },
+  "九戸郡": {
+   "title": "九戸郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "久慈市": true,
+    "九戸村": false,
+    "洋野町": false,
+    "葛巻町": true,
+    "軽米町": false,
+    "野田村": false
+   }
+  },
+  "二戸郡": {
+   "title": "二戸郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "一戸町": false,
+    "二戸市": false,
+    "八幡平市": true,
+    "葛巻町": true
+   }
+  },
+  "北九戸郡": {
+   "title": "北九戸郡",
+   "province": null,
+   "municipalities": {
+    "久慈市": true,
+    "九戸村": true,
+    "洋野町": true,
+    "葛巻町": true,
+    "軽米町": true
+   }
+  },
+  "北岩手郡": {
+   "title": "北岩手郡",
+   "province": null,
+   "municipalities": {
+    "八幡平市": true,
+    "岩手町": false,
+    "盛岡市": true
+   }
+  },
+  "北閉伊郡": {
+   "title": "北閉伊郡",
+   "province": null,
+   "municipalities": {
+    "岩泉町": false,
+    "普代村": false,
+    "田野畑村": false
+   }
+  },
+  "南九戸郡": {
+   "title": "南九戸郡",
+   "province": null,
+   "municipalities": {
+    "久慈市": true,
+    "野田村": true
+   }
+  },
+  "南岩手郡": {
+   "title": "南岩手郡",
+   "province": null,
+   "municipalities": {
+    "滝沢市": false,
+    "盛岡市": true,
+    "雫石町": false
+   }
+  },
+  "南閉伊郡": {
+   "title": "南閉伊郡",
+   "province": null,
+   "municipalities": {
+    "大槌町": false,
+    "釜石市": true
+   }
+  },
+  "和賀郡": {
+   "title": "和賀郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "北上市": false,
+    "花巻市": true,
+    "西和賀町": false,
+    "金ケ崎町": false
+   }
+  },
+  "岩手郡": {
+   "title": "岩手郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "八幡平市": true,
+    "岩手町": false,
+    "滝沢市": false,
+    "盛岡市": true,
+    "葛巻町": false,
+    "雫石町": false
+   }
+  },
+  "東和賀郡": {
+   "title": "東和賀郡",
+   "province": null,
+   "municipalities": {
+    "北上市": true,
+    "花巻市": true,
+    "金ケ崎町": true
+   }
+  },
+  "東磐井郡": {
+   "title": "東磐井郡",
+   "province": null,
+   "municipalities": {
+    "一関市": true,
+    "奥州市": true,
+    "平泉町": true
+   }
+  },
+  "東閉伊郡": {
+   "title": "東閉伊郡",
+   "province": null,
+   "municipalities": {
+    "宮古市": true,
+    "山田町": false
+   }
+  },
+  "気仙郡": {
+   "title": "気仙郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "住田町": false
+   }
+  },
+  "江刺郡": {
+   "title": "江刺郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "北上市": true,
+    "奥州市": true
+   }
+  },
+  "磐井郡": {
+   "title": "磐井郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "一関市": true,
+    "奥州市": true,
+    "平泉町": true
+   }
+  },
+  "稗貫郡": {
+   "title": "稗貫郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "花巻市": true
+   }
+  },
+  "糠部郡": {
+   "title": "糠部郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "紫波郡": {
+   "title": "紫波郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "盛岡市": true,
+    "矢巾町": false,
+    "紫波町": false
+   }
+  },
+  "胆沢郡": {
+   "title": "胆沢郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "奥州市": true,
+    "金ケ崎町": false
+   }
+  },
+  "西和賀郡": {
+   "title": "西和賀郡",
+   "province": null,
+   "municipalities": {
+    "西和賀町": false
+   }
+  },
+  "西磐井郡": {
+   "title": "西磐井郡",
+   "province": null,
+   "municipalities": {
+    "一関市": true,
+    "平泉町": false
+   }
+  },
+  "西閉伊郡": {
+   "title": "西閉伊郡",
+   "province": null,
+   "municipalities": {
+    "遠野市": false
+   }
+  },
+  "閉伊郡": {
+   "title": "閉伊郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "大槌町": false,
+    "宮古市": false,
+    "山田町": false,
+    "岩泉町": false,
+    "普代村": false,
+    "田野畑村": false,
+    "遠野市": false,
+    "釜石市": true
+   }
+  }
+ },
+ "4": {
+  "丹取郡": {
+   "title": "丹取郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "亘理郡": {
+   "title": "亘理郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "亘理町": false,
+    "山元町": false,
+    "岩沼市": true
+   }
+  },
+  "伊具郡": {
+   "title": "伊具郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "丸森町": false,
+    "角田市": false
+   }
+  },
+  "刈田郡": {
+   "title": "刈田郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "七ヶ宿町": false,
+    "白石市": false,
+    "蔵王町": false
+   }
+  },
+  "加美郡": {
+   "title": "加美郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "加美町": false,
+    "色麻町": false
+   }
+  },
+  "名取郡": {
+   "title": "名取郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "仙台市太白区": true,
+    "仙台市若林区": true,
+    "仙台市青葉区": true,
+    "名取市": true,
+    "岩沼市": true
+   }
+  },
+  "宮城郡": {
+   "title": "宮城郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "七ヶ浜町": false,
+    "仙台市宮城野区": true,
+    "仙台市泉区": true,
+    "仙台市若林区": true,
+    "仙台市青葉区": true,
+    "利府町": false,
+    "塩竈市": true,
+    "多賀城市": true,
+    "松島町": false
+   }
+  },
+  "富田郡": {
+   "title": "富田郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "小田郡": {
+   "title": "小田郡 (陸奥国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "志田郡": {
+   "title": "志田郡",
+   "province": "陸奥国",
+   "municipalities": {}
+  },
+  "新田郡": {
+   "title": "新田郡 (陸奥国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "本吉郡": {
+   "title": "本吉郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "南三陸町": false,
+    "気仙沼市": true,
+    "登米市": true,
+    "石巻市": true
+   }
+  },
+  "柴田郡": {
+   "title": "柴田郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "大河原町": false,
+    "川崎町": false,
+    "村田町": false,
+    "柴田町": false
+   }
+  },
+  "栗原郡": {
+   "title": "栗原郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "大崎市": true,
+    "栗原市": false,
+    "登米市": true
+   }
+  },
+  "桃生郡": {
+   "title": "桃生郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "牡鹿郡": {
+   "title": "牡鹿郡",
+   "province": null,
+   "municipalities": {
+    "女川町": false
+   }
+  },
+  "玉造郡": {
+   "title": "玉造郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "大崎市": true
+   }
+  },
+  "登米郡": {
+   "title": "登米郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "登米市": true
+   }
+  },
+  "遠田郡": {
+   "title": "遠田郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "大崎市": true,
+    "涌谷町": false,
+    "美里町": false
+   }
+  },
+  "長岡郡": {
+   "title": "長岡郡 (陸奥国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "黒川郡": {
+   "title": "黒川郡",
+   "province": null,
+   "municipalities": {
+    "大和町": false,
+    "大衡村": false,
+    "大郷町": false
+   }
+  }
+ },
+ "5": {
+  "上浦郡": {
+   "title": "上浦郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "仙北郡": {
+   "title": "仙北郡",
+   "province": "出羽国",
+   "municipalities": {
+    "仙北市": false,
+    "大仙市": true,
+    "横手市": true,
+    "美郷町": false
+   }
+  },
+  "北秋田郡": {
+   "title": "北秋田郡",
+   "province": null,
+   "municipalities": {
+    "上小阿仁村": false,
+    "北秋田市": false,
+    "大館市": false,
+    "能代市": true
+   }
+  },
+  "南秋田郡": {
+   "title": "南秋田郡",
+   "province": null,
+   "municipalities": {
+    "五城目町": false,
+    "井川町": false,
+    "八郎潟町": false,
+    "大潟村": false,
+    "潟上市": false,
+    "男鹿市": false,
+    "秋田市": true
+   }
+  },
+  "山本郡": {
+   "title": "山本郡",
+   "province": "出羽国",
+   "municipalities": {
+    "三種町": false,
+    "八峰町": false,
+    "能代市": true,
+    "藤里町": false
+   }
+  },
+  "平鹿郡": {
+   "title": "平鹿郡",
+   "province": "出羽国",
+   "municipalities": {
+    "大仙市": true,
+    "横手市": true
+   }
+  },
+  "比内郡": {
+   "title": "比内郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "河辺郡": {
+   "title": "河辺郡",
+   "province": "出羽国",
+   "municipalities": {
+    "大仙市": true,
+    "秋田市": true
+   }
+  },
+  "由利郡": {
+   "title": "由利郡",
+   "province": "出羽国",
+   "municipalities": {
+    "にかほ市": false,
+    "由利本荘市": false,
+    "秋田市": true
+   }
+  },
+  "秋田郡": {
+   "title": "秋田郡",
+   "province": "出羽国",
+   "municipalities": {}
+  },
+  "雄勝郡": {
+   "title": "雄勝郡",
+   "province": "出羽国",
+   "municipalities": {
+    "東成瀬村": false,
+    "横手市": true,
+    "湯沢市": false,
+    "羽後町": false
+   }
+  },
+  "鹿角郡": {
+   "title": "鹿角郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "小坂町": false,
+    "鹿角市": false
+   }
+  }
+ },
+ "6": {
+  "北村山郡": {
+   "title": "北村山郡",
+   "province": null,
+   "municipalities": {
+    "大石田町": false,
+    "天童市": true,
+    "尾花沢市": false,
+    "村山市": false,
+    "東根市": false
+   }
+  },
+  "南村山郡": {
+   "title": "南村山郡",
+   "province": null,
+   "municipalities": {
+    "上山市": true,
+    "山形市": true
+   }
+  },
+  "南置賜郡": {
+   "title": "南置賜郡",
+   "province": null,
+   "municipalities": {
+    "川西町": true,
+    "米沢市": true,
+    "飯豊町": true
+   }
+  },
+  "最上郡": {
+   "title": "最上郡",
+   "province": "出羽国",
+   "municipalities": {
+    "上山市": true,
+    "大蔵村": false,
+    "天童市": true,
+    "山形市": true,
+    "戸沢村": false,
+    "新庄市": false,
+    "最上町": false,
+    "朝日町": true,
+    "白鷹町": true,
+    "真室川町": false,
+    "舟形町": false,
+    "金山町": false,
+    "鮭川村": false
+   }
+  },
+  "村山郡": {
+   "title": "村山郡",
+   "province": "出羽国",
+   "municipalities": {
+    "上山市": true,
+    "大江町": false,
+    "天童市": true,
+    "寒河江市": false,
+    "尾花沢市": false,
+    "山形市": true,
+    "新庄市": false,
+    "村山市": false,
+    "東根市": false,
+    "河北町": false,
+    "白鷹町": true,
+    "西川町": false
+   }
+  },
+  "東村山郡": {
+   "title": "東村山郡",
+   "province": null,
+   "municipalities": {
+    "中山町": false,
+    "天童市": true,
+    "山形市": true,
+    "山辺町": false
+   }
+  },
+  "東田川郡": {
+   "title": "東田川郡",
+   "province": null,
+   "municipalities": {
+    "三川町": false,
+    "庄内町": false,
+    "酒田市": true,
+    "鶴岡市": true
+   }
+  },
+  "東置賜郡": {
+   "title": "東置賜郡",
+   "province": null,
+   "municipalities": {
+    "上山市": true,
+    "南陽市": false,
+    "川西町": false,
+    "米沢市": true,
+    "長井市": true,
+    "高畠町": false
+   }
+  },
+  "田川郡": {
+   "title": "田川郡 (羽前国)",
+   "province": "出羽国",
+   "municipalities": {}
+  },
+  "置賜郡": {
+   "title": "置賜郡",
+   "province": "出羽国",
+   "municipalities": {
+    "上山市": true,
+    "南陽市": false,
+    "米沢市": false,
+    "長井市": false
+   }
+  },
+  "西村山郡": {
+   "title": "西村山郡",
+   "province": null,
+   "municipalities": {
+    "大江町": false,
+    "寒河江市": false,
+    "朝日町": false,
+    "河北町": false,
+    "白鷹町": true,
+    "西川町": false
+   }
+  },
+  "西田川郡": {
+   "title": "西田川郡",
+   "province": null,
+   "municipalities": {
+    "三川町": true,
+    "酒田市": true,
+    "鶴岡市": true
+   }
+  },
+  "西置賜郡": {
+   "title": "西置賜郡",
+   "province": null,
+   "municipalities": {
+    "小国町": false,
+    "白鷹町": false,
+    "長井市": true,
+    "飯豊町": false
+   }
+  },
+  "飽海郡": {
+   "title": "飽海郡",
+   "province": "出羽国",
+   "municipalities": {
+    "遊佐町": false,
+    "酒田市": true
+   }
+  }
+ },
+ "7": {
+  "伊達郡": {
+   "title": "伊達郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "伊達市": false,
+    "国見町": false,
+    "川俣町": false,
+    "桑折町": false,
+    "福島市": true
+   }
+  },
+  "会津郡": {
+   "title": "会津郡",
+   "province": "陸奥国",
+   "municipalities": {}
+  },
+  "信夫郡": {
+   "title": "信夫郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "福島市": true
+   }
+  },
+  "北会津郡": {
+   "title": "北会津郡",
+   "province": null,
+   "municipalities": {
+    "会津若松市": true
+   }
+  },
+  "南会津郡": {
+   "title": "南会津郡",
+   "province": null,
+   "municipalities": {
+    "下郷町": false,
+    "南会津町": false,
+    "只見町": false,
+    "檜枝岐村": false
+   }
+  },
+  "双葉郡": {
+   "title": "双葉郡",
+   "province": null,
+   "municipalities": {
+    "いわき市": true,
+    "双葉町": false,
+    "大熊町": false,
+    "富岡町": false,
+    "川内村": false,
+    "広野町": false,
+    "楢葉町": false,
+    "浪江町": false,
+    "葛尾村": false
+   }
+  },
+  "大沼郡": {
+   "title": "大沼郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "三島町": false,
+    "会津美里町": false,
+    "会津若松市": true,
+    "昭和村": false,
+    "柳津町": true,
+    "金山町": false
+   }
+  },
+  "宇多郡": {
+   "title": "宇多郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "新地町": false,
+    "相馬市": false
+   }
+  },
+  "安積郡": {
+   "title": "安積郡",
+   "province": null,
+   "municipalities": {
+    "郡山市": true
+   }
+  },
+  "安達郡": {
+   "title": "安達郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "二本松市": false,
+    "大玉村": false,
+    "川俣町": true,
+    "本宮市": false,
+    "福島市": true,
+    "郡山市": true
+   }
+  },
+  "岩瀬郡": {
+   "title": "岩瀬郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "天栄村": false,
+    "白河市": true,
+    "矢吹町": true,
+    "鏡石町": false,
+    "須賀川市": true
+   }
+  },
+  "東白川郡": {
+   "title": "東白川郡",
+   "province": null,
+   "municipalities": {
+    "古殿町": false,
+    "塙町": false,
+    "棚倉町": false,
+    "矢祭町": false,
+    "鮫川村": false
+   }
+  },
+  "楢葉郡": {
+   "title": "楢葉郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "いわき市": true,
+    "富岡町": true,
+    "川内村": true,
+    "広野町": true,
+    "楢葉町": true
+   }
+  },
+  "標葉郡": {
+   "title": "標葉郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "双葉町": false,
+    "大熊町": false,
+    "浪江町": false,
+    "葛尾村": false
+   }
+  },
+  "河沼郡": {
+   "title": "河沼郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "会津坂下町": false,
+    "会津若松市": true,
+    "喜多方市": true,
+    "柳津町": false,
+    "湯川村": false,
+    "西会津町": true
+   }
+  },
+  "田村郡": {
+   "title": "田村郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "三春町": false,
+    "小野町": false,
+    "田村市": true,
+    "郡山市": true
+   }
+  },
+  "相馬郡": {
+   "title": "相馬郡",
+   "province": null,
+   "municipalities": {
+    "南相馬市": false,
+    "新地町": false,
+    "相馬市": false,
+    "飯舘村": false
+   }
+  },
+  "石城郡": {
+   "title": "石城郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "いわき市": true
+   }
+  },
+  "石川郡": {
+   "title": "石川郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "古殿町": false,
+    "平田村": false,
+    "浅川町": false,
+    "玉川村": false,
+    "石川町": false
+   }
+  },
+  "磐前郡": {
+   "title": "磐前郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "いわき市": true
+   }
+  },
+  "磐城郡": {
+   "title": "磐城郡",
+   "province": "陸奥国",
+   "municipalities": {}
+  },
+  "耶麻郡": {
+   "title": "耶麻郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "北塩原村": false,
+    "喜多方市": true,
+    "猪苗代町": false,
+    "磐梯町": false,
+    "西会津町": false
+   }
+  },
+  "菊多郡": {
+   "title": "菊多郡",
+   "province": "陸奥国",
+   "municipalities": {
+    "いわき市": true
+   }
+  },
+  "行方郡": {
+   "title": "行方郡 (福島県)",
+   "province": null,
+   "municipalities": {
+    "南相馬市": false,
+    "飯舘村": false
+   }
+  },
+  "西白河郡": {
+   "title": "西白河郡",
+   "province": null,
+   "municipalities": {
+    "中島村": false,
+    "泉崎村": false,
+    "矢吹町": false,
+    "西郷村": false
+   }
+  }
+ },
+ "8": {
+  "久慈郡": {
+   "title": "久慈郡",
+   "province": "常陸国",
+   "municipalities": {
+    "大子町": false,
+    "常陸大宮市": true,
+    "常陸太田市": false,
+    "日立市": true
+   }
+  },
+  "信太郡": {
+   "title": "信太郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "北相馬郡": {
+   "title": "北相馬郡",
+   "province": null,
+   "municipalities": {
+    "つくばみらい市": true,
+    "利根町": false,
+    "取手市": true,
+    "守谷市": false,
+    "常総市": true,
+    "龍ケ崎市": true
+   }
+  },
+  "多賀郡": {
+   "title": "多賀郡",
+   "province": "常陸国",
+   "municipalities": {
+    "北茨城市": false,
+    "日立市": true,
+    "高萩市": false
+   }
+  },
+  "岡田郡": {
+   "title": "岡田郡",
+   "province": "下総国",
+   "municipalities": {
+    "下妻市": true,
+    "八千代町": true,
+    "常総市": true
+   }
+  },
+  "新治郡": {
+   "title": "新治郡",
+   "province": "常陸国",
+   "municipalities": {
+    "かすみがうら市": false,
+    "つくば市": true,
+    "土浦市": true,
+    "小美玉市": true,
+    "石岡市": false
+   }
+  },
+  "東茨城郡": {
+   "title": "東茨城郡",
+   "province": null,
+   "municipalities": {
+    "城里町": false,
+    "大洗町": false,
+    "小美玉市": true,
+    "常陸大宮市": true,
+    "水戸市": true,
+    "笠間市": true,
+    "茨城町": false
+   }
+  },
+  "河内郡": {
+   "title": "河内郡 (茨城県)",
+   "province": "常陸国",
+   "municipalities": {
+    "つくば市": true,
+    "河内町": true,
+    "牛久市": true,
+    "稲敷市": true,
+    "龍ケ崎市": true
+   }
+  },
+  "猿島郡": {
+   "title": "猿島郡",
+   "province": "下総国",
+   "municipalities": {
+    "五霞町": false,
+    "古河市": true,
+    "坂東市": false,
+    "境町": false
+   }
+  },
+  "相馬郡": {
+   "title": "相馬郡 (下総国)",
+   "province": "下総国",
+   "municipalities": {
+    "つくばみらい市": true,
+    "利根町": false,
+    "取手市": true,
+    "守谷市": false,
+    "常総市": true,
+    "龍ケ崎市": true
+   }
+  },
+  "真壁郡": {
+   "title": "真壁郡",
+   "province": "常陸国",
+   "municipalities": {
+    "下妻市": true,
+    "八千代町": true,
+    "桜川市": true,
+    "筑西市": false
+   }
+  },
+  "稲敷郡": {
+   "title": "稲敷郡",
+   "province": null,
+   "municipalities": {
+    "つくば市": true,
+    "土浦市": true,
+    "河内町": false,
+    "牛久市": false,
+    "稲敷市": true,
+    "美浦村": false,
+    "阿見町": false,
+    "龍ケ崎市": true
+   }
+  },
+  "筑波郡": {
+   "title": "筑波郡",
+   "province": "常陸国",
+   "municipalities": {
+    "つくばみらい市": true,
+    "つくば市": true,
+    "下妻市": true,
+    "取手市": true,
+    "土浦市": true,
+    "常総市": true
+   }
+  },
+  "結城郡": {
+   "title": "結城郡",
+   "province": null,
+   "municipalities": {
+    "八千代町": false,
+    "古河市": true,
+    "結城市": false
+   }
+  },
+  "茨城郡": {
+   "title": "茨城郡",
+   "province": "常陸国",
+   "municipalities": {
+    "城里町": false,
+    "大洗町": true,
+    "小美玉市": true,
+    "常陸大宮市": true,
+    "桜川市": true,
+    "水戸市": true,
+    "笠間市": false,
+    "茨城町": true
+   }
+  },
+  "葛飾郡": {
+   "title": "葛飾郡",
+   "province": null,
+   "municipalities": {
+    "五霞町": false,
+    "古河市": true,
+    "坂東市": true,
+    "境町": true
+   }
+  },
+  "行方郡": {
+   "title": "行方郡 (茨城県)",
+   "province": "常陸国",
+   "municipalities": {
+    "潮来市": false,
+    "行方市": false,
+    "鉾田市": true
+   }
+  },
+  "西茨城郡": {
+   "title": "西茨城郡",
+   "province": null,
+   "municipalities": {
+    "城里町": true,
+    "桜川市": true,
+    "笠間市": true
+   }
+  },
+  "西葛飾郡": {
+   "title": "西葛飾郡",
+   "province": null,
+   "municipalities": {
+    "五霞町": true,
+    "古河市": true
+   }
+  },
+  "豊田郡": {
+   "title": "豊田郡 (茨城県)",
+   "province": "下総国",
+   "municipalities": {
+    "下妻市": true,
+    "八千代町": true,
+    "常総市": true
+   }
+  },
+  "那珂郡": {
+   "title": "那珂郡",
+   "province": "常陸国",
+   "municipalities": {
+    "ひたちなか市": false,
+    "常陸大宮市": true,
+    "東海村": false,
+    "水戸市": true,
+    "那珂市": false
+   }
+  },
+  "鹿島郡": {
+   "title": "鹿島郡 (茨城県)",
+   "province": "常陸国",
+   "municipalities": {}
+  }
+ },
+ "9": {
+  "上都賀郡": {
+   "title": "上都賀郡",
+   "province": null,
+   "municipalities": {
+    "日光市": true,
+    "栃木市": true,
+    "鹿沼市": true
+   }
+  },
+  "下都賀郡": {
+   "title": "下都賀郡",
+   "province": null,
+   "municipalities": {
+    "下野市": true,
+    "壬生町": false,
+    "小山市": false,
+    "栃木市": true,
+    "野木町": false
+   }
+  },
+  "塩谷郡": {
+   "title": "塩谷郡",
+   "province": "下野国",
+   "municipalities": {
+    "さくら市": true,
+    "塩谷町": false,
+    "日光市": true,
+    "矢板市": true,
+    "那須塩原市": true,
+    "高根沢町": false
+   }
+  },
+  "安蘇郡": {
+   "title": "安蘇郡",
+   "province": "下野国",
+   "municipalities": {
+    "佐野市": true,
+    "日光市": true
+   }
+  },
+  "寒川郡": {
+   "title": "寒川郡 (栃木県)",
+   "province": "下野国",
+   "municipalities": {
+    "小山市": true
+   }
+  },
+  "梁田郡": {
+   "title": "梁田郡",
+   "province": "下野国",
+   "municipalities": {
+    "足利市": true
+   }
+  },
+  "河内郡": {
+   "title": "河内郡",
+   "province": "下野国",
+   "municipalities": {
+    "上三川町": false,
+    "下野市": true,
+    "宇都宮市": true,
+    "日光市": true,
+    "鹿沼市": true
+   }
+  },
+  "芳賀郡": {
+   "title": "芳賀郡",
+   "province": "下野国",
+   "municipalities": {
+    "宇都宮市": true,
+    "市貝町": false,
+    "益子町": false,
+    "真岡市": false,
+    "芳賀町": false,
+    "茂木町": false
+   }
+  },
+  "足利郡": {
+   "title": "足利郡",
+   "province": "下野国",
+   "municipalities": {
+    "佐野市": true,
+    "足利市": true
+   }
+  },
+  "那須郡": {
+   "title": "那須郡",
+   "province": "下野国",
+   "municipalities": {
+    "さくら市": true,
+    "大田原市": false,
+    "矢板市": true,
+    "那珂川町": false,
+    "那須塩原市": true,
+    "那須烏山市": false,
+    "那須町": false
+   }
+  },
+  "都賀郡": {
+   "title": "都賀郡",
+   "province": "下野国",
+   "municipalities": {}
+  }
+ },
+ "10": {
+  "佐位郡": {
+   "title": "佐位郡",
+   "province": "上野国",
+   "municipalities": {
+    "伊勢崎市": true
+   }
+  },
+  "佐波郡": {
+   "title": "佐波郡",
+   "province": null,
+   "municipalities": {
+    "伊勢崎市": true,
+    "前橋市": true,
+    "玉村町": false
+   }
+  },
+  "利根郡": {
+   "title": "利根郡",
+   "province": "上野国",
+   "municipalities": {
+    "みなかみ町": false,
+    "川場村": false,
+    "昭和村": false,
+    "沼田市": true,
+    "片品村": false
+   }
+  },
+  "勢多郡": {
+   "title": "勢多郡",
+   "province": "上野国",
+   "municipalities": {
+    "みどり市": true,
+    "前橋市": true,
+    "桐生市": false,
+    "渋川市": false
+   }
+  },
+  "北勢多郡": {
+   "title": "北勢多郡",
+   "province": null,
+   "municipalities": {
+    "昭和村": false,
+    "沼田市": true
+   }
+  },
+  "北甘楽郡": {
+   "title": "北甘楽郡",
+   "province": null,
+   "municipalities": {
+    "下仁田町": false,
+    "南牧村": false,
+    "安中市": true,
+    "富岡市": false,
+    "甘楽町": false,
+    "高崎市": true
+   }
+  },
+  "北群馬郡": {
+   "title": "北群馬郡",
+   "province": null,
+   "municipalities": {
+    "吉岡町": false,
+    "榛東村": false,
+    "渋川市": true
+   }
+  },
+  "南勢多郡": {
+   "title": "南勢多郡",
+   "province": null,
+   "municipalities": {
+    "みどり市": true,
+    "伊勢崎市": true,
+    "前橋市": true,
+    "千代田町": true,
+    "桐生市": true,
+    "渋川市": true
+   }
+  },
+  "南甘楽郡": {
+   "title": "南甘楽郡",
+   "province": null,
+   "municipalities": {
+    "上野村": false,
+    "下仁田町": true,
+    "神流町": false,
+    "藤岡市": true
+   }
+  },
+  "吾妻郡": {
+   "title": "吾妻郡",
+   "province": null,
+   "municipalities": {
+    "みなかみ町": true,
+    "中之条町": false,
+    "嬬恋村": false,
+    "東吾妻町": false,
+    "草津町": false,
+    "長野原町": false,
+    "高山村": false
+   }
+  },
+  "多胡郡": {
+   "title": "多胡郡",
+   "province": "上野国",
+   "municipalities": {
+    "藤岡市": true,
+    "高崎市": true
+   }
+  },
+  "多野郡": {
+   "title": "多野郡",
+   "province": null,
+   "municipalities": {
+    "上野村": false,
+    "神流町": false,
+    "藤岡市": false,
+    "高崎市": true
+   }
+  },
+  "山田郡": {
+   "title": "山田郡 (群馬県)",
+   "province": "上野国",
+   "municipalities": {
+    "みどり市": true,
+    "太田市": true,
+    "桐生市": true
+   }
+  },
+  "新田郡": {
+   "title": "新田郡",
+   "province": "上野国",
+   "municipalities": {
+    "みどり市": true,
+    "伊勢崎市": true,
+    "太田市": true
+   }
+  },
+  "東群馬郡": {
+   "title": "東群馬郡",
+   "province": null,
+   "municipalities": {
+    "前橋市": true,
+    "千代田町": true
+   }
+  },
+  "片岡郡": {
+   "title": "片岡郡",
+   "province": "上野国",
+   "municipalities": {
+    "高崎市": true
+   }
+  },
+  "甘楽郡": {
+   "title": "甘楽郡",
+   "province": "上野国",
+   "municipalities": {
+    "下仁田町": false,
+    "南牧村": false,
+    "富岡市": false,
+    "甘楽町": false,
+    "高崎市": true
+   }
+  },
+  "碓氷郡": {
+   "title": "碓氷郡",
+   "province": "上野国",
+   "municipalities": {
+    "安中市": true,
+    "高崎市": true
+   }
+  },
+  "緑野郡": {
+   "title": "緑野郡",
+   "province": "上野国",
+   "municipalities": {
+    "藤岡市": true,
+    "高崎市": true
+   }
+  },
+  "群馬郡": {
+   "title": "群馬郡",
+   "province": "上野国",
+   "municipalities": {
+    "前橋市": true,
+    "吉岡町": false,
+    "榛東村": false,
+    "渋川市": true,
+    "玉村町": true,
+    "高崎市": true
+   }
+  },
+  "西群馬郡": {
+   "title": "西群馬郡",
+   "province": null,
+   "municipalities": {
+    "前橋市": true,
+    "吉岡町": false,
+    "榛東村": false,
+    "渋川市": true,
+    "高山村": false,
+    "高崎市": true
+   }
+  },
+  "邑楽郡": {
+   "title": "邑楽郡",
+   "province": "上野国",
+   "municipalities": {
+    "千代田町": false,
+    "大泉町": false,
+    "太田市": false,
+    "明和町": false,
+    "板倉町": false,
+    "邑楽町": false,
+    "館林市": false
+   }
+  },
+  "那波郡": {
+   "title": "那波郡",
+   "province": "上野国",
+   "municipalities": {
+    "伊勢崎市": true,
+    "前橋市": true,
+    "玉村町": true
+   }
+  }
+ },
+ "11": {
+  "中葛飾郡": {
+   "title": "中葛飾郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "児玉郡": {
+   "title": "児玉郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "上里町": false,
+    "本庄市": false,
+    "神川町": false,
+    "美里町": false
+   }
+  },
+  "入間郡": {
+   "title": "入間郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "ふじみ野市": false,
+    "三芳町": false,
+    "入間市": false,
+    "坂戸市": false,
+    "富士見市": false,
+    "川越市": false,
+    "志木市": true,
+    "所沢市": false,
+    "日高市": false,
+    "毛呂山町": false,
+    "狭山市": false,
+    "越生町": false,
+    "飯能市": false,
+    "鶴ヶ島市": false
+   }
+  },
+  "北埼玉郡": {
+   "title": "北埼玉郡",
+   "province": null,
+   "municipalities": {
+    "加須市": false,
+    "熊谷市": true,
+    "羽生市": false,
+    "行田市": false,
+    "鴻巣市": true
+   }
+  },
+  "北葛飾郡": {
+   "title": "北葛飾郡",
+   "province": null,
+   "municipalities": {
+    "三郷市": false,
+    "久喜市": false,
+    "吉川市": false,
+    "幸手市": false,
+    "春日部市": true,
+    "杉戸町": false,
+    "松伏町": false,
+    "越谷市": true
+   }
+  },
+  "北足立郡": {
+   "title": "北足立郡",
+   "province": null,
+   "municipalities": {
+    "さいたま市": true,
+    "上尾市": false,
+    "伊奈町": false,
+    "北本市": false,
+    "和光市": false,
+    "富士見市": true,
+    "川口市": false,
+    "志木市": true,
+    "戸田市": true,
+    "新座市": false,
+    "朝霞市": false,
+    "桶川市": false,
+    "草加市": true,
+    "蕨市": false,
+    "行田市": false,
+    "越谷市": true,
+    "鴻巣市": false
+   }
+  },
+  "南埼玉郡": {
+   "title": "南埼玉郡",
+   "province": null,
+   "municipalities": {
+    "さいたま市": true,
+    "久喜市": true,
+    "八潮市": false,
+    "宮代町": false,
+    "春日部市": true,
+    "白岡市": false,
+    "草加市": true,
+    "蓮田市": false,
+    "越谷市": false
+   }
+  },
+  "埼玉郡": {
+   "title": "埼玉郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "さいたま市": true,
+    "久喜市": true,
+    "八潮市": false,
+    "加須市": false,
+    "春日部市": true,
+    "熊谷市": true,
+    "白岡市": false,
+    "羽生市": false,
+    "草加市": true,
+    "蓮田市": false,
+    "行田市": false,
+    "越谷市": false,
+    "鴻巣市": true
+   }
+  },
+  "大里郡": {
+   "title": "大里郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "寄居町": false,
+    "小川町": true,
+    "深谷市": false,
+    "熊谷市": true,
+    "鴻巣市": true
+   }
+  },
+  "幡羅郡": {
+   "title": "幡羅郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "深谷市": true,
+    "熊谷市": true
+   }
+  },
+  "新座郡": {
+   "title": "新座郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "和光市": false,
+    "志木市": true,
+    "戸田市": true,
+    "新座市": false,
+    "朝霞市": false
+   }
+  },
+  "榛沢郡": {
+   "title": "榛沢郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "深谷市": true
+   }
+  },
+  "横見郡": {
+   "title": "横見郡",
+   "province": "武蔵国",
+   "municipalities": {}
+  },
+  "比企郡": {
+   "title": "比企郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "ときがわ町": false,
+    "吉見町": false,
+    "小川町": false,
+    "嵐山町": false,
+    "川島町": false,
+    "川越市": true,
+    "東松山市": false,
+    "滑川町": false,
+    "越生町": true,
+    "鳩山町": false
+   }
+  },
+  "男衾郡": {
+   "title": "男衾郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "寄居町": true,
+    "小川町": true,
+    "深谷市": true,
+    "熊谷市": true
+   }
+  },
+  "秩父郡": {
+   "title": "秩父郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "ときがわ町": true,
+    "寄居町": true,
+    "小鹿野町": false,
+    "東秩父村": false,
+    "横瀬町": false,
+    "皆野町": false,
+    "神川町": true,
+    "秩父市": false,
+    "長瀞町": false,
+    "飯能市": true
+   }
+  },
+  "葛飾郡": {
+   "title": "葛飾郡",
+   "province": null,
+   "municipalities": {
+    "さいたま市": true,
+    "三郷市": false,
+    "久喜市": true,
+    "加須市": true,
+    "吉川市": false,
+    "幸手市": false,
+    "春日部市": true,
+    "杉戸町": false,
+    "松伏町": false,
+    "越谷市": true
+   }
+  },
+  "賀美郡": {
+   "title": "賀美郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "上里町": false,
+    "神川町": true
+   }
+  },
+  "足立郡": {
+   "title": "足立郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "さいたま市": true,
+    "上尾市": false,
+    "伊奈町": false,
+    "北本市": false,
+    "川口市": false,
+    "戸田市": true,
+    "桶川市": false,
+    "草加市": true,
+    "蕨市": false,
+    "鴻巣市": true
+   }
+  },
+  "那珂郡": {
+   "title": "那珂郡 (埼玉県)",
+   "province": null,
+   "municipalities": {
+    "本庄市": true,
+    "美里町": true
+   }
+  },
+  "高麗郡": {
+   "title": "高麗郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "入間市": true,
+    "川越市": true,
+    "日高市": false,
+    "狭山市": true,
+    "飯能市": true,
+    "鶴ヶ島市": false
+   }
+  }
+ },
+ "12": {
+  "上埴生郡": {
+   "title": "上埴生郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "下埴生郡": {
+   "title": "下埴生郡",
+   "province": null,
+   "municipalities": {
+    "成田市": true,
+    "栄町": true
+   }
+  },
+  "匝瑳郡": {
+   "title": "匝瑳郡",
+   "province": "下総国",
+   "municipalities": {
+    "匝瑳市": true,
+    "旭市": true,
+    "横芝光町": true
+   }
+  },
+  "千葉郡": {
+   "title": "千葉郡",
+   "province": "下総国",
+   "municipalities": {
+    "八千代市": true,
+    "千葉市": true,
+    "千葉市中央区": false,
+    "千葉市稲毛区": false,
+    "千葉市緑区": true,
+    "千葉市花見川区": true,
+    "千葉市若葉区": false,
+    "習志野市": false,
+    "船橋市": true
+   }
+  },
+  "南相馬郡": {
+   "title": "南相馬郡",
+   "province": null,
+   "municipalities": {
+    "我孫子市": false,
+    "柏市": true
+   }
+  },
+  "印旛郡": {
+   "title": "印旛郡",
+   "province": null,
+   "municipalities": {
+    "佐倉市": false,
+    "八千代市": true,
+    "八街市": false,
+    "千葉市": true,
+    "千葉市花見川区": true,
+    "印西市": false,
+    "四街道市": false,
+    "富里市": false,
+    "成田市": true,
+    "柏市": true,
+    "栄町": false,
+    "白井市": false,
+    "酒々井町": false,
+    "鎌ケ谷市": true
+   }
+  },
+  "君津郡": {
+   "title": "君津郡",
+   "province": null,
+   "municipalities": {
+    "君津市": false,
+    "富津市": false,
+    "木更津市": false,
+    "袖ケ浦市": false,
+    "鴨川市": true
+   }
+  },
+  "周淮郡": {
+   "title": "周淮郡",
+   "province": "上総国",
+   "municipalities": {
+    "君津市": true,
+    "富津市": true,
+    "木更津市": true
+   }
+  },
+  "天羽郡": {
+   "title": "天羽郡",
+   "province": "上総国",
+   "municipalities": {
+    "富津市": true
+   }
+  },
+  "夷隅郡": {
+   "title": "夷隅郡",
+   "province": "上総国",
+   "municipalities": {
+    "いすみ市": true,
+    "勝浦市": false,
+    "大多喜町": false,
+    "御宿町": false,
+    "睦沢町": true
+   }
+  },
+  "安房郡": {
+   "title": "安房郡",
+   "province": "安房国",
+   "municipalities": {
+    "南房総市": true,
+    "鋸南町": false,
+    "館山市": true
+   }
+  },
+  "山武郡": {
+   "title": "山武郡",
+   "province": null,
+   "municipalities": {
+    "九十九里町": false,
+    "千葉市緑区": true,
+    "大網白里市": true,
+    "山武市": false,
+    "東金市": false,
+    "横芝光町": false,
+    "芝山町": false
+   }
+  },
+  "山辺郡": {
+   "title": "山辺郡 (千葉県)",
+   "province": "上総国",
+   "municipalities": {
+    "九十九里町": false,
+    "千葉市緑区": true,
+    "大網白里市": true,
+    "山武市": true,
+    "東金市": true
+   }
+  },
+  "市原郡": {
+   "title": "市原郡",
+   "province": "上総国",
+   "municipalities": {}
+  },
+  "平郡": {
+   "title": "平郡",
+   "province": null,
+   "municipalities": {
+    "南房総市": true,
+    "鋸南町": false,
+    "館山市": true
+   }
+  },
+  "望陀郡": {
+   "title": "望陀郡",
+   "province": "上総国",
+   "municipalities": {
+    "君津市": true,
+    "木更津市": true,
+    "袖ケ浦市": false,
+    "鴨川市": true
+   }
+  },
+  "朝夷郡": {
+   "title": "朝夷郡",
+   "province": null,
+   "municipalities": {
+    "南房総市": true,
+    "鴨川市": true
+   }
+  },
+  "東葛飾郡": {
+   "title": "東葛飾郡",
+   "province": null,
+   "municipalities": {
+    "市川市": false,
+    "松戸市": true,
+    "柏市": true,
+    "流山市": false,
+    "浦安市": false,
+    "船橋市": true,
+    "野田市": false,
+    "鎌ケ谷市": true
+   }
+  },
+  "武射郡": {
+   "title": "武射郡",
+   "province": "上総国",
+   "municipalities": {}
+  },
+  "海上郡": {
+   "title": "海上郡 (上総国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "畔蒜郡": {
+   "title": "畔蒜郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "相馬郡": {
+   "title": "相馬郡 (下総国)",
+   "province": "下総国",
+   "municipalities": {
+    "我孫子市": false,
+    "柏市": true
+   }
+  },
+  "葛飾郡": {
+   "title": "葛飾郡",
+   "province": null,
+   "municipalities": {
+    "市川市": true,
+    "松戸市": true,
+    "柏市": true,
+    "流山市": false,
+    "浦安市": true,
+    "船橋市": true,
+    "野田市": true,
+    "鎌ケ谷市": true
+   }
+  },
+  "長柄郡": {
+   "title": "長柄郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "長狭郡": {
+   "title": "長狭郡",
+   "province": null,
+   "municipalities": {
+    "鴨川市": true
+   }
+  },
+  "長生郡": {
+   "title": "長生郡",
+   "province": null,
+   "municipalities": {
+    "いすみ市": true,
+    "一宮町": false,
+    "大網白里市": true,
+    "白子町": false,
+    "睦沢町": false,
+    "茂原市": false,
+    "長南町": false,
+    "長柄町": false,
+    "長生村": false
+   }
+  },
+  "香取郡": {
+   "title": "香取郡",
+   "province": "下総国",
+   "municipalities": {
+    "多古町": false,
+    "東庄町": false,
+    "神崎町": false
+   }
+  }
+ },
+ "13": {
+  "北多摩郡": {
+   "title": "北多摩郡",
+   "province": null,
+   "municipalities": {
+    "三鷹市": false,
+    "世田谷区": true,
+    "国分寺市": false,
+    "国立市": false,
+    "小平市": false,
+    "小金井市": false,
+    "府中市": true,
+    "昭島市": false,
+    "東久留米市": false,
+    "東大和市": false,
+    "東村山市": false,
+    "武蔵村山市": false,
+    "武蔵野市": false,
+    "清瀬市": false,
+    "狛江市": false,
+    "稲城市": true,
+    "立川市": false,
+    "西東京市": true,
+    "調布市": false
+   }
+  },
+  "北豊島郡": {
+   "title": "北豊島郡",
+   "province": null,
+   "municipalities": {
+    "北区": false,
+    "板橋区": false,
+    "練馬区": false,
+    "荒川区": false,
+    "豊島区": false
+   }
+  },
+  "南多摩郡": {
+   "title": "南多摩郡",
+   "province": null,
+   "municipalities": {
+    "八王子市": true,
+    "多摩市": true,
+    "府中市": true,
+    "日野市": true,
+    "町田市": true,
+    "稲城市": true
+   }
+  },
+  "南葛飾郡": {
+   "title": "南葛飾郡",
+   "province": null,
+   "municipalities": {
+    "墨田区": true,
+    "江戸川区": true,
+    "江東区": true,
+    "葛飾区": false,
+    "足立区": true
+   }
+  },
+  "南豊島郡": {
+   "title": "南豊島郡",
+   "province": null,
+   "municipalities": {
+    "新宿区": true,
+    "渋谷区": true
+   }
+  },
+  "南足立郡": {
+   "title": "南足立郡",
+   "province": null,
+   "municipalities": {
+    "足立区": true
+   }
+  },
+  "多摩郡": {
+   "title": "多摩郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "世田谷区": true,
+    "中央区": true,
+    "中野区": true,
+    "杉並区": true
+   }
+  },
+  "東多摩郡": {
+   "title": "東多摩郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "荏原郡": {
+   "title": "荏原郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "世田谷区": true,
+    "品川区": true,
+    "大田区": true,
+    "目黒区": true
+   }
+  },
+  "葛飾郡": {
+   "title": "葛飾郡",
+   "province": null,
+   "municipalities": {
+    "墨田区": true,
+    "江戸川区": true,
+    "江東区": true,
+    "葛飾区": false,
+    "足立区": true
+   }
+  },
+  "西多摩郡": {
+   "title": "西多摩郡",
+   "province": null,
+   "municipalities": {
+    "あきる野市": false,
+    "奥多摩町": false,
+    "日の出町": false,
+    "檜原村": false,
+    "瑞穂町": false,
+    "福生市": false,
+    "羽村市": false,
+    "青梅市": false
+   }
+  },
+  "豊多摩郡": {
+   "title": "豊多摩郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "豊島郡": {
+   "title": "豊島郡 (武蔵国)",
+   "province": null,
+   "municipalities": {}
+  },
+  "足立郡": {
+   "title": "足立郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "北区": true,
+    "板橋区": true,
+    "足立区": false
+   }
+  }
+ },
+ "14": {
+  "三浦郡": {
+   "title": "三浦郡",
+   "province": "相模国",
+   "municipalities": {
+    "三浦市": false,
+    "横須賀市": false,
+    "葉山町": false,
+    "逗子市": false
+   }
+  },
+  "中郡": {
+   "title": "中郡",
+   "province": null,
+   "municipalities": {
+    "二宮町": false,
+    "伊勢原市": false,
+    "厚木市": true,
+    "大磯町": false,
+    "平塚市": false,
+    "秦野市": true
+   }
+  },
+  "久良岐郡": {
+   "title": "久良岐郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "横浜市中区": true,
+    "横浜市南区": true,
+    "横浜市港南区": true,
+    "横浜市磯子区": true,
+    "横浜市西区": true,
+    "横浜市金沢区": true
+   }
+  },
+  "北多摩郡": {
+   "title": "北多摩郡",
+   "province": null,
+   "municipalities": {
+    "大和市": false
+   }
+  },
+  "南多摩郡": {
+   "title": "南多摩郡",
+   "province": null,
+   "municipalities": {
+    "相模原市": true
+   }
+  },
+  "多摩郡": {
+   "title": "多摩郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "川崎市多摩区": true,
+    "川崎市高津区": true,
+    "相模原市中央区": true,
+    "相模原市南区": true,
+    "相模原市緑区": true
+   }
+  },
+  "大住郡": {
+   "title": "大住郡",
+   "province": "相模国",
+   "municipalities": {
+    "伊勢原市": false,
+    "厚木市": true,
+    "平塚市": true,
+    "秦野市": true
+   }
+  },
+  "愛甲郡": {
+   "title": "愛甲郡",
+   "province": null,
+   "municipalities": {
+    "厚木市": true,
+    "愛川町": false,
+    "清川村": false
+   }
+  },
+  "橘樹郡": {
+   "title": "橘樹郡",
+   "province": "武蔵国",
+   "municipalities": {}
+  },
+  "津久井郡": {
+   "title": "津久井郡",
+   "province": "相模国",
+   "municipalities": {
+    "相模原市": true
+   }
+  },
+  "淘綾郡": {
+   "title": "淘綾郡",
+   "province": "相模国",
+   "municipalities": {
+    "二宮町": false,
+    "大磯町": false,
+    "平塚市": true
+   }
+  },
+  "荏原郡": {
+   "title": "荏原郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "川崎市中原区": true,
+    "川崎市川崎区": true,
+    "川崎市幸区": true,
+    "川崎市高津区": true
+   }
+  },
+  "足柄上郡": {
+   "title": "足柄上郡",
+   "province": "相模国",
+   "municipalities": {
+    "中井町": false,
+    "南足柄市": false,
+    "大井町": false,
+    "小田原市": true,
+    "山北町": false,
+    "松田町": false,
+    "秦野市": true,
+    "開成町": false
+   }
+  },
+  "足柄下郡": {
+   "title": "足柄下郡",
+   "province": "相模国",
+   "municipalities": {
+    "小田原市": true,
+    "湯河原町": false,
+    "真鶴町": false,
+    "箱根町": false
+   }
+  },
+  "都筑郡": {
+   "title": "都筑郡",
+   "province": "武蔵国",
+   "municipalities": {
+    "川崎市": true,
+    "川崎市麻生区": true,
+    "横浜市": true,
+    "横浜市保土ケ谷区": true,
+    "横浜市旭区": false,
+    "横浜市港北区": true,
+    "横浜市瀬谷区": true,
+    "横浜市緑区": false,
+    "横浜市都筑区": false,
+    "横浜市青葉区": false
+   }
+  },
+  "鎌倉郡": {
+   "title": "鎌倉郡",
+   "province": "相模国",
+   "municipalities": {
+    "横浜市": true,
+    "横浜市南区": true,
+    "横浜市戸塚区": false,
+    "横浜市栄区": false,
+    "横浜市泉区": false,
+    "横浜市港南区": true,
+    "横浜市瀬谷区": true,
+    "横浜市金沢区": true,
+    "藤沢市": false,
+    "鎌倉市": false
+   }
+  },
+  "高座郡": {
+   "title": "高座郡",
+   "province": "相模国",
+   "municipalities": {
+    "大和市": false,
+    "寒川町": false,
+    "座間市": false,
+    "海老名市": false,
+    "相模原市": true,
+    "綾瀬市": false,
+    "茅ヶ崎市": false,
+    "藤沢市": true
+   }
+  }
+ },
+ "15": {
+  "三島郡": {
+   "title": "三島郡 (新潟県)",
+   "province": "越後国",
+   "municipalities": {
+    "出雲崎町": false,
+    "小千谷市": true,
+    "新潟市西蒲区": true,
+    "燕市": true,
+    "長岡市": true
+   }
+  },
+  "中蒲原郡": {
+   "title": "中蒲原郡",
+   "province": null,
+   "municipalities": {
+    "五泉市": true,
+    "加茂市": true,
+    "新潟市": true,
+    "新潟市中央区": true,
+    "新潟市北区": true,
+    "新潟市南区": false,
+    "新潟市東区": true,
+    "新潟市江南区": false,
+    "新潟市秋葉区": false
+   }
+  },
+  "中頸城郡": {
+   "title": "中頸城郡",
+   "province": null,
+   "municipalities": {
+    "上越市": true,
+    "妙高市": false,
+    "柏崎市": true
+   }
+  },
+  "中魚沼郡": {
+   "title": "中魚沼郡",
+   "province": null,
+   "municipalities": {
+    "十日町市": true,
+    "小千谷市": true,
+    "津南町": false,
+    "長岡市": true
+   }
+  },
+  "佐渡郡": {
+   "title": "佐渡郡",
+   "province": null,
+   "municipalities": {
+    "佐渡市": false
+   }
+  },
+  "刈羽郡": {
+   "title": "刈羽郡",
+   "province": "越後国",
+   "municipalities": {
+    "刈羽村": false,
+    "柏崎市": true,
+    "長岡市": true
+   }
+  },
+  "加茂郡": {
+   "title": "加茂郡 (新潟県)",
+   "province": "佐渡国",
+   "municipalities": {
+    "佐渡市": false
+   }
+  },
+  "北蒲原郡": {
+   "title": "北蒲原郡",
+   "province": null,
+   "municipalities": {
+    "新潟市": true,
+    "新潟市北区": true,
+    "新潟市東区": true,
+    "新発田市": false,
+    "聖籠町": false,
+    "胎内市": false,
+    "阿賀町": true,
+    "阿賀野市": true
+   }
+  },
+  "北魚沼郡": {
+   "title": "北魚沼郡",
+   "province": null,
+   "municipalities": {
+    "小千谷市": true,
+    "長岡市": true,
+    "魚沼市": true
+   }
+  },
+  "南蒲原郡": {
+   "title": "南蒲原郡",
+   "province": null,
+   "municipalities": {
+    "三条市": false,
+    "加茂市": true,
+    "燕市": true,
+    "田上町": false,
+    "見附市": true,
+    "長岡市": true
+   }
+  },
+  "南魚沼郡": {
+   "title": "南魚沼郡",
+   "province": null,
+   "municipalities": {
+    "南魚沼市": false,
+    "湯沢町": false,
+    "魚沼市": true
+   }
+  },
+  "古志郡": {
+   "title": "古志郡",
+   "province": "越後国",
+   "municipalities": {
+    "小千谷市": true,
+    "見附市": true,
+    "長岡市": true
+   }
+  },
+  "岩船郡": {
+   "title": "岩船郡",
+   "province": "越後国",
+   "municipalities": {
+    "村上市": false,
+    "粟島浦村": false,
+    "関川村": false
+   }
+  },
+  "東蒲原郡": {
+   "title": "東蒲原郡",
+   "province": null,
+   "municipalities": {
+    "五泉市": true,
+    "阿賀町": false,
+    "阿賀野市": true
+   }
+  },
+  "東頸城郡": {
+   "title": "東頸城郡",
+   "province": null,
+   "municipalities": {
+    "上越市": true,
+    "十日町市": true,
+    "柏崎市": true
+   }
+  },
+  "羽茂郡": {
+   "title": "羽茂郡",
+   "province": "佐渡国",
+   "municipalities": {
+    "佐渡市": false
+   }
+  },
+  "蒲原郡": {
+   "title": "蒲原郡",
+   "province": "越後国",
+   "municipalities": {
+    "三条市": false,
+    "五泉市": false,
+    "加茂市": false,
+    "弥彦村": false,
+    "新潟市": true,
+    "新発田市": false,
+    "燕市": true,
+    "田上町": false,
+    "聖籠町": false,
+    "胎内市": false,
+    "見附市": true,
+    "長岡市": true,
+    "阿賀町": false,
+    "阿賀野市": false
+   }
+  },
+  "西蒲原郡": {
+   "title": "西蒲原郡",
+   "province": null,
+   "municipalities": {
+    "弥彦村": false,
+    "新潟市": true,
+    "新潟市中央区": true,
+    "新潟市南区": true,
+    "新潟市西区": false,
+    "新潟市西蒲区": true,
+    "燕市": true
+   }
+  },
+  "西頸城郡": {
+   "title": "西頸城郡",
+   "province": null,
+   "municipalities": {
+    "上越市": true,
+    "糸魚川市": true
+   }
+  },
+  "雑太郡": {
+   "title": "雑太郡",
+   "province": "佐渡国",
+   "municipalities": {
+    "佐渡市": false
+   }
+  },
+  "頸城郡": {
+   "title": "頸城郡",
+   "province": "越後国",
+   "municipalities": {
+    "上越市": true,
+    "十日町市": true,
+    "妙高市": false,
+    "柏崎市": true,
+    "糸魚川市": false
+   }
+  },
+  "魚沼郡": {
+   "title": "魚沼郡",
+   "province": "越後国",
+   "municipalities": {
+    "十日町市": true,
+    "南魚沼市": false,
+    "小千谷市": true,
+    "長岡市": true,
+    "魚沼市": false
+   }
+  }
+ },
+ "16": {
+  "上新川郡": {
+   "title": "上新川郡",
+   "province": null,
+   "municipalities": {
+    "上市町": false,
+    "富山市": true,
+    "滑川市": false,
+    "立山町": false,
+    "舟橋村": false
+   }
+  },
+  "下新川郡": {
+   "title": "下新川郡",
+   "province": null,
+   "municipalities": {
+    "入善町": false,
+    "朝日町": false
+   }
+  },
+  "中新川郡": {
+   "title": "中新川郡",
+   "province": null,
+   "municipalities": {
+    "上市町": false,
+    "立山町": false,
+    "舟橋村": false
+   }
+  },
+  "婦負郡": {
+   "title": "婦負郡",
+   "province": "越中国",
+   "municipalities": {
+    "富山市": true,
+    "射水市": true
+   }
+  },
+  "射水郡": {
+   "title": "射水郡",
+   "province": "越中国",
+   "municipalities": {
+    "富山市": true,
+    "射水市": true,
+    "氷見市": false,
+    "高岡市": true
+   }
+  },
+  "新川郡": {
+   "title": "新川郡",
+   "province": "越中国",
+   "municipalities": {}
+  },
+  "東礪波郡": {
+   "title": "東礪波郡",
+   "province": null,
+   "municipalities": {
+    "南砺市": true,
+    "砺波市": true,
+    "高岡市": true
+   }
+  },
+  "氷見郡": {
+   "title": "氷見郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "礪波郡": {
+   "title": "礪波郡",
+   "province": "越中国",
+   "municipalities": {
+    "南砺市": false,
+    "小矢部市": false,
+    "砺波市": false,
+    "高岡市": true
+   }
+  },
+  "西礪波郡": {
+   "title": "西礪波郡",
+   "province": null,
+   "municipalities": {
+    "南砺市": true,
+    "小矢部市": false,
+    "砺波市": true,
+    "高岡市": true
+   }
+  }
+ },
+ "17": {
+  "江沼郡": {
+   "title": "江沼郡",
+   "province": "加賀国",
+   "municipalities": {
+    "加賀市": false,
+    "小松市": true
+   }
+  },
+  "河北郡": {
+   "title": "河北郡",
+   "province": "加賀国",
+   "municipalities": {
+    "かほく市": true,
+    "内灘町": false,
+    "津幡町": false,
+    "金沢市": true
+   }
+  },
+  "珠洲郡": {
+   "title": "珠洲郡",
+   "province": "能登国",
+   "municipalities": {
+    "珠洲市": false,
+    "能登町": true
+   }
+  },
+  "石川郡": {
+   "title": "石川郡 (石川県)",
+   "province": "加賀国",
+   "municipalities": {
+    "白山市": true,
+    "野々市市": false,
+    "金沢市": true
+   }
+  },
+  "羽咋郡": {
+   "title": "羽咋郡",
+   "province": "能登国",
+   "municipalities": {
+    "かほく市": true,
+    "七尾市": true,
+    "宝達志水町": false,
+    "志賀町": false,
+    "津幡町": true,
+    "羽咋市": true
+   }
+  },
+  "能美郡": {
+   "title": "能美郡",
+   "province": "加賀国",
+   "municipalities": {
+    "小松市": true,
+    "川北町": false,
+    "白山市": true,
+    "能美市": false
+   }
+  },
+  "鳳珠郡": {
+   "title": "鳳珠郡",
+   "province": null,
+   "municipalities": {
+    "穴水町": false,
+    "能登町": false
+   }
+  },
+  "鳳至郡": {
+   "title": "鳳至郡",
+   "province": "能登国",
+   "municipalities": {
+    "穴水町": false,
+    "能登町": true,
+    "輪島市": false
+   }
+  },
+  "鹿島郡": {
+   "title": "鹿島郡",
+   "province": "能登国",
+   "municipalities": {
+    "七尾市": true,
+    "中能登町": false,
+    "羽咋市": true
+   }
+  }
+ },
+ "18": {
+  "三方上中郡": {
+   "title": "三方上中郡",
+   "province": null,
+   "municipalities": {
+    "若狭町": false
+   }
+  },
+  "三方郡": {
+   "title": "三方郡",
+   "province": "若狭国",
+   "municipalities": {
+    "美浜町": false,
+    "若狭町": true
+   }
+  },
+  "丹生郡": {
+   "title": "丹生郡",
+   "province": "越前国",
+   "municipalities": {
+    "福井市": true,
+    "越前市": true,
+    "越前町": false,
+    "鯖江市": true
+   }
+  },
+  "今立郡": {
+   "title": "今立郡",
+   "province": "越前国",
+   "municipalities": {
+    "池田町": false,
+    "越前市": true,
+    "鯖江市": true
+   }
+  },
+  "南条郡": {
+   "title": "南条郡",
+   "province": "越前国",
+   "municipalities": {
+    "南越前町": false,
+    "越前市": true
+   }
+  },
+  "吉田郡": {
+   "title": "吉田郡",
+   "province": "越前国",
+   "municipalities": {
+    "坂井市": true,
+    "永平寺町": false,
+    "福井市": true
+   }
+  },
+  "坂井郡": {
+   "title": "坂井郡",
+   "province": "越前国",
+   "municipalities": {
+    "あわら市": false,
+    "坂井市": true,
+    "永平寺町": true,
+    "福井市": true
+   }
+  },
+  "大野郡": {
+   "title": "大野郡 (福井県)",
+   "province": "越前国",
+   "municipalities": {
+    "勝山市": false,
+    "大野市": false,
+    "福井市": true
+   }
+  },
+  "大飯郡": {
+   "title": "大飯郡",
+   "province": "若狭国",
+   "municipalities": {
+    "おおい町": false,
+    "小浜市": true,
+    "高浜町": false
+   }
+  },
+  "敦賀郡": {
+   "title": "敦賀郡",
+   "province": "越前国",
+   "municipalities": {
+    "敦賀市": false
+   }
+  },
+  "足羽郡": {
+   "title": "足羽郡",
+   "province": "越前国",
+   "municipalities": {
+    "福井市": true
+   }
+  },
+  "遠敷郡": {
+   "title": "遠敷郡",
+   "province": "若狭国",
+   "municipalities": {
+    "おおい町": true,
+    "小浜市": true,
+    "若狭町": true
+   }
+  }
+ },
+ "19": {
+  "中巨摩郡": {
+   "title": "中巨摩郡",
+   "province": null,
+   "municipalities": {
+    "中央市": true,
+    "南アルプス市": false,
+    "富士川町": true,
+    "昭和町": false,
+    "甲府市": true,
+    "甲斐市": true
+   }
+  },
+  "八代郡": {
+   "title": "八代郡 (甲斐国)",
+   "province": "甲斐国",
+   "municipalities": {
+    "中央市": true,
+    "南部町": true,
+    "富士川町": true,
+    "富士河口湖町": true,
+    "甲州市": true,
+    "甲府市": true,
+    "笛吹市": true,
+    "身延町": true
+   }
+  },
+  "北巨摩郡": {
+   "title": "北巨摩郡",
+   "province": null,
+   "municipalities": {
+    "北杜市": false,
+    "甲斐市": true,
+    "韮崎市": false
+   }
+  },
+  "北都留郡": {
+   "title": "北都留郡",
+   "province": null,
+   "municipalities": {
+    "丹波山村": false,
+    "小菅村": false
+   }
+  },
+  "南巨摩郡": {
+   "title": "南巨摩郡",
+   "province": null,
+   "municipalities": {
+    "南部町": false,
+    "富士川町": false,
+    "早川町": false,
+    "身延町": false
+   }
+  },
+  "南都留郡": {
+   "title": "南都留郡",
+   "province": null,
+   "municipalities": {
+    "富士河口湖町": false,
+    "山中湖村": false,
+    "忍野村": false,
+    "西桂町": false,
+    "道志村": false,
+    "鳴沢村": false
+   }
+  },
+  "山梨郡": {
+   "title": "山梨郡",
+   "province": "甲斐国",
+   "municipalities": {
+    "山梨市": false,
+    "甲州市": true,
+    "甲府市": true,
+    "笛吹市": true
+   }
+  },
+  "巨摩郡": {
+   "title": "巨摩郡",
+   "province": "甲斐国",
+   "municipalities": {
+    "中央市": true,
+    "北杜市": false,
+    "南アルプス市": false,
+    "甲府市": true,
+    "甲斐市": false,
+    "韮崎市": false
+   }
+  },
+  "東八代郡": {
+   "title": "東八代郡",
+   "province": null,
+   "municipalities": {
+    "中央市": true,
+    "甲州市": true,
+    "甲府市": true,
+    "笛吹市": true
+   }
+  },
+  "東山梨郡": {
+   "title": "東山梨郡",
+   "province": null,
+   "municipalities": {
+    "山梨市": false,
+    "甲州市": true,
+    "笛吹市": true
+   }
+  },
+  "西八代郡": {
+   "title": "西八代郡",
+   "province": null,
+   "municipalities": {
+    "南部町": true,
+    "富士川町": true,
+    "富士河口湖町": true,
+    "市川三郷町": false,
+    "甲府市": true,
+    "身延町": true
+   }
+  },
+  "西山梨郡": {
+   "title": "西山梨郡",
+   "province": null,
+   "municipalities": {
+    "甲府市": true
+   }
+  },
+  "都留郡": {
+   "title": "都留郡",
+   "province": "甲斐国",
+   "municipalities": {
+    "上野原市": true,
+    "大月市": true,
+    "富士吉田市": true,
+    "都留市": true
+   }
+  }
+ },
+ "20": {
+  "上伊那郡": {
+   "title": "上伊那郡",
+   "province": null,
+   "municipalities": {
+    "中川村": false,
+    "伊那市": true,
+    "南箕輪村": false,
+    "宮田村": false,
+    "松川町": true,
+    "箕輪町": false,
+    "辰野町": false,
+    "飯島町": false,
+    "駒ヶ根市": true
+   }
+  },
+  "上水内郡": {
+   "title": "上水内郡",
+   "province": null,
+   "municipalities": {
+    "信濃町": false,
+    "小川村": false,
+    "長野市": true,
+    "飯綱町": false
+   }
+  },
+  "上高井郡": {
+   "title": "上高井郡",
+   "province": null,
+   "municipalities": {
+    "小布施町": false,
+    "長野市": true,
+    "須坂市": true,
+    "高山村": false
+   }
+  },
+  "下伊那郡": {
+   "title": "下伊那郡",
+   "province": null,
+   "municipalities": {
+    "下條村": false,
+    "喬木村": false,
+    "売木村": false,
+    "大鹿村": false,
+    "天龍村": false,
+    "平谷村": false,
+    "松川町": false,
+    "根羽村": false,
+    "泰阜村": false,
+    "豊丘村": false,
+    "阿南町": false,
+    "阿智村": false,
+    "飯田市": true,
+    "高森町": false
+   }
+  },
+  "下水内郡": {
+   "title": "下水内郡",
+   "province": null,
+   "municipalities": {
+    "中野市": true,
+    "栄村": false,
+    "飯山市": true
+   }
+  },
+  "下高井郡": {
+   "title": "下高井郡",
+   "province": null,
+   "municipalities": {
+    "中野市": true,
+    "山ノ内町": false,
+    "木島平村": false,
+    "栄村": true,
+    "野沢温泉村": false,
+    "飯山市": true
+   }
+  },
+  "伊那郡": {
+   "title": "伊那郡",
+   "province": "信濃国",
+   "municipalities": {}
+  },
+  "佐久郡": {
+   "title": "佐久郡",
+   "province": "信濃国",
+   "municipalities": {
+    "佐久市": false,
+    "小諸市": true,
+    "東御市": true
+   }
+  },
+  "北佐久郡": {
+   "title": "北佐久郡",
+   "province": null,
+   "municipalities": {
+    "佐久市": true,
+    "小諸市": true,
+    "御代田町": false,
+    "東御市": true,
+    "立科町": false,
+    "軽井沢町": false
+   }
+  },
+  "北安曇郡": {
+   "title": "北安曇郡",
+   "province": null,
+   "municipalities": {
+    "大町市": false,
+    "安曇野市": true,
+    "小谷村": false,
+    "松川村": false,
+    "池田町": false,
+    "生坂村": true,
+    "白馬村": false,
+    "長野市": true
+   }
+  },
+  "南佐久郡": {
+   "title": "南佐久郡",
+   "province": null,
+   "municipalities": {
+    "佐久市": true,
+    "佐久穂町": false,
+    "北相木村": false,
+    "南牧村": false,
+    "南相木村": false,
+    "小海町": false,
+    "川上村": false
+   }
+  },
+  "南安曇郡": {
+   "title": "南安曇郡",
+   "province": null,
+   "municipalities": {
+    "安曇野市": true,
+    "松本市": true
+   }
+  },
+  "埴科郡": {
+   "title": "埴科郡",
+   "province": "信濃国",
+   "municipalities": {
+    "千曲市": true,
+    "坂城町": false,
+    "長野市": true
+   }
+  },
+  "安曇郡": {
+   "title": "安曇郡",
+   "province": "信濃国",
+   "municipalities": {
+    "大町市": false,
+    "安曇野市": true,
+    "松本市": true,
+    "生坂村": true,
+    "長野市": true
+   }
+  },
+  "小県郡": {
+   "title": "小県郡",
+   "province": "信濃国",
+   "municipalities": {
+    "上田市": false,
+    "小諸市": true,
+    "東御市": true,
+    "長和町": false,
+    "青木村": false
+   }
+  },
+  "更級郡": {
+   "title": "更級郡",
+   "province": "信濃国",
+   "municipalities": {
+    "千曲市": true,
+    "坂城町": true,
+    "長野市": true
+   }
+  },
+  "木曽郡": {
+   "title": "木曽郡",
+   "province": null,
+   "municipalities": {
+    "上松町": false,
+    "南木曽町": false,
+    "塩尻市": true,
+    "大桑村": false,
+    "木曽町": false,
+    "木祖村": false,
+    "松本市": true,
+    "王滝村": false
+   }
+  },
+  "東筑摩郡": {
+   "title": "東筑摩郡",
+   "province": null,
+   "municipalities": {
+    "塩尻市": true,
+    "安曇野市": true,
+    "山形村": false,
+    "朝日村": false,
+    "松本市": true,
+    "生坂村": false,
+    "筑北村": false,
+    "麻績村": false
+   }
+  },
+  "水内郡": {
+   "title": "水内郡",
+   "province": "信濃国",
+   "municipalities": {
+    "中野市": true,
+    "栄村": true,
+    "長野市": true,
+    "飯山市": true
+   }
+  },
+  "筑摩郡": {
+   "title": "筑摩郡",
+   "province": "信濃国",
+   "municipalities": {
+    "塩尻市": false,
+    "安曇野市": true,
+    "松本市": true
+   }
+  },
+  "諏訪郡": {
+   "title": "諏訪郡",
+   "province": "信濃国",
+   "municipalities": {
+    "下諏訪町": false,
+    "原村": false,
+    "富士見町": false,
+    "岡谷市": false,
+    "茅野市": false,
+    "諏訪市": false
+   }
+  },
+  "高井郡": {
+   "title": "高井郡",
+   "province": "信濃国",
+   "municipalities": {
+    "中野市": true,
+    "栄村": true,
+    "長野市": true,
+    "須坂市": false,
+    "飯山市": true
+   }
+  }
+ },
+ "21": {
+  "上石津郡": {
+   "title": "上石津郡",
+   "province": null,
+   "municipalities": {
+    "大垣市": true,
+    "養老町": true
+   }
+  },
+  "下石津郡": {
+   "title": "下石津郡",
+   "province": null,
+   "municipalities": {
+    "海津市": true
+   }
+  },
+  "不破郡": {
+   "title": "不破郡",
+   "province": "美濃国",
+   "municipalities": {
+    "垂井町": false,
+    "大垣市": true,
+    "関ケ原町": false,
+    "養老町": true
+   }
+  },
+  "中島郡": {
+   "title": "中島郡 (岐阜県)",
+   "province": "美濃国",
+   "municipalities": {
+    "羽島市": true
+   }
+  },
+  "加茂郡": {
+   "title": "加茂郡",
+   "province": "美濃国",
+   "municipalities": {
+    "七宗町": false,
+    "下呂市": true,
+    "八百津町": false,
+    "坂祝町": false,
+    "富加町": false,
+    "川辺町": false,
+    "恵那市": true,
+    "東白川村": false,
+    "白川町": false,
+    "美濃加茂市": false,
+    "関市": true
+   }
+  },
+  "厚見郡": {
+   "title": "厚見郡",
+   "province": "美濃国",
+   "municipalities": {
+    "岐阜市": true
+   }
+  },
+  "可児郡": {
+   "title": "可児郡",
+   "province": "美濃国",
+   "municipalities": {
+    "八百津町": true,
+    "可児市": false,
+    "多治見市": true,
+    "御嵩町": false
+   }
+  },
+  "各務郡": {
+   "title": "各務郡",
+   "province": "美濃国",
+   "municipalities": {
+    "各務原市": true,
+    "岐阜市": true
+   }
+  },
+  "吉城郡": {
+   "title": "吉城郡",
+   "province": "飛騨国",
+   "municipalities": {
+    "飛騨市": false,
+    "高山市": true
+   }
+  },
+  "土岐郡": {
+   "title": "土岐郡",
+   "province": "美濃国",
+   "municipalities": {
+    "土岐市": false,
+    "多治見市": true,
+    "瑞浪市": true
+   }
+  },
+  "多芸郡": {
+   "title": "多芸郡",
+   "province": "美濃国",
+   "municipalities": {
+    "大垣市": true,
+    "海津市": true,
+    "養老町": true
+   }
+  },
+  "大野郡": {
+   "title": "大野郡 (美濃国)",
+   "province": "美濃国",
+   "municipalities": {
+    "大野町": false,
+    "揖斐川町": true,
+    "本巣市": true,
+    "池田町": true,
+    "瑞穂市": true,
+    "神戸町": true
+   }
+  },
+  "安八郡": {
+   "title": "安八郡",
+   "province": "美濃国",
+   "municipalities": {
+    "大垣市": true,
+    "安八町": false,
+    "池田町": false,
+    "海津市": true,
+    "神戸町": false,
+    "輪之内町": false
+   }
+  },
+  "山県郡": {
+   "title": "山県郡 (岐阜県)",
+   "province": "美濃国",
+   "municipalities": {
+    "山県市": true,
+    "岐阜市": true,
+    "関市": true
+   }
+  },
+  "席田郡": {
+   "title": "席田郡 (岐阜県)",
+   "province": "美濃国",
+   "municipalities": {
+    "北方町": true,
+    "本巣市": true
+   }
+  },
+  "恵那郡": {
+   "title": "恵那郡",
+   "province": "美濃国",
+   "municipalities": {
+    "中津川市": true,
+    "恵那市": true,
+    "瑞浪市": true
+   }
+  },
+  "揖斐郡": {
+   "title": "揖斐郡",
+   "province": null,
+   "municipalities": {
+    "大垣市": true,
+    "大野町": false,
+    "揖斐川町": false,
+    "池田町": false,
+    "神戸町": true
+   }
+  },
+  "方県郡": {
+   "title": "方県郡",
+   "province": "美濃国",
+   "municipalities": {
+    "岐阜市": true
+   }
+  },
+  "本巣郡": {
+   "title": "本巣郡",
+   "province": "美濃国",
+   "municipalities": {
+    "北方町": false,
+    "岐阜市": true,
+    "本巣市": false,
+    "瑞穂市": false
+   }
+  },
+  "武儀郡": {
+   "title": "武儀郡",
+   "province": "美濃国",
+   "municipalities": {
+    "七宗町": true,
+    "下呂市": true,
+    "山県市": true,
+    "白川町": true,
+    "美濃市": false,
+    "関市": true
+   }
+  },
+  "池田郡": {
+   "title": "池田郡",
+   "province": "美濃国",
+   "municipalities": {
+    "大垣市": true,
+    "揖斐川町": true,
+    "池田町": true
+   }
+  },
+  "海津郡": {
+   "title": "海津郡",
+   "province": null,
+   "municipalities": {
+    "海津市": true
+   }
+  },
+  "海西郡": {
+   "title": "海西郡 (岐阜県)",
+   "province": "美濃国",
+   "municipalities": {
+    "海津市": true
+   }
+  },
+  "益田郡": {
+   "title": "益田郡",
+   "province": "飛騨国",
+   "municipalities": {
+    "下呂市": true,
+    "高山市": true
+   }
+  },
+  "石津郡": {
+   "title": "石津郡",
+   "province": "美濃国",
+   "municipalities": {
+    "大垣市": true,
+    "海津市": true,
+    "養老町": true
+   }
+  },
+  "稲葉郡": {
+   "title": "稲葉郡",
+   "province": null,
+   "municipalities": {
+    "各務原市": true,
+    "岐阜市": true
+   }
+  },
+  "羽島郡": {
+   "title": "羽島郡",
+   "province": null,
+   "municipalities": {
+    "各務原市": true,
+    "岐南町": false,
+    "岐阜市": true,
+    "笠松町": false,
+    "羽島市": false
+   }
+  },
+  "羽栗郡": {
+   "title": "羽栗郡",
+   "province": "美濃国",
+   "municipalities": {
+    "各務原市": true,
+    "岐南町": false,
+    "岐阜市": true,
+    "笠松町": false,
+    "羽島市": true
+   }
+  },
+  "郡上郡": {
+   "title": "郡上郡",
+   "province": "美濃国",
+   "municipalities": {
+    "下呂市": true,
+    "郡上市": true
+   }
+  },
+  "養老郡": {
+   "title": "養老郡",
+   "province": null,
+   "municipalities": {
+    "大垣市": true,
+    "海津市": true,
+    "養老町": false
+   }
+  }
+ },
+ "22": {
+  "佐野郡": {
+   "title": "佐野郡",
+   "province": "遠江国",
+   "municipalities": {
+    "掛川市": true,
+    "森町": true
+   }
+  },
+  "君沢郡": {
+   "title": "君沢郡",
+   "province": "伊豆国",
+   "municipalities": {
+    "三島市": true,
+    "伊豆の国市": true,
+    "伊豆市": true,
+    "沼津市": true
+   }
+  },
+  "周智郡": {
+   "title": "周智郡",
+   "province": "遠江国",
+   "municipalities": {
+    "森町": false,
+    "浜松市": true,
+    "浜松市天竜区": true,
+    "袋井市": true
+   }
+  },
+  "城東郡": {
+   "title": "城東郡",
+   "province": "遠江国",
+   "municipalities": {
+    "島田市": true,
+    "御前崎市": true,
+    "掛川市": true,
+    "菊川市": false,
+    "袋井市": true
+   }
+  },
+  "安倍郡": {
+   "title": "安倍郡",
+   "province": "駿河国",
+   "municipalities": {
+    "静岡市葵区": true
+   }
+  },
+  "富士郡": {
+   "title": "富士郡",
+   "province": "駿河国",
+   "municipalities": {
+    "富士宮市": true,
+    "富士市": true
+   }
+  },
+  "小笠郡": {
+   "title": "小笠郡",
+   "province": null,
+   "municipalities": {
+    "御前崎市": true,
+    "掛川市": false,
+    "森町": true,
+    "菊川市": false,
+    "袋井市": true
+   }
+  },
+  "山名郡": {
+   "title": "山名郡",
+   "province": "遠江国",
+   "municipalities": {
+    "磐田市": true,
+    "袋井市": true
+   }
+  },
+  "庵原郡": {
+   "title": "庵原郡",
+   "province": "駿河国",
+   "municipalities": {
+    "富士宮市": true,
+    "富士市": true,
+    "静岡市": true,
+    "静岡市清水区": true,
+    "静岡市葵区": true
+   }
+  },
+  "引佐郡": {
+   "title": "引佐郡",
+   "province": "遠江国",
+   "municipalities": {
+    "浜松市": true
+   }
+  },
+  "志太郡": {
+   "title": "志太郡",
+   "province": "駿河国",
+   "municipalities": {
+    "島田市": true,
+    "川根本町": true,
+    "焼津市": true,
+    "藤枝市": true
+   }
+  },
+  "敷知郡": {
+   "title": "敷知郡",
+   "province": "遠江国",
+   "municipalities": {
+    "浜松市": true,
+    "湖西市": true
+   }
+  },
+  "有渡郡": {
+   "title": "有渡郡",
+   "province": "駿河国",
+   "municipalities": {
+    "静岡市": true,
+    "静岡市清水区": true,
+    "静岡市葵区": true,
+    "静岡市駿河区": true
+   }
+  },
+  "榛原郡": {
+   "title": "榛原郡",
+   "province": "遠江国",
+   "municipalities": {
+    "吉田町": false,
+    "島田市": true,
+    "川根本町": false,
+    "御前崎市": true,
+    "牧之原市": false
+   }
+  },
+  "浜名郡": {
+   "title": "浜名郡",
+   "province": "遠江国",
+   "municipalities": {
+    "湖西市": true
+   }
+  },
+  "田方郡": {
+   "title": "田方郡",
+   "province": "伊豆国",
+   "municipalities": {
+    "三島市": true,
+    "伊豆の国市": true,
+    "伊豆市": true,
+    "函南町": false
+   }
+  },
+  "益津郡": {
+   "title": "益津郡",
+   "province": "駿河国",
+   "municipalities": {
+    "焼津市": true,
+    "藤枝市": true
+   }
+  },
+  "磐田郡": {
+   "title": "磐田郡",
+   "province": "遠江国",
+   "municipalities": {
+    "磐田市": false
+   }
+  },
+  "豊田郡": {
+   "title": "豊田郡 (静岡県)",
+   "province": "遠江国",
+   "municipalities": {
+    "森町": true,
+    "浜松市": true,
+    "浜松市天竜区": true,
+    "磐田市": true,
+    "袋井市": true
+   }
+  },
+  "賀茂郡": {
+   "title": "賀茂郡",
+   "province": "伊豆国",
+   "municipalities": {
+    "下田市": false,
+    "伊東市": false,
+    "伊豆市": true,
+    "南伊豆町": false,
+    "東伊豆町": false,
+    "松崎町": false,
+    "河津町": false,
+    "熱海市": false,
+    "西伊豆町": false
+   }
+  },
+  "那賀郡": {
+   "title": "那賀郡 (静岡県)",
+   "province": "伊豆国",
+   "municipalities": {
+    "松崎町": true,
+    "西伊豆町": false
+   }
+  },
+  "長上郡": {
+   "title": "長上郡",
+   "province": "遠江国",
+   "municipalities": {
+    "浜松市": true,
+    "磐田市": true
+   }
+  },
+  "駿東郡": {
+   "title": "駿東郡",
+   "province": "駿河国",
+   "municipalities": {
+    "函南町": true,
+    "富士市": true,
+    "小山町": false,
+    "御殿場市": false,
+    "沼津市": true,
+    "清水町": false,
+    "裾野市": false,
+    "長泉町": false
+   }
+  },
+  "麁玉郡": {
+   "title": "麁玉郡",
+   "province": "遠江国",
+   "municipalities": {
+    "浜松市": true
+   }
+  }
+ },
+ "23": {
+  "中島郡": {
+   "title": "中島郡 (愛知県)",
+   "province": "尾張国",
+   "municipalities": {
+    "一宮市": true,
+    "清須市": true,
+    "稲沢市": true
+   }
+  },
+  "丹羽郡": {
+   "title": "丹羽郡",
+   "province": "尾張国",
+   "municipalities": {
+    "一宮市": true,
+    "大口町": false,
+    "岩倉市": false,
+    "扶桑町": false,
+    "江南市": true,
+    "犬山市": false
+   }
+  },
+  "八名郡": {
+   "title": "八名郡",
+   "province": "三河国",
+   "municipalities": {
+    "新城市": true,
+    "豊川市": true,
+    "豊橋市": true
+   }
+  },
+  "加茂郡": {
+   "title": "加茂郡 (三河国)",
+   "province": "三河国",
+   "municipalities": {
+    "みよし市": false,
+    "豊田市": true
+   }
+  },
+  "北設楽郡": {
+   "title": "北設楽郡",
+   "province": null,
+   "municipalities": {
+    "新城市": true,
+    "東栄町": false,
+    "設楽町": false,
+    "豊根村": false,
+    "豊田市": true
+   }
+  },
+  "南設楽郡": {
+   "title": "南設楽郡",
+   "province": null,
+   "municipalities": {
+    "新城市": true
+   }
+  },
+  "宝飯郡": {
+   "title": "宝飯郡",
+   "province": "三河国",
+   "municipalities": {
+    "蒲郡市": false,
+    "豊川市": true,
+    "豊橋市": true
+   }
+  },
+  "幡豆郡": {
+   "title": "幡豆郡",
+   "province": "三河国",
+   "municipalities": {
+    "幸田町": true,
+    "西尾市": true
+   }
+  },
+  "愛知郡": {
+   "title": "愛知郡 (愛知県)",
+   "province": "尾張国",
+   "municipalities": {
+    "名古屋市": true,
+    "日進市": false,
+    "東郷町": false,
+    "瀬戸市": true,
+    "豊明市": true,
+    "長久手市": false
+   }
+  },
+  "春日井郡": {
+   "title": "春日井郡",
+   "province": "尾張国",
+   "municipalities": {
+    "名古屋市": true,
+    "小牧市": false,
+    "尾張旭市": false,
+    "春日井市": false,
+    "清須市": true,
+    "瀬戸市": true,
+    "豊山町": false
+   }
+  },
+  "東加茂郡": {
+   "title": "東加茂郡",
+   "province": null,
+   "municipalities": {
+    "新城市": true,
+    "豊田市": true
+   }
+  },
+  "東春日井郡": {
+   "title": "東春日井郡",
+   "province": null,
+   "municipalities": {
+    "名古屋市": true,
+    "名古屋市千種区": true,
+    "名古屋市名東区": true,
+    "名古屋市守山区": false,
+    "名古屋市東区": true,
+    "小牧市": true,
+    "尾張旭市": false,
+    "春日井市": false,
+    "瀬戸市": true
+   }
+  },
+  "海東郡": {
+   "title": "海東郡",
+   "province": "尾張国",
+   "municipalities": {
+    "あま市": false,
+    "名古屋市": true,
+    "大治町": false,
+    "弥富市": true,
+    "愛西市": true,
+    "津島市": false,
+    "清須市": true,
+    "蟹江町": false
+   }
+  },
+  "海西郡": {
+   "title": "海西郡 (愛知県)",
+   "province": "尾張国",
+   "municipalities": {
+    "弥富市": true,
+    "愛西市": true,
+    "飛島村": false
+   }
+  },
+  "海部郡": {
+   "title": "海部郡 (愛知県)",
+   "province": "尾張国",
+   "municipalities": {
+    "あま市": false,
+    "名古屋市": true,
+    "大治町": false,
+    "弥富市": false,
+    "愛西市": false,
+    "津島市": false,
+    "清須市": true,
+    "蟹江町": false,
+    "飛島村": false
+   }
+  },
+  "渥美郡": {
+   "title": "渥美郡",
+   "province": "三河国",
+   "municipalities": {
+    "田原市": true,
+    "豊橋市": true
+   }
+  },
+  "知多郡": {
+   "title": "知多郡",
+   "province": "尾張国",
+   "municipalities": {
+    "半田市": false,
+    "南知多町": false,
+    "名古屋市": true,
+    "名古屋市緑区": true,
+    "大府市": false,
+    "常滑市": false,
+    "東浦町": false,
+    "東海市": true,
+    "武豊町": false,
+    "知多市": false,
+    "美浜町": false,
+    "豊明市": true,
+    "阿久比町": false
+   }
+  },
+  "碧海郡": {
+   "title": "碧海郡",
+   "province": "三河国",
+   "municipalities": {
+    "刈谷市": false,
+    "安城市": false,
+    "岡崎市": true,
+    "知立市": false,
+    "碧南市": false,
+    "西尾市": true,
+    "豊田市": true,
+    "高浜市": false
+   }
+  },
+  "葉栗郡": {
+   "title": "葉栗郡",
+   "province": "尾張国",
+   "municipalities": {
+    "一宮市": true,
+    "江南市": true
+   }
+  },
+  "西加茂郡": {
+   "title": "西加茂郡",
+   "province": null,
+   "municipalities": {
+    "みよし市": false,
+    "豊田市": true
+   }
+  },
+  "西春日井郡": {
+   "title": "西春日井郡",
+   "province": null,
+   "municipalities": {
+    "名古屋市": true,
+    "小牧市": true,
+    "清須市": true,
+    "豊山町": false
+   }
+  },
+  "設楽郡": {
+   "title": "設楽郡",
+   "province": "三河国",
+   "municipalities": {
+    "新城市": true,
+    "豊田市": true
+   }
+  },
+  "額田郡": {
+   "title": "額田郡",
+   "province": "三河国",
+   "municipalities": {
+    "岡崎市": true,
+    "幸田町": false,
+    "豊田市": true
+   }
+  }
+ },
+ "24": {
+  "一志郡": {
+   "title": "一志郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "松阪市": true,
+    "津市": true
+   }
+  },
+  "三重郡": {
+   "title": "三重郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "四日市市": true,
+    "川越町": false,
+    "朝日町": false,
+    "菰野町": false
+   }
+  },
+  "伊賀郡": {
+   "title": "伊賀郡",
+   "province": "伊賀国",
+   "municipalities": {
+    "伊賀市": true,
+    "名張市": true
+   }
+  },
+  "北牟婁郡": {
+   "title": "北牟婁郡",
+   "province": null,
+   "municipalities": {
+    "大紀町": true,
+    "尾鷲市": true,
+    "紀北町": false
+   }
+  },
+  "南牟婁郡": {
+   "title": "南牟婁郡",
+   "province": null,
+   "municipalities": {
+    "尾鷲市": true,
+    "御浜町": false,
+    "熊野市": false,
+    "紀宝町": false
+   }
+  },
+  "名張郡": {
+   "title": "名張郡",
+   "province": "伊賀国",
+   "municipalities": {
+    "名張市": true
+   }
+  },
+  "名賀郡": {
+   "title": "名賀郡",
+   "province": null,
+   "municipalities": {
+    "伊賀市": true,
+    "名張市": false
+   }
+  },
+  "員弁郡": {
+   "title": "員弁郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "いなべ市": false,
+    "東員町": false,
+    "桑名市": true
+   }
+  },
+  "多気郡": {
+   "title": "多気郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "多気町": false,
+    "大台町": false,
+    "明和町": false,
+    "松阪市": true
+   }
+  },
+  "奄芸郡": {
+   "title": "奄芸郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "亀山市": true,
+    "津市": true,
+    "鈴鹿市": true
+   }
+  },
+  "安濃郡": {
+   "title": "安濃郡 (三重県)",
+   "province": "伊勢国",
+   "municipalities": {
+    "津市": true
+   }
+  },
+  "安芸郡": {
+   "title": "安芸郡 (三重県)",
+   "province": null,
+   "municipalities": {
+    "亀山市": true,
+    "津市": true
+   }
+  },
+  "山田郡": {
+   "title": "山田郡 (三重県)",
+   "province": "伊賀国",
+   "municipalities": {
+    "伊賀市": true
+   }
+  },
+  "度会郡": {
+   "title": "度会郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "伊勢市": false,
+    "南伊勢町": false,
+    "大紀町": false,
+    "度会町": false,
+    "志摩市": true,
+    "明和町": true,
+    "玉城町": false
+   }
+  },
+  "志摩郡": {
+   "title": "志摩郡 (三重県)",
+   "province": "志摩国",
+   "municipalities": {
+    "志摩市": true,
+    "鳥羽市": true
+   }
+  },
+  "朝明郡": {
+   "title": "朝明郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "四日市市": true,
+    "川越町": false,
+    "朝日町": false,
+    "菰野町": true
+   }
+  },
+  "桑名郡": {
+   "title": "桑名郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "木曽岬町": false,
+    "桑名市": true,
+    "津市": true
+   }
+  },
+  "河曲郡": {
+   "title": "河曲郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "鈴鹿市": true
+   }
+  },
+  "河芸郡": {
+   "title": "河芸郡",
+   "province": null,
+   "municipalities": {
+    "亀山市": true,
+    "津市": true,
+    "鈴鹿市": true
+   }
+  },
+  "牟婁郡": {
+   "title": "牟婁郡",
+   "province": "紀伊国",
+   "municipalities": {
+    "大紀町": true,
+    "尾鷲市": false,
+    "熊野市": false
+   }
+  },
+  "答志郡": {
+   "title": "答志郡",
+   "province": "志摩国",
+   "municipalities": {
+    "志摩市": true,
+    "鳥羽市": false
+   }
+  },
+  "英虞郡": {
+   "title": "英虞郡",
+   "province": "志摩国",
+   "municipalities": {
+    "志摩市": true
+   }
+  },
+  "鈴鹿郡": {
+   "title": "鈴鹿郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "亀山市": true,
+    "伊賀市": true,
+    "四日市市": true,
+    "鈴鹿市": true
+   }
+  },
+  "阿山郡": {
+   "title": "阿山郡",
+   "province": null,
+   "municipalities": {
+    "伊賀市": true
+   }
+  },
+  "阿拝郡": {
+   "title": "阿拝郡",
+   "province": "伊賀国",
+   "municipalities": {
+    "伊賀市": true
+   }
+  },
+  "飯南郡": {
+   "title": "飯南郡",
+   "province": null,
+   "municipalities": {
+    "多気町": true,
+    "松阪市": true
+   }
+  },
+  "飯野郡": {
+   "title": "飯野郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "松阪市": true
+   }
+  },
+  "飯高郡": {
+   "title": "飯高郡",
+   "province": "伊勢国",
+   "municipalities": {
+    "多気町": true,
+    "松阪市": true
+   }
+  }
+ },
+ "25": {
+  "伊香郡": {
+   "title": "伊香郡",
+   "province": "近江国",
+   "municipalities": {
+    "長浜市": true
+   }
+  },
+  "坂田郡": {
+   "title": "坂田郡",
+   "province": "近江国",
+   "municipalities": {
+    "彦根市": true,
+    "米原市": true,
+    "長浜市": true
+   }
+  },
+  "愛知郡": {
+   "title": "愛知郡 (滋賀県)",
+   "province": "近江国",
+   "municipalities": {
+    "彦根市": true,
+    "愛荘町": false,
+    "東近江市": true,
+    "豊郷町": true
+   }
+  },
+  "東浅井郡": {
+   "title": "東浅井郡",
+   "province": null,
+   "municipalities": {
+    "米原市": true,
+    "長浜市": true
+   }
+  },
+  "栗太郡": {
+   "title": "栗太郡",
+   "province": "近江国",
+   "municipalities": {
+    "大津市": true,
+    "守山市": true,
+    "栗東市": false,
+    "草津市": false
+   }
+  },
+  "浅井郡": {
+   "title": "浅井郡",
+   "province": "近江国",
+   "municipalities": {
+    "米原市": true,
+    "長浜市": true
+   }
+  },
+  "滋賀郡": {
+   "title": "滋賀郡",
+   "province": "近江国",
+   "municipalities": {
+    "大津市": true,
+    "高島市": true
+   }
+  },
+  "犬上郡": {
+   "title": "犬上郡",
+   "province": "近江国",
+   "municipalities": {
+    "多賀町": false,
+    "彦根市": true,
+    "甲良町": false,
+    "豊郷町": false
+   }
+  },
+  "甲賀郡": {
+   "title": "甲賀郡",
+   "province": "近江国",
+   "municipalities": {
+    "日野町": true,
+    "湖南市": false,
+    "甲賀市": false
+   }
+  },
+  "神崎郡": {
+   "title": "神崎郡 (滋賀県)",
+   "province": "近江国",
+   "municipalities": {
+    "彦根市": true,
+    "東近江市": true
+   }
+  },
+  "蒲生郡": {
+   "title": "蒲生郡",
+   "province": "近江国",
+   "municipalities": {
+    "日野町": false,
+    "東近江市": true,
+    "竜王町": false,
+    "近江八幡市": true
+   }
+  },
+  "西浅井郡": {
+   "title": "西浅井郡",
+   "province": null,
+   "municipalities": {
+    "長浜市": true
+   }
+  },
+  "野洲郡": {
+   "title": "野洲郡",
+   "province": "近江国",
+   "municipalities": {
+    "守山市": true,
+    "近江八幡市": true,
+    "野洲市": false
+   }
+  },
+  "高島郡": {
+   "title": "高島郡 (滋賀県)",
+   "province": "近江国",
+   "municipalities": {
+    "高島市": true
+   }
+  }
+ },
+ "26": {
+  "与謝郡": {
+   "title": "与謝郡",
+   "province": "丹後国",
+   "municipalities": {
+    "与謝野町": false,
+    "京丹後市": true,
+    "伊根町": false,
+    "宮津市": true,
+    "福知山市": true
+   }
+  },
+  "中郡": {
+   "title": "中郡 (京都府)",
+   "province": "丹後国",
+   "municipalities": {
+    "京丹後市": true
+   }
+  },
+  "久世郡": {
+   "title": "久世郡",
+   "province": "山城国",
+   "municipalities": {
+    "久御山町": false,
+    "京都市": true,
+    "京都市伏見区": true,
+    "八幡市": true,
+    "城陽市": true,
+    "宇治市": true,
+    "宇治田原町": true
+   }
+  },
+  "乙訓郡": {
+   "title": "乙訓郡",
+   "province": "山城国",
+   "municipalities": {
+    "京都市": true,
+    "京都市伏見区": true,
+    "京都市南区": true,
+    "京都市西京区": true,
+    "向日市": false,
+    "大山崎町": false,
+    "長岡京市": false
+   }
+  },
+  "何鹿郡": {
+   "title": "何鹿郡",
+   "province": "丹波国",
+   "municipalities": {
+    "福知山市": true,
+    "綾部市": false
+   }
+  },
+  "加佐郡": {
+   "title": "加佐郡",
+   "province": "丹後国",
+   "municipalities": {
+    "宮津市": true,
+    "福知山市": true,
+    "舞鶴市": false
+   }
+  },
+  "北桑田郡": {
+   "title": "北桑田郡",
+   "province": null,
+   "municipalities": {
+    "京都市": true,
+    "京都市右京区": true,
+    "京都市左京区": true,
+    "南丹市": true
+   }
+  },
+  "南桑田郡": {
+   "title": "南桑田郡",
+   "province": null,
+   "municipalities": {
+    "亀岡市": true
+   }
+  },
+  "天田郡": {
+   "title": "天田郡",
+   "province": "丹波国",
+   "municipalities": {
+    "福知山市": true
+   }
+  },
+  "宇治郡": {
+   "title": "宇治郡",
+   "province": "山城国",
+   "municipalities": {
+    "京都市": true,
+    "京都市伏見区": true,
+    "京都市山科区": false,
+    "宇治市": true
+   }
+  },
+  "愛宕郡": {
+   "title": "愛宕郡",
+   "province": "山城国",
+   "municipalities": {
+    "京都市": true,
+    "京都市北区": true,
+    "京都市左京区": true,
+    "京都市東山区": true
+   }
+  },
+  "桑田郡": {
+   "title": "桑田郡",
+   "province": "丹波国",
+   "municipalities": {
+    "亀岡市": true,
+    "京都市": true,
+    "京都市右京区": true,
+    "京都市左京区": true,
+    "南丹市": true
+   }
+  },
+  "熊野郡": {
+   "title": "熊野郡",
+   "province": "丹後国",
+   "municipalities": {
+    "京丹後市": true
+   }
+  },
+  "相楽郡": {
+   "title": "相楽郡",
+   "province": "山城国",
+   "municipalities": {
+    "井手町": true,
+    "南山城村": false,
+    "和束町": false,
+    "木津川市": false,
+    "笠置町": false,
+    "精華町": false
+   }
+  },
+  "竹野郡": {
+   "title": "竹野郡 (京都府)",
+   "province": "丹後国",
+   "municipalities": {
+    "京丹後市": false
+   }
+  },
+  "紀伊郡": {
+   "title": "紀伊郡",
+   "province": "山城国",
+   "municipalities": {
+    "京都市": true,
+    "京都市伏見区": true,
+    "京都市南区": true,
+    "京都市東山区": true,
+    "宇治市": true
+   }
+  },
+  "綴喜郡": {
+   "title": "綴喜郡",
+   "province": "山城国",
+   "municipalities": {
+    "井手町": false,
+    "京田辺市": false,
+    "京都市": true,
+    "京都市伏見区": true,
+    "八幡市": true,
+    "城陽市": true,
+    "宇治田原町": false
+   }
+  },
+  "船井郡": {
+   "title": "船井郡",
+   "province": "丹波国",
+   "municipalities": {
+    "亀岡市": true,
+    "京丹波町": false,
+    "南丹市": true
+   }
+  },
+  "葛野郡": {
+   "title": "葛野郡",
+   "province": "山城国",
+   "municipalities": {
+    "京都市": true,
+    "京都市下京区": true,
+    "京都市中京区": true,
+    "京都市北区": true,
+    "京都市南区": true,
+    "京都市右京区": true,
+    "京都市西京区": true
+   }
+  }
+ },
+ "27": {
+  "三島郡": {
+   "title": "三島郡 (大阪府)",
+   "province": "摂津国",
+   "municipalities": {
+    "吹田市": true,
+    "島本町": false,
+    "摂津市": false,
+    "箕面市": true,
+    "茨木市": false,
+    "豊中市": true,
+    "豊能町": true,
+    "高槻市": true
+   }
+  },
+  "中河内郡": {
+   "title": "中河内郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "大阪市": true,
+    "大阪市住吉区": true,
+    "大阪市平野区": true,
+    "大阪市東住吉区": true,
+    "大阪市生野区": true,
+    "松原市": true,
+    "柏原市": true
+   }
+  },
+  "丹北郡": {
+   "title": "丹北郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "大阪市": true,
+    "大阪市住吉区": true,
+    "大阪市平野区": true,
+    "大阪市東住吉区": true,
+    "松原市": true,
+    "羽曳野市": true,
+    "藤井寺市": true
+   }
+  },
+  "丹南郡": {
+   "title": "丹南郡",
+   "province": null,
+   "municipalities": {
+    "堺市": true,
+    "堺市東区": true,
+    "堺市美原区": true,
+    "大阪狭山市": false,
+    "松原市": true,
+    "羽曳野市": true,
+    "藤井寺市": true
+   }
+  },
+  "丹比郡": {
+   "title": "丹比郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "交野郡": {
+   "title": "交野郡",
+   "province": null,
+   "municipalities": {
+    "交野市": false,
+    "寝屋川市": true,
+    "枚方市": true
+   }
+  },
+  "住吉郡": {
+   "title": "住吉郡",
+   "province": null,
+   "municipalities": {
+    "大阪市": true,
+    "大阪市住之江区": true,
+    "大阪市住吉区": true,
+    "大阪市平野区": true,
+    "大阪市東住吉区": true,
+    "大阪市西成区": true,
+    "大阪市阿倍野区": true
+   }
+  },
+  "八上郡": {
+   "title": "八上郡 (大阪府)",
+   "province": null,
+   "municipalities": {
+    "堺市": true,
+    "堺市北区": true,
+    "堺市東区": true,
+    "堺市美原区": true,
+    "松原市": true
+   }
+  },
+  "北河内郡": {
+   "title": "北河内郡",
+   "province": null,
+   "municipalities": {
+    "交野市": true,
+    "四條畷市": true,
+    "大東市": true,
+    "大阪市鶴見区": true,
+    "守口市": true,
+    "寝屋川市": true,
+    "枚方市": true,
+    "門真市": true
+   }
+  },
+  "南河内郡": {
+   "title": "南河内郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "千早赤阪村": false,
+    "堺市": true,
+    "堺市北区": true,
+    "堺市東区": false,
+    "堺市美原区": false,
+    "大阪狭山市": false,
+    "太子町": false,
+    "富田林市": false,
+    "松原市": true,
+    "柏原市": true,
+    "河内長野市": false,
+    "河南町": false,
+    "羽曳野市": false,
+    "藤井寺市": false
+   }
+  },
+  "南郡": {
+   "title": "南郡",
+   "province": null,
+   "municipalities": {
+    "岸和田市": true,
+    "貝塚市": true
+   }
+  },
+  "古市郡": {
+   "title": "古市郡",
+   "province": null,
+   "municipalities": {
+    "羽曳野市": true
+   }
+  },
+  "和泉郡": {
+   "title": "和泉郡",
+   "province": null,
+   "municipalities": {
+    "和泉市": false,
+    "岸和田市": true,
+    "忠岡町": true,
+    "泉大津市": true
+   }
+  },
+  "大県郡": {
+   "title": "大県郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "柏原市": true
+   }
+  },
+  "大鳥郡": {
+   "title": "大鳥郡",
+   "province": null,
+   "municipalities": {
+    "堺市中区": false,
+    "堺市北区": true,
+    "堺市南区": false,
+    "堺市堺区": true,
+    "堺市西区": true,
+    "高石市": true
+   }
+  },
+  "安宿部郡": {
+   "title": "安宿部郡",
+   "province": null,
+   "municipalities": {
+    "柏原市": true
+   }
+  },
+  "島上郡": {
+   "title": "島上郡",
+   "province": "摂津国",
+   "municipalities": {
+    "島本町": false,
+    "高槻市": true
+   }
+  },
+  "島下郡": {
+   "title": "島下郡",
+   "province": "摂津国",
+   "municipalities": {
+    "吹田市": true,
+    "摂津市": false,
+    "箕面市": true,
+    "茨木市": false,
+    "豊中市": true,
+    "豊能町": true
+   }
+  },
+  "志紀郡": {
+   "title": "志紀郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "柏原市": true,
+    "藤井寺市": true
+   }
+  },
+  "日根郡": {
+   "title": "日根郡",
+   "province": null,
+   "municipalities": {
+    "岬町": false,
+    "泉佐野市": false,
+    "泉南市": false,
+    "熊取町": false,
+    "田尻町": false,
+    "貝塚市": true,
+    "阪南市": false
+   }
+  },
+  "東成郡": {
+   "title": "東成郡",
+   "province": null,
+   "municipalities": {
+    "大阪市": true,
+    "大阪市中央区": true,
+    "大阪市城東区": false,
+    "大阪市天王寺区": false,
+    "大阪市旭区": false,
+    "大阪市東成区": false,
+    "大阪市浪速区": true,
+    "大阪市生野区": true,
+    "大阪市西成区": true,
+    "大阪市都島区": true,
+    "大阪市阿倍野区": true,
+    "大阪市鶴見区": true
+   }
+  },
+  "河内郡": {
+   "title": "河内郡 (大阪府)",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "大阪市": true
+   }
+  },
+  "泉北郡": {
+   "title": "泉北郡",
+   "province": null,
+   "municipalities": {
+    "和泉市": false,
+    "堺市": true,
+    "堺市中区": false,
+    "堺市北区": true,
+    "堺市南区": false,
+    "堺市堺区": true,
+    "堺市西区": false,
+    "岸和田市": true,
+    "忠岡町": false,
+    "泉大津市": false,
+    "高石市": false
+   }
+  },
+  "泉南郡": {
+   "title": "泉南郡",
+   "province": null,
+   "municipalities": {
+    "岬町": false,
+    "岸和田市": true,
+    "泉佐野市": false,
+    "泉南市": false,
+    "熊取町": false,
+    "田尻町": false,
+    "貝塚市": false,
+    "阪南市": false
+   }
+  },
+  "渋川郡": {
+   "title": "渋川郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "大阪市": true,
+    "大阪市平野区": true,
+    "大阪市生野区": true
+   }
+  },
+  "石川郡": {
+   "title": "石川郡 (大阪府)",
+   "province": null,
+   "municipalities": {
+    "富田林市": true
+   }
+  },
+  "能勢郡": {
+   "title": "能勢郡",
+   "province": "摂津国",
+   "municipalities": {
+    "能勢町": false,
+    "豊能町": true
+   }
+  },
+  "若江郡": {
+   "title": "若江郡",
+   "province": null,
+   "municipalities": {
+    "八尾市": true,
+    "大阪市": true
+   }
+  },
+  "茨田郡": {
+   "title": "茨田郡",
+   "province": null,
+   "municipalities": {
+    "大東市": true,
+    "大阪市鶴見区": true,
+    "守口市": false,
+    "寝屋川市": true,
+    "枚方市": true,
+    "門真市": false
+   }
+  },
+  "西成郡": {
+   "title": "西成郡",
+   "province": null,
+   "municipalities": {
+    "大阪市": true,
+    "大阪市中央区": true,
+    "大阪市住之江区": true,
+    "大阪市住吉区": true,
+    "大阪市北区": true,
+    "大阪市大正区": false,
+    "大阪市東淀川区": false,
+    "大阪市此花区": false,
+    "大阪市浪速区": true,
+    "大阪市淀川区": false,
+    "大阪市港区": false,
+    "大阪市福島区": false,
+    "大阪市西区": true,
+    "大阪市西成区": true,
+    "大阪市西淀川区": false
+   }
+  },
+  "讃良郡": {
+   "title": "讃良郡",
+   "province": null,
+   "municipalities": {
+    "四條畷市": false,
+    "大東市": true,
+    "寝屋川市": true
+   }
+  },
+  "豊島郡": {
+   "title": "豊島郡 (大阪府)",
+   "province": "摂津国",
+   "municipalities": {
+    "吹田市": true,
+    "池田市": false,
+    "箕面市": true,
+    "豊中市": true
+   }
+  },
+  "豊能郡": {
+   "title": "豊能郡",
+   "province": null,
+   "municipalities": {
+    "吹田市": true,
+    "池田市": false,
+    "箕面市": true,
+    "能勢町": false,
+    "豊中市": true,
+    "豊能町": false
+   }
+  },
+  "錦部郡": {
+   "title": "錦部郡",
+   "province": null,
+   "municipalities": {
+    "富田林市": true,
+    "河内長野市": false
+   }
+  },
+  "高安": {
+   "title": "高安 (八尾市)",
+   "province": null,
+   "municipalities": {}
+  }
+ },
+ "28": {
+  "七美郡": {
+   "title": "七美郡",
+   "province": "但馬国",
+   "municipalities": {
+    "養父市": true,
+    "香美町": true
+   }
+  },
+  "三原郡": {
+   "title": "三原郡",
+   "province": "淡路国",
+   "municipalities": {
+    "南あわじ市": false,
+    "洲本市": true
+   }
+  },
+  "二方郡": {
+   "title": "二方郡",
+   "province": "但馬国",
+   "municipalities": {
+    "新温泉町": true,
+    "香美町": true
+   }
+  },
+  "佐用郡": {
+   "title": "佐用郡",
+   "province": "播磨国",
+   "municipalities": {
+    "佐用町": false
+   }
+  },
+  "八部郡": {
+   "title": "八部郡",
+   "province": "摂津国",
+   "municipalities": {
+    "神戸市": true,
+    "神戸市中央区": true,
+    "神戸市兵庫区": false,
+    "神戸市北区": true,
+    "神戸市灘区": true,
+    "神戸市長田区": false,
+    "神戸市須磨区": true
+   }
+  },
+  "出石郡": {
+   "title": "出石郡",
+   "province": "但馬国",
+   "municipalities": {
+    "豊岡市": true
+   }
+  },
+  "加古郡": {
+   "title": "加古郡",
+   "province": "播磨国",
+   "municipalities": {
+    "加古川市": true,
+    "播磨町": false,
+    "明石市": false,
+    "稲美町": false,
+    "高砂市": false
+   }
+  },
+  "加東郡": {
+   "title": "加東郡",
+   "province": "播磨国",
+   "municipalities": {
+    "加東市": false,
+    "小野市": false
+   }
+  },
+  "加西郡": {
+   "title": "加西郡",
+   "province": "播磨国",
+   "municipalities": {
+    "加西市": false,
+    "多可町": true,
+    "西脇市": true
+   }
+  },
+  "印南郡": {
+   "title": "印南郡",
+   "province": "播磨国",
+   "municipalities": {
+    "加古川市": true,
+    "姫路市": true,
+    "高砂市": true
+   }
+  },
+  "城崎郡": {
+   "title": "城崎郡",
+   "province": "但馬国",
+   "municipalities": {
+    "豊岡市": true
+   }
+  },
+  "多可郡": {
+   "title": "多可郡",
+   "province": "播磨国",
+   "municipalities": {
+    "多可町": false,
+    "神河町": true,
+    "西脇市": true
+   }
+  },
+  "多紀郡": {
+   "title": "多紀郡",
+   "province": "丹波国",
+   "municipalities": {
+    "丹波篠山市": false
+   }
+  },
+  "宍粟郡": {
+   "title": "宍粟郡",
+   "province": "播磨国",
+   "municipalities": {
+    "たつの市": true,
+    "佐用町": true,
+    "姫路市": true,
+    "宍粟市": false
+   }
+  },
+  "川辺郡": {
+   "title": "川辺郡",
+   "province": "摂津国",
+   "municipalities": {
+    "三田市": true,
+    "伊丹市": true,
+    "宝塚市": true,
+    "尼崎市": true,
+    "川西市": false,
+    "猪名川町": false
+   }
+  },
+  "揖保郡": {
+   "title": "揖保郡",
+   "province": "播磨国",
+   "municipalities": {
+    "たつの市": true,
+    "太子町": false,
+    "姫路市": true,
+    "相生市": true
+   }
+  },
+  "揖東郡": {
+   "title": "揖東郡",
+   "province": "播磨国",
+   "municipalities": {
+    "たつの市": true,
+    "太子町": false,
+    "姫路市": true
+   }
+  },
+  "揖西郡": {
+   "title": "揖西郡",
+   "province": "播磨国",
+   "municipalities": {
+    "たつの市": true,
+    "姫路市": true,
+    "相生市": true
+   }
+  },
+  "明石郡": {
+   "title": "明石郡",
+   "province": "播磨国",
+   "municipalities": {
+    "明石市": true,
+    "神戸市": true,
+    "神戸市垂水区": false,
+    "神戸市西区": false,
+    "神戸市須磨区": true
+   }
+  },
+  "有馬郡": {
+   "title": "有馬郡",
+   "province": "摂津国",
+   "municipalities": {
+    "三田市": true,
+    "神戸市": true,
+    "神戸市北区": true,
+    "神戸市灘区": true,
+    "西宮市": true
+   }
+  },
+  "朝来郡": {
+   "title": "朝来郡",
+   "province": "但馬国",
+   "municipalities": {
+    "朝来市": true
+   }
+  },
+  "武庫郡": {
+   "title": "武庫郡",
+   "province": "摂津国",
+   "municipalities": {
+    "宝塚市": true,
+    "尼崎市": true,
+    "西宮市": true
+   }
+  },
+  "気多郡": {
+   "title": "気多郡 (兵庫県)",
+   "province": "但馬国",
+   "municipalities": {
+    "豊岡市": true
+   }
+  },
+  "氷上郡": {
+   "title": "氷上郡",
+   "province": "丹波国",
+   "municipalities": {
+    "丹波市": false
+   }
+  },
+  "津名郡": {
+   "title": "津名郡",
+   "province": "淡路国",
+   "municipalities": {
+    "洲本市": true,
+    "淡路市": false
+   }
+  },
+  "神崎郡": {
+   "title": "神崎郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true,
+    "市川町": false,
+    "朝来市": true,
+    "神河町": false,
+    "福崎町": false
+   }
+  },
+  "神東郡": {
+   "title": "神東郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true,
+    "市川町": true,
+    "神河町": true,
+    "福崎町": true
+   }
+  },
+  "神西郡": {
+   "title": "神西郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true,
+    "市川町": true,
+    "朝来市": true,
+    "神河町": true,
+    "福崎町": true
+   }
+  },
+  "美含郡": {
+   "title": "美含郡",
+   "province": "但馬国",
+   "municipalities": {
+    "新温泉町": true,
+    "豊岡市": true,
+    "香美町": true
+   }
+  },
+  "美嚢郡": {
+   "title": "美嚢郡",
+   "province": "播磨国",
+   "municipalities": {
+    "三木市": false,
+    "神戸市北区": true
+   }
+  },
+  "美方郡": {
+   "title": "美方郡",
+   "province": null,
+   "municipalities": {
+    "新温泉町": false,
+    "養父市": true,
+    "香美町": false
+   }
+  },
+  "菟原郡": {
+   "title": "菟原郡",
+   "province": "摂津国",
+   "municipalities": {
+    "神戸市": true,
+    "神戸市中央区": true,
+    "神戸市東灘区": false,
+    "神戸市灘区": false,
+    "芦屋市": false
+   }
+  },
+  "赤穂郡": {
+   "title": "赤穂郡",
+   "province": "播磨国",
+   "municipalities": {
+    "たつの市": true,
+    "上郡町": false,
+    "佐用町": true,
+    "相生市": true,
+    "赤穂市": true
+   }
+  },
+  "飾東郡": {
+   "title": "飾東郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true
+   }
+  },
+  "飾磨郡": {
+   "title": "飾磨郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true
+   }
+  },
+  "飾西郡": {
+   "title": "飾西郡",
+   "province": "播磨国",
+   "municipalities": {
+    "姫路市": true
+   }
+  },
+  "養父郡": {
+   "title": "養父郡 (兵庫県)",
+   "province": "但馬国",
+   "municipalities": {
+    "朝来市": true,
+    "豊岡市": true,
+    "養父市": true
+   }
+  }
+ },
+ "29": {
+  "北葛城郡": {
+   "title": "北葛城郡",
+   "province": null,
+   "municipalities": {
+    "上牧町": false,
+    "大和高田市": true,
+    "広陵町": false,
+    "河合町": false,
+    "王寺町": false,
+    "葛城市": true,
+    "香芝市": false
+   }
+  },
+  "十市郡": {
+   "title": "十市郡",
+   "province": "大和国",
+   "municipalities": {
+    "桜井市": true,
+    "橿原市": true,
+    "田原本町": true
+   }
+  },
+  "南葛城郡": {
+   "title": "南葛城郡",
+   "province": null,
+   "municipalities": {
+    "御所市": true,
+    "葛城市": true
+   }
+  },
+  "吉野郡": {
+   "title": "吉野郡",
+   "province": "大和国",
+   "municipalities": {
+    "上北山村": false,
+    "下北山村": false,
+    "下市町": false,
+    "五條市": true,
+    "十津川村": false,
+    "吉野町": false,
+    "大淀町": false,
+    "天川村": false,
+    "宇陀市": true,
+    "川上村": false,
+    "東吉野村": false,
+    "野迫川村": false,
+    "黒滝村": false
+   }
+  },
+  "宇智郡": {
+   "title": "宇智郡",
+   "province": "大和国",
+   "municipalities": {
+    "五條市": true,
+    "大淀町": true
+   }
+  },
+  "宇陀郡": {
+   "title": "宇陀郡",
+   "province": "大和国",
+   "municipalities": {
+    "宇陀市": true,
+    "御杖村": false,
+    "曽爾村": false
+   }
+  },
+  "山辺郡": {
+   "title": "山辺郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和郡山市": true,
+    "天理市": true,
+    "奈良市": true,
+    "宇陀市": true,
+    "山添村": false,
+    "桜井市": true
+   }
+  },
+  "平群郡": {
+   "title": "平群郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和郡山市": true,
+    "生駒市": true
+   }
+  },
+  "広瀬郡": {
+   "title": "広瀬郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和高田市": true,
+    "広陵町": false,
+    "河合町": false
+   }
+  },
+  "式上郡": {
+   "title": "式上郡",
+   "province": "大和国",
+   "municipalities": {
+    "天理市": true,
+    "宇陀市": true,
+    "桜井市": true
+   }
+  },
+  "式下郡": {
+   "title": "式下郡",
+   "province": "大和国",
+   "municipalities": {
+    "三宅町": false,
+    "天理市": true,
+    "川西町": false,
+    "田原本町": true
+   }
+  },
+  "忍海郡": {
+   "title": "忍海郡",
+   "province": "大和国",
+   "municipalities": {
+    "御所市": true,
+    "葛城市": true
+   }
+  },
+  "添上郡": {
+   "title": "添上郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和郡山市": true,
+    "天理市": true,
+    "奈良市": true,
+    "山添村": true
+   }
+  },
+  "添下郡": {
+   "title": "添下郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和郡山市": true,
+    "奈良市": true,
+    "生駒市": true
+   }
+  },
+  "生駒郡": {
+   "title": "生駒郡",
+   "province": null,
+   "municipalities": {
+    "三郷町": false,
+    "大和郡山市": true,
+    "奈良市": true,
+    "安堵町": false,
+    "平群町": false,
+    "斑鳩町": false,
+    "生駒市": false
+   }
+  },
+  "磯城郡": {
+   "title": "磯城郡",
+   "province": null,
+   "municipalities": {
+    "三宅町": false,
+    "天理市": true,
+    "宇陀市": true,
+    "川西町": false,
+    "桜井市": false,
+    "橿原市": true,
+    "田原本町": false
+   }
+  },
+  "葛上郡": {
+   "title": "葛上郡",
+   "province": "大和国",
+   "municipalities": {
+    "御所市": true
+   }
+  },
+  "葛下郡": {
+   "title": "葛下郡",
+   "province": "大和国",
+   "municipalities": {
+    "上牧町": false,
+    "大和高田市": true,
+    "王寺町": false,
+    "葛城市": true,
+    "香芝市": false
+   }
+  },
+  "高市郡": {
+   "title": "高市郡",
+   "province": "大和国",
+   "municipalities": {
+    "大和高田市": true,
+    "明日香村": false,
+    "橿原市": true,
+    "高取町": false
+   }
+  }
+ },
+ "30": {
+  "伊都郡": {
+   "title": "伊都郡",
+   "province": "紀伊国",
+   "municipalities": {
+    "かつらぎ町": false,
+    "九度山町": false,
+    "橋本市": true,
+    "紀の川市": true,
+    "高野町": false
+   }
+  },
+  "名草郡": {
+   "title": "名草郡",
+   "province": null,
+   "municipalities": {
+    "和歌山市": true,
+    "海南市": true
+   }
+  },
+  "日高郡": {
+   "title": "日高郡 (和歌山県)",
+   "province": "紀伊国",
+   "municipalities": {
+    "みなべ町": false,
+    "印南町": false,
+    "御坊市": true,
+    "日高川町": false,
+    "日高町": false,
+    "田辺市": true,
+    "由良町": false,
+    "美浜町": false
+   }
+  },
+  "有田郡": {
+   "title": "有田郡",
+   "province": "紀伊国",
+   "municipalities": {
+    "広川町": false,
+    "有田川町": false,
+    "有田市": true,
+    "湯浅町": false
+   }
+  },
+  "東牟婁郡": {
+   "title": "東牟婁郡",
+   "province": null,
+   "municipalities": {
+    "すさみ町": true,
+    "串本町": false,
+    "北山村": false,
+    "古座川町": false,
+    "太地町": false,
+    "新宮市": false,
+    "田辺市": true,
+    "那智勝浦町": false
+   }
+  },
+  "海草郡": {
+   "title": "海草郡",
+   "province": "紀伊国",
+   "municipalities": {
+    "和歌山市": true,
+    "有田市": true,
+    "海南市": true,
+    "紀美野町": false
+   }
+  },
+  "海部郡": {
+   "title": "海部郡 (和歌山県)",
+   "province": "紀伊国",
+   "municipalities": {
+    "和歌山市": true,
+    "有田市": true,
+    "海南市": true
+   }
+  },
+  "牟婁郡": {
+   "title": "牟婁郡",
+   "province": "紀伊国",
+   "municipalities": {
+    "新宮市": false,
+    "田辺市": true
+   }
+  },
+  "西牟婁郡": {
+   "title": "西牟婁郡",
+   "province": null,
+   "municipalities": {
+    "すさみ町": false,
+    "上富田町": false,
+    "串本町": true,
+    "田辺市": true,
+    "白浜町": false
+   }
+  },
+  "那賀郡": {
+   "title": "那賀郡 (和歌山県)",
+   "province": "紀伊国",
+   "municipalities": {
+    "かつらぎ町": true,
+    "和歌山市": true,
+    "岩出市": false,
+    "海南市": true,
+    "紀の川市": true,
+    "紀美野町": false
+   }
+  }
+ },
+ "31": {
+  "久米郡": {
+   "title": "久米郡 (鳥取県)",
+   "province": "伯耆国",
+   "municipalities": {
+    "倉吉市": true,
+    "北栄町": true
+   }
+  },
+  "会見郡": {
+   "title": "会見郡",
+   "province": "伯耆国",
+   "municipalities": {
+    "伯耆町": true,
+    "南部町": true,
+    "境港市": true,
+    "日吉津村": true,
+    "米子市": true
+   }
+  },
+  "八上郡": {
+   "title": "八上郡 (鳥取県)",
+   "province": "因幡国",
+   "municipalities": {
+    "八頭町": true,
+    "鳥取市": true
+   }
+  },
+  "八東郡": {
+   "title": "八東郡",
+   "province": "因幡国",
+   "municipalities": {
+    "八頭町": true,
+    "若桜町": true
+   }
+  },
+  "八橋郡": {
+   "title": "八橋郡",
+   "province": "伯耆国",
+   "municipalities": {
+    "北栄町": true,
+    "大山町": true,
+    "琴浦町": true
+   }
+  },
+  "八頭郡": {
+   "title": "八頭郡",
+   "province": null,
+   "municipalities": {
+    "八頭町": false,
+    "智頭町": false,
+    "若桜町": false,
+    "鳥取市": true
+   }
+  },
+  "岩井郡": {
+   "title": "岩井郡",
+   "province": "因幡国",
+   "municipalities": {
+    "岩美町": true,
+    "鳥取市": true
+   }
+  },
+  "岩美郡": {
+   "title": "岩美郡",
+   "province": null,
+   "municipalities": {
+    "岩美町": false,
+    "鳥取市": true
+   }
+  },
+  "日野郡": {
+   "title": "日野郡",
+   "province": "伯耆国",
+   "municipalities": {
+    "伯耆町": true,
+    "日南町": false,
+    "日野町": false,
+    "江府町": false
+   }
+  },
+  "智頭郡": {
+   "title": "智頭郡",
+   "province": "因幡国",
+   "municipalities": {
+    "智頭町": true,
+    "鳥取市": true
+   }
+  },
+  "東伯郡": {
+   "title": "東伯郡",
+   "province": null,
+   "municipalities": {
+    "三朝町": false,
+    "倉吉市": true,
+    "北栄町": false,
+    "大山町": true,
+    "湯梨浜町": false,
+    "琴浦町": false
+   }
+  },
+  "気多郡": {
+   "title": "気多郡 (鳥取県)",
+   "province": "因幡国",
+   "municipalities": {
+    "鳥取市": true
+   }
+  },
+  "気高郡": {
+   "title": "気高郡",
+   "province": null,
+   "municipalities": {
+    "鳥取市": true
+   }
+  },
+  "汗入郡": {
+   "title": "汗入郡",
+   "province": "伯耆国",
+   "municipalities": {
+    "大山町": true,
+    "米子市": true
+   }
+  },
+  "河村郡": {
+   "title": "河村郡",
+   "province": "伯耆国",
+   "municipalities": {
+    "三朝町": true,
+    "倉吉市": true,
+    "湯梨浜町": true
+   }
+  },
+  "法美郡": {
+   "title": "法美郡",
+   "province": "因幡国",
+   "municipalities": {
+    "鳥取市": true
+   }
+  },
+  "西伯郡": {
+   "title": "西伯郡",
+   "province": null,
+   "municipalities": {
+    "伯耆町": false,
+    "南部町": false,
+    "境港市": false,
+    "大山町": false,
+    "日吉津村": false,
+    "米子市": false
+   }
+  },
+  "邑美郡": {
+   "title": "邑美郡",
+   "province": "因幡国",
+   "municipalities": {
+    "鳥取市": true
+   }
+  },
+  "高草郡": {
+   "title": "高草郡",
+   "province": "因幡国",
+   "municipalities": {
+    "鳥取市": true
+   }
+  }
+ },
+ "32": {
+  "仁多郡": {
+   "title": "仁多郡",
+   "province": "出雲国",
+   "municipalities": {
+    "奥出雲町": false,
+    "雲南市": true
+   }
+  },
+  "八束郡": {
+   "title": "八束郡",
+   "province": null,
+   "municipalities": {
+    "出雲市": true,
+    "安来市": true,
+    "松江市": true
+   }
+  },
+  "出雲郡": {
+   "title": "出雲郡",
+   "province": "出雲国",
+   "municipalities": {
+    "出雲市": true
+   }
+  },
+  "周吉郡": {
+   "title": "周吉郡",
+   "province": "隠岐国",
+   "municipalities": {
+    "隠岐の島町": true
+   }
+  },
+  "大原郡": {
+   "title": "大原郡",
+   "province": "出雲国",
+   "municipalities": {
+    "雲南市": true
+   }
+  },
+  "安濃郡": {
+   "title": "安濃郡 (島根県)",
+   "province": "石見国",
+   "municipalities": {
+    "出雲市": true,
+    "大田市": true
+   }
+  },
+  "島根郡": {
+   "title": "島根郡",
+   "province": "出雲国",
+   "municipalities": {
+    "松江市": true
+   }
+  },
+  "意宇郡": {
+   "title": "意宇郡",
+   "province": null,
+   "municipalities": {
+    "安来市": true,
+    "松江市": true
+   }
+  },
+  "楯縫郡": {
+   "title": "楯縫郡",
+   "province": "出雲国",
+   "municipalities": {
+    "出雲市": true
+   }
+  },
+  "海士郡": {
+   "title": "海士郡",
+   "province": "隠岐国",
+   "municipalities": {
+    "海士町": false
+   }
+  },
+  "知夫郡": {
+   "title": "知夫郡",
+   "province": "隠岐国",
+   "municipalities": {
+    "知夫村": false,
+    "西ノ島町": false
+   }
+  },
+  "神門郡": {
+   "title": "神門郡",
+   "province": "出雲国",
+   "municipalities": {
+    "出雲市": true,
+    "大田市": true
+   }
+  },
+  "秋鹿郡": {
+   "title": "秋鹿郡",
+   "province": "出雲国",
+   "municipalities": {
+    "出雲市": true,
+    "松江市": true
+   }
+  },
+  "穏地郡": {
+   "title": "穏地郡",
+   "province": "隠岐国",
+   "municipalities": {
+    "隠岐の島町": true
+   }
+  },
+  "簸川郡": {
+   "title": "簸川郡",
+   "province": null,
+   "municipalities": {
+    "出雲市": true,
+    "大田市": true
+   }
+  },
+  "美濃郡": {
+   "title": "美濃郡",
+   "province": "石見国",
+   "municipalities": {
+    "益田市": false
+   }
+  },
+  "能義郡": {
+   "title": "能義郡",
+   "province": "出雲国",
+   "municipalities": {
+    "安来市": true
+   }
+  },
+  "邇摩郡": {
+   "title": "邇摩郡",
+   "province": "石見国",
+   "municipalities": {
+    "大田市": true,
+    "川本町": true,
+    "江津市": true
+   }
+  },
+  "邑智郡": {
+   "title": "邑智郡",
+   "province": "石見国",
+   "municipalities": {
+    "大田市": true,
+    "川本町": false,
+    "江津市": true,
+    "浜田市": true,
+    "美郷町": false,
+    "邑南町": false,
+    "飯南町": true
+   }
+  },
+  "那賀郡": {
+   "title": "那賀郡 (島根県)",
+   "province": "石見国",
+   "municipalities": {
+    "江津市": true,
+    "浜田市": true
+   }
+  },
+  "隠岐郡": {
+   "title": "隠岐郡",
+   "province": null,
+   "municipalities": {
+    "海士町": false,
+    "知夫村": false,
+    "西ノ島町": false,
+    "隠岐の島町": false
+   }
+  },
+  "飯石郡": {
+   "title": "飯石郡",
+   "province": "出雲国",
+   "municipalities": {
+    "出雲市": true,
+    "雲南市": true,
+    "飯南町": false
+   }
+  },
+  "鹿足郡": {
+   "title": "鹿足郡",
+   "province": "石見国",
+   "municipalities": {
+    "吉賀町": false,
+    "津和野町": false
+   }
+  }
+ },
+ "33": {
+  "上房郡": {
+   "title": "上房郡",
+   "province": "備中国",
+   "municipalities": {
+    "吉備中央町": true,
+    "高梁市": true
+   }
+  },
+  "上道郡": {
+   "title": "上道郡",
+   "province": "備前国",
+   "municipalities": {
+    "岡山市": true,
+    "岡山市中区": true,
+    "岡山市北区": true,
+    "岡山市東区": true
+   }
+  },
+  "下道郡": {
+   "title": "下道郡",
+   "province": "備中国",
+   "municipalities": {
+    "倉敷市": true,
+    "総社市": true
+   }
+  },
+  "久米北条郡": {
+   "title": "久米北条郡",
+   "province": "美作国",
+   "municipalities": {
+    "岡山市": true,
+    "岡山市北区": true,
+    "津山市": true,
+    "美咲町": true
+   }
+  },
+  "久米南条郡": {
+   "title": "久米南条郡",
+   "province": "美作国",
+   "municipalities": {
+    "久米南町": false,
+    "岡山市": true,
+    "岡山市北区": true,
+    "津山市": true,
+    "美咲町": true
+   }
+  },
+  "久米郡": {
+   "title": "久米郡",
+   "province": "美作国",
+   "municipalities": {
+    "久米南町": false,
+    "岡山市": true,
+    "岡山市北区": true,
+    "津山市": true,
+    "美咲町": false
+   }
+  },
+  "児島郡": {
+   "title": "児島郡",
+   "province": "備前国",
+   "municipalities": {
+    "倉敷市": true,
+    "岡山市": true,
+    "岡山市南区": true,
+    "玉野市": false
+   }
+  },
+  "加賀郡": {
+   "title": "加賀郡",
+   "province": null,
+   "municipalities": {
+    "吉備中央町": false
+   }
+  },
+  "勝北郡": {
+   "title": "勝北郡",
+   "province": "美作国",
+   "municipalities": {
+    "勝央町": true,
+    "奈義町": false,
+    "津山市": true,
+    "美作市": true
+   }
+  },
+  "勝南郡": {
+   "title": "勝南郡",
+   "province": "美作国",
+   "municipalities": {
+    "勝央町": true,
+    "津山市": true,
+    "美作市": true,
+    "美咲町": true
+   }
+  },
+  "勝田郡": {
+   "title": "勝田郡",
+   "province": "美作国",
+   "municipalities": {
+    "勝央町": false,
+    "奈義町": false,
+    "津山市": true,
+    "美作市": true,
+    "美咲町": true
+   }
+  },
+  "吉備郡": {
+   "title": "吉備郡",
+   "province": null,
+   "municipalities": {
+    "倉敷市": true,
+    "吉備中央町": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "総社市": true
+   }
+  },
+  "吉野郡": {
+   "title": "吉野郡 (岡山県)",
+   "province": "美作国",
+   "municipalities": {
+    "美作市": true,
+    "西粟倉村": false
+   }
+  },
+  "和気郡": {
+   "title": "和気郡",
+   "province": "備前国",
+   "municipalities": {
+    "備前市": true,
+    "和気町": false,
+    "岡山市": true,
+    "岡山市東区": true,
+    "赤磐市": true
+   }
+  },
+  "哲多郡": {
+   "title": "哲多郡",
+   "province": "備中国",
+   "municipalities": {
+    "新見市": true
+   }
+  },
+  "大庭郡": {
+   "title": "大庭郡",
+   "province": "美作国",
+   "municipalities": {
+    "真庭市": true
+   }
+  },
+  "小田郡": {
+   "title": "小田郡",
+   "province": "備中国",
+   "municipalities": {
+    "井原市": true,
+    "矢掛町": false,
+    "笠岡市": true
+   }
+  },
+  "川上郡": {
+   "title": "川上郡 (岡山県)",
+   "province": "備中国",
+   "municipalities": {
+    "井原市": true,
+    "高梁市": true
+   }
+  },
+  "後月郡": {
+   "title": "後月郡",
+   "province": "備中国",
+   "municipalities": {
+    "井原市": true
+   }
+  },
+  "御津郡": {
+   "title": "御津郡",
+   "province": null,
+   "municipalities": {
+    "吉備中央町": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "岡山市南区": true,
+    "美咲町": true
+   }
+  },
+  "御野郡": {
+   "title": "御野郡",
+   "province": "備前国",
+   "municipalities": {
+    "岡山市": true,
+    "岡山市北区": true,
+    "岡山市南区": true
+   }
+  },
+  "東北条郡": {
+   "title": "東北条郡",
+   "province": "美作国",
+   "municipalities": {
+    "津山市": true
+   }
+  },
+  "東南条郡": {
+   "title": "東南条郡",
+   "province": "美作国",
+   "municipalities": {
+    "津山市": true
+   }
+  },
+  "津高郡": {
+   "title": "津高郡",
+   "province": "備前国",
+   "municipalities": {
+    "吉備中央町": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "美咲町": true
+   }
+  },
+  "浅口郡": {
+   "title": "浅口郡",
+   "province": "備中国",
+   "municipalities": {
+    "倉敷市": true,
+    "浅口市": false,
+    "笠岡市": true,
+    "里庄町": false
+   }
+  },
+  "真島郡": {
+   "title": "真島郡",
+   "province": "美作国",
+   "municipalities": {
+    "新庄村": false,
+    "真庭市": true,
+    "美咲町": true
+   }
+  },
+  "真庭郡": {
+   "title": "真庭郡",
+   "province": null,
+   "municipalities": {
+    "新庄村": false,
+    "真庭市": true,
+    "美咲町": true
+   }
+  },
+  "磐梨郡": {
+   "title": "磐梨郡",
+   "province": "備前国",
+   "municipalities": {
+    "和気町": true,
+    "岡山市": true,
+    "岡山市東区": true,
+    "赤磐市": true
+   }
+  },
+  "窪屋郡": {
+   "title": "窪屋郡",
+   "province": "備中国",
+   "municipalities": {
+    "倉敷市": true,
+    "総社市": true
+   }
+  },
+  "苫田郡": {
+   "title": "苫田郡",
+   "province": "美作国",
+   "municipalities": {
+    "津山市": true,
+    "鏡野町": false
+   }
+  },
+  "英田郡": {
+   "title": "英田郡",
+   "province": "美作国",
+   "municipalities": {
+    "美作市": true,
+    "西粟倉村": false
+   }
+  },
+  "西北条郡": {
+   "title": "西北条郡",
+   "province": "美作国",
+   "municipalities": {
+    "津山市": true,
+    "鏡野町": true
+   }
+  },
+  "西西条郡": {
+   "title": "西西条郡",
+   "province": "美作国",
+   "municipalities": {
+    "津山市": true,
+    "鏡野町": true
+   }
+  },
+  "賀陽郡": {
+   "title": "賀陽郡",
+   "province": "備中国",
+   "municipalities": {
+    "吉備中央町": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "総社市": true
+   }
+  },
+  "赤坂郡": {
+   "title": "赤坂郡",
+   "province": "備前国",
+   "municipalities": {
+    "岡山市": true,
+    "岡山市北区": true,
+    "赤磐市": true
+   }
+  },
+  "赤磐郡": {
+   "title": "赤磐郡",
+   "province": null,
+   "municipalities": {
+    "和気町": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "岡山市東区": true,
+    "赤磐市": true
+   }
+  },
+  "邑久郡": {
+   "title": "邑久郡",
+   "province": "備前国",
+   "municipalities": {
+    "備前市": true,
+    "岡山市": true,
+    "岡山市東区": true,
+    "瀬戸内市": false
+   }
+  },
+  "都宇郡": {
+   "title": "都宇郡",
+   "province": "備中国",
+   "municipalities": {
+    "倉敷市": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "岡山市南区": true,
+    "早島町": false
+   }
+  },
+  "都窪郡": {
+   "title": "都窪郡",
+   "province": null,
+   "municipalities": {
+    "倉敷市": true,
+    "岡山市": true,
+    "岡山市北区": true,
+    "岡山市南区": true,
+    "早島町": false,
+    "総社市": true
+   }
+  },
+  "阿哲郡": {
+   "title": "阿哲郡",
+   "province": null,
+   "municipalities": {
+    "新見市": false
+   }
+  },
+  "阿賀郡": {
+   "title": "阿賀郡",
+   "province": "備中国",
+   "municipalities": {
+    "新見市": true,
+    "真庭市": true,
+    "高梁市": true
+   }
+  }
+ },
+ "34": {
+  "三上郡": {
+   "title": "三上郡",
+   "province": "備後国",
+   "municipalities": {
+    "庄原市": true
+   }
+  },
+  "三次郡": {
+   "title": "三次郡",
+   "province": "備後国",
+   "municipalities": {
+    "三次市": true
+   }
+  },
+  "三谿郡": {
+   "title": "三谿郡",
+   "province": "備後国",
+   "municipalities": {
+    "三次市": true
+   }
+  },
+  "世羅郡": {
+   "title": "世羅郡",
+   "province": "備後国",
+   "municipalities": {
+    "三原市": true,
+    "三次市": true,
+    "世羅町": false,
+    "広島市": true,
+    "府中市": true
+   }
+  },
+  "佐伯郡": {
+   "title": "佐伯郡",
+   "province": "安芸国",
+   "municipalities": {
+    "大竹市": false,
+    "広島市": true,
+    "広島市佐伯区": false,
+    "広島市西区": true,
+    "廿日市市": false,
+    "江田島市": true
+   }
+  },
+  "双三郡": {
+   "title": "双三郡",
+   "province": null,
+   "municipalities": {
+    "三次市": true
+   }
+  },
+  "品治郡": {
+   "title": "品治郡",
+   "province": "備後国",
+   "municipalities": {
+    "福山市": true
+   }
+  },
+  "奴可郡": {
+   "title": "奴可郡",
+   "province": "備後国",
+   "municipalities": {
+    "庄原市": true
+   }
+  },
+  "安佐郡": {
+   "title": "安佐郡",
+   "province": null,
+   "municipalities": {
+    "広島市": true,
+    "広島市南区": false,
+    "広島市安佐北区": true,
+    "広島市安佐南区": false,
+    "広島市東区": true,
+    "広島市西区": true
+   }
+  },
+  "安芸郡": {
+   "title": "安芸郡 (広島県)",
+   "province": "安芸国",
+   "municipalities": {
+    "呉市": true,
+    "坂町": false,
+    "広島市": true,
+    "広島市南区": true,
+    "広島市安芸区": true,
+    "広島市東区": true,
+    "府中町": false,
+    "江田島市": true,
+    "海田町": false,
+    "熊野町": false
+   }
+  },
+  "安那郡": {
+   "title": "安那郡",
+   "province": "備後国",
+   "municipalities": {
+    "福山市": true
+   }
+  },
+  "山県郡": {
+   "title": "山県郡",
+   "province": "安芸国",
+   "municipalities": {
+    "北広島町": false,
+    "安芸太田町": false
+   }
+  },
+  "御調郡": {
+   "title": "御調郡",
+   "province": "備後国",
+   "municipalities": {
+    "三原市": true,
+    "世羅町": true,
+    "尾道市": true,
+    "府中市": true
+   }
+  },
+  "恵蘇郡": {
+   "title": "恵蘇郡",
+   "province": "備後国",
+   "municipalities": {
+    "庄原市": true
+   }
+  },
+  "比婆郡": {
+   "title": "比婆郡",
+   "province": null,
+   "municipalities": {
+    "庄原市": true
+   }
+  },
+  "沼田郡": {
+   "title": "沼田郡",
+   "province": "安芸国",
+   "municipalities": {
+    "広島市": true,
+    "広島市南区": true,
+    "広島市安佐北区": true,
+    "広島市安佐南区": true,
+    "広島市西区": true
+   }
+  },
+  "沼隈郡": {
+   "title": "沼隈郡",
+   "province": "備後国",
+   "municipalities": {
+    "尾道市": true,
+    "福山市": true
+   }
+  },
+  "深安郡": {
+   "title": "深安郡",
+   "province": null,
+   "municipalities": {
+    "福山市": true
+   }
+  },
+  "深津郡": {
+   "title": "深津郡",
+   "province": "備後国",
+   "municipalities": {
+    "福山市": true
+   }
+  },
+  "甲奴郡": {
+   "title": "甲奴郡",
+   "province": "備後国",
+   "municipalities": {
+    "三次市": true,
+    "庄原市": true,
+    "府中市": true,
+    "神石高原町": true
+   }
+  },
+  "神石郡": {
+   "title": "神石郡",
+   "province": "備後国",
+   "municipalities": {
+    "庄原市": true,
+    "神石高原町": false
+   }
+  },
+  "芦品郡": {
+   "title": "芦品郡",
+   "province": null,
+   "municipalities": {
+    "府中市": true,
+    "神石高原町": true,
+    "福山市": true
+   }
+  },
+  "芦田郡": {
+   "title": "芦田郡",
+   "province": "備後国",
+   "municipalities": {
+    "府中市": true,
+    "神石高原町": true,
+    "福山市": true
+   }
+  },
+  "豊田郡": {
+   "title": "豊田郡",
+   "province": "安芸国",
+   "municipalities": {
+    "三原市": true,
+    "呉市": true,
+    "大崎上島町": false,
+    "尾道市": true,
+    "広島市": true,
+    "竹原市": true
+   }
+  },
+  "賀茂郡": {
+   "title": "賀茂郡 (広島県)",
+   "province": "安芸国",
+   "municipalities": {
+    "呉市": true,
+    "広島市": true,
+    "広島市安芸区": true,
+    "竹原市": true
+   }
+  },
+  "高宮郡": {
+   "title": "高宮郡",
+   "province": "安芸国",
+   "municipalities": {
+    "広島市": true,
+    "広島市南区": true,
+    "広島市安佐北区": true,
+    "広島市安佐南区": true,
+    "広島市東区": true
+   }
+  },
+  "高田郡": {
+   "title": "高田郡",
+   "province": "安芸国",
+   "municipalities": {
+    "三次市": true,
+    "安芸高田市": false,
+    "広島市安佐北区": true
+   }
+  }
+ },
+ "35": {
+  "佐波郡": {
+   "title": "佐波郡 (山口県)",
+   "province": "周防国",
+   "municipalities": {
+    "周南市": true,
+    "山口市": true,
+    "防府市": true
+   }
+  },
+  "厚狭郡": {
+   "title": "厚狭郡",
+   "province": "長門国",
+   "municipalities": {
+    "下関市": true,
+    "宇部市": true,
+    "山陽小野田市": false
+   }
+  },
+  "吉敷郡": {
+   "title": "吉敷郡",
+   "province": "周防国",
+   "municipalities": {
+    "宇部市": true,
+    "山口市": true,
+    "防府市": true
+   }
+  },
+  "大島郡": {
+   "title": "大島郡 (山口県)",
+   "province": "周防国",
+   "municipalities": {
+    "周防大島町": false,
+    "柳井市": true
+   }
+  },
+  "大津郡": {
+   "title": "大津郡",
+   "province": "長門国",
+   "municipalities": {
+    "長門市": false
+   }
+  },
+  "熊毛郡": {
+   "title": "熊毛郡 (山口県)",
+   "province": "周防国",
+   "municipalities": {
+    "上関町": false,
+    "光市": false,
+    "周南市": true,
+    "平生町": false,
+    "柳井市": true,
+    "田布施町": false
+   }
+  },
+  "玖珂郡": {
+   "title": "玖珂郡",
+   "province": "周防国",
+   "municipalities": {
+    "和木町": false,
+    "岩国市": true,
+    "柳井市": true
+   }
+  },
+  "美祢郡": {
+   "title": "美祢郡",
+   "province": "長門国",
+   "municipalities": {
+    "美祢市": true
+   }
+  },
+  "見島": {
+   "title": "見島",
+   "province": null,
+   "municipalities": {}
+  },
+  "豊浦郡": {
+   "title": "豊浦郡",
+   "province": "長門国",
+   "municipalities": {
+    "下関市": true,
+    "美祢市": true
+   }
+  },
+  "都濃郡": {
+   "title": "都濃郡",
+   "province": "周防国",
+   "municipalities": {
+    "下松市": true,
+    "周南市": true
+   }
+  },
+  "阿武郡": {
+   "title": "阿武郡",
+   "province": "長門国",
+   "municipalities": {
+    "山口市": true,
+    "萩市": true,
+    "阿武町": false
+   }
+  }
+ },
+ "36": {
+  "三好郡": {
+   "title": "三好郡",
+   "province": "阿波国",
+   "municipalities": {
+    "三好市": true,
+    "東みよし町": false
+   }
+  },
+  "以西郡": {
+   "title": "以西郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "勝浦郡": {
+   "title": "勝浦郡",
+   "province": "阿波国",
+   "municipalities": {
+    "上勝町": false,
+    "勝浦町": false,
+    "小松島市": true,
+    "徳島市": true
+   }
+  },
+  "名東郡": {
+   "title": "名東郡",
+   "province": "阿波国",
+   "municipalities": {
+    "佐那河内村": false,
+    "徳島市": true
+   }
+  },
+  "名西郡": {
+   "title": "名西郡",
+   "province": "阿波国",
+   "municipalities": {
+    "上板町": true,
+    "徳島市": true,
+    "石井町": false,
+    "神山町": false
+   }
+  },
+  "板東郡": {
+   "title": "板東郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "板野郡": {
+   "title": "板野郡",
+   "province": "阿波国",
+   "municipalities": {
+    "上板町": false,
+    "北島町": false,
+    "吉野川市": true,
+    "徳島市": true,
+    "松茂町": false,
+    "板野町": false,
+    "藍住町": false,
+    "阿波市": true,
+    "鳴門市": false
+   }
+  },
+  "海部郡": {
+   "title": "海部郡 (徳島県)",
+   "province": "阿波国",
+   "municipalities": {
+    "海陽町": false,
+    "牟岐町": false,
+    "美波町": false,
+    "那賀町": true
+   }
+  },
+  "美馬郡": {
+   "title": "美馬郡",
+   "province": "阿波国",
+   "municipalities": {
+    "つるぎ町": false,
+    "三好市": true,
+    "美馬市": true
+   }
+  },
+  "那賀郡": {
+   "title": "那賀郡",
+   "province": "阿波国",
+   "municipalities": {
+    "小松島市": true,
+    "那賀町": false,
+    "阿南市": false
+   }
+  },
+  "阿波郡": {
+   "title": "阿波郡",
+   "province": "阿波国",
+   "municipalities": {
+    "吉野川市": true,
+    "阿波市": true
+   }
+  },
+  "麻植郡": {
+   "title": "麻植郡",
+   "province": "阿波国",
+   "municipalities": {
+    "吉野川市": true,
+    "美馬市": true
+   }
+  }
+ },
+ "37": {
+  "三木郡": {
+   "title": "三木郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "さぬき市": true,
+    "三木町": false,
+    "高松市": true
+   }
+  },
+  "三豊郡": {
+   "title": "三豊郡",
+   "province": null,
+   "municipalities": {
+    "三豊市": false,
+    "観音寺市": false
+   }
+  },
+  "三野郡": {
+   "title": "三野郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "三豊市": true,
+    "観音寺市": true
+   }
+  },
+  "仲多度郡": {
+   "title": "仲多度郡",
+   "province": null,
+   "municipalities": {
+    "まんのう町": false,
+    "丸亀市": true,
+    "善通寺市": false,
+    "坂出市": true,
+    "多度津町": false,
+    "琴平町": false
+   }
+  },
+  "多度郡": {
+   "title": "多度郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "善通寺市": true,
+    "多度津町": true
+   }
+  },
+  "大内郡": {
+   "title": "大内郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "東かがわ市": true
+   }
+  },
+  "大川郡": {
+   "title": "大川郡",
+   "province": null,
+   "municipalities": {
+    "さぬき市": true,
+    "東かがわ市": false
+   }
+  },
+  "寒川郡": {
+   "title": "寒川郡 (香川県)",
+   "province": "讃岐国",
+   "municipalities": {
+    "さぬき市": true,
+    "東かがわ市": true
+   }
+  },
+  "小豆郡": {
+   "title": "小豆郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "土庄町": false,
+    "小豆島町": false
+   }
+  },
+  "山田郡": {
+   "title": "山田郡 (香川県)",
+   "province": "讃岐国",
+   "municipalities": {
+    "高松市": true
+   }
+  },
+  "木田郡": {
+   "title": "木田郡",
+   "province": null,
+   "municipalities": {
+    "さぬき市": true,
+    "三木町": false,
+    "高松市": true
+   }
+  },
+  "綾歌郡": {
+   "title": "綾歌郡",
+   "province": null,
+   "municipalities": {
+    "まんのう町": true,
+    "丸亀市": true,
+    "坂出市": true,
+    "宇多津町": false,
+    "綾川町": false,
+    "高松市": true
+   }
+  },
+  "豊田郡": {
+   "title": "豊田郡 (香川県)",
+   "province": "讃岐国",
+   "municipalities": {
+    "三豊市": true,
+    "観音寺市": true
+   }
+  },
+  "那珂郡": {
+   "title": "那珂郡 (香川県)",
+   "province": "讃岐国",
+   "municipalities": {
+    "まんのう町": true,
+    "丸亀市": true,
+    "善通寺市": true,
+    "坂出市": true,
+    "多度津町": true,
+    "琴平町": false
+   }
+  },
+  "阿野郡": {
+   "title": "阿野郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "まんのう町": true,
+    "坂出市": true,
+    "綾川町": false,
+    "高松市": true
+   }
+  },
+  "香川郡": {
+   "title": "香川郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "直島町": false,
+    "高松市": true
+   }
+  },
+  "鵜足郡": {
+   "title": "鵜足郡",
+   "province": "讃岐国",
+   "municipalities": {
+    "まんのう町": true,
+    "丸亀市": true,
+    "坂出市": true,
+    "宇多津町": true
+   }
+  }
+ },
+ "38": {
+  "三木郡": {
+   "title": "三木郡",
+   "province": "讃岐国",
+   "municipalities": {}
+  },
+  "上浮穴郡": {
+   "title": "上浮穴郡",
+   "province": null,
+   "municipalities": {
+    "久万高原町": false,
+    "内子町": true,
+    "大洲市": true,
+    "西予市": true
+   }
+  },
+  "下浮穴郡": {
+   "title": "下浮穴郡",
+   "province": null,
+   "municipalities": {
+    "伊予市": true,
+    "内子町": true,
+    "大洲市": true,
+    "東温市": true,
+    "松山市": true,
+    "砥部町": false
+   }
+  },
+  "久米郡": {
+   "title": "久米郡 (愛媛県)",
+   "province": "伊予国",
+   "municipalities": {}
+  },
+  "伊予郡": {
+   "title": "伊予郡",
+   "province": "伊予国",
+   "municipalities": {
+    "松前町": false,
+    "砥部町": false
+   }
+  },
+  "北宇和郡": {
+   "title": "北宇和郡",
+   "province": null,
+   "municipalities": {
+    "宇和島市": true,
+    "松野町": false,
+    "鬼北町": false
+   }
+  },
+  "南宇和郡": {
+   "title": "南宇和郡",
+   "province": null,
+   "municipalities": {
+    "愛南町": false
+   }
+  },
+  "周敷郡": {
+   "title": "周敷郡",
+   "province": "伊予国",
+   "municipalities": {
+    "東温市": true,
+    "西条市": true
+   }
+  },
+  "周桑郡": {
+   "title": "周桑郡",
+   "province": null,
+   "municipalities": {
+    "東温市": true,
+    "西条市": true
+   }
+  },
+  "和気郡": {
+   "title": "和気郡 (愛媛県)",
+   "province": "伊予国",
+   "municipalities": {
+    "松山市": true
+   }
+  },
+  "喜多郡": {
+   "title": "喜多郡",
+   "province": "伊予国",
+   "municipalities": {
+    "伊予市": true,
+    "内子町": false,
+    "大洲市": true,
+    "西予市": true
+   }
+  },
+  "宇和郡": {
+   "title": "宇和郡",
+   "province": "伊予国",
+   "municipalities": {
+    "八幡浜市": false,
+    "大洲市": true,
+    "宇和島市": false,
+    "西予市": true
+   }
+  },
+  "宇摩郡": {
+   "title": "宇摩郡",
+   "province": "伊予国",
+   "municipalities": {
+    "四国中央市": true,
+    "新居浜市": true
+   }
+  },
+  "山田郡": {
+   "title": "山田郡 (香川県)",
+   "province": "讃岐国",
+   "municipalities": {}
+  },
+  "新居郡": {
+   "title": "新居郡",
+   "province": "伊予国",
+   "municipalities": {
+    "新居浜市": true,
+    "西条市": true
+   }
+  },
+  "東宇和郡": {
+   "title": "東宇和郡",
+   "province": null,
+   "municipalities": {
+    "大洲市": true,
+    "宇和島市": true,
+    "西予市": true
+   }
+  },
+  "桑村郡": {
+   "title": "桑村郡",
+   "province": "伊予国",
+   "municipalities": {
+    "西条市": true
+   }
+  },
+  "浮穴郡": {
+   "title": "浮穴郡",
+   "province": "伊予国",
+   "municipalities": {
+    "久万高原町": false,
+    "伊予市": true,
+    "内子町": true,
+    "大洲市": true,
+    "東温市": true,
+    "松山市": true,
+    "砥部町": false,
+    "西予市": true
+   }
+  },
+  "温泉郡": {
+   "title": "温泉郡",
+   "province": "伊予国",
+   "municipalities": {
+    "松山市": true
+   }
+  },
+  "西宇和郡": {
+   "title": "西宇和郡",
+   "province": null,
+   "municipalities": {
+    "伊方町": false,
+    "八幡浜市": false,
+    "大洲市": true,
+    "西予市": true
+   }
+  },
+  "越智郡": {
+   "title": "越智郡",
+   "province": "伊予国",
+   "municipalities": {
+    "上島町": false
+   }
+  },
+  "野間郡": {
+   "title": "野間郡",
+   "province": "伊予国",
+   "municipalities": {}
+  },
+  "風早郡": {
+   "title": "風早郡",
+   "province": "伊予国",
+   "municipalities": {}
+  }
+ },
+ "39": {
+  "吾川郡": {
+   "title": "吾川郡",
+   "province": "土佐国",
+   "municipalities": {
+    "いの町": false,
+    "仁淀川町": false,
+    "土佐市": true,
+    "越知町": true,
+    "高知市": true
+   }
+  },
+  "土佐郡": {
+   "title": "土佐郡",
+   "province": "土佐国",
+   "municipalities": {
+    "いの町": true,
+    "土佐町": false,
+    "大川村": false,
+    "高知市": true
+   }
+  },
+  "安芸郡": {
+   "title": "安芸郡 (高知県)",
+   "province": "土佐国",
+   "municipalities": {
+    "北川村": false,
+    "奈半利町": false,
+    "安田町": false,
+    "安芸市": true,
+    "室戸市": true,
+    "東洋町": false,
+    "田野町": false,
+    "芸西村": false,
+    "馬路村": false
+   }
+  },
+  "幡多郡": {
+   "title": "幡多郡",
+   "province": "土佐国",
+   "municipalities": {
+    "三原村": false,
+    "四万十市": false,
+    "四万十町": true,
+    "土佐清水市": false,
+    "大月町": false,
+    "宿毛市": false,
+    "黒潮町": false
+   }
+  },
+  "長岡郡": {
+   "title": "長岡郡",
+   "province": "土佐国",
+   "municipalities": {
+    "南国市": true,
+    "土佐町": true,
+    "大豊町": false,
+    "本山町": false,
+    "香美市": true,
+    "高知市": true
+   }
+  },
+  "香美郡": {
+   "title": "香美郡",
+   "province": "土佐国",
+   "municipalities": {
+    "南国市": true,
+    "安芸市": true,
+    "芸西村": true,
+    "香南市": false,
+    "香美市": true
+   }
+  },
+  "高岡郡": {
+   "title": "高岡郡",
+   "province": "土佐国",
+   "municipalities": {
+    "いの町": true,
+    "中土佐町": false,
+    "仁淀川町": true,
+    "佐川町": false,
+    "四万十町": false,
+    "土佐市": true,
+    "日高村": false,
+    "津野町": false,
+    "越知町": false,
+    "須崎市": false
+   }
+  }
+ },
+ "40": {
+  "三井郡": {
+   "title": "三井郡",
+   "province": null,
+   "municipalities": {
+    "久留米市": true,
+    "大刀洗町": false,
+    "小郡市": false
+   }
+  },
+  "三池郡": {
+   "title": "三池郡",
+   "province": "筑後国",
+   "municipalities": {
+    "みやま市": true,
+    "大牟田市": false
+   }
+  },
+  "三潴郡": {
+   "title": "三潴郡",
+   "province": "筑後国",
+   "municipalities": {
+    "久留米市": true,
+    "大川市": false,
+    "大木町": false,
+    "柳川市": true,
+    "筑後市": true
+   }
+  },
+  "上妻郡": {
+   "title": "上妻郡",
+   "province": "筑後国",
+   "municipalities": {
+    "久留米市": true,
+    "八女市": true,
+    "広川町": false,
+    "筑後市": true
+   }
+  },
+  "上座郡": {
+   "title": "上座郡",
+   "province": "筑前国",
+   "municipalities": {
+    "朝倉市": true,
+    "東峰村": false
+   }
+  },
+  "上毛郡": {
+   "title": "上毛郡",
+   "province": "豊前国",
+   "municipalities": {
+    "上毛町": false,
+    "吉富町": false,
+    "豊前市": true
+   }
+  },
+  "下妻郡": {
+   "title": "下妻郡",
+   "province": "筑後国",
+   "municipalities": {
+    "みやま市": true,
+    "筑後市": true
+   }
+  },
+  "下座郡": {
+   "title": "下座郡",
+   "province": "筑前国",
+   "municipalities": {
+    "朝倉市": true
+   }
+  },
+  "京都郡": {
+   "title": "京都郡",
+   "province": "豊前国",
+   "municipalities": {
+    "みやこ町": false,
+    "苅田町": false,
+    "行橋市": true
+   }
+  },
+  "仲津郡": {
+   "title": "仲津郡",
+   "province": "豊前国",
+   "municipalities": {
+    "みやこ町": true,
+    "行橋市": true
+   }
+  },
+  "企救郡": {
+   "title": "企救郡",
+   "province": null,
+   "municipalities": {
+    "北九州市": true,
+    "北九州市八幡東区": true,
+    "北九州市小倉北区": false,
+    "北九州市小倉南区": false,
+    "北九州市門司区": false,
+    "行橋市": true
+   }
+  },
+  "八女郡": {
+   "title": "八女郡",
+   "province": null,
+   "municipalities": {
+    "みやま市": true,
+    "久留米市": true,
+    "八女市": false,
+    "広川町": false,
+    "筑後市": true
+   }
+  },
+  "嘉穂郡": {
+   "title": "嘉穂郡",
+   "province": null,
+   "municipalities": {
+    "嘉麻市": true,
+    "桂川町": false,
+    "飯塚市": true
+   }
+  },
+  "嘉麻郡": {
+   "title": "嘉麻郡",
+   "province": "筑前国",
+   "municipalities": {
+    "嘉麻市": true,
+    "飯塚市": true
+   }
+  },
+  "夜須郡": {
+   "title": "夜須郡",
+   "province": "筑前国",
+   "municipalities": {
+    "朝倉市": true,
+    "筑前町": false,
+    "飯塚市": true
+   }
+  },
+  "宗像郡": {
+   "title": "宗像郡",
+   "province": null,
+   "municipalities": {
+    "宗像市": true,
+    "福津市": true
+   }
+  },
+  "山本郡": {
+   "title": "山本郡 (福岡県)",
+   "province": "筑後国",
+   "municipalities": {
+    "久留米市": true
+   }
+  },
+  "山門郡": {
+   "title": "山門郡",
+   "province": null,
+   "municipalities": {
+    "みやま市": true,
+    "柳川市": true
+   }
+  },
+  "席田郡": {
+   "title": "席田郡 (福岡県)",
+   "province": "筑前国",
+   "municipalities": {
+    "福岡市博多区": true
+   }
+  },
+  "御井郡": {
+   "title": "御井郡",
+   "province": "筑後国",
+   "municipalities": {
+    "久留米市": true,
+    "大刀洗町": true,
+    "小郡市": true
+   }
+  },
+  "御原郡": {
+   "title": "御原郡",
+   "province": "筑後国",
+   "municipalities": {
+    "大刀洗町": true,
+    "小郡市": true
+   }
+  },
+  "御笠郡": {
+   "title": "御笠郡",
+   "province": "筑前国",
+   "municipalities": {
+    "大野城市": true,
+    "太宰府市": false,
+    "筑紫野市": false
+   }
+  },
+  "志摩郡": {
+   "title": "志摩郡 (福岡県)",
+   "province": "筑前国",
+   "municipalities": {
+    "福岡市": true,
+    "福岡市西区": true,
+    "糸島市": true
+   }
+  },
+  "怡土郡": {
+   "title": "怡土郡",
+   "province": "筑前国",
+   "municipalities": {
+    "福岡市": true,
+    "福岡市早良区": true,
+    "福岡市西区": true,
+    "糸島市": true
+   }
+  },
+  "早良郡": {
+   "title": "早良郡",
+   "province": "筑前国",
+   "municipalities": {
+    "福岡市": true,
+    "福岡市中央区": true,
+    "福岡市南区": false,
+    "福岡市城南区": false,
+    "福岡市早良区": true,
+    "福岡市西区": true
+   }
+  },
+  "朝倉郡": {
+   "title": "朝倉郡",
+   "province": null,
+   "municipalities": {
+    "朝倉市": false,
+    "東峰村": false,
+    "筑前町": false,
+    "飯塚市": true
+   }
+  },
+  "浮羽郡": {
+   "title": "浮羽郡",
+   "province": null,
+   "municipalities": {
+    "うきは市": false,
+    "久留米市": true
+   }
+  },
+  "生葉郡": {
+   "title": "生葉郡",
+   "province": "筑後国",
+   "municipalities": {
+    "うきは市": true,
+    "八女市": true
+   }
+  },
+  "田川郡": {
+   "title": "田川郡",
+   "province": "豊前国",
+   "municipalities": {
+    "嘉麻市": true,
+    "大任町": false,
+    "川崎町": false,
+    "添田町": false,
+    "田川市": false,
+    "福智町": false,
+    "糸田町": false,
+    "赤村": false,
+    "香春町": false
+   }
+  },
+  "穂波郡": {
+   "title": "穂波郡",
+   "province": "筑前国",
+   "municipalities": {
+    "桂川町": false,
+    "飯塚市": true
+   }
+  },
+  "竹野郡": {
+   "title": "竹野郡 (福岡県)",
+   "province": "筑後国",
+   "municipalities": {
+    "うきは市": true,
+    "久留米市": true
+   }
+  },
+  "筑紫郡": {
+   "title": "筑紫郡",
+   "province": null,
+   "municipalities": {
+    "大野城市": false,
+    "太宰府市": false,
+    "春日市": false,
+    "福岡市": true,
+    "福岡市南区": true,
+    "福岡市博多区": false,
+    "福岡市東区": true,
+    "筑紫野市": false,
+    "那珂川市": false
+   }
+  },
+  "築上郡": {
+   "title": "築上郡",
+   "province": null,
+   "municipalities": {
+    "上毛町": false,
+    "吉富町": false,
+    "築上町": false,
+    "豊前市": false
+   }
+  },
+  "築城郡": {
+   "title": "築城郡",
+   "province": "豊前国",
+   "municipalities": {
+    "築上町": false,
+    "豊前市": true
+   }
+  },
+  "糟屋郡": {
+   "title": "糟屋郡",
+   "province": "筑前国",
+   "municipalities": {
+    "久山町": false,
+    "古賀市": false,
+    "宇美町": false,
+    "志免町": false,
+    "新宮町": false,
+    "福岡市": true,
+    "福岡市東区": true,
+    "篠栗町": false,
+    "粕屋町": false,
+    "須恵町": false
+   }
+  },
+  "糸島郡": {
+   "title": "糸島郡",
+   "province": null,
+   "municipalities": {
+    "福岡市": true,
+    "福岡市西区": true,
+    "糸島市": false
+   }
+  },
+  "表糟屋郡": {
+   "title": "表糟屋郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "裏糟屋郡": {
+   "title": "裏糟屋郡",
+   "province": null,
+   "municipalities": {}
+  },
+  "遠賀郡": {
+   "title": "遠賀郡",
+   "province": "筑前国",
+   "municipalities": {
+    "中間市": true,
+    "北九州市": true,
+    "北九州市八幡東区": true,
+    "北九州市八幡西区": true,
+    "北九州市戸畑区": false,
+    "北九州市若松区": false,
+    "岡垣町": false,
+    "水巻町": false,
+    "芦屋町": false,
+    "遠賀町": false
+   }
+  },
+  "那珂郡": {
+   "title": "那珂郡 (福岡県)",
+   "province": "筑前国",
+   "municipalities": {
+    "大野城市": true,
+    "春日市": false,
+    "福岡市": true,
+    "福岡市南区": true,
+    "福岡市博多区": true,
+    "福岡市東区": true,
+    "那珂川市": false
+   }
+  },
+  "鞍手郡": {
+   "title": "鞍手郡",
+   "province": "筑前国",
+   "municipalities": {
+    "中間市": true,
+    "北九州市": true,
+    "北九州市八幡西区": true,
+    "宮若市": false,
+    "小竹町": false,
+    "直方市": false,
+    "鞍手町": false
+   }
+  }
+ },
+ "41": {
+  "三根郡": {
+   "title": "三根郡",
+   "province": "肥前国",
+   "municipalities": {
+    "みやき町": true,
+    "上峰町": false
+   }
+  },
+  "三養基郡": {
+   "title": "三養基郡",
+   "province": null,
+   "municipalities": {
+    "みやき町": false,
+    "上峰町": false,
+    "基山町": false,
+    "鳥栖市": false
+   }
+  },
+  "佐賀郡": {
+   "title": "佐賀郡",
+   "province": "肥前国",
+   "municipalities": {
+    "佐賀市": true
+   }
+  },
+  "基肄郡": {
+   "title": "基肄郡",
+   "province": "肥前国",
+   "municipalities": {
+    "基山町": false,
+    "鳥栖市": true
+   }
+  },
+  "小城郡": {
+   "title": "小城郡",
+   "province": "肥前国",
+   "municipalities": {
+    "佐賀市": true,
+    "多久市": true,
+    "小城市": false,
+    "江北町": true
+   }
+  },
+  "東松浦郡": {
+   "title": "東松浦郡",
+   "province": null,
+   "municipalities": {
+    "唐津市": false,
+    "玄海町": false
+   }
+  },
+  "杵島郡": {
+   "title": "杵島郡",
+   "province": "肥前国",
+   "municipalities": {
+    "多久市": true,
+    "大町町": false,
+    "武雄市": true,
+    "江北町": false,
+    "白石町": false
+   }
+  },
+  "神埼郡": {
+   "title": "神埼郡",
+   "province": "肥前国",
+   "municipalities": {
+    "佐賀市": true,
+    "吉野ヶ里町": false,
+    "神埼市": false
+   }
+  },
+  "藤津郡": {
+   "title": "藤津郡",
+   "province": "肥前国",
+   "municipalities": {
+    "太良町": false,
+    "嬉野市": false,
+    "鹿島市": false
+   }
+  },
+  "西松浦郡": {
+   "title": "西松浦郡",
+   "province": null,
+   "municipalities": {
+    "伊万里市": false,
+    "有田町": false,
+    "武雄市": true
+   }
+  },
+  "養父郡": {
+   "title": "養父郡 (佐賀県)",
+   "province": "肥前国",
+   "municipalities": {
+    "みやき町": true,
+    "鳥栖市": true
+   }
+  }
+ },
+ "42": {
+  "上県郡": {
+   "title": "上県郡",
+   "province": "対馬国",
+   "municipalities": {
+    "対馬市": true
+   }
+  },
+  "下県郡": {
+   "title": "下県郡",
+   "province": "対馬国",
+   "municipalities": {
+    "対馬市": true
+   }
+  },
+  "北松浦郡": {
+   "title": "北松浦郡",
+   "province": null,
+   "municipalities": {
+    "佐々町": false,
+    "佐世保市": true,
+    "小値賀町": false,
+    "平戸市": false,
+    "松浦市": false
+   }
+  },
+  "北高来郡": {
+   "title": "北高来郡",
+   "province": null,
+   "municipalities": {
+    "諫早市": true,
+    "長崎市": true
+   }
+  },
+  "南松浦郡": {
+   "title": "南松浦郡",
+   "province": null,
+   "municipalities": {
+    "五島市": false,
+    "新上五島町": false
+   }
+  },
+  "南高来郡": {
+   "title": "南高来郡",
+   "province": null,
+   "municipalities": {
+    "南島原市": false,
+    "島原市": false,
+    "雲仙市": false
+   }
+  },
+  "壱岐郡": {
+   "title": "壱岐郡",
+   "province": "壱岐国",
+   "municipalities": {
+    "壱岐市": true
+   }
+  },
+  "彼杵郡": {
+   "title": "彼杵郡",
+   "province": "肥前国",
+   "municipalities": {
+    "佐世保市": true,
+    "大村市": false,
+    "西海市": false,
+    "諫早市": true,
+    "長崎市": true
+   }
+  },
+  "東彼杵郡": {
+   "title": "東彼杵郡",
+   "province": null,
+   "municipalities": {
+    "佐世保市": true,
+    "大村市": false,
+    "川棚町": false,
+    "東彼杵町": false,
+    "波佐見町": false
+   }
+  },
+  "松浦郡": {
+   "title": "松浦郡",
+   "province": null,
+   "municipalities": {
+    "五島市": false,
+    "佐世保市": true,
+    "平戸市": false,
+    "松浦市": false
+   }
+  },
+  "石田郡": {
+   "title": "石田郡",
+   "province": "壱岐国",
+   "municipalities": {
+    "壱岐市": true
+   }
+  },
+  "西彼杵郡": {
+   "title": "西彼杵郡",
+   "province": null,
+   "municipalities": {
+    "時津町": false,
+    "西海市": false,
+    "諫早市": true,
+    "長与町": false,
+    "長崎市": true
+   }
+  },
+  "高来郡": {
+   "title": "高来郡",
+   "province": "肥前国",
+   "municipalities": {
+    "南島原市": false,
+    "島原市": false,
+    "諫早市": true,
+    "長崎市": true,
+    "雲仙市": false
+   }
+  }
+ },
+ "43": {
+  "上益城郡": {
+   "title": "上益城郡",
+   "province": "肥後国",
+   "municipalities": {
+    "嘉島町": false,
+    "山都町": false,
+    "御船町": false,
+    "熊本市": true,
+    "熊本市東区": true,
+    "甲佐町": false,
+    "益城町": false,
+    "菊陽町": true,
+    "西原村": true
+   }
+  },
+  "下益城郡": {
+   "title": "下益城郡",
+   "province": "肥後国",
+   "municipalities": {
+    "宇城市": true,
+    "熊本市": true,
+    "熊本市南区": true,
+    "美里町": false
+   }
+  },
+  "八代郡": {
+   "title": "八代郡",
+   "province": "肥後国",
+   "municipalities": {
+    "八代市": true,
+    "氷川町": false
+   }
+  },
+  "合志郡": {
+   "title": "合志郡",
+   "province": "肥後国",
+   "municipalities": {
+    "南阿蘇村": true,
+    "合志市": false,
+    "大津町": true,
+    "熊本市": true,
+    "熊本市東区": true,
+    "菊池市": true,
+    "菊陽町": true
+   }
+  },
+  "天草郡": {
+   "title": "天草郡",
+   "province": "肥後国",
+   "municipalities": {
+    "上天草市": false,
+    "天草市": false,
+    "苓北町": false
+   }
+  },
+  "宇土郡": {
+   "title": "宇土郡",
+   "province": "肥後国",
+   "municipalities": {
+    "宇土市": true,
+    "宇城市": true
+   }
+  },
+  "山本郡": {
+   "title": "山本郡 (熊本県)",
+   "province": "肥後国",
+   "municipalities": {
+    "山鹿市": true,
+    "熊本市": true,
+    "熊本市北区": true
+   }
+  },
+  "山鹿郡": {
+   "title": "山鹿郡",
+   "province": "肥後国",
+   "municipalities": {
+    "山鹿市": true
+   }
+  },
+  "玉名郡": {
+   "title": "玉名郡",
+   "province": "肥後国",
+   "municipalities": {
+    "南関町": false,
+    "和水町": false,
+    "玉名市": false,
+    "玉東町": false,
+    "荒尾市": false,
+    "長洲町": false
+   }
+  },
+  "球磨郡": {
+   "title": "球磨郡",
+   "province": "肥後国",
+   "municipalities": {
+    "あさぎり町": false,
+    "五木村": false,
+    "人吉市": false,
+    "多良木町": false,
+    "山江村": false,
+    "水上村": false,
+    "湯前町": false,
+    "球磨村": false,
+    "相良村": false,
+    "錦町": false
+   }
+  },
+  "菊池郡": {
+   "title": "菊池郡",
+   "province": "肥後国",
+   "municipalities": {
+    "大津町": false,
+    "山鹿市": true,
+    "菊池市": true,
+    "菊陽町": false
+   }
+  },
+  "葦北郡": {
+   "title": "葦北郡",
+   "province": "肥後国",
+   "municipalities": {
+    "八代市": true,
+    "水俣市": false,
+    "津奈木町": false,
+    "芦北町": false
+   }
+  },
+  "託麻郡": {
+   "title": "託麻郡",
+   "province": "肥後国",
+   "municipalities": {
+    "熊本市": true,
+    "熊本市中央区": true,
+    "熊本市南区": true,
+    "熊本市東区": true
+   }
+  },
+  "阿蘇郡": {
+   "title": "阿蘇郡",
+   "province": "肥後国",
+   "municipalities": {
+    "南小国町": false,
+    "南阿蘇村": false,
+    "大津町": true,
+    "小国町": false,
+    "山都町": true,
+    "産山村": false,
+    "西原村": false,
+    "阿蘇市": false,
+    "高森町": false
+   }
+  },
+  "飽田郡": {
+   "title": "飽田郡",
+   "province": "肥後国",
+   "municipalities": {
+    "宇土市": true,
+    "熊本市": true,
+    "熊本市中央区": true,
+    "熊本市北区": true,
+    "熊本市南区": true,
+    "熊本市西区": false
+   }
+  },
+  "飽託郡": {
+   "title": "飽託郡",
+   "province": null,
+   "municipalities": {
+    "宇土市": true,
+    "熊本市": true,
+    "熊本市中央区": true,
+    "熊本市北区": true,
+    "熊本市南区": true,
+    "熊本市東区": true,
+    "熊本市西区": false
+   }
+  },
+  "鹿本郡": {
+   "title": "鹿本郡",
+   "province": null,
+   "municipalities": {
+    "山鹿市": true,
+    "熊本市": true,
+    "熊本市北区": true
+   }
+  }
+ },
+ "44": {
+  "下毛郡": {
+   "title": "下毛郡",
+   "province": "豊前国",
+   "municipalities": {
+    "中津市": true
+   }
+  },
+  "北海部郡": {
+   "title": "北海部郡",
+   "province": null,
+   "municipalities": {
+    "大分市": true,
+    "津久見市": false,
+    "臼杵市": true
+   }
+  },
+  "南海部郡": {
+   "title": "南海部郡",
+   "province": null,
+   "municipalities": {
+    "佐伯市": true,
+    "豊後大野市": true
+   }
+  },
+  "国東郡": {
+   "title": "国東郡",
+   "province": "豊後国",
+   "municipalities": {
+    "国東市": false,
+    "姫島村": false,
+    "杵築市": true,
+    "豊後高田市": true
+   }
+  },
+  "大分郡": {
+   "title": "大分郡",
+   "province": "豊後国",
+   "municipalities": {
+    "別府市": true,
+    "大分市": true,
+    "由布市": true
+   }
+  },
+  "大野郡": {
+   "title": "大野郡 (大分県)",
+   "province": "豊後国",
+   "municipalities": {
+    "佐伯市": true,
+    "大分市": true,
+    "竹田市": true,
+    "臼杵市": true,
+    "豊後大野市": true
+   }
+  },
+  "宇佐郡": {
+   "title": "宇佐郡",
+   "province": "豊前国",
+   "municipalities": {
+    "宇佐市": true,
+    "豊後高田市": true
+   }
+  },
+  "日田郡": {
+   "title": "日田郡",
+   "province": "豊後国",
+   "municipalities": {
+    "中津市": true,
+    "日田市": false
+   }
+  },
+  "東国東郡": {
+   "title": "東国東郡",
+   "province": null,
+   "municipalities": {
+    "国東市": false,
+    "姫島村": false,
+    "杵築市": true
+   }
+  },
+  "海部郡": {
+   "title": "海部郡 (豊後国)",
+   "province": "豊後国",
+   "municipalities": {
+    "佐伯市": true,
+    "大分市": true,
+    "津久見市": false,
+    "臼杵市": true
+   }
+  },
+  "玖珠郡": {
+   "title": "玖珠郡",
+   "province": "豊後国",
+   "municipalities": {
+    "九重町": false,
+    "玖珠町": false
+   }
+  },
+  "直入郡": {
+   "title": "直入郡",
+   "province": "豊後国",
+   "municipalities": {
+    "大分市": true,
+    "由布市": true,
+    "竹田市": true
+   }
+  },
+  "西国東郡": {
+   "title": "西国東郡",
+   "province": null,
+   "municipalities": {
+    "杵築市": true,
+    "豊後高田市": true
+   }
+  },
+  "速見郡": {
+   "title": "速見郡",
+   "province": "豊後国",
+   "municipalities": {
+    "別府市": true,
+    "宇佐市": true,
+    "日出町": false,
+    "杵築市": true,
+    "由布市": true
+   }
+  }
+ },
+ "45": {
+  "児湯郡": {
+   "title": "児湯郡",
+   "province": "日向国",
+   "municipalities": {
+    "宮崎市": true,
+    "川南町": false,
+    "新富町": false,
+    "日向市": true,
+    "木城町": false,
+    "西米良村": false,
+    "西都市": true,
+    "都農町": false,
+    "高鍋町": false
+   }
+  },
+  "北諸県郡": {
+   "title": "北諸県郡",
+   "province": null,
+   "municipalities": {
+    "三股町": false,
+    "都城市": false
+   }
+  },
+  "北那珂郡": {
+   "title": "北那珂郡",
+   "province": null,
+   "municipalities": {
+    "宮崎市": true
+   }
+  },
+  "南那珂郡": {
+   "title": "南那珂郡",
+   "province": null,
+   "municipalities": {
+    "串間市": false,
+    "日南市": false
+   }
+  },
+  "宮崎郡": {
+   "title": "宮崎郡",
+   "province": "日向国",
+   "municipalities": {
+    "国富町": true,
+    "宮崎市": true
+   }
+  },
+  "東臼杵郡": {
+   "title": "東臼杵郡",
+   "province": null,
+   "municipalities": {
+    "延岡市": false,
+    "日向市": true,
+    "椎葉村": false,
+    "美郷町": false,
+    "諸塚村": false,
+    "門川町": false
+   }
+  },
+  "東諸県郡": {
+   "title": "東諸県郡",
+   "province": null,
+   "municipalities": {
+    "国富町": false,
+    "宮崎市": true,
+    "綾町": false
+   }
+  },
+  "臼杵郡": {
+   "title": "臼杵郡",
+   "province": "日向国",
+   "municipalities": {
+    "延岡市": false,
+    "日向市": true
+   }
+  },
+  "西臼杵郡": {
+   "title": "西臼杵郡",
+   "province": null,
+   "municipalities": {
+    "五ヶ瀬町": false,
+    "日之影町": false,
+    "椎葉村": false,
+    "諸塚村": false,
+    "高千穂町": false
+   }
+  },
+  "西諸県郡": {
+   "title": "西諸県郡",
+   "province": null,
+   "municipalities": {
+    "えびの市": false,
+    "小林市": false,
+    "高原町": false
+   }
+  },
+  "諸県郡": {
+   "title": "諸県郡",
+   "province": "日向国",
+   "municipalities": {
+    "えびの市": false,
+    "宮崎市": true,
+    "小林市": false,
+    "都城市": false
+   }
+  },
+  "那珂郡": {
+   "title": "那珂郡 (宮崎県)",
+   "province": "日向国",
+   "municipalities": {
+    "串間市": false,
+    "宮崎市": true,
+    "日南市": false
+   }
+  }
+ },
+ "46": {
+  "伊佐郡": {
+   "title": "伊佐郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "さつま町": false,
+    "伊佐市": false,
+    "薩摩川内市": true
+   }
+  },
+  "出水郡": {
+   "title": "出水郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "出水市": false,
+    "長島町": false,
+    "阿久根市": false
+   }
+  },
+  "北大隅郡": {
+   "title": "北大隅郡",
+   "province": null,
+   "municipalities": {
+    "鹿児島市": true
+   }
+  },
+  "南伊佐郡": {
+   "title": "南伊佐郡",
+   "province": null,
+   "municipalities": {
+    "さつま町": false,
+    "薩摩川内市": true
+   }
+  },
+  "南大隅郡": {
+   "title": "南大隅郡",
+   "province": null,
+   "municipalities": {
+    "南大隅町": false,
+    "垂水市": true,
+    "錦江町": false
+   }
+  },
+  "南諸県郡": {
+   "title": "南諸県郡",
+   "province": null,
+   "municipalities": {
+    "大崎町": false,
+    "志布志市": false,
+    "曽於市": true
+   }
+  },
+  "大島郡": {
+   "title": "大島郡 (鹿児島県)",
+   "province": "大隅国",
+   "municipalities": {
+    "与論町": false,
+    "伊仙町": false,
+    "和泊町": false,
+    "喜界町": false,
+    "大和村": false,
+    "天城町": false,
+    "宇検村": false,
+    "徳之島町": false,
+    "瀬戸内町": false,
+    "知名町": false,
+    "龍郷町": false
+   }
+  },
+  "大隅郡": {
+   "title": "大隅郡",
+   "province": "大隅国",
+   "municipalities": {
+    "南大隅町": false,
+    "垂水市": true,
+    "錦江町": false,
+    "鹿児島市": true
+   }
+  },
+  "姶良郡": {
+   "title": "姶良郡",
+   "province": "大隅国",
+   "municipalities": {
+    "姶良市": false,
+    "湧水町": false,
+    "霧島市": true
+   }
+  },
+  "川辺郡": {
+   "title": "川辺郡 (鹿児島県)",
+   "province": "薩摩国",
+   "municipalities": {
+    "三島村": false,
+    "十島村": false,
+    "南さつま市": true,
+    "南九州市": true,
+    "枕崎市": false
+   }
+  },
+  "揖宿郡": {
+   "title": "揖宿郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "指宿市": true
+   }
+  },
+  "日置郡": {
+   "title": "日置郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "いちき串木野市": false,
+    "日置市": true,
+    "鹿児島市": true
+   }
+  },
+  "曽於郡": {
+   "title": "曽於郡",
+   "province": "大隅国",
+   "municipalities": {
+    "垂水市": true,
+    "大崎町": false,
+    "志布志市": false,
+    "曽於市": false,
+    "霧島市": true,
+    "鹿屋市": true
+   }
+  },
+  "東囎唹郡": {
+   "title": "東囎唹郡",
+   "province": null,
+   "municipalities": {
+    "曽於市": true,
+    "鹿屋市": true
+   }
+  },
+  "桑原郡": {
+   "title": "桑原郡",
+   "province": "大隅国",
+   "municipalities": {
+    "湧水町": false,
+    "霧島市": true
+   }
+  },
+  "熊毛郡": {
+   "title": "熊毛郡 (鹿児島県)",
+   "province": "大隅国",
+   "municipalities": {
+    "中種子町": false,
+    "南種子町": false,
+    "屋久島町": false,
+    "西之表市": false
+   }
+  },
+  "甑島郡": {
+   "title": "甑島郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "薩摩川内市": true
+   }
+  },
+  "給黎郡": {
+   "title": "給黎郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "南九州市": true,
+    "鹿児島市": true
+   }
+  },
+  "肝属郡": {
+   "title": "肝属郡",
+   "province": "大隅国",
+   "municipalities": {
+    "南大隅町": false,
+    "垂水市": true,
+    "東串良町": false,
+    "肝付町": false,
+    "錦江町": false,
+    "鹿屋市": true
+   }
+  },
+  "菱刈郡": {
+   "title": "菱刈郡",
+   "province": "大隅国",
+   "municipalities": {
+    "伊佐市": true
+   }
+  },
+  "薩摩郡": {
+   "title": "薩摩郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "さつま町": false,
+    "薩摩川内市": true
+   }
+  },
+  "西囎唹郡": {
+   "title": "西囎唹郡",
+   "province": null,
+   "municipalities": {
+    "垂水市": true,
+    "霧島市": true
+   }
+  },
+  "諸県郡": {
+   "title": "諸県郡",
+   "province": "日向国",
+   "municipalities": {
+    "大崎町": false,
+    "志布志市": false,
+    "曽於市": true
+   }
+  },
+  "谿山郡": {
+   "title": "谿山郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "鹿児島市": true
+   }
+  },
+  "阿多郡": {
+   "title": "阿多郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "南さつま市": true,
+    "日置市": true
+   }
+  },
+  "頴娃郡": {
+   "title": "頴娃郡",
+   "province": "薩摩国",
+   "municipalities": {
+    "南九州市": true,
+    "指宿市": true
+   }
+  },
+  "馭謨郡": {
+   "title": "馭謨郡",
+   "province": "大隅国",
+   "municipalities": {
+    "屋久島町": false
+   }
+  },
+  "高城郡": {
+   "title": "高城郡 (鹿児島県)",
+   "province": "薩摩国",
+   "municipalities": {
+    "薩摩川内市": true
+   }
+  },
+  "鹿児島郡": {
+   "title": "鹿児島郡",
+   "province": null,
+   "municipalities": {
+    "三島村": false,
+    "十島村": false,
+    "鹿児島市": true
+   }
+  }
+ },
+ "47": {
+  "中頭郡": {
+   "title": "中頭郡",
+   "province": null,
+   "municipalities": {
+    "うるま市": false,
+    "中城村": false,
+    "北中城村": false,
+    "北谷町": false,
+    "嘉手納町": false,
+    "宜野湾市": false,
+    "沖縄市": false,
+    "浦添市": false,
+    "西原町": false,
+    "読谷村": false,
+    "那覇市": true
+   }
+  },
+  "八重山郡": {
+   "title": "八重山郡",
+   "province": null,
+   "municipalities": {
+    "与那国町": false,
+    "石垣市": false,
+    "竹富町": false
+   }
+  },
+  "国頭郡": {
+   "title": "国頭郡",
+   "province": null,
+   "municipalities": {
+    "今帰仁村": false,
+    "伊江村": false,
+    "名護市": false,
+    "国頭村": false,
+    "大宜味村": false,
+    "宜野座村": false,
+    "恩納村": false,
+    "本部町": false,
+    "東村": false,
+    "金武町": false
+   }
+  },
+  "宮古郡": {
+   "title": "宮古郡",
+   "province": null,
+   "municipalities": {
+    "多良間村": false,
+    "宮古島市": false
+   }
+  },
+  "島尻郡": {
+   "title": "島尻郡",
+   "province": null,
+   "municipalities": {
+    "与那原町": false,
+    "久米島町": false,
+    "伊平屋村": false,
+    "伊是名村": false,
+    "八重瀬町": false,
+    "北大東村": false,
+    "南城市": false,
+    "南大東村": false,
+    "南風原町": false,
+    "座間味村": false,
+    "渡名喜村": false,
+    "渡嘉敷村": false,
+    "粟国村": false,
+    "糸満市": false,
+    "豊見城市": false,
+    "那覇市": true
+   }
+  }
+ }
+}
