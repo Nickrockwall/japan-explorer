@@ -41,7 +41,7 @@ The app is available in Chinese, English and Japanese.
 - New background music: koto improvising in the miyako-bushi scale, never repeating (off by default — turn it on under Sound in ⚙ Settings, with separate music and effects volume)
 - New speaker button in the top bar: one-tap mute, remembered; music fades out when the tab goes to the background
 - All sounds are synthesised live in the browser, zero downloads; if audio fails, the map keeps working (covered by a dedicated test)
-- Note: on iPhone, the silent switch may mute web audio
+- Works on phones from the first tap; on iPhone (iOS 16.4+) you'll hear it even in silent mode, and like video sites it pauses music from other apps — tap the speaker to mute
 
 ### 🌸 v2.0 "Pilgrimage" Expansion
 - **New layer "Pilgrimage" unlocked!** 111 anime pilgrimage spots and NHK taiga-drama locations across all 47 prefectures

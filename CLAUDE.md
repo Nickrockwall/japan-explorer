@@ -259,7 +259,8 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 ## 声音（audio.js）
 
 - 单例 `audio`：`play(name)`、`toggleMute()` / `setMuted()`、`setMusic(on)`、`setVolume('bgm'|'sfx', 0–1)`、`onChange(fn)`、`debug()`（测试用）。
-- 浏览器自动播放限制：首次 `pointerdown` / `keydown` / `touchstart` 才创建 AudioContext；监听一直保留，用于恢复被系统挂起的 context。解锁前调用 `play` 静默忽略（深链接打开时不会出声）。
+- 浏览器自动播放限制：首次用户操作才创建 / 恢复 AudioContext，并在手势里播 1 采样静音（旧版 iOS）。**触摸屏上 touchstart 与触摸的 pointerdown 不算解锁操作**，必须同时监听 `pointerup` / `touchend` / `click`（电脑模拟测不出来，只有真手机会失效）。监听一直保留，用于恢复被系统挂起（Safari 为 `interrupted`）的 context。解锁前调用 `play` 静默忽略（深链接打开时不会出声）。
+- iOS 16.4+：未静音时设 `navigator.audioSession.type = 'playback'`，静音模式下也出声（会暂停其他 App 的音乐）；顶栏静音时改回 `auto`。
 - 默认全部实时合成：`click` 竹筒轻击（选县、选市区町村、点巡礼图钉、跨到另一个时代）、`stamp` 太鼓一击（盖印）、`battle` 太鼓两击 + 法螺贝（开始合战）、`drum` 太鼓「咚咚」（合战推进到 `impact: true` 的阶段）。各音效有最短间隔（`SFX[].gap`），连点不叠音。
 - 背景音乐：都节音阶（E F A B C）随机游走的古筝拨弦 + E/B 持续低音 + 合成混响，不循环；默认关，在设置弹窗「声音」区块开启（改动立即生效，不随保存/取消）。开启 + 未静音 + 页面在前台才播放，切后台淡出后停止。
 - 想用录好的 mp3：放进 `src/assets/audio/`，在 audio.js 顶部 `FILES` 登记（不自动探测，免得 404 进控制台），加载/播放失败自动退回合成。

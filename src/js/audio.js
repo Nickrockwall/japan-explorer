@@ -40,19 +40,35 @@ function safe(fn) {
   try { return fn(); } catch (err) { warn('出错，已忽略', err); return undefined; }
 }
 
+function setSession(type) {
+  try {
+    if (navigator.audioSession && navigator.audioSession.type !== type) navigator.audioSession.type = type;
+  } catch (err) { warn('无法设置音频会话', err); }
+}
+
 // ── 初始化：首次手势时解锁 AudioContext（浏览器自动播放限制） ──
 function unlock() {
   if (failed) return;
   try {
     if (!ctx) {
+      // iOS 16.4+：声明为「播放类」，静音模式下也出声（像视频网站；顶栏喇叭可一键静音）。
+      // 代价：出声时会暂停其他 App 正在放的音乐，所以只在未静音时声明。
+      if (!prefs.muted) setSession('playback');
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) throw new Error('浏览器不支持 Web Audio');
       ctx = new AC();
       build();
       loadFiles();
     }
-    // iOS 来电、切后台等会把 AudioContext 挂起，下一次点击时恢复
-    if (ctx.state === 'suspended') ctx.resume().catch((err) => warn('无法恢复播放', err));
+    // 还没解锁，或 iOS 来电、切后台把 AudioContext 挂起（Safari 为 interrupted）：在这次操作里恢复
+    if (ctx.state !== 'running' && ctx.state !== 'closed') {
+      ctx.resume().catch((err) => warn('无法恢复播放', err));
+      // 旧版 iOS Safari 还要在手势里真正播放一个声音才算解锁：播一个 1 采样的静音
+      const s = ctx.createBufferSource();
+      s.buffer = ctx.createBuffer(1, 1, 22050);
+      s.connect(ctx.destination);
+      s.start(0);
+    }
   } catch (err) {
     failed = true;
     ctx = null;
@@ -391,6 +407,7 @@ export const audio = {
   onChange(fn) { listeners.add(fn); },
   setMuted(on) {
     prefs.muted = !!on;
+    if (ctx) setSession(on ? 'auto' : 'playback'); // 静音时把其他 App 的音乐还给用户
     if (nodes) safe(() => ramp(nodes.master.gain, on ? 0 : 1, 0.25));
     syncMusic();
     save();
@@ -414,8 +431,11 @@ export const audio = {
   debug: () => ({ ready: !!ctx && !failed, ctx: ctx?.state || null, played: { ...played }, music: !!music && !musicStop }),
 };
 
-// 全局首次手势解锁；之后保留监听，用于恢复被系统挂起的 AudioContext
-for (const ev of ['pointerdown', 'keydown', 'touchstart']) {
+// 全局首次手势解锁；之后保留监听，用于恢复被系统挂起的 AudioContext。
+// 触摸屏上「按下」（touchstart / 触摸的 pointerdown）不算解锁声音的用户操作，要等「抬起」：
+// 所以 pointerup / touchend / click 都要监听，否则手机上永远解不了锁。
+// 鼠标的 pointerdown 算数，保留它让电脑上第一下点击就能出声。
+for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']) {
   addEventListener(ev, unlock, { capture: true, passive: true });
 }
 document.addEventListener('visibilitychange', syncMusic);
