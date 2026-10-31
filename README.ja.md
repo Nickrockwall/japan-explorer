@@ -90,7 +90,7 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 ## 技術
 
 - 素の HTML / CSS / ES Modules。フレームワークも npm 依存もなし
-- 地図：[Apache ECharts](https://echarts.apache.org/) 5.5.1（CDN から読み込み、ミラーへのフォールバックあり）
+- 地図：[Apache ECharts](https://echarts.apache.org/) 5.5.1。サイトと一緒に配信（`src/vendor/`、Apache-2.0）し、外部 CDN に依存しないため CDN がつながらない環境でも開けます。フォントは Google Fonts、つながらない場合はシステムフォント
 - データ：言語ごとに一つの JSON にまとめ（`src/data/bundle/`）、初回表示に必要なデータのリクエストは二つだけ
 - PWA：`manifest.webmanifest` と `sw.js` によるオフラインキャッシュ
 - 公開：GitHub Pages（GitHub Actions から公開）。`main` に push するとまず自動チェックが走り、**すべて通ったときだけ公開**。失敗したときはサイトは前の版のまま

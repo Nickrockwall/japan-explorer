@@ -29,6 +29,8 @@ VIEWPORTS = {
 # 与功能无关、可忽略的控制台消息
 IGNORE = re.compile(r'navigator\.vibrate|mobile-web-app-capable|fonts\.(googleapis|gstatic)\.com|favicon')
 SEARCH = {'zh': '丰田', 'en': 'Toyota', 'ja': 'とよた'}
+# 模拟国内网络：这些外部服务请求失败时，页面仍须正常打开（地图库等必须随站点发布）
+BLOCKED_ABROAD = ('cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com')
 # 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
 ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
 
@@ -50,15 +52,18 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_):
+    def open(self, hash_, china=False):
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
                                        service_workers='block')
         page = ctx.new_page()
+        if china:
+            page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
         page.problems = []
-        page.on('console', lambda m: m.type == 'error' and not IGNORE.search(m.text) and page.problems.append(f'console: {m.text}'))
+        ignore = re.compile(IGNORE.pattern + r'|net::ERR_FAILED') if china else IGNORE
+        page.on('console', lambda m: m.type == 'error' and not ignore.search(m.text) and page.problems.append(f'console: {m.text}'))
         page.on('pageerror', lambda e: page.problems.append(f'pageerror: {e}'))
         page.goto(f'{self.base}#lang={self.lang}&{hash_}' if hash_ else f'{self.base}#lang={self.lang}')
-        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=10000 if china else 30000)
         page.wait_for_timeout(800)
         return page
 
@@ -129,6 +134,25 @@ class Case:
         text = page.locator('#chat .msg.ai').last.text_content()
         assert len(text) > 20, f'离线解答太短：{text!r}'
 
+    def era_stable(self, page):
+        # 势力数量差别最大的几个时代之间切换，图例与报幕横幅的尺寸、位置都不能变
+        js = '''(i) => { const r = document.getElementById('tb-range'); r.value = i; r.dispatchEvent(new Event('input', { bubbles: true })); }'''
+        boxes = []
+        for i in (0, 4, 5, 8):
+            page.evaluate(js, i)
+            page.wait_for_timeout(700)
+            boxes.append(page.evaluate('''() => ['.map-legend', '.era-banner'].map((s) => {
+                const b = document.querySelector(s).getBoundingClientRect(); return [s, Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)]; })'''))
+        assert all(b == boxes[0] for b in boxes), f'换时代时排版在变：{boxes}'
+
+    def search_fits(self, page):
+        page.fill('#search-input', '府')
+        page.wait_for_selector('#search-pop li')
+        box = page.locator('#search-pop').bounding_box()
+        vw, vh = page.evaluate('[innerWidth, innerHeight]')
+        assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1, f'搜索列表横向超出屏幕：x={box["x"]:.0f} w={box["width"]:.0f} 屏宽 {vw}'
+        assert box['y'] + box['height'] <= vh + 1, f'搜索列表超出屏幕底部：{box["y"] + box["height"]:.0f} > {vh}'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -144,7 +168,9 @@ def plan(lang):
              ('search', '', ['search'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
-                  ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs'])]
+                  ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
+                  ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
+                  ('china', 'pref=26', ['deeplink'])]
     return cases
 
 
@@ -164,7 +190,7 @@ def main():
                     total += 1
                     page = None
                     try:
-                        page = c.open(hash_)
+                        page = c.open(hash_, china=name == 'china')
                         for step in steps:
                             getattr(c, step)(page)
                         page.wait_for_timeout(300)

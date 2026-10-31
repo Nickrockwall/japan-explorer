@@ -27,19 +27,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Japan Explorer">
 
-  <!-- 字体不阻塞首屏：Google Fonts 在部分地区访问慢，加载失败时回退系统字体 -->
+  <!-- 字体不阻塞首屏；display=optional：字体若没能马上就绪，本次就整页用系统字体，不会中途替换导致排版跳动
+       （Google Fonts 在国内常连不上，此时始终用系统字体） -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=optional" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="src/css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
-  <script>
-    // CDN 回退：jsdelivr → unpkg → npmmirror（国内镜像）
-    window.echarts || document.write('<script src="https://unpkg.com/echarts@5.5.1/dist/echarts.min.js"><\/script>');
-  </script>
-  <script>
-    window.echarts || document.write('<script src="https://registry.npmmirror.com/echarts/5.5.1/files/dist/echarts.min.js"><\/script>');
-  </script>
+  <!-- ECharts 随站点一起发布（Apache-2.0，见 src/vendor/echarts-LICENSE）：不依赖外部 CDN，
+       国内访问时 jsdelivr 挂起也不会让整页卡住 -->
+  <script src="src/vendor/echarts.min.js"></script>
 </head>
 <body>
   <header class="topbar">

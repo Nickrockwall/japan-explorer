@@ -14,8 +14,9 @@
   --kin: #d4a373;          /* 青金 */
   --kin-soft: rgba(212, 163, 115, .14);
   --ai: #5d8aa8;           /* 藍，辅助 */
-  --serif: "Noto Serif SC", "Noto Serif JP", "Songti SC", serif;
-  --sans: "Noto Sans SC", "Noto Sans JP", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  /* Google 字体不可用时依次退到各系统的中文衬线 / 无衬线字体 */
+  --serif: "Noto Serif SC", "Noto Serif JP", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --sans: "Noto Sans SC", "Noto Sans JP", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", system-ui, sans-serif;
   --r: 10px;
   --r-sm: 6px;
   --gap: 14px;
@@ -147,7 +148,7 @@ button, input, select { font: inherit; color: inherit; }
 .search { position: relative; }
 .search-pop {
   position: absolute; top: calc(100% + 6px); right: 0; z-index: 20; width: max(100%, 300px); max-width: calc(100vw - 32px);
-  margin: 0; padding: 4px; list-style: none; border-radius: 12px;
+  margin: 0; padding: 4px; list-style: none; border-radius: 12px; overflow-y: auto; overscroll-behavior: contain;
   background: rgba(30,30,35,.98); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0,0,0,.55);
 }
 .search-pop[hidden] { display: none; }
@@ -521,6 +522,8 @@ body.in-battle .map-toolbar, body.in-battle .timebar, body.in-battle .era-banner
 
 /* 图例抬高，给时空滑块让位 */
 .map-legend { bottom: 84px; }
+/* 时代模式：各时代势力数量不同，图例预留固定高度，换时代时不跳 */
+body.time-travel .legend-items { min-height: calc(4 * 1.75em + 3 * 4px); align-content: flex-start; }
 body:not([data-layer="history"]) .map-legend, body.in-battle .map-legend { bottom: 14px; }
 
 /* ── 时空穿越滑块 ───────────────────────────── */
@@ -559,18 +562,20 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 /* 时代报幕 */
 .era-banner {
   position: absolute; left: 50%; top: 42%; z-index: 4; transform: translate(-50%, -50%);
-  pointer-events: none; text-align: center; opacity: 0; min-width: 260px;
+  /* 固定宽度：不随各时代标题长短伸缩 */
+  pointer-events: none; text-align: center; opacity: 0; width: min(440px, calc(100% - 24px));
   padding: 16px 30px 14px; border-radius: 4px;
   background: linear-gradient(90deg, transparent, rgba(16,14,14,.88) 18%, rgba(16,14,14,.88) 82%, transparent);
   border-top: 1px solid rgba(212,163,115,.5); border-bottom: 1px solid rgba(212,163,115,.5);
 }
 .era-banner.show { animation: era-show 2.8s ease forwards; }
 .era-banner small { font: 500 12px var(--serif); color: var(--kin); letter-spacing: .3em; }
-.era-banner h3 { margin: 2px 0 4px; font: 900 32px var(--serif); letter-spacing: .3em; color: #fff; text-shadow: 0 0 18px rgba(212,163,115,.5); }
-.era-banner p { margin: 0; font-size: 12.5px; color: var(--text-2); }
+.era-banner h3 { margin: 2px 0 4px; font: 900 32px/1.25 var(--serif); letter-spacing: .3em; color: #fff; text-shadow: 0 0 18px rgba(212,163,115,.5); white-space: nowrap; }
+.era-banner p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
+.era-banner p:last-child { min-height: 3em; } /* 副标题预留两行，一行两行切换时横幅不跳 */
 .era-banner p.cap { color: #ffd27a; font: 700 13px var(--serif); margin-bottom: 2px; }
 @keyframes era-show {
-  0% { opacity: 0; transform: translate(-50%, -40%); letter-spacing: .5em; }
+  0% { opacity: 0; transform: translate(-50%, -44%); }
   15%, 75% { opacity: 1; transform: translate(-50%, -50%); }
   100% { opacity: 0; transform: translate(-50%, -56%); }
 }
@@ -860,6 +865,12 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .muni-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-width: none; }
   .muni.has-card .muni-legend { display: none; }
   .muni-legend { left: 10px; bottom: 10px; }
+  /* 图例：说明一行、条目单行横滑，高度固定，不再随时代长高挡住地图 */
+  .legend-caption { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .map-legend:not(.muni-legend) .legend-items { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .map-legend:not(.muni-legend) .legend-items::-webkit-scrollbar { display: none; }
+  body.time-travel .legend-items { min-height: 0; }
+  .map-legend:not(.muni-legend) { right: 10px; max-width: none; }
   /* 合战：底部显示名将解说 */
   body.in-battle .map-legend { display: none; }
   body.in-battle .battle-voice {

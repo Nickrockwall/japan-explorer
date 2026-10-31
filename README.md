@@ -88,7 +88,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 ## 技术
 
 - 原生 HTML / CSS / ES Modules，无框架、无 npm 依赖
-- 地图：[Apache ECharts](https://echarts.apache.org/) 5.5.1（CDN 加载，带国内镜像回退）
+- 地图：[Apache ECharts](https://echarts.apache.org/) 5.5.1，随站点一起发布（`src/vendor/`，Apache-2.0），不依赖外部 CDN，国内网络下也能打开；字体用 Google Fonts，连不上时自动用系统字体
 - 数据：每种语言打包成单个 JSON（`src/data/bundle/`），首屏只需 2 个数据请求
 - PWA：`manifest.webmanifest` + `sw.js` 离线缓存
 - 部署：GitHub Pages，由 GitHub Actions 发布——推送到 main 后先自动检查，**全部通过才上线**，任何一项失败网站都保持上一版

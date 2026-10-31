@@ -90,7 +90,7 @@ python -X utf8 tests/smoke.py             # UI smoke tests: desktop / tablet / p
 ## Tech
 
 - Plain HTML / CSS / ES modules — no framework, no npm dependencies
-- Map: [Apache ECharts](https://echarts.apache.org/) 5.5.1, loaded from a CDN with fallback mirrors
+- Map: [Apache ECharts](https://echarts.apache.org/) 5.5.1, shipped with the site (`src/vendor/`, Apache-2.0) rather than loaded from a CDN, so the page also opens on networks where CDNs are blocked; Google Fonts are optional and fall back to system fonts
 - Data: one bundled JSON file per language (`src/data/bundle/`), so first load needs only two data requests
 - PWA: `manifest.webmanifest` + an offline cache in `sw.js`
 - Hosting: GitHub Pages, published by GitHub Actions — a push to `main` is checked first and **goes live only if every check passes**; if anything fails, the site stays on the previous version

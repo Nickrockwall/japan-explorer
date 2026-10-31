@@ -108,8 +108,25 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
     return scored.slice(0, MAX).map((x) => x[1]);
   }
 
+  // 定位：窄屏时贴着搜索框下方铺满屏宽；高度只用到软键盘以上的可见区域，放不下就在列表里滚动
+  function place() {
+    if (pop.hidden) return;
+    const vv = window.visualViewport;
+    const bottom = vv ? vv.offsetTop + vv.height : innerHeight;
+    const r = input.getBoundingClientRect();
+    const narrow = innerWidth <= 900;
+    Object.assign(pop.style, narrow
+      ? { position: 'fixed', left: '8px', right: '8px', width: 'auto', top: `${r.bottom + 6}px` }
+      : { position: '', left: '', right: '', width: '', top: '' });
+    pop.style.maxHeight = `${Math.max(120, bottom - r.bottom - 14)}px`;
+  }
+  window.visualViewport?.addEventListener('resize', place);
+  window.visualViewport?.addEventListener('scroll', place);
+  window.addEventListener('resize', place);
+
   function render() {
     pop.hidden = !results.length;
+    place();
     input.setAttribute('aria-expanded', String(!pop.hidden));
     pop.innerHTML = results.map((e, i) => `
       <li role="option" id="sr-${i}" data-i="${i}" aria-selected="${i === active}" class="${i === active ? 'on' : ''}">
@@ -153,6 +170,7 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
       e.preventDefault();
       active = (active + (e.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length;
       render();
+      pop.querySelector('li.on')?.scrollIntoView({ block: 'nearest' });
     } else if (e.key === 'Escape' && !pop.hidden) {
       e.stopPropagation(); // 不要顺带退出下钻 / 合战
       close();
