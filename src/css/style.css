@@ -768,6 +768,41 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .battle-hud.folded .hud-nav { margin-top: 6px; }
 .battle-hud.folded .hud-head b { font-size: 15px; }
 
+/* ── 圣地巡礼 ───────────────────────────── */
+.pil-filter { display: none; }
+body[data-layer="pilgrimage"] .pil-filter { display: inline-flex; align-self: flex-start; }
+body[data-layer="pilgrimage"] .pil-filter button.on { background: #b8457e; }
+body.in-battle .pil-card, body.muni-open .pil-card { display: none; }
+.pil-card { z-index: 4; width: 320px; }
+.pil-head { display: flex; align-items: center; gap: 8px; padding-right: 30px; font-size: 12px; color: var(--muted); }
+.pil-tag {
+  flex: none; padding: 1px 9px; border-radius: 10px; font-size: 11px; font-weight: 700;
+  color: var(--c); border: 1px solid var(--c); background: color-mix(in srgb, var(--c) 14%, transparent);
+}
+.pil-pref { margin-left: auto; }
+.pil-work { margin-top: 6px; font: 900 19px/1.35 var(--serif); }
+.pil-place { margin: 2px 0 8px; font-size: 12.5px; color: var(--kin); }
+.pil-block { border-top: 1px solid var(--line-soft); padding: 6px 0; }
+.pil-block b { display: block; font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .06em; }
+.pil-block p { margin: 2px 0 0; font-size: 12.5px; line-height: 1.65; }
+/* 详卡底部：圣地巡礼志 */
+.pil-section { margin-top: 18px; border: 1px solid rgba(255,126,182,.3); border-radius: var(--r); background: linear-gradient(180deg, rgba(255,126,182,.06), transparent); }
+.pil-section summary { cursor: pointer; padding: 10px 14px; display: flex; align-items: baseline; gap: 10px; list-style: none; }
+.pil-section summary::-webkit-details-marker { display: none; }
+.pil-h { font: 700 14px var(--serif); letter-spacing: .12em; color: #ffb3d4; }
+.pil-section summary small { font-size: 11px; color: var(--muted); }
+.pil-list { padding: 0 10px 10px; display: grid; gap: 6px; }
+.pil-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer;
+  padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-soft); background: var(--panel); color: var(--text);
+}
+.pil-item:hover { border-color: #ff7eb6; }
+.pil-item-main { flex: 1; min-width: 0; display: grid; }
+.pil-item-main b { font: 700 13.5px var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pil-item-main small { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pil-go { color: var(--muted); font-size: 18px; }
+.pil-empty { margin: 0; padding: 4px 4px 2px; font-size: 12.5px; color: var(--muted); }
+
 /* ── 市区町村下钻 ───────────────────────────── */
 .muni { position: absolute; inset: 0; z-index: 6; background: var(--bg); }
 .muni[hidden] { display: none; }

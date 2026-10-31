@@ -192,6 +192,46 @@ def check_municipalities():
             err('municipalities/index.json', f'{row[1]} 的代码在地图数据里找不到（需重新运行 build_municipalities.py）')
 
 
+def check_pilgrimage():
+    """圣地巡礼：字段、类型、坐标落在对应县内（容许约 3 公里，海边与岛）、已完成的县动漫与大河剧各至少一处、英日译文齐全"""
+    sys.path.insert(0, os.path.dirname(__file__))
+    from pilgrimage_tool import near
+    data = load('src', 'data', 'pilgrimage.json')
+    geo = load('src', 'assets', 'geojson', 'japan.json')
+    geom = {f['properties']['id']: f['geometry'] for f in geo['features']}
+    need = ('id', 'pref', 'type', 'year', 'work', 'work_wiki', 'place', 'place_wiki', 'evidence', 'coords', 'scene', 'tips')
+    ids = set()
+    for s in data['spots']:
+        where = f'pilgrimage {s.get("id")}'
+        miss = [k for k in need if not s.get(k)]
+        if miss:
+            err(where, f'缺字段 {miss}')
+            continue
+        if s['id'] in ids:
+            err(where, 'id 重复')
+        ids.add(s['id'])
+        if s['type'] not in ('anime', 'taiga'):
+            err(where, f'type 必须是 anime / taiga：{s["type"]}')
+        if s['pref'] not in geom:
+            err(where, f'pref 非法：{s["pref"]}')
+        elif not near(s['coords'], geom[s['pref']]):
+            err(where, f'坐标 {s["coords"]} 不在第 {s["pref"]} 号县内')
+    for pid in data['done']:
+        types = {s['type'] for s in data['spots'] if s['pref'] == pid}
+        for t_ in ('anime', 'taiga'):
+            if t_ not in types:
+                err('pilgrimage', f'第 {pid} 号县标为已完成，但没有 {t_} 巡礼点')
+    for lang in ('en', 'ja'):
+        over = load('src', 'data', 'i18n', lang, 'pilgrimage.json')
+        for sid in sorted(ids - set(over)):
+            err(f'i18n/{lang}/pilgrimage.json', f'缺 {sid} 的译文')
+        for sid, v in over.items():
+            if sid not in ids:
+                err(f'i18n/{lang}/pilgrimage.json', f'多出不存在的 {sid}')
+            elif set(v) != {'work', 'place', 'scene', 'tips'}:
+                err(f'i18n/{lang}/pilgrimage.json', f'{sid} 的字段应为 work / place / scene / tips')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -214,7 +254,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_pilgrimage, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

@@ -76,6 +76,8 @@
           </form>
         </div>
         <div class="filters" id="filters" role="tablist" data-i18n-aria="filters.aria" aria-label="时空滤镜"></div>
+        <!-- 圣地巡礼图层的子分类（仅该图层显示） -->
+        <div class="filters pil-filter" id="pil-filter" role="tablist" data-i18n-aria="pil.aria" aria-label="巡礼分类"></div>
       </div>
 
       <div class="map-legend" id="legend">
@@ -116,6 +118,9 @@
       </div>
       <!-- 市区町村下钻（muni.js 填充） -->
       <div class="muni" id="muni" hidden></div>
+
+      <!-- 圣地巡礼：点图钉弹出的作品卡（pilgrimage.js 填充） -->
+      <div class="muni-card pil-card" id="pil-card" hidden aria-live="polite"></div>
 
       <!-- 窄屏合战时：向导在页面下方看不到，在地图底部同步显示名将的最新发言 -->
       <div class="battle-voice" id="battle-voice">

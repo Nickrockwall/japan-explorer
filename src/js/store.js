@@ -14,7 +14,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
   const geoP = fetchJSON('src/assets/geojson/japan.json');
   try {
     const b = await fetchJSON(`src/data/bundle/${lang}.json`);
-    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])) };
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage };
   } catch {
     return loadFiles(lang, merge);
   }
@@ -38,7 +38,11 @@ async function loadFiles(lang, merge) {
     return { ...merge(base, await fetchJSON(`${dir}/prefectures/${e.file}`)), _translated: true };
   }));
   const ev = manifest?.[lang]?.events ? merge(events, await fetchJSON(`${dir}/historical_events.json`)) : events;
-  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])) };
+  // 圣地巡礼：译文按 id 叠加（与 tools/build_bundle.py 的 pilgrimage() 一致）
+  const pil = await fetchJSON('src/data/pilgrimage.json');
+  const over = lang === 'zh' ? {} : await fetchJSON(`${dir}/pilgrimage.json`).catch(() => ({}));
+  const pilgrimage = { done: pil.done, spots: pil.spots.map((s) => ({ ...s, ...(over[s.id] || {}) })) };
+  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage };
 }
 
 function read(key, fallback) {

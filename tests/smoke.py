@@ -153,6 +153,29 @@ class Case:
         assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1, f'搜索列表横向超出屏幕：x={box["x"]:.0f} w={box["width"]:.0f} 屏宽 {vw}'
         assert box['y'] + box['height'] <= vh + 1, f'搜索列表超出屏幕底部：{box["y"] + box["height"]:.0f} > {vh}'
 
+    def pilgrimage(self, page):
+        self.tab(page, 'map')
+        page.click('[data-layer="pilgrimage"]')
+        page.wait_for_timeout(500)
+        legend = page.text_content('#legend-items')
+        assert legend.strip(), '巡礼图层没有图例'
+        # 模拟点击《你的名字。》的图钉（ECharts 画布上的点无法用选择器点中）
+        page.evaluate("() => { echarts.getInstanceByDom(document.getElementById('map')).trigger('click', { seriesId: 'spots', data: { id: 'kiminonawa-suga' } }); }")
+        page.wait_for_selector('#pil-card:not([hidden])')
+        assert '你的名字' in page.text_content('#pil-card'), '巡礼卡片内容不对'
+        page.click('[data-pil="taiga"]')
+        page.wait_for_timeout(300)
+        assert '动漫' not in page.text_content('#legend-items'), '只看大河剧时图例里不应再有动漫'
+        assert page.is_hidden('#pil-card'), '切到大河剧后，动漫的卡片应关闭'
+        self.tab(page, 'detail')
+        assert page.locator('.pil-section .pil-item').count() >= 2, '详卡的圣地巡礼志条目不足'
+        self.tab(page, 'guide')
+        first = page.locator('#quick button').first
+        assert '圣地' in first.text_content(), f'巡礼图层下第一条快捷提问应是圣地：{first.text_content()!r}'
+        first.click()
+        page.wait_for_timeout(3500)
+        assert '热血漫迷' in page.locator('#chat .msg.ai').last.text_content(), '离线巡礼解说没有用漫迷口吻'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -170,7 +193,7 @@ def plan(lang):
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
-                  ('china', 'pref=26', ['deeplink'])]
+                  ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage'])]
     return cases
 
 

@@ -75,7 +75,13 @@ const ROLE = {
 const R = ROLE[lang];
 const RULES = PROMPT_RULES[lang];
 
-export function buildSystemPrompt(p, P, place = null) {
+const PIL_RULE = {
+  zh: '用户正在看「圣地巡礼」图层。下面是本县收录的动漫圣地与大河剧名所，问到巡礼时：动漫部分用热血漫迷的口吻，大河剧部分用剧评人的口吻；只依据列表介绍，不要编造新的取景地，不剧透关键情节，提醒遵守当地礼仪。',
+  en: 'The user is viewing the "Pilgrimage" layer. Below are the anime and taiga-drama locations recorded for this prefecture. When asked about them, talk about anime like an enthusiastic otaku and about taiga dramas like a drama critic; stick to this list, do not invent other locations, avoid major spoilers, and remind people of local etiquette.',
+  ja: 'ユーザーは「聖地巡礼」レイヤーを見ています。以下は本県のアニメ聖地と大河ドラマゆかりの地です。巡礼について聞かれたら、アニメは熱血アニメファンの口調、大河ドラマはドラマ評論家の口調で紹介してください。リストにない撮影地を作らず、重要なネタバレは避け、地元のマナーにも触れてください。',
+};
+
+export function buildSystemPrompt(p, P, place = null, pil = null) {
   const { guide, hero_persona, _translated, ...data } = p;
   return `${P.hero ? R.hero(P) : R.guide(P)}
 
@@ -83,8 +89,20 @@ ${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
-${place ? `\n${R.place(place)}\n` : ''}
+${place ? `\n${R.place(place)}\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
 ${RULES.reply}. ${RULES.rules}`;
+}
+
+// 圣地巡礼（离线）：动漫部分换热血漫迷口吻，大河剧部分换剧评人口吻，最后回到原身份收尾
+function pilAnswer(spots, p, P) {
+  const name = prefName(p);
+  const part = (type, head, line) => {
+    const list = spots.filter((s) => s.type === type);
+    return list.length ? `${t(head, { name })}\n${list.map((s) => t(line, s)).join('\n')}` : '';
+  };
+  const anime = part('anime', 'o.pil.anime', 'o.pil.animeLine');
+  const taiga = part('taiga', 'o.pil.taiga', 'o.pil.taigaLine');
+  return [anime, taiga, t('o.pil.end', { self: P.self, tip: spots[0].tips })].filter(Boolean).join('\n\n') + `\n\n${P.tail}`;
 }
 
 // 市区町村（下钻地图里的选中项）：借县史料里对该令制国的说明，拼出离线解答
@@ -328,6 +346,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
   let personaMode = initialMode; // 'scholar' 博学史官 | 'hero' 名将附体
   let battle = null; // 合战沙盘进行中时：{ b, field }
   let place = null; // 下钻地图里选中的市区町村
+  let pil = null; // 圣地巡礼图层下本县的巡礼点
   let P = null;
   let history = [];
   let busy = false;
@@ -394,7 +413,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const myCtrl = (ctrl = new AbortController());
     let out = '';
     try {
-      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place);
+      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place, pil);
       for await (const chunk of streamChat(cfg, system, history, myCtrl.signal)) {
         out += chunk;
         div.innerHTML = fmt(out);
@@ -419,6 +438,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const ans = battle
       ? (key ? battleAnswer(key, battle.b, P) : battleFreeText(text, battle.b, P))
       : key === 'place' && place ? placeAnswer(place, pref, P)
+        : key === 'pil' && pil?.length ? pilAnswer(pil, pref, P)
         : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
     typeOut(ans || t('g.fallback', { self: P.self }), offlineHint());
   }
@@ -465,6 +485,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     quick.innerHTML = '';
     const qs = battle ? battleQuestions() : quickQuestions(pref);
     if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
+    if (pil?.length && !battle) qs.unshift({ key: 'pil', text: t('q.pil') });
     for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';
@@ -498,6 +519,13 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     showIntro,
     get mode() { return personaMode; },
     // 下钻地图里选中的市区町村（null 表示没有）：不重置对话，只换快捷提问、补进 System Prompt
+    // 圣地巡礼图层：本县巡礼点（不在该图层时为 null）。不重置对话，只换快捷提问、补进 System Prompt
+    setPilgrimage(list) {
+      const next = list?.length ? list : null;
+      const changed = (next?.map((s) => s.id).join() || '') !== (pil?.map((s) => s.id).join() || '');
+      pil = next;
+      if (pref && !battle && P && changed) renderQuick();
+    },
     setPlace(x) {
       const changed = (x?.ja || null) !== (place?.ja || null);
       place = x;

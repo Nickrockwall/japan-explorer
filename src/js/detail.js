@@ -161,7 +161,7 @@ export function highlightEra(el, era) {
   }
 }
 
-export function renderDetail(el, p, { stampedAt, focus } = {}) {
+export function renderDetail(el, p, { stampedAt, focus, extra = '' } = {}) {
   const L = p.historical_lineage;
   const provs = L.ritsuryo_provinces;
   const ancient = provs.map((x) => esc(x.name)).join(' · ');
@@ -257,5 +257,6 @@ export function renderDetail(el, p, { stampedAt, focus } = {}) {
           ${x.note ? `<span class="x">${esc(x.note)}</span>` : ''}
         </div>`).join('')}
     </div>`;
+  if (extra) el.insertAdjacentHTML('beforeend', extra); // 详卡底部的附加卡片（如圣地巡礼志）
   el.scrollTop = 0;
 }

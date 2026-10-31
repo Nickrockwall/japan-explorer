@@ -37,6 +37,17 @@ def deep_merge(base, over):
     return over
 
 
+# 圣地巡礼：只带前端需要的字段（work_wiki / evidence 等核验用字段不进包），译文按 id 叠加
+SPOT_FIELDS = ('id', 'pref', 'type', 'year', 'work', 'place', 'coords', 'scene', 'tips')
+
+
+def pilgrimage(lang):
+    src = load(os.path.join(DATA, 'pilgrimage.json'))
+    path = os.path.join(DATA, 'i18n', lang, 'pilgrimage.json')
+    over = load(path) if lang != 'zh' and os.path.exists(path) else {}
+    return {'done': src['done'], 'spots': [{**{k: s[k] for k in SPOT_FIELDS}, **over.get(s['id'], {})} for s in src['spots']]}
+
+
 def build(lang):
     """生成某种语言的数据包文本（tools/check_data.py 也用它来判断已提交的包是否过期）"""
     index = load(os.path.join(DATA, 'index.json'))
@@ -56,7 +67,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang)}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

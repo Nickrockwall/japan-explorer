@@ -62,6 +62,8 @@ export const LAYERS = {
     key: (p) => p.ramen.category,
     cats: cats('rm', { tonkotsu: '#ece3d0', shoyu: '#a8433a', miso: '#d9a441', shio: '#9fd0cc', other: '#7d6fa8' }),
   },
+  // 圣地巡礼：底图整体调暗，只看图钉（动漫粉 / 大河古金），见 spotSeries
+  pilgrimage: { label: label('layer', 'pilgrimage'), caption: label('layerCap', 'pilgrimage'), dim: true },
   sake: {
     label: label('layer', 'sake'), caption: label('layerCap', 'sake'),
     key: (p) => p.sake.quadrant,
@@ -70,6 +72,9 @@ export const LAYERS = {
     }),
   },
 };
+
+// 圣地巡礼图钉配色
+export const SPOT_COLOR = { anime: '#ff7eb6', taiga: '#e0b04c' };
 
 // 酒樽徽记
 const BARREL = 'path://M8 4h16c2 3 3 7 3 12s-1 9-3 12H8c-2-3-3-7-3-12s1-9 3-12zM5.6 10h20.8M5.6 22h20.8';
@@ -96,7 +101,7 @@ function centroid(geometry) {
   return best;
 }
 
-export function createMap(el, geo, prefs, { onSelect }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -113,12 +118,13 @@ export function createMap(el, geo, prefs, { onSelect }) {
   echarts.registerMap('japan', geo);
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
-  const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0 };
+  const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0, spotType: 'all', spotId: null };
   let visitedSet = new Set();
   let activeId = null;
 
   // 当前着色方案：{ label, cat(id) → [label, color] | null }
   function scheme() {
+    if (LAYERS[state.layer]?.dim) return { label: LAYERS[state.layer].label, cat: () => ['', '#202026'] };
     if (state.layer !== 'history') {
       const L = LAYERS[state.layer];
       return { label: L.label, cat: (id) => L.cats[L.key(prefs.get(id))] };
@@ -197,6 +203,26 @@ export function createMap(el, geo, prefs, { onSelect }) {
     };
   }
 
+  // 圣地巡礼图钉：带呼吸光晕的 effectScatter；选中的那颗更大
+  const shownSpots = () => (state.layer === 'pilgrimage' && !state.battle
+    ? spots.filter((s) => state.spotType === 'all' || s.type === state.spotType) : []);
+  function spotSeries() {
+    return {
+      id: 'spots', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
+      rippleEffect: { scale: 3.2, brushType: 'stroke', period: 3.2 },
+      showEffectOn: 'render',
+      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+      emphasis: { scale: 1.5, label: { show: true } },
+      data: shownSpots().map((s) => ({
+        name: s.work, value: s.coords, id: s.id,
+        symbolSize: s.id === state.spotId ? 17 : 10,
+        itemStyle: { color: SPOT_COLOR[s.type], shadowBlur: 12, shadowColor: SPOT_COLOR[s.type], borderColor: '#fff', borderWidth: s.id === state.spotId ? 2 : 0 },
+        label: { show: s.id === state.spotId },
+      })),
+    };
+  }
+
   // 合战沙盘：按当前阶段显示进军路线、要地标记与交战爆点
   function battleSeries() {
     const b = state.battle;
@@ -253,7 +279,7 @@ export function createMap(el, geo, prefs, { onSelect }) {
       geo: { regions: [...nameById.keys()].map((id) => region(id, sc)) },
       series: [
         { id: 'prefs', data: [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), ...battleSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(),
       ],
     });
   }
@@ -270,6 +296,10 @@ export function createMap(el, geo, prefs, { onSelect }) {
       formatter: (params) => {
         if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
         if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#b4ada3">${params.name}</span>`;
+        if (params.seriesId === 'spots') {
+          const s = spots.find((x) => x.id === params.data.id);
+          return `<b style="color:${SPOT_COLOR[s.type]}">${s.type === 'anime' ? '✦' : '◆'} ${s.work}</b><br><span style="color:#b4ada3">${s.place}</span>`;
+        }
         if (params.seriesId === 'barrels') {
           const p = prefs.get(params.data.pid);
           return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
@@ -309,12 +339,17 @@ export function createMap(el, geo, prefs, { onSelect }) {
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), ...battleSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(),
     ],
   });
   render();
 
   chart.on('click', (params) => {
+    if (params.seriesId === 'spots') {
+      const s = spots.find((x) => x.id === params.data?.id);
+      if (s) onSpot(s);
+      return;
+    }
     if (params.seriesId !== 'prefs' || state.battle) return;
     const id = idByName.get(params.name);
     if (id) onSelect(id);
@@ -333,7 +368,14 @@ export function createMap(el, geo, prefs, { onSelect }) {
     setVisited(set) { visitedSet = set; render(); },
     select(id) { activeId = id; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
-    setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; render(); return state.layer; },
+    setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
+    setSpotType(type) { state.spotType = type; render(); },
+    // 选中某个巡礼点：放大图钉并平滑拉近（spot 为 null 时只取消选中）
+    focusSpot(spot) {
+      state.spotId = spot?.id ?? null;
+      render();
+      if (spot) setView({ center: spot.coords, zoom: Math.max(getView().zoom, 5) });
+    },
     setEra(era) { state.era = era || null; render(); },
     startBattle(b) {
       const saved = getView();
@@ -358,6 +400,13 @@ export function createMap(el, geo, prefs, { onSelect }) {
       let caption;
       let cats;
       let key;
+      if (LAYERS[state.layer]?.dim) {
+        const shown = shownSpots();
+        return {
+          caption: LAYERS[state.layer].caption,
+          items: ['anime', 'taiga'].map((k) => [label('pil', k), SPOT_COLOR[k], shown.filter((s) => s.type === k).length]).filter((x) => x[2]),
+        };
+      }
       if (state.layer !== 'history') {
         const L = LAYERS[state.layer];
         ({ caption, cats, key } = L);

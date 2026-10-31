@@ -6,6 +6,7 @@ import { createGuide, testConnection } from './guide.js';
 import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
+import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -322,20 +323,55 @@ async function main() {
   function renderCurrent() {
     if (!app.currentId) return;
     const focus = app.layer === 'history' ? null : app.layer;
-    renderDetail(detailEl, prefs.get(app.currentId), { stampedAt: goshuinBook.get()[app.currentId], focus });
+    const p = prefs.get(app.currentId);
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: pilgrimageSection(p, pil.spots, pil.done) });
+    if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
   }
 
+  // ── 圣地巡礼 ──
+  const pil = data.pilgrimage || { done: [], spots: [] };
+  const spotsOf = (id) => pil.spots.filter((s) => s.pref === id);
+  const pilCard = $('pil-card');
+  function closeSpot() {
+    if (pilCard.hidden) return;
+    pilCard.hidden = true;
+    map.focusSpot(null);
+  }
+  function openSpot(s) {
+    if (app.battle) exitBattle();
+    closeMuni();
+    if (app.layer !== 'pilgrimage') applyLayer('pilgrimage');
+    if (map.state.spotType !== 'all' && map.state.spotType !== s.type) applyPilType('all');
+    if (app.currentId !== s.pref) map.onSelect(s.pref);
+    map.focusSpot(s);
+    pilCard.innerHTML = spotCard(s, prefName(prefs.get(s.pref)));
+    pilCard.hidden = false;
+    tabs.set('map');
+  }
+  pilCard.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="pil-close"]')) closeSpot();
+  });
+  detailEl.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act="spot"]');
+    if (b) openSpot(pil.spots.find((s) => s.id === b.dataset.id));
+  });
+  const syncGuidePil = () => guide.setPilgrimage(app.layer === 'pilgrimage' && app.currentId ? spotsOf(app.currentId) : null);
+
   const map = createMap($('map'), data.geo, prefs, {
+    spots: pil.spots,
+    onSpot: (s) => openSpot(s),
     onSelect(id) {
       if (app.battle) exitBattle();
       if (id === app.currentId) return;
+      closeSpot();
       app.currentId = id;
       const set = visited.add(id);
       updateCounter(set);
       map.setVisited(set);
       map.select(id);
       renderCurrent();
+      if (app.layer === 'pilgrimage') guide.setPilgrimage(spotsOf(id)); // 先换巡礼点，载入新县时快捷提问一并带上
       guide.setPrefecture(prefs.get(id));
       history.replaceState(null, '', stateHash(id));
       $('tab-pref').textContent = prefName(prefs.get(id));
@@ -478,6 +514,7 @@ async function main() {
     .map(([k, l]) => `<button type="button" role="tab" data-layer="${k}">${l.label}</button>`).join('');
   function applyLayer(l) {
     if (l !== 'history') stopPlay();
+    if (l !== 'pilgrimage') closeSpot();
     app.layer = map.setLayer(l);
     uiPref.set('layer', app.layer);
     document.body.dataset.layer = app.layer;
@@ -489,11 +526,33 @@ async function main() {
     syncFilterButtons();
     updateLegend(map);
     renderCurrent();
+    syncGuidePil();
   }
   layerBox.addEventListener('click', (e) => {
     const b = e.target.closest('[data-layer]');
     if (b) applyLayer(b.dataset.layer);
   });
+
+  // 圣地巡礼的子分类：全部 / 动漫 / 大河剧
+  const pilBox = $('pil-filter');
+  pilBox.innerHTML = ['all', 'anime', 'taiga']
+    .map((k) => `<button type="button" role="tab" data-pil="${k}">${label('pil', k)}</button>`).join('');
+  function applyPilType(k) {
+    map.setSpotType(k);
+    pilBox.querySelectorAll('[data-pil]').forEach((b) => {
+      const on = b.dataset.pil === k;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on);
+    });
+    const cur = pil.spots.find((s) => s.id === map.state.spotId);
+    if (cur && k !== 'all' && cur.type !== k) closeSpot();
+    updateLegend(map);
+  }
+  pilBox.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pil]');
+    if (b) applyPilType(b.dataset.pil);
+  });
+  applyPilType('all');
 
   // ── 合战沙盘 ──
   const battleDlg = $('battles');
@@ -591,7 +650,8 @@ async function main() {
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-    if (app.battle) exitBattle();
+    if (!pilCard.hidden) closeSpot();
+    else if (app.battle) exitBattle();
     else closeMuni();
   });
 

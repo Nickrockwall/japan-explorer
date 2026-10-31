@@ -231,13 +231,36 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 旧国独立核对：build_municipalities 会用「整体属于某郡 → 该郡的令制国」核对对照表（约 1,350 个市町村），不一致的打印出来。明治郡有跨旧国改划（如奄美的大岛郡、志布志并入曾于郡），所以「部分属于」不自动采纳，只人工确认后写进对照表的 partial。
 - 搜索（`search.js`，自定义下拉替代 datalist，键盘上下 / Enter / Esc；县与旧国优先、旧国按所在县逐条列出、重名市町村分条显示；下钻时搜索框搬进下钻顶栏）：构建脚本同时输出 `src/data/municipalities/index.json`（`[县id, 名称, 读音, 英文名, [代码…], 人口, 年份]`；政令市另有一条整市，代码为其全部区），搜索框首次聚焦时才下载。`fold()` 统一字形（简体/异体字 → 新字体、片假名 → 平假名、去掉长音符号后再 NFC 合成）。排序：县/旧国优先，市区町村按 名称一致 > 去掉「市町村区」一致或英文一致 > 名称/读音/英文开头 > 包含，同分时整市优先、读音越短越优先。选中后 `muni.show(pref, { codes, city })` 直接聚焦并拉近。
 
+## 圣地巡礼（pilgrimage.js + map.js 图层 pilgrimage）
+
+- 数据单独放在 `src/data/pilgrimage.json`（不写进各县 JSON），英日译文在 `src/data/i18n/{en,ja}/pilgrimage.json`（按 id，字段 work / place / scene / tips），由 `build_bundle.py` 合并进数据包的 `pilgrimage`：
+
+```jsonc
+{
+  "done": [1, 2, …],                 // 已完成的县：动漫与大河剧各至少一处（check_data 检查）
+  "spots": [{
+    "id": "garupan-oarai", "pref": 8, "type": "anime",   // anime | taiga（NHK 大河剧）
+    "year": 2012, "work": "少女与战车", "place": "大洗町（大洗矶前神社）",
+    "work_wiki": "ガールズ&パンツァー",                  // 日文维基百科条目（核验用，不进数据包）
+    "place_wiki": "大洗磯前神社",                         // 坐标取自此条目（无则 Wikidata P625）
+    "evidence": ["大洗"],                                 // 作品条目里须出现其一，或地点条目提到作品名
+    "coords": [140.5874, 36.3158],                        // 由工具写入，勿手改（实在没有才手填并标 coords_src: manual）
+    "scene": "哪一幕在这里（不剧透）", "tips": "礼仪与注意事项（不写营业时间、票价等易过时信息）"
+  }]
+}
+```
+
+- 新增巡礼点：写好条目后运行 `python -X utf8 tools/pilgrimage_tool.py verify --write`（取坐标、核验作品与地点的对应、检查坐标在县内），`search 关键词` 可查候选；选作品优先参考维基百科「○○県を舞台とした作品一覧」。只收有出处的圣地，宁缺毋滥。
+- 图层：底图调暗（`LAYERS.pilgrimage.dim`），`spots` effectScatter 图钉（动漫粉 `#ff7eb6` / 大河古金 `#e0b04c`，`SPOT_COLOR`），子分类「全部 / 动漫 / 大河剧」（`#pil-filter`，`map.setSpotType`）；点图钉 → `openSpot`：选中所在县、`map.focusSpot` 拉近、弹出 `#pil-card`；Esc / × 关闭。详卡底部「圣地巡礼志」（`pilgrimageSection`，经 `renderDetail` 的 `extra` 传入），点条目在地图上定位。
+- 向导：巡礼图层下 `guide.setPilgrimage(本县巡礼点)`，快捷提问最前面加「这里有哪些圣地？」；离线由 `pilAnswer` 回答（动漫部分热血漫迷口吻、大河剧部分剧评人口吻）；在线把巡礼点写进 System Prompt（`PIL_RULE`）。
+
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否覆盖全部 `src/js`、仓库里有无 `__pycache__` / 测试页等杂物。
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定
