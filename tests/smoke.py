@@ -1,0 +1,193 @@
+"""界面冒烟测试：用真实浏览器把主要操作走一遍，任何控制台报错 / 页面异常 / 横向溢出都算失败。
+
+    pip install playwright && playwright install chromium   # 首次
+    python -X utf8 tests/smoke.py                            # 用 Playwright 自带的 Chromium
+    PW_CHANNEL=chrome python -X utf8 tests/smoke.py          # 本地用已安装的 Chrome（免下载）
+    SMOKE_ONLY='phone.*zh' python -X utf8 tests/smoke.py     # 只跑部分场景
+
+中文在电脑 / 平板 / 手机三种尺寸下跑全部场景；英文、日文只跑与语言相关的场景。
+失败时截图存到 tests/artifacts/（已加入 .gitignore，CI 会作为附件上传）。
+"""
+import functools
+import http.server
+import os
+import re
+import socketserver
+import sys
+import threading
+import time
+
+from playwright.sync_api import sync_playwright
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+ART = os.path.join(ROOT, 'tests', 'artifacts')
+VIEWPORTS = {
+    'desktop': dict(viewport={'width': 1280, 'height': 800}),
+    'tablet': dict(viewport={'width': 820, 'height': 1180}, has_touch=True),
+    'phone': dict(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2),
+}
+# 与功能无关、可忽略的控制台消息
+IGNORE = re.compile(r'navigator\.vibrate|mobile-web-app-capable|fonts\.(googleapis|gstatic)\.com|favicon')
+SEARCH = {'zh': '丰田', 'en': 'Toyota', 'ja': 'とよた'}
+# 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
+ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
+
+
+class Quiet(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+
+def serve():
+    handler = functools.partial(Quiet, directory=ROOT)
+    httpd = socketserver.ThreadingTCPServer(('127.0.0.1', 0), handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    return httpd, f'http://127.0.0.1:{httpd.server_address[1]}/index.html'
+
+
+class Case:
+    def __init__(self, browser, base, vp, lang):
+        self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
+        self.narrow = vp != 'desktop'
+
+    def open(self, hash_):
+        ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
+                                       service_workers='block')
+        page = ctx.new_page()
+        page.problems = []
+        page.on('console', lambda m: m.type == 'error' and not IGNORE.search(m.text) and page.problems.append(f'console: {m.text}'))
+        page.on('pageerror', lambda e: page.problems.append(f'pageerror: {e}'))
+        page.goto(f'{self.base}#lang={self.lang}&{hash_}' if hash_ else f'{self.base}#lang={self.lang}')
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        page.wait_for_timeout(800)
+        return page
+
+    def tab(self, page, name):
+        if self.narrow:
+            page.click(f'#tabbar [data-tab="{name}"]')
+            page.wait_for_timeout(200)
+
+    # ── 场景 ──
+    def deeplink(self, page):
+        page_kanji = page.text_content('.modern-title .kanji')
+        assert page_kanji == '京都府', f'详卡标题是 {page_kanji!r}'
+        if self.narrow:
+            assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
+
+    def no_overflow(self, page):
+        over = page.evaluate('document.scrollingElement.scrollWidth - innerWidth')
+        assert over <= 1, f'页面横向溢出 {over}px'
+
+    def muni(self, page):
+        page.wait_for_selector('.muni-card:not([hidden])', timeout=15000)
+        text = page.text_content('.muni-card')
+        assert '豊田' in text or 'Toyota' in text, f'详情卡内容：{text[:60]!r}'
+        assert page.locator('#muni .muni-names, #muni canvas').count() > 0
+
+    def search(self, page):
+        page.fill('#search-input', SEARCH[self.lang])
+        page.wait_for_selector('#search-pop li', timeout=15000)
+        page.keyboard.press('Enter')
+        page.wait_for_selector('.muni-card:not([hidden])', timeout=15000)
+        text = page.text_content('.muni-card')
+        assert '豊田' in text or 'Toyota' in text, f'搜索后详情卡：{text[:60]!r}'
+        assert 'm=23211' in page.evaluate('location.hash'), '地址栏应带上选中的市町村'
+
+    def battle(self, page):
+        page.click('#btn-battle')
+        page.click('#battles .battle-card >> nth=0')
+        page.wait_for_selector('#battle-hud:not([hidden])')
+        if self.narrow:
+            assert page.evaluate('document.body.dataset.tab') == 'map', '合战应切到地图页'
+        page.click('#hud-next')
+        page.wait_for_timeout(300)
+        assert page.locator('#hud-phases li.on').get_attribute('data-i') == '1', '下一阶段没有生效'
+        page.click('#hud-exit')
+        page.wait_for_selector('#battle-hud', state='hidden')
+
+    def era(self, page):
+        page.evaluate("(() => { const r = document.getElementById('tb-range'); r.value = 6; r.dispatchEvent(new Event('input', { bubbles: true })); })()")
+        page.wait_for_timeout(500)
+        assert page.evaluate("document.body.classList.contains('time-travel')"), '时代滑块没有进入时空穿越'
+
+    def stamp(self, page):
+        self.tab(page, 'detail')
+        page.click('.stamp-btn')
+        page.wait_for_selector('.seal-drop .seal-face')
+        page.wait_for_timeout(900)
+        box = page.locator('.seal-drop .seal-face').bounding_box()
+        vh = page.evaluate('innerHeight')
+        cy = box['y'] + box['height'] / 2
+        assert 0 < cy < vh, f'印章中心 y={cy:.0f} 不在屏幕内（高 {vh}）'
+
+    def guide(self, page):
+        self.tab(page, 'guide')
+        before = page.locator('#chat .msg.ai').count()
+        page.click('#quick button >> nth=0')
+        page.wait_for_function(f"document.querySelectorAll('#chat .msg.ai').length > {before}")
+        page.wait_for_timeout(2500)
+        text = page.locator('#chat .msg.ai').last.text_content()
+        assert len(text) > 20, f'离线解答太短：{text!r}'
+
+    def tabs(self, page):
+        if not self.narrow:
+            assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
+            return
+        for name, sel in (('detail', '#detail'), ('guide', '#chat'), ('map', '#map')):
+            self.tab(page, name)
+            assert page.is_visible(sel), f'切到 {name} 后 {sel} 不可见'
+
+
+def plan(lang):
+    full = lang == 'zh'
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+             ('search', '', ['search'])]
+    if full:
+        cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
+                  ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs'])]
+    return cases
+
+
+def main():
+    os.makedirs(ART, exist_ok=True)
+    httpd, base = serve()
+    failures, total, started = [], 0, time.time()
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(channel=os.environ.get('PW_CHANNEL') or None)
+        for vp in VIEWPORTS:
+            for lang in ('zh', 'en', 'ja'):
+                c = Case(browser, base, vp, lang)
+                for name, hash_, steps in plan(lang):
+                    label = f'{vp:7} {lang} {name}'
+                    if ONLY and not ONLY.search(label):
+                        continue
+                    total += 1
+                    page = None
+                    try:
+                        page = c.open(hash_)
+                        for step in steps:
+                            getattr(c, step)(page)
+                        page.wait_for_timeout(300)
+                        if page.problems:
+                            raise AssertionError('；'.join(page.problems[:3]))
+                        print(f'✓ {label}')
+                    except Exception as e:  # noqa: BLE001 — 逐条记录，继续跑完
+                        msg = str(e).splitlines()[0][:300]
+                        failures.append(f'{label}: {msg}')
+                        print(f'✗ {label}: {msg}')
+                        if page:
+                            page.screenshot(path=os.path.join(ART, f'{vp}-{lang}-{name}.png'))
+                    finally:
+                        if page:
+                            page.context.close()
+        browser.close()
+    httpd.shutdown()
+    print(f'\n{total - len(failures)}/{total} 通过，用时 {time.time() - started:.0f}s')
+    if failures:
+        print('失败：\n' + '\n'.join(f'  - {f}' for f in failures))
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

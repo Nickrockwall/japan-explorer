@@ -32,6 +32,8 @@
 /* iOS Safari 的 100vh 含被工具栏遮住的部分，支持时改用动态视口高度 */
 @supports (height: 100dvh) { :root { --vh: 100dvh; } }
 * { box-sizing: border-box; }
+/* hidden 属性永远生效：组件里写的 display: grid/flex 不会再把它盖掉（曾两次因此出 bug） */
+[hidden] { display: none !important; }
 html, body { height: 100%; }
 body {
   margin: 0;

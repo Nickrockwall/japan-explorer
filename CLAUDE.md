@@ -211,7 +211,7 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 风土图层：`history | ramen | sake`。非历史图层时隐藏滤镜与时代滑块，详卡顶部换成拉面解构图 / 酒标卡；切回历史图层时滤镜与时代原样恢复。
 - 时代滑块：拖动/点刻度/播放即进入「时空穿越」（`body.time-travel`），按时代 `prefecture_colors` 着色并在 `capital.coords` 放脉冲点；点任一滤镜或 × 退出。选中县时高亮对应 `timeline_stage`。
 - 合战沙盘：`startBattle` 记住当前视角并缩放到 `view`，按当前阶段（`setBattlePhase`）叠加 `lines`（polyline，箭头流动）、出阵点、要地标记与战场爆点；HUD 可点阶段条、上/下一阶段或自动推演（每 7 秒一段），每换一段向导以名将口吻解说；`body.in-battle` 隐藏工具条与滑块；向导切换为 `narrator`。退出（按钮或 Esc）恢复视角、图层、滤镜与向导。合战中地图点击被忽略。
-- 窄屏合战：向导在页面下方看不到，`setupBattleVoice` 用 MutationObserver 把向导最新一条 AI 发言（打字机与 LLM 流式输出都会同步）镜像到地图底部的 `#battle-voice` 浮窗，「提问 ↓」滚到输入框；合战期间地图区加高到 80vh。
+- 窄屏合战：`setupBattleVoice` 用 MutationObserver 把向导最新一条 AI 发言（打字机与 LLM 流式输出都会同步）镜像到地图底部的 `#battle-voice` 浮窗，「提问」切到向导页。
 - 飞线 `effect.trailLength` 必须为 0：拖尾会开启 zlevel 运动模糊，缩放时留残影。
 - 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线用于正文。
 
@@ -229,6 +229,14 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - 旧郡（`old_districts`：`[[郡名, 是否只含一部分]]`；政令市只写到市一级的在文件的 `cities`）：`python -X utf8 tools/fetch_districts.py` 从日文维基百科「Category:○○の郡」及「(消滅)」下各郡条目整理成 `tools/districts.json`（可人工修正，已提交），再由 build_municipalities 合并。解析规则：第一个标题前的现属町村 + 「郡域」一节的列表项（嵌套列表把上级市名接到区前）与「郡域は…にあたる」一句；叙述段落不读；括号内容判断完「一部」后去掉再匹配（括号恰好为「全域」才算整体）。指的是明治郡制（1878〜）的郡域，界面上注明「可能不完整」。Wikidata 的合并链覆盖不全且有误，不用于旧郡。
 - 旧国独立核对：build_municipalities 会用「整体属于某郡 → 该郡的令制国」核对对照表（约 1,350 个市町村），不一致的打印出来。明治郡有跨旧国改划（如奄美的大岛郡、志布志并入曾于郡），所以「部分属于」不自动采纳，只人工确认后写进对照表的 partial。
 - 搜索（`search.js`，自定义下拉替代 datalist，键盘上下 / Enter / Esc；县与旧国优先、旧国按所在县逐条列出、重名市町村分条显示；下钻时搜索框搬进下钻顶栏）：构建脚本同时输出 `src/data/municipalities/index.json`（`[县id, 名称, 读音, 英文名, [代码…], 人口, 年份]`；政令市另有一条整市，代码为其全部区），搜索框首次聚焦时才下载。`fold()` 统一字形（简体/异体字 → 新字体、片假名 → 平假名、去掉长音符号后再 NFC 合成）。排序：县/旧国优先，市区町村按 名称一致 > 去掉「市町村区」一致或英文一致 > 名称/读音/英文开头 > 包含，同分时整市优先、读音越短越优先。选中后 `muni.show(pref, { codes, city })` 直接聚焦并拉近。
+
+## 检查与测试（改完提交前先跑）
+
+- `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否覆盖全部 `src/js`、仓库里有无 `__pycache__` / 测试页等杂物。
+- `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
+- GitHub Actions（`.github/workflows/checks.yml`）每次推送先跑数据检查再跑冒烟测试。注意：GitHub Pages 仍直接从 main 发布，检查失败不会阻止上线——推送前本地先跑。
+- CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。
 
 ## 约定
 

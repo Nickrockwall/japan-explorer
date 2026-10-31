@@ -2,6 +2,8 @@
 
 [中文](README.md) | [English](README.en.md) | **日本語**
 
+[![Checks](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml/badge.svg)](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml)
+
 **▶ オンラインで遊ぶ：https://nickrockwall.github.io/japan-explorer/**
 
 ![Japan Explorer](src/assets/og-cover-ja.png)
@@ -68,6 +70,16 @@ python tools/build_bundle.py
 ```
 
 データ構造とプロジェクトの決まりごとは [CLAUDE.md](CLAUDE.md)（中国語）にまとめています。
+
+## 自動チェック
+
+GitHub に push するたびに自動で実行されます（上のバッジ）。手元でも実行できます。
+
+```bash
+python -X utf8 tools/check_data.py        # データとリポジトリの整合性（数秒）
+pip install playwright && python -m playwright install chromium   # 初回のみ
+python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC / タブレット / スマホ × 中英日（約 2 分）
+```
 
 ## 技術
 

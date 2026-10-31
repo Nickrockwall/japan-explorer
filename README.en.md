@@ -2,6 +2,8 @@
 
 [中文](README.md) | **English** | [日本語](README.ja.md)
 
+[![Checks](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml/badge.svg)](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml)
+
 **▶ Try it online: https://nickrockwall.github.io/japan-explorer/**
 
 ![Japan Explorer](src/assets/og-cover-en.png)
@@ -68,6 +70,16 @@ python tools/build_bundle.py
 ```
 
 The data schema and project conventions are documented in [CLAUDE.md](CLAUDE.md) (in Chinese).
+
+## Automated checks
+
+They run on every push to GitHub (see the badge above); you can also run them locally:
+
+```bash
+python -X utf8 tools/check_data.py        # data & repo consistency, a few seconds
+pip install playwright && python -m playwright install chromium   # first time
+python -X utf8 tests/smoke.py             # UI smoke tests: desktop / tablet / phone × zh / en / ja, ~2 min
+```
 
 ## Tech
 

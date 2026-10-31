@@ -1,0 +1,38 @@
+# 每次推送 / PR：先跑数据检查（几秒），通过后再用真实浏览器跑界面冒烟测试（约 3 分钟）
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Data & repo consistency
+        run: python -X utf8 tools/check_data.py
+
+  ui:
+    runs-on: ubuntu-latest
+    needs: data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright + Chromium
+        run: |
+          pip install playwright==1.64.1
+          python -m playwright install --with-deps chromium
+      - name: UI smoke tests (desktop / tablet / phone × zh / en / ja)
+        run: python -X utf8 tests/smoke.py
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-screenshots
+          path: tests/artifacts/

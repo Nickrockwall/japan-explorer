@@ -2,6 +2,8 @@
 
 **中文** | [English](README.en.md) | [日本語](README.ja.md)
 
+[![Checks](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml/badge.svg)](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml)
+
 **▶ 在线体验：https://nickrockwall.github.io/japan-explorer/**
 
 ![Japan Explorer](src/assets/og-cover.png)
@@ -66,6 +68,16 @@ python tools/build_bundle.py
 ```
 
 数据结构、字段含义与各项约定见 [CLAUDE.md](CLAUDE.md)。
+
+## 自动检查
+
+每次推送到 GitHub 都会自动运行（结果见上方徽章）；本地改完也可以先跑一遍：
+
+```bash
+python -X utf8 tools/check_data.py        # 数据与仓库一致性，几秒
+pip install playwright && python -m playwright install chromium   # 首次
+python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板 / 手机 × 中英日，约 2 分钟
+```
 
 ## 技术
 

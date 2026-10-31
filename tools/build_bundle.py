@@ -37,34 +37,40 @@ def deep_merge(base, over):
     return over
 
 
-def main():
+def build(lang):
+    """生成某种语言的数据包文本（tools/check_data.py 也用它来判断已提交的包是否过期）"""
     index = load(os.path.join(DATA, 'index.json'))
     events = load(os.path.join(DATA, 'historical_events.json'))
     manifest = load(os.path.join(DATA, 'i18n', 'manifest.json'))
+    done = set(manifest.get(lang, {}).get('prefectures', [])) if lang != 'zh' else None
+    prefs = []
+    for e in index:
+        base = load(os.path.join(DATA, 'prefectures', e['file']))
+        if lang == 'zh':
+            p = dict(base, _translated=True)
+        elif e['id'] in done:
+            p = dict(deep_merge(base, load(os.path.join(DATA, 'i18n', lang, 'prefectures', e['file']))), _translated=True)
+        else:
+            p = dict(base, _translated=False)
+        prefs.append(p)
+    ev = events
+    if lang != 'zh' and manifest.get(lang, {}).get('events'):
+        ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs}
+    text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
+    body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
+    return json.dumps(body, ensure_ascii=False, separators=(',', ':'))
+
+
+def main():
     out_dir = os.path.join(DATA, 'bundle')
     os.makedirs(out_dir, exist_ok=True)
     for lang in LANGS:
-        done = set(manifest.get(lang, {}).get('prefectures', [])) if lang != 'zh' else None
-        prefs = []
-        for e in index:
-            base = load(os.path.join(DATA, 'prefectures', e['file']))
-            if lang == 'zh':
-                p = dict(base, _translated=True)
-            elif e['id'] in done:
-                p = dict(deep_merge(base, load(os.path.join(DATA, 'i18n', lang, 'prefectures', e['file']))), _translated=True)
-            else:
-                p = dict(base, _translated=False)
-            prefs.append(p)
-        ev = events
-        if lang != 'zh' and manifest.get(lang, {}).get('events'):
-            ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-        body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs}
-        text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
-        body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
+        text = build(lang)
         path = os.path.join(out_dir, f'{lang}.json')
         with open(path, 'w', encoding='utf-8') as f:
-            json.dump(body, f, ensure_ascii=False, separators=(',', ':'))
-        print(f'{lang}: {len(prefs)} prefectures, {os.path.getsize(path) // 1024} KB, version {body["version"]}')
+            f.write(text)
+        print(f'{lang}: {os.path.getsize(path) // 1024} KB, version {json.loads(text)["version"]}')
 
 
 if __name__ == '__main__':
