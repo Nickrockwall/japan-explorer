@@ -5,6 +5,12 @@
   "scene": "A coming-of-age story set in Chichibu; the old bridge appears in the opening and many scenes, and the city has worked with the series for years.",
   "tips": "The shopping streets near Chichibu Station and Jōrin-ji temple are also locations. The old bridge is pedestrian-only — mind other walkers."
  },
+ "anonatsu-komoro": {
+  "work": "Waiting in the Summer (Ano Natsu de Matteru)",
+  "place": "Komoro City",
+  "scene": "Over a summer of making a home-made movie, Komoro's station, Kaikoen park and streets become the story's stage.",
+  "tips": "Kaikoen, the Komoro Castle site beside the station, is worth a visit; the series displays are in the station and tourist facilities."
+ },
  "atsuhime-edojo": {
   "work": "Atsuhime",
   "place": "Edo Castle site (East Gardens of the Imperial Palace)",
@@ -23,17 +29,35 @@
   "scene": "In the first episode, \"Cherry Blossom\", the station where Takaki waits through the heavy snow is Iwafune on the JR Ryōmō Line.",
   "tips": "It is a working station: don't linger on the platform for photos or get in passengers' way. A snowy winter day is closest to the film's mood."
  },
+ "diy-sanjo": {
+  "work": "Do It Yourself!!",
+  "place": "Sanjō City",
+  "scene": "High-school girls build things by hand in a DIY club, set in Sanjō, a city famous for blades and metalwork that collaborates with the series.",
+  "tips": "Sanjō is a city of craftspeople — try forging a small knife at a local smithing workshop. Factories are working sites; don't enter without permission."
+ },
  "flying-witch-hirosaki": {
   "work": "Flying Witch",
   "place": "Hirosaki Castle (Hirosaki Park)",
   "scene": "Makoto, a witch in training, moves in with relatives in Hirosaki; the castle town, Mount Iwaki and the apple orchards run through the whole series.",
   "tips": "Hirosaki Park's spring blossoms and the town's Western-style buildings make a lovely walk. The homes in the series are ordinary houses — please don't disturb residents."
  },
+ "furinkazan-takeda": {
+  "work": "Fūrin Kazan",
+  "place": "Takeda Shrine (site of Tsutsujigasaki residence)",
+  "scene": "The story of Yamamoto Kansuke, strategist to Takeda Shingen; the Takeda residence at Tsutsujigasaki stood where Takeda Shrine is today.",
+  "tips": "The original moat and earthworks survive around the shrine; buses run directly from Kōfu Station."
+ },
  "garupan-oarai": {
   "work": "Girls und Panzer",
   "place": "Ōarai (Ōarai Isosaki Shrine)",
   "scene": "The heroines' Ōarai Girls' Academy calls Ōarai its home port; the shopping streets and the torii on the rocks by the sea appear throughout — a model of anime–town collaboration.",
   "tips": "The shopping streets are full of character standees and tie-in goods; supporting local shops is part of the pilgrimage. The torii stands on rocks — keep away at high tide or in big waves."
+ },
+ "glasslip-mikuni": {
+  "work": "Glasslip",
+  "place": "Mikuni (Sakai City)",
+  "scene": "A summer between a girl raised in a glass workshop and a transfer student, set in the seaside town of Mikuni in Sakai, Fukui.",
+  "tips": "Mikuni's old streets and shore are good for walking. The nearby Tōjinbō cliffs have no railings — keep well back from the edge."
  },
  "golden-kamuy-abashiri": {
   "work": "Golden Kamuy",
@@ -47,6 +71,12 @@
   "scene": "A story centered on the Shinsengumi, which in its later part follows them to Aizu; Mount Iimori is where the young Byakkotai met their tragic end in the Boshin War.",
   "tips": "The hill has the Byakkotai graves and the unusual Sazaedō hall — please be respectful. The stone steps are steep; a paid escalator is available."
  },
+ "hanasaku-yuwaku": {
+  "work": "Hanasaku Iroha",
+  "place": "Yuwaku Onsen",
+  "scene": "Ohana grows up working at the inn Kissuisō; the spa town is modeled on Yuwaku Onsen outside Kanazawa, which even started holding the series' Bonbori Festival for real.",
+  "tips": "Yuwaku is a quiet mountain spa — don't wander into inns' private areas for photos. It gets crowded during the autumn Bonbori Festival."
+ },
  "homura-esashi": {
   "work": "Homura Tatsu",
   "place": "Esashi Fujiwara no Sato",
@@ -58,6 +88,18 @@
   "place": "Kanezawa Hachimangū (Kanezawa Stockade battlefield)",
   "scene": "Part two of the drama covers the Later Three Years' War, whose final battle was fought at the Kanezawa stockade in Dewa — the foundation of the Ōshū Fujiwara.",
   "tips": "The battlefield is now Kanezawa Park and Kanezawa Hachimangū; the nearby museum of the Later Three Years' War explains the battle. Lovely in autumn colors."
+ },
+ "hyouka-takayama": {
+  "work": "Hyouka",
+  "place": "Hida-Takayama",
+  "scene": "The Classics Club's everyday mysteries take place in Kamiyama, modeled on Hida-Takayama, with its old streets, shrines and festivals.",
+  "tips": "Takayama's old streets are crowded — keep the narrow lanes clear when taking photos. The school is modeled on a real high school; don't enter the grounds."
+ },
+ "ieyasu-okazaki": {
+  "work": "What Will You Do, Ieyasu? (Dōsuru Ieyasu)",
+  "place": "Okazaki Castle",
+  "scene": "Tokugawa Ieyasu was born at Okazaki Castle in Mikawa, where the drama begins his life of \"what will you do?\"",
+  "tips": "Okazaki Park around the castle has an Ieyasu museum, and the old Hatchō miso makers nearby offer tours."
  },
  "initiald-haruna": {
   "work": "Initial D",
@@ -77,17 +119,47 @@
   "scene": "The spiritual center of the Kamakura shogunate; Minamoto no Sanetomo's assassination on its great stone steps is one of the drama's most shocking turns.",
   "tips": "Walk from Kamakura Station along the Dankazura approach. New Year and weekends are packed — weekday mornings are best."
  },
+ "kiminonawa-hidafurukawa": {
+  "work": "Your Name.",
+  "place": "Hida-Furukawa Station",
+  "scene": "Searching for Mitsuha, Taki comes to Hida and asks around at Hida-Furukawa's station and streets.",
+  "tips": "The view of trains from the station footbridge is the classic shot — don't block passengers. The Seto River and white-walled storehouses are lovely for a stroll."
+ },
  "kiminonawa-suga": {
   "work": "Your Name.",
   "place": "Suga Shrine (Shinjuku)",
   "scene": "The film's iconic staircase with red railings is the Otoko-zaka steps in front of Suga Shrine.",
   "tips": "This is a quiet residential area: don't linger in the middle of the stairs or make noise. Weekday mornings are quietest."
  },
+ "kirin-ichijodani": {
+  "work": "Awaiting Kirin (Kirin ga Kuru)",
+  "place": "Ichijōdani Asakura Family Ruins",
+  "scene": "After leaving Mino, Akechi Mitsuhide drifted to Echizen and served Asakura Yoshikage; the drama's Echizen years center on Ichijōdani.",
+  "tips": "A Sengoku-period street has been reconstructed, giving a feel for a castle town. The site is large — allow half a day."
+ },
+ "kunitori-gifu": {
+  "work": "Kunitori Monogatari",
+  "place": "Gifu Castle (Mount Kinka)",
+  "scene": "Two generations of \"stealing a province\": Saitō Dōsan ruled from Inabayama Castle, which Oda Nobunaga took and renamed Gifu.",
+  "tips": "Ride the Mount Kinka ropeway up; the keep looks out over the Nōbi plain. Cormorant fishing on the Nagara River is famous in summer."
+ },
+ "lovelive-uchiura": {
+  "work": "Love Live! Sunshine!!",
+  "place": "Uchiura, Numazu City",
+  "scene": "The nine members of Aqours live in Uchiura, Numazu; Awashima island in the bay and the coastal villages are full of traces of the series.",
+  "tips": "Uchiura is a residential fishing village — keep your voice down and don't linger outside homes. Numazu has many tie-in shops; supporting them is part of the pilgrimage."
+ },
  "luckystar-washinomiya": {
   "work": "Lucky Star",
   "place": "Washinomiya Shrine",
   "scene": "The Hiiragi sisters' family shrine is modeled on Washinomiya Shrine, often seen as one of the starting points of Japan's anime pilgrimage boom.",
   "tips": "It is a real shrine with normal shrine etiquette. The anime-illustrated ema plaques are a highlight, but please don't read out or photograph other people's wishes."
+ },
+ "maruko-shimizu": {
+  "work": "Chibi Maruko-chan",
+  "place": "Shimizu (Chibi Maruko-chan Land)",
+  "scene": "The author Momoko Sakura's hometown, Shimizu in Shizuoka City, is Maruko's town; a harbor-side mall has a theme attraction for the series.",
+  "tips": "The attraction is by Shimizu port, where you can also see Mount Fuji across the harbor. Shimizu is known for its tuna dishes."
  },
  "masamune-zuihoden": {
   "work": "Dokuganryū Masamune",
@@ -100,6 +172,12 @@
   "place": "Ōtsuchi Town",
   "scene": "After the 2011 earthquake, girls start a new life in the \"Mayoiga\" house of a seaside town modeled on Ōtsuchi, which collaborated with the film.",
   "tips": "This area was rebuilt after the disaster; visit with respect. The coastal reconstruction memorials tell the town's story."
+ },
+ "naotora-ryotanji": {
+  "work": "Naotora: The Lady Warlord",
+  "place": "Ryōtan-ji (Iinoya)",
+  "scene": "Ryōtan-ji in Iinoya is the family temple of the Ii, and the story of the woman lord Ii Naotora protecting her clan centers on this area.",
+  "tips": "The temple garden is celebrated — please be quiet inside. Iinoya-gū shrine and related memorials are nearby."
  },
  "omohide-yamagata": {
   "work": "Only Yesterday",
@@ -124,6 +202,12 @@
   "place": "Numata Castle site",
   "scene": "Numata Castle, contested by the Sanada and the Hōjō, is a key setting; the dispute became Hideyoshi's pretext for attacking the Hōjō.",
   "tips": "The castle site is now Numata Park, overlooking river terraces; the nearby Nagurumi Castle site belongs to the same story."
+ },
+ "sanadamaru-ueda": {
+  "work": "Sanada Maru",
+  "place": "Ueda Castle site",
+  "scene": "Ueda Castle, built by Sanada Masayuki, twice repelled great Tokugawa armies — the pride of the Sanada.",
+  "tips": "The Sanada Stone and the West Turret are highlights; spring blossoms and autumn leaves are the best seasons."
  },
  "sanpei-masuda": {
   "work": "Fishing Kid Sanpei (Tsurikichi Sanpei)",
@@ -155,17 +239,47 @@
   "scene": "The crossing in the anime opening, with the Enoden train passing in front of the sea, has become a must-see for fans from around the world.",
   "tips": "It is extremely crowded. Locals repeatedly ask visitors not to stand in the road for photos, not to block trains or cars, and not to make noise near homes."
  },
+ "summerwars-ueda": {
+  "work": "Summer Wars",
+  "place": "Ueda City",
+  "scene": "The hero follows a senior to her family home in Ueda, Shinshū — the Jinnouchi clan, descendants of the Sanada — where a battle across the internet begins.",
+  "tips": "Ueda Station and the city have displays about the film. The great house is fictional and the hillsides it draws on are private land — please stay out."
+ },
+ "supercub-hokuto": {
+  "work": "Super Cub",
+  "place": "Hokuto City (around Hinoharu Station)",
+  "scene": "Koguma, a high-schooler living alone, buys a used Honda Super Cub, and her days unfold on the mountain roads of Hokuto.",
+  "tips": "Follow traffic rules on bikes or in cars — the mountain roads are winding. The school is modeled on a real high school; don't enter the grounds."
+ },
  "taiheiki-bannaji": {
   "work": "Taiheiki",
   "place": "Bannaji (site of the Ashikaga residence)",
   "scene": "The hero, Ashikaga Takauji, came from the Ashikaga of Ashikaga Estate in Shimotsuke; Bannaji stands on the site of their residence.",
   "tips": "The temple keeps its moat and earthen walls, the layout of a warrior's residence. The neighboring Ashikaga School is said to be Japan's oldest school."
  },
+ "tenchijin-kasugayama": {
+  "work": "Tenchijin",
+  "place": "Kasugayama Castle site",
+  "scene": "Naoe Kanetsugu grew up at Kasugayama, the castle of Uesugi Kenshin, and much of the drama's first half takes place here.",
+  "tips": "It is a hilltop castle site — wear good walking shoes. The main enclosure at the top looks out over the Takada plain and the Sea of Japan."
+ },
  "tenchijin-yonezawa": {
   "work": "Tenchijin",
   "place": "Yonezawa Castle site (Uesugi Shrine)",
   "scene": "Naoe Kanetsugu serves Uesugi Kagekatsu; after Sekigahara the Uesugi were reduced to Yonezawa, where Kanetsugu spent the rest of his life.",
   "tips": "Uesugi Shrine and the Keishōden treasure house on the castle grounds hold the clan's heirlooms. Don't miss Yonezawa beef."
+ },
+ "toshiie-kanazawa": {
+  "work": "Toshiie and Matsu",
+  "place": "Kanazawa Castle Park",
+  "scene": "Maeda Toshiie took Kanazawa and laid the foundations of the \"one-million-koku\" Kaga domain; Kanazawa Castle was home to fourteen generations of the Maeda.",
+  "tips": "The castle sits next to Kenroku-en, so visit both together. Its many styles of stone wall earn it the name \"museum of stone walls\"."
+ },
+ "truetears-johana": {
+  "work": "true tears",
+  "place": "Jōhana (Nanto City)",
+  "scene": "Nanto is home to the studio P.A.WORKS; Jōhana's old streets, station and Hikiyama festival all appear in the series.",
+  "tips": "Jōhana is a quiet town of old streets, best explored on foot. Trains on the Jōhana Line are infrequent — check times in advance."
  },
  "wug-sendai": {
   "work": "Wake Up, Girls!",
@@ -185,6 +299,12 @@
   "scene": "Aizu-born Niijima Yae took up a rifle to defend Tsuruga Castle; the drama's siege of Aizu happened here.",
   "tips": "The keep houses a local museum with views over the Aizu basin from the top. The red-tiled keep looks best with spring blossoms."
  },
+ "yattokame-nagoya": {
+  "work": "Yatogame-chan Kansatsu Nikki",
+  "place": "Nagoya Castle",
+  "scene": "Everyday life with Nagoya-loving high-schooler Yatogame and a transfer student, packed with jokes about Nagoya dialect and food.",
+  "tips": "Nagoya Castle's restored Honmaru Palace is exquisite; afterwards try the \"Nagoya-meshi\" from the series — miso katsu, tebasaki and more."
+ },
  "yorimoi-tatebayashi": {
   "work": "A Place Further than the Universe",
   "place": "Tatebayashi",
@@ -196,5 +316,17 @@
   "place": "Kōdōkan (Mito)",
   "scene": "The last shogun came from the Mito Tokugawa and was educated at the domain school Kōdōkan, where he also confined himself after returning power to the emperor.",
   "tips": "Kōdōkan is right by Mito Station; in plum season, combine it with Kairakuen garden."
+ },
+ "yoshitsune-kurikara": {
+  "work": "Yoshitsune",
+  "place": "Kurikara battlefield (Oyabe City)",
+  "scene": "At Kurikara Pass, Kiso Yoshinaka routed the Taira army with his \"fire oxen\" stratagem; the drama portrays this battle that turned the Genpei War.",
+  "tips": "The battlefield is in the hills with sloping paths, loveliest when the double cherries bloom in spring. The road is narrow — drive carefully."
+ },
+ "yurucamp-motosu": {
+  "work": "Laid-Back Camp",
+  "place": "Lake Motosu",
+  "scene": "The lakeside where Rin camps alone and meets Nadeshiko in the first episode is Lake Motosu, with its view of Mount Fuji.",
+  "tips": "Camp only at proper campsites and take all your rubbish home. Winter by the lake is bitterly cold; never light fires where they're banned."
  }
 }
