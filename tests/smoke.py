@@ -311,6 +311,35 @@ class Case:
         assert page.locator('#book .slot.got.real').count() == 1, '一宫篇应有一枚亲临印'
         page.keyboard.press('Escape')
 
+    def power(self, page):
+        # 古国国力：68 国按指标着色；榜单首位武藏、逆袭首位河内；点地图上的武藏选中埼玉并在榜单里高亮；宿敌 PK；离开后卡片收起
+        self.tab(page, 'map')
+        page.click('[data-filter="power"]')
+        page.wait_for_selector('#power-card:not([hidden]) .kr-list li', timeout=15000)
+        page.wait_for_timeout(900)  # 卡片摊开时地图中心平移避让（动画 0.7 秒）
+        assert page.text_content('.kr-list li >> nth=0').find('武') >= 0 or 'Musashi' in page.text_content('.kr-list li >> nth=0'), '人口榜首位应是武藏'
+        box = page.locator('#power-card').bounding_box()
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'国力卡片超出屏幕：{box}'
+        page.click('[data-metric="rise"]')
+        assert '43' in page.text_content('.kr-list li >> nth=0'), '逆袭榜首位应是河内（江户第 43）'
+        assert page.locator('#legend-items span').count() == 5, '逆袭图例应有五档'
+        js = '''() => { const c = echarts.getInstanceByDom(document.getElementById('map')); const r = document.getElementById('map').getBoundingClientRect();
+            const [x, y] = c.convertToPixel({ geoIndex: 0 }, [139.4, 35.9]); return [x + r.left, y + r.top]; }'''
+        x, y = page.evaluate(js)
+        (page.touchscreen.tap if self.narrow else page.mouse.click)(x, y)
+        page.wait_for_timeout(600)
+        assert 'pref=11' in page.evaluate('location.hash'), f'点武藏国应选中埼玉：{page.evaluate("location.hash")}'
+        assert page.locator('.kr-list li.on').count() == 1, '榜单应高亮武藏'
+        page.click('[data-kr-tab="pk"]')
+        page.click('[data-pk="iga-koka"]')
+        assert page.locator('.pk-table tr').count() == 8, 'PK 表应有表头 + 7 行'
+        page.select_option('[data-pk-side="1"]', '隠岐国')
+        assert page.locator('.pk-table td.win').count() >= 5, '自选 PK 应标出胜方'
+        page.click('[data-filter="circuit"]')
+        page.wait_for_timeout(300)
+        assert page.is_hidden('#power-card') and page.is_hidden('#power-metrics'), '离开国力后卡片与指标行应收起'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -323,7 +352,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search'])]
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),

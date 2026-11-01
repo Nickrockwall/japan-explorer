@@ -23,6 +23,7 @@
 | **国名今犹在** | 68 国共 190 个今天还带着旧国名的东西：信浓川、讃岐乌冬、伊予柑、备前烧、萨摩芋、近江铁道……古国地图的悬停提示、古国卡片与详卡里都能看到；每一条都用维基百科核验过名字来历与地点 |
 | **我在哪** | 地图上的 📍 按钮：用手机定位告诉你此刻身在哪个令制国、今天的哪个县与市区町村、明治的哪个郡，并附上该国的广重浮世绘与今日国名；位置只在本机计算，不会上传 |
 | **古国巡礼** | 第 5 个图层：68 古国底图上的诸国一宫（85 社，含论社）、国府（85 处推定地）、国分寺（67 处）。一宫可在网站上参拜盖印；人在神社 1 公里内时「实地打卡」，盖金色的「亲临」印；御朱印帐新增「诸国一宫」篇 |
+| **古国国力** | 「时空滤镜」新增一档：把今天的人口按 68 个古国重新加起来，与江户时代（1721 年幕府调查）的人口、石高对比——武藏一国住着全日本 21% 的人，河内从江户第 43 逆袭到今天第 8，佐渡今天的人比 1721 年还少。榜单、反常识头条与「宿敌 PK」（伊贺 vs 甲贺、尾张 vs 三河……也可任选两国） |
 | **风土图层** | 拉面流派图鉴（含一碗拉面的解构图）、地酒名酿地图 |
 | **市区町村地图** | 点进任一县，看全部 1,900 多个市区町村，按古代令制国或人口着色；悬停可看读音、旧国、明治时期的旧郡、现属郡与人口。搜索框可直接搜市町村（支持简体字、假名、英文），重名分条列出；地图上显示地名；选中后 AI 向导也能就此回答；链接可直接分享到某个市町村 |
 | **圣地巡礼** | 第 4 个风土图层：动漫圣地与 NHK 大河剧名所的图钉，可按「全部 / 动漫 / 大河剧」筛选；点图钉看作品、取景地、场景与巡礼贴士，AI 向导会以热血漫迷 / 剧评人的口吻解说。每处的坐标与「作品 ↔ 地点」都经维基百科核验（47 都道府县共 111 处） |
@@ -37,6 +38,13 @@
 ## 📜 更新日志
 
 > 冒险者们，新版本已降临。以下为历次版本公告（最新在上）。
+
+### 📊 v2.8「六十八国国力榜」
+- **新滤镜「古国国力」开放！** 今天全日本约 1.26 亿人按 68 个古国重新分组，地图按人口、江户人口、人口密度、石高或「三百年逆袭」着色
+- 榜单可点：点哪一国，地图就飞过去；点地图上的国，榜单也跟着高亮
+- 反常识头条全部由数字算出：武藏一国比人口最少的 43 国加起来还多；隐岐全国坐不满半座东京巨蛋；佐渡、若狭、石见今天的人比 1721 年还少
+- 「宿敌 PK」：伊贺 vs 甲贺、甲斐 vs 越后、尾张 vs 三河、萨摩 vs 长州、大阪三国、备前备中备后，也可任选两国
+- 江户人口与石高出自日文维基百科（幕府调查，不含武士等）；跨两国的市町村整个算给主要一方，界面上如实注明是约数
 
 ### ⛩️ v2.7「诸国一宫巡拜」
 - **新图层「古国巡礼」开放！** 68 古国底图上标出诸国一宫、国府、国分寺，可按类别筛选
@@ -195,7 +203,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 
 全国地图：出典「地球地図日本」（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换为 GeoJSON。
 
-市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`（同时生成时间轴 `province_eras.json`；明治分国对照由 `python -X utf8 tools/fetch_meiji.py` 生成 `tools/meiji_provinces.json`）。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。古国巡礼（`src/data/koku_sites.json`）：`python -X utf8 tools/fetch_koku.py`（需 shapely）从维基「一宮」「国府」「国分寺」条目的表格整理并核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。
+市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`（同时生成时间轴 `province_eras.json`；明治分国对照由 `python -X utf8 tools/fetch_meiji.py` 生成 `tools/meiji_provinces.json`）。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。古国巡礼（`src/data/koku_sites.json`）：`python -X utf8 tools/fetch_koku.py`（需 shapely）从维基「一宮」「国府」「国分寺」条目的表格整理并核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。 古国国力（`src/data/kokuryoku.json`）：`python -X utf8 tools/build_kokuryoku.py`（需 shapely），今日人口按市区町村汇总；江户人口与石高整理自[日文维基百科](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」（CC BY-SA 4.0）。
 
 ## 版权与许可
 

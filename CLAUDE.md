@@ -44,6 +44,8 @@ src/data/province_names.json   「国名今犹在」：旧国 → 今天仍带�
 src/js/provnames.js            国名标签：古国悬停提示、古国卡片、详卡
 src/data/koku_sites.json       古国巡礼：诸国一宫·国府·国分寺（tools/fetch_koku.py 生成并核验）
 src/js/koku.js                 古国巡礼的卡片、详卡「古国三迹」、御朱印帐「诸国一宫」篇
+src/data/kokuryoku.json        古国国力：68 国今日人口 / 面积 / 市区町村数 + 江户人口与石高（tools/build_kokuryoku.py 生成，打进数据包）
+src/js/kokuryoku.js            古国国力：指标、着色、提示、反常识头条、榜单与宿敌 PK 卡片
 src/js/locate.js               「我在哪」：浏览器定位 → 县（map.prefAt）→ 市区町村（该县的 municipalities 文件）→ 结果卡片
 ```
 
@@ -180,6 +182,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 | 五畿七道 | **底图换成 68 令制国真实边界**（`provinces.json`，首次选该滤镜时才下载），按旧国的 `circuit` 着色；加载失败时退回按县内首个令制国着色 |
 | 战国势力 | `map_filters.sengoku_1572`：固定 **1572 年（元龟三年）信玄西上前夕** 的县内主导势力 |
 | 幕末阵营 | `map_filters.bakumatsu`：戊辰战争时县内主导势力立场（萨长土肥 / 新政府方 / 佐幕方 / 天领直辖） |
+| 古国国力 | 底图同样换成 68 国（824 年），按 `kokuryoku.js` 的指标着色（见下「古国国力」） |
 
 一县多藩、势力交错时只能取主导势力，属近似表达；切换只改 `geo.regions[].itemStyle`，不重载 GeoJSON。
 
@@ -189,6 +192,13 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 输出：`features`（`key` 日文国名、`zh/ja/en`、`kana`、`circuit`、`prefs` 今属县 id；`key: "-"` 为奄美·小笠原等令制外）+ `pref_borders`（只含陆上县与县交界的折线，不含海岸线）。
 - 前端（map.js）：`setProvinces(g)` 注册第二张底图 `provinces`；`provMode()`（历史图层 + 五畿七道 + 非时代 / 非合战）时 geo 换图，叠加 `provnames`（按面积排序的国名，`hideOverlap`）、`prefborders`（虚线县界）、`prefactive`（选中县轮廓，取自 japan.json）。两张底图共用 `boundingCoords`（japan.json 的范围），换图时比例与位置不变。点击时按坐标在 japan.json 里找所在县（`prefAt`），仍走 `onSelect(县 id)`。
 - 测试里换算点击位置时，`convertToPixel` 给的是相对地图容器的坐标，要加上 `#map` 的 `getBoundingClientRect()` 偏移。
+
+### 古国国力（kokuryoku.js）
+
+- `python -X utf8 tools/build_kokuryoku.py`（需 shapely）：今日人口与市区町村数按市区町村的 `province` 汇总（跨两国的整个算给主要一方 → 约数，界面注明）；面积取 provinces.json 的国界；江户人口（享保6年 1721、弘化3年 1846）与石高（天保5年 1834）取日文维基「江戸時代の日本の人口統計」的旧国别表（幕府调查，不含武士等；CC BY-SA 4.0，已登记）。宿敌 PK 用到的郡（`DISTRICTS`，如近江国甲贺郡）按明治旧郡汇总，只算整体属于该郡的市町村。改了市区町村数据后重跑，再 `build_bundle.py`。
+- 指标 `METRICS`：pop / pop1721 / density / koku / rise（1721 人口排名 → 今日排名的升降）。令制外（虾夷地、琉球）不计江户指标与逆袭。量级指标按排名分五档着色，逆袭按名次升降分五档。
+- 反常识头条全部由数字算出（`headlines()`），条件不成立的那条不出；东京巨蛋按棒球赛约 43,500 席（日文维基）。宿敌 PK 预设在 `PK`，一方可以是几国之和（长州 = 周防 + 长门）或一个郡。
+- 前端：`map.setPower(power)` 后滤镜 `power` 生效（`powerMode()`；旧国边界未载入时按探索进度显示）；`body.power-mode` 显示指标行 `#power-metrics`，一进入就摊开 `#power-card`。卡片摊开时 `map.setInset` 让地图中心避开它（宽屏让右侧、窄屏让底部）。点地图上的国 → `onPower(key)` 高亮榜单该行；点榜单 → `map.focusProvince` 飞过去。
 
 ### 古国演变时间轴（712 / 757 / 824 / 1869）
 
@@ -307,7 +317,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

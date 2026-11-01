@@ -9,6 +9,7 @@ import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
 import { getPosition, placeAt, locCard } from './locate.js';
+import { createPower, METRICS } from './kokuryoku.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
@@ -441,7 +442,81 @@ async function main() {
   const syncArtCard = () => {
     if (!map.provMode) closeArtCard();
     syncProvEras();
+    syncPower();
   };
+
+  // ── 古国国力：68 国按指标着色 + 榜单 / 宿敌 PK 卡片（旧国边界载入后才建） ──
+  let power = null;
+  const powerCard = $('power-card');
+  const metricBox = $('power-metrics');
+  metricBox.innerHTML = METRICS.map((m) => `<button type="button" role="tab" data-metric="${m}">${esc(t(`kr.m.${m}`))}</button>`).join('')
+    + `<button type="button" class="kr-open" data-act="kr-open">${esc(t('kr.open'))}</button>`;
+  function renderPower() {
+    if (!power || powerCard.hidden) return;
+    const top = powerCard.querySelector('.kr-body')?.scrollTop;
+    powerCard.innerHTML = power.card();
+    const body = powerCard.querySelector('.kr-body');
+    if (body && top != null) body.scrollTop = top;
+    insetPower();
+  }
+  // 卡片摊开时地图中心避开它：宽屏让出右侧，窄屏让出底部
+  function insetPower() {
+    if (powerCard.hidden) { map.setInset({}); return; }
+    map.setInset(narrow() ? { bottom: powerCard.offsetHeight + 10 } : { right: powerCard.offsetWidth + 16 });
+  }
+  function closePower() {
+    if (powerCard.hidden) return;
+    powerCard.hidden = true;
+    insetPower();
+  }
+  function openPower() {
+    if (!power) return;
+    powerCard.hidden = false;
+    renderPower();
+  }
+  // 地图上点了某国（fromList 为榜单里点的）：描白边、榜单滚到这一行
+  function focusPower(key, fromList) {
+    if (!power) return;
+    power.setFocus(key);
+    map.redraw();
+    if (fromList) map.focusProvince(key);
+    if (powerCard.hidden) openPower(); else renderPower();
+    powerCard.querySelector(`.kr-list li[data-k="${CSS.escape(key)}"]`)?.scrollIntoView({ block: 'nearest' });
+    map.hideTip();
+  }
+  function syncPower() {
+    const on = map.powerMode;
+    const was = document.body.classList.contains('power-mode');
+    document.body.classList.toggle('power-mode', on);
+    metricBox.querySelectorAll('[data-metric]').forEach((b) => {
+      const sel = b.dataset.metric === power?.metric;
+      b.classList.toggle('on', sel);
+      b.setAttribute('aria-selected', String(sel));
+    });
+    if (on && !was) openPower(); // 一进入国力就摊开榜单
+    if (!on) closePower();
+  }
+  metricBox.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="kr-open"]')) { if (powerCard.hidden) openPower(); else closePower(); return; }
+    const b = e.target.closest('[data-metric]');
+    if (!b || !power || b.dataset.metric === power.metric) return;
+    power.setMetric(b.dataset.metric);
+    map.redraw();
+    updateLegend(map);
+    syncPower();
+    renderPower();
+    audio.play('click');
+  });
+  powerCard.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="kr-close"]')) { closePower(); return; }
+    const li = e.target.closest('.kr-list li[data-k]');
+    if (li) { focusPower(li.dataset.k, true); return; }
+    if (power?.handle(e)) renderPower();
+  });
+  powerCard.addEventListener('change', (e) => {
+    const sel = e.target.closest('[data-pk-side]');
+    if (sel && power) { power.pick(sel); renderPower(); }
+  });
 
   // ── 古国演变时间轴：712 / 757 / 824 / 1869（时间轴数据第一次用到时才下载） ──
   const eraBox = $('prov-eras');
@@ -598,6 +673,7 @@ async function main() {
     koku: kokuSites,
     onKoku: (s) => openKoku(s),
     onProvince: (p) => openArtCard(p),
+    onPower: (key) => focusPower(key, false),
     provTipExtra: (key) => namesTip(namesByKey.get(key)),
     onSelect(id) {
       if (app.battle) exitBattle();
@@ -741,11 +817,19 @@ async function main() {
   let provinces = null;
   function ensureProvinces() {
     provinces ??= loadProvinces()
-      .then((g) => { map.setProvinces(g); updateLegend(map); syncProvEras(); })
+      .then((g) => {
+        map.setProvinces(g);
+        if (data.kokuryoku) {
+          power = createPower(data.kokuryoku, g);
+          map.setPower(power);
+        }
+        updateLegend(map);
+        syncArtCard();
+      })
       .catch((err) => console.warn('令制国边界加载失败，改按县近似着色', err));
   }
   function applyFilter(m) {
-    if (m === 'circuit') ensureProvinces();
+    if (m === 'circuit' || m === 'power') ensureProvinces();
     queueMicrotask(syncArtCard);
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
     uiPref.set('filter', map.setMode(m));
@@ -994,7 +1078,7 @@ async function main() {
   updateGoshuinCount();
   map.setVisited(set);
   map.setKokuStamps(ichinomiya.get());
-  if (map.setMode(uiPref.get('filter', 'explore')) === 'circuit') ensureProvinces();
+  if (['circuit', 'power'].includes(map.setMode(uiPref.get('filter', 'explore')))) ensureProvinces();
   applyLayer(uiPref.get('layer', 'history'));
   renderWelcome(detailEl);
   guide.refreshMode();

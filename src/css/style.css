@@ -874,6 +874,46 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 body.prov-mode .prov-eras { display: inline-flex; align-self: flex-start; }
 body.prov-mode .prov-eras button.on { background: #7a5c9e; }
 
+/* 古国国力：指标行 + 榜单 / 宿敌 PK 卡片 */
+.power-metrics { display: none; }
+body.power-mode .power-metrics { display: inline-flex; align-self: flex-start; }
+body.power-mode .power-metrics button.on { background: #b0703c; }
+.power-metrics .kr-open { color: var(--kin); border-left: 1px solid var(--line); border-radius: 0 16px 16px 0; margin-left: 2px; }
+.muni-card.power-card { top: 160px; width: 330px; max-height: calc(100% - 260px); display: flex; flex-direction: column; overflow: hidden; }
+.muni-card.power-card[hidden] { display: none; }
+.kr-fact { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 10px; padding: 8px 10px; border-radius: 8px;
+  background: rgba(212,163,115,.1); border: 1px solid rgba(212,163,115,.25); font-size: 12.5px; line-height: 1.55; color: #f0e2c8; }
+.kr-fact span { flex: 1; }
+.kr-fact button { flex: none; border: 0; background: none; color: var(--kin); font-size: 11.5px; cursor: pointer; padding: 0; white-space: nowrap; }
+.kr-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.kr-tabs button { flex: 1; border: 1px solid var(--line); background: transparent; color: var(--text-2); border-radius: 7px; padding: 5px 0; font-size: 12.5px; cursor: pointer; }
+.kr-tabs button.on { background: var(--kin); border-color: var(--kin); color: var(--bg); font-weight: 700; }
+.kr-body { overflow-y: auto; min-height: 0; flex: 1; padding-right: 2px; }
+.kr-list { list-style: none; margin: 0; padding: 0; font-size: 12.5px; }
+.kr-list li { display: grid; grid-template-columns: 22px 44px minmax(0, 1fr) auto; gap: 6px; align-items: center; padding: 4px 4px; border-radius: 6px; cursor: pointer; }
+:root[lang="en"] .kr-list li { grid-template-columns: 22px 68px minmax(0, 1fr) auto; }
+.kr-list li:hover { background: rgba(255,255,255,.05); }
+.kr-list li.on { background: rgba(212,163,115,.18); }
+.kr-list .no { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; font-size: 11px; }
+.kr-list .nm { font-family: var(--serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kr-list .bar { height: 7px; border-radius: 4px; background: rgba(255,255,255,.05); overflow: hidden; }
+.kr-list .bar i { display: block; height: 100%; border-radius: 4px; }
+.kr-list .val { color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 11.5px; }
+.kr-list .val b.up { color: #ff8a6a; }
+.kr-list .val b.down { color: #8fb0e0; }
+.kr-pk-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.kr-pk-chips button { border: 1px solid var(--line); background: transparent; color: var(--text-2); border-radius: 14px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
+.kr-pk-chips button.on { border-color: var(--kin); color: var(--kin); }
+.kr-pk-pick { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 11px; color: var(--muted); }
+.kr-pk-pick select { flex: 1; min-width: 0; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; font-size: 13px; }
+.pk-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+.pk-table th, .pk-table td { padding: 5px 4px; border-top: 1px solid var(--line-soft); text-align: right; white-space: nowrap; }
+.pk-table tr:first-child th { border-top: 0; font: 700 13px var(--serif); color: var(--text); white-space: normal; }
+.pk-table th:first-child { text-align: left; color: var(--muted); font-weight: 400; }
+.pk-table td.win { color: var(--kin); font-weight: 700; }
+.kr-note { margin: 8px 0 0; font-size: 10.5px; line-height: 1.5; color: var(--muted); }
+.power-card > :not(.kr-body) { flex: none; }
+
 /* 我在哪 */
 .locate-btn {
   position: absolute; right: 16px; bottom: 104px; z-index: 3; width: 42px; height: 42px; border-radius: 50%;
@@ -1021,6 +1061,12 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .muni-bar .search input { width: 100%; }
   .muni-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-width: none; }
   .muni-card.art-card { top: auto; bottom: 10px; width: auto; max-width: none; max-height: 38%; padding: 10px 12px; }
+  .muni-card.power-card { max-height: 46%; }
+  .power-card .kr-fact { margin: 6px 0 8px; padding: 6px 8px; font-size: 12px; }
+  .power-card .kr-tabs button { padding: 4px 0; }
+  .kr-pk-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .kr-pk-chips::-webkit-scrollbar { display: none; }
+  .kr-pk-chips button { flex: none; }
   .art-card .muni-name { font-size: 16px; }
   .art-card .muni-sub { margin-bottom: 4px; }
   .art-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; padding-top: 6px; }

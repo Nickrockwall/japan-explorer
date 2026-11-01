@@ -52,6 +52,8 @@ export const FILTERS = {
     key: (p) => p.map_filters.bakumatsu,
     cats: cats('bk', { satcho: '#c23531', shinseifu: '#d98b6a', sabaku: '#4f6fa8', tenryo: '#d4a373', outside: '#3a3a42' }),
   },
+  // 古国国力：68 国按人口等指标着色，配色与图例由 kokuryoku.js 提供（setPower）；旧国边界未载入时按探索进度显示
+  power: { label: label('filter', 'power'), caption: label('filterCap', 'power') },
 };
 
 // 风土图层
@@ -143,7 +145,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [] }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -234,7 +236,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       const byKey = Object.fromEntries(e.legend.map((x) => [x.key, [x.label, x.color]]));
       return { label: e.short, cat: (id) => byKey[e.prefecture_keys[id]] };
     }
-    if (state.filter !== 'explore') {
+    if (state.filter !== 'explore' && FILTERS[state.filter].key) {
       const f = FILTERS[state.filter];
       return { label: f.label, cat: (id) => f.cats[f.key(prefs.get(id))] };
     }
@@ -403,9 +405,12 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   }
 
   const provMode = () => !!prov && state.layer === 'history' && !state.era && !state.battle && state.filter === 'circuit';
-  // 旧国底图：五畿七道滤镜，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
-  const provBaseOn = () => !!prov && !state.battle && (provMode() || state.layer === 'koku');
-  const curProv = () => (state.layer === 'koku' ? buildProv('824') : prov);
+  // 古国国力：同样用 824 年的 68 国（统计是按这 68 国做的）
+  let power = null;
+  const powerMode = () => !!prov && !!power && state.layer === 'history' && !state.era && !state.battle && state.filter === 'power';
+  // 旧国底图：五畿七道滤镜、古国国力，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
+  const provBaseOn = () => !!prov && !state.battle && (provMode() || powerMode() || state.layer === 'koku');
+  const curProv = () => (state.layer === 'koku' || powerMode() ? buildProv('824') : prov);
 
   function provRegion(f) {
     if (state.layer === 'koku') {
@@ -416,10 +421,12 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         label: { show: false },
       };
     }
-    const c = FILTERS.circuit.cats[f.properties.circuit]?.[1] || COLOR.base;
+    const c = (powerMode() ? power.color(f.properties.key) : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
+    const on = powerMode() && f.properties.key === power.focus;
     return {
       name: f.properties.key,
-      itemStyle: { areaColor: c, borderColor: COLOR.border, borderWidth: 0.9, shadowBlur: 0 },
+      itemStyle: on ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.55)', shadowBlur: 8 }
+        : { areaColor: c, borderColor: COLOR.border, borderWidth: 0.9, shadowBlur: 0 },
       emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.4 }, label: { show: false } },
       label: { show: false },
     };
@@ -473,14 +480,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     });
   }
 
-  // 手机竖屏：工具条和图例 / 时空滑块盖在地图上下，把地图中心放到中间露出的空白处
+  // 手机竖屏：工具条和图例 / 时空滑块盖在地图上下，把地图中心放到中间露出的空白处。
+  // inset：浮在地图上的大卡片（如国力榜）占去的右侧宽度 / 底部高度，地图中心随之避开
+  let inset = { right: 0, bottom: 0 };
   function layoutCenter() {
     const pane = el.getBoundingClientRect();
-    if (innerWidth > 560 || !pane.height) return ['50%', '50%'];
+    if (!pane.height) return ['50%', '50%'];
+    const x = inset.right ? Math.round((pane.width - inset.right) / 2) : '50%';
+    if (innerWidth > 560) return [x, inset.bottom ? Math.round((pane.height - inset.bottom) / 2) : '50%'];
     const pad = (sel) => el.parentElement.querySelector(sel)?.getBoundingClientRect();
     const top = (pad('.toolbar-row')?.bottom ?? pane.top) - pane.top + 44; // 再留一行滤镜
-    const bottom = (pad('.timebar')?.top || pane.bottom) - pane.top - 60;   // 图例约 60px
-    return ['50%', Math.round((top + bottom) / 2)];
+    let bottom = (pad('.timebar')?.top || pane.bottom) - pane.top - 60;     // 图例约 60px
+    if (inset.bottom) bottom = Math.min(bottom, pane.height - inset.bottom - 10);
+    return [x, Math.round((top + bottom) / 2)];
   }
 
   function provTip(f) {
@@ -488,6 +500,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const p = f.properties;
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
     if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
+    if (powerMode()) {
+      return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}</div>
+        <div style="color:#d4a373;margin-top:2px">${now}</div><div style="margin-top:4px;line-height:1.6">${power.tip(p.key)}</div>`;
+    }
     const [lb, color] = FILTERS.circuit.cats[p.circuit];
     const extra = provTipExtra(p.key);
     const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#b4ada3">${p.kana}</span>` : '';
@@ -582,6 +598,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         ?? (f?.properties.prefs.length === 1 ? f.properties.prefs[0] : null);
       if (id) onSelect(id);
       if (f && provMode()) onProvince(f.properties);
+      if (f?.properties.zh && powerMode()) onPower(f.properties.key);
       return;
     }
     const id = idByName.get(params.name);
@@ -617,6 +634,20 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       render();
     },
     get provEra() { return provEra; },
+    // 古国国力：传入 kokuryoku.js 的 createPower() 结果；换指标、选中某国后调 redraw
+    setPower(p) { power = p; render(); },
+    setInset(i) {
+      const next = { right: 0, bottom: 0, ...i };
+      if (next.right === inset.right && next.bottom === inset.bottom) return; // 卡片重绘时尺寸没变就不挪地图
+      inset = next;
+      chart.setOption({ geo: { layoutCenter: layoutCenter() } });
+    },
+    get powerMode() { return powerMode(); },
+    redraw: () => render(),
+    focusProvince(key) {
+      const f = buildProv('824').byKey.get(key);
+      if (f) setView({ center: centroid(f.geometry), zoom: Math.max(getView().zoom, 2.6) });
+    },
     // 选县时顺带更新已探索集合，只重画一次
     select(id, visited) { activeId = id; if (visited) visitedSet = visited; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
@@ -700,6 +731,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
             .map((x) => [x.label, x.color, Object.values(e.prefecture_keys).filter((k) => k === x.key).length])
             .filter((x) => x[2]),
         };
+      } else if (powerMode()) {
+        return power.legend();
       } else if (provMode()) {
         const counts = new Map();
         for (const f of prov.features) if (f.properties.zh) counts.set(f.properties.circuit, (counts.get(f.properties.circuit) || 0) + 1);
@@ -707,7 +740,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           caption: provEra === '824' ? t('prov.cap') : `${t(`prov.era.${provEra}`)} ${t('prov.approx')}`,
           items: Object.entries(FILTERS.circuit.cats).map(([k, [lb, color]]) => [lb, color, counts.get(k)]).filter((x) => x[2]),
         };
-      } else if (state.filter === 'explore') {
+      } else if (state.filter === 'explore' || state.filter === 'power') { // 国力的旧国边界未就绪时同探索进度
         return { caption: FILTERS.explore.caption, items: [[t('lg.unvisited'), COLOR.base], [t('lg.visited'), COLOR.visited], [t('lg.active'), COLOR.active]] };
       } else {
         ({ caption, cats, key } = FILTERS[state.filter]);

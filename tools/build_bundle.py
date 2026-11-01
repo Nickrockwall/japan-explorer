@@ -123,7 +123,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang)}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json'))}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))
