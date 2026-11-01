@@ -1,5 +1,5 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
-import { loadAll, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
@@ -533,7 +533,15 @@ async function main() {
       b.setAttribute('aria-selected', on);
     });
   }
+  // 五畿七道滤镜第一次打开时下载真实旧国边界；失败就沿用按县近似着色
+  let provinces = null;
+  function ensureProvinces() {
+    provinces ??= loadProvinces()
+      .then((g) => { map.setProvinces(g); updateLegend(map); })
+      .catch((err) => console.warn('令制国边界加载失败，改按县近似着色', err));
+  }
   function applyFilter(m) {
+    if (m === 'circuit') ensureProvinces();
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
     uiPref.set('filter', map.setMode(m));
     syncFilterButtons();
@@ -745,7 +753,7 @@ async function main() {
   updateCounter(set);
   updateGoshuinCount();
   map.setVisited(set);
-  map.setMode(uiPref.get('filter', 'explore'));
+  if (map.setMode(uiPref.get('filter', 'explore')) === 'circuit') ensureProvinces();
   applyLayer(uiPref.get('layer', 'history'));
   renderWelcome(detailEl);
   guide.refreshMode();

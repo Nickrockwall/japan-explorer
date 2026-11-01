@@ -232,6 +232,28 @@ def check_pilgrimage():
                 err(f'i18n/{lang}/pilgrimage.json', f'{sid} 的字段应为 work / place / scene / tips')
 
 
+def check_provinces():
+    """令制国边界：恰好 68 国、与市区町村数据里出现的旧国一一对应、七道取值合法（改了市区町村后要重跑 build_provinces.py）"""
+    data = load('src', 'data', 'provinces.json')
+    keys = {f['properties']['key'] for f in data['features']}
+    real = [f['properties'] for f in data['features'] if f['properties']['circuit'] != '令制外']
+    if len(real) != 68:
+        err('provinces', f'令制国应为 68 个，实际 {len(real)}')
+    circuits = set(cats('circuit'))
+    for p in real:
+        if p['circuit'] not in circuits:
+            err('provinces', f'{p["key"]} 的七道取值非法：{p["circuit"]}')
+    used = set()
+    for i in range(1, 48):
+        for f in load('src', 'data', 'municipalities', f'{i:02d}.json')['features']:
+            used.add(f['properties'].get('province') or '-')
+    if used != keys:
+        err('provinces', f'与市区町村数据不一致（请运行 python -X utf8 tools/build_provinces.py）：'
+                         f'缺 {sorted(used - keys)}，多 {sorted(keys - used)}')
+    if not data.get('pref_borders'):
+        err('provinces', '缺少县界 pref_borders')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -254,7 +276,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_pilgrimage, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_pilgrimage, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

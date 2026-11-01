@@ -18,7 +18,7 @@ The app is available in Chinese, English and Japanese.
 |---|---|
 | **Then and now** | 47 prefectures ⇄ 68 ancient provinces (the Gokishichidō circuits); provinces split across several prefectures are tagged "cross-border" |
 | **Six-stage history** | A timeline for every prefecture: Ritsuryō → Kamakura → Muromachi → Sengoku → Edo → Modern |
-| **Map filters** | Exploration progress / modern regions / ancient circuits / Sengoku powers (1572) / Bakumatsu camps |
+| **Map filters** | Exploration progress / modern regions / ancient circuits / Sengoku powers (1572) / Bakumatsu camps. "Ancient circuits" draws the **real borders** of the 68 provinces — see Musashi spanning Tokyo, Saitama and Kanagawa, or Settsu split between Osaka and Hyōgo — with prefecture borders dashed on top |
 | **Time travel** | Drag the slider or press play to see the map and seat of power in nine eras, from Asuka to today |
 | **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
 | **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
@@ -35,6 +35,13 @@ The app is available in Chinese, English and Japanese.
 ## 📜 Patch Notes
 
 > Adventurers, a new version has arrived. Here are all past announcements (latest first).
+
+### 🗾 v2.2 "Sixty-Eight Provinces"
+- **The "Ancient circuits" filter is now a real map of the old provinces!** Instead of painting today's prefectures, the map draws the 68 provinces as they were
+- Musashi spans Tokyo, Saitama and Kanagawa; Settsu is split between Osaka and Hyōgo — prefecture borders are dashed on top, so then and now line up at a glance
+- Province names on the map, with more appearing as you zoom; hover for the reading, the circuit and the prefectures it covers today
+- Clicking still selects the prefecture you clicked in
+- Borders are pieced together from 1,900+ municipalities by province (a municipality spanning two provinces goes to the main one, so they are approximate)
 
 ### 🥁 v2.1 "Taiko & Koto"
 - **Sound effects are live!** A bamboo *tok* on the map, a *dong* of taiko on every stamp, a conch-shell horn to open each battle and war drums at every clash
@@ -150,7 +157,7 @@ History, local in-jokes, ramen and sake entries follow commonly accepted account
 
 National map: source 「地球地図日本」 (Global Map Japan, Geospatial Information Authority of Japan), converted to GeoJSON by [dataofjapan/land](https://github.com/dataofjapan/land).
 
-Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`.
+Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`. The 68 province borders (`src/data/provinces.json`) are merged from the municipalities by province: `pip install shapely`, then `python -X utf8 tools/build_provinces.py`.
 
 ## Copyright & License
 

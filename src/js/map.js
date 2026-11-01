@@ -1,7 +1,7 @@
 // ECharts 日本全图：geo 坐标系 + 时空滤镜 / 时代滑块 / 风土图层 / 合战沙盘
 // 底图用 geo 组件渲染（regions 着色），map 系列挂在 geo 上（geoIndex）负责点击与悬停；
 // 首都脉冲、进军飞线、战场爆点、酒樽徽记都叠加在同一个 geo 坐标系里。
-import { t, label, prefName } from './i18n.js';
+import { t, label, prefName, lang } from './i18n.js';
 const COLOR = {
   base: '#2e2e36',
   visited: 'rgba(212,163,115,0.55)',
@@ -101,6 +101,43 @@ function centroid(geometry) {
   return best;
 }
 
+// 多边形面积（平方度），用于给旧国名标签排优先级
+function areaOf(geometry) {
+  const polys = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
+  let sum = 0;
+  for (const poly of polys) {
+    const ring = poly[0];
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) sum += ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+  }
+  return Math.abs(sum) / 2;
+}
+
+function geoBounds(geo) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const f of geo.features) {
+    const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    for (const q of polys) for (const [x, y] of q[0]) {
+      x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+    }
+  }
+  return [[x0, y1], [x1, y0]]; // ECharts boundingCoords：左上、右下
+}
+
+function inRing(pt, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+// 旧国显示名：中文 / 日文去掉「国」，英文去掉「Province」（琉球王国等令制外的名字不动）
+const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
+  : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
+const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
+
 export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
@@ -116,6 +153,23 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
     center.set(id, centroid(f.geometry));
   }
   echarts.registerMap('japan', geo);
+  // 两张底图（县 / 旧国）共用同一取景范围，切换时比例与位置不变
+  const bounds = geoBounds(geo);
+
+  // 点击坐标 → 所在县（令制国底图下点到哪个县仍选哪个县）
+  const prefShapes = geo.features.map((f) => {
+    const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    const xs = polys.flatMap((q) => q[0].map((c) => c[0]));
+    const ys = polys.flatMap((q) => q[0].map((c) => c[1]));
+    return { id: f.properties.id, polys, box: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] };
+  });
+  const prefAt = ([x, y]) => prefShapes.find(({ polys, box }) =>
+    x >= box[0] && x <= box[2] && y >= box[1] && y <= box[3]
+    && polys.some((q) => inRing([x, y], q[0]) && !q.slice(1).some((h) => inRing([x, y], h))))?.id;
+
+  // 令制国真实边界：五畿七道滤镜下替换底图（tools/build_provinces.py 生成，setProvinces 按需传入）
+  let prov = null;
+  let shownMap = 'japan';
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
   const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0, spotType: 'all', spotId: null };
@@ -273,15 +327,72 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
     ];
   }
 
+  const provMode = () => !!prov && state.layer === 'history' && !state.era && !state.battle && state.filter === 'circuit';
+
+  function provRegion(f) {
+    const c = FILTERS.circuit.cats[f.properties.circuit]?.[1] || COLOR.base;
+    return {
+      name: f.properties.key,
+      itemStyle: { areaColor: c, borderColor: COLOR.border, borderWidth: 0.9, shadowBlur: 0 },
+      emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.4 }, label: { show: false } },
+      label: { show: false },
+    };
+  }
+
+  // 旧国名标签（大国优先，放不下的自动隐藏，放大后显示更多）+ 虚线县界 + 选中县的轮廓
+  function provSeries() {
+    const on = provMode();
+    const active = on && activeId ? prefShapes.find((x) => x.id === activeId) : null;
+    return [
+      {
+        id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0,
+        label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+          textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2.5, formatter: '{b}' },
+        labelLayout: { hideOverlap: true },
+        data: on ? prov.labels : [],
+      },
+      {
+        id: 'prefborders', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true,
+        lineStyle: { color: 'rgba(255,255,255,.5)', width: 0.8, type: [3, 3], opacity: 1 },
+        data: on ? prov.borders : [],
+      },
+      {
+        id: 'prefactive', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true,
+        lineStyle: { color: '#fff', width: 2, opacity: 1, shadowColor: 'rgba(255,255,255,.6)', shadowBlur: 8 },
+        data: active ? active.polys.map((q) => ({ coords: q[0] })) : [],
+      },
+    ];
+  }
+
   function render() {
-    const sc = scheme();
+    const pm = provMode();
+    const sc = pm ? null : scheme();
+    const geoOpt = { regions: pm ? prov.features.map(provRegion) : [...nameById.keys()].map((id) => region(id, sc)) };
+    // 换底图时带上当前视角，免得跳回默认位置
+    const want = pm ? 'provinces' : 'japan';
+    if (want !== shownMap) {
+      Object.assign(geoOpt, { map: want }, getView());
+      shownMap = want;
+    }
     chart.setOption({
-      geo: { regions: [...nameById.keys()].map((id) => region(id, sc)) },
+      geo: geoOpt,
       series: [
-        { id: 'prefs', data: [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(),
+        { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
+        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(),
       ],
     });
+  }
+
+  function provTip(f) {
+    if (!f) return '';
+    const p = f.properties;
+    const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
+    if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
+    const [lb, color] = FILTERS.circuit.cats[p.circuit];
+    const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#b4ada3">${p.kana}</span>` : '';
+    return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}${kana}</div>
+      <div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color};margin-right:6px"></span>${lb}</div>
+      <div style="color:#d4a373;margin-top:3px">${now}</div>`;
   }
 
   chart.setOption({
@@ -305,6 +416,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
           return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
         }
         if (['origins', 'impact', 'markers'].includes(params.seriesId)) return `<b>${params.name}</b>`;
+        if (provMode() && params.seriesId === 'prefs') return provTip(prov.byKey.get(params.name));
         const p = prefs.get(params.value);
         if (!p) return '';
         const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name).join(' · ');
@@ -324,6 +436,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
     },
     geo: {
       map: 'japan',
+      boundingCoords: bounds,
       roam: true,
       // GeoJSON 含小笠原等远岛，范围很大；默认视角对准本土四岛 + 冲绳
       center: homeView().center,
@@ -339,7 +452,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(),
     ],
   });
   render();
@@ -351,6 +464,14 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
       return;
     }
     if (params.seriesId !== 'prefs' || state.battle) return;
+    if (provMode()) {
+      // 旧国底图下按点击位置找县；落在两套边界的细缝里时，只跨一县的国直接取那个县
+      const f = prov.byKey.get(params.name);
+      const id = prefAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))
+        ?? (f?.properties.prefs.length === 1 ? f.properties.prefs[0] : null);
+      if (id) onSelect(id);
+      return;
+    }
     const id = idByName.get(params.name);
     if (id) onSelect(id);
   });
@@ -366,6 +487,20 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
   return {
     onSelect,
     setVisited(set) { visitedSet = set; render(); },
+    // 传入 provinces.json 后，五畿七道滤镜改用真实旧国边界
+    setProvinces(g) {
+      for (const f of g.features) f.properties.name = f.properties.key;
+      echarts.registerMap('provinces', g);
+      prov = {
+        features: g.features,
+        byKey: new Map(g.features.map((f) => [f.properties.key, f])),
+        borders: g.pref_borders.map((coords) => ({ coords })),
+        labels: g.features.filter((f) => f.properties.zh)
+          .map((f) => ({ f, a: areaOf(f.geometry) })).sort((x, y) => y.a - x.a)
+          .map(({ f }) => ({ name: provLabel(f.properties), value: centroid(f.geometry) })),
+      };
+      render();
+    },
     select(id) { activeId = id; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
     setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
@@ -417,6 +552,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
           items: e.legend
             .map((x) => [x.label, x.color, Object.values(e.prefecture_keys).filter((k) => k === x.key).length])
             .filter((x) => x[2]),
+        };
+      } else if (provMode()) {
+        const counts = new Map();
+        for (const f of prov.features) if (f.properties.zh) counts.set(f.properties.circuit, (counts.get(f.properties.circuit) || 0) + 1);
+        return {
+          caption: t('prov.cap'),
+          items: Object.entries(FILTERS.circuit.cats).map(([k, [lb, color]]) => [lb, color, counts.get(k)]),
         };
       } else if (state.filter === 'explore') {
         return { caption: FILTERS.explore.caption, items: [[t('lg.unvisited'), COLOR.base], [t('lg.visited'), COLOR.visited], [t('lg.active'), COLOR.active]] };

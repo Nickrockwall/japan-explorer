@@ -218,6 +218,27 @@ class Case:
         page.wait_for_timeout(300)
         assert not page.evaluate(AUDIO_DEBUG)['ready']
 
+    def provinces(self, page):
+        # 五畿七道：底图换成 68 令制国真实边界；点武藏国里的一点仍选中埼玉；换滤镜后换回县
+        self.tab(page, 'map')
+        page.click('[data-filter="circuit"]')
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('68')", timeout=15000)
+        page.wait_for_timeout(800)
+        js = '''() => { const c = echarts.getInstanceByDom(document.getElementById('map'));
+            const g = c.getOption().geo[0]; const r = document.getElementById('map').getBoundingClientRect();
+            const [x, y] = c.convertToPixel({ geoIndex: 0 }, [139.35, 36.0]); return [g.map, x + r.left, y + r.top]; }'''
+        shown, x, y = page.evaluate(js)
+        assert shown == 'provinces', f'底图应为 provinces，实际 {shown}'
+        if self.narrow:
+            page.tap('#map', position={'x': x - page.locator('#map').bounding_box()['x'], 'y': y - page.locator('#map').bounding_box()['y']})
+        else:
+            page.mouse.click(x, y)
+        page.wait_for_timeout(600)
+        assert 'pref=11' in page.evaluate('location.hash'), f'点武藏国里的埼玉应选中埼玉：{page.evaluate("location.hash")}'
+        page.click('[data-filter="region"]')
+        page.wait_for_timeout(500)
+        assert page.evaluate(js)[0] == 'japan', '换滤镜后底图应换回县'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -236,7 +257,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

@@ -36,6 +36,7 @@ src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, n
 src/data/index.json            47 县清单（id, slug, file, kanji, zh, region）
 src/data/historical_events.json  全国共享：timeline_eras（9 个时代）+ historic_battles（5 场合战）
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
+src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
 ```
 
 ## 核心模型：现代 47 都道府县 ⇄ 古代 68 令制国
@@ -168,11 +169,18 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 |---|---|
 | 探索进度 | 未探索 / 已探索 / 当前 |
 | 现代区划 | `region` 八地方 |
-| 五畿七道 | 县内**首个**令制国的 `circuit`（跨多道的县以主要国为准，tooltip 列出全部古国） |
+| 五畿七道 | **底图换成 68 令制国真实边界**（`provinces.json`，首次选该滤镜时才下载），按旧国的 `circuit` 着色；加载失败时退回按县内首个令制国着色 |
 | 战国势力 | `map_filters.sengoku_1572`：固定 **1572 年（元龟三年）信玄西上前夕** 的县内主导势力 |
 | 幕末阵营 | `map_filters.bakumatsu`：戊辰战争时县内主导势力立场（萨长土肥 / 新政府方 / 佐幕方 / 天领直辖） |
 
 一县多藩、势力交错时只能取主导势力，属近似表达；切换只改 `geo.regions[].itemStyle`，不重载 GeoJSON。
+
+### 令制国底图（五畿七道）
+
+- `python -X utf8 tools/build_provinces.py`（需 `pip install shapely`，仅生成时用）：市区町村先按「旧国 × 县」合并成小块，**一起** `coverage_simplify`，再拼出旧国与县界——两套边界由同一批边组成，叠加时完全对齐。跨两国的市町村整块归 `province`（主要一方），国界是近似。改了市区町村数据或 `province_overrides.json` 后重跑；`check_data` 会核对 68 国与市区町村里出现的旧国一致。
+- 输出：`features`（`key` 日文国名、`zh/ja/en`、`kana`、`circuit`、`prefs` 今属县 id；`key: "-"` 为奄美·小笠原等令制外）+ `pref_borders`（只含陆上县与县交界的折线，不含海岸线）。
+- 前端（map.js）：`setProvinces(g)` 注册第二张底图 `provinces`；`provMode()`（历史图层 + 五畿七道 + 非时代 / 非合战）时 geo 换图，叠加 `provnames`（按面积排序的国名，`hideOverlap`）、`prefborders`（虚线县界）、`prefactive`（选中县轮廓，取自 japan.json）。两张底图共用 `boundingCoords`（japan.json 的范围），换图时比例与位置不变。点击时按坐标在 japan.json 里找所在县（`prefAt`），仍走 `onSelect(县 id)`。
+- 测试里换算点击位置时，`convertToPixel` 给的是相对地图容器的坐标，要加上 `#map` 的 `getBoundingClientRect()` 偏移。
 
 ## historical_events.json
 
@@ -272,7 +280,7 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定
