@@ -8,6 +8,9 @@ import { esc, legalHTML } from './detail.js';
 import { audio } from './audio.js';
 import { disputeCard } from './disputed.js';
 import { createCountyView } from './korea-counties.js';
+import { placeHistory, placeCard } from './korea-place.js';
+import { getPosition } from './locate.js';
+import { disputedAt } from './disputed.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -113,7 +116,28 @@ function openStage(el, era) {
   }
 }
 
-function renderRegion(el, p, c, translated = true) {
+// 「道名今犹在」：今天的区 → 名字来源（names.json：八道与慈江道各取两座城的首字）
+const ORIGIN = { 8: 'gyeonggi', 1: 'gyeonggi', 4: 'gyeonggi', 9: 'gangwon', 26: 'gangwon', 10: 'chungcheong', 11: 'chungcheong',
+  12: 'jeolla', 13: 'jeolla', 14: 'gyeongsang', 15: 'gyeongsang', 3: 'gyeongsang', 2: 'gyeongsang', 6: 'gyeongsang',
+  17: 'pyeongan', 19: 'pyeongan', 21: 'pyeongan', 22: 'pyeongan', 24: 'hwanghae', 25: 'hwanghae', 20: 'gyeonggi',
+  27: 'hamgyeong', 28: 'hamgyeong', 23: 'jagang', 29: 'ryanggang', 18: 'rason', 5: 'chungcheong', 7: 'chungcheong', 16: 'jeolla' };
+function originHTML(id, names) {
+  const k = ORIGIN[id];
+  if (!k || !names) return '';
+  let text;
+  if (['gyeonggi', 'ryanggang', 'rason'].includes(k)) text = t(`kr.n.${k}`);
+  else {
+    const u = names.provs[k];
+    const [a, b] = names.sources.filter((s) => s.prov === k);
+    // 去掉行政单位的字，只留地名：江陵市 → 江陵、Hwangju County → Hwangju、江原道 → 江原
+    const bare = (x) => x.replace(/(市|郡|道)$/, '').replace(/ County$/, '');
+    const nm = (x) => bare((lang === 'en' ? x.en : lang === 'ja' ? x.ja : x.zh) || x.ko);
+    text = t('kr.n.two', { p: bare(lang === 'en' ? u[3] : lang === 'ja' ? u[2] : u[1]), a: nm(a), b: nm(b) });
+  }
+  return `<div class="section-h">${t('kr.n.h')}</div><div class="note kr-origin">${esc(text)}</div>`;
+}
+
+function renderRegion(el, p, c, translated = true, names = null) {
   const side = t(`kr.side.${p.side}`);
   el.innerHTML = `
     <div class="hero">
@@ -144,6 +168,7 @@ function renderRegion(el, p, c, translated = true) {
       <div class="stat"><div class="k">${t('st.area')}</div><div class="v">${Math.round(p.area).toLocaleString()} km²</div></div>
     </div>
     ${p.note ? `<div class="note">${esc(p.note[lang] || p.note.zh)}</div>` : ''}
+    ${originHTML(p.id, names)}
     ${contentHTML(c)}
     <p class="legal">${t('kr.src.region')}</p>`;
   if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
@@ -176,6 +201,7 @@ export async function main() {
   let content = await getJSON(`${MAP.data}/content/${lang}.json`);
   const translated = !!content;
   if (!content) content = await getJSON(`${MAP.data}/content/zh.json`) || {};
+  const names = await getJSON(`${MAP.data}/names.json`);
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
@@ -198,6 +224,7 @@ export async function main() {
   // 市郡区下钻：叠在地图区上层（与日本的市区町村下钻同一容器）
   const counties = createCountyView($('muni'), {
     onClose: closeCounties,
+    onKoseki: (at) => showPlace(at),
     onSelect: (code) => history.replaceState(null, '', `${stateHash(app.currentId)}&muni=1${code ? `&m=${code}` : ''}`),
   });
   function openCounties(id, code = null) {
@@ -253,7 +280,7 @@ export async function main() {
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (x) => {
         if (x.seriesId === 'regions' && app.era !== 'today') return `<b>${esc(eraName(app.era, x.name))}</b>`;
-        if (x.seriesId === 'seats') return `<b>${esc(t(`kr.s.${app.era}.${x.data.key}`))}</b>`;
+        if (x.seriesId === 'seats') return x.data.prov ? `<b>${esc(x.data.label)}</b><br><span style="color:#b4ada3">${esc(t('kr.n.tip', { p: (names.provs[x.data.prov] || [])[lang === 'en' ? 3 : lang === 'ja' ? 2 : 1] || '' }))}</span>` : `<b>${esc(x.data.label)}</b>`;
         if (x.seriesId === 'regions') {
           const p = regions.get(idByName.get(x.name));
           return p ? `<b>${esc(nameOf(p))}</b> <span style="color:#b4ada3">${esc(p.name)}</span>` : '';
@@ -298,8 +325,14 @@ export async function main() {
         id: 'seats', type: 'scatter', coordinateSystem: 'geo', z: 6, symbol: 'circle', symbolSize: 6, data: [],
         itemStyle: { color: '#f3ede2', borderColor: '#151a19', borderWidth: 1 },
         label: { show: true, position: 'right', color: '#f3ede2', fontSize: 11, fontWeight: 700, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5,
-          formatter: (x) => t(`kr.s.${app.era}.${x.data.key}`) },
+          formatter: (x) => x.data.label },
         labelLayout: { hideOverlap: true },
+      },
+      {
+        id: 'you', type: 'effectScatter', coordinateSystem: 'geo', z: 7, silent: true, symbolSize: 12, data: [],
+        rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
+        itemStyle: { color: '#5ab0ff', borderColor: '#fff', borderWidth: 2 },
+        label: { show: true, position: 'right', color: '#cfe7ff', fontSize: 12, fontWeight: 700, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: () => t('loc.you') },
       },
       {
         id: 'sea', type: 'scatter', coordinateSystem: 'geo', symbolSize: 0, silent: true, z: 3, data: [{ value: [130.9, 39.6] }],
@@ -331,7 +364,8 @@ export async function main() {
         { id: 'regions', data: (today ? geo.features.map((f) => f.properties.name) : d.features.map((f) => f.properties.key)).map((name) => ({ name })) },
         { id: 'mdl', data: today ? geo.mdl.map((coords) => ({ coords })) : [] },
         { id: 'mdl-label', data: today ? [{ value: mdlMid }] : [] },
-        { id: 'seats', data: d?.seats ? d.seats.map((s) => ({ value: s.coords, key: s.key })) : [] },
+        { id: 'seats', data: d?.seats ? d.seats.map((s) => ({ value: s.coords, label: t(`kr.s.${era}.${s.key}`) }))
+          : d?.sources ? d.sources.filter((s) => s.prov !== 'jagang' || era === '1896').map((s) => ({ value: s.coords, label: (lang === 'en' ? s.en : lang === 'ja' ? s.ja : s.zh) || s.ko, prov: s.prov })) : [] },
       ],
     });
     eraBox.querySelectorAll('button').forEach((b) => { const on = b.dataset.era === era; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
@@ -357,6 +391,47 @@ export async function main() {
   document.querySelector('.map-pane').appendChild(eraBox);
   eraBox.addEventListener('click', (e) => { const b = e.target.closest('[data-era]'); if (b) setEra(b.dataset.era); });
 
+  // 「此地古今」：定位或市郡中心 → 卡片（#loc-card）
+  const locCardEl = $('loc-card');
+  const locBtn = $('btn-locate');
+  let placeShown = null; // { rid, code }
+  function closePlace() { locCardEl.hidden = true; chart.setOption({ series: [{ id: 'you', data: [] }] }); }
+  async function showPlace(pt, { accuracy = null, located = false } = {}) {
+    const h = await placeHistory(geo.features, pt);
+    if (!h) { toast(t('kr.loc.outside')); return; }
+    const p = h.region;
+    if (p.id !== app.currentId) select(p.id);
+    closeCard();
+    if (counties.open) closeCounties();
+    const ph = content[p.id]?.dialect?.phrases?.[0];
+    locCardEl.innerHTML = placeCard(h, nameOf(p), { dialect: ph, accuracy, located });
+    locCardEl.hidden = false;
+    locCardEl.scrollTop = 0;
+    placeShown = { rid: p.id, code: h.county?.code || null };
+    if (located) chart.setOption({ series: [{ id: 'you', data: [{ value: pt }] }] });
+    if (narrow()) tabs.set('map');
+  }
+  locBtn.addEventListener('click', async () => {
+    locBtn.disabled = true;
+    locBtn.classList.add('busy');
+    try {
+      const { pt, accuracy } = await getPosition();
+      const k = disputedAt(pt);
+      if (k) { closePlace(); card.innerHTML = disputeCard(k); card.hidden = false; return; }
+      await showPlace(pt, { accuracy, located: true });
+    } catch (err) {
+      console.warn('定位失败', err);
+      toast(t(err.key || 'loc.fail'));
+    } finally {
+      locBtn.disabled = false;
+      locBtn.classList.remove('busy');
+    }
+  });
+  locCardEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="card-close"]')) closePlace();
+    if (e.target.closest('[data-act="place-counties"]') && placeShown) { closePlace(); openCounties(placeShown.rid, placeShown.code); }
+  });
+
   function updateCounter() {
     const n = visited.get().size;
     $('visited-count').textContent = n;
@@ -379,7 +454,7 @@ export async function main() {
     visited.add(id);
     updateCounter();
     paint();
-    renderRegion(detailEl, p, content[id], translated);
+    renderRegion(detailEl, p, content[id], translated, names);
     openStage(detailEl, app.era);
     $('tab-pref').textContent = nameOf(p);
     history.replaceState(null, '', stateHash(id));
@@ -396,7 +471,7 @@ export async function main() {
   card.addEventListener('click', (e) => { if (e.target.closest('[data-act="card-close"]')) closeCard(); });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-    if (!card.hidden) closeCard(); else if (counties.open) closeCounties();
+    if (!card.hidden) closeCard(); else if (!locCardEl.hidden) closePlace(); else if (counties.open) closeCounties();
   });
 
   detailEl.addEventListener('click', async (e) => {

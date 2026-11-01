@@ -81,16 +81,33 @@ SILLA_SEATS = [  # 新罗九州的州治与王京（今地）
     ('sakju', 127.73, 37.88), ('myeongju', 128.88, 37.75)]
 GORYEO_IN = set(range(1, 16)) | {17, 19, 20, 21, 22, 24, 25, 26}  # 11 世纪的北界：千里长城（鸭绿江口—定州）
 GORYEO_IN_COUNTIES = {(27, '고원군'), (27, '금야군'), (27, '정평군')}  # 东界北端：高原、永兴（金野）、定平
+# 「道名今犹在」：朝鲜八道的名字取两座城的首字（京畿除外，指王都周边）；慈江道取慈城、江界
+NAME_SOURCES = {
+    'chungcheong': [(10, '충주시'), (10, '청주시')], 'jeolla': [(12, '전주시'), (13, '나주시')],
+    'gyeongsang': [(14, '경주시'), (14, '상주시')], 'hwanghae': [(25, '황주군'), (24, '해주시')],
+    'gangwon': [(9, '강릉시'), (9, '원주시')], 'pyeongan': [(17, '평양시'), (21, '안주시')],
+    'hamgyeong': [(27, '함흥시'), (28, '경성군')], 'jagang': [(23, '자성군'), (23, '강계시')],
+}
 GORYEO_SEATS = [  # 五道两界与京畿的大致位置（标签用）
     ('gyeonggi', 126.55, 37.97), ('yanggwang', 127.35, 36.95), ('gyeongsang', 128.7, 36.05), ('jeolla', 127.0, 35.3),
     ('gyoju', 128.0, 37.75), ('seohae', 125.75, 38.35), ('bukgye', 125.6, 39.75), ('donggye', 127.4, 39.15)]
 
 
 def main():
-    counties = []
+    counties, props = [], {}
     for rid in range(1, 30):
         for f in json.load(open(os.path.join(SRC, f'{rid:02d}.json'), encoding='utf-8'))['features']:
             counties.append((rid, f['properties'].get('ko'), shape(f['geometry']).buffer(0)))
+            props[(rid, f['properties'].get('ko'))] = (f['properties'], counties[-1][2])
+    sources = []
+    for prov, towns in NAME_SOURCES.items():
+        for rid, ko in towns:
+            if (rid, ko) not in props:
+                sys.exit(f'道名来源的城不在市郡数据里：{ko}')
+            p, g = props[(rid, ko)]
+            pt = g.representative_point()
+            sources.append({'prov': prov, 'ko': ko, 'zh': p['zh'], 'ja': p['ja'], 'en': p['en'],
+                            'coords': [round(pt.x, 3), round(pt.y, 3)]})
     used = {(r, k) for r, k, _ in counties}
     for key in list(EXCEPT) + list(GORYEO_IN_COUNTIES):
         if key not in used:
@@ -122,8 +139,8 @@ def main():
     goryeo = scheme(lambda r, k: r in GORYEO_IN or (r, k) in GORYEO_IN_COUNTIES)
 
     out = {
-        '1896': {'units': {k: list(v) for k, v in P13.items()}, 'features': merge(p13), 'approx': sorted(APPROX_1896)},
-        'joseon': {'units': {k: list(v) for k, v in P8.items()}, 'features': merge(p8)},
+        '1896': {'units': {k: list(v) for k, v in P13.items()}, 'features': merge(p13), 'approx': sorted(APPROX_1896), 'sources': sources},
+        'joseon': {'units': {k: list(v) for k, v in P8.items()}, 'features': merge(p8), 'sources': sources},
         'goryeo': {'features': merge(goryeo), 'seats': [{'key': k, 'coords': [x, y]} for k, x, y in GORYEO_SEATS]},
         'silla': {'features': merge(silla), 'seats': [{'key': k, 'coords': [x, y]} for k, x, y in SILLA_SEATS]},
     }
@@ -132,6 +149,10 @@ def main():
         if missing:
             sys.exit(f'{era} 缺 {missing}')
     os.makedirs(OUT, exist_ok=True)
+    # 道名的来历（详卡用，很小，开页就加载）
+    names = {'provs': {**{k: list(v) for k, v in P8.items()}, 'jagang': ['자강도', '慈江道', '慈江道', 'Chagang']}, 'sources': sources}
+    with open(os.path.join(ROOT, 'src', 'data', 'korea', 'names.json'), 'w', encoding='utf-8') as f:
+        json.dump(names, f, ensure_ascii=False, separators=(',', ':'))
     for k, v in out.items():
         with open(os.path.join(OUT, f'{k}.json'), 'w', encoding='utf-8') as f:
             json.dump({'type': 'FeatureCollection', **v}, f, ensure_ascii=False, separators=(',', ':'))

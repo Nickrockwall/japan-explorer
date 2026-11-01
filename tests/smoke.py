@@ -300,6 +300,38 @@ class Case:
         assert not page.is_visible('#legend'), '回到今天时图例应收起'
         self.no_overflow(page)
 
+    KR_GB = {'zh': ('庆尚北道', '庆尚道', '王京'), 'en': ('North Gyeongsang', 'Gyeongsang', 'Royal capital'), 'ja': ('慶尚北道', '慶尚道', '王京')}
+    KR_HAMNAM = {'zh': '咸镜南道', 'en': 'South Hamgyong', 'ja': '咸鏡南道'}
+
+    def korea_locate(self, page):
+        # 模拟定位在庆州：今天庆尚北道，1896 庆尚北道、朝鲜庆尚道、统一新罗境内且最近的是王京
+        self.tab(page, 'map')
+        page.click('#btn-locate')
+        page.wait_for_selector('#loc-card:not([hidden])', timeout=20000)
+        text = page.text_content('#loc-card')
+        for w in self.KR_GB[self.lang]:
+            assert w in text, f'缺 {w!r}：{text[:120]!r}'
+        assert '경주시' in text or 'Gyeongju' in text or '庆州' in text or '慶州' in text, text[:120]
+        # 道名的来历：庆尚 = 庆州 + 尚州
+        self.tab(page, 'detail')
+        origin = page.text_content('#detail .kr-origin')
+        assert ('尚州' in origin or 'Sangju' in origin), origin
+        self.tab(page, 'map')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('#loc-card', state='hidden')
+
+    def korea_koseki(self, page):
+        # 元山（今属江原道）：1896 年属咸镜南道
+        code = page.evaluate("""(async () => (await (await fetch('src/data/korea/counties/26.json')).json())
+            .features.find((f) => f.properties.ko === '원산시').properties.code)()""")
+        page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=26&muni=1&m={code}')
+        page.reload()
+        page.wait_for_selector('#muni .muni-card:not([hidden])', timeout=15000)
+        page.click('#muni [data-act="koseki"]')
+        page.wait_for_selector('#loc-card:not([hidden])', timeout=15000)
+        assert self.KR_HAMNAM[self.lang] in page.text_content('#loc-card'), page.text_content('#loc-card')[:120]
+        self.no_overflow(page)
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -618,7 +650,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
@@ -651,6 +683,7 @@ def main():
                         page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name == 'tour',
                                       geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
                                       else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
+                                      else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
                                       else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
                         for step in steps:
                             getattr(c, step)(page)

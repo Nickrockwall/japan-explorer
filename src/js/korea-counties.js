@@ -10,7 +10,7 @@ const fmtPop = (n) => (n == null ? '—' : n.toLocaleString(lang === 'zh' ? 'zh-
 // 当前语言的名字：中文 / 日文标签缺时用韩文，英文缺时用罗马字（只有罗马字名的朝鲜郡）
 export const countyName = (p) => (lang === 'en' ? p.en : (lang === 'ja' ? p.ja : p.zh)) || p.ko || p.en;
 
-export function createCountyView(root, { onClose, onSelect = () => {} }) {
+export function createCountyView(root, { onClose, onSelect = () => {}, onKoseki = () => {} }) {
   root.innerHTML = `
     <div class="muni-map"></div>
     <div class="muni-bar">
@@ -56,7 +56,8 @@ export function createCountyView(root, { onClose, onSelect = () => {} }) {
     const q = lang === 'en' ? `${p.en} ${cur.region.en}` : (lang === 'ja' ? p.ja : p.zh) || p.ko || p.en;
     const wiki = `<a class="muni-wiki" href="https://${lang}.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}" target="_blank" rel="noopener">${t('muni.wiki')} ↗</a>`;
     const noko = !p.ko ? `<div class="muni-note">${esc(t('kr.c.noko'))}</div>` : '';
-    return `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>${head}${rows}${noko}${wiki}`;
+    const ks = `<button type="button" class="btn ks-open" data-act="koseki" data-code="${esc(p.code)}">${esc(t('kr.ks.open'))}</button>`;
+    return `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>${head}${rows}${noko}${ks}${wiki}`;
   }
 
   function legend() {
@@ -140,6 +141,7 @@ export function createCountyView(root, { onClose, onSelect = () => {} }) {
     const b = e.target.closest('button');
     if (b?.dataset.act === 'close') onClose();
     else if (b?.dataset.act === 'unselect') select(null);
+    else if (b?.dataset.act === 'koseki') { const p = cur.byCode.get(b.dataset.code); if (p) onKoseki(p.at); }
   });
   window.addEventListener('resize', () => !root.hidden && chart?.resize());
 

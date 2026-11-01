@@ -1325,7 +1325,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 
 /* ── 朝鲜半岛模式：日本独有的按钮、工具条、时代滑块与定位先隐藏（korea.js） ── */
 :root[data-map="korea"] #btn-battle, :root[data-map="korea"] #btn-book, :root[data-map="korea"] .map-toolbar,
-:root[data-map="korea"] #timebar, :root[data-map="korea"] #btn-locate, :root[data-map="korea"] #persona-switch,
+:root[data-map="korea"] #timebar, :root[data-map="korea"] #persona-switch,
 :root[data-map="korea"] #guide-mode, :root[data-map="korea"] #quick, :root[data-map="korea"] #legend,
 :root[data-map="korea"] #settings button[value="tour"] { display: none; }
 .kr-soon { opacity: .85; }
@@ -1375,3 +1375,4 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 :root[data-map="korea"].kr-era #legend { display: block; }
 .timeline .tl.hl > summary { box-shadow: inset 3px 0 0 var(--kin); }
 @media (max-width: 560px) { .kr-eras button small { display: none; } }
+.kr-origin { border-left-color: var(--ai); }
