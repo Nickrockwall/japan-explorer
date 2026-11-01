@@ -176,7 +176,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   let you = null;
   function youSeries() {
     return {
-      id: 'you', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true,
+      id: 'you', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, animation: false,
       rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
       symbolSize: 13,
       itemStyle: { color: '#5ab0ff', borderColor: '#fff', borderWidth: 2, shadowBlur: 12, shadowColor: '#5ab0ff' },
@@ -308,7 +308,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     ? koku.filter((s) => state.kokuType === 'all' || s.kind === state.kokuType) : []);
   function kokuSeries() {
     return {
-      id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3,
+      id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, animation: false,
       label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
         textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
       labelLayout: { hideOverlap: true },
@@ -425,26 +425,28 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     };
   }
 
-  // 旧国名标签（大国优先，放不下的自动隐藏，放大后显示更多）+ 虚线县界 + 选中县的轮廓
+  // 旧国名标签（大国优先，放不下的自动隐藏，放大后显示更多）+ 虚线县界 + 选中县的轮廓。
+  // 这些叠加层都关掉更新动画（animation: false）：否则换县时轮廓会从旧县的形状逐点变形到新县，
+  // 换年份时国名标签会飞来飞去，看起来像边界在漂移
   function provSeries() {
     const on = provBaseOn();
     const prov = on ? curProv() : null;
     const active = on && activeId ? prefShapes.find((x) => x.id === activeId) : null;
     return [
       {
-        id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0,
+        id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0, animation: false,
         label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
           textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2.5, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: on ? prov.labels : [],
       },
       {
-        id: 'prefborders', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true,
+        id: 'prefborders', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true, animation: false,
         lineStyle: { color: 'rgba(255,255,255,.5)', width: 0.8, type: [3, 3], opacity: 1 },
         data: on ? prov.borders : [],
       },
       {
-        id: 'prefactive', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true,
+        id: 'prefactive', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true, animation: false,
         lineStyle: { color: '#fff', width: 2, opacity: 1, shadowColor: 'rgba(255,255,255,.6)', shadowBlur: 8 },
         data: active ? active.polys.map((q) => ({ coords: q[0] })) : [],
       },
