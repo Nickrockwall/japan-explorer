@@ -23,6 +23,7 @@ The app is available in Chinese, English and Japanese.
 | **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
 | **Hiroshige prints** | All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces* (1853–56): click a province on the ancient map to see how Hiroshige painted it, and where the scene is today; the detail card lists the prints for each prefecture, viewable full size |
 | **The name lives on** | 190 things across the 68 provinces that still carry the old name: the Shinano River, Sanuki udon, Iyokan citrus, Bizen ware, Satsuma sweet potatoes, the Ōmi Railway… shown in the ancient-map tooltip, the province card and the detail card; each one checked against Wikipedia for its name and location |
+| **Where am I?** | The 📍 button on the map uses your phone's location to tell you which ancient province you're standing in, plus today's prefecture and municipality and the Meiji-era district, with that province's Hiroshige print and surviving names; worked out on your device, never uploaded |
 | **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
 | **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, province, Meiji-era districts, today's district and population. The search box finds municipalities too (kanji, kana or English) with duplicates listed separately; place names on the map; the AI guide answers about the selected place; links can point straight at a municipality |
 | **Pilgrimage** | A fourth layer of anime pilgrimage spots and NHK taiga-drama locations, filterable by type; tap a pin for the work, the location, the scene and visiting tips, and the AI guide talks about them like an otaku or a drama critic. Every spot's coordinates and work–place link are checked against Wikipedia (111 spots across all 47 prefectures) |
@@ -37,6 +38,13 @@ The app is available in Chinese, English and Japanese.
 ## 📜 Patch Notes
 
 > Adventurers, a new version has arrived. Here are all past announcements (latest first).
+
+### 📍 v2.5 "You Are Here"
+- **New "Where am I?" button on the map!** Traveling in Japan? Tap it to see which ancient province you're standing in
+- Also shows today's prefecture, municipality and Meiji-era district; municipalities spanning two provinces say so
+- Comes with that province's Hiroshige print and surviving names, plus one tap to the municipal map
+- Location is requested only when you tap, and is worked out on your device — never sent to any server
+- Clear messages if you're abroad, deny permission or have no signal
 
 ### 🏷️ v2.4 "The Name Lives On"
 - **190 things that still carry an old province name!** The Shinano River, Sanuki udon, Iyokan citrus, Bizen ware, Satsuma sweet potatoes, the Ōmi Railway… names you hear every day turn out to be over a thousand years old

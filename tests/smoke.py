@@ -56,9 +56,10 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_, china=False, no_audio=False):
+    def open(self, hash_, china=False, no_audio=False, geo=None):
+        extra = {'geolocation': geo, 'permissions': ['geolocation']} if geo else {}
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
-                                       service_workers='block')
+                                       service_workers='block', **extra)
         if no_audio:
             ctx.add_init_script(NO_AUDIO)
         page = ctx.new_page()
@@ -262,6 +263,17 @@ class Case:
         assert page.locator('.art-section .art-thumb').count() == 2, '东京都详卡应列出两幅'
         assert page.locator('.pn-section .pn-row').count() >= 2, '东京都详卡应列出武藏、伊豆的今日国名'
 
+    def locate(self, page):
+        # 模拟定位在京都中京区：选中京都府，卡片写山城国与京都市中京区，并带山城的浮世绘；可直接打开市区町村地图
+        page.click('#btn-locate')
+        page.wait_for_selector('#loc-card:not([hidden])', timeout=10000)
+        text = page.text_content('#loc-card')
+        assert '山城' in text and '中京区' in text, f'定位卡片内容不对：{text[:80]!r}'
+        assert 'pref=26' in page.evaluate('location.hash'), '应选中京都府'
+        assert page.locator('#loc-card .art-row').count() >= 1, '应带上山城国的浮世绘'
+        page.click('#loc-card [data-act="loc-muni"]')
+        page.wait_for_selector('.muni-card:not([hidden])', timeout=15000)
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -280,7 +292,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 
@@ -300,7 +312,8 @@ def main():
                     total += 1
                     page = None
                     try:
-                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken')
+                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken',
+                                      geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate' else None)
                         for step in steps:
                             getattr(c, step)(page)
                         page.wait_for_timeout(300)

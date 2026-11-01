@@ -7,7 +7,8 @@ import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
-import { provinceCard, hiroshigeSection, createViewer } from './hiroshige.js';
+import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
+import { getPosition, placeAt, locCard } from './locate.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
@@ -373,7 +374,8 @@ async function main() {
   const artCard = $('art-card');
   function closeArtCard() { artCard.hidden = true; }
   function openArtCard(p) {
-    const prints = art.filter((h) => h.province === p.key || (p.key === '武蔵国' && h.province === '江戸'));
+    closeLocCard();
+    const prints = printsOf(art, p.key);
     const names = namesByKey.get(p.key);
     if (!prints.length && !names) { closeArtCard(); return; }
     const info = map.provInfo(p);
@@ -382,6 +384,52 @@ async function main() {
     artCard.scrollTop = 0;
     map.hideTip(); // 触屏点按后提示框会留在原处，盖住卡片
   }
+  // ── 我在哪：定位 → 所在县、市区町村、旧国、明治旧郡，配该国的浮世绘与今日国名 ──
+  const locCardEl = $('loc-card');
+  const locBtn = $('btn-locate');
+  let located = null; // { pid, props }
+  function closeLocCard() {
+    if (locCardEl.hidden) return;
+    locCardEl.hidden = true;
+    map.setYou(null);
+  }
+  async function locate() {
+    locBtn.disabled = true;
+    locBtn.classList.add('busy'); // 按钮转圈表示正在定位
+    try {
+      const { pt, accuracy } = await getPosition();
+      const pid = map.prefAt(pt);
+      if (!pid) { closeLocCard(); toast(t('loc.outside')); return; }
+      const place = await placeAt(pid, pt);
+      if (app.battle) exitBattle();
+      closeMuni();
+      closeArtCard();
+      if (pid !== app.currentId) map.onSelect(pid);
+      tabs.set('map');
+      const key = place.props.province;
+      const extra = key ? printRows(printsOf(art, key), prefLabel) + namesBlock(namesByKey.get(key)) : '';
+      locCardEl.innerHTML = locCard(place, prefLabel(pid), accuracy, extra);
+      locCardEl.hidden = false;
+      locCardEl.scrollTop = 0;
+      located = { pid, props: place.props };
+      map.setYou(pt);
+      audio.play('click');
+    } catch (err) {
+      console.warn('定位失败', err);
+      toast(t(err.key || 'loc.fail'));
+    } finally {
+      locBtn.disabled = false;
+      locBtn.classList.remove('busy');
+    }
+  }
+  locBtn.addEventListener('click', locate);
+  locCardEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="loc-close"]')) closeLocCard();
+    if (e.target.closest('[data-act="loc-muni"]') && located) openMuni(located.pid, { codes: [located.props.code] });
+    const b = e.target.closest('[data-act="art"]');
+    if (b) viewer.open(+b.dataset.no);
+  });
+
   // 离开古国底图（换滤镜、时代、图层、合战、下钻）时收起卡片
   const syncArtCard = () => { if (!map.provMode) closeArtCard(); };
   for (const el of [artCard, detailEl]) {
@@ -733,6 +781,7 @@ async function main() {
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
     if (!artCard.hidden) closeArtCard();
+    else if (!locCardEl.hidden) closeLocCard();
     else if (!pilCard.hidden) closeSpot();
     else if (app.battle) exitBattle();
     else closeMuni();

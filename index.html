@@ -131,6 +131,12 @@
       <!-- 圣地巡礼：点图钉弹出的作品卡（pilgrimage.js 填充） -->
       <div class="muni-card pil-card" id="pil-card" hidden aria-live="polite"></div>
 
+      <!-- 我在哪：定位按钮与结果卡片（locate.js） -->
+      <button type="button" class="locate-btn" id="btn-locate" data-i18n-title="loc.btn" data-i18n-aria="loc.btn" title="我在哪" aria-label="我在哪">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="muni-card art-card loc-card" id="loc-card" hidden aria-live="polite"></div>
+
       <!-- 古国地图：点一国弹出广重《六十余州名所图会》（hiroshige.js 填充） -->
       <div class="muni-card art-card" id="art-card" hidden aria-live="polite"></div>
 

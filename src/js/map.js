@@ -167,6 +167,20 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     x >= box[0] && x <= box[2] && y >= box[1] && y <= box[3]
     && polys.some((q) => inRing([x, y], q[0]) && !q.slice(1).some((h) => inRing([x, y], h))))?.id;
 
+  // 「我在哪」的位置标记
+  let you = null;
+  function youSeries() {
+    return {
+      id: 'you', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true,
+      rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
+      symbolSize: 13,
+      itemStyle: { color: '#5ab0ff', borderColor: '#fff', borderWidth: 2, shadowBlur: 12, shadowColor: '#5ab0ff' },
+      label: { show: true, position: 'right', color: '#cfe7ff', fontSize: 12, fontWeight: 700,
+        textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: () => t('loc.you') },
+      data: you && !state.battle ? [{ value: you }] : [],
+    };
+  }
+
   // 令制国真实边界：五畿七道滤镜下替换底图（tools/build_provinces.py 生成，setProvinces 按需传入）
   let prov = null;
   let shownMap = 'japan';
@@ -378,7 +392,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       geo: geoOpt,
       series: [
         { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(), youSeries(),
       ],
     });
   }
@@ -453,7 +467,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(), youSeries(),
     ],
   });
   render();
@@ -531,6 +545,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     get state() { return { ...state }; },
     get provMode() { return provMode(); },
     hideTip: () => chart.dispatchAction({ type: 'hideTip' }),
+    prefAt,
+    // 标出「我在哪」的位置并拉近（null 时去掉标记）
+    setYou(pt) {
+      you = pt;
+      render();
+      if (pt) setView({ center: pt, zoom: Math.max(getView().zoom, 4.5) });
+    },
     // 旧国显示名与「今属」说明（作品卡用）
     provInfo(p) { return { label: provFull(p), now: t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') }) }; },
     // 当前图例：{ caption, items: [label, color, count?][] }

@@ -17,13 +17,12 @@ const thumb = (h, cls = '') => `
     <img src="${esc(h.img)}" alt="" loading="lazy" width="560" height="820">
   </button>`;
 
-// 古国地图上点一国弹出的卡片：该国的作品（武藏另有「江户」一幅）
-export function provinceCard(provLabel, nowList, prints, prefName, extra = '') {
-  return `
-    <button type="button" class="muni-card-x" data-act="art-close" aria-label="${esc(t('close'))}">×</button>
-    <div class="muni-name">${esc(provLabel)}</div>
-    <div class="muni-sub">${esc(nowList)}</div>
-    ${prints.map((h) => `
+// 一国的作品（武藏另有「江户」一幅）
+export const printsOf = (prints, key) => prints.filter((h) => h.province === key || (key === '武蔵国' && h.province === '江戸'));
+
+// 作品行：缩略图 + 题名 + 今天的地点（古国卡片与「我在哪」共用）
+export function printRows(prints, prefName) {
+  return prints.map((h) => `
       <div class="art-row">
         ${thumb(h)}
         <div class="art-meta">
@@ -31,7 +30,16 @@ export function provinceCard(provLabel, nowList, prints, prefName, extra = '') {
           <div class="art-title">${titleHTML(h)}</div>
           <div class="art-where">${esc(where(h, prefName))}</div>
         </div>
-      </div>`).join('')}
+      </div>`).join('');
+}
+
+// 古国地图上点一国弹出的卡片
+export function provinceCard(provLabel, nowList, prints, prefName, extra = '') {
+  return `
+    <button type="button" class="muni-card-x" data-act="art-close" aria-label="${esc(t('close'))}">×</button>
+    <div class="muni-name">${esc(provLabel)}</div>
+    <div class="muni-sub">${esc(nowList)}</div>
+    ${printRows(prints, prefName)}
     ${extra}`;
 }
 

@@ -41,6 +41,7 @@ src/data/hiroshige.json        广重《六十余州名所图会》69 幅（tool
 src/js/hiroshige.js            古国地图上的作品卡、详卡「广重笔下」、大图浏览
 src/data/province_names.json   「国名今犹在」：旧国 → 今天仍带国名的东西（tools/province_names_tool.py 核验）
 src/js/provnames.js            国名标签：古国悬停提示、古国卡片、详卡
+src/js/locate.js               「我在哪」：浏览器定位 → 县（map.prefAt）→ 市区町村（该县的 municipalities 文件）→ 结果卡片
 ```
 
 ## 核心模型：现代 47 都道府县 ⇄ 古代 68 令制国
@@ -192,6 +193,7 @@ src/js/provnames.js            国名标签：古国悬停提示、古国卡片�
 - 画中地点：画题里第一个有坐标的链接条目（`PLACE` 可指定别的条目、或写 None 表示不用链接），落到市区町村边界里；**定位结果的旧国（`province` 或 `partial`）必须与作品的国一致**，否则列为待处理。画题无链接的：该国只有一个市町村就取它；`MANUAL` 里人工确认的取人工值（市区町村名为 None = 只确定到县）；其余只记县、界面写「具体地点不详」。不要为了填满而猜地点。
 - 题名译文在工具的 `TITLES`（中 / 英；日文界面显示原题）。`build_bundle.py` 按语言拼好 `title_t`、旧国名 `prov`、市区町村名 `place` 放进数据包的 `hiroshige`（逐个文件回退加载时不显示浮世绘）。
 - 「国名今犹在」（provnames.js）：`province_names.json` 为 `{ 旧国: [{ja, zh, en, type, wiki, evidence?, evidence_note?}] }`，type ∈ place / nature / food / craft / transit / culture。新增后必须跑 `python -X utf8 tools/province_names_tool.py verify`（需 shapely）：① 名字里含国名简称或 `ALIASES` 别称；② place / transit / nature 的条目坐标在该国内（自然地物容许 60 公里），food / craft / culture 的条目正文提到该国或今属县名。通不过就不收，确需例外写 `evidence` 并在 `evidence_note` 说明（如信浓川：河口在越后）。数据包 `province_names` 每国带 `prov` 显示名与 `prefs`；`map` 的 `provTipExtra` 往古国提示里加一行，古国卡片 `namesBlock`，详卡 `namesSection`（按县涉及的旧国）。
+- 「我在哪」（locate.js）：地图右侧 `#btn-locate`，只在点按时调用 `navigator.geolocation`（超时 12 秒，不要求高精度）。县由 `map.prefAt`（japan.json）判断，市区町村在该县文件里点内判断、落空取最近的；不在任何县内 → 提示「似乎不在日本」。卡片 `#loc-card`（复用 `.art-card` 定位样式）写旧国（`province` + `partial`）、今天的县与市区町村、明治旧郡，并附该国浮世绘（`printRows`）与今日国名；`map.setYou(pt)` 放蓝色脉冲标记并拉近，关卡片时去掉。位置不发往任何地方。smoke `locate` 用 Playwright 的 `geolocation` 模拟京都中京区。
 - 前端：古国底图下 `map` 的 `onProvince(properties)` → `#art-card`（武藏另带第 17 图「江户」）；离开古国底图时 `syncArtCard` 收起。详卡 `hiroshigeSection` 列出画中地点在本县的作品。`#art` 大图对话框按编号循环翻页（‹ › / 方向键）。
 
 ## historical_events.json
@@ -292,7 +294,7 @@ src/js/provnames.js            国名标签：古国悬停提示、古国卡片�
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定
