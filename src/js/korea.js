@@ -6,6 +6,7 @@ import { visited } from './store.js';
 import { lang, t, applyStatic, stateHash, shareURL } from './i18n.js';
 import { esc, legalHTML } from './detail.js';
 import { audio } from './audio.js';
+import { disputeCard } from './disputed.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -80,19 +81,6 @@ function renderRegion(el, p) {
     <div class="note kr-soon">${t('kr.soon')}</div>
     <p class="legal">${t('kr.src.region')}</p>`;
   el.scrollTop = 0;
-}
-
-function dokdoCard() {
-  return `
-    <button type="button" class="muni-card-x" data-act="card-close" aria-label="${esc(t('close'))}">×</button>
-    <div class="loc-kicker">${esc(t('kr.disputed'))}</div>
-    <div class="muni-name">${esc(t('kr.dokdo.name'))}</div>
-    <div class="muni-sub">${esc(t('kr.dokdo.aka'))}</div>
-    <div class="muni-row"><span>${esc(t('kr.dokdo.where.k'))}</span><b>${esc(t('kr.dokdo.where'))}</b></div>
-    <div class="muni-row"><span>${esc(t('kr.dokdo.now.k'))}</span><b>${esc(t('kr.dokdo.now'))}</b></div>
-    <div class="muni-row"><span>${esc(t('kr.dokdo.kr.k'))}</span><b>${esc(t('kr.dokdo.kr'))}</b></div>
-    <div class="muni-row"><span>${esc(t('kr.dokdo.jp.k'))}</span><b>${esc(t('kr.dokdo.jp'))}</b></div>
-    <div class="muni-note">${esc(t('kr.dokdo.note'))}</div>`;
 }
 
 export async function main() {
@@ -216,7 +204,7 @@ export async function main() {
 
   function closeCard() { card.hidden = true; }
   function openDokdo() {
-    card.innerHTML = dokdoCard();
+    card.innerHTML = disputeCard('takeshima');
     card.hidden = false;
     card.scrollTop = 0;
     if (narrow()) tabs.set('map');

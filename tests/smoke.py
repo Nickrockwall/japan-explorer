@@ -167,6 +167,33 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_selector('#art-card', state='hidden')
 
+    # ── 日本模式的争议地区（disputed.js）──
+    DSP_ORDER = {'zh': ('独岛', '竹岛'), 'en': ('Dokdo', 'Takeshima'), 'ja': ('独島', '竹島')}
+    DSP_KURIL = {'zh': '北方领土', 'en': 'Northern Territories', 'ja': '北方領土'}
+
+    def disputed_split(self, page):
+        r = page.evaluate("""(async () => {
+            const { splitDisputed, disputedAt } = await import('./src/js/disputed.js');
+            const geo = await (await fetch('src/assets/geojson/japan.json')).json();
+            const { geo: g, parts } = splitDisputed(geo);
+            const inRing = (pt, ring) => { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                const [xi, yi] = ring[i], [xj, yj] = ring[j];
+                if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) c = !c; } return c; };
+            const has = (id, pt) => { const f = g.features.find((x) => x.properties.id === id);
+                const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+                return polys.some((q) => inRing(pt, q[0])); };
+            return { kunashiri: has(1, [145.95, 44.05]), etorofu: has(1, [147.9, 45.0]), shikotan: has(1, [146.75, 43.82]),
+                     suisho: has(1, [145.91, 43.44]), nosappu: has(1, [145.80, 43.385]), nemuro: has(1, [145.58, 43.33]),
+                     takeshima: has(32, [131.866, 37.241]), parts: Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, v.length])),
+                     at: [disputedAt([145.95, 44.05]), disputedAt([131.866, 37.241]), disputedAt([145.58, 43.33])],
+                     untouched: geo.features.find((x) => x.properties.id === 1).geometry.coordinates.length };
+        })()""")
+        assert not any(r[k] for k in ('kunashiri', 'etorofu', 'shikotan', 'suisho', 'takeshima')), f'争议岛仍在县里 {r}'
+        assert r['nosappu'] and r['nemuro'], f'根室被误拆 {r}'
+        assert r['parts'].get('kurils', 0) >= 10 and r['parts'].get('takeshima') == 3, f'拆出的多边形 {r["parts"]}'
+        assert r['at'] == ['kurils', 'takeshima', None], f'disputedAt {r["at"]}'
+        assert r['untouched'] > 30, '不应改动传入的 GeoJSON'
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -485,7 +512,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
