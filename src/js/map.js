@@ -2,6 +2,7 @@
 // 底图用 geo 组件渲染（regions 着色），map 系列挂在 geo 上（geoIndex）负责点击与悬停；
 // 首都脉冲、进军飞线、战场爆点、酒樽徽记都叠加在同一个 geo 坐标系里。
 import { t, label, prefName, lang } from './i18n.js';
+import { DISPUTED, disputeLabel } from './disputed.js';
 const COLOR = {
   base: '#2e2e36',
   visited: 'rgba(212,163,115,0.55)',
@@ -148,7 +149,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {} }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {}, disputed = {}, onDispute = () => {} }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -179,6 +180,38 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 「我在哪」的位置标记
   let you = null;
+  // 有争议的岛（disputed.js 从县里拆出来的多边形）：中性灰、虚线框、两个名字，可点；旧国底图（历史边界）与合战时不画
+  const dspKeys = Object.keys(disputed);
+  const dspAt = (ll) => dspKeys.find((k) => disputed[k].some((q) => inRing(ll, q[0])));
+  const dspOn = () => dspKeys.length && !provBaseOn() && !state.battle;
+  function disputedSeries() {
+    const on = dspOn();
+    return [
+      {
+        // 只负责画；点击按坐标判断（见下面 getZr 的 click），自定义路径的命中检测在交互后不可靠
+        id: 'disputed', type: 'custom', coordinateSystem: 'geo', zlevel: 1, silent: true, animation: false,
+        renderItem: (params, api) => {
+          let d = '';
+          for (const q of disputed[dspKeys[params.dataIndex]]) {
+            for (const ring of q) {
+              ring.forEach((c, i) => { const [x, y] = api.coord(c); d += `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`; });
+              d += 'Z';
+            }
+          }
+          return { type: 'path', shape: { pathData: d }, style: { fill: 'rgba(150,146,138,.32)', stroke: 'rgba(205,200,190,.85)', lineWidth: 0.8, lineDash: [3, 2] } };
+        },
+        data: on ? dspKeys.map(() => 0) : [],
+      },
+      {
+        id: 'disputed-names', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, cursor: 'pointer', symbol: 'circle',
+        itemStyle: { color: 'rgba(0,0,0,0)', borderColor: '#b9b4a8', borderWidth: 2 },
+        label: { show: true, position: 'bottom', color: '#cdc8bc', fontSize: 11, textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 2,
+          formatter: (x) => disputeLabel(dspKeys[x.dataIndex]) },
+        data: on ? dspKeys.map((k) => ({ value: DISPUTED[k].label, symbolSize: DISPUTED[k].point ? 9 : 0 })) : [],
+      },
+    ];
+  }
+
   function youSeries() {
     return {
       id: 'you', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, animation: false,
@@ -533,7 +566,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       geo: geoOpt,
       series: [
         { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), youSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), youSeries(),
       ],
     });
   }
@@ -594,6 +627,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       borderColor: '#3a3a42',
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (params) => {
+        if (params.seriesId === 'disputed-names') return `<b>${disputeLabel(dspKeys[params.dataIndex])}</b>`;
         if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
         if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#b4ada3">${params.name}</span>`;
         if (params.seriesId === 'spots') {
@@ -646,10 +680,17 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), youSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), youSeries(),
     ],
   });
   render();
+
+  // 有争议的岛：按点击坐标判断落在哪块岛上（标签与竹岛的圆点另由 disputed-names 的系列点击处理）
+  chart.getZr().on('click', (e) => {
+    if (!dspOn()) return;
+    const k = dspAt(chart.convertFromPixel({ geoIndex: 0 }, [e.offsetX, e.offsetY]));
+    if (k) onDispute(k);
+  });
 
   // 缩放跨过 KOKU_ZOOM 时重画古国巡礼的图钉
   chart.on('georoam', () => {
@@ -659,6 +700,12 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   });
 
   chart.on('click', (params) => {
+    if (params.seriesId === 'disputed-names') {
+      if (!state.battle) onDispute(dspKeys[params.dataIndex]);
+      return;
+    }
+    // 点在有争议的岛上：交给下面的 getZr 处理，不选县
+    if (dspOn() && dspAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))) return;
     if (params.seriesId === 'spots') {
       const s = spots.find((x) => x.id === params.data?.id);
       if (s) onSpot(s);

@@ -16,6 +16,7 @@ import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
+import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
 import { NARROW, SHORT, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
@@ -177,6 +178,16 @@ async function main() {
   const viewer = createViewer($('art'), art, prefLabel);
   const artCard = $('art-card');
   function closeArtCard() { artCard.hidden = true; }
+  // 有争议的岛：借用同一张卡片，只列双方立场
+  function openDispute(key) {
+    closeLocCard();
+    artCard.innerHTML = disputeCard(key);
+    artCard.hidden = false;
+    artCard.scrollTop = 0;
+    map.hideTip();
+    if (narrow()) tabs.set('map');
+    audio.play('click');
+  }
   function openArtCard(p) {
     closeLocCard();
     const prints = printsOf(art, p.key);
@@ -203,7 +214,12 @@ async function main() {
     try {
       const { pt, accuracy } = await getPosition();
       const pid = map.prefAt(pt);
-      if (!pid) { closeLocCard(); toast(t('loc.outside')); return; }
+      if (!pid) {
+        closeLocCard();
+        const key = disputedAt(pt);
+        if (key) openDispute(key); else toast(t('loc.outside'));
+        return;
+      }
       const place = await placeAt(pid, pt);
       if (app.battle) exitBattle();
       closeMuni();
@@ -428,7 +444,7 @@ async function main() {
   });
   for (const el of [artCard, detailEl]) {
     el.addEventListener('click', (e) => {
-      if (e.target.closest('[data-act="art-close"]')) closeArtCard();
+      if (e.target.closest('[data-act="art-close"], [data-act="card-close"]')) closeArtCard();
       const b = e.target.closest('[data-act="art"]');
       if (b) viewer.open(+b.dataset.no);
     });
@@ -545,7 +561,11 @@ async function main() {
   });
   const syncGuidePil = () => guide.setPilgrimage(app.layer === 'pilgrimage' && app.currentId ? spotsOf(app.currentId) : null);
 
-  const map = createMap($('map'), data.geo, prefs, {
+  // 竹岛与北方四岛从县里拆出，单独画成有争议的地区（disputed.js）
+  const dsp = splitDisputed(data.geo);
+  const map = createMap($('map'), dsp.geo, prefs, {
+    disputed: dsp.parts,
+    onDispute: (key) => openDispute(key),
     spots: pil.spots,
     emblems: data.emblems || {},
     onSpot: (s) => openSpot(s),

@@ -182,10 +182,10 @@ class Case:
             const has = (id, pt) => { const f = g.features.find((x) => x.properties.id === id);
                 const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
                 return polys.some((q) => inRing(pt, q[0])); };
-            return { kunashiri: has(1, [145.95, 44.05]), etorofu: has(1, [147.9, 45.0]), shikotan: has(1, [146.75, 43.82]),
+            return { kunashiri: has(1, [145.814, 44.088]), etorofu: has(1, [147.9, 45.0]), shikotan: has(1, [146.75, 43.82]),
                      suisho: has(1, [145.91, 43.44]), nosappu: has(1, [145.80, 43.385]), nemuro: has(1, [145.58, 43.33]),
                      takeshima: has(32, [131.866, 37.241]), parts: Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, v.length])),
-                     at: [disputedAt([145.95, 44.05]), disputedAt([131.866, 37.241]), disputedAt([145.58, 43.33])],
+                     at: [disputedAt([145.814, 44.088]), disputedAt([131.866, 37.241]), disputedAt([145.58, 43.33])],
                      untouched: geo.features.find((x) => x.properties.id === 1).geometry.coordinates.length };
         })()""")
         assert not any(r[k] for k in ('kunashiri', 'etorofu', 'shikotan', 'suisho', 'takeshima')), f'争议岛仍在县里 {r}'
@@ -193,6 +193,48 @@ class Case:
         assert r['parts'].get('kurils', 0) >= 10 and r['parts'].get('takeshima') == 3, f'拆出的多边形 {r["parts"]}'
         assert r['at'] == ['kurils', 'takeshima', None], f'disputedAt {r["at"]}'
         assert r['untouched'] > 30, '不应改动传入的 GeoJSON'
+
+    def _click_geo(self, page, lonlat, sel='#map'):
+        pt = page.evaluate("""([sel, ll]) => {
+            const el = document.querySelector(sel);
+            const c = echarts.getInstanceByDom(el);
+            const xy = c.convertToPixel({ geoIndex: 0 }, ll);
+            const r = el.getBoundingClientRect();
+            return [xy[0] + r.left, xy[1] + r.top];
+        }""", [sel, lonlat])
+        page.mouse.click(pt[0], pt[1])
+
+    def disputed_jp(self, page):
+        self.tab(page, 'map')
+        # 竹岛：空心圆点 → 争议卡，名字顺序固定
+        self._click_geo(page, [131.8667, 37.2417])
+        try:
+            page.wait_for_selector('#art-card:not([hidden])', timeout=5000)
+        except Exception:
+            raise AssertionError(f"点竹岛没弹卡（地址 {page.evaluate('location.hash')}）")
+        text = page.text_content('#art-card')
+        a, b = self.DSP_ORDER[self.lang]
+        assert a in text and b in text and text.index(a) < text.index(b), f'竹岛卡片：{text[:80]!r}'
+        page.click('#art-card [data-act="card-close"]')
+        page.wait_for_selector('#art-card', state='hidden')
+        # 国后岛：不选中北海道，弹北方四岛的卡片
+        page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).setOption({ geo: { center: [146.5, 44.2], zoom: 6 } })")
+        page.wait_for_timeout(300)
+        self._click_geo(page, [145.814, 44.088])
+        try:
+            page.wait_for_selector('#art-card:not([hidden])', timeout=5000)
+        except Exception:
+            raise AssertionError(f"点国后岛没弹卡（地址 {page.evaluate('location.hash')}）")
+        assert self.DSP_KURIL[self.lang] in page.text_content('#art-card')
+        assert page.locator('.modern-title').count() == 0, '点国后岛不应打开北海道详卡'
+        page.keyboard.press('Escape')
+        page.wait_for_selector('#art-card', state='hidden')
+
+    def locate_kurils(self, page):
+        self.tab(page, 'map')
+        page.click('#btn-locate')
+        page.wait_for_selector('#art-card:not([hidden])', timeout=15000)
+        assert self.DSP_KURIL[self.lang] in page.text_content('#art-card'), '定位在国后岛应弹争议卡'
 
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
@@ -512,7 +554,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
@@ -544,6 +586,7 @@ def main():
                     try:
                         page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name == 'tour',
                                       geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
+                                      else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
                                       else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
                         for step in steps:
                             getattr(c, step)(page)
