@@ -18,7 +18,7 @@
 |---|---|
 | **今昔対照** | 47都道府県 ⇄ 68令制国（五畿七道）。ひとつの国が複数の県に分かれた場合は「県境またぎ」と表示 |
 | **六つの時代の沿革** | 県ごとの年表：律令 → 鎌倉 → 室町 → 戦国 → 江戸 → 近現代 |
-| **時空フィルター** | 探訪状況 / 現代の地方区分 / 五畿七道 / 戦国勢力（1572年）/ 幕末の陣営。「五畿七道」では 68 令制国の**本来の境界**を描画。東京・埼玉・神奈川にまたがる武蔵、大阪と兵庫に分かれた摂津がひと目でわかり、県境は破線で重ねて表示 |
+| **時空フィルター** | 探訪状況 / 現代の地方区分 / 五畿七道 / 戦国勢力（1572年）/ 幕末の陣営。「五畿七道」では 68 令制国の**本来の境界**を描画。東京・埼玉・神奈川にまたがる武蔵、大阪と兵庫に分かれた摂津がひと目でわかり、県境は破線で重ねて表示。712・757・824・1869 年を切り替えて、旧国の誕生と分立をたどれます |
 | **時空旅行** | スライダーを動かすか再生ボタンで、飛鳥から現代まで九つの時代の勢力図と政権の中心地を表示 |
 | **合戦演武** | 桶狭間・川中島・関ヶ原・壇ノ浦・西南戦争を、布陣 → 開戦 → 転機 → 結末の四段階で再現。武将自らが解説 |
 | **広重の浮世絵** | 歌川広重『六十余州名所図会』（1853–56）全69点。旧国地図で国をクリックすると広重が描いたその国の風景と、描かれた場所が今どの県・市にあるかを表示。詳細カードにも県ごとの作品を並べ、拡大して1点ずつ見られます |
@@ -38,6 +38,13 @@
 ## 📜 アップデート履歴
 
 > 冒険者の皆さま、新バージョンが到着しました。これまでのお知らせ一覧です（新しい順）。
+
+### 🕰️ v2.6「旧国の誕生と分立」
+- **旧国地図に年表を追加：712・757・824・1869！**
+- 712年：出羽国が置かれたばかり。丹後・美作・大隅・和泉・加賀・能登・安房はまだ分かれず、種子島・屋久島は「多褹島」
+- 757年：和泉・能登が分立する一方、安房は上総に再び併合。824年に多褹島が大隅に編入され、68か国が定まる
+- 1869年の明治の分国：陸奥は五つに、出羽は二つに分かれ、蝦夷地は北海道11か国に。全国84か国
+- 明治の新国は東北・北海道の市区町村425をすべて明治の郡から対応づけ。郡と国の関係は Wikipedia のカテゴリから取得し、同名の郡や郡にまたがる市町村は一つずつ確認
 
 ### 📍 v2.5「いまここは」
 - **地図に「現在地」ボタンを追加！** 日本を旅しながらタップすると、いまいる場所がどの令制国かがわかります
@@ -180,7 +187,7 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 
 全国地図：出典「地球地図日本」（国土地理院）。[dataofjapan/land](https://github.com/dataofjapan/land) による GeoJSON 変換版を使用。
 
-市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。
+市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`（年表 `province_eras.json` も生成。明治の分国の対応表 `tools/meiji_provinces.json` は `python -X utf8 tools/fetch_meiji.py` で作成）。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。
 
 ## 著作権とライセンス
 

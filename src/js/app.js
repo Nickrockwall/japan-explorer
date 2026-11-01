@@ -1,5 +1,5 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
-import { loadAll, loadProvinces, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
@@ -430,8 +430,42 @@ async function main() {
     if (b) viewer.open(+b.dataset.no);
   });
 
-  // 离开古国底图（换滤镜、时代、图层、合战、下钻）时收起卡片
-  const syncArtCard = () => { if (!map.provMode) closeArtCard(); };
+  // 离开古国底图（换滤镜、时代、图层、合战、下钻）时收起卡片，并显示 / 隐藏古国时间轴
+  const syncArtCard = () => {
+    if (!map.provMode) closeArtCard();
+    syncProvEras();
+  };
+
+  // ── 古国演变时间轴：712 / 757 / 824 / 1869（时间轴数据第一次用到时才下载） ──
+  const eraBox = $('prov-eras');
+  eraBox.innerHTML = ['712', '757', '824', '1869'].map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t('prov.y', { y }))}</button>`).join('');
+  let erasLoad = null;
+  function syncProvEras() {
+    document.body.classList.toggle('prov-mode', map.provMode);
+    eraBox.querySelectorAll('[data-y]').forEach((b) => {
+      const on = b.dataset.y === map.provEra;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', String(on));
+    });
+  }
+  eraBox.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-y]');
+    if (!b || b.dataset.y === map.provEra) return;
+    if (b.dataset.y !== '824') {
+      erasLoad ??= loadProvinceEras().then((d) => map.setProvEras(d));
+      try { await erasLoad; } catch (err) {
+        console.warn('古国时间轴加载失败', err);
+        erasLoad = null;
+        toast(t('prov.eraFail'));
+        return;
+      }
+    }
+    closeArtCard();
+    map.setProvEra(b.dataset.y);
+    audio.play('click');
+    updateLegend(map);
+    syncProvEras();
+  });
   for (const el of [artCard, detailEl]) {
     el.addEventListener('click', (e) => {
       if (e.target.closest('[data-act="art-close"]')) closeArtCard();
@@ -618,7 +652,7 @@ async function main() {
   let provinces = null;
   function ensureProvinces() {
     provinces ??= loadProvinces()
-      .then((g) => { map.setProvinces(g); updateLegend(map); })
+      .then((g) => { map.setProvinces(g); updateLegend(map); syncProvEras(); })
       .catch((err) => console.warn('令制国边界加载失败，改按县近似着色', err));
   }
   function applyFilter(m) {

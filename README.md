@@ -16,7 +16,7 @@
 |---|---|
 | **古今对照** | 47 都道府县 ⇄ 68 令制国（五畿七道），一国被多县瓜分时标出「跨界」 |
 | **六段沿革** | 每县一条时间轴：律令 → 镰仓 → 室町 → 战国 → 江户 → 近现代 |
-| **时空滤镜** | 探索进度 / 现代区划 / 五畿七道 / 战国势力（1572 年）/ 幕末阵营。「五畿七道」显示 68 令制国的**真实边界**：武藏横跨东京·埼玉·神奈川、摄津被大阪与兵库分走，一眼可见；县界以虚线叠在上面 |
+| **时空滤镜** | 探索进度 / 现代区划 / 五畿七道 / 战国势力（1572 年）/ 幕末阵营。「五畿七道」显示 68 令制国的**真实边界**：武藏横跨东京·埼玉·神奈川、摄津被大阪与兵库分走，一眼可见；县界以虚线叠在上面。还能切换 712 / 757 / 824 / 1869 四个年份，看古国的出生与分家 |
 | **时空穿越** | 拖动滑块或自动播放，看飞鸟到现代九个时代的版图与政权中枢 |
 | **合战演武** | 桶狭间、川中岛、关原、坛之浦、西南战争——布阵 → 开战 → 转折 → 结局四阶段沙盘推演，名将亲自解说 |
 | **广重浮世绘** | 歌川广重《六十余州名所图会》（1853–56）全 69 幅：在古国地图上点一国，看广重笔下那里的风景，以及画中地点今天在哪个县、哪个市；详卡里列出本县的画，可放大并逐幅翻看 |
@@ -36,6 +36,13 @@
 ## 📜 更新日志
 
 > 冒险者们，新版本已降临。以下为历次版本公告（最新在上）。
+
+### 🕰️ v2.6「古国的出生与分家」
+- **古国地图新增时间轴：712 · 757 · 824 · 1869！**
+- 712 年：出羽刚立国，丹后、美作、大隅、和泉、加贺、能登、安房都还没分出来，种子岛与屋久岛是「多褹岛」
+- 757 年：和泉、能登分出，安房却又并回了上总；824 年多褹岛并入大隅，68 国定型
+- 1869 年明治分国：陆奥一分为五、出羽一分为二，虾夷地划为北海道十一国，全国 84 国
+- 明治新国按东北与北海道 425 个市区町村的明治旧郡逐一对照，郡与国的归属取自维基百科分类，同名郡与跨郡市町村逐个人工核对
 
 ### 📍 v2.5「此刻你在」
 - **地图新增「我在哪」按钮！** 在日本旅行时点一下，告诉你此刻身在哪个令制国
@@ -178,7 +185,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 
 全国地图：出典「地球地図日本」（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换为 GeoJSON。
 
-市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。
+市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`（同时生成时间轴 `province_eras.json`；明治分国对照由 `python -X utf8 tools/fetch_meiji.py` 生成 `tools/meiji_provinces.json`）。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。
 
 ## 版权与许可
 

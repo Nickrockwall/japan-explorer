@@ -844,6 +844,11 @@ body.in-battle .art-card, body.muni-open .art-card { display: none; }
 .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
 .art-grid figure { margin: 0; }
 .art-grid figcaption { margin-top: 5px; font-size: 11.5px; line-height: 1.45; color: var(--text-2); }
+/* 古国演变时间轴：只在古国底图下显示 */
+.prov-eras { display: none; }
+body.prov-mode .prov-eras { display: inline-flex; align-self: flex-start; }
+body.prov-mode .prov-eras button.on { background: #7a5c9e; }
+
 /* 我在哪 */
 .locate-btn {
   position: absolute; right: 16px; bottom: 104px; z-index: 3; width: 42px; height: 42px; border-radius: 50%;

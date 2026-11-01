@@ -229,16 +229,34 @@ class Case:
             const g = c.getOption().geo[0]; const r = document.getElementById('map').getBoundingClientRect();
             const [x, y] = c.convertToPixel({ geoIndex: 0 }, [139.35, 36.0]); return [g.map, x + r.left, y + r.top]; }'''
         shown, x, y = page.evaluate(js)
-        assert shown == 'provinces', f'底图应为 provinces，实际 {shown}'
+        assert shown == 'provinces-824', f'底图应为 824 年的旧国，实际 {shown}'
         if self.narrow:
             page.tap('#map', position={'x': x - page.locator('#map').bounding_box()['x'], 'y': y - page.locator('#map').bounding_box()['y']})
         else:
             page.mouse.click(x, y)
         page.wait_for_timeout(600)
         assert 'pref=11' in page.evaluate('location.hash'), f'点武藏国里的埼玉应选中埼玉：{page.evaluate("location.hash")}'
+        # 古国演变时间轴：1869 年北海道分出十一国，点札幌仍选中北海道；712 年 62 国
+        page.click('#prov-eras [data-y="1869"]')
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('1869')", timeout=15000)
+        page.wait_for_timeout(800)
+        assert page.evaluate(js)[0] == 'provinces-1869', '应换成 1869 年的底图'
+        assert '11' in page.text_content('#legend-items'), '1869 年图例应有北海道十一国'
+        # 默认视角下札幌在地图顶部、被搜索框挡住：先把视角移到北海道
+        page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).setOption({ geo: { center: [142.5, 43.3], zoom: 4 } })")
+        page.wait_for_timeout(900)
+        x, y = page.evaluate(js.replace('[139.35, 36.0]', '[141.35, 43.06]'))[1:]
+        (page.touchscreen.tap if self.narrow else page.mouse.click)(x, y)
+        page.wait_for_timeout(600)
+        assert 'pref=1&' in page.evaluate('location.hash'), f'1869 年底图上点札幌应选中北海道：{page.evaluate("location.hash")}'
+        page.click('#prov-eras [data-y="712"]')
+        page.wait_for_timeout(800)
+        assert page.evaluate(js)[0] == 'provinces-712'
+        page.click('#prov-eras [data-y="824"]')
         page.click('[data-filter="region"]')
         page.wait_for_timeout(500)
         assert page.evaluate(js)[0] == 'japan', '换滤镜后底图应换回县'
+        assert page.is_hidden('#prov-eras'), '离开古国底图后时间轴应隐藏'
 
     def hiroshige(self, page):
         # 古国地图上点武藏国：弹出广重两幅（武藏、江户）；看大图、翻页；详卡有「广重笔下」

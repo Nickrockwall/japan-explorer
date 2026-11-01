@@ -35,7 +35,7 @@ export const FILTERS = {
     key: (p) => p.historical_lineage.ritsuryo_provinces[0].circuit,
     cats: cats('circuit', {
       畿内: '#c23531', 东海道: '#d4a373', 东山道: '#7a9a6a', 北陆道: '#6f9fb8',
-      山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 令制外: '#4a4a53',
+      山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 北海道: '#9fb6d6', 令制外: '#4a4a53',
     }),
   },
   sengoku: {
@@ -181,8 +181,33 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     };
   }
 
-  // 令制国真实边界：五畿七道滤镜下替换底图（tools/build_provinces.py 生成，setProvinces 按需传入）
+  // 令制国真实边界：五畿七道滤镜下替换底图（tools/build_provinces.py 生成，setProvinces 按需传入）。
+  // 时间轴（712 / 757 / 1869）只存与 824 年不同的国，切换时拼出当年的底图（setProvEras 按需传入）
   let prov = null;
+  let provBase = null;
+  let provEras = null;
+  let provEra = '824';
+  const provMaps = new Map();
+  function buildProv(year) {
+    if (!provMaps.has(year)) {
+      const d = year === '824' ? { remove: [], add: [] } : provEras[year];
+      const gone = new Set(d.remove);
+      const features = [...provBase.features.filter((f) => !gone.has(f.properties.key)), ...d.add];
+      for (const f of features) f.properties.name = f.properties.key;
+      const mapName = `provinces-${year}`;
+      echarts.registerMap(mapName, { type: 'FeatureCollection', features });
+      provMaps.set(year, {
+        mapName,
+        features,
+        byKey: new Map(features.map((f) => [f.properties.key, f])),
+        borders: provBase.pref_borders.map((coords) => ({ coords })),
+        labels: features.filter((f) => f.properties.zh)
+          .map((f) => ({ f, a: areaOf(f.geometry) })).sort((x, y) => y.a - x.a)
+          .map(({ f }) => ({ name: provLabel(f.properties), value: centroid(f.geometry) })),
+      });
+    }
+    return provMaps.get(year);
+  }
   let shownMap = 'japan';
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
@@ -383,7 +408,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const sc = pm ? null : scheme();
     const geoOpt = { regions: pm ? prov.features.map(provRegion) : [...nameById.keys()].map((id) => region(id, sc)) };
     // 换底图时带上当前视角，免得跳回默认位置
-    const want = pm ? 'provinces' : 'japan';
+    const want = pm ? prov.mapName : 'japan';
     if (want !== shownMap) {
       Object.assign(geoOpt, { map: want }, getView());
       shownMap = want;
@@ -505,18 +530,18 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     setVisited(set) { visitedSet = set; render(); },
     // 传入 provinces.json 后，五畿七道滤镜改用真实旧国边界
     setProvinces(g) {
-      for (const f of g.features) f.properties.name = f.properties.key;
-      echarts.registerMap('provinces', g);
-      prov = {
-        features: g.features,
-        byKey: new Map(g.features.map((f) => [f.properties.key, f])),
-        borders: g.pref_borders.map((coords) => ({ coords })),
-        labels: g.features.filter((f) => f.properties.zh)
-          .map((f) => ({ f, a: areaOf(f.geometry) })).sort((x, y) => y.a - x.a)
-          .map(({ f }) => ({ name: provLabel(f.properties), value: centroid(f.geometry) })),
-      };
+      provBase = g;
+      prov = buildProv('824');
       render();
     },
+    // 时间轴数据（province_eras.json）与当前年份
+    setProvEras(e) { provEras = e; },
+    setProvEra(year) {
+      provEra = year;
+      prov = buildProv(year);
+      render();
+    },
+    get provEra() { return provEra; },
     select(id) { activeId = id; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
     setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
@@ -584,8 +609,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         const counts = new Map();
         for (const f of prov.features) if (f.properties.zh) counts.set(f.properties.circuit, (counts.get(f.properties.circuit) || 0) + 1);
         return {
-          caption: t('prov.cap'),
-          items: Object.entries(FILTERS.circuit.cats).map(([k, [lb, color]]) => [lb, color, counts.get(k)]),
+          caption: provEra === '824' ? t('prov.cap') : `${t(`prov.era.${provEra}`)} ${t('prov.approx')}`,
+          items: Object.entries(FILTERS.circuit.cats).map(([k, [lb, color]]) => [lb, color, counts.get(k)]).filter((x) => x[2]),
         };
       } else if (state.filter === 'explore') {
         return { caption: FILTERS.explore.caption, items: [[t('lg.unvisited'), COLOR.base], [t('lg.visited'), COLOR.visited], [t('lg.active'), COLOR.active]] };

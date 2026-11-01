@@ -37,6 +37,7 @@ src/data/index.json            47 县清单（id, slug, file, kanji, zh, region�
 src/data/historical_events.json  全国共享：timeline_eras（9 个时代）+ historic_battles（5 场合战）
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
+src/data/province_eras.json    古国演变时间轴：712 / 757 / 1869 年与 824 年的差异（remove + add）
 src/data/hiroshige.json        广重《六十余州名所图会》69 幅（tools/fetch_hiroshige.py 生成；图片在 src/assets/hiroshige/NN.jpg）
 src/js/hiroshige.js            古国地图上的作品卡、详卡「广重笔下」、大图浏览
 src/data/province_names.json   「国名今犹在」：旧国 → 今天仍带国名的东西（tools/province_names_tool.py 核验）
@@ -187,6 +188,13 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 前端（map.js）：`setProvinces(g)` 注册第二张底图 `provinces`；`provMode()`（历史图层 + 五畿七道 + 非时代 / 非合战）时 geo 换图，叠加 `provnames`（按面积排序的国名，`hideOverlap`）、`prefborders`（虚线县界）、`prefactive`（选中县轮廓，取自 japan.json）。两张底图共用 `boundingCoords`（japan.json 的范围），换图时比例与位置不变。点击时按坐标在 japan.json 里找所在县（`prefAt`），仍走 `onSelect(县 id)`。
 - 测试里换算点击位置时，`convertToPixel` 给的是相对地图容器的坐标，要加上 `#map` 的 `getBoundingClientRect()` 偏移。
 
+### 古国演变时间轴（712 / 757 / 824 / 1869）
+
+- 824 年（多褹岛并入大隅、68 国定型）就是 `provinces.json` 的底图；其他三档在 `build_provinces.py` 的 `ERAS` 里定义：`merge`（子国并回母国）、`tane`（种子岛·屋久岛四市町为多褹岛）、`meiji`（东北与北海道按明治国）。各档只存与 824 年不同的国，写进 `province_eras.json`（`{年: {remove: [key], add: [Feature]}}`，第一次点时间轴时才下载）。所有档都由同一批「旧国 × 明治国 × 县」小块一起简化后拼出，边界完全对齐。
+- 明治国对照 `tools/meiji_provinces.json`（团体代码 → 国）由 `python -X utf8 tools/fetch_meiji.py` 生成：市区町村的明治旧郡 → 日文维基郡条目的分类「○○国の郡」（陆奥取「陸奥国の郡 (1869-)」；按县限定可能的国）。1878 年后拆出的郡看 `PARENT`（原郡）；同名郡用 `TITLE` 指定条目名；近年新设的郡（北海道日高郡、二海郡）跳过；北海道上川郡·中川郡按市町村写在 `AMBIG`（核对「上川郡 (石狩国)」等条目列有该市町村）；旧郡都只部分属于又分属多国的市町村在 `MAIN` 写中心市街所在的郡（核对市町村条目里出现该郡名）。分类的 `cllimit` 是整批共享的，必须跟随 continue 取完。
+- 新出现的国（多褹岛、明治 18 国）的三语名、读音、所属之道在 `NEW`；北海道十一国的「道」为 `北海道`（`FILTERS.circuit.cats` 与 `label('circuit')` 已加）。
+- 前端：`map.setProvEras(d)` / `setProvEra(year)`，每档注册一张 `provinces-<年>` 底图（缓存）；图例按当年计数，说明取 `prov.era.<年>`。`#prov-eras` 只在 `body.prov-mode`（古国底图）显示，`syncProvEras` 随 `syncArtCard` 一起更新。
+
 ### 广重《六十余州名所图会》（hiroshige.js）
 
 - `python -X utf8 tools/fetch_hiroshige.py`（需 `pip install pillow`）：解析日文维基百科「六十余州名所図会」的表格（69 幅，第 70 幅目录页跳过）→ 在 Commons 核对许可，**只收公有领域** → 原图缓存到 `.cache/hiroshige/`，缩到宽 560px 存 `src/assets/hiroshige/NN.jpg`（Commons 在国内打不开，图片随站点发布）。
@@ -294,7 +302,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

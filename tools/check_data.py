@@ -252,6 +252,22 @@ def check_provinces():
                          f'缺 {sorted(used - keys)}，多 {sorted(keys - used)}')
     if not data.get('pref_borders'):
         err('provinces', '缺少县界 pref_borders')
+    # 古国演变时间轴：三个年份、改动的国七道合法；东北与北海道每个市区町村都有明治国
+    eras = load('src', 'data', 'province_eras.json')
+    if sorted(eras) != ['1869', '712', '757']:
+        err('provinces', f'province_eras.json 应有 712 / 757 / 1869 三档：{sorted(eras)}')
+    for y, e in eras.items():
+        for f in e['add']:
+            if f['properties']['circuit'] not in circuits | {'令制外'}:
+                err('provinces', f'{y} 年 {f["properties"]["key"]} 的七道取值非法')
+        for k in e['remove']:
+            if k not in keys:
+                err('provinces', f'{y} 年要去掉的 {k} 不在 824 年底图里')
+    meiji = load('tools', 'meiji_provinces.json')
+    for i in range(1, 8):
+        for f in load('src', 'data', 'municipalities', f'{i:02d}.json')['features']:
+            if f['properties']['code'] not in meiji:
+                err('provinces', f'{f["properties"]["name"]} 没有明治国（请运行 tools/fetch_meiji.py 与 build_provinces.py）')
 
 
 def check_hiroshige():
