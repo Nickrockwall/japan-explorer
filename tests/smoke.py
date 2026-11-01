@@ -134,6 +134,8 @@ class Case:
         assert title == self.KR_TITLE[self.lang], f'详卡标题是 {title!r}'
         assert page.text_content('.modern-title .kana') == '서울특별시'
         assert page.text_content('#visited-total') == '29'
+        assert page.locator('#detail .tl').count() == 6, '详卡时间轴应有 6 段'
+        assert page.locator('#detail .untranslated').count() == 0, '三种语言的史话都应已就绪'
         # 选中的区在地图上着色（geo.regions），独岛不属任何一区
         hot = page.evaluate("""(() => { const g = echarts.getInstanceByDom(document.getElementById('map')).getOption().geo[0];
             const base = g.itemStyle.areaColor; return g.regions.filter((r) => r.itemStyle.areaColor !== base && !r.itemStyle.areaColor.startsWith('rgba')).map((r) => r.name); })()""")

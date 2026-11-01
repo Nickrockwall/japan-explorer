@@ -332,6 +332,36 @@ def check_koku():
             err('koku', f'{kind} 缺 {sorted(miss)}')
 
 
+def check_korea():
+    """朝鲜半岛：一级区 29 个、各区市郡文件齐全；三种语言的史话结构一致（时间轴 6 段，名胜、物产、方言句子条数相同）"""
+    regions = load('src', 'data', 'korea', 'regions.json')
+    ids = sorted(f['properties']['id'] for f in regions['features'])
+    if ids != list(range(1, 30)):
+        err('korea/regions.json', f'一级区编号应为 1–29，实为 {ids}')
+    for i in ids:
+        c = load('src', 'data', 'korea', 'counties', f'{i:02d}.json')
+        if not c['features'] or any(f['properties']['region'] != i for f in c['features']):
+            err(f'korea/counties/{i:02d}.json', '为空或混入了别的区')
+    base = load('src', 'data', 'korea', 'content', 'zh.json')
+    if sorted(map(int, base)) != ids:
+        err('korea/content/zh.json', '地区不全')
+    for lang in ('zh', 'en', 'ja'):
+        d = load('src', 'data', 'korea', 'content', f'{lang}.json')
+        for k, b in base.items():
+            x = d.get(k)
+            where = f'korea/content/{lang}.json#{k}'
+            if not x:
+                err(where, '缺这个地区')
+                continue
+            if len(x['timeline']) != 6:
+                err(where, '时间轴应为 6 段')
+            for f in ('landmarks', 'specialties', 'meme'):
+                if len(x[f]) != len(b[f]):
+                    err(where, f'{f} 条数与中文不同')
+            if len(x['dialect']['phrases']) != len(b['dialect']['phrases']) or [p[0] for p in x['dialect']['phrases']] != [p[0] for p in b['dialect']['phrases']]:
+                err(where, '方言句子与中文不同（韩文原句应一致）')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -354,7 +384,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

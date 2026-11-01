@@ -1,0 +1,743 @@
+{
+ "1": {
+  "seat": "Jung District",
+  "timeline": [
+   "Baekje's early capitals, Wiryeseong and Hanseong, stood around today's Songpa District (the Pungnap and Mongchon earthen walls); Goguryeo took them in 475.",
+   "From 553 the lower Han River belonged to Silla, which set up Hansan Province, later called Hanju.",
+   "Goryeo made it Namgyeong (Hanyang), one of its three capitals.",
+   "In 1394 King Taejo of Joseon moved the capital to Hanyang, building Gyeongbokgung, the Jongmyo shrine and the city wall; it stayed the royal capital for five centuries.",
+   "Under Japanese rule from 1910 it was renamed Keijō (Gyeongseong), seat of the Government-General of Korea.",
+   "Named Seoul from 1946 and a special city from 1949; it hosted the 1988 Summer Olympics and is the capital of South Korea."
+  ],
+  "landmarks": [
+   ["Gyeongbokgung", "Joseon's main palace, finished in 1395, burned in the Imjin War and rebuilt in the 19th century."],
+   ["Changdeokgung and Jongmyo", "Both World Heritage sites: a palace laid out with its gardens, and the shrine to the Joseon kings."],
+   ["Han River", "It runs through the city, splitting Seoul into Gangbuk (north) and Gangnam (south)."]
+  ],
+  "specialties": [
+   ["Seolleongtang", "Milky ox-bone soup simmered for hours, served with rice and kimchi — an old Seoul breakfast."],
+   ["Royal court cuisine", "The Joseon palace kitchen tradition, built around five colours and five flavours."]
+  ],
+  "dialect": {
+   "name": "Seoul speech",
+   "features": "Standard Korean is based on the speech of middle-class Seoul; the intonation is flatter than in the south and sentences often end in -yo.",
+   "phrases": [["안녕하세요", "Hello"], ["감사합니다", "Thank you"]]
+  },
+  "meme": [["Gangbuk vs Gangnam", "Gangnam was only built up after the 1970s, yet it has become shorthand for 'expensive'; old Seoulites will remind you that every palace is in Gangbuk."]]
+ },
+ "2": {
+  "seat": "Yeonje District",
+  "timeline": [
+   "The area of the ancient Geochilsan state, later absorbed by Silla, centred on Dongnae.",
+   "Unified Silla made it Dongnae County.",
+   "Under Goryeo it was Dongnae Prefecture, already famous for its hot springs.",
+   "Joseon set up Dongnae-bu, with the Japan House (Waegwan) at Choryang for trade with Japan; the first battles of the 1592 Imjin War were fought at Busanjin and Dongnae Fortress.",
+   "Opened as a port in 1876, it became the starting point of the sea route to Japan; under Japanese rule from 1910.",
+   "Temporary capital during the Korean War (1950–1953); today South Korea's second city and biggest port."
+  ],
+  "landmarks": [
+   ["Haeundae", "Korea's best-known beach, packed every summer."],
+   ["Gamcheon Culture Village", "Colourful houses stacked up a hillside, first settled by wartime refugees."],
+   ["Beomeosa", "An old temple below Geumjeongsan, said to date from Silla."]
+  ],
+  "specialties": [
+   ["Dwaeji-gukbap", "Rice in pork-bone soup with chives and salted shrimp — everyday Busan food."],
+   ["Milmyeon", "Cold wheat noodles that wartime refugees made from relief flour; found only in Busan."],
+   ["Fish cakes", "Busan eomuk is known nationwide and sold in every market."]
+  ],
+  "dialect": {
+   "name": "Gyeongsang dialect",
+   "features": "It has pitch accent; speech is direct and clipped, and outsiders often think people are arguing.",
+   "phrases": [["밥 뭇나?", "Have you eaten? (a greeting)"], ["단디 해라", "Do it properly, be careful"]]
+  },
+  "meme": [["Baseball town", "When the Lotte Giants lose, every taxi driver in the city will tell you about it; when they win, Sajik Stadium sings 'Busan Galmaegi'."]]
+ },
+ "3": {
+  "seat": "Jung District",
+  "timeline": [
+   "Known as Dalgubeol, part of Silla.",
+   "In 689 King Sinmun planned to move the capital to Dalgubeol, but never did.",
+   "Under Goryeo it was Daegu Prefecture.",
+   "From 1601 the Gyeongsang governor's office sat here; its herbal medicine market (Yangnyeongsi) has carried on ever since and was one of the largest in Joseon.",
+   "The 1907 National Debt Repayment Movement started here; under Japanese rule from 1910.",
+   "A directly governed city from 1981 (now a metropolitan city); Gunwi County moved in from North Gyeongsang in 2023."
+  ],
+  "landmarks": [
+   ["Donghwasa on Palgongsan", "The old temple on the mountain north of the city."],
+   ["Seomun Market", "Successor to one of Joseon's three great markets, busy at night."],
+   ["Kim Kwang-seok Street", "A mural alley in memory of the singer."]
+  ],
+  "specialties": [
+   ["Makchang", "Grilled pork intestines, Daegu's favourite drinking snack."],
+   ["Napjak mandu", "Thin, flat fried dumplings eaten with a spicy sauce."]
+  ],
+  "dialect": {
+   "name": "Gyeongsang dialect",
+   "features": "The same Gyeongsang family as Busan, with clear rises and falls in pitch.",
+   "phrases": [["와?", "Why? What's up?"], ["마이 무라", "Eat plenty"]]
+  },
+  "meme": [["Daefrica", "The basin is so hot in summer that people blend 'Daegu' and 'Africa' into 'Daefrica'; one street sculpture is an ice cream melting in the sun."]]
+ },
+ "4": {
+  "seat": "Namdong District",
+  "timeline": [
+   "Said to be Michuhol, founded by Biryu; held by Baekje, then Goguryeo and Silla.",
+   "Under Unified Silla it was the Soseong area.",
+   "The Incheon Yi clan supplied several Goryeo queens and the town was raised to Gyeongwon-bu; from 1232 to 1270 Goryeo's court moved to Ganghwa Island to hold out against the Mongols.",
+   "In Joseon it held the port of Jemulpo; French and American fleets fought on Ganghwa in 1866 and 1871, and the Treaty of Ganghwa was signed there in 1876.",
+   "Jemulpo opened in 1883, with a Chinatown and foreign concessions; under Japanese rule from 1910.",
+   "UN forces landed here in 1950; Incheon International Airport opened in 2001; in July 2026 the city created the Jemulpo, Yeongjong, Geomdan and Seohae districts."
+  ],
+  "landmarks": [
+   ["Chinatown", "Where Chinese merchants settled after the port opened, and one claimed birthplace of Korean jajangmyeon."],
+   ["Ganghwa dolmens", "A World Heritage site together with the dolmens of Gochang and Hwasun."],
+   ["Wolmido", "A small island by the harbour, with rides and sea views."]
+  ],
+  "specialties": [
+   ["Jajangmyeon", "Said to have been invented by Chinatown cooks for dock workers after the port opened."],
+   ["Ganghwa ginseng", "Korean ginseng grown on Ganghwa Island."]
+  ],
+  "dialect": {
+   "name": "Gyeonggi dialect",
+   "features": "Close to Seoul speech; the northern islands such as Baengnyeongdo sound more like Hwanghae.",
+   "phrases": [["어서 오세요", "Welcome"]]
+  },
+  "meme": [["The airport isn't in Seoul", "Visitors say they 'landed in Seoul', but the plane came down in Incheon — locals have long since stopped correcting them."]]
+ },
+ "5": {
+  "seat": "Seo District",
+  "timeline": [
+   "The Baekje district of Usul.",
+   "Under Unified Silla it was Bipung County.",
+   "Under Goryeo it belonged to Gongju.",
+   "In Joseon it was just a big field under Gongju, called Hanbat ('great field') in Korean — the meaning of Daejeon.",
+   "It grew after Daejeon Station opened on the Seoul–Busan railway in 1905; the South Chungcheong provincial office moved here from Gongju in 1932.",
+   "A directly governed city from 1989 (now a metropolitan city); home to the Daedeok research district and the 1993 Expo."
+  ],
+  "landmarks": [
+   ["Daedeok Innopolis", "Korea's largest cluster of research institutes."],
+   ["Yuseong hot springs", "A spa town known since early times."],
+   ["Gyejoksan", "A red-clay barefoot trail on the edge of the city."]
+  ],
+  "specialties": [
+   ["Sungsimdang bakery", "Open since 1956; people take the train just to buy its fried soboro bread."],
+   ["Kalguksu", "Daejeon has one of the highest numbers of knife-cut noodle shops in the country."]
+  ],
+  "dialect": {
+   "name": "Chungcheong dialect",
+   "features": "Slow and drawn-out, often ending sentences in -yu.",
+   "phrases": [["괜찮아유", "It's fine (maybe it isn't)"], ["그려유", "Yes, sure"]]
+  },
+  "meme": [["The boring city", "Locals joke that Daejeon is a 'no-fun city' whose only sight is a bakery — and the joke has turned into a tourism slogan."]]
+ },
+ "6": {
+  "seat": "Nam District",
+  "timeline": [
+   "The southeastern coast of Silla.",
+   "Under Unified Silla it was Hagok County; the legend of Cheoyong is set at Gaeunpo.",
+   "Under Goryeo it was called Ulju.",
+   "Joseon's Gyeongsang Left Army Command was here; Ulsan's Japanese castle saw fierce fighting at the end of the Imjin War (1597–1598).",
+   "Under Japanese rule from 1910; Jangsaengpo was a whaling port.",
+   "Named a special industrial zone in 1962, where Hyundai's car, shipbuilding and petrochemical businesses grew; a metropolitan city since 1997."
+  ],
+  "landmarks": [
+   ["Bangudae petroglyphs", "Whales and hunters carved into a rock face in prehistoric times."],
+   ["Taehwagang National Garden", "Bamboo groves and gardens along the river."],
+   ["Ganjeolgot", "One of the first places on the Korean mainland to see the sunrise."]
+  ],
+  "specialties": [
+   ["Eonyang bulgogi", "Finely cut seasoned beef grilled on a wire grill."],
+   ["Jangsaengpo whale culture", "Whaling is banned now; a museum and a whale village remain."]
+  ],
+  "dialect": {
+   "name": "Gyeongsang dialect",
+   "features": "The eastern Gyeongsang accent.",
+   "phrases": [["와 이라노?", "What's going on?"]]
+  },
+  "meme": [["Factory-town wages", "Ulsan's income per head has long been among the highest in the country; buy a car here and someone will ask, 'A Hyundai?'"]]
+ },
+ "7": {
+  "seat": "Sejong",
+  "timeline": [
+   "Part of Baekje.",
+   "Under Unified Silla it belonged to Ungcheon Province.",
+   "Under Goryeo it belonged to Gongju.",
+   "In Joseon it was the Yeongi area.",
+   "Under Japanese rule from 1910; Jochiwon grew up around the railway.",
+   "Created in 2012 and named after King Sejong, as an administrative city to which many ministries moved."
+  ],
+  "landmarks": [
+   ["Government Complex Sejong", "Government buildings that run on for kilometres, with a garden on the roof."],
+   ["Sejong Lake Park", "The artificial lake at the heart of the new city."],
+   ["National Library of Korea, Sejong", "Shaped like the pages of an open book."]
+  ],
+  "specialties": [
+   ["Jochiwon peaches", "The long-standing fruit of the Jochiwon area."]
+  ],
+  "dialect": {
+   "name": "Chungcheong dialect",
+   "features": "Long-time residents speak Chungcheong; newcomers come from all over the country.",
+   "phrases": [["그려유", "Yes, right"]]
+  },
+  "meme": [["Friday in Sejong", "It's a civil servants' city: on Friday evenings the express buses to Seoul fill up."]]
+ },
+ "8": {
+  "seat": "Suwon",
+  "timeline": [
+   "The Han River basin was Baekje's, then Goguryeo's in the 5th century, then Silla's after 553.",
+   "Under Unified Silla most of it was Hanju.",
+   "In 1018 Goryeo named the land around its capital Gaegyeong 'Gyeonggi' — the origin of the name.",
+   "Joseon's Gyeonggi Province surrounded the capital Hanyang; King Jeongjo built Hwaseong Fortress in Suwon (finished in 1796).",
+   "Under Japanese rule from 1910, still as Gyeonggi Province.",
+   "After 1945 its north was cut off by the dividing line; today it is South Korea's most populous province and, with Seoul and Incheon, makes up the capital area."
+  ],
+  "landmarks": [
+   ["Hwaseong Fortress", "King Jeongjo's walled city in Suwon, a World Heritage site."],
+   ["Namhansanseong", "Where King Injo took refuge in 1636, a World Heritage site."],
+   ["Imjingak", "A peace park on the Imjin River, close to the dividing line."]
+  ],
+  "specialties": [
+   ["Suwon galbi", "Large seasoned beef ribs, grilled."],
+   ["Icheon rice and pottery", "Icheon rice was once sent to the royal court; the town is also a pottery centre."]
+  ],
+  "dialect": {
+   "name": "Gyeonggi dialect",
+   "features": "Almost the same as Seoul speech, and one basis of the standard language.",
+   "phrases": [["그랬어요?", "Really?"]]
+  },
+  "meme": [["The commute", "Two hours each way to a job in Seoul is normal; Gyeonggi people sleep on the subway better than anyone."]]
+ },
+ "9": {
+  "seat": "Chuncheon",
+  "timeline": [
+   "Land of the ancient Ye people, then Goguryeo, then Silla from the 6th century.",
+   "Under Unified Silla it was split between Sakju and Myeongju.",
+   "Under Goryeo it was Gyoju Circuit and the Eastern Frontier.",
+   "Joseon created Gangwon Province, named from the first characters of Gangneung and Wonju.",
+   "Under Japanese rule from 1910.",
+   "Cut by the 38th parallel in 1945; since the 1953 armistice there has been a Gangwon on each side. It hosted the 2018 Pyeongchang Winter Olympics and became a special self-governing province in 2023."
+  ],
+  "landmarks": [
+   ["Seoraksan", "The granite peaks of the east coast."],
+   ["Gyeongpodae, Gangneung", "A lakeside pavilion for watching the moon and the sea."],
+   ["Pyeongchang", "Host of the 2018 Winter Olympics."]
+  ],
+  "specialties": [
+   ["Chuncheon dakgalbi", "Chicken and rice cakes stir-fried on a big iron pan."],
+   ["Makguksu", "Cold buckwheat noodles from around Chuncheon."],
+   ["Potatoes", "Highland potatoes are what everyone thinks of first."]
+  ],
+  "dialect": {
+   "name": "Gangwon dialect",
+   "features": "The east coast (Yeongdong) differs from the west; Yeongdong has pitch accent and often ends in -deuraeyo.",
+   "phrases": [["그랬드래요", "So they say"]]
+  },
+  "meme": [["Potato province", "Mention Gangwon and people say 'potatoes'; Gangwon folk will hand you a potato pancake."]]
+ },
+ "10": {
+  "seat": "Cheongju",
+  "timeline": [
+   "Fought over by all three kingdoms; a Goguryeo stele stands in Chungju.",
+   "Unified Silla placed two of its five secondary capitals here: Jungwongyeong (Chungju) and Seowongyeong (Cheongju).",
+   "In 1377 the Jikji was printed at Heungdeoksa in Cheongju — the oldest surviving book printed with metal type.",
+   "In Joseon it belonged to Chungcheong Province, named from Chungju and Cheongju.",
+   "Split off as North Chungcheong in 1896; under Japanese rule from 1910.",
+   "South Korea's only province without a coastline; Cheongju and Cheongwon merged in 2014."
+  ],
+  "landmarks": [
+   ["Beopjusa on Songnisan", "A World Heritage site together with other mountain monasteries."],
+   ["Chungju Lake", "A reservoir on the Namhan River."],
+   ["Cheongju Early Printing Museum", "Built on the site of Heungdeoksa."]
+  ],
+  "specialties": [
+   ["Yeongdong grapes", "Grapes and wine."],
+   ["Goesan salted cabbage", "Brined cabbage ready for making kimchi."]
+  ],
+  "dialect": {
+   "name": "Chungcheong dialect",
+   "features": "Soft and roundabout.",
+   "phrases": [["뭐여?", "What?"]]
+  },
+  "meme": [["No sea", "To reach a beach you have to leave the province — so Chungju Lake is fondly called the 'inland sea'."]]
+ },
+ "11": {
+  "seat": "Hongseong County (Naepo New Town)",
+  "timeline": [
+   "Both of later Baekje's capitals were here: Ungjin (Gongju, 475–538) and Sabi (Buyeo, 538–660).",
+   "Under Unified Silla it was Ungcheon Province.",
+   "Under Goryeo it belonged to Yanggwang Circuit and others.",
+   "In Joseon it was part of Chungcheong; Yi Sun-sin grew up in Asan, where the Hyeonchungsa shrine honours him.",
+   "Split off as South Chungcheong in 1896; during the 1919 March First Movement, Yu Gwan-sun led a protest at Byeongcheon in Cheonan.",
+   "The provincial office moved to Daejeon in 1932 and in 2013 to Naepo New Town between Hongseong and Yesan."
+  ],
+  "landmarks": [
+   ["Baekje sites in Gongju and Buyeo", "Gongsanseong, Busosanseong and more — a World Heritage site."],
+   ["Hyeonchungsa", "Yi Sun-sin's shrine in Asan."],
+   ["Anmyeondo", "Pine woods and beaches on the west coast."]
+  ],
+  "specialties": [
+   ["Cheonan walnut cakes", "Little walnut-shaped cakes, a fixture of motorway rest stops."],
+   ["Geumsan ginseng", "Korea's ginseng trading hub."]
+  ],
+  "dialect": {
+   "name": "Chungcheong dialect",
+   "features": "Slow, and never says 'no' outright.",
+   "phrases": [["괜찮아유", "It's fine"], ["천천히 오세유", "Take your time"]]
+  },
+  "meme": [["A Chungcheong 'no'", "'Well, I suppose I could sell it for that…' translates as: that's far too cheap."]]
+ },
+ "12": {
+  "seat": "Jeonju",
+  "timeline": [
+   "Old Mahan land, later Baekje; Iksan has the Mireuksa temple site and the Wanggung-ri palace site.",
+   "Unified Silla set up Wansan Province (Jeonju).",
+   "Under Goryeo it was part of Jeolla.",
+   "Jeonju was the ancestral seat of the Jeonju Yi, Joseon's royal clan, and Gyeonggijeon holds King Taejo's portrait; the 1894 Donghak Peasant Revolution broke out at Gobu (today's Jeongeup).",
+   "Gunsan port opened in 1899 and rice was shipped from it to Japan; under Japanese rule from 1910.",
+   "Split off as North Jeolla in 1896; renamed Jeonbuk Special Self-Governing Province in 2024."
+  ],
+  "landmarks": [
+   ["Jeonju Hanok Village", "More than 700 traditional houses."],
+   ["Mireuksa temple site, Iksan", "Baekje's largest temple site, a World Heritage site."],
+   ["Naejangsan", "Famous for its autumn leaves."]
+  ],
+  "specialties": [
+   ["Jeonju bibimbap", "A brass bowl of vegetables mixed with chilli paste."],
+   ["Kongnamul-gukbap", "Bean-sprout soup with rice, Jeonju's hangover breakfast."],
+   ["Sunchang gochujang", "Korea's best-known chilli paste."]
+  ],
+  "dialect": {
+   "name": "Jeolla dialect",
+   "features": "Sentences often end in -ing or -dangkke; 'geosigi' stands in for almost anything.",
+   "phrases": [["거시기", "Thingy (can mean anything)"], ["허벌나게", "Really, extremely"]]
+  },
+  "meme": [["Nowhere bad to eat", "In Jeonju you can walk into any restaurant and eat well — locals will only tell you the one next door is better."]]
+ },
+ "13": {
+  "seat": "Gwangju, Muan and Suncheon (three offices)",
+  "timeline": [
+   "A centre of Mahan, with large jar-coffin tombs along the Yeongsan River; later Baekje.",
+   "Unified Silla set up Mujin Province (Gwangju).",
+   "Goryeo's founder Wang Geon married into the Oh clan of Naju, which raised Naju's standing; 'Jeolla' comes from Jeonju and Naju.",
+   "In Joseon, Yi Sun-sin's Jeolla Left Navy was based at Yeosu; the 1597 Battle of Myeongnyang was fought between Haenam and Jindo.",
+   "Under Japanese rule from 1910; the Gwangju Student Movement broke out in 1929.",
+   "The Gwangju Uprising of May 1980; on 1 July 2026 Gwangju and South Jeolla merged into Jeonnam-Gwangju Integrated Special City."
+  ],
+  "landmarks": [
+   ["May 18th National Cemetery", "In memory of those killed in Gwangju in May 1980."],
+   ["Suncheon Bay wetland", "Reed beds and migrating birds."],
+   ["Jindo sea-parting", "A path that appears from the sea a few times a year at low tide."]
+  ],
+  "specialties": [
+   ["Yeonggwang gulbi", "Salted, dried yellow croaker, once sent to the court."],
+   ["Naju gomtang", "Clear beef soup with rice."],
+   ["Boseong green tea", "Terraced tea fields."]
+  ],
+  "dialect": {
+   "name": "Jeolla dialect",
+   "features": "Close to the northern Jeolla speech, warm and expressive, often ending in -ing.",
+   "phrases": [["징하다", "Unbelievable (half complaint, half praise)"], ["오메", "Oh my"]]
+  },
+  "meme": [["Twenty side dishes", "Order a set meal in Jeolla and the table fills with twenty-odd side dishes; visitors think there's been a mistake."]]
+ },
+ "14": {
+  "seat": "Andong",
+  "timeline": [
+   "Home of Silla's capital Geumseong (today's Gyeongju); Daegaya's Goryeong is here too.",
+   "Gyeongju was Unified Silla's royal capital, where Bulguksa and Seokguram were built.",
+   "Part of Goryeo's Gyeongsang lands; Andong got its name ('east, at peace') after helping Wang Geon defeat Later Baekje.",
+   "In Joseon, Andong was a centre of Confucian learning, with Dosan Seowon and Hahoe Village.",
+   "Under Japanese rule from 1910.",
+   "Split off as North Gyeongsang in 1896; POSCO in Pohang and electronics in Gumi drove industry from the 1970s; the provincial office moved to Andong in 2016."
+  ],
+  "landmarks": [
+   ["Bulguksa and Seokguram, Gyeongju", "Masterpieces of Unified Silla Buddhist art, a World Heritage site."],
+   ["Hahoe Village, Andong", "A yangban village of the Ryu clan, a World Heritage site."],
+   ["Ulleungdo", "A volcanic island in the East Sea."]
+  ],
+  "specialties": [
+   ["Andong jjimdak", "Chicken braised in soy sauce with glass noodles."],
+   ["Andong soju", "A traditional distilled spirit."],
+   ["Yeongdeok snow crab", "Long-legged crabs in winter."]
+  ],
+  "dialect": {
+   "name": "Gyeongsang dialect",
+   "features": "Andong keeps many old words.",
+   "phrases": [["예, 그래니더", "Yes, that's right (polite, Andong style)"]]
+  },
+  "meme": [["Yangban airs", "Andong people are teased for their manners — even in an argument, seniority comes first."]]
+ },
+ "15": {
+  "seat": "Changwon",
+  "timeline": [
+   "The heart of the Gaya states, with Geumgwan Gaya centred on Gimhae; the Gaya tumuli are a World Heritage site.",
+   "Under Unified Silla it was Yangju and Gangju (Jinju).",
+   "Under Goryeo it was part of Gyeongsang.",
+   "In the Imjin War Jinju Fortress was besieged twice (1592, 1593); Yi Sun-sin won at Hansando, and the Three-Province Naval Command was later set up at Tongyeong.",
+   "Under Japanese rule from 1910; Masan and Jinhae were ports.",
+   "Split off as South Gyeongsang in 1896; Changwon, Masan and Jinhae merged in 2010 into Changwon, a machinery centre."
+  ],
+  "landmarks": [
+   ["Haeinsa", "Home of the Tripitaka Koreana, a World Heritage site."],
+   ["Tongyeong", "Yi Sun-sin's naval base, the 'Naples of the East'."],
+   ["Jinju Fortress", "Walls and the Chokseongnu pavilion above the Nam River."]
+  ],
+  "specialties": [
+   ["Chungmu gimbap", "Plain seaweed rolls eaten with side dishes, Tongyeong's speciality."],
+   ["Tongyeong oysters", "Korea's biggest oyster-growing area."]
+  ],
+  "dialect": {
+   "name": "Gyeongsang dialect",
+   "features": "The western Gyeongsang accent, a little different from Busan and Daegu.",
+   "phrases": [["우짜노", "What do we do now?"]]
+  },
+  "meme": [["Jinhae cherry blossoms", "Every April the Jinhae festival buries the city in blossom — and in traffic."]]
+ },
+ "16": {
+  "seat": "Jeju City",
+  "timeline": [
+   "The independent kingdom of Tamna.",
+   "Tamna sent tribute to Baekje and Silla.",
+   "Goryeo absorbed it as Tamna County; the Sambyeolcho holdouts were crushed here in 1273, after which the Yuan ran horse ranches on the island.",
+   "Joseon made it Jeju-mok, often a place of exile — Kim Jeong-hui was banished to Daejeong.",
+   "Under Japanese rule from 1910.",
+   "Large numbers of islanders were killed in the Jeju 4·3 events from 1948; a special self-governing province since 2006, its volcanic island and lava tubes became World Natural Heritage in 2007."
+  ],
+  "landmarks": [
+   ["Hallasan", "South Korea's highest peak, 1,947 m."],
+   ["Seongsan Ilchulbong", "A crater rising from the sea."],
+   ["Manjanggul", "A long lava tube."]
+  ],
+  "specialties": [
+   ["Tangerines and hallabong", "A citrus with a knob on top."],
+   ["Black pork", "Jeju's grilled black pig."],
+   ["Haenyeo", "Women divers who fish without breathing gear, recognised by UNESCO as intangible heritage."]
+  ],
+  "dialect": {
+   "name": "Jejueo",
+   "features": "Very different from mainland Korean and keeps much Middle Korean; UNESCO lists it as critically endangered.",
+   "phrases": [["혼저 옵서예", "Welcome"], ["폭삭 속았수다", "Thank you for your hard work"]]
+  },
+  "meme": [["Island of three plenties", "Jeju calls itself rich in stones, wind and women; locals add a fourth: tourists."]]
+ },
+ "17": {
+  "seat": "Central District",
+  "timeline": [
+   "The Han dynasty's Lelang commandery (108 BC–313 AD) is generally placed around Pyongyang; Goguryeo moved its capital here in 427, and its fall in 668 came with the loss of Pyongyang.",
+   "Unified Silla's northern edge ran roughly along the Taedong River, leaving Pyongyang a frontier.",
+   "Goryeo made Pyongyang its Western Capital, one of three; Myocheong's revolt broke out here in 1135.",
+   "In Joseon it was the seat of the Pyongan governor; the Taedong Gate and Ryongwang Pavilion were famous sights.",
+   "The American merchant ship General Sherman was burned on the Taedong in 1866; under Japanese rule from 1910.",
+   "Capital of the Democratic People's Republic of Korea since 1948."
+  ],
+  "landmarks": [
+   ["Taedong Gate", "The east gate of the old city, rebuilt in Joseon times."],
+   ["Moranbong", "Hills by the Taedong River with the Ulmil and Pubyok pavilions."],
+   ["Goguryeo tombs", "Painted tombs around Pyongyang and Nampo, a World Heritage site."]
+  ],
+  "specialties": [
+   ["Pyongyang naengmyeon", "Buckwheat noodles in a cool meat broth; many restaurants in the South carry the name too."],
+   ["Nokdu jijim", "Mung-bean pancakes, a Pyongan home dish."]
+  ],
+  "dialect": {
+   "name": "Pyongan dialect",
+   "features": "North Korea's standard 'cultured language' is based on Pyongyang speech; sentences often end in -seumneda.",
+   "phrases": [["반갑습네다", "Nice to meet you"]]
+  },
+  "meme": [["The noodle debate", "Pyongyang naengmyeon or Hamhung naengmyeon — which is the real thing? Food lovers on both sides can argue all night."]]
+ },
+ "18": {
+  "seat": "Rajin",
+  "timeline": [
+   "Land of the Okjeo and Mohe peoples.",
+   "Part of Balhae in the Unified Silla period.",
+   "Brought gradually under control from late Goryeo on.",
+   "In Joseon it was part of Gyeongheung, a frontier of the 'Six Garrisons'; Yi Sun-sin fought the Jurchens on Nokdundo in 1587.",
+   "Under Japanese rule from 1910, when Rajin port was built.",
+   "Made the Rajin–Sonbong free economic and trade zone in 1991 and a special city in 2010; it borders China and Russia."
+  ],
+  "landmarks": [
+   ["Rajin port", "An ice-free port open to China and Russia."],
+   ["Tumen River Friendship Bridge", "The railway bridge between North Korea and Russia."]
+  ],
+  "specialties": [
+   ["Seafood", "Fish and kelp from the northeast coast."]
+  ],
+  "dialect": {
+   "name": "Hamgyong dialect (Six Garrisons)",
+   "features": "The far-north frontier accent, often ending in -seumdung.",
+   "phrases": [["했슴둥?", "Did you do it?"]]
+  },
+  "meme": [["Three-country corner", "The only place in North Korea that borders Russia — from the Tumen you can see three countries at once."]]
+ },
+ "19": {
+  "seat": "Nampo",
+  "timeline": [
+   "Goguryeo heartland, home of the three Kangso tombs.",
+   "A frontier in the Unified Silla period.",
+   "Under Goryeo it lay around the Western Capital (Pyongyang).",
+   "In Joseon a small fishing village near Samhwa, called Jeungnampo.",
+   "Opened as the port of Chinnampo in 1897; under Japanese rule from 1910.",
+   "The West Sea Barrage was finished in 1986; today it is Pyongyang's port and a special city separate from South Pyongan."
+  ],
+  "landmarks": [
+   ["Three Kangso tombs", "Goguryeo tombs painted with the Four Guardians, part of the World Heritage site."],
+   ["West Sea Barrage", "A long dam and locks across the mouth of the Taedong."]
+  ],
+  "specialties": [
+   ["Ryonggang hot springs", "Long-famous hot springs."]
+  ],
+  "dialect": {
+   "name": "Pyongan dialect",
+   "features": "Close to Pyongyang speech.",
+   "phrases": [["일없습네다", "It's all right"]]
+  },
+  "meme": [["Pyongyang's sea gate", "When Pyongyang people say they're 'going to the seaside', it usually means Nampo."]]
+ },
+ "20": {
+  "seat": "Kaesong",
+  "timeline": [
+   "Ruled in turn by Baekje, Goguryeo and Silla.",
+   "Under Unified Silla it was Songak County.",
+   "Goryeo's capital Gaegyeong from 919 for nearly five centuries; Manwoldae is the palace site.",
+   "After Joseon moved the capital to Hanyang it became Kaesong-bu; its merchants (Songsang) were known for trading and their own bookkeeping.",
+   "Under Japanese rule from 1910; Kaesong ginseng was famous.",
+   "North of the dividing line after the 1953 armistice; the inter-Korean Kaesong Industrial Region ran here from 2004 to 2016; a special city since 2019, with Jangphung County added in 2023."
+  ],
+  "landmarks": [
+   ["Historic sites of Kaesong", "Manwoldae, Sonjuk Bridge, the Songgyungwan academy and more — a World Heritage site."],
+   ["Sonjuk Bridge", "Where Jeong Mong-ju was killed in 1392."],
+   ["Panmunjom (north side)", "Where the armistice was signed."]
+  ],
+  "specialties": [
+   ["Kaesong ginseng", "A long-established Korean ginseng region."],
+   ["Pyeonsu", "Kaesong's square dumplings."]
+  ],
+  "dialect": {
+   "name": "Kaesong speech",
+   "features": "Historically part of the Gyeonggi dialect, close to Seoul speech.",
+   "phrases": []
+  },
+  "meme": [["Kaesong merchants", "'Kaesong people know their sums' is said all over the peninsula — double-entry bookkeeping is said to have early roots here."]]
+ },
+ "21": {
+  "seat": "Pyongsong",
+  "timeline": [
+   "The Goguryeo heartland; in 612 Eulji Mundeok crushed a Sui army at the Salsu (Chongchon) River.",
+   "A frontier between Balhae and Silla in the Unified Silla period.",
+   "Under Goryeo it was part of the Northern Frontier.",
+   "Joseon created Pyongan Province, named from Pyongyang and Anju.",
+   "Split off as South Pyongan in 1896; under Japanese rule from 1910.",
+   "Part of the North after 1945; the provincial office later moved to Pyongsong."
+  ],
+  "landmarks": [
+   ["Paeksang Pavilion", "On the Chongchon River at Anju, one of the 'Eight Views of Gwanseo'."],
+   ["Chongchon River", "The battlefield of the Salsu victory."]
+  ],
+  "specialties": [
+   ["Nokdu jijim", "Mung-bean pancakes, a Pyongan home dish."]
+  ],
+  "dialect": {
+   "name": "Pyongan dialect",
+   "features": "Flat intonation, with endings like -seumneda and -ni?",
+   "phrases": [["반갑습네다", "Nice to meet you"]]
+  },
+  "meme": [["The other Kansai", "The 'Eight Views of Gwanseo' are in Pyongan Province and have nothing to do with Japan's Kansai."]]
+ },
+ "22": {
+  "seat": "Sinuiju",
+  "timeline": [
+   "Goguryeo land; its early capital Gungnae lay just across the Yalu.",
+   "Between Balhae and Silla in the Unified Silla period.",
+   "In 1388 Yi Seong-gye turned his army back at Wihwa Island on the Yalu and went on to found Joseon.",
+   "King Seonjo fled to Uiju in the 1592 Imjin War; Hong Gyeong-nae's rebellion began at Dabokdong, Kasan, in 1811.",
+   "Split off as North Pyongan in 1896; the Yalu railway bridge opened in 1911 and Sinuiju grew up around it; under Japanese rule from 1910.",
+   "Today the main gateway for trade with China, facing Dandong across the river."
+  ],
+  "landmarks": [
+   ["Myohyangsan", "A famous mountain with the Pohyon temple."],
+   ["Tonggun Pavilion", "A pavilion on the Uiju walls overlooking the Yalu."],
+   ["Sino-Korean Friendship Bridge", "The road and rail bridge between Sinuiju and Dandong."]
+  ],
+  "specialties": [
+   ["Yalu river trade", "A border crossing town with traffic across the river."]
+  ],
+  "dialect": {
+   "name": "Pyongan dialect",
+   "features": "The northwestern accent.",
+   "phrases": [["어드메 가오?", "Where are you going?"]]
+  },
+  "meme": [["The retreat from Wihwa Island", "An army that said 'let's not, let's go home' — and ended up founding a five-hundred-year dynasty."]]
+ },
+ "23": {
+  "seat": "Kanggye",
+  "timeline": [
+   "Early Goguryeo's heartland lay on both banks of the Yalu.",
+   "Part of Balhae in the Unified Silla period.",
+   "Brought gradually under control from late Goryeo on.",
+   "In Joseon it was the mountain country of Pyongan; King Sejong set up four counties here against the Jurchens.",
+   "Under Japanese rule from 1910.",
+   "Split from North Pyongan in 1949 as Chagang Province; mountainous, with large hydroelectric plants."
+  ],
+  "landmarks": [
+   ["Yalu River", "Across it is Ji'an in China's Jilin, with Goguryeo's Gungnae fortress and the Gwanggaeto Stele."],
+   ["Rangrim Mountains", "One of the high ridges of the northern peninsula."]
+  ],
+  "specialties": [
+   ["Mountain produce", "Forest goods and timber."]
+  ],
+  "dialect": {
+   "name": "Pyongan dialect",
+   "features": "A mountain accent that blends into Hamgyong speech at the edges.",
+   "phrases": [["일없습네다", "It's all right"]]
+  },
+  "meme": [["Across from an ancient capital", "Stand on the Yalu and the Goguryeo capital of 1,600 years ago is on the other bank."]]
+ },
+ "24": {
+  "seat": "Haeju",
+  "timeline": [
+   "Goguryeo land; Anak Tomb No. 3 has rare ink inscriptions and murals.",
+   "Under Unified Silla it was the north of Hanju.",
+   "Close to Goryeo's capital Gaegyeong, a key area west of the capital region.",
+   "Joseon created Hwanghae Province, named from Hwangju and Haeju; the outlaw Im Kkeok-jeong roamed around Kuwolsan in the 16th century.",
+   "Under Japanese rule from 1910; the Yonbaek plain was a rice bowl.",
+   "Ongjin and Yonbaek south of the 38th parallel were briefly part of the South after 1945 and went to the North with the 1953 armistice; split off as South Hwanghae in 1954."
+  ],
+  "landmarks": [
+   ["Anak Tomb No. 3", "A Goguryeo mural tomb, part of the World Heritage site."],
+   ["Kuwolsan", "Linked in legend with Dangun, and the hideout of the outlaw Im Kkeok-jeong."],
+   ["Haeju", "Known in Joseon for calligraphy ink."]
+  ],
+  "specialties": [
+   ["Yonbaek rice", "Rice from the Yonbaek plain."]
+  ],
+  "dialect": {
+   "name": "Hwanghae dialect",
+   "features": "Between Gyeonggi and Pyongan speech.",
+   "phrases": []
+  },
+  "meme": [["The outlaw's mountain", "Im Kkeok-jeong's story has been filmed in both North and South, and it made Kuwolsan famous."]]
+ },
+ "25": {
+  "seat": "Sariwon",
+  "timeline": [
+   "Goguryeo land.",
+   "A northern frontier in the Unified Silla period.",
+   "Close to Goryeo's capital; Wang Geon granted Pyongsan to his founding general Sin Sung-gyeom as the seat of the Pyongsan Sin clan.",
+   "In Joseon it belonged to Hwanghae Province — Hwangju gave half the name.",
+   "Under Japanese rule from 1910; the Seoul–Sinuiju railway ran through Sariwon.",
+   "Split off as North Hwanghae in 1954, with its office in Sariwon."
+  ],
+  "landmarks": [
+   ["Chongbangsan fortress", "A mountain fortress and the Songbul temple near Sariwon."],
+   ["Sohung", "A crossroads town."]
+  ],
+  "specialties": [
+   ["Hwangju apples", "A well-known apple district of the northern peninsula."]
+  ],
+  "dialect": {
+   "name": "Hwanghae dialect",
+   "features": "A transition zone between northern and southern accents.",
+   "phrases": []
+  },
+  "meme": [["Closer than you think", "As the crow flies, Sariwon is far closer to Seoul than Busan is."]]
+ },
+ "26": {
+  "seat": "Wonsan",
+  "timeline": [
+   "Land of the Eastern Ye, then Goguryeo; Silla pushed north to here in the 6th century.",
+   "The northern part of Sakju and Myeongju in Unified Silla.",
+   "Goryeo's Eastern Frontier.",
+   "In Joseon it was part of Gangwon (its north part in Hamgyong).",
+   "Wonsan opened as a port in 1880; under Japanese rule from 1910.",
+   "Divided by the 38th parallel in 1945; Wonsan and nearby areas moved from South Hamgyong into Kangwon in 1946; South Korean tourists could visit Kumgangsan from 1998 to 2008."
+  ],
+  "landmarks": [
+   ["Kumgangsan", "The 'mountain of twelve thousand peaks'."],
+   ["Myongsasimni", "White sands and sweetbriar roses near Wonsan."],
+   ["Songdowon", "Wonsan's seaside."]
+  ],
+  "specialties": [
+   ["Pollock", "The signature fish of the East Sea."]
+  ],
+  "dialect": {
+   "name": "Gangwon and Hamgyong dialects",
+   "features": "The south sounds like the Gangwon east coast; the north like Hamgyong.",
+   "phrases": [["그랬소?", "Is that so?"]]
+  },
+  "meme": [["Two Gangwons", "There's a Gangwon on each side, so elections and weather forecasts have to say which one."]]
+ },
+ "27": {
+  "seat": "Hamhung",
+  "timeline": [
+   "Land of the Okjeo, then Goguryeo; in the 6th century Silla's King Jinheung set up the Hwangchoryong and Maunryong steles here.",
+   "Part of Balhae in the Unified Silla period.",
+   "Brought under control in late Goryeo; Yi Seong-gye's family rose to power here.",
+   "Joseon's Hamgyong Province (from Hamhung and Gyeongseong); King Taejo retired to Hamhung, giving rise to the phrase 'Hamhung envoy'.",
+   "Under Japanese rule from 1910; large chemical works were built at Hungnam.",
+   "The Battle of Chosin Reservoir and the Hungnam evacuation took place here in the winter of 1950."
+  ],
+  "landmarks": [
+   ["Hamhung Bongung", "Yi Seong-gye's old residence."],
+   ["Kaema Plateau", "The 'roof of the peninsula'."],
+   ["Hungnam port", "Where the 1950 evacuation sailed from."]
+  ],
+  "specialties": [
+   ["Hamhung naengmyeon", "Chewy noodles of potato starch, with spicy raw fish."]
+  ],
+  "dialect": {
+   "name": "Hamgyong dialect",
+   "features": "Pitch accent, with endings like -seumdung and -mme.",
+   "phrases": [["했슴둥?", "Did you do it?"], ["일없슴메", "It's all right"]]
+  },
+  "meme": [["The Hamhung envoy", "None of the envoys sent to fetch the retired king from Hamhung ever came back — so a 'Hamhung envoy' is someone who goes and never returns."]]
+ },
+ "28": {
+  "seat": "Chongjin",
+  "timeline": [
+   "Land of the Okjeo and Mohe.",
+   "Part of Balhae in the Unified Silla period.",
+   "Under Goryeo, Jurchen country.",
+   "Under King Sejong, Kim Jong-seo founded the 'Six Garrisons', pushing the border to the Tumen; Gyeongseong gave half the province's name.",
+   "Under Japanese rule from 1910; Chongjin grew into a port and industrial city.",
+   "Part of the North after 1945; the provincial office is in Chongjin."
+  ],
+  "landmarks": [
+   ["Chilbosan", "A coastal mountain of strange rocks."],
+   ["Kyongsong", "A northern stronghold in Joseon times."]
+  ],
+  "specialties": [
+   ["East Sea fish", "Pollock and squid."]
+  ],
+  "dialect": {
+   "name": "Hamgyong dialect (Six Garrisons)",
+   "features": "Keeps many Middle Korean forms; sentences often end in -mdung.",
+   "phrases": [["어디 감둥?", "Where are you going?"]]
+  },
+  "meme": [["The Six Garrisons", "King Sejong's 'northern frontier' made the Tumen River the peninsula's northern border."]]
+ },
+ "29": {
+  "seat": "Hyesan",
+  "timeline": [
+   "The Paektu area, a frontier of Goguryeo and Balhae.",
+   "Part of Balhae in the Unified Silla period.",
+   "Under Goryeo, Jurchen country.",
+   "In Joseon it belonged to Hamgyong; a boundary stele was set up on Paektu in 1712.",
+   "Under Japanese rule from 1910; the Battle of Pochonbo took place in 1937.",
+   "Created in 1954 from parts of South and North Hamgyong as Ryanggang Province."
+  ],
+  "landmarks": [
+   ["Heaven Lake on Paektu", "A crater lake on the peninsula's highest peak; the China–North Korea border crosses it."],
+   ["Samjiyon", "Highland lakes."]
+  ],
+  "specialties": [
+   ["Potatoes", "Highland potatoes, especially from Taehongdan."]
+  ],
+  "dialect": {
+   "name": "Hamgyong dialect",
+   "features": "A northern accent.",
+   "phrases": [["일없슴메", "It's all right"]]
+  },
+  "meme": [["The coldest province", "Minus thirty or forty in winter is normal; across the river from Hyesan is China's Changbai."]]
+ }
+}

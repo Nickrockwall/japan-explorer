@@ -52,7 +52,37 @@ function renderWelcome(el) {
     </div>`;
 }
 
-function renderRegion(el, p) {
+// 各区的史话（src/data/korea/content/{lang}.json）：时间轴固定 6 段，顺序同 ERAS
+const ERAS = ['samguk', 'silla', 'goryeo', 'joseon', 'modern', 'today'];
+
+function contentHTML(c) {
+  if (!c) return `<div class="note kr-soon">${t('kr.soon')}</div>`;
+  const items = (xs) => xs.map(([n, d]) => `<li><span class="n">${esc(n)}</span><span class="d">${esc(d)}</span></li>`).join('');
+  return `
+    ${c.meme?.length ? `<details class="meme" open>
+      <summary><span class="meme-h">${t('meme.h')}</span><small>${t('meme.sub')}</small></summary>
+      ${c.meme.map(([h, x]) => `<div class="meme-item"><b>${esc(h)}</b><p>${esc(x)}</p></div>`).join('')}
+    </details>` : ''}
+    <div class="section-h">${t('sec.timeline')} <small>${t('sec.timeline.sub')}</small></div>
+    <div class="timeline">
+      ${c.timeline.map((x, i) => `
+        <details class="tl" data-stage="${ERAS[i]}" ${i === 0 ? 'open' : ''}>
+          <summary><span class="era">${esc(t(`kr.era.${ERAS[i]}`))}</span><span class="t">${esc(x.split(/[，,。；;]/)[0])}</span><span class="period">${esc(t(`kr.era.${ERAS[i]}.p`))}</span></summary>
+          <div class="body">${esc(x)}</div>
+        </details>`).join('')}
+    </div>
+    <div class="two-col">
+      <div><div class="section-h">${t('sec.landmarks')} <small>Landmarks</small></div><ul class="items">${items(c.landmarks)}</ul></div>
+      <div><div class="section-h">${t('sec.specialties')} <small>Specialties</small></div><ul class="items">${items(c.specialties)}</ul></div>
+    </div>
+    <div class="section-h">${t('sec.dialect')} <small>${esc(c.dialect.name)}</small></div>
+    <div class="dialect-box">
+      <p class="feat">${esc(c.dialect.features)}</p>
+      ${c.dialect.phrases.map(([ph, m]) => `<div class="phrase"><span class="p" lang="ko">${esc(ph)}</span><span class="m">${esc(m)}</span></div>`).join('')}
+    </div>`;
+}
+
+function renderRegion(el, p, c, translated = true) {
   const side = t(`kr.side.${p.side}`);
   el.innerHTML = `
     <div class="hero">
@@ -78,13 +108,14 @@ function renderRegion(el, p) {
     </div>
     <div class="stats">
       <div class="stat"><div class="k">${t('kr.st.side')}</div><div class="v" title="${esc(side)}">${esc(t(`kr.side.${p.side}.s`))}</div></div>
-      <div class="stat"><div class="k">${t('st.pop')}</div><div class="v">${fmtPop(p.pop)}</div></div>
-      <div class="stat"><div class="k">${t('kr.st.year')}</div><div class="v">${p.pop_year || '—'}</div></div>
+      <div class="stat"><div class="k">${t('kr.st.seat')}</div><div class="v" title="${esc(c?.seat || '')}">${esc(c?.seat || '—')}</div></div>
+      <div class="stat"><div class="k">${t('st.pop')}</div><div class="v" title="${p.pop_year || ''}">${fmtPop(p.pop)}${p.pop_year ? `<small> (${p.pop_year})</small>` : ''}</div></div>
       <div class="stat"><div class="k">${t('st.area')}</div><div class="v">${Math.round(p.area).toLocaleString()} km²</div></div>
     </div>
     ${p.note ? `<div class="note">${esc(p.note[lang] || p.note.zh)}</div>` : ''}
-    <div class="note kr-soon">${t('kr.soon')}</div>
+    ${contentHTML(c)}
     <p class="legal">${t('kr.src.region')}</p>`;
+  if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
   el.scrollTop = 0;
 }
 
@@ -109,6 +140,11 @@ export async function main() {
     return;
   }
   const regions = new Map(geo.features.map((f) => [f.properties.id, f.properties]));
+  // 史话：当前语言没有时退回中文并提示
+  const getJSON = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  let content = await getJSON(`${MAP.data}/content/${lang}.json`);
+  const translated = !!content;
+  if (!content) content = await getJSON(`${MAP.data}/content/zh.json`) || {};
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
@@ -242,7 +278,7 @@ export async function main() {
     visited.add(id);
     updateCounter();
     chart.setOption({ geo: { regions: regionData() } });
-    renderRegion(detailEl, p);
+    renderRegion(detailEl, p, content[id], translated);
     $('tab-pref').textContent = nameOf(p);
     history.replaceState(null, '', stateHash(id));
     tabs.ping('detail');
