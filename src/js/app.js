@@ -1,5 +1,5 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
-import { MAP } from './country.js';
+import { MAP, mapKey } from './country.js';
 import { loadAll, loadProvinces, loadProvinceEras, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
@@ -16,7 +16,7 @@ import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
-import { NARROW, SHORT, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch } from './shell.js';
+import { NARROW, SHORT, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -113,6 +113,7 @@ async function main() {
   const loading = $('loading');
   applyStatic();
   setupLangSwitch();
+  setupMapSwitch();
   setupHudFold();
   setupSound();
   $('settings-legal').innerHTML = legalHTML();
@@ -1014,7 +1015,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+// 半岛等其他地图走各自的入口，日本的代码路径不动
+document.documentElement.dataset.map = mapKey;
+(mapKey === 'japan' ? main() : import('./korea.js').then((m) => m.main())).catch((err) => {
   console.error(err);
   const loading = $('loading');
   loading.classList.remove('hidden');

@@ -3,6 +3,7 @@ import { apiConfig, DEFAULT_API, uiPref } from './store.js';
 import { testConnection } from './guide.js';
 import { audio } from './audio.js';
 import { lang, LANGS, setLang, t } from './i18n.js';
+import { MAPS, mapKey, setMap } from './country.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -219,5 +220,17 @@ export function setupLangSwitch() {
   box.addEventListener('click', (e) => {
     const b = e.target.closest('[data-lang]');
     if (b) setLang(b.dataset.lang);
+  });
+}
+
+// 顶栏的地图开关：日本 / 朝鲜半岛（手机上用简称）
+export function setupMapSwitch() {
+  const box = $('map-switch');
+  box.innerHTML = Object.keys(MAPS).map((k) =>
+    `<button type="button" role="radio" data-map="${k}" aria-checked="${k === mapKey}" class="${k === mapKey ? 'on' : ''}" title="${t(`map.${k}`)}">`
+    + `<span class="lbl-full">${t(`map.${k}`)}</span><span class="lbl-short">${t(`map.${k}.s`)}</span></button>`).join('');
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-map]');
+    if (b) setMap(b.dataset.map);
   });
 }

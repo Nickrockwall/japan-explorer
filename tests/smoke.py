@@ -106,6 +106,22 @@ class Case:
         # 老用户数据键名不变
         assert page.evaluate("JSON.parse(localStorage.getItem('je.visited') || '[]').includes(26)"), '日本模式应写入 je.visited'
 
+    def korea_switch(self, page):
+        # 顶栏开关切到朝鲜半岛：整页重载，地址栏带 map=korea
+        page.click('#map-switch [data-map="korea"]')
+        page.wait_for_function("document.documentElement.dataset.map === 'korea'", timeout=30000)
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        assert 'map=korea' in page.evaluate('location.hash'), f"地址栏 {page.evaluate('location.hash')}"
+        assert page.get_attribute('#map-switch [data-map="korea"]', 'aria-checked') == 'true'
+        self.no_overflow(page)
+        # 看过半岛之后，日本的老链接（不带 map）仍打开日本
+        page.goto(f'{self.base}#lang={self.lang}&pref=26')
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        page.wait_for_timeout(500)
+        assert page.evaluate('document.documentElement.dataset.map') == 'japan'
+        self.deeplink(page)
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -424,7 +440,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

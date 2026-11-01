@@ -6,7 +6,7 @@ const SHELL = [
   'index.html',
   'manifest.webmanifest',
   'src/css/style.css',
-  'src/js/app.js', 'src/js/country.js', 'src/js/shell.js', 'src/js/store.js', 'src/js/map.js', 'src/js/detail.js',
+  'src/js/app.js', 'src/js/country.js', 'src/js/shell.js', 'src/js/korea.js', 'src/js/store.js', 'src/js/map.js', 'src/js/detail.js',
   'src/js/guide.js', 'src/js/goshuin.js', 'src/js/crests.js', 'src/js/i18n.js', 'src/js/muni.js', 'src/js/search.js', 'src/js/pilgrimage.js', 'src/js/audio.js', 'src/js/hiroshige.js', 'src/js/provnames.js', 'src/js/locate.js', 'src/js/koku.js', 'src/js/kokuryoku.js', 'src/js/koseki.js', 'src/js/tour.js',
   'src/vendor/echarts.min.js',
   'src/assets/geojson/japan.json',

@@ -5,6 +5,7 @@
 
 export const MAPS = {
   japan: { key: 'japan', geo: 'src/assets/geojson/japan.json', data: 'src/data', units: 47, store: 'je.' },
+  korea: { key: 'korea', geo: 'src/data/korea/regions.json', data: 'src/data/korea', units: 29, store: 'je.korea.' },
 };
 
 const SAVED_KEY = 'je.ui.map';
@@ -26,3 +27,14 @@ export const mapKey = pickMap(location.hash, readSaved());
 try { localStorage.setItem(SAVED_KEY, JSON.stringify(mapKey)); } catch { /* 隐私模式等情况下忽略 */ }
 
 export const MAP = MAPS[mapKey];
+
+// 换地图：地址栏只留语言和 map=，整页重载
+export function setMap(key) {
+  if (!MAPS[key] || key === mapKey) return;
+  const old = new URLSearchParams(location.hash.slice(1));
+  const h = new URLSearchParams();
+  h.set('map', key);
+  if (old.has('lang')) h.set('lang', old.get('lang'));
+  location.hash = h.toString();
+  location.reload();
+}

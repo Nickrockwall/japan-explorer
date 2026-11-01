@@ -787,6 +787,19 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 }
 .lang-switch button:hover { color: var(--kin); }
 .lang-switch button.on { background: var(--kin); color: var(--bg); }
+.map-switch {
+  display: inline-flex; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); flex: none;
+}
+.map-switch button {
+  border: 0; background: transparent; cursor: pointer; padding: 4px 9px; border-radius: 6px;
+  font: 700 12px var(--sans); color: var(--muted); white-space: nowrap;
+}
+.map-switch button:hover { color: var(--kin); }
+.map-switch button.on { background: var(--shu); color: #fff; }
+@media (max-width: 900px) {
+  .map-switch .lbl-full { display: none; }
+  .map-switch .lbl-short { display: inline; }
+}
 .untranslated {
   margin: -6px 0 12px; padding: 6px 10px; border-radius: var(--r-sm); font-size: 12px;
   color: #b9d3e6; background: rgba(93,138,168,.14); border: 1px dashed rgba(93,138,168,.5);
@@ -1173,6 +1186,9 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .brand h1 { font-size: 17px; }
   .brand-seal { width: 32px; height: 32px; font-size: 17px; }
   .lang-switch { order: 1; }
+  /* 手机：品牌区只留印章，地图开关占标题的位置 */
+  .brand > div:not(.map-switch):not(.brand-seal) { display: none; }
+  .map-switch button { padding: 4px 8px; }
   .explore-counter, .btn-battle, .btn-book, .btn-sound, #btn-settings { order: 2; }
   .btn-sound { flex: none; padding: 6px 7px; }
   .explore-counter { flex: none; }
