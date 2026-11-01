@@ -21,6 +21,7 @@ The app is available in Chinese, English and Japanese.
 | **Map filters** | Exploration progress / modern regions / ancient circuits / Sengoku powers (1572) / Bakumatsu camps. "Ancient circuits" draws the **real borders** of the 68 provinces — see Musashi spanning Tokyo, Saitama and Kanagawa, or Settsu split between Osaka and Hyōgo — with prefecture borders dashed on top |
 | **Time travel** | Drag the slider or press play to see the map and seat of power in nine eras, from Asuka to today |
 | **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
+| **Hiroshige prints** | All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces* (1853–56): click a province on the ancient map to see how Hiroshige painted it, and where the scene is today; the detail card lists the prints for each prefecture, viewable full size |
 | **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
 | **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, province, Meiji-era districts, today's district and population. The search box finds municipalities too (kanji, kana or English) with duplicates listed separately; place names on the map; the AI guide answers about the selected place; links can point straight at a municipality |
 | **Pilgrimage** | A fourth layer of anime pilgrimage spots and NHK taiga-drama locations, filterable by type; tap a pin for the work, the location, the scene and visiting tips, and the AI guide talks about them like an otaku or a drama critic. Every spot's coordinates and work–place link are checked against Wikipedia (111 spots across all 47 prefectures) |
@@ -35,6 +36,13 @@ The app is available in Chinese, English and Japanese.
 ## 📜 Patch Notes
 
 > Adventurers, a new version has arrived. Here are all past announcements (latest first).
+
+### 🎨 v2.3 "Hiroshige's Sixty-odd Provinces"
+- **All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces* are in!** One per province, plus Edo
+- Click a province on the "Ancient circuits" map to see Hiroshige's view of it; Musashi also has the Year-End Market at Asakusa
+- Each print shows where the scene is today, down to the city (located from Wikipedia coordinates; where the spot is unknown, it says so)
+- New "through Hiroshige's eyes" section on the detail card; click a thumbnail for the full print and browse with ‹ › or the arrow keys
+- The prints are public domain; images come from Wikimedia Commons and ship with the site, so they load in China too
 
 ### 🗾 v2.2 "Sixty-Eight Provinces"
 - **The "Ancient circuits" filter is now a real map of the old provinces!** Instead of painting today's prefectures, the map draws the 68 provinces as they were
@@ -157,7 +165,7 @@ History, local in-jokes, ramen and sake entries follow commonly accepted account
 
 National map: source 「地球地図日本」 (Global Map Japan, Geospatial Information Authority of Japan), converted to GeoJSON by [dataofjapan/land](https://github.com/dataofjapan/land).
 
-Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`. The 68 province borders (`src/data/provinces.json`) are merged from the municipalities by province: `pip install shapely`, then `python -X utf8 tools/build_provinces.py`.
+Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`. The 68 province borders (`src/data/provinces.json`) are merged from the municipalities by province: `pip install shapely`, then `python -X utf8 tools/build_provinces.py`. Hiroshige prints (`src/data/hiroshige.json` and `src/assets/hiroshige/`): `pip install pillow`, then `python -X utf8 tools/fetch_hiroshige.py` (public domain only; scenes it cannot place, or places in the wrong province, are listed for manual review).
 
 ## Copyright & License
 

@@ -40,6 +40,7 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/assets/geojson/japan.json` | 地球地図日本（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换 | 须注明「出典：地球地図日本」；商用须向国土地理院报告 |
 | `src/data/municipalities/` 的边界，及由其合并而成的 `src/data/provinces.json` | 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成，经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化 | 国土数値情報の利用規約 |
 | `src/data/municipalities/` 的读音、人口、英文名 | [Wikidata](https://www.wikidata.org/) | CC0 |
+| `src/assets/hiroshige/` | 歌川広重『六十余州名所図会』（1853–56），图像取自 [Wikimedia Commons](https://commons.wikimedia.org/)（各图原始页面见 `src/data/hiroshige.json` 的 `source`） | 公有领域（Public domain）。画题译文与地点整理属本项目内容 |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 
 作品名、人物名、商标（动画、大河剧、酒造、拉面店等）归各自权利人所有，本项目仅作介绍性引用。

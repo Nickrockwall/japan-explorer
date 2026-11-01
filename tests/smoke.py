@@ -239,6 +239,27 @@ class Case:
         page.wait_for_timeout(500)
         assert page.evaluate(js)[0] == 'japan', '换滤镜后底图应换回县'
 
+    def hiroshige(self, page):
+        # 古国地图上点武藏国：弹出广重两幅（武藏、江户）；看大图、翻页；详卡有「广重笔下」
+        self.tab(page, 'map')
+        page.click('[data-filter="circuit"]')
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('68')", timeout=15000)
+        page.wait_for_timeout(800)
+        x, y = page.evaluate('''() => { const c = echarts.getInstanceByDom(document.getElementById('map'));
+            const r = document.getElementById('map').getBoundingClientRect();
+            const [x, y] = c.convertToPixel({ geoIndex: 0 }, [139.75, 35.69]); return [x + r.left, y + r.top]; }''')
+        (page.touchscreen.tap if self.narrow else page.mouse.click)(x, y)
+        page.wait_for_selector('#art-card:not([hidden])')
+        assert page.locator('#art-card .art-row').count() == 2, '武藏国应有两幅（武藏、江户）'
+        page.click('#art-card [data-act="art"] >> nth=0')
+        page.wait_for_selector('#art[open] .art-big img')
+        page.wait_for_function("document.querySelector('#art .art-big img').naturalWidth > 0", timeout=10000)  # 大图加载出来
+        page.click('#art [data-act="art-next"]')
+        assert '17' in page.text_content('#art .art-series'), '下一幅应是第 17 图'
+        page.keyboard.press('Escape')
+        self.tab(page, 'detail')
+        assert page.locator('.art-section .art-thumb').count() == 2, '东京都详卡应列出两幅'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -257,7 +278,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

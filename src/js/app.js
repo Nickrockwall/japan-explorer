@@ -7,6 +7,7 @@ import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
+import { provinceCard, hiroshigeSection, createViewer } from './hiroshige.js';
 import { audio } from './audio.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
@@ -357,9 +358,34 @@ async function main() {
     if (!app.currentId) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
-    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: pilgrimageSection(p, pil.spots, pil.done) });
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + pilgrimageSection(p, pil.spots, pil.done) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
+  }
+
+  // ── 广重《六十余州名所图会》：古国地图上点一国弹卡片，详卡列出本县的画，点缩略图看大图 ──
+  const art = data.hiroshige || [];
+  const prefLabel = (id) => prefName(prefs.get(id));
+  const viewer = createViewer($('art'), art, prefLabel);
+  const artCard = $('art-card');
+  function closeArtCard() { artCard.hidden = true; }
+  function openArtCard(p) {
+    const prints = art.filter((h) => h.province === p.key || (p.key === '武蔵国' && h.province === '江戸'));
+    if (!prints.length) { closeArtCard(); return; }
+    const info = map.provInfo(p);
+    artCard.innerHTML = provinceCard(info.label, info.now, prints, prefLabel);
+    artCard.hidden = false;
+    artCard.scrollTop = 0;
+    map.hideTip(); // 触屏点按后提示框会留在原处，盖住卡片
+  }
+  // 离开古国底图（换滤镜、时代、图层、合战、下钻）时收起卡片
+  const syncArtCard = () => { if (!map.provMode) closeArtCard(); };
+  for (const el of [artCard, detailEl]) {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('[data-act="art-close"]')) closeArtCard();
+      const b = e.target.closest('[data-act="art"]');
+      if (b) viewer.open(+b.dataset.no);
+    });
   }
 
   // ── 圣地巡礼 ──
@@ -395,6 +421,7 @@ async function main() {
   const map = createMap($('map'), data.geo, prefs, {
     spots: pil.spots,
     onSpot: (s) => openSpot(s),
+    onProvince: (p) => openArtCard(p),
     onSelect(id) {
       if (app.battle) exitBattle();
       if (id === app.currentId) return;
@@ -491,6 +518,7 @@ async function main() {
     }
     syncFilterButtons();
     updateLegend(map);
+    syncArtCard();
     if (app.currentId) era ? highlightEra(detailEl, era) : highlightEra(detailEl, null);
   }
 
@@ -542,6 +570,7 @@ async function main() {
   }
   function applyFilter(m) {
     if (m === 'circuit') ensureProvinces();
+    queueMicrotask(syncArtCard);
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
     uiPref.set('filter', map.setMode(m));
     syncFilterButtons();
@@ -569,6 +598,7 @@ async function main() {
     });
     syncFilterButtons();
     updateLegend(map);
+    syncArtCard();
     renderCurrent();
     syncGuidePil();
   }
@@ -697,7 +727,8 @@ async function main() {
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-    if (!pilCard.hidden) closeSpot();
+    if (!artCard.hidden) closeArtCard();
+    else if (!pilCard.hidden) closeSpot();
     else if (app.battle) exitBattle();
     else closeMuni();
   });

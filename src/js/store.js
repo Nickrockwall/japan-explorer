@@ -17,7 +17,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
   const geoP = fetchJSON('src/assets/geojson/japan.json');
   try {
     const b = await fetchJSON(`src/data/bundle/${lang}.json`);
-    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage };
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [] };
   } catch {
     return loadFiles(lang, merge);
   }
@@ -45,7 +45,8 @@ async function loadFiles(lang, merge) {
   const pil = await fetchJSON('src/data/pilgrimage.json');
   const over = lang === 'zh' ? {} : await fetchJSON(`${dir}/pilgrimage.json`).catch(() => ({}));
   const pilgrimage = { done: pil.done, spots: pil.spots.map((s) => ({ ...s, ...(over[s.id] || {}) })) };
-  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage };
+  // 广重浮世绘只随数据包发布（题名译文、市区町村名由 build_bundle.py 拼好）；回退加载时不显示
+  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [] };
 }
 
 function read(key, fallback) {

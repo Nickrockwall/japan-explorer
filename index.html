@@ -131,6 +131,9 @@
       <!-- 圣地巡礼：点图钉弹出的作品卡（pilgrimage.js 填充） -->
       <div class="muni-card pil-card" id="pil-card" hidden aria-live="polite"></div>
 
+      <!-- 古国地图：点一国弹出广重《六十余州名所图会》（hiroshige.js 填充） -->
+      <div class="muni-card art-card" id="art-card" hidden aria-live="polite"></div>
+
       <!-- 窄屏合战时：向导在页面下方看不到，在地图底部同步显示名将的最新发言 -->
       <div class="battle-voice" id="battle-voice">
         <div class="bv-head">
@@ -212,6 +215,13 @@
       </header>
       <div class="battle-list" id="battle-list"></div>
     </div>
+  </dialog>
+
+  <dialog class="art-dlg" id="art" data-i18n-aria="art.series" aria-label="六十余州名所图会">
+    <button type="button" class="book-close art-x" data-act="art-x" data-i18n-aria="close" aria-label="关闭">×</button>
+    <button type="button" class="art-nav art-prev" data-act="art-prev" data-i18n-aria="art.prev" aria-label="上一幅">‹</button>
+    <figure class="art-big"></figure>
+    <button type="button" class="art-nav art-next" data-act="art-next" data-i18n-aria="art.next" aria-label="下一幅">›</button>
   </dialog>
 
   <dialog class="modal" id="settings">

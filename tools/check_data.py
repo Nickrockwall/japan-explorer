@@ -254,6 +254,29 @@ def check_provinces():
         err('provinces', '缺少县界 pref_borders')
 
 
+def check_hiroshige():
+    """广重《六十余州名所图会》：69 幅、编号连续、旧国合法、图片存在、只收公有领域、题名译文齐全"""
+    path = os.path.join(ROOT, 'src', 'data', 'hiroshige.json')
+    if not os.path.exists(path):
+        return
+    data = load('src', 'data', 'hiroshige.json')
+    provs = {f['properties']['key'] for f in load('src', 'data', 'provinces.json')['features']} | {'江戸'}
+    if sorted(h['no'] for h in data) != list(range(1, 70)):
+        err('hiroshige', '应为第 1–69 图各一幅')
+    for h in data:
+        where = f'hiroshige {h["no"]}'
+        if h['province'] not in provs:
+            err(where, f'旧国「{h["province"]}」不在 provinces.json 里')
+        if not os.path.exists(os.path.join(ROOT, h['img'])):
+            err(where, f'缺图片 {h["img"]}')
+        if not re.search(r'public domain|^PD|^CC0', h.get('license', ''), re.I):
+            err(where, f'许可不是公有领域：{h.get("license")!r}')
+        if not (h.get('title_zh') and h.get('title_en')):
+            err(where, '缺题名译文（tools/fetch_hiroshige.py 的 TITLES）')
+        if not 1 <= (h.get('pref') or 0) <= 47:
+            err(where, '缺画中地点所在的县')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -276,7 +299,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_pilgrimage, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_pilgrimage, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

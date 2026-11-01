@@ -48,6 +48,32 @@ def pilgrimage(lang):
     return {'done': src['done'], 'spots': [{**{k: s[k] for k in SPOT_FIELDS}, **over.get(s['id'], {})} for s in src['spots']]}
 
 
+# 广重《六十余州名所图会》：按语言给出题名译文、旧国名与画中地点今天所在的市区町村名
+EDO = {'zh': '江户', 'ja': '江戸', 'en': 'Edo'}
+
+
+def hiroshige(lang):
+    path = os.path.join(DATA, 'hiroshige.json')
+    if not os.path.exists(path):
+        return []
+    prov_names, muni_names = {}, {}
+    for i in range(1, 48):
+        d = load(os.path.join(DATA, 'municipalities', f'{i:02d}.json'))
+        prov_names.update(d['provinces'])
+        for f in d['features']:
+            q = f['properties']
+            muni_names[q['code']] = q['en'] if lang == 'en' and q.get('en') else q['name']
+    out = []
+    for h in load(path):
+        prov = EDO[lang] if h['province'] == '江戸' else prov_names[h['province']][lang]
+        out.append({
+            'no': h['no'], 'province': h['province'], 'prov': prov, 'title': h['title'],
+            'title_t': {'zh': h['title_zh'], 'en': h['title_en']}.get(lang, h['title']),
+            'pref': h['pref'], 'place': muni_names.get(h['muni']), 'img': h['img'], 'source': h['source'],
+        })
+    return out
+
+
 def build(lang):
     """生成某种语言的数据包文本（tools/check_data.py 也用它来判断已提交的包是否过期）"""
     index = load(os.path.join(DATA, 'index.json'))
@@ -67,7 +93,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang)}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang)}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

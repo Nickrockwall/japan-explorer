@@ -138,7 +138,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots = [] }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, spots = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -470,6 +470,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
       const id = prefAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))
         ?? (f?.properties.prefs.length === 1 ? f.properties.prefs[0] : null);
       if (id) onSelect(id);
+      if (f) onProvince(f.properties);
       return;
     }
     const id = idByName.get(params.name);
@@ -527,6 +528,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, spots =
       setView(view || homeView());
     },
     get state() { return { ...state }; },
+    get provMode() { return provMode(); },
+    hideTip: () => chart.dispatchAction({ type: 'hideTip' }),
+    // 旧国显示名与「今属」说明（作品卡用）
+    provInfo(p) { return { label: provFull(p), now: t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') }) }; },
     // 当前图例：{ caption, items: [label, color, count?][] }
     legend() {
       if (state.battle) {
