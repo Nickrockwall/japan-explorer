@@ -525,7 +525,8 @@ body.resizing { cursor: row-resize; user-select: none; }
 /* 图层按钮多于屏宽时在行内横滑，不撑宽整个地图区（flex 子项默认不肯缩到内容以下） */
 .toolbar-row > .layers { min-width: 0; }
 .toolbar-row > * { pointer-events: auto; }
-.map-toolbar .filters { align-self: flex-start; }
+.map-toolbar .filters { align-self: flex-start; max-width: 100%; overflow-x: auto; scrollbar-width: none; } /* 字体偏宽时在行内横滑，不撑宽地图区 */
+.map-toolbar .filters::-webkit-scrollbar { display: none; }
 .layers {
   display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px;
   background: rgba(24,24,28,.88); border: 1px solid rgba(212,163,115,.4); backdrop-filter: blur(4px);

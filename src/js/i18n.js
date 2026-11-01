@@ -566,7 +566,7 @@ const LABELS = {
   filter: {
     explore: ['探索进度', 'Exploration', '探訪状況'], region: ['现代区划', 'Modern regions', '現在の地方区分'],
     circuit: ['五畿七道', 'Ancient circuits', '五畿七道'], sengoku: ['战国势力', 'Sengoku powers', '戦国勢力'],
-    bakumatsu: ['幕末阵营', 'Bakumatsu camps', '幕末の陣営'], power: ['古国国力', 'Province power', '旧国の国力'],
+    bakumatsu: ['幕末阵营', 'Bakumatsu camps', '幕末の陣営'], power: ['古国国力', 'Then & now', '旧国の国力'],
   },
   filterCap: {
     explore: ['点击地区即记为已探索', 'Click a region to mark it explored', '地域をクリックすると探訪済みに'],
