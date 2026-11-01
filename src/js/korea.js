@@ -13,6 +13,7 @@ import { getPosition } from './locate.js';
 import { disputedAt } from './disputed.js';
 import { createTour } from './tour.js';
 import { createKoreaGuide } from './korea-guide.js';
+import { openShared, sharedButtons } from './shared.js';
 import { uiPref, apiConfig } from './store.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
@@ -75,6 +76,7 @@ function renderWelcome(el) {
       <p>${t('kr.w.p1')}</p>
       <p>${t('kr.w.p2')}</p>
       <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
+      <div class="section-h">${t('sh.h')}</div>${sharedButtons()}
       <p class="legal">${legalHTML()}</p>
     </div>`;
 }
@@ -98,6 +100,7 @@ function contentHTML(c) {
           <div class="body">${esc(x)}</div>
         </details>`).join('')}
     </div>
+    <div class="section-h">${t('sh.h')} <small>${t('sh.small')}</small></div>${sharedButtons()}
     <div class="two-col">
       <div><div class="section-h">${t('sec.landmarks')} <small>Landmarks</small></div><ul class="items">${items(c.landmarks)}</ul></div>
       <div><div class="section-h">${t('sec.specialties')} <small>Specialties</small></div><ul class="items">${items(c.specialties)}</ul></div>
@@ -515,7 +518,11 @@ export async function main() {
   window.addEventListener('resize', () => chart.resize());
 
   renderWelcome(detailEl);
-  detailEl.addEventListener('click', (e) => { if (e.target.closest('[data-act="tour"]')) startTour(); });
+  detailEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="tour"]')) startTour();
+    const sh = e.target.closest('[data-act="shared"]');
+    if (sh) openShared(sh.dataset.key);
+  });
   updateCounter();
   loading.classList.add('hidden');
   if (!uiPref.get('tourKorea', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);

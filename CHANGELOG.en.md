@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.0 · 2026-11-02
+
+- New Korean Peninsula mode, switched from next to the title: 29 regions North and South (2026 divisions) and 400-plus cities and counties, named in English, Korean script and romanization
+- A card for every region: six eras of history, sights, food, dialect and local in-jokes (in three languages)
+- Historical divisions: Silla's nine provinces, Goryeo's circuits, Joseon's eight provinces and the 1896 thirteen provinces; the towns behind the province names, Where am I and Then and now
+- Shared history of Japan and Korea: the Imjin War and Japanese rule, written as facts both sides accept / each side's account / sources, shared by both modes
+- Disputed places (Dokdo / Takeshima, the Northern Territories, Sea of Japan / East Sea) show both names and each side's position; Japan mode now draws them the same way
+- The peninsula guide Dancheong, dancheong colours, gayageum-style music and a first-visit tour
+
 ## 2.11 · 2026-11-01
 
 - The details card now shows each prefecture's emblem instead of an emoji (all 47 from Wikimedia Commons, public domain), drawn in gold; a seal with the old province names stands in if an emblem is missing

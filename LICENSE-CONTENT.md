@@ -46,7 +46,8 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/assets/emblems/`（47 都道府县章）与 `src/data/emblems.json` | [Wikimedia Commons](https://commons.wikimedia.org/) 各县章 SVG（文件名见 emblems.json 的 `commons`），转成透明底 PNG | **公有领域**（工具逐个核对，只收公有领域 / CC0） |
 | `tools/domains.json` 及数据包中的 `domains`（幕末各郡的领主与町村数） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)各郡条目「近世以降の沿革」中的《旧高旧領取調帳》表；藩的英文名来自 [Wikidata](https://www.wikidata.org/)（CC0） | **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/korea/regions.json` 的边界（朝鲜半岛模式） | [geoBoundaries](https://www.geoboundaries.org/)（gbOpen）：韩国 ADM1 取自 Natural Earth，ADM2 取自 citypopulation.de；朝鲜 ADM1/ADM2 取自 WFP / OCHA ROAP。按现行区划合并、简化 | 韩国 ADM1 公有领域；韩国 ADM2 CC BY 3.0；朝鲜 CC BY 3.0 IGO（均须署名） |
-| `src/data/korea/regions.json` 的韩文名、人口、面积，独岛 / 竹岛的坐标 | [Wikidata](https://www.wikidata.org/) | CC0 |
+| `src/data/korea/regions.json` 与 `counties/` 的名称、人口、面积，独岛 / 竹岛的坐标 | [Wikidata](https://www.wikidata.org/) | CC0 |
+| `src/data/korea/counties/`、`eras/` 的边界 | 同上 geoBoundaries（韩国 ADM3 的邑面洞用于补全灵光郡、拼出仁川检丹区：韩国公共누리第 1 类，须注明出处） | 同上 |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 
 作品名、人物名、商标（动画、大河剧、酒造、拉面店等）归各自权利人所有，本项目仅作介绍性引用。

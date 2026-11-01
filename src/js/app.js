@@ -17,6 +17,7 @@ import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
+import { openShared } from './shared.js';
 import { NARROW, SHORT, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
@@ -1009,7 +1010,11 @@ async function main() {
     { key: 'end' },
   ], { onEnd: () => uiPref.set('tourDone', true) });
   startTour = () => { if (app.battle) exitBattle(); closeMuni(); tour.start(); };
-  detailEl.addEventListener('click', (e) => { if (e.target.closest('[data-act="tour"]')) startTour(); });
+  detailEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="tour"]')) startTour();
+    const sh = e.target.closest('[data-act="shared"]');
+    if (sh) openShared(sh.dataset.key);
+  });
   if (!uiPref.get('tourDone', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 
   // 深链接：#pref=26 直接打开京都

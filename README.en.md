@@ -49,6 +49,17 @@ All of these come from the app's Rankings and Ancestral register views, and you 
 
 A 9-step tour runs on your first visit, and you can replay it from settings. The interface is in 中文, English and 日本語.
 
+## Korean Peninsula mode
+
+The 'Japan / Korean Peninsula' switch next to the title opens the peninsula map (or open `#map=korea` directly):
+
+- 29 first-level regions, North and South (divisions as of 2026), each with its name in English, Korean script and romanization, history across six eras, sights, food and dialect, and a drill-down to 400-plus cities and counties
+- Historical divisions: Silla's nine provinces, Goryeo's circuits, Joseon's eight provinces and the thirteen provinces of 1896; the Joseon layer marks the towns each province is named after (Gyeongsang = Gyeongju + Sangju…)
+- Where am I / Then and now: what your spot belonged to under Silla, Goryeo, Joseon and in 1896
+- Shared history of Japan and Korea: the Imjin War and Japanese rule, set out as facts both sides accept, each side's mainstream account, and sources — the same text in both modes
+- Disputed places show both names and list each side's position: Dokdo / Takeshima, Sea of Japan / East Sea; Japan mode now draws Takeshima and the Northern Territories the same way
+- Dancheong colours and gayageum-style music; the guide, Dancheong, answers questions even without an AI key
+
 ## How to use it
 
 - **Phone**: open the link in your browser, in portrait or landscape. To add it to your home screen: Safari on iPhone → Share → "Add to Home Screen"; Chrome on Android → ⋮ → "Add to Home screen". Pages you've seen also work offline.
@@ -66,6 +77,7 @@ Everything on the map has a source where possible, and the app says so where som
 - **Borders**: national map from 「地球地図日本」 (Geospatial Information Authority of Japan); municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成. Province borders are pieced together from municipalities, and a municipality spanning two provinces counts toward the main one, so they are approximate.
 - **From Japanese Wikipedia** (CC BY-SA 4.0): Meiji-era districts; ichinomiya shrines, provincial capitals and kokubunji temples; Edo-period population and rice yield by province; late-Edo lords by district (旧高旧領取調帳). Each entry is checked by script — for example, that its coordinates fall inside its province — and anything that doesn't match is left out.
 - **Wikidata** (CC0): municipal readings, populations and English names; English names of domains.
+- **Korean Peninsula**: boundaries from geoBoundaries (South: Natural Earth, citypopulation.de; North: WFP / OCHA ROAP), names and populations from Wikidata, updated to the 2026 divisions using Korean Wikipedia (e.g. Jeonnam-Gwangju, Incheon's new districts). Historical divisions are pieced together from today's counties; Silla and Goryeo show only territory and provincial seats — all approximate.
 - **Ukiyo-e and emblems**: Hiroshige's prints and the 47 prefectural emblems are in the public domain; images from Wikimedia Commons.
 - History, in-jokes, ramen and sake follow common accounts, some coloring is approximate (e.g. by a prefecture's dominant power), and uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
 

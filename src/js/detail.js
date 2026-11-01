@@ -2,6 +2,7 @@
 import { crestSVG } from './crests.js';
 import { t, label, lang, prefName, joinList } from './i18n.js';
 import { mapKey } from './country.js';
+import { sharedButtons } from './shared.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -17,6 +18,7 @@ export function renderWelcome(el) {
       <p>${t('w.p2')}</p>
       <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
+      <div class="section-h">${t('sh.h')}</div>${sharedButtons()}
       <p class="legal">${legalHTML()}</p>
     </div>`;
 }

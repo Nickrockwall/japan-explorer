@@ -1,0 +1,110 @@
+{
+ "events": [
+  {
+   "key": "imjin",
+   "years": "1592–1598",
+   "title": {"zh": "壬辰战争", "en": "The Imjin War", "ja": "壬辰戦争（文禄・慶長の役）"},
+   "names": [
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "壬辰倭乱、丁酉再乱", "en": "Imjin Waeran, Jeongyu Jaeran (임진왜란)", "ja": "壬辰倭乱・丁酉再乱"}},
+    {"who": {"zh": "朝鲜", "en": "North Korea", "ja": "北朝鮮"}, "name": {"zh": "壬辰祖国战争", "en": "Imjin Patriotic War (임진조국전쟁)", "ja": "壬辰祖国戦争"}},
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "文禄·庆长之役", "en": "Bunroku and Keichō campaigns", "ja": "文禄・慶長の役"}},
+    {"who": {"zh": "中国", "en": "China", "ja": "中国"}, "name": {"zh": "万历朝鲜之役、抗倭援朝", "en": "Wanli Korean Campaign", "ja": "万暦朝鮮の役"}}
+   ],
+   "facts": {
+    "zh": [
+     "1592 年 4 月，统一日本的丰臣秀吉派大军在釜山登陆，很快攻下汉城、平壤。",
+     "朝鲜水军在李舜臣指挥下屡次获胜，各地义兵起事；明朝出兵援助，1593 年收复平壤。",
+     "和谈破裂后日军 1597 年再次进攻，1598 年秀吉去世后撤回。",
+     "战争造成朝鲜大量人员死伤与被掳，许多陶工等工匠被带到日本，日本一些窑业的起源与此有关；京都的耳冢埋着战时割下的朝鲜人耳鼻。",
+     "1607 年起朝鲜与德川幕府恢复往来，此后朝鲜多次派遣通信使到日本。"
+    ],
+    "en": [
+     "In April 1592 Toyotomi Hideyoshi, who had just unified Japan, landed a large army at Busan; it soon took Hanseong (Seoul) and Pyongyang.",
+     "Joseon's navy under Yi Sun-sin won repeatedly, volunteer 'righteous armies' rose across the country, and Ming China sent troops, retaking Pyongyang in 1593.",
+     "After peace talks failed, Japan invaded again in 1597 and withdrew after Hideyoshi died in 1598.",
+     "Korea suffered heavy loss of life and many people were carried off, among them potters whose skills lie at the origin of several Japanese ceramic traditions; the Mimizuka in Kyoto holds ears and noses cut from Koreans in the war.",
+     "Relations between Joseon and the Tokugawa shogunate resumed in 1607, after which Joseon sent embassies (tongsinsa) to Japan many times."
+    ],
+    "ja": [
+     "1592年4月、天下を統一した豊臣秀吉が大軍を釜山に上陸させ、漢城・平壌を相次いで落とした。",
+     "朝鮮水軍は李舜臣の指揮で勝利を重ね、各地で義兵が起こり、明が援軍を送って1593年に平壌を奪回した。",
+     "講和交渉が決裂し1597年に再出兵、1598年の秀吉の死後に撤退した。",
+     "朝鮮では多くの死傷者と連行者が出た。連れて来られた陶工などの職人は日本のいくつかの窯業の起こりに関わっている。京都の耳塚には戦時に切り取られた朝鮮の人々の耳や鼻が葬られている。",
+     "1607年から朝鮮と徳川幕府の往来が再開し、以後朝鮮はたびたび通信使を日本に派遣した。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "教科书称「文禄·庆长之役」，多写作秀吉为征服明朝而「出兵朝鲜」或「侵略朝鲜」，以失败告终，并消耗了丰臣政权。出兵的动机（征明、领土欲、给家臣的恩赏等）至今有不同说法。",
+              "en": "Textbooks call it the Bunroku–Keichō campaigns and generally describe it as Hideyoshi's 'expedition to' or 'invasion of' Korea aimed at conquering Ming China, ending in failure and draining the Toyotomi regime. Historians still debate his motives — conquest of Ming, territorial ambition, rewards for his vassals.",
+              "ja": "教科書では「文禄・慶長の役」と呼び、明の征服をめざした秀吉の「朝鮮出兵」「朝鮮侵略」として、失敗に終わり豊臣政権を疲弊させたと説明することが多い。出兵の動機（明の征服、領土欲、家臣への恩賞など）には諸説ある。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "称「壬辰倭乱」，是国难与全民抵抗的象征：李舜臣、各地义兵与民众的抗争是叙述的中心；被掳的人与被夺走的文物、耳冢被视为战争暴行的证据。",
+              "en": "Called the Imjin Waeran, it stands for national catastrophe and popular resistance, with Yi Sun-sin, the righteous armies and ordinary people at the centre; the captives, looted cultural property and the Mimizuka are seen as evidence of wartime atrocities.",
+              "ja": "「壬辰倭乱」と呼び、国難と民衆の抵抗の象徴とする。李舜臣や義兵、民衆の戦いが語りの中心で、連行された人々や奪われた文化財、耳塚は戦争の残虐行為の証とされる。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "称「壬辰祖国战争」，强调人民群众与义兵的爱国斗争。",
+              "en": "Called the Imjin Patriotic War, it stresses the patriotic struggle of the common people and the righteous armies.",
+              "ja": "「壬辰祖国戦争」と呼び、人民大衆と義兵の愛国的な戦いを強調する。"}}
+   ],
+   "sources": [
+    {"title": "임진왜란 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/임진왜란"},
+    {"title": "文禄・慶長の役 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/文禄・慶長の役"},
+    {"title": "Japanese invasions of Korea (1592–1598) (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Japanese_invasions_of_Korea_(1592–1598)"}
+   ]
+  },
+  {
+   "key": "rule",
+   "years": "1910–1945",
+   "title": {"zh": "日本统治时期", "en": "Japanese rule", "ja": "日本統治時代"},
+   "names": [
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "日帝强占期", "en": "Ilje gangjeomgi — the period of forced occupation by imperial Japan (일제강점기)", "ja": "日帝強占期"}},
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "日本统治时代、韩国合并", "en": "Japanese rule / annexation of Korea", "ja": "日本統治時代・韓国併合"}}
+   ],
+   "facts": {
+    "zh": [
+     "1905 年的第二次日韩协约使大韩帝国失去外交权，1910 年《日韩合并条约》之后由朝鲜总督府统治到 1945 年。",
+     "1919 年爆发三一运动，同年在上海成立大韩民国临时政府。",
+     "统治期间进行了土地调查，修建铁路、港口与工厂；1930 年代后期起推行皇民化政策：创氏改名、参拜神社、压缩朝鲜语教育。",
+     "战争期间大量朝鲜人被动员到日本等地劳动和参军；1993 年日本政府的河野谈话承认军方直接或间接参与了慰安所的设置与管理。",
+     "1945 年日本战败后统治结束；1965 年日韩签订基本条约与请求权协定，日本提供经济合作资金，协定写明请求权问题「完全且最终解决」。"
+    ],
+    "en": [
+     "The 1905 protectorate treaty took away the Korean Empire's diplomatic rights; after the 1910 annexation treaty Korea was ruled by the Government-General of Korea until 1945.",
+     "The March First Movement broke out in 1919, and a Provisional Government of the Republic of Korea was set up in Shanghai the same year.",
+     "The period saw a land survey and the building of railways, ports and factories; from the late 1930s 'imperialization' policies pressed name changes, Shinto shrine worship and cuts to Korean-language teaching.",
+     "In wartime large numbers of Koreans were mobilized for labour in Japan and elsewhere and for military service; the Japanese government's 1993 Kono Statement acknowledged the military's direct and indirect involvement in setting up and running 'comfort stations'.",
+     "Japanese rule ended with Japan's defeat in 1945. In 1965 the two countries signed the Basic Treaty and a claims agreement under which Japan provided economic cooperation funds; the agreement states that claims have been settled 'completely and finally'."
+    ],
+    "ja": [
+     "1905年の第二次日韓協約で大韓帝国は外交権を失い、1910年の韓国併合条約以後、1945年まで朝鮮総督府が統治した。",
+     "1919年に三・一運動が起こり、同年上海で大韓民国臨時政府が成立した。",
+     "統治期には土地調査が行われ、鉄道・港湾・工場が建設された。1930年代後半からは創氏改名、神社参拝、朝鮮語教育の縮小などの皇民化政策が進められた。",
+     "戦時には多くの朝鮮の人々が日本などへの労働や軍務に動員された。1993年の河野談話は、慰安所の設置・管理に軍が直接・間接に関与したことを認めた。",
+     "1945年の日本の敗戦で統治は終わった。1965年に日韓基本条約と請求権協定が結ばれ、日本は経済協力資金を供与し、協定は請求権問題が「完全かつ最終的に解決された」と定めた。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "1995 年的村山谈话对殖民统治与侵略表示「痛切的反省」与「由衷的歉意」，此后历届内阁表示继承。政府立场是合并条约在当时合法有效、战时的请求权问题已由 1965 年协定解决；2018 年起把「征用工」改称「旧朝鲜半岛出身劳动者」。也有人强调统治期间的基础建设，这一看法在日韩都有争议。",
+              "en": "The 1995 Murayama Statement expressed 'deep remorse' and a 'heartfelt apology' for colonial rule and aggression, and later cabinets have said they uphold it. The government's position is that the annexation treaty was legally valid at the time and that wartime claims were settled by the 1965 agreement; since 2018 it has used the term 'former workers from the Korean Peninsula' rather than 'conscripted workers'. Some emphasise the infrastructure built under Japanese rule, a view contested in both countries.",
+              "ja": "1995年の村山談話は植民地支配と侵略について「痛切な反省」と「心からのお詫び」を表明し、以後の内閣も継承するとしている。政府の立場は、併合条約は当時有効に結ばれ、戦時の請求権問題は1965年の協定で解決済みというもの。2018年からは「徴用工」ではなく「旧朝鮮半島出身労働者」と呼ぶ。統治期のインフラ整備を強調する見方もあるが、日韓双方で議論がある。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "称「日帝强占期」，认为合并条约是在强迫下签订、自始无效；叙述以独立运动与民众受害为中心，强征劳工与慰安妇是核心议题。2018 年大法院判决认定强征劳工的个人请求权并未因 1965 年协定而消灭，日韩对此分歧至今。",
+              "en": "Called the period of forced occupation, it is seen as resting on a treaty signed under coercion and void from the start; the account centres on the independence movement and on the suffering of ordinary people, with forced labour and 'comfort women' as core issues. In 2018 the Supreme Court ruled that forced labourers' individual claims were not extinguished by the 1965 agreement — a point on which the two governments still disagree.",
+              "ja": "「日帝強占期」と呼び、併合条約は強制のもとで結ばれ当初から無効だったとする。語りの中心は独立運動と民衆の被害で、強制動員と慰安婦が核心の問題。2018年に大法院は、強制動員被害者の個人請求権は1965年の協定で消滅していないと判断し、日韓の対立は今も続いている。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "以抗日武装斗争为叙述中心；朝鲜与日本至今没有建立外交关系，主张日本应对殖民统治作出赔偿。",
+              "en": "The account centres on the armed anti-Japanese struggle; North Korea and Japan still have no diplomatic relations, and North Korea demands compensation for colonial rule.",
+              "ja": "抗日武装闘争を語りの中心に置く。北朝鮮と日本は今も国交がなく、北朝鮮は植民地支配への賠償を求めている。"}}
+   ],
+   "sources": [
+    {"title": "일제강점기 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/일제강점기"},
+    {"title": "韓国併合 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/韓国併合"},
+    {"title": "村山談話 / 河野談話 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/村山談話"},
+    {"title": "日韓請求権並びに経済協力協定 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日韓請求権並びに経済協力協定"},
+    {"title": "Korea under Japanese rule (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Korea_under_Japanese_rule"}
+   ]
+  }
+ ]
+}

@@ -101,8 +101,10 @@ class Case:
         assert 'map=' not in page.evaluate('location.hash'), '日本模式的地址栏不应带 map='
         # 规则本身（不依赖已登记哪些地图）
         rules = page.evaluate("""import('./src/js/country.js').then(({ pickMap: p }) => [
-            p('', null), p('#map=nope', null), p('#pref=26&lang=ja', 'japan'), p('#pref=26', 'nope')])""")
-        assert rules == ['japan'] * 4, f'pickMap 结果 {rules}'
+            p('', null), p('#map=nope', null), p('#pref=26&lang=ja', 'japan'), p('#pref=26', 'nope'),
+            p('', null, '?map=nope&lang=ja')])""")
+        assert rules == ['japan'] * 5, f'pickMap 结果 {rules}'
+        assert page.evaluate("import('./src/js/country.js').then(({ pickMap: p }) => p('', 'japan', '?map=korea'))") == 'korea', '?map=korea 应打开半岛'
         # 老用户数据键名不变
         assert page.evaluate("JSON.parse(localStorage.getItem('je.visited') || '[]').includes(26)"), '日本模式应写入 je.visited'
 
@@ -343,6 +345,30 @@ class Case:
         self.tab(page, 'guide')
         page.click('#quick [data-q="name"]')
         page.wait_for_function("(() => { const x = [...document.querySelectorAll('#chat .msg.ai')].pop()?.textContent || ''; return x.includes('尚州') || x.includes('Sangju'); })()", timeout=8000)
+
+    def shared(self, page):
+        # 日韩共同历史：欢迎卡进入，三层结构（事实 / 各方叙述 / 来源），日本与半岛两种模式内容一致
+        self.tab(page, 'detail')
+        page.click('#detail [data-act="shared"][data-key="rule"]')
+        page.wait_for_selector('dialog#shared[open]')
+        assert page.locator('#shared .sh-facts li').count() == 5
+        assert page.locator('#shared .sh-view').count() == 3
+        assert page.locator('#shared .sh-src a').count() >= 3
+        text = page.text_content('#shared .sh-body')
+        page.click('#shared [data-sh="imjin"]')
+        assert page.locator('#shared .sh-facts li').count() == 5
+        box = page.evaluate("(() => { const r = document.querySelector('dialog#shared').getBoundingClientRect(); return [r.left, r.right, r.bottom, innerWidth, innerHeight]; })()")
+        assert box[0] >= 0 and box[1] <= box[3] + 1 and box[2] <= box[4] + 1, f'对话框出屏 {box}'
+        page.keyboard.press('Escape')
+        page.wait_for_selector('dialog#shared', state='hidden')
+        # 半岛模式看到的是同一份
+        page.goto(f'{self.base}#lang={self.lang}&map=korea')
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        self.tab(page, 'detail')
+        page.click('#detail [data-act="shared"][data-key="rule"]')
+        page.wait_for_selector('dialog#shared[open]')
+        assert page.text_content('#shared .sh-body') == text, '两种模式的共同历史内容应相同'
 
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
@@ -679,7 +705,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
