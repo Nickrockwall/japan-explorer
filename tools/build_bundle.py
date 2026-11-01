@@ -100,6 +100,12 @@ def ja_to_zh_table():
     return table
 
 
+# 都道府县章（tools/fetch_emblems.py 生成，只收公有领域）：县 id → PNG 路径；没有的县前端改用旧国名朱印
+def emblems():
+    path = os.path.join(DATA, 'emblems.json')
+    return {k: v['file'] for k, v in load(path).items()} if os.path.exists(path) else {}
+
+
 # 幕末各郡的领主（tools/fetch_domains.py → tools/domains.json）：按县 id → 明治旧郡名，取前 3 位 + 其余合计。
 # 幕府领 / 旗本领 / 寺社领 / 相给写成 @代号，由前端按语言显示；藩名中文按字形转换，英文取 Wikidata 标签（没有就用日文）
 def domains(lang):
@@ -171,7 +177,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json')), 'domains': domains(lang)}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json')), 'domains': domains(lang), 'emblems': emblems()}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

@@ -19,7 +19,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
   const geoP = fetchJSON('src/assets/geojson/japan.json');
   try {
     const b = await fetchJSON(`src/data/bundle/${lang}.json`);
-    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null };
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null, emblems: b.emblems || {} };
   } catch {
     return loadFiles(lang, merge);
   }
@@ -49,7 +49,8 @@ async function loadFiles(lang, merge) {
   const pilgrimage = { done: pil.done, spots: pil.spots.map((s) => ({ ...s, ...(over[s.id] || {}) })) };
   // 广重浮世绘只随数据包发布（题名译文、市区町村名由 build_bundle.py 拼好）；回退加载时不显示
   const kokuryoku = await fetchJSON('src/data/kokuryoku.json').catch(() => null);
-  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [], provinceNames: [], koku: [], kokuryoku };
+  const emblems = Object.fromEntries(Object.entries(await fetchJSON('src/data/emblems.json').catch(() => ({}))).map(([k, v]) => [k, v.file]));
+  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [], provinceNames: [], koku: [], kokuryoku, emblems };
 }
 
 function read(key, fallback) {

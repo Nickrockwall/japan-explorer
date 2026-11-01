@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 2.11 · 2026-11-01
+
+- The details card now shows each prefecture's emblem instead of an emoji (all 47 from Wikimedia Commons, public domain), drawn in gold; a seal with the old province names stands in if an emblem is missing
+- The map tooltip shows the emblem before the prefecture name too
+- On phones, buttons use short labels when the full text doesn't fit ("Stamp", "Stamped", "Towns"); the full text is in the tooltip
+
 ## 2.10 · 2026-11-01
 
 - Quick tour: a 9-step introduction on first visit (map, details, guide, layers and filters, time travel, "Where am I?" and battles); replay it from settings or the welcome page

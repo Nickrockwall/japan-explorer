@@ -210,6 +210,14 @@ body.resizing { cursor: row-resize; user-select: none; }
   flex: none; width: 54px; height: 54px; border-radius: 12px; display: grid; place-items: center;
   font-size: 28px; background: var(--kin-soft); border: 1px solid rgba(212,163,115,.3);
 }
+/* 县章：透明底 PNG 当遮罩，统一涂成金色 */
+.emblem { width: 40px; height: 40px; background: var(--kin);
+  -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+/* 没有县章时：旧国名朱印（一国两字竖排，两国并排） */
+.kuni-seal { display: flex; flex-direction: row-reverse; gap: 2px; padding: 4px; border-radius: 4px; background: var(--shu); color: #f6e9d6;
+  font: 900 13px/1 var(--serif); box-shadow: inset 0 0 0 1.5px rgba(246,233,214,.55); }
+.kuni-seal b { writing-mode: vertical-rl; letter-spacing: 1px; }
+.kuni-seal.two { font-size: 11px; }
 .hero-main { min-width: 0; flex: 1; }
 .ancient-title { font: 900 24px/1.25 var(--serif); letter-spacing: .03em; color: var(--text); }
 .ancient-title .arrow { color: var(--shu); margin: 0 6px; font-weight: 500; }
@@ -740,6 +748,11 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 /* ── 分享 ───────────────────────────── */
 .hero-actions { flex: none; align-self: center; display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
 .hero-actions .stamp-btn { align-self: stretch; justify-content: center; }
+.lbl-short { display: none; }
+@media (max-width: 560px) {
+  .hero-actions .lbl-full { display: none; }
+  .hero-actions .lbl-short { display: inline; }
+}
 .share-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer;
   padding: 5px 10px; border-radius: 8px; font-size: 12px;

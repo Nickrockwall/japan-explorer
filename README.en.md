@@ -66,7 +66,7 @@ Everything on the map has a source where possible, and the app says so where som
 - **Borders**: national map from 「地球地図日本」 (Geospatial Information Authority of Japan); municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成. Province borders are pieced together from municipalities, and a municipality spanning two provinces counts toward the main one, so they are approximate.
 - **From Japanese Wikipedia** (CC BY-SA 4.0): Meiji-era districts; ichinomiya shrines, provincial capitals and kokubunji temples; Edo-period population and rice yield by province; late-Edo lords by district (旧高旧領取調帳). Each entry is checked by script — for example, that its coordinates fall inside its province — and anything that doesn't match is left out.
 - **Wikidata** (CC0): municipal readings, populations and English names; English names of domains.
-- **Ukiyo-e**: Hiroshige's prints are in the public domain; images from Wikimedia Commons.
+- **Ukiyo-e and emblems**: Hiroshige's prints and the 47 prefectural emblems are in the public domain; images from Wikimedia Commons.
 - History, in-jokes, ramen and sake follow common accounts, some coloring is approximate (e.g. by a prefecture's dominant power), and uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
 
 ## License

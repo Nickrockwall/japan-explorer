@@ -88,6 +88,10 @@ class Case:
     def deeplink(self, page):
         page_kanji = page.text_content('.modern-title .kanji')
         assert page_kanji == '京都府', f'详卡标题是 {page_kanji!r}'
+        # 详卡头像是县章（图片能加载）
+        assert page.locator('.hero-badge .emblem').count() == 1, '详卡头像应是县章'
+        ok = page.evaluate("fetch('src/assets/emblems/26.png').then((r) => r.ok)")
+        assert ok, '京都府章图片加载失败'
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
 

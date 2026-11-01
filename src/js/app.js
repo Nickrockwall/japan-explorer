@@ -376,7 +376,7 @@ async function main() {
     if (detailStale) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
-    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, emblem: data.emblems?.[p.id], extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
   }
@@ -759,6 +759,7 @@ async function main() {
 
   const map = createMap($('map'), data.geo, prefs, {
     spots: pil.spots,
+    emblems: data.emblems || {},
     onSpot: (s) => openSpot(s),
     koku: kokuSites,
     onKoku: (s) => openKoku(s),

@@ -43,6 +43,7 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/assets/hiroshige/` | 歌川広重『六十余州名所図会』（1853–56），图像取自 [Wikimedia Commons](https://commons.wikimedia.org/)（各图原始页面见 `src/data/hiroshige.json` 的 `source`） | 公有领域（Public domain）。画题译文与地点整理属本项目内容 |
 | `src/data/koku_sites.json`（一宫·国府·国分寺的名称、所在地与现状） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「一宮」「国府」「国分寺」条目的一览表与各社寺条目的坐标 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/kokuryoku.json` 中的江户人口（1721、1846）与石高（1834） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」的旧国别人口表 | **CC BY-SA 4.0**（不适用 NC） |
+| `src/assets/emblems/`（47 都道府县章）与 `src/data/emblems.json` | [Wikimedia Commons](https://commons.wikimedia.org/) 各县章 SVG（文件名见 emblems.json 的 `commons`），转成透明底 PNG | **公有领域**（工具逐个核对，只收公有领域 / CC0） |
 | `tools/domains.json` 及数据包中的 `domains`（幕末各郡的领主与町村数） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)各郡条目「近世以降の沿革」中的《旧高旧領取調帳》表；藩的英文名来自 [Wikidata](https://www.wikidata.org/)（CC0） | **CC BY-SA 4.0**（不适用 NC） |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 

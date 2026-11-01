@@ -148,7 +148,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [] }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {} }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -559,6 +559,14 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     return [x, Math.round((top + bottom) / 2)];
   }
 
+  // 提示框里的县章：透明底 PNG 当遮罩涂成金色（与详卡头像同一做法）
+  const emblemTip = (id) => {
+    const file = emblems[id];
+    if (!file) return '';
+    const m = `url('${file}') center / contain no-repeat`;
+    return `<span style="display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-2px;background:#d4a373;-webkit-mask:${m};mask:${m}"></span>`;
+  };
+
   function provTip(f) {
     if (!f) return '';
     const p = f.properties;
@@ -615,7 +623,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           : '';
         if (state.layer === 'ramen' && !state.battle) extra += `<div style="color:#d4a373">🍜 ${p.ramen.style_name}</div>`;
         if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#d4a373">🍶 ${p.sake.brand} · ${p.sake.brewery}</div>`;
-        return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${p.badge.icon} ${names.get(p.id)} ${seen}</div>
+        return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${emblemTip(p.id)}${names.get(p.id)} ${seen}</div>
           <div style="color:#b4ada3">${label('region', p.region)} · ${sub}</div>
           <div style="color:#d4a373;margin-top:3px">${t('tip.ancient', { list: provs })}</div>${extra}`;
       },

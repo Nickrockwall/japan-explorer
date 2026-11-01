@@ -40,10 +40,16 @@ function fmtPop(k) {
   return k >= 1000 ? `${(k / 1000).toFixed(2)}百万` : `${(k / 10).toFixed(1)}万`;
 }
 
+// 全称 + 简称：窄屏（手机）只显示简称，完整文字在 title 里
+const twoLabels = (full, short) => `<span class="lbl-full">${esc(full)}</span><span class="lbl-short">${esc(short)}</span>`;
+
 function stampButton(p, stampedAt) {
-  return stampedAt
-    ? `<button class="stamp-btn done" type="button" disabled>${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}${t('stamp.done', { date: fmtDate(stampedAt) })}</button>`
-    : `<button class="stamp-btn" type="button" data-act="stamp">${crestSVG(p.goshuin.crest_icon, 'crest crest-mini')}${t('stamp.do')}</button>`;
+  const crest = crestSVG(p.goshuin.crest_icon, 'crest crest-mini');
+  if (stampedAt) {
+    const full = t('stamp.done', { date: fmtDate(stampedAt) });
+    return `<button class="stamp-btn done" type="button" disabled title="${esc(full)}">${crest}${twoLabels(full, t('stamp.doneShort'))}</button>`;
+  }
+  return `<button class="stamp-btn" type="button" data-act="stamp" title="${esc(t('stamp.do'))}">${crest}${twoLabels(t('stamp.do'), t('stamp.doShort'))}</button>`;
 }
 
 // 盖印动效：朱印落下 + 面板微震 + 设备振动
@@ -169,7 +175,19 @@ export function highlightEra(el, era) {
   }
 }
 
-export function renderDetail(el, p, { stampedAt, focus, extra = '' } = {}) {
+// 详卡头像：县章（金色遮罩）；没有县章的县用旧国名朱印（最多两国，竖排）
+function badge(p, emblem) {
+  const name = prefName(p);
+  if (emblem) {
+    const u = `url('${esc(emblem)}')`;
+    return `<span class="emblem" role="img" aria-label="${esc(t('emblem.alt', { name }))}" title="${esc(t('emblem.alt', { name }))}"
+      style="-webkit-mask-image:${u};mask-image:${u}"></span>`;
+  }
+  const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name.replace(/国$/, '')).slice(0, 2);
+  return `<span class="kuni-seal${provs.length > 1 ? ' two' : ''}" role="img" aria-label="${esc(provs.join(' · '))}">${provs.map((x) => `<b>${esc(x)}</b>`).join('')}</span>`;
+}
+
+export function renderDetail(el, p, { stampedAt, focus, extra = '', emblem } = {}) {
   const L = p.historical_lineage;
   const provs = L.ritsuryo_provinces;
   const ancient = provs.map((x) => esc(x.name)).join(' · ');
@@ -178,7 +196,7 @@ export function renderDetail(el, p, { stampedAt, focus, extra = '' } = {}) {
   el.innerHTML = `
     ${p._translated === false ? `<div class="untranslated">🌐 ${t('untranslated')}</div>` : ''}
     <div class="hero">
-      <div class="hero-badge" aria-hidden="true">${esc(p.badge.icon)}</div>
+      <div class="hero-badge">${badge(p, emblem)}</div>
       <div class="hero-main">
         <div class="ancient-title">${ancient}<span class="arrow">→</span>${esc(prefName(p))}</div>
         <div class="modern-title">
@@ -196,7 +214,7 @@ export function renderDetail(el, p, { stampedAt, focus, extra = '' } = {}) {
         </button>
         <button class="share-btn" type="button" data-act="muni" title="${esc(t('muni.open.title'))}">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          <span>${t('muni.open')}</span>
+          <span>${twoLabels(t('muni.open'), t('muni.openShort'))}</span>
         </button>
       </div>
     </div>

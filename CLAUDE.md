@@ -48,6 +48,7 @@ src/data/koku_sites.json       古国巡礼：诸国一宫·国府·国分寺（
 src/js/koku.js                 古国巡礼的卡片、详卡「古国三迹」、御朱印帐「诸国一宫」篇
 src/data/kokuryoku.json        古国国力：68 国今日人口 / 面积 / 市区町村数 + 江户人口与石高（tools/build_kokuryoku.py 生成，打进数据包）
 src/js/kokuryoku.js            古国国力：指标、着色、提示、反常识头条、榜单与宿敌 PK 卡片
+src/data/emblems.json          47 都道府县章（tools/fetch_emblems.py：Wikidata P94 → Commons 只收公有领域 → src/assets/emblems/NN.png 透明底），详卡头像
 src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）
 tools/domains.json             幕末各郡的领主与町村数（tools/fetch_domains.py 由维基各郡条目的《旧高旧領取調帳》表整理，build_bundle 拼进数据包 domains）
@@ -348,4 +349,6 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 不引入构建工具；新增模块用原生 ES Modules `import`。
 - 版权与许可：© 2026 Nickrockwall；代码 MIT（`LICENSE`，保持纯 MIT 原文以便 GitHub 识别），内容 CC BY-NC 4.0，范围与第三方清单在 `LICENSE-CONTENT.md`。新增第三方素材时登记到该表，并在 README 三语「数据从哪来」一节与界面上注明出处。
 - README（三语）是给第一次来的人看的简介：语气平实，不写更新日志；各版本改动记在 `CHANGELOG.md` / `CHANGELOG.en.md` / `CHANGELOG.ja.md`（日期 + 几条要点，最新在上）。副标题是「古今日本地图 / Japan, Then and Now / 古今日本地図」。
+- 详卡头像是县章：PNG 当 CSS 遮罩统一涂金色（只看 alpha；工具把接近白色的像素变透明，白色画在彩色底上的县章才显出图案）。Wikidata P94 不是县章的在工具的 `OVERRIDE` 指定（岐阜）。没有县章的县用旧国名朱印（`badge()`，最多两国竖排）。地图悬停提示里县名前也放县章（`emblemTip`，createMap 的 `emblems` 参数）；`badge.icon`（emoji）现在不再显示。
+- 手机上放不下完整文字的按钮同时输出全称与简称（`twoLabels`，`.lbl-full` / `.lbl-short` 按 ≤560px 切换，全称进 title）：盖印（日文简称「御朱印」）、已盖印（只留「已盖印」，日期进 title）、英文「Cities & towns」→「Towns」。
 - 分享封面 `src/assets/og-cover{,-en,-ja}.png` 由 `python -X utf8 tools/make_og.py` 截 `tools/og_cover.html` 生成（文字在模板的 `T` 里改）；README 截图 `docs/screen-{desktop,phone}-{zh,en,ja}.jpg` 由 `python -X utf8 tools/make_screens.py` 生成。界面有明显变化时重跑。全国地图须注明「出典：地球地図日本」（欢迎卡与设置弹窗底部的 `legalHTML()`）。来自维基百科的数据是 CC BY-SA 4.0，不能并入 NC 内容。

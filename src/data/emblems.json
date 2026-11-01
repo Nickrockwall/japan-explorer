@@ -1,0 +1,237 @@
+{
+ "1": {
+  "file": "src/assets/emblems/01.png",
+  "commons": "File:Emblem of Hokkaido Prefecture.svg",
+  "license": "Public domain"
+ },
+ "2": {
+  "file": "src/assets/emblems/02.png",
+  "commons": "File:Emblem of Aomori Prefecture.svg",
+  "license": "Public domain"
+ },
+ "3": {
+  "file": "src/assets/emblems/03.png",
+  "commons": "File:Emblem of Iwate Prefecture.svg",
+  "license": "Public domain"
+ },
+ "4": {
+  "file": "src/assets/emblems/04.png",
+  "commons": "File:Emblem of Miyagi Prefecture.svg",
+  "license": "Public domain"
+ },
+ "5": {
+  "file": "src/assets/emblems/05.png",
+  "commons": "File:Emblem of Akita Prefecture.svg",
+  "license": "Public domain"
+ },
+ "6": {
+  "file": "src/assets/emblems/06.png",
+  "commons": "File:Emblem of Yamagata Prefecture.svg",
+  "license": "Public domain"
+ },
+ "7": {
+  "file": "src/assets/emblems/07.png",
+  "commons": "File:Emblem of Fukushima Prefecture.svg",
+  "license": "Public domain"
+ },
+ "8": {
+  "file": "src/assets/emblems/08.png",
+  "commons": "File:Emblem of Ibaraki Prefecture.svg",
+  "license": "Public domain"
+ },
+ "9": {
+  "file": "src/assets/emblems/09.png",
+  "commons": "File:Emblem of Tochigi Prefecture.svg",
+  "license": "Public domain"
+ },
+ "10": {
+  "file": "src/assets/emblems/10.png",
+  "commons": "File:Emblem of Gunma Prefecture.svg",
+  "license": "Public domain"
+ },
+ "11": {
+  "file": "src/assets/emblems/11.png",
+  "commons": "File:Emblem of Saitama Prefecture.svg",
+  "license": "Public domain"
+ },
+ "12": {
+  "file": "src/assets/emblems/12.png",
+  "commons": "File:Emblem of Chiba prefecture.svg",
+  "license": "Public domain"
+ },
+ "13": {
+  "file": "src/assets/emblems/13.png",
+  "commons": "File:Emblem of Tokyo Metropolis.svg",
+  "license": "Public domain"
+ },
+ "14": {
+  "file": "src/assets/emblems/14.png",
+  "commons": "File:Emblem of Kanagawa Prefecture.svg",
+  "license": "Public domain"
+ },
+ "15": {
+  "file": "src/assets/emblems/15.png",
+  "commons": "File:Emblem of Niigata Prefecture.svg",
+  "license": "Public domain"
+ },
+ "16": {
+  "file": "src/assets/emblems/16.png",
+  "commons": "File:Emblem of Toyama Prefecture.svg",
+  "license": "Public domain"
+ },
+ "17": {
+  "file": "src/assets/emblems/17.png",
+  "commons": "File:Emblem of Ishikawa Prefecture.svg",
+  "license": "Public domain"
+ },
+ "18": {
+  "file": "src/assets/emblems/18.png",
+  "commons": "File:Emblem of Fukui Prefecture.svg",
+  "license": "Public domain"
+ },
+ "19": {
+  "file": "src/assets/emblems/19.png",
+  "commons": "File:Emblem of Yamanashi prefecture.svg",
+  "license": "Public domain"
+ },
+ "20": {
+  "file": "src/assets/emblems/20.png",
+  "commons": "File:Emblem of Nagano Prefecture.svg",
+  "license": "Public domain"
+ },
+ "21": {
+  "file": "src/assets/emblems/21.png",
+  "commons": "File:Emblem of Gifu Prefecture.svg",
+  "license": "Public domain"
+ },
+ "22": {
+  "file": "src/assets/emblems/22.png",
+  "commons": "File:Emblem of Shizuoka Prefecture.svg",
+  "license": "Public domain"
+ },
+ "23": {
+  "file": "src/assets/emblems/23.png",
+  "commons": "File:Emblem of Aichi Prefecture.svg",
+  "license": "Public domain"
+ },
+ "24": {
+  "file": "src/assets/emblems/24.png",
+  "commons": "File:Emblem of Mie Prefecture.svg",
+  "license": "Public domain"
+ },
+ "25": {
+  "file": "src/assets/emblems/25.png",
+  "commons": "File:Emblem of Shiga Prefecture.svg",
+  "license": "Public domain"
+ },
+ "26": {
+  "file": "src/assets/emblems/26.png",
+  "commons": "File:Emblem of Kyoto Prefecture.svg",
+  "license": "Public domain"
+ },
+ "27": {
+  "file": "src/assets/emblems/27.png",
+  "commons": "File:Emblem of Osaka Prefecture.svg",
+  "license": "Public domain"
+ },
+ "28": {
+  "file": "src/assets/emblems/28.png",
+  "commons": "File:Emblem of Hyogo Prefecture.svg",
+  "license": "Public domain"
+ },
+ "29": {
+  "file": "src/assets/emblems/29.png",
+  "commons": "File:Emblem of Nara Prefecture.svg",
+  "license": "Public domain"
+ },
+ "30": {
+  "file": "src/assets/emblems/30.png",
+  "commons": "File:Emblem of Wakayama Prefecture.svg",
+  "license": "Public domain"
+ },
+ "31": {
+  "file": "src/assets/emblems/31.png",
+  "commons": "File:Emblem of Tottori Prefecture.svg",
+  "license": "Public domain"
+ },
+ "32": {
+  "file": "src/assets/emblems/32.png",
+  "commons": "File:Emblem of Shimane Prefecture.svg",
+  "license": "Public domain"
+ },
+ "33": {
+  "file": "src/assets/emblems/33.png",
+  "commons": "File:Emblem of Okayama Prefecture.svg",
+  "license": "Public domain"
+ },
+ "34": {
+  "file": "src/assets/emblems/34.png",
+  "commons": "File:Emblem of Hiroshima Prefecture.svg",
+  "license": "Public domain"
+ },
+ "35": {
+  "file": "src/assets/emblems/35.png",
+  "commons": "File:Emblem of Yamaguchi Prefecture.svg",
+  "license": "Public domain"
+ },
+ "36": {
+  "file": "src/assets/emblems/36.png",
+  "commons": "File:Emblem of Tokushima Prefecture.svg",
+  "license": "Public domain"
+ },
+ "37": {
+  "file": "src/assets/emblems/37.png",
+  "commons": "File:Emblem of Kagawa Prefecture.svg",
+  "license": "Public domain"
+ },
+ "38": {
+  "file": "src/assets/emblems/38.png",
+  "commons": "File:Emblem of Ehime prefecture.svg",
+  "license": "Public domain"
+ },
+ "39": {
+  "file": "src/assets/emblems/39.png",
+  "commons": "File:Emblem of Kochi Prefecture.svg",
+  "license": "Public domain"
+ },
+ "40": {
+  "file": "src/assets/emblems/40.png",
+  "commons": "File:Emblem of Fukuoka Prefecture.svg",
+  "license": "Public domain"
+ },
+ "41": {
+  "file": "src/assets/emblems/41.png",
+  "commons": "File:Emblem of Saga Prefecture.svg",
+  "license": "Public domain"
+ },
+ "42": {
+  "file": "src/assets/emblems/42.png",
+  "commons": "File:Emblem of Nagasaki Prefecture.svg",
+  "license": "Public domain"
+ },
+ "43": {
+  "file": "src/assets/emblems/43.png",
+  "commons": "File:Emblem of Kumamoto Prefecture.svg",
+  "license": "Public domain"
+ },
+ "44": {
+  "file": "src/assets/emblems/44.png",
+  "commons": "File:Emblem of Oita Prefecture.svg",
+  "license": "Public domain"
+ },
+ "45": {
+  "file": "src/assets/emblems/45.png",
+  "commons": "File:Emblem of Miyazaki Prefecture.svg",
+  "license": "Public domain"
+ },
+ "46": {
+  "file": "src/assets/emblems/46.png",
+  "commons": "File:Emblem of Kagoshima Prefecture.svg",
+  "license": "Public domain"
+ },
+ "47": {
+  "file": "src/assets/emblems/47.png",
+  "commons": "File:Emblem of Okinawa Prefecture.svg",
+  "license": "Public domain"
+ }
+}
