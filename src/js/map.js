@@ -13,7 +13,7 @@ const COLOR = {
 
 export const DEFAULT_VIEW = { center: [135, 34.6], zoom: 1.26 };
 // 手机竖屏：地图区窄而高，放大并把中心移向本州中部
-const MOBILE_VIEW = { center: [136.6, 36.4], zoom: 1.6 };
+const MOBILE_VIEW = { center: [137.1, 37.9], zoom: 1.8 };
 const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : DEFAULT_VIEW);
 
 // 分类配色；显示名由 i18n 的 label() 按当前语言给出
@@ -473,6 +473,16 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     });
   }
 
+  // 手机竖屏：工具条和图例 / 时空滑块盖在地图上下，把地图中心放到中间露出的空白处
+  function layoutCenter() {
+    const pane = el.getBoundingClientRect();
+    if (innerWidth > 560 || !pane.height) return ['50%', '50%'];
+    const pad = (sel) => el.parentElement.querySelector(sel)?.getBoundingClientRect();
+    const top = (pad('.toolbar-row')?.bottom ?? pane.top) - pane.top + 44; // 再留一行滤镜
+    const bottom = (pad('.timebar')?.top || pane.bottom) - pane.top - 60;   // 图例约 60px
+    return ['50%', Math.round((top + bottom) / 2)];
+  }
+
   function provTip(f) {
     if (!f) return '';
     const p = f.properties;
@@ -538,7 +548,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       center: homeView().center,
       zoom: homeView().zoom,
       scaleLimit: { min: 0.8, max: 40 },
-      layoutCenter: ['50%', '50%'],
+      layoutCenter: layoutCenter(),
       layoutSize: '100%',
       itemStyle: { areaColor: COLOR.base, borderColor: COLOR.border, borderWidth: 0.8 },
       label: { color: '#fff', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2,
@@ -578,7 +588,11 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (id) onSelect(id);
   });
 
-  window.addEventListener('resize', () => chart.resize());
+  const resize = () => {
+    chart.resize();
+    chart.setOption({ geo: { layoutCenter: layoutCenter() } });
+  };
+  window.addEventListener('resize', resize);
 
   const getView = () => {
     const g = chart.getOption().geo[0];
@@ -603,7 +617,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       render();
     },
     get provEra() { return provEra; },
-    select(id) { activeId = id; render(); },
+    // 选县时顺带更新已探索集合，只重画一次
+    select(id, visited) { activeId = id; if (visited) visitedSet = visited; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
     setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
     setSpotType(type) { state.spotType = type; render(); },
@@ -707,6 +722,6 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         items: Object.entries(cats).filter(([k]) => counts.has(k)).map(([k, [label, color]]) => [label, color, counts.get(k)]),
       };
     },
-    resize: () => chart.resize(),
+    resize,
   };
 }

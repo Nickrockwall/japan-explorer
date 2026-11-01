@@ -48,12 +48,13 @@ function setupBattleVoice(onAsk) {
 }
 
 // 窄屏三页切换：body[data-tab] = map | detail | guide；宽屏下标签栏隐藏、三块同时显示
-function setupTabs(onShowMap) {
+function setupTabs(onShowMap, onShowDetail) {
   const bar = $('tabbar');
   const set = (tab) => {
     document.body.dataset.tab = tab;
     for (const b of bar.querySelectorAll('[data-tab]')) b.setAttribute('aria-selected', String(b.dataset.tab === tab));
     if (tab === 'map') requestAnimationFrame(onShowMap); // 地图隐藏期间尺寸可能变过，回来时重算
+    if (tab === 'detail') onShowDetail();
   };
   bar.addEventListener('click', (e) => {
     const b = e.target.closest('[data-tab]');
@@ -350,8 +351,11 @@ async function main() {
     initialMode: uiPref.get('guideMode', 'scholar'),
   });
 
-  const tabs = setupTabs(() => { map.resize(); muni.resize(); });
+  const tabs = setupTabs(() => { map.resize(); muni.resize(); }, () => detailStale && renderCurrent());
   const narrow = () => matchMedia(NARROW).matches;
+  // 窄屏上详卡不在眼前时先不重建（整张详卡要几十毫秒，会拖慢点县），切到详情页或变宽时再补
+  let detailStale = false;
+  matchMedia(NARROW).addEventListener('change', () => detailStale && renderCurrent());
   const syncVoice = setupBattleVoice(() => tabs.set('guide'));
   const detailEl = $('detail');
   const app = { currentId: null, layer: 'history', eraIdx: null, battle: null, phase: 0, savedView: null };
@@ -359,6 +363,8 @@ async function main() {
   // 依当前图层与时代重绘详卡
   function renderCurrent() {
     if (!app.currentId) return;
+    detailStale = narrow() && tabs.current !== 'detail';
+    if (detailStale) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
     renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
@@ -601,8 +607,7 @@ async function main() {
       app.currentId = id;
       const set = visited.add(id);
       updateCounter(set);
-      map.setVisited(set);
-      map.select(id);
+      map.select(id, set);
       renderCurrent();
       if (app.layer === 'pilgrimage') guide.setPilgrimage(spotsOf(id)); // 先换巡礼点，载入新县时快捷提问一并带上
       guide.setPrefecture(prefs.get(id));
