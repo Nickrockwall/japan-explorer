@@ -236,6 +236,24 @@ class Case:
         page.wait_for_selector('#art-card:not([hidden])', timeout=15000)
         assert self.DSP_KURIL[self.lang] in page.text_content('#art-card'), '定位在国后岛应弹争议卡'
 
+    def disputed_muni(self, page):
+        page.wait_for_selector('#muni .muni-map canvas', timeout=15000)
+        page.wait_for_timeout(500)
+        info = page.evaluate("""(async () => {
+            const c = echarts.getInstanceByDom(document.querySelector('#muni .muni-map'));
+            const regions = c.getOption().geo[0].regions;
+            const file = await (await fetch('src/data/municipalities/01.json')).json();
+            const pick = (n) => regions.find((r) => r.name === n)?.itemStyle.areaColor;
+            return { habomai: pick('dsp-kurils'), shikotan: pick('01695'), sapporo: pick('01101'),
+                     title: document.querySelector('#muni .muni-title').textContent, n: file.features.length };
+        })()""")
+        assert info['habomai'] and info['habomai'] == info['shikotan'] and info['habomai'] != info['sapporo'], f'争议地区应同为灰色 {info}'
+        assert str(info['n']) in info['title'].replace(',', ''), f'标题的市町村数应不含争议块 {info}'
+        # 点齿舞群岛（从根室市拆出的那块）→ 下钻自己的卡片列出双方立场
+        self._click_geo(page, [145.91, 43.44], '#muni .muni-map')
+        page.wait_for_selector('#muni .muni-card:not([hidden])', timeout=5000)
+        assert self.DSP_KURIL[self.lang] in page.text_content('#muni .muni-card')
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -554,7 +572,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

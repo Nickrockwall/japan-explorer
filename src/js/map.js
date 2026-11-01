@@ -705,7 +705,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       return;
     }
     // 点在有争议的岛上：交给下面的 getZr 处理，不选县
-    if (dspOn() && dspAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))) return;
+    if (dspOn() && params.event && dspAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))) return;
     if (params.seriesId === 'spots') {
       const s = spots.find((x) => x.id === params.data?.id);
       if (s) onSpot(s);

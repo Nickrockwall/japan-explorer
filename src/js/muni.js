@@ -3,9 +3,11 @@
 import { MAP } from './country.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
+import { splitDisputed, disputeCard, disputeLabel } from './disputed.js';
 
 const PALETTE = ['#c25a56', '#d4a373', '#6f9fb8', '#7a9a6a', '#9a86b8', '#4f9c94', '#c9784f', '#b86a8e'];
 const OUTSIDE = '#4a4a53';
+const DISPUTED = '#77736b'; // 有争议的岛：中性灰（disputed.js）
 const POP_STOPS = ['#2f3440', '#6f7f96', '#d4a373', '#c23531']; // 人口：少 → 多（对数刻度）
 const CREDIT = '「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 · Wikidata';
 
@@ -78,7 +80,12 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
     if (cache.has(pid)) return cache.get(pid);
     const res = await fetch(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.json`);
     if (!res.ok) throw new Error(`${res.status}`);
-    const geo = await res.json();
+    // 竹岛、齿舞群岛从所属市町村里拆出，另成一块（不是市町村：不计数、不出户籍）；北方四岛的六村整体标为有争议
+    const { geo, parts } = splitDisputed(await res.json());
+    for (const [k, polys] of Object.entries(parts)) {
+      geo.features.push({ type: 'Feature', geometry: { type: 'MultiPolygon', coordinates: polys },
+        properties: { code: `dsp-${k}`, name: disputeLabel(k), disputed: k, pseudo: true, partial: [], remote: true } });
+    }
     for (const f of geo.features) {
       f.properties.label = f.properties.name;
       f.properties.at = center(f.geometry);
@@ -93,6 +100,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
   const provName = (ja) => (ja ? cur.geo.provinces[ja]?.[lang] || ja : t('muni.outside'));
 
   function color(p) {
+    if (p.disputed) return DISPUTED;
     if (mode === 'pop') {
       if (!p.pop) return OUTSIDE;
       const [lo, hi] = cur.popRange;
@@ -107,9 +115,11 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
   };
 
   function info(p, { full = false } = {}) {
+    if (p.pseudo) return full ? disputeCard(p.disputed) : `<div class="muni-name">${esc(disputeLabel(p.disputed))}</div>`;
     const sub = [p.kana, lang !== 'en' && p.en ? p.en : null].filter(Boolean).join(' · ');
     const rows = [];
     // 由古到今：所属市 → 旧国 → 旧郡（明治）→ 现属郡 → 人口
+    if (p.disputed) rows.push([t('dsp.kicker'), esc(disputeLabel(p.disputed))]);
     if (p.city) rows.push([t('muni.ward'), esc(p.city)]);
     const prov = p.province ? provName(p.province) : t('muni.outside');
     rows.push([t('muni.province'), p.partial.length ? `${prov}<small>${esc(t('muni.partial', { list: p.partial.map(provName).join('・') }))}</small>` : prov]);
@@ -157,9 +167,11 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         <div class="muni-ramp-l"><span>${fmtPop(Math.round(10 ** lo))}</span><span>${fmtPop(Math.round(10 ** hi))}</span></div>`;
     } else {
       const counts = new Map();
-      for (const f of feats) counts.set(f.properties.province, (counts.get(f.properties.province) || 0) + 1);
+      for (const f of feats) if (!f.properties.disputed) counts.set(f.properties.province, (counts.get(f.properties.province) || 0) + 1);
+      const dsp = feats.filter((f) => f.properties.disputed && !f.properties.pseudo).length;
       const items = [...counts].sort((a, b) => b[1] - a[1]).map(([ja, n]) =>
-        `<span><i style="background:${ja ? cur.provColor.get(ja) : OUTSIDE}"></i>${esc(provName(ja))}<small>${n}</small></span>`).join('');
+        `<span><i style="background:${ja ? cur.provColor.get(ja) : OUTSIDE}"></i>${esc(provName(ja))}<small>${n}</small></span>`).join('')
+        + (feats.some((f) => f.properties.disputed) ? `<span><i style="background:${DISPUTED}"></i>${esc(t('dsp.kicker'))}${dsp ? `<small>${dsp}</small>` : ''}</span>` : '');
       html = `<div class="legend-caption">${t('muni.legend.prov')}</div><div class="legend-items">${items}</div>`;
     }
     box.innerHTML = `${html}<div class="muni-credit">${CREDIT}</div>`;
@@ -237,6 +249,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
   // 选中项的摘要，交给 AI 向导（名称按界面语言，旧国为显示名）
   function placeOf(codes, city) {
     const one = codes.length === 1 ? cur.byCode.get(codes[0]) : null;
+    if (one?.pseudo) return null;
     if (one) {
       return {
         name: dn(one), ja: one.label, kana: one.kana, en: one.en, city: one.city, district: one.district,
@@ -286,7 +299,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
     const b = e.target.closest('button');
     if (!b) return;
     if (b.dataset.act === 'close') onClose();
-    else if (b.dataset.act === 'unselect') select([]);
+    else if (b.dataset.act === 'unselect' || b.dataset.act === 'card-close') select([]);
     else if (b.dataset.act === 'koseki') onKoseki(cur.pref.id, b.dataset.code);
     else if (b.dataset.mode && b.dataset.mode !== mode) { mode = b.dataset.mode; render(); }
   });
@@ -324,7 +337,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
       card.hidden = true;
       root.classList.remove('has-card');
       const title = lang === 'en' ? pref.name.romaji : pref.name.kanji;
-      $('.muni-title').textContent = `${title} · ${t('muni.count', { n: geo.features.length })}`;
+      $('.muni-title').textContent = `${title} · ${t('muni.count', { n: geo.features.filter((f) => !f.properties.pseudo).length })}`;
       initChart();
       render();
       if (focus) {
