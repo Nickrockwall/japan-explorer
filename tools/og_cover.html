@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- 分享封面（1200×630）模板：tools/make_og.py 用 Playwright 按语言截图，生成 src/assets/og-cover{,-en,-ja}.png -->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+SC:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #18181c; }
+  body {
+    position: relative; color: #ece6dc; font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+    background: radial-gradient(ellipse at 78% 45%, #26232a 0%, #18181c 62%);
+  }
+  :lang(ja) body, body.ja { font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; }
+  #map { position: absolute; right: 0; top: 0; width: 640px; height: 630px; }
+  .text { position: absolute; left: 72px; top: 64px; width: 600px; }
+  .kicker { font: 500 22px 'Noto Sans SC', sans-serif; letter-spacing: .32em; color: #d4a373; }
+  h1 { margin: 14px 0 0; font: 900 84px/1.08 'Noto Serif SC', 'Noto Serif JP', serif; letter-spacing: .02em; }
+  body.ja h1 { font-family: 'Noto Serif JP', 'Noto Serif SC', serif; }
+  body.en h1 { font-size: 66px; line-height: 1.12; letter-spacing: 0; }
+  h1 em { font-style: normal; color: #d0453f; }
+  .sub { margin-top: 14px; font: 700 30px 'Noto Serif SC', 'Noto Serif JP', serif; color: #e8dcc6; }
+  body.en .sub { font-size: 27px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 26px; width: 560px; }
+  .tags span { padding: 6px 14px; border-radius: 20px; border: 1px solid #4a4a52; font-size: 18px; color: #ddd3c2; }
+  .tags span.hot { border-color: rgba(212,163,115,.6); }
+  .langs { position: absolute; left: 72px; bottom: 40px; width: 500px; padding-top: 18px; border-top: 1px solid #3a3a42;
+    font-size: 21px; letter-spacing: .06em; color: #9a9188; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="text">
+  <div class="kicker">JAPAN EXPLORER</div>
+  <h1 id="title"></h1>
+  <div class="sub" id="sub"></div>
+  <div class="tags" id="tags"></div>
+</div>
+<div class="langs">中文 · English · 日本語</div>
+<script src="../src/vendor/echarts.min.js"></script>
+<script>
+  const T = {
+    zh: { title: '<em>古今</em>日本<br>地图', sub: '68 古国 ⇄ 47 都道府县',
+      tags: [['68 令制国'], ['九大时代'], ['合战沙盘'], ['古国国力', 1], ['古代户籍', 1], ['广重浮世绘'], ['AI 历史向导']] },
+    en: { title: 'Japan,<br><em>Then and Now</em>', sub: '68 ancient provinces ⇄ 47 prefectures',
+      tags: [['68 provinces'], ['9 eras'], ['Battles'], ['Rankings', 1], ['Ancestral register', 1], ['Hiroshige prints'], ['AI guide']] },
+    ja: { title: '<em>古今</em>日本<br>地図', sub: '68の旧国 ⇄ 47都道府県',
+      tags: [['68の令制国'], ['九つの時代'], ['合戦沙盤'], ['旧国の国力', 1], ['古代の戸籍', 1], ['広重の浮世絵'], ['AI 歴史案内人']] },
+  };
+  // 五畿七道配色（与 src/js/map.js 的 FILTERS.circuit 一致）
+  const CIRCUIT = { 畿内: '#c23531', 东海道: '#d4a373', 东山道: '#7a9a6a', 北陆道: '#6f9fb8', 山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 令制外: '#4a4a53' };
+  const lang = new URLSearchParams(location.search).get('lang') || 'zh';
+  const L = T[lang];
+  document.body.classList.add(lang);
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.getElementById('title').innerHTML = L.title;
+  document.getElementById('sub').textContent = L.sub;
+  document.getElementById('tags').innerHTML = L.tags.map(([s, hot]) => `<span class="${hot ? 'hot' : ''}">${s}</span>`).join('');
+
+  Promise.all([fetch('../src/data/provinces.json').then((r) => r.json()), fetch('../src/data/koku_sites.json').then((r) => r.json())])
+    .then(([prov, sites]) => {
+      for (const f of prov.features) f.properties.name = f.properties.key;
+      echarts.registerMap('prov', prov);
+      const chart = echarts.init(document.getElementById('map'), null, { renderer: 'canvas', devicePixelRatio: 2 });
+      const ichi = (Array.isArray(sites) ? sites : sites.sites || []).filter((s) => s.kind === 'ichi' && s.coords);
+      chart.setOption({
+        animation: false,
+        geo: {
+          map: 'prov', center: [136.6, 38.2], zoom: 1.4, layoutCenter: ['46%', '50%'], layoutSize: '100%', silent: true,
+          itemStyle: { borderColor: '#18181c', borderWidth: 0.7 },
+          regions: prov.features.map((f) => ({ name: f.properties.key, itemStyle: { areaColor: CIRCUIT[f.properties.circuit] || '#4a4a53' } })),
+        },
+        series: [{
+          type: 'scatter', coordinateSystem: 'geo', symbolSize: 6, silent: true,
+          itemStyle: { color: '#ffe3a8', borderColor: '#18181c', borderWidth: 1, shadowBlur: 6, shadowColor: 'rgba(255,210,122,.7)' },
+          data: ichi.map((s) => s.coords),
+        }],
+      });
+      document.fonts.ready.then(() => { document.body.dataset.ready = '1'; });
+    });
+</script>
+</body>
+</html>

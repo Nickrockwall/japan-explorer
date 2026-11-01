@@ -1,7 +1,7 @@
 {
-  "name": "Japan Explorer · 日本47都道府县古今变迁图鉴",
+  "name": "Japan Explorer · 古今日本地图",
   "short_name": "Japan Explorer",
-  "description": "在日本全图上探索47都道府县与68令制国的古今变迁。Explore Japan's 47 prefectures through the ages.",
+  "description": "古今日本地图：今天的 47 都道府县与千年前的 68 古国。Japan, Then and Now — the 68 ancient provinces under today's map.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

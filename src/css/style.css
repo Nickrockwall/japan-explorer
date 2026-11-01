@@ -870,6 +870,22 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .slot.real .ichi-seal { color: #b8862f; border-color: #d4a84a; box-shadow: 0 0 12px rgba(255,210,122,.45); }
 .slot.real { border-color: rgba(212,168,74,.7); }
 
+/* 新手教程：压暗整页，当前控件开「聚光灯」洞，旁边放说明气泡 */
+.tour { position: fixed; inset: 0; z-index: 2000; }
+.tour.tour-plain { background: rgba(0,0,0,.62); }
+.tour-hole { position: fixed; border-radius: 10px; border: 2px solid var(--kin); pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,.62), 0 0 18px rgba(212,163,115,.5); transition: left .25s, top .25s, width .25s, height .25s; }
+.tour-tip { position: fixed; width: min(330px, calc(100vw - 24px)); padding: 14px 16px 12px; border-radius: 12px;
+  background: var(--panel); color: var(--text); border: 1px solid rgba(212,163,115,.6); box-shadow: 0 12px 32px rgba(0,0,0,.55); }
+.tour-n { font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+.tour-tip h3 { margin: 2px 0 6px; font: 700 17px var(--serif); color: var(--kin); padding-right: 64px; }
+.tour-tip p { margin: 0; font-size: 13.5px; line-height: 1.65; color: var(--text-2); }
+.tour-tip p b { color: var(--text); }
+.tour-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+.tour-skip { position: absolute; top: 12px; right: 12px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; padding: 2px 4px; }
+.tour-skip:hover { color: var(--kin); }
+@media (prefers-reduced-motion: reduce) { .tour-hole { transition: none; } }
+
 /* 古代户籍《古今人别帐》：和纸卷轴，与御朱印帐同一套纸色 */
 .koseki {
   width: min(560px, calc(100vw - 24px - var(--safe-l) - var(--safe-r))); overflow-y: auto; overscroll-behavior: contain;
@@ -1235,4 +1251,45 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .tabbar button { flex-direction: row; justify-content: center; gap: 6px; padding: 5px 4px; }
   .tabbar svg { width: 18px; height: 18px; }
   .tabbar small { display: none; }
+
+  /* 地图页：控件压成上下各一行、左右并排，中间整块留给地图 */
+  .map-toolbar { top: 6px; left: 10px; right: 10px; gap: 5px; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  .map-toolbar > *, .map-toolbar .filters { max-width: calc(50% - 3px); }
+  .toolbar-row { flex: 0 1 auto; flex-wrap: nowrap; gap: 5px; }
+  .toolbar-row > .layers { flex: 0 1 auto; }
+  .layers { overflow-x: auto; scrollbar-width: none; }
+  .layers button, .filters button { padding: 4px 9px; font-size: 12px; }
+  .map-legend:not(.muni-legend) { left: 10px; right: auto; bottom: 8px; width: calc(50% - 15px); max-width: none; padding: 5px 10px; font-size: 11px; }
+  .map-legend:not(.muni-legend) .legend-caption { display: none; }
+  body:not([data-layer="history"]) .map-legend:not(.muni-legend), body.in-battle .map-legend { width: calc(100% - 20px); }
+  .timebar { left: calc(50% + 5px); right: 10px; bottom: 8px; padding: 4px 10px; gap: 8px; }
+  .tb-play { width: 30px; height: 30px; font-size: 11px; box-shadow: none; }
+  .tb-ticks, .tb-info span { display: none; }
+  .tb-info { width: auto; max-width: 34%; }
+  .tb-info b { font-size: 12.5px; }
+  .locate-btn { top: auto; bottom: 52px; right: 10px; width: 34px; height: 34px; }
+  .era-banner { top: 50%; padding: 10px 24px; }
+  /* 卡片放到右侧，不再从底部盖住大半个地图 */
+  .muni-card, .muni-card.art-card, .muni-card.power-card {
+    left: auto; right: 10px; top: 50px; bottom: 8px; width: min(340px, 46%); max-width: none; max-height: none; overflow-y: auto;
+  }
+  .muni .muni-card { top: 84px; }
+  .muni-card.power-card { overflow: hidden; }
+  body.in-battle .battle-voice { left: auto; right: 10px; width: min(380px, 50%); max-height: calc(100% - 20px); }
+  .battle-hud { width: min(420px, 50%); left: 10px; right: auto; top: 8px; transform: none; }
+}
+/* 横屏手机也用压紧的搜索框：收成放大镜，点开时盖住整行 */
+@media (max-height: 520px) and (orientation: landscape) and (min-width: 561px) {
+  .toolbar-row > .search { flex: none; width: 32px; height: 32px; }
+  .map-toolbar .search input, .map-toolbar .search input:focus {
+    position: absolute; top: 0; right: 0; width: 32px; max-width: none; height: 32px; padding: 0 0 0 31px; border-radius: 16px;
+    background: rgba(24,24,28,.88) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a373' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l4.5 4.5'/%3E%3C/svg%3E") 8px 50% / 15px no-repeat;
+    font-size: 16px; color: transparent;
+  }
+  .map-toolbar .search input::placeholder { color: transparent; }
+  .map-toolbar .search input::-webkit-search-cancel-button { display: none; }
+  .map-toolbar .search input:focus, .map-toolbar .search input:not(:placeholder-shown) {
+    width: min(420px, calc(100vw - 40px - var(--safe-l) - var(--safe-r))); padding-right: 12px; color: var(--text); z-index: 3;
+  }
+  .map-toolbar .search input:focus::placeholder { color: var(--muted); }
 }

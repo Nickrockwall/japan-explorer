@@ -14,6 +14,7 @@ export function renderWelcome(el) {
       <h2>${t('w.h')}</h2>
       <p>${t('w.p1')}</p>
       <p>${t('w.p2')}</p>
+      <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
       <p class="legal">${legalHTML()}</p>
     </div>`;

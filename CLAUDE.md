@@ -1,4 +1,4 @@
-# Japan Explorer · 日本47都道府县古今变迁图鉴
+# Japan Explorer · 古今日本地图
 
 交互式历史地图应用：在日本全图上点选任一都道府县，查看其古代令制国沿革、历史时间轴、名胜物产、方言与地缘梗；用「时空滤镜」看五畿七道、战国势力、幕末阵营；打卡收集御朱印；拖动「时空穿越滑块」看九个时代的版图与政权中枢；在「合战演武」沙盘上回放经典战役；切换「拉面 / 地酒」风土图层；并与「AI 历史向导」对话（博学史官 ⇄ 名将附体 / 合战名将）。
 
@@ -18,6 +18,7 @@
   - `je.goshuin` — 御朱印 `{ [id]: 盖印时间 ISO }`
   - `je.ui.filter` / `je.ui.guideMode` / `je.ui.split` / `je.ui.layer` — 当前滤镜、向导模式（scholar|hero）、右侧上下比例（%）、风土图层（history|ramen|sake）
   - `je.ui.kosekiName` — 古代户籍的户主名（只存本机）
+  - `je.ui.tourDone` — 看过（或跳过）新手教程；smoke 除 `tour` 场景外都预先写入，免得教程遮住页面
   - `je.ui.audio` — 声音 `{muted, bgm, bgmVol, sfxVol}`（默认音效开、背景音乐关）
 
 ## 目录结构
@@ -47,6 +48,7 @@ src/data/koku_sites.json       古国巡礼：诸国一宫·国府·国分寺（
 src/js/koku.js                 古国巡礼的卡片、详卡「古国三迹」、御朱印帐「诸国一宫」篇
 src/data/kokuryoku.json        古国国力：68 国今日人口 / 面积 / 市区町村数 + 江户人口与石高（tools/build_kokuryoku.py 生成，打进数据包）
 src/js/kokuryoku.js            古国国力：指标、着色、提示、反常识头条、榜单与宿敌 PK 卡片
+src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）
 tools/domains.json             幕末各郡的领主与町村数（tools/fetch_domains.py 由维基各郡条目的《旧高旧領取調帳》表整理，build_bundle 拼进数据包 domains）
 src/js/locate.js               「我在哪」：浏览器定位 → 县（map.prefAt）→ 市区町村（该县的 municipalities 文件）→ 结果卡片
@@ -174,6 +176,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 雅致和风 × 深色科技仪表盘：底色 `#18181c`，朱红 `#c23531`（选中/强调），青金 `#d4a373`（已探索/次强调）。
 - 布局：顶栏 + 左 58% 地图 + 右 42%（上：详卡，下：向导，中间拖动条可调比例 20–80%）；窄屏改为上下堆叠。
 - 响应式断点：≤900px（及高 ≤520px 的横屏）改为底部标签栏三页切换（`body[data-tab]` = map | detail | guide，见 `setupTabs`）：地图 / 详卡 / 向导各占满顶栏与标签栏之间，不整页滚动；选县时留在地图页，「详情」标签显示县名并闪一下；打开下钻或合战切到地图页；名将解说的「提问」切到向导页；不带 muni 的县链接直接打开详情页。横屏另有一组压缩样式（顶栏一行、标签栏横排）。≤560px 为手机：顶栏两行、按钮只留图标、时代刻度换成当前时代名、快捷提问单行横滑、合战面板默认折叠、地图用 `MOBILE_VIEW` 放大视角。改界面后用 390×844 尺寸截图检查。
+- **横屏手机**（高 ≤520px 的横屏，`SHORT`）：地图页工具条一行（图层左半、滤镜右半，子行换到第二行左侧），底部一行（图例左半、去掉说明；时空滑块右半、只留播放键 + 滑轨 + 时代名）；各种卡片（`.muni-card`，含国力榜、古国 / 巡礼 / 我在哪卡）改放右侧；`layoutCenter` 把地图中心放在上下两行之间，取景用 `LANDSCAPE_VIEW`；合战时 `setInset({ left })` 让地图避开左上的合战面板。转屏（竖屏手机 / 横屏手机 / 宽屏三种形态之间）时 `resize` 回到该形态的默认取景。smoke 有 `landscape`（844×390）视口，只跑 `LANDSCAPE_CASES`。
+- 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过；窄屏的「详情」「向导」步骤指向底部标签按钮。首次访问且地址栏不带 `pref=` 时自动开始，设置弹窗与欢迎卡可再打开；走完或跳过都记 `tourDone`。
 - 刘海屏安全区域：页面用 `viewport-fit=cover`，四周边距统一走 `--safe-t/r/b/l` 变量（取自 `env(safe-area-inset-*)`），弹窗高度用 `--vh`（支持时为 `100dvh`）。新增贴边或 `position: fixed` 的元素时要加上对应的安全区域边距。测试时可在页面里覆盖这些变量模拟 iPhone（竖屏 上 47 / 下 34，横屏 左右 47 / 下 21）。横屏手机（高 ≤520px）同样走上下堆叠布局。
 
 ## 时空滤镜
@@ -223,9 +227,11 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 画中地点：画题里第一个有坐标的链接条目（`PLACE` 可指定别的条目、或写 None 表示不用链接），落到市区町村边界里；**定位结果的旧国（`province` 或 `partial`）必须与作品的国一致**，否则列为待处理。画题无链接的：该国只有一个市町村就取它；`MANUAL` 里人工确认的取人工值（市区町村名为 None = 只确定到县）；其余只记县、界面写「具体地点不详」。不要为了填满而猜地点。
 - 题名译文在工具的 `TITLES`（中 / 英；日文界面显示原题）。`build_bundle.py` 按语言拼好 `title_t`、旧国名 `prov`、市区町村名 `place` 放进数据包的 `hiroshige`（逐个文件回退加载时不显示浮世绘）。
 - 「国名今犹在」（provnames.js）：`province_names.json` 为 `{ 旧国: [{ja, zh, en, type, wiki, evidence?, evidence_note?}] }`，type ∈ place / nature / food / craft / transit / culture。新增后必须跑 `python -X utf8 tools/province_names_tool.py verify`（需 shapely）：① 名字里含国名简称或 `ALIASES` 别称；② place / transit / nature 的条目坐标在该国内（自然地物容许 60 公里），food / craft / culture 的条目正文提到该国或今属县名。通不过就不收，确需例外写 `evidence` 并在 `evidence_note` 说明（如信浓川：河口在越后）。数据包 `province_names` 每国带 `prov` 显示名与 `prefs`；`map` 的 `provTipExtra` 往古国提示里加一行，古国卡片 `namesBlock`，详卡 `namesSection`（按县涉及的旧国）。
+- 县界叠加层 `prefborders` 是 custom series：全部县界（`borderChains()` 先把首尾相接的段串成链）画成一条 path，拖动时每帧只重算坐标。原来 3,000 多段 `lines` 每段一个元素，慢手机上拖动每帧约 36ms，现约 11ms。
 - 「我在哪」（locate.js）：地图右侧 `#btn-locate`，只在点按时调用 `navigator.geolocation`（超时 12 秒，不要求高精度）。县由 `map.prefAt`（japan.json）判断，市区町村在该县文件里点内判断、落空取最近的；不在任何县内 → 提示「似乎不在日本」。卡片 `#loc-card`（复用 `.art-card` 定位样式）写旧国（`province` + `partial`）、今天的县与市区町村、明治旧郡，并附该国浮世绘（`printRows`）与今日国名；`map.setYou(pt)` 放蓝色脉冲标记并拉近，关卡片时去掉。位置不发往任何地方。smoke `locate` 用 Playwright 的 `geolocation` 模拟京都中京区。
 - 古国巡礼（koku.js，图层 `koku`）：`python -X utf8 tools/fetch_koku.py` 解析维基「一宮」（按七道分多张表，取表头含「二宮以下」的）、「国府」「国分寺」的一览表。坐标：一宫取神社条目，国分寺取「○○国分寺跡」或继承寺院条目（表头脚注里的链接要先去掉），国府取史迹条目；没有坐标的按地址文字匹配该国所属县的市区町村（取最长名称），图钉放在市町村内（`precise: false`，画成空心）。核验：坐标离该国 ≤5 公里、市町村的 province/partial 含该国；地址文字与坐标的市町村不一致时列出待核（已核对的进 `CHECKED`）；人工覆盖写在 `MANUAL`（`wiki: None` = 不用条目坐标）。「未詳」的不放图钉。市町村判断必须先精确包含、再放宽，否则会落到邻市。数据为 CC BY-SA 4.0（见 LICENSE-CONTENT）。
   - 底图：`koku` 图层用 824 年 68 国（`curProv()`），压暗作衬底；`provBaseOn()` 统管「旧国底图」（五畿七道或古国巡礼），`provMode()` 仍只指五畿七道（浮世绘卡片、时间轴、悬停国名只在那里）。
+  - 图钉密度：「全部」时缩放 < `KOKU_ZOOM`（3）只画一宫（`drawnKoku`），放大或选了子分类才画国府、国分寺；选中的那颗总是画。图例计数仍按全部。
   - 一宫：`ichinomiya` 存 `je.ichinomiya`（`{旧国: {at, site, real, realAt}}`），一国任一论社即算。「实地打卡」：精确坐标的神社要在 `CHECKIN_KM`（1 公里）内；只到市町村的神社要人在同一市町村。`map.setKokuStamps` 让已参拜的一宫描金边、亲临的发光。御朱印帐 `createBook(..., { ichi })` 多一个「诸国一宫」模式（按七道分页）。设置里的「重置」也清一宫。
 - 前端：古国底图下 `map` 的 `onProvince(properties)` → `#art-card`（武藏另带第 17 图「江户」）；离开古国底图时 `syncArtCard` 收起。详卡 `hiroshigeSection` 列出画中地点在本县的作品。`#art` 大图对话框按编号循环翻页（‹ › / 方向键）。
 
@@ -327,7 +333,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / battle / koseki / tour；`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定
@@ -340,4 +346,6 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 新增或修改县数据时保持 schema 一致，`history_timeline` 必须恰好 6 段（律令/镰仓/室町/战国/江户/近现代）。
 - 史实以通行说法为准，存疑处用“据传”标注。
 - 不引入构建工具；新增模块用原生 ES Modules `import`。
-- 版权与许可：© 2026 Nickrockwall；代码 MIT（`LICENSE`，保持纯 MIT 原文以便 GitHub 识别），内容 CC BY-NC 4.0，范围与第三方清单在 `LICENSE-CONTENT.md`。新增第三方素材时登记到该表，并在 README 三语「说明」与界面上注明出处。全国地图须注明「出典：地球地図日本」（欢迎卡与设置弹窗底部的 `legalHTML()`）。来自维基百科的数据是 CC BY-SA 4.0，不能并入 NC 内容。
+- 版权与许可：© 2026 Nickrockwall；代码 MIT（`LICENSE`，保持纯 MIT 原文以便 GitHub 识别），内容 CC BY-NC 4.0，范围与第三方清单在 `LICENSE-CONTENT.md`。新增第三方素材时登记到该表，并在 README 三语「数据从哪来」一节与界面上注明出处。
+- README（三语）是给第一次来的人看的简介：语气平实，不写更新日志；各版本改动记在 `CHANGELOG.md` / `CHANGELOG.en.md` / `CHANGELOG.ja.md`（日期 + 几条要点，最新在上）。副标题是「古今日本地图 / Japan, Then and Now / 古今日本地図」。
+- 分享封面 `src/assets/og-cover{,-en,-ja}.png` 由 `python -X utf8 tools/make_og.py` 截 `tools/og_cover.html` 生成（文字在模板的 `T` 里改）；README 截图 `docs/screen-{desktop,phone}-{zh,en,ja}.jpg` 由 `python -X utf8 tools/make_screens.py` 生成。界面有明显变化时重跑。全国地图须注明「出典：地球地図日本」（欢迎卡与设置弹窗底部的 `legalHTML()`）。来自维基百科的数据是 CC BY-SA 4.0，不能并入 NC 内容。

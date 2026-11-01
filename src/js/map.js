@@ -14,7 +14,10 @@ const COLOR = {
 export const DEFAULT_VIEW = { center: [135, 34.6], zoom: 1.26 };
 // 手机竖屏：地图区窄而高，放大并把中心移向本州中部
 const MOBILE_VIEW = { center: [137.1, 37.9], zoom: 1.8 };
-const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : DEFAULT_VIEW);
+// 横屏手机：地图区矮而宽，控件压在上下各一行，取景缩小一点让本州完整露出
+const SHORT = '(max-height: 520px) and (orientation: landscape)';
+const LANDSCAPE_VIEW = { center: [137.6, 37.4], zoom: 1.1 };
+const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : matchMedia(SHORT).matches ? LANDSCAPE_VIEW : DEFAULT_VIEW);
 
 // 分类配色；显示名由 i18n 的 label() 按当前语言给出
 const cats = (group, colors) => Object.fromEntries(Object.entries(colors).map(([k, c]) => [k, [label(group, k), c]]));
@@ -207,7 +210,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         mapName,
         features,
         byKey: new Map(features.map((f) => [f.properties.key, f])),
-        borders: provBase.pref_borders.map((coords) => ({ coords })),
+        borders: borderChains(),
         labels: features.filter((f) => f.properties.zh)
           .map((f) => ({ f, a: areaOf(f.geometry) })).sort((x, y) => y.a - x.a)
           .map(({ f }) => ({ name: provLabel(f.properties), value: centroid(f.geometry) })),
@@ -216,6 +219,47 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     return provMaps.get(year);
   }
   let shownMap = 'japan';
+
+  // 县界原本是 3,000 多段短折线，每段都是一个图形元素，拖动地图时每帧重画很慢；
+  // 把首尾相接的段串成长链（形状不变），元素数降到几百个
+  let chains = null;
+  function borderChains() {
+    if (chains) return chains;
+    const key = ([x, y]) => `${x},${y}`;
+    const ends = new Map();
+    const segs = provBase.pref_borders.map((c) => c.slice());
+    segs.forEach((s, i) => {
+      for (const k of [key(s[0]), key(s[s.length - 1])]) (ends.get(k) || ends.set(k, []).get(k)).push(i);
+    });
+    const used = new Set();
+    const take = (k, from) => (ends.get(k) || []).find((j) => j !== from && !used.has(j));
+    chains = [];
+    for (let i = 0; i < segs.length; i++) {
+      if (used.has(i)) continue;
+      used.add(i);
+      let line = segs[i];
+      // 先向尾部接，再向头部接；只在恰好两段相交的点上接，三县交界处断开
+      for (const atEnd of [true, false]) {
+        for (;;) {
+          const k = key(atEnd ? line[line.length - 1] : line[0]);
+          if ((ends.get(k) || []).length !== 2) break;
+          const j = take(k, i);
+          if (j == null) break;
+          used.add(j);
+          let s = segs[j];
+          if (atEnd) {
+            if (key(s[0]) !== k) s = s.slice().reverse();
+            line = line.concat(s.slice(1));
+          } else {
+            if (key(s[s.length - 1]) !== k) s = s.slice().reverse();
+            line = s.slice(0, -1).concat(line);
+          }
+        }
+      }
+      chains.push({ coords: line });
+    }
+    return chains;
+  }
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
   const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0, spotType: 'all', spotId: null, kokuType: 'all', kokuId: null };
@@ -308,6 +352,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   // 古国巡礼图钉：一宫 / 国府 / 国分寺；已参拜的一宫描金边，亲临的加光晕
   const shownKoku = () => (state.layer === 'koku' && !state.battle
     ? koku.filter((s) => state.kokuType === 'all' || s.kind === state.kokuType) : []);
+  // 「全部」时缩得较小只画一宫（全国 240 多个图钉会叠成一团），放大到 KOKU_ZOOM 以上再加国府、国分寺；选中的那颗总是画
+  const KOKU_ZOOM = 3;
+  let kokuNear = false;
+  const drawnKoku = () => shownKoku().filter((s) => state.kokuType !== 'all' || kokuNear || s.kind === 'ichi' || s.id === state.kokuId);
   function kokuSeries() {
     return {
       id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, animation: false,
@@ -315,7 +363,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
       labelLayout: { hideOverlap: true },
       emphasis: { scale: 1.4, label: { show: true } },
-      data: shownKoku().map((s) => {
+      data: drawnKoku().map((s) => {
         const c = KOKU_COLOR[s.kind];
         const on = s.id === state.kokuId;
         const got = s.kind === 'ichi' && kokuStamped.has(s.prov);
@@ -448,9 +496,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         data: on ? prov.labels : [],
       },
       {
-        id: 'prefborders', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true, animation: false,
-        lineStyle: { color: 'rgba(255,255,255,.5)', width: 0.8, type: [3, 3], opacity: 1 },
-        data: on ? prov.borders : [],
+        // 全部县界画成一条路径（一个图形元素）：拖动、缩放时每帧只重算坐标，不再管理几千个线段元素
+        id: 'prefborders', type: 'custom', coordinateSystem: 'geo', zlevel: 1, silent: true, animation: false,
+        renderItem: (params, api) => {
+          let d = '';
+          for (const { coords } of prov.borders) {
+            for (let i = 0; i < coords.length; i++) {
+              const [x, y] = api.coord(coords[i]);
+              d += `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+            }
+          }
+          return { type: 'path', shape: { pathData: d }, style: { fill: null, stroke: 'rgba(255,255,255,.5)', lineWidth: 0.8, lineDash: [3, 3] } };
+        },
+        data: on ? [0] : [],
       },
       {
         id: 'prefactive', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true, animation: false,
@@ -482,13 +540,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 手机竖屏：工具条和图例 / 时空滑块盖在地图上下，把地图中心放到中间露出的空白处。
   // inset：浮在地图上的大卡片（如国力榜）占去的右侧宽度 / 底部高度，地图中心随之避开
-  let inset = { right: 0, bottom: 0 };
+  let inset = { left: 0, right: 0, bottom: 0 };
   function layoutCenter() {
     const pane = el.getBoundingClientRect();
     if (!pane.height) return ['50%', '50%'];
-    const x = inset.right ? Math.round((pane.width - inset.right) / 2) : '50%';
-    if (innerWidth > 560) return [x, inset.bottom ? Math.round((pane.height - inset.bottom) / 2) : '50%'];
+    const x = inset.left || inset.right ? Math.round(inset.left + (pane.width - inset.left - inset.right) / 2) : '50%';
     const pad = (sel) => el.parentElement.querySelector(sel)?.getBoundingClientRect();
+    if (matchMedia(SHORT).matches) {
+      // 横屏：上面一行工具条、下面一行图例 + 时空滑块，中心放在两者之间
+      const top = (pad('.toolbar-row')?.bottom ?? pane.top) - pane.top;
+      const bottom = Math.min(...['.timebar', '.map-legend'].map((s) => pad(s)?.top || pane.bottom)) - pane.top;
+      return [x, Math.round((top + bottom) / 2)];
+    }
+    if (innerWidth > 560) return [x, inset.bottom ? Math.round((pane.height - inset.bottom) / 2) : '50%'];
     const top = (pad('.toolbar-row')?.bottom ?? pane.top) - pane.top + 44; // 再留一行滤镜
     let bottom = (pad('.timebar')?.top || pane.bottom) - pane.top - 60;     // 图例约 60px
     if (inset.bottom) bottom = Math.min(bottom, pane.height - inset.bottom - 10);
@@ -579,6 +643,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   });
   render();
 
+  // 缩放跨过 KOKU_ZOOM 时重画古国巡礼的图钉
+  chart.on('georoam', () => {
+    if (state.layer !== 'koku') return;
+    const near = getView().zoom >= KOKU_ZOOM;
+    if (near !== kokuNear) { kokuNear = near; render(); }
+  });
+
   chart.on('click', (params) => {
     if (params.seriesId === 'spots') {
       const s = spots.find((x) => x.id === params.data?.id);
@@ -605,9 +676,16 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (id) onSelect(id);
   });
 
+  // 转屏（竖屏手机 ⇄ 横屏手机 ⇄ 宽屏）时回到该形态的默认取景，否则竖屏的放大倍数在横屏下会撑出屏幕
+  const formOf = () => (innerWidth <= 560 ? 'phone' : matchMedia(SHORT).matches ? 'landscape' : 'wide');
+  let form = formOf();
   const resize = () => {
     chart.resize();
     chart.setOption({ geo: { layoutCenter: layoutCenter() } });
+    if (formOf() !== form) {
+      form = formOf();
+      if (!state.battle) setView(homeView());
+    }
   };
   window.addEventListener('resize', resize);
 
@@ -615,7 +693,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const g = chart.getOption().geo[0];
     return { center: [...g.center], zoom: g.zoom };
   };
-  const setView = (v) => chart.setOption({ geo: { center: v.center, zoom: v.zoom } });
+  const setView = (v) => {
+    chart.setOption({ geo: { center: v.center, zoom: v.zoom } });
+    if ((v.zoom >= KOKU_ZOOM) !== kokuNear && state.layer === 'koku') { kokuNear = v.zoom >= KOKU_ZOOM; render(); }
+  };
 
   return {
     onSelect,
@@ -637,8 +718,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     // 古国国力：传入 kokuryoku.js 的 createPower() 结果；换指标、选中某国后调 redraw
     setPower(p) { power = p; render(); },
     setInset(i) {
-      const next = { right: 0, bottom: 0, ...i };
-      if (next.right === inset.right && next.bottom === inset.bottom) return; // 卡片重绘时尺寸没变就不挪地图
+      const next = { left: 0, right: 0, bottom: 0, ...i };
+      if (next.left === inset.left && next.right === inset.right && next.bottom === inset.bottom) return; // 卡片重绘时尺寸没变就不挪地图
       inset = next;
       chart.setOption({ geo: { layoutCenter: layoutCenter() } });
     },
@@ -651,7 +732,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     // 选县时顺带更新已探索集合，只重画一次
     select(id, visited) { activeId = id; if (visited) visitedSet = visited; render(); },
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
-    setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
+    setLayer(l) {
+      state.layer = LAYERS[l] ? l : 'history';
+      state.spotId = null;
+      kokuNear = getView().zoom >= KOKU_ZOOM;
+      render();
+      return state.layer;
+    },
     setSpotType(type) { state.spotType = type; render(); },
     // 古国巡礼：子分类、选中的图钉（拉近）、已参拜 / 亲临的一宫
     setKokuType(type) { state.kokuType = type; render(); },

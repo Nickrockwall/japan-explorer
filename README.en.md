@@ -1,226 +1,93 @@
-# Japan Explorer · Japan's 47 Prefectures Through the Ages
+# Japan Explorer · Japan, Then and Now
 
 [中文](README.md) | **English** | [日本語](README.ja.md)
 
 [![Checks](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml/badge.svg)](https://github.com/Nickrockwall/japan-explorer/actions/workflows/checks.yml)
 
-**▶ Try it online: https://nickrockwall.github.io/japan-explorer/**
+**▶ Open it: https://nickrockwall.github.io/japan-explorer/**
 
 ![Japan Explorer](src/assets/og-cover-en.png)
 
-Tap any prefecture on the map of Japan to see which ancient provinces it once belonged to and how it changed from the ritsuryō era to the present day. Drag the timeline through nine historical periods, replay famous battles on a sandbox map, and chat with an AI history guide whose persona changes from region to region.
+Old Japan laid over today's map: which of the 68 ancient provinces became each of today's 47 prefectures? Tap a prefecture or a town, or use your phone's location, and see who ruled the ground under your feet in each era.
 
-The app is available in Chinese, English and Japanese.
+<p>
+  <img src="docs/screen-desktop-en.jpg" alt="Desktop: province rankings" width="68%">
+  <img src="docs/screen-phone-en.jpg" alt="Phone: ancestral register" width="29%">
+</p>
 
-## Features
+## A few things you might not know
 
-| Feature | Description |
-|---|---|
-| **Then and now** | 47 prefectures ⇄ 68 ancient provinces (the Gokishichidō circuits); provinces split across several prefectures are tagged "cross-border" |
-| **Six-stage history** | A timeline for every prefecture: Ritsuryō → Kamakura → Muromachi → Sengoku → Edo → Modern |
-| **Map filters** | Exploration progress / modern regions / ancient circuits / Sengoku powers (1572) / Bakumatsu camps. "Ancient circuits" draws the **real borders** of the 68 provinces — see Musashi spanning Tokyo, Saitama and Kanagawa, or Settsu split between Osaka and Hyōgo — with prefecture borders dashed on top. Switch between 712, 757, 824 and 1869 to watch provinces being born and split |
-| **Time travel** | Drag the slider or press play to see the map and seat of power in nine eras, from Asuka to today |
-| **Battle sandbox** | Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases (deployment → opening → turning point → outcome) and narrated by the commanders themselves |
-| **Hiroshige prints** | All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces* (1853–56): click a province on the ancient map to see how Hiroshige painted it, and where the scene is today; the detail card lists the prints for each prefecture, viewable full size |
-| **The name lives on** | 190 things across the 68 provinces that still carry the old name: the Shinano River, Sanuki udon, Iyokan citrus, Bizen ware, Satsuma sweet potatoes, the Ōmi Railway… shown in the ancient-map tooltip, the province card and the detail card; each one checked against Wikipedia for its name and location |
-| **Where am I?** | The 📍 button on the map uses your phone's location to tell you which ancient province you're standing in, plus today's prefecture and municipality and the Meiji-era district, with that province's Hiroshige print and surviving names; worked out on your device, never uploaded |
-| **Ancient sites** | A fifth layer: on the 68-province map, every province's ichinomiya shrine (85, including rival claimants), provincial capital (85 presumed sites) and kokubunji temple (67). Visit an ichinomiya to stamp it on the site, or check in within 1 km of the real shrine for a gold "in person" seal; the goshuin book gets an Ichinomiya section |
-| **Then & now** | A new map filter (Province power): today's population re-added by the 68 ancient provinces and set against the Edo period (the shogunate's 1721 census and rice yields). Musashi alone holds 21% of Japan; Kawachi climbs from 43rd to 8th; Sado has fewer people than in 1721. Rankings, surprising headlines and a rivals face-off (Iga vs Kōka, Owari vs Mikawa… or any two provinces) |
-| **Ancestral register** | Pick a municipality (or use "Where am I?") to get a "Register of Then and Now": your circuit, province and district; how far and in which direction your guardian shrine lies; how many days it took to walk to the provincial capital; who ruled in 1572; which lords held your district's villages at the end of the Edo period (e.g. "Chiisagata: 158 towns and villages — Ueda Domain 106, hatamoto 20…"); your side in the Boshin War; and a local greeting the guide can say for you. Every line carries a seal showing whether it is exact to the municipality, district, prefecture or province. Add your name, save it as an image or copy a link |
-| **Food layers** | A ramen atlas (with a cut-away of each local bowl) and a map of famous sake |
-| **Municipal map** | Drill into any prefecture to see all 1,900+ cities, towns and villages, colored by ancient province or by population; hover for reading, province, Meiji-era districts, today's district and population. The search box finds municipalities too (kanji, kana or English) with duplicates listed separately; place names on the map; the AI guide answers about the selected place; links can point straight at a municipality |
-| **Pilgrimage** | A fourth layer of anime pilgrimage spots and NHK taiga-drama locations, filterable by type; tap a pin for the work, the location, the scene and visiting tips, and the AI guide talks about them like an otaku or a drama critic. Every spot's coordinates and work–place link are checked against Wikipedia (111 spots across all 47 prefectures) |
-| **Goshuin book** | Collect a stamp for every prefecture you visit — 47 family-crest seals in all |
-| **Local rivalries** | Light-hearted regional in-jokes and friendly rivalries |
-| **AI history guide** | A scholar whose persona changes by region (a Heian court lady, an ukiyo-e cat, a Ryukyu priestess…) ⇄ a famous local warlord speaking in the first person; works offline without an API key |
-| **Japanese-style sound** | A bamboo tap when you pick a region or change era, a deep taiko hit when you stamp, taiko and a conch-shell horn when a battle begins, and drums at each clash; optional background music (koto improvising in the miyako-bushi scale, never the same twice) can be turned on in Settings. Everything is synthesised live in the browser — no audio files; the speaker in the top bar mutes all |
-| **Three languages** | 中文 / English / 日本語 — follows your browser language on first visit; switch any time in the top-right corner |
-| **Sharing** | A Share button on the detail card; links keep the region and language, e.g. `#pref=26&lang=en` opens Kyoto in English |
-| **Mobile & install** | On phones, a bottom tab bar switches between Map, Details and Guide, each full-screen; "Add to Home Screen" opens it full-screen like an app, and pages you have viewed work offline |
+- Add up today's population by ancient province and **Musashi alone holds 21% of Japan** (about 25.9 million) — more than the 43 smallest provinces combined.
+- All of **Oki** has about 19,000 people — not enough to fill half of Tokyo Dome.
+- **Sado** has only 57% of the people it had in 1721, while **Kawachi** climbed from 43rd in the Edo census to 8th today.
+- Ueda in Nagano lies in Chiisagata District of Shinano Province; at the end of the Edo period, 106 of the district's 158 towns and villages belonged to the Ueda Domain.
 
-## 📜 Patch Notes
+All of these come from the app's Rankings and Ancestral register views, and you can open each one to check.
 
-> Adventurers, a new version has arrived. Here are all past announcements (latest first).
+## What you can do
 
-### 📜 v2.9 "Register of Then and Now"
-- **New: Ancestral register.** Tap "📜 Ancestral register" on a municipality card or in "Where am I?" to see who ruled the ground under your feet in each era
-- Late-Edo lords down to the district, from the early-Meiji survey of villages and lords quoted in Japanese Wikipedia's district articles — covering municipalities home to about 80% of the population; elsewhere it falls back to the prefecture and says so with a "Pref." seal
-- Distances and directions to the guardian shrine, provincial capital and kokubunji from real coordinates; walking days assume 30 km a day
-- Add your name (stored only in your browser), save a portrait image or copy a link that opens the same register
-- One tap in "Local greeting" has the guide greet you in the local dialect
+**Explore the map**
+- Then and now: the real borders of the 68 ancient provinces under the 47 prefectures, colored by circuit; switch between 712, 757, 824 and 1869 to watch provinces split and merge
+- Over 1,900 municipalities, colored by province or population, with their Meiji-era districts; search works with kanji, kana and English
+- Time travel: drag the slider through nine eras, from Asuka to today, with each era's powers and capital
 
-### 📊 v2.8 "The Power of the Sixty-Eight"
-- **New filter: Then & now (province power).** Today's population regrouped by the 68 ancient provinces; color the map by population, Edo population, density, rice yield or the "300-year shake-up"
-- Click a province in the rankings to fly there; click one on the map and the rankings follow
-- Headlines computed straight from the numbers: Musashi outnumbers the 43 smallest provinces combined; all of Oki wouldn't fill half of Tokyo Dome; Sado, Wakasa and Iwami have fewer people than in 1721
-- Rivals: Iga vs Kōka, Kai vs Echigo, Owari vs Mikawa, Satsuma vs Chōshū, Osaka's three provinces, the three Bi provinces — or pick any two
-- Edo population and rice yields from Japanese Wikipedia (shogunate census, excluding samurai and some others); a municipality spanning two provinces counts toward the main one, and the app says the totals are approximate
+**Read the history**
+- A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
+- Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals
+- Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)
+- All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces*, with where each scene is today; 190 things that still carry an old province name (the Shinano River, Sanuki udon, Iyokan…)
 
-### ⛩️ v2.7 "The Ichinomiya Pilgrimage"
-- **New layer: Ancient sites!** Each province's ichinomiya shrine, provincial capital and kokubunji temple on the 68-province map, filterable by type
-- 85 ichinomiya cover all 68 provinces (where several shrines claim the title, all are listed — visiting any one counts)
-- Tap "Visit & stamp" on an ichinomiya; when you're actually within 1 km of the shrine, "Check in on site" for a gold in-person seal
-- The goshuin book gets an Ichinomiya section: 68 provinces by circuit, with in-person seals shining gold
-- Provincial capitals are mostly presumed sites, sometimes several candidates — labeled as such; places without exact coordinates are pinned at the municipality (hollow pins)
-- New "Ancient sites" section on the detail card for each prefecture
-- Compiled from Japanese Wikipedia, with every location checked to lie in its own province; a few placements (Tosa capital, Yamato and Dewa kokubunji) were corrected along the way
+**About you**
+- Where am I?: find out which ancient province and district you're standing in
+- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the 1572 power, the late-Edo lords, your Boshin War side and a local greeting; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
+- Goshuin book: a stamp for every prefecture you visit; pay respects at each province's ichinomiya shrine online, and earn an "in person" stamp when you're actually there
 
-### 🕰️ v2.6 "Provinces Born and Split"
-- **The ancient-province map gets a timeline: 712 · 757 · 824 · 1869!**
-- 712: Dewa has just been created; Tango, Mimasaka, Ōsumi, Izumi, Kaga, Noto and Awa have not split off yet, and Tanegashima and Yakushima form Tane Island
-- 757: Izumi and Noto are split off, but Awa has been folded back into Kazusa; in 824 Tane joins Ōsumi and the 68 provinces are settled
-- 1869, the Meiji reorganization: Mutsu splits in five, Dewa in two, and Ezo becomes Hokkaido's eleven provinces — 84 in all
-- The new Meiji provinces are mapped municipality by municipality (425 in Tohoku and Hokkaido) through their Meiji districts, with district-to-province links taken from Wikipedia categories and every ambiguous case checked by hand
+**Just for fun**
+- Ramen styles, local sake, 111 anime and taiga-drama locations, and regional in-jokes
+- The time-travel guide changes identity with the region (a Heian court lady, an ukiyo-e cat, a general…) and answers quick questions even without AI
+- Japanese-style sound effects and koto background music, all synthesized in the browser
 
-### 📍 v2.5 "You Are Here"
-- **New "Where am I?" button on the map!** Traveling in Japan? Tap it to see which ancient province you're standing in
-- Also shows today's prefecture, municipality and Meiji-era district; municipalities spanning two provinces say so
-- Comes with that province's Hiroshige print and surviving names, plus one tap to the municipal map
-- Location is requested only when you tap, and is worked out on your device — never sent to any server
-- Clear messages if you're abroad, deny permission or have no signal
+A 9-step tour runs on your first visit, and you can replay it from settings. The interface is in 中文, English and 日本語.
 
-### 🏷️ v2.4 "The Name Lives On"
-- **190 things that still carry an old province name!** The Shinano River, Sanuki udon, Iyokan citrus, Bizen ware, Satsuma sweet potatoes, the Ōmi Railway… names you hear every day turn out to be over a thousand years old
-- Hover a province on the ancient map to see them, or click for the full list; the detail card gets a "The name lives on" section for the provinces in each prefecture
-- Nicknames count too: Shinshū soba (Shinano), Kōshū wine (Kai), Kishū plums (Kii), Banshū abacuses (Harima)…
-- Every entry is checked against Wikipedia: the name really contains the province's name, places and landscapes really lie in that province, and goods' articles really mention the province or prefecture — anything that doesn't check out is left out
+## How to use it
 
-### 🎨 v2.3 "Hiroshige's Sixty-odd Provinces"
-- **All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces* are in!** One per province, plus Edo
-- Click a province on the "Ancient circuits" map to see Hiroshige's view of it; Musashi also has the Year-End Market at Asakusa
-- Each print shows where the scene is today, down to the city (located from Wikipedia coordinates; where the spot is unknown, it says so)
-- New "through Hiroshige's eyes" section on the detail card; click a thumbnail for the full print and browse with ‹ › or the arrow keys
-- The prints are public domain; images come from Wikimedia Commons and ship with the site, so they load in China too
+- **Phone**: open the link in your browser, in portrait or landscape. To add it to your home screen: Safari on iPhone → Share → "Add to Home Screen"; Chrome on Android → ⋮ → "Add to Home screen". Pages you've seen also work offline.
+- **Computer**: open the link. The map is on the left, details and the guide on the right.
+- **Sharing**: the Share button on a card copies a link with the region and language, e.g. `#pref=26&lang=ja` opens Kyoto in Japanese.
 
-### 🗾 v2.2 "Sixty-Eight Provinces"
-- **The "Ancient circuits" filter is now a real map of the old provinces!** Instead of painting today's prefectures, the map draws the 68 provinces as they were
-- Musashi spans Tokyo, Saitama and Kanagawa; Settsu is split between Osaka and Hyōgo — prefecture borders are dashed on top, so then and now line up at a glance
-- Province names on the map, with more appearing as you zoom; hover for the reading, the circuit and the prefectures it covers today
-- Clicking still selects the prefecture you clicked in
-- Borders are pieced together from 1,900+ municipalities by province (a municipality spanning two provinces goes to the main one, so they are approximate)
+**AI (optional)**: to chat freely with the guide, add your own key under "API Settings". Claude, Gemini and OpenAI-compatible services (including DeepSeek) are supported. The key stays in your browser, and requests go straight from your browser to the service you chose — never through this site.
 
-### 🥁 v2.1 "Taiko & Koto"
-- **Sound effects are live!** A bamboo *tok* on the map, a *dong* of taiko on every stamp, a conch-shell horn to open each battle and war drums at every clash
-- New background music: koto improvising in the miyako-bushi scale, never repeating (off by default — turn it on under Sound in ⚙ Settings, with separate music and effects volume)
-- New speaker button in the top bar: one-tap mute, remembered; music fades out when the tab goes to the background
-- All sounds are synthesised live in the browser, zero downloads; if audio fails, the map keeps working (covered by a dedicated test)
-- Works on phones from the first tap; on iPhone (iOS 16.4+) you'll hear it even in silent mode, and like video sites it pauses music from other apps — tap the speaker to mute
+**Privacy**: no accounts and no analytics. Location is used only when you tap the button and is worked out on your device; your progress, stamps and household name stay in your own browser.
 
-### 🌸 v2.0 "Pilgrimage" Expansion
-- **New layer "Pilgrimage" unlocked!** 111 anime pilgrimage spots and NHK taiga-drama locations across all 47 prefectures
-- Pins glow and breathe: sakura pink for anime, antique gold for taiga dramas; filter by All / Anime / Taiga
-- Tap a pin and the camera glides in, opening a card with the scene and pilgrim's tips
-- New "Pilgrimage Guide" in the detail panel; the AI guide learns two new voices: 🔥 hot-blooded otaku and 🎬 drama critic
-- Every coordinate and work–place link verified against Wikipedia — about 10 fake pilgrimage sites were purged by the system
+## Where the data comes from
 
-### 🛡️ v1.9 "Shield & Portal"
-- New automated check system: every update must pass data checks and 51 live browser tests — **no pass, no release**
-- Fixed: the map freezing on networks where CDNs are blocked (the map engine now ships with the site; loads in 0.5s)
-- Fixed: legend and banner jumping when switching eras; the search list running off-screen on phones
+Everything on the map has a source where possible, and the app says so where something is approximate:
 
-### 🗺️ v1.8 "Map of a Thousand Towns"
-- Drill-down map opened: 1,900+ municipalities, colored by ancient province or population, with place names
-- Added Meiji-era former districts; the province table cross-checked at about 1,350 municipalities
-- Search upgraded: kanji (simplified too), kana and English; duplicate names listed separately; share links straight to a municipality
-- Phones now switch between Map / Details / Guide tabs
+- **Borders**: national map from 「地球地図日本」 (Geospatial Information Authority of Japan); municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成. Province borders are pieced together from municipalities, and a municipality spanning two provinces counts toward the main one, so they are approximate.
+- **From Japanese Wikipedia** (CC BY-SA 4.0): Meiji-era districts; ichinomiya shrines, provincial capitals and kokubunji temples; Edo-period population and rice yield by province; late-Edo lords by district (旧高旧領取調帳). Each entry is checked by script — for example, that its coordinates fall inside its province — and anything that doesn't match is left out.
+- **Wikidata** (CC0): municipal readings, populations and English names; English names of domains.
+- **Ukiyo-e**: Hiroshige's prints are in the public domain; images from Wikimedia Commons.
+- History, in-jokes, ramen and sake follow common accounts, some coloring is approximate (e.g. by a prefecture's dominant power), and uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
 
-### 📱 v1.7 "Pocket Scroll"
-- Add to Home Screen, works offline; share links carry the language
-- Phone layout overhaul, notch-safe and landscape-ready
-- Data bundling: first load down from about 100 requests to 2
-
-### 🌏 v1.6 "Trilingual Pass"
-- English and Japanese unlocked, all 47 prefectures fully translated; first visit follows your browser language
-
-### ⚔️ v1.5 "Battle Sandbox"
-- Five famous battles replayed in four phases — deployment, opening, turning point, outcome — narrated by the commanders
-- Time-travel slider: nine eras from Asuka to today
-
-### 🍜 v1.4 "Food Atlas"
-- Two new layers: the ramen atlas and the sake map
-
-### 🏯 v1.0 "Launch"
-- 47 prefectures ⇄ 68 ancient provinces, six-stage timelines, the goshuin book, and an AI history guide that changes persona by region
-
-## Connecting an AI (optional)
-
-You can use the app without an AI service: quick questions and common questions are answered from local data, in the guide's voice. For free-form conversation, click **API Settings** in the top-right corner and enter your own key:
-
-| Provider type | Use it for |
-|---|---|
-| Claude API | Anthropic |
-| Gemini (native) | Google AI Studio keys, including the newer keys starting with `AQ.` |
-| OpenAI-compatible | OpenAI, DeepSeek and any other service with a `/chat/completions` endpoint |
-
-Use **Test connection** to check your settings. Your key is stored only in your own browser; requests go straight from your browser to the service you entered and never pass through this site.
-
-## Using it on a phone
-
-Open https://nickrockwall.github.io/japan-explorer/ in your phone's browser. To add it to your home screen:
-
-- **iPhone (Safari):** tap the Share button → **Add to Home Screen**
-- **Android (Chrome):** tap ⋮ → **Add to Home screen** / **Install app**
-
-## Running locally
-
-```bash
-python -m http.server 8000   # or: npx serve .
-```
-
-Then open http://localhost:8000. Double-clicking `index.html` does not work, because the browser blocks data loading from `file://`.
-
-## Editing the content
-
-- Prefecture data: `src/data/prefectures/NN_slug.json` (the Chinese base text)
-- English and Japanese translations: `src/data/i18n/{en,ja}/` (text fields only, layered over the Chinese base)
-- Eras and battles: `src/data/historical_events.json`
-
-**After changing any JSON file, rebuild the bundles.** The site reads the bundled files, not the individual ones:
-
-```bash
-python tools/build_bundle.py
-```
-
-The data schema and project conventions are documented in [CLAUDE.md](CLAUDE.md) (in Chinese).
-
-## Automated checks and deployment
-
-Every push to GitHub runs, in order:
-
-1. **Data checks** (a few seconds): fields and values, translation structure, stale bundles, municipalities vs. the province table, and more
-2. **UI tests** (~2 min): a real browser walks through the main features on desktop / tablet / phone in Chinese, English and Japanese
-3. **Deploy**: only for `main`, and only when both previous steps pass; otherwise the site stays on the previous version, and failure screenshots can be downloaded from the run
-
-See the badge above or the [Actions page](https://github.com/Nickrockwall/japan-explorer/actions). You can also run the checks locally:
-
-```bash
-python -X utf8 tools/check_data.py        # data & repo consistency, a few seconds
-pip install playwright && python -m playwright install chromium   # first time
-python -X utf8 tests/smoke.py             # UI smoke tests: desktop / tablet / phone × zh / en / ja, ~2 min
-```
-
-## Tech
-
-- Plain HTML / CSS / ES modules — no framework, no npm dependencies
-- Map: [Apache ECharts](https://echarts.apache.org/) 5.5.1, shipped with the site (`src/vendor/`, Apache-2.0) rather than loaded from a CDN, so the page also opens on networks where CDNs are blocked; Google Fonts are optional and fall back to system fonts
-- Data: one bundled JSON file per language (`src/data/bundle/`), so first load needs only two data requests
-- PWA: `manifest.webmanifest` + an offline cache in `sw.js`
-- Hosting: GitHub Pages, published by GitHub Actions — a push to `main` is checked first and **goes live only if every check passes**; if anything fails, the site stays on the previous version
-
-## Notes
-
-History, local in-jokes, ramen and sake entries follow commonly accepted accounts. Some are approximations (for example, each prefecture is colored by its dominant power), and uncertain points are marked "according to one account" or "legend has it". The app is meant for casual exploration, not academic citation.
-
-National map: source 「地球地図日本」 (Global Map Japan, Geospatial Information Authority of Japan), converted to GeoJSON by [dataofjapan/land](https://github.com/dataofjapan/land).
-
-Municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 (Japan's Ministry of Land, Infrastructure, Transport and Tourism, simplified by [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)). Readings, population and English names come from [Wikidata](https://www.wikidata.org/) (CC0). Each municipality's ancient province comes from a hand-made table (`tools/province_overrides.json`) cross-checked against Wikidata and the former-district data; municipalities spanning several provinces use the main one. Former (Meiji-era) districts are compiled from the district articles of [Japanese Wikipedia](https://ja.wikipedia.org/) (CC BY-SA 4.0) into `tools/districts.json`; refresh with `python -X utf8 tools/fetch_districts.py`. Rebuild with `python -X utf8 tools/build_municipalities.py`. The 68 province borders (`src/data/provinces.json`) are merged from the municipalities by province: `pip install shapely`, then `python -X utf8 tools/build_provinces.py` (it also writes the timeline, `province_eras.json`; the Meiji mapping `tools/meiji_provinces.json` comes from `python -X utf8 tools/fetch_meiji.py`). After adding or editing province names (`src/data/province_names.json`), run `python -X utf8 tools/province_names_tool.py verify`. Ancient sites (`src/data/koku_sites.json`): `python -X utf8 tools/fetch_koku.py` (needs shapely) compiles and checks the tables of the Wikipedia articles 一宮, 国府 and 国分寺. Hiroshige prints (`src/data/hiroshige.json` and `src/assets/hiroshige/`): `pip install pillow`, then `python -X utf8 tools/fetch_hiroshige.py` (public domain only; scenes it cannot place, or places in the wrong province, are listed for manual review). Province power (`src/data/kokuryoku.json`): `python -X utf8 tools/build_kokuryoku.py` (needs shapely); population today is summed from the municipalities, and Edo population and rice yields come from [Japanese Wikipedia](https://ja.wikipedia.org/), "江戸時代の日本の人口統計" (CC BY-SA 4.0). Late-Edo lords for the ancestral register (`tools/domains.json`): `python -X utf8 tools/fetch_domains.py`, from the 旧高旧領取調帳 tables in [Japanese Wikipedia](https://ja.wikipedia.org/)'s district articles (CC BY-SA 4.0); English domain names from Wikidata (CC0).
-
-## Copyright & License
+## License
 
 © 2026 Nickrockwall
 
-- **Code** (HTML / CSS / JS / Python tools and tests): [MIT](LICENSE) — use, modify and use commercially; just keep the copyright notice
-- **Content** (historical text, guide personas and answers, translations, cover images and icons): [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — share and adapt with credit to "Japan Explorer by Nickrockwall" and a link to this project, **non-commercial only**; for commercial use, open a GitHub issue first
-- **Third-party material** keeps its own terms: ECharts (Apache-2.0), map boundaries (Global Map Japan / 国土数値情報), Wikidata (CC0), former-district data (Japanese Wikipedia, CC BY-SA 4.0)
+- **Code**: [MIT](LICENSE)
+- **Content** (historical text, personas and answers, translations, cover and icons): [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — credit "Japan Explorer by Nickrockwall" with a link; no commercial use
+- **Third-party material** follows its own terms; data from Wikipedia is CC BY-SA 4.0, not NC. Full list in [LICENSE-CONTENT.md](LICENSE-CONTENT.md)
 
-See [LICENSE-CONTENT.md](LICENSE-CONTENT.md) for the full scope and third-party list.
+What changed in each version: [CHANGELOG.en.md](CHANGELOG.en.md).
+
+## Development
+
+A static site: plain HTML / CSS / ES modules, with [Apache ECharts](https://echarts.apache.org/) bundled for the map (so it loads in mainland China too). No build step.
+
+```bash
+python -m http.server 8000          # run locally, then open http://localhost:8000 (double-clicking index.html won't work)
+python tools/build_bundle.py        # rebuild after changing any JSON in src/data
+python -X utf8 tools/check_data.py  # data checks
+python -X utf8 tests/smoke.py       # UI tests (pip install playwright && python -m playwright install chromium)
+```
+
+Each push to GitHub runs the data checks and UI tests (desktop, tablet, phone portrait and landscape × zh / en / ja); the site is published to GitHub Pages only if everything passes. Data formats, the data tools in `tools/` and project conventions are documented in [CLAUDE.md](CLAUDE.md).

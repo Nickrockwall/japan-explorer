@@ -11,6 +11,7 @@ import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } fro
 import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
 import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { createPower, METRICS } from './kokuryoku.js';
+import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
@@ -23,9 +24,12 @@ function updateCounter(set) {
   $('visited-bar').style.width = `${(set.size / 47) * 100}%`;
 }
 
+const NARROW = '(max-width: 900px), (max-height: 520px) and (orientation: landscape)';
+// 横屏手机（矮而宽）
+const SHORT = '(max-height: 520px) and (orientation: landscape)';
+
 // 窄屏时页面上下堆叠，向导在地图下方很远，合战中看不到名将解说。
 // 把向导最新一条发言（含打字机效果与 LLM 流式输出）同步到地图底部的浮窗。
-const NARROW = '(max-width: 900px), (max-height: 520px) and (orientation: landscape)';
 function setupBattleVoice(onAsk) {
   const chat = $('chat');
   const text = $('bv-text');
@@ -120,7 +124,7 @@ function updateLegend(map) {
     .join('');
 }
 
-function setupSettings(guide, onResetVisited) {
+function setupSettings(guide, onResetVisited, onTour) {
   const dlg = $('settings');
   const provider = $('cfg-provider');
   const base = $('cfg-base');
@@ -179,6 +183,8 @@ function setupSettings(guide, onResetVisited) {
       apiConfig.clear();
     } else if (action === 'reset-visited') {
       onResetVisited();
+    } else if (action === 'tour') {
+      onTour();
     }
     refreshDot();
     guide.refreshMode();
@@ -344,6 +350,7 @@ async function main() {
   const battles = events.historic_battles;
 
   let openSettings = () => {};
+  let startTour = () => {}; // 新手教程（初始化完成后赋值）
   const guide = createGuide({
     chat: $('chat'), quick: $('quick'), form: $('composer'), input: $('chat-input'), send: $('btn-send'),
     avatar: $('guide-avatar'), name: $('guide-name'), title: $('guide-title'), mode: $('guide-mode'),
@@ -540,7 +547,12 @@ async function main() {
   // 卡片摊开时地图中心避开它：宽屏让出右侧，窄屏让出底部
   function insetPower() {
     if (powerCard.hidden) { map.setInset({}); return; }
-    map.setInset(narrow() ? { bottom: powerCard.offsetHeight + 10 } : { right: powerCard.offsetWidth + 16 });
+    // 按卡片实际的位置：靠右的窄卡（宽屏、横屏）让出右侧，铺满底部的（竖屏手机、平板）让出底部
+    const card = powerCard.getBoundingClientRect();
+    const pane = $('map').getBoundingClientRect();
+    map.setInset(card.width < pane.width * 0.6
+      ? { right: Math.round(pane.right - card.left + 8) }
+      : { bottom: Math.round(pane.bottom - card.top + 10) });
   }
   function closePower() {
     if (powerCard.hidden) return;
@@ -1068,6 +1080,14 @@ async function main() {
     phaseBox.innerHTML = b.phases.map((ph, k) =>
       `<li data-i="${k}"><span class="ph-n">${k + 1}</span><span class="ph-t">${esc(ph.title)}</span></li>`).join('');
     $('battle-hud').hidden = false;
+    syncArtCard(); // 收起古国卡片 / 国力榜（连同它让出的地图位置）
+    // 横屏手机：合战面板盖在左上，地图中心挪到面板右侧
+    if (matchMedia(SHORT).matches) {
+      requestAnimationFrame(() => {
+        const hud = $('battle-hud').getBoundingClientRect();
+        map.setInset({ left: Math.round(hud.right - $('map').getBoundingClientRect().left + 8) });
+      });
+    }
     updateLegend(map);
     guide.startBattle(b, prefs.get(b.battlefield.prefecture_id));
     setPhase(0, { narrate: false }); // 第一阶段由开场陈词引出，点“下一阶段”再逐段解说
@@ -1082,6 +1102,8 @@ async function main() {
     app.savedView = null;
     document.body.classList.remove('in-battle');
     $('battle-hud').hidden = true;
+    map.setInset({});
+    syncArtCard();
     updateLegend(map);
     guide.endBattle();
   }
@@ -1149,7 +1171,7 @@ async function main() {
     map.setVisited(set);
     renderCurrent();
     updateLegend(map);
-  });
+  }, () => startTour());
 
   // ── 初始状态 ──
   const set = visited.get();
@@ -1163,6 +1185,23 @@ async function main() {
   guide.refreshMode();
   guide.showIntro();
   loading.classList.add('hidden');
+
+  // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始；设置里与欢迎卡上可再看
+  const onMap = () => { if (narrow()) tabs.set('map'); };
+  const tour = createTour([
+    { key: 'hi' },
+    { key: 'map', target: () => $('map'), before: onMap },
+    { key: 'detail', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="detail"]') : detailEl) },
+    { key: 'guide', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="guide"]') : document.querySelector('.guide')) },
+    { key: 'tools', target: () => document.querySelector('.map-toolbar'), before: onMap },
+    { key: 'time', target: () => $('timebar'), before: onMap },
+    { key: 'locate', target: () => $('btn-locate'), before: onMap },
+    { key: 'battle', target: () => $('btn-battle') },
+    { key: 'end' },
+  ], { onEnd: () => uiPref.set('tourDone', true) });
+  startTour = () => { if (app.battle) exitBattle(); closeMuni(); tour.start(); };
+  detailEl.addEventListener('click', (e) => { if (e.target.closest('[data-act="tour"]')) startTour(); });
+  if (!uiPref.get('tourDone', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 
   // 深链接：#pref=26 直接打开京都
   const m = location.hash.match(/pref=(\d+)/);

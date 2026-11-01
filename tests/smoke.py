@@ -25,7 +25,10 @@ VIEWPORTS = {
     'desktop': dict(viewport={'width': 1280, 'height': 800}),
     'tablet': dict(viewport={'width': 820, 'height': 1180}, has_touch=True),
     'phone': dict(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2),
+    'landscape': dict(viewport={'width': 844, 'height': 390}, is_mobile=True, has_touch=True, device_scale_factor=2),
 }
+# 横屏手机只跑与布局相关的场景（中文）
+LANDSCAPE_CASES = {'deeplink', 'power', 'battle', 'koseki', 'tour'}
 # 与功能无关、可忽略的控制台消息
 IGNORE = re.compile(r'navigator\.vibrate|mobile-web-app-capable|fonts\.(googleapis|gstatic)\.com|favicon')
 SEARCH = {'zh': '丰田', 'en': 'Toyota', 'ja': 'とよた'}
@@ -56,12 +59,14 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_, china=False, no_audio=False, geo=None):
+    def open(self, hash_, china=False, no_audio=False, geo=None, fresh=False):
         extra = {'geolocation': geo, 'permissions': ['geolocation']} if geo else {}
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
                                        service_workers='block', **extra)
         if no_audio:
             ctx.add_init_script(NO_AUDIO)
+        if not fresh:
+            ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); } catch (e) {}")
         page = ctx.new_page()
         if china:
             page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
@@ -367,6 +372,32 @@ class Case:
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'guide', '乡音应切到向导页'
 
+    def tour(self, page):
+        # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；设置里可再打开，Esc 关闭
+        page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
+        n = int(page.text_content('.tour-n').split('/')[1])
+        assert n == 9, f'教程应有 9 步，实际 {n}'
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        for i in range(n):
+            page.wait_for_timeout(300)
+            box = page.locator('.tour-tip').bounding_box()
+            assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'第 {i + 1} 步气泡出屏：{box}'
+            if 0 < i < n - 1:
+                hole = page.locator('.tour-hole').bounding_box()
+                assert hole and hole['width'] > 10 and hole['height'] > 10, f'第 {i + 1} 步没有对准控件'
+            page.click('[data-tour="next"]')
+        page.wait_for_selector('.tour', state='detached')
+        assert page.evaluate("localStorage.getItem('je.ui.tourDone')") == 'true', '走完教程应记住'
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached')
+        page.wait_for_timeout(900)
+        assert page.locator('.tour').count() == 0, '看过教程后不应再自动出现'
+        page.click('#btn-settings')
+        page.click('#settings button[value="tour"]')
+        page.wait_for_selector('.tour')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.tour', state='detached')
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -380,7 +411,7 @@ def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
-             ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki'])]
+             ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
@@ -403,10 +434,12 @@ def main():
                     label = f'{vp:7} {lang} {name}'
                     if ONLY and not ONLY.search(label):
                         continue
+                    if vp == 'landscape' and (lang != 'zh' or name not in LANDSCAPE_CASES):
+                        continue
                     total += 1
                     page = None
                     try:
-                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken',
+                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name == 'tour',
                                       geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
                                       else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
                         for step in steps:
