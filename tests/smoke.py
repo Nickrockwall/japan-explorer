@@ -122,6 +122,51 @@ class Case:
         assert page.evaluate('document.documentElement.dataset.map') == 'japan'
         self.deeplink(page)
 
+    # ── 朝鲜半岛模式 ──
+    KR_TITLE = {'zh': '首尔特别市', 'en': 'Seoul', 'ja': 'ソウル特別市'}
+    KR_DOKDO = {'zh': ('独岛', '竹岛'), 'en': ('Dokdo', 'Takeshima'), 'ja': ('独島', '竹島')}
+
+    def korea(self, page):
+        assert page.evaluate('document.documentElement.dataset.map') == 'korea'
+        if self.narrow:
+            assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏地区链接应打开详情页'
+        title = page.text_content('.modern-title .kanji')
+        assert title == self.KR_TITLE[self.lang], f'详卡标题是 {title!r}'
+        assert page.text_content('.modern-title .kana') == '서울특별시'
+        assert page.text_content('#visited-total') == '29'
+        # 选中的区在地图上着色（geo.regions），独岛不属任何一区
+        hot = page.evaluate("""(() => { const g = echarts.getInstanceByDom(document.getElementById('map')).getOption().geo[0];
+            const base = g.itemStyle.areaColor; return g.regions.filter((r) => r.itemStyle.areaColor !== base && !r.itemStyle.areaColor.startsWith('rgba')).map((r) => r.name); })()""")
+        assert hot == ['서울특별시'], f'着色的区 {hot}'
+        # 日本独有的按钮不出现
+        for sel in ('#btn-battle', '#btn-book', '#timebar', '.map-toolbar'):
+            assert not page.is_visible(sel), f'半岛模式不应显示 {sel}'
+        # 越界编号：不报错、回到欢迎卡
+        page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=99')
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        assert page.locator('.modern-title').count() == 0, 'pref=99 不应打开详卡'
+        assert page.locator('.welcome').count() == 1
+
+    def korea_dispute(self, page):
+        self.tab(page, 'map')
+        page.wait_for_timeout(300)
+        pt = page.evaluate("""(() => {
+            const c = echarts.getInstanceByDom(document.getElementById('map'));
+            const xy = c.convertToPixel({ geoIndex: 0 }, [131.8667, 37.2417]);
+            const r = document.getElementById('map').getBoundingClientRect();
+            return [xy[0] + r.left, xy[1] + r.top];
+        })()""")
+        page.mouse.click(pt[0], pt[1])
+        page.wait_for_selector('#art-card:not([hidden])', timeout=5000)
+        text = page.text_content('#art-card')
+        a, b = self.KR_DOKDO[self.lang]
+        assert a in text and b in text and text.index(a) < text.index(b), f'卡片：{text[:80]!r}'
+        box = page.evaluate("(() => { const r = document.getElementById('art-card').getBoundingClientRect(); return [r.left, r.right, r.bottom, innerWidth, innerHeight]; })()")
+        assert box[0] >= 0 and box[1] <= box[3] + 1 and box[2] <= box[4] + 1, f'卡片出屏 {box}'
+        page.keyboard.press('Escape')
+        page.wait_for_selector('#art-card', state='hidden')
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -440,7 +485,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

@@ -1,6 +1,7 @@
 // 右上：地区风土与历史详卡
 import { crestSVG } from './crests.js';
 import { t, label, lang, prefName, joinList } from './i18n.js';
+import { mapKey } from './country.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -23,7 +24,7 @@ export function renderWelcome(el) {
 // 版权与许可：代码 MIT、内容 CC BY-NC 4.0；全国地图须注明出典（地球地図日本）
 const REPO = 'https://github.com/Nickrockwall/japan-explorer';
 export function legalHTML() {
-  return `© 2026 Nickrockwall · ${t('legal.lic')} · <a href="${REPO}/blob/main/LICENSE-CONTENT.md" target="_blank" rel="noopener">${t('legal.more')}</a><br>${t('legal.map')}`;
+  return `© 2026 Nickrockwall · ${t('legal.lic')} · <a href="${REPO}/blob/main/LICENSE-CONTENT.md" target="_blank" rel="noopener">${t('legal.more')}</a><br>${t(mapKey === 'korea' ? 'kr.legal.map' : 'legal.map')}`;
 }
 
 const list = (items) => items.map((x) => `<span class="pill">${esc(x)}</span>`).join('');
