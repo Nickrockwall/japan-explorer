@@ -1329,3 +1329,40 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 :root[data-map="korea"] #guide-mode, :root[data-map="korea"] #quick, :root[data-map="korea"] #legend,
 :root[data-map="korea"] #settings button[value="tour"] { display: none; }
 .kr-soon { opacity: .85; }
+
+/* ── 朝鲜半岛模式的皮肤：丹青（青绿底、朱红、石黄）+ 韩纸纤维纹；只换颜色与质感，布局不动 ── */
+:root[data-map="korea"] {
+  --bg: #151b1a;
+  --bg-2: #1a2120;
+  --panel: #1e2624;
+  --panel-2: #26302d;
+  --line: #33403c;
+  --line-soft: #28322f;
+  --text: #eee8da;         /* 韩纸的米白 */
+  --text-2: #b6b2a4;
+  --muted: #80837a;
+  --shu: #c8432f;          /* 丹青的朱 */
+  --shu-soft: rgba(200, 67, 47, .16);
+  --kin: #e2bd57;          /* 石黄 */
+  --kin-soft: rgba(226, 189, 87, .14);
+  --ai: #3f8f7f;           /* 青绿 */
+}
+:root[data-map="korea"] body {
+  /* 韩纸：两层极淡的斜向纤维 */
+  background-image:
+    repeating-linear-gradient(28deg, transparent 0 9px, rgba(255,255,255,.012) 9px 10px, transparent 10px 23px),
+    repeating-linear-gradient(-61deg, transparent 0 13px, rgba(255,255,255,.01) 13px 14px, transparent 14px 31px);
+  background-size: auto;
+}
+/* 顶栏下缘一条五方色（青赤黄白黑）细带，取自丹青 */
+:root[data-map="korea"] .topbar {
+  background: linear-gradient(180deg, #1b2322, var(--bg));
+  border-bottom: 3px solid;
+  border-image: linear-gradient(90deg, #2f6f8f 0 10%, #c8432f 10% 20%, #e2bd57 20% 30%, #e9e4d6 30% 40%, #0c0c0c 40% 50%,
+    #2f6f8f 50% 60%, #c8432f 60% 70%, #e2bd57 70% 80%, #e9e4d6 80% 90%, #0c0c0c 90% 100%) 1;
+}
+:root[data-map="korea"] .muni-card { background: rgba(26,33,32,.97); border-color: rgba(226,189,87,.45); }
+@media (max-width: 560px) {
+  /* 半岛模式没有合战与御朱印按钮，设置按钮不再拉满整行 */
+  :root[data-map="korea"] #btn-settings { flex: 0 0 auto; margin-left: auto; }
+}
