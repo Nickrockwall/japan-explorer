@@ -332,6 +332,18 @@ class Case:
         assert self.KR_HAMNAM[self.lang] in page.text_content('#loc-card'), page.text_content('#loc-card')[:120]
         self.no_overflow(page)
 
+    def korea_guide(self, page):
+        # 离线向导：济州的方言快捷提问给出济州语原句；庆尚北道的「名字」讲庆州、尚州
+        self.tab(page, 'guide')
+        page.click('#quick [data-q="dialect"]')
+        page.wait_for_function("[...document.querySelectorAll('#chat .msg.ai')].pop()?.textContent.includes('혼저 옵서예')", timeout=8000)
+        page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=14')
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        self.tab(page, 'guide')
+        page.click('#quick [data-q="name"]')
+        page.wait_for_function("(() => { const x = [...document.querySelectorAll('#chat .msg.ai')].pop()?.textContent || ''; return x.includes('尚州') || x.includes('Sangju'); })()", timeout=8000)
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -667,7 +679,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

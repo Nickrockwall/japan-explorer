@@ -12,7 +12,8 @@ import { placeHistory, placeCard } from './korea-place.js';
 import { getPosition } from './locate.js';
 import { disputedAt } from './disputed.js';
 import { createTour } from './tour.js';
-import { uiPref } from './store.js';
+import { createKoreaGuide } from './korea-guide.js';
+import { uiPref, apiConfig } from './store.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -120,11 +121,14 @@ function openStage(el, era) {
 }
 
 // 「道名今犹在」：今天的区 → 名字来源（names.json：八道与慈江道各取两座城的首字）
-const ORIGIN = { 8: 'gyeonggi', 1: 'gyeonggi', 4: 'gyeonggi', 9: 'gangwon', 26: 'gangwon', 10: 'chungcheong', 11: 'chungcheong',
-  12: 'jeolla', 13: 'jeolla', 14: 'gyeongsang', 15: 'gyeongsang', 3: 'gyeongsang', 2: 'gyeongsang', 6: 'gyeongsang',
-  17: 'pyeongan', 19: 'pyeongan', 21: 'pyeongan', 22: 'pyeongan', 24: 'hwanghae', 25: 'hwanghae', 20: 'gyeonggi',
-  27: 'hamgyeong', 28: 'hamgyeong', 23: 'jagang', 29: 'ryanggang', 18: 'rason', 5: 'chungcheong', 7: 'chungcheong', 16: 'jeolla' };
+const ORIGIN = { 8: 'gyeonggi', 9: 'gangwon', 26: 'gangwon', 10: 'chungcheong', 11: 'chungcheong', 12: 'jeolla', 13: 'jeolla',
+  14: 'gyeongsang', 15: 'gyeongsang', 21: 'pyeongan', 22: 'pyeongan', 24: 'hwanghae', 25: 'hwanghae',
+  27: 'hamgyeong', 28: 'hamgyeong', 23: 'jagang', 29: 'ryanggang', 18: 'rason' }; // 只收名字里带着来源的区（首尔、釜山等城市的名字另有来历）
 function originHTML(id, names) {
+  const text = originText(id, names);
+  return text ? `<div class="section-h">${t('kr.n.h')}</div><div class="note kr-origin">${esc(text)}</div>` : '';
+}
+function originText(id, names) {
   const k = ORIGIN[id];
   if (!k || !names) return '';
   let text;
@@ -137,7 +141,7 @@ function originHTML(id, names) {
     const nm = (x) => bare((lang === 'en' ? x.en : lang === 'ja' ? x.ja : x.zh) || x.ko);
     text = t('kr.n.two', { p: bare(lang === 'en' ? u[3] : lang === 'ja' ? u[2] : u[1]), a: nm(a), b: nm(b) });
   }
-  return `<div class="section-h">${t('kr.n.h')}</div><div class="note kr-origin">${esc(text)}</div>`;
+  return text;
 }
 
 function renderRegion(el, p, c, translated = true, names = null) {
@@ -215,13 +219,13 @@ export async function main() {
   const narrow = () => matchMedia(NARROW).matches;
   const tabs = setupTabs(() => { chart.resize(); counties.resize(); }, () => {});
 
-  // 向导：半岛的史料还在整理，先放一条说明，输入框保持禁用
-  $('guide-name').textContent = t('kr.guide.name');
-  $('guide-title').textContent = t('kr.guide.title');
-  $('guide-avatar').textContent = t('kr.guide.ava');
+  // 向导：半岛只有一位案内人「丹青」，史话就是本区的 content
+  let openSettings = () => {};
+  const guide = createKoreaGuide({
+    chat: $('chat'), quick: $('quick'), form: $('composer'), input: $('chat-input'), send: $('btn-send'),
+    avatar: $('guide-avatar'), name: $('guide-name'), title: $('guide-title'), mode: $('guide-mode'),
+  }, { getConfig: apiConfig.get, openSettings: () => openSettings(), origin: () => originText(app.currentId, names) });
   $('chat-input').placeholder = t('kr.chat.ph');
-  $('chat').innerHTML = `<div class="msg ai">${esc(t('kr.guide.soon'))}</div>`;
-  const guideStub = { refreshMode() {} };
 
   const chart = echarts.init($('map'), null, { renderer: 'canvas' });
   // 市郡区下钻：叠在地图区上层（与日本的市区町村下钻同一容器）
@@ -458,6 +462,7 @@ export async function main() {
     updateCounter();
     paint();
     renderRegion(detailEl, p, content[id], translated, names);
+    guide.setRegion(p, content[id], nameOf(p));
     openStage(detailEl, app.era);
     $('tab-pref').textContent = nameOf(p);
     history.replaceState(null, '', stateHash(id));
@@ -501,7 +506,7 @@ export async function main() {
     { key: 'krend' },
   ], { onEnd: () => uiPref.set('tourKorea', true) });
   const startTour = () => { closeCard(); closePlace(); if (counties.open) closeCounties(); tour.start(); };
-  setupSettings(guideStub, () => {
+  openSettings = setupSettings(guide, () => {
     visited.clear();
     if (app.currentId) visited.add(app.currentId);
     updateCounter();
