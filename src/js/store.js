@@ -19,7 +19,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
   const geoP = fetchJSON('src/assets/geojson/japan.json');
   try {
     const b = await fetchJSON(`src/data/bundle/${lang}.json`);
-    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [] };
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [] };
   } catch {
     return loadFiles(lang, merge);
   }
@@ -48,7 +48,7 @@ async function loadFiles(lang, merge) {
   const over = lang === 'zh' ? {} : await fetchJSON(`${dir}/pilgrimage.json`).catch(() => ({}));
   const pilgrimage = { done: pil.done, spots: pil.spots.map((s) => ({ ...s, ...(over[s.id] || {}) })) };
   // 广重浮世绘只随数据包发布（题名译文、市区町村名由 build_bundle.py 拼好）；回退加载时不显示
-  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [], provinceNames: [] };
+  return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [], provinceNames: [], koku: [] };
 }
 
 function read(key, fallback) {
@@ -89,6 +89,27 @@ export const goshuinBook = {
     return book;
   },
   clear: () => write(GOSHUIN_KEY, null),
+};
+
+// 诸国一宫：{ [旧国]: { at 参拜时间, site 神社 id, real 是否亲临, realAt 亲临时间 } }
+const ICHI_KEY = 'je.ichinomiya';
+export const ichinomiya = {
+  get: () => read(ICHI_KEY, {}),
+  pray(prov, site) {
+    const book = this.get();
+    if (!book[prov]) book[prov] = { at: new Date().toISOString(), site };
+    write(ICHI_KEY, book);
+    return book;
+  },
+  // 实地打卡：没参拜过的顺带记上参拜
+  checkin(prov, site) {
+    const book = this.get();
+    const now = new Date().toISOString();
+    book[prov] = { at: book[prov]?.at || now, site, real: true, realAt: now };
+    write(ICHI_KEY, book);
+    return book;
+  },
+  clear: () => write(ICHI_KEY, null),
 };
 
 // 界面偏好：滤镜模式、向导模式、右侧上下比例

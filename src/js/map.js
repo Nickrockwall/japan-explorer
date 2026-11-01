@@ -64,6 +64,8 @@ export const LAYERS = {
   },
   // 圣地巡礼：底图整体调暗，只看图钉（动漫粉 / 大河古金），见 spotSeries
   pilgrimage: { label: label('layer', 'pilgrimage'), caption: label('layerCap', 'pilgrimage'), dim: true },
+  // 古国巡礼：底图换成 68 古国（暗色），叠一宫 / 国府 / 国分寺图钉，见 kokuSeries
+  koku: { label: label('layer', 'koku'), caption: label('layerCap', 'koku'), dim: true },
   sake: {
     label: label('layer', 'sake'), caption: label('layerCap', 'sake'),
     key: (p) => p.sake.quadrant,
@@ -75,6 +77,9 @@ export const LAYERS = {
 
 // 圣地巡礼图钉配色
 export const SPOT_COLOR = { anime: '#ff7eb6', taiga: '#e0b04c' };
+// 古国巡礼：一宫 ⛩ 朱红、国府 ◆ 金、国分寺 卍 紫；只定位到市区町村的画成空心
+export const KOKU_COLOR = { ichi: '#e0503c', fu: '#e0b04c', ji: '#b49be0' };
+const KOKU_SYMBOL = { ichi: 'pin', fu: 'diamond', ji: 'roundRect' };
 
 // 酒樽徽记
 const BARREL = 'path://M8 4h16c2 3 3 7 3 12s-1 9-3 12H8c-2-3-3-7-3-12s1-9 3-12zM5.6 10h20.8M5.6 22h20.8';
@@ -138,7 +143,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, provTipExtra = () => '', spots = [] }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -211,7 +216,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   let shownMap = 'japan';
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
-  const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0, spotType: 'all', spotId: null };
+  const state = { layer: 'history', filter: 'explore', era: null, battle: null, phase: 0, spotType: 'all', spotId: null, kokuType: 'all', kokuId: null };
+  let kokuStamped = new Set(); // 已参拜的一宫（旧国 key）；亲临的另记
+  let kokuReal = new Set();
   let visitedSet = new Set();
   let activeId = null;
 
@@ -296,6 +303,35 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     };
   }
 
+  // 古国巡礼图钉：一宫 / 国府 / 国分寺；已参拜的一宫描金边，亲临的加光晕
+  const shownKoku = () => (state.layer === 'koku' && !state.battle
+    ? koku.filter((s) => state.kokuType === 'all' || s.kind === state.kokuType) : []);
+  function kokuSeries() {
+    return {
+      id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3,
+      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+      labelLayout: { hideOverlap: true },
+      emphasis: { scale: 1.4, label: { show: true } },
+      data: shownKoku().map((s) => {
+        const c = KOKU_COLOR[s.kind];
+        const on = s.id === state.kokuId;
+        const got = s.kind === 'ichi' && kokuStamped.has(s.prov);
+        const real = got && kokuReal.has(s.prov);
+        return {
+          name: s.name || t('koku.fu.name', { prov: s.provLabel }), value: s.coords, id: s.id,
+          symbol: KOKU_SYMBOL[s.kind],
+          symbolSize: (s.kind === 'ichi' ? 14 : 10) * (on ? 1.4 : 1),
+          itemStyle: s.precise
+            ? { color: c, borderColor: got ? '#ffd27a' : 'rgba(0,0,0,.55)', borderWidth: got ? 2 : 0.8,
+              shadowBlur: real ? 14 : 0, shadowColor: '#ffd27a' }
+            : { color: 'rgba(24,24,28,.6)', borderColor: c, borderWidth: 1.6 },
+          label: { show: on },
+        };
+      }),
+    };
+  }
+
   // 圣地巡礼图钉：带呼吸光晕的 effectScatter；选中的那颗更大
   const shownSpots = () => (state.layer === 'pilgrimage' && !state.battle
     ? spots.filter((s) => state.spotType === 'all' || s.type === state.spotType) : []);
@@ -367,8 +403,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   }
 
   const provMode = () => !!prov && state.layer === 'history' && !state.era && !state.battle && state.filter === 'circuit';
+  // 旧国底图：五畿七道滤镜，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
+  const provBaseOn = () => !!prov && !state.battle && (provMode() || state.layer === 'koku');
+  const curProv = () => (state.layer === 'koku' ? buildProv('824') : prov);
 
   function provRegion(f) {
+    if (state.layer === 'koku') {
+      return {
+        name: f.properties.key,
+        itemStyle: { areaColor: '#25252c', borderColor: '#4a4a55', borderWidth: 0.9, shadowBlur: 0 },
+        emphasis: { itemStyle: { areaColor: '#30303a', borderColor: '#8a7a68', borderWidth: 1.2 }, label: { show: false } },
+        label: { show: false },
+      };
+    }
     const c = FILTERS.circuit.cats[f.properties.circuit]?.[1] || COLOR.base;
     return {
       name: f.properties.key,
@@ -380,7 +427,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 旧国名标签（大国优先，放不下的自动隐藏，放大后显示更多）+ 虚线县界 + 选中县的轮廓
   function provSeries() {
-    const on = provMode();
+    const on = provBaseOn();
+    const prov = on ? curProv() : null;
     const active = on && activeId ? prefShapes.find((x) => x.id === activeId) : null;
     return [
       {
@@ -404,7 +452,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   }
 
   function render() {
-    const pm = provMode();
+    const pm = provBaseOn();
+    const prov = pm ? curProv() : null;
     const sc = pm ? null : scheme();
     const geoOpt = { regions: pm ? prov.features.map(provRegion) : [...nameById.keys()].map((id) => region(id, sc)) };
     // 换底图时带上当前视角，免得跳回默认位置
@@ -417,7 +466,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       geo: geoOpt,
       series: [
         { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(), youSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), youSeries(),
       ],
     });
   }
@@ -456,7 +505,12 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
         }
         if (['origins', 'impact', 'markers'].includes(params.seriesId)) return `<b>${params.name}</b>`;
-        if (provMode() && params.seriesId === 'prefs') return provTip(prov.byKey.get(params.name));
+        if (params.seriesId === 'koku') {
+          const s = koku.find((x) => x.id === params.data.id);
+          const where = [prefs.get(s.pref) ? names.get(s.pref) : '', s.muniLabel].filter(Boolean).join(' ');
+          return `<b style="color:${KOKU_COLOR[s.kind]}">${t(`koku.icon.${s.kind}`)} ${params.name}</b><br><span style="color:#b4ada3">${s.provLabel} · ${where}</span>`;
+        }
+        if (provBaseOn() && params.seriesId === 'prefs') return provTip(curProv().byKey.get(params.name));
         const p = prefs.get(params.value);
         if (!p) return '';
         const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name).join(' · ');
@@ -492,7 +546,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), ...battleSeries(), ...provSeries(), youSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), youSeries(),
     ],
   });
   render();
@@ -503,14 +557,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (s) onSpot(s);
       return;
     }
+    if (params.seriesId === 'koku') {
+      const s = koku.find((x) => x.id === params.data?.id);
+      if (s) onKoku(s);
+      return;
+    }
     if (params.seriesId !== 'prefs' || state.battle) return;
-    if (provMode()) {
+    if (provBaseOn()) {
       // 旧国底图下按点击位置找县；落在两套边界的细缝里时，只跨一县的国直接取那个县
-      const f = prov.byKey.get(params.name);
+      const f = curProv().byKey.get(params.name);
       const id = prefAt(chart.convertFromPixel({ geoIndex: 0 }, [params.event.offsetX, params.event.offsetY]))
         ?? (f?.properties.prefs.length === 1 ? f.properties.prefs[0] : null);
       if (id) onSelect(id);
-      if (f) onProvince(f.properties);
+      if (f && provMode()) onProvince(f.properties);
       return;
     }
     const id = idByName.get(params.name);
@@ -546,6 +605,18 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     setMode(m) { state.filter = FILTERS[m] ? m : 'explore'; render(); return state.filter; },
     setLayer(l) { state.layer = LAYERS[l] ? l : 'history'; state.spotId = null; render(); return state.layer; },
     setSpotType(type) { state.spotType = type; render(); },
+    // 古国巡礼：子分类、选中的图钉（拉近）、已参拜 / 亲临的一宫
+    setKokuType(type) { state.kokuType = type; render(); },
+    focusKoku(site) {
+      state.kokuId = site?.id ?? null;
+      render();
+      if (site) setView({ center: site.coords, zoom: Math.max(getView().zoom, 4.5) });
+    },
+    setKokuStamps(book) {
+      kokuStamped = new Set(Object.keys(book));
+      kokuReal = new Set(Object.keys(book).filter((k) => book[k].real));
+      render();
+    },
     // 选中某个巡礼点：放大图钉并平滑拉近（spot 为 null 时只取消选中）
     focusSpot(spot) {
       state.spotId = spot?.id ?? null;
@@ -587,6 +658,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       let caption;
       let cats;
       let key;
+      if (state.layer === 'koku') {
+        const shown = shownKoku();
+        return {
+          caption: LAYERS.koku.caption,
+          items: ['ichi', 'fu', 'ji'].map((k) => [`${t(`koku.icon.${k}`)} ${t(`koku.${k}`)}`, KOKU_COLOR[k], shown.filter((s) => s.kind === k).length]).filter((x) => x[2]),
+        };
+      }
       if (LAYERS[state.layer]?.dim) {
         const shown = shownSpots();
         return {

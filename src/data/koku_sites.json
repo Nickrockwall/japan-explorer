@@ -1,0 +1,3861 @@
+[
+ {
+  "id": "ichi-山城-1",
+  "kind": "ichi",
+  "prov": "山城国",
+  "name": "賀茂別雷神社",
+  "wiki": "賀茂別雷神社",
+  "place": "京都府京都市北区",
+  "coords": [
+   135.75278,
+   35.06028
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26101"
+ },
+ {
+  "id": "ichi-山城-2",
+  "kind": "ichi",
+  "prov": "山城国",
+  "name": "賀茂御祖神社",
+  "wiki": "賀茂御祖神社",
+  "place": "京都府京都市左京区",
+  "coords": [
+   135.7725,
+   35.03889
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26103"
+ },
+ {
+  "id": "ichi-大和-1",
+  "kind": "ichi",
+  "prov": "大和国",
+  "name": "大神神社",
+  "wiki": "大神神社",
+  "place": "奈良県桜井市",
+  "coords": [
+   135.85305,
+   34.5291
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 29,
+  "muni": "29206"
+ },
+ {
+  "id": "ichi-河内-1",
+  "kind": "ichi",
+  "prov": "河内国",
+  "name": "枚岡神社",
+  "wiki": "枚岡神社",
+  "place": "大阪府東大阪市",
+  "coords": [
+   135.65111,
+   34.67
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27227"
+ },
+ {
+  "id": "ichi-和泉-1",
+  "kind": "ichi",
+  "prov": "和泉国",
+  "name": "大鳥大社",
+  "wiki": "大鳥大社",
+  "place": "大阪府堺市西区",
+  "coords": [
+   135.46075,
+   34.53686
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27144"
+ },
+ {
+  "id": "ichi-摂津-1",
+  "kind": "ichi",
+  "prov": "摂津国",
+  "name": "住吉大社",
+  "wiki": "住吉大社",
+  "place": "大阪府大阪市住吉区",
+  "coords": [
+   135.49378,
+   34.61239
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27120"
+ },
+ {
+  "id": "ichi-伊賀-1",
+  "kind": "ichi",
+  "prov": "伊賀国",
+  "name": "敢国神社",
+  "wiki": "敢國神社",
+  "place": "三重県伊賀市",
+  "coords": [
+   136.16396,
+   34.78734
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24216"
+ },
+ {
+  "id": "ichi-伊勢-1",
+  "kind": "ichi",
+  "prov": "伊勢国",
+  "name": "椿大神社",
+  "wiki": "椿大神社",
+  "place": "三重県鈴鹿市",
+  "coords": [
+   136.45203,
+   34.9643
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24207"
+ },
+ {
+  "id": "ichi-志摩-1",
+  "kind": "ichi",
+  "prov": "志摩国",
+  "name": "伊雑宮",
+  "wiki": "伊雑宮",
+  "place": "三重県志摩市",
+  "coords": [
+   136.80889,
+   34.38028
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24215"
+ },
+ {
+  "id": "ichi-尾張-1",
+  "kind": "ichi",
+  "prov": "尾張国",
+  "name": "真清田神社",
+  "wiki": "真清田神社",
+  "place": "愛知県一宮市",
+  "coords": [
+   136.80209,
+   35.30756
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23203"
+ },
+ {
+  "id": "ichi-三河-1",
+  "kind": "ichi",
+  "prov": "三河国",
+  "name": "砥鹿神社",
+  "wiki": "砥鹿神社",
+  "place": "愛知県豊川市",
+  "coords": [
+   137.42119,
+   34.84764
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23207"
+ },
+ {
+  "id": "ichi-遠江-1",
+  "kind": "ichi",
+  "prov": "遠江国",
+  "name": "小国神社",
+  "wiki": "小国神社",
+  "place": "静岡県周智郡森町",
+  "coords": [
+   137.89917,
+   34.8475
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22461"
+ },
+ {
+  "id": "ichi-遠江-2",
+  "kind": "ichi",
+  "prov": "遠江国",
+  "name": "事任八幡宮",
+  "wiki": "事任八幡宮",
+  "place": "静岡県掛川市",
+  "coords": [
+   138.07542,
+   34.79839
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22213"
+ },
+ {
+  "id": "ichi-駿河-1",
+  "kind": "ichi",
+  "prov": "駿河国",
+  "name": "富士山本宮浅間大社",
+  "wiki": "富士山本宮浅間大社",
+  "place": "静岡県富士宮市",
+  "coords": [
+   138.61,
+   35.22741
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22207"
+ },
+ {
+  "id": "ichi-伊豆-1",
+  "kind": "ichi",
+  "prov": "伊豆国",
+  "name": "三嶋大社",
+  "wiki": "三嶋大社",
+  "place": "静岡県三島市",
+  "coords": [
+   138.91883,
+   35.12241
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22206"
+ },
+ {
+  "id": "ichi-甲斐-1",
+  "kind": "ichi",
+  "prov": "甲斐国",
+  "name": "浅間神社",
+  "wiki": "浅間神社 (笛吹市)",
+  "place": "山梨県笛吹市",
+  "coords": [
+   138.69744,
+   35.64776
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 19,
+  "muni": "19211"
+ },
+ {
+  "id": "ichi-相模-1",
+  "kind": "ichi",
+  "prov": "相模国",
+  "name": "寒川神社",
+  "wiki": "寒川神社",
+  "place": "神奈川県高座郡寒川町",
+  "coords": [
+   139.38333,
+   35.37964
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 14,
+  "muni": "14321"
+ },
+ {
+  "id": "ichi-武蔵-1",
+  "kind": "ichi",
+  "prov": "武蔵国",
+  "name": "小野神社",
+  "wiki": "小野神社 (多摩市)",
+  "place": "東京都多摩市",
+  "coords": [
+   139.44227,
+   35.653
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 13,
+  "muni": "13224"
+ },
+ {
+  "id": "ichi-武蔵-2",
+  "kind": "ichi",
+  "prov": "武蔵国",
+  "name": "氷川神社",
+  "wiki": "氷川神社",
+  "place": "埼玉県さいたま市大宮区",
+  "coords": [
+   139.62973,
+   35.91675
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 11,
+  "muni": "11103"
+ },
+ {
+  "id": "ichi-安房-1",
+  "kind": "ichi",
+  "prov": "安房国",
+  "name": "安房神社",
+  "wiki": "安房神社",
+  "place": "千葉県館山市",
+  "coords": [
+   139.83674,
+   34.92244
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12205"
+ },
+ {
+  "id": "ichi-上総-1",
+  "kind": "ichi",
+  "prov": "上総国",
+  "name": "玉前神社",
+  "wiki": "玉前神社",
+  "place": "千葉県長生郡一宮町",
+  "coords": [
+   140.36053,
+   35.37626
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12421"
+ },
+ {
+  "id": "ichi-下総-1",
+  "kind": "ichi",
+  "prov": "下総国",
+  "name": "香取神宮",
+  "wiki": "香取神宮",
+  "place": "千葉県香取市",
+  "coords": [
+   140.52869,
+   35.88612
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12236"
+ },
+ {
+  "id": "ichi-常陸-1",
+  "kind": "ichi",
+  "prov": "常陸国",
+  "name": "鹿島神宮",
+  "wiki": "鹿島神宮",
+  "place": "茨城県鹿嶋市",
+  "coords": [
+   140.63149,
+   35.96886
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 8,
+  "muni": "08222"
+ },
+ {
+  "id": "ichi-近江-1",
+  "kind": "ichi",
+  "prov": "近江国",
+  "name": "建部大社",
+  "wiki": "建部大社",
+  "place": "滋賀県大津市",
+  "coords": [
+   135.9135,
+   34.97361
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 25,
+  "muni": "25201"
+ },
+ {
+  "id": "ichi-美濃-1",
+  "kind": "ichi",
+  "prov": "美濃国",
+  "name": "南宮大社",
+  "wiki": "南宮大社",
+  "place": "岐阜県不破郡垂井町",
+  "coords": [
+   136.52531,
+   35.36097
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 21,
+  "muni": "21361"
+ },
+ {
+  "id": "ichi-飛騨-1",
+  "kind": "ichi",
+  "prov": "飛騨国",
+  "name": "飛騨一宮水無神社",
+  "wiki": "飛騨一宮水無神社",
+  "place": "岐阜県高山市",
+  "coords": [
+   137.25186,
+   36.08531
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 21,
+  "muni": "21203"
+ },
+ {
+  "id": "ichi-信濃-1",
+  "kind": "ichi",
+  "prov": "信濃国",
+  "name": "諏訪大社",
+  "wiki": "諏訪大社",
+  "place": "長野県諏訪市・茅野市 ・諏訪郡下諏訪町",
+  "coords": [
+   138.11947,
+   35.99816
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 20,
+  "muni": "20206"
+ },
+ {
+  "id": "ichi-上野-1",
+  "kind": "ichi",
+  "prov": "上野国",
+  "name": "一之宮貫前神社",
+  "wiki": "一之宮貫前神社",
+  "place": "群馬県富岡市",
+  "coords": [
+   138.85765,
+   36.25515
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 10,
+  "muni": "10210"
+ },
+ {
+  "id": "ichi-下野-1",
+  "kind": "ichi",
+  "prov": "下野国",
+  "name": "二荒山神社",
+  "wiki": "宇都宮二荒山神社",
+  "place": "栃木県宇都宮市",
+  "coords": [
+   139.88569,
+   36.56269
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 9,
+  "muni": "09201"
+ },
+ {
+  "id": "ichi-陸奥-1",
+  "kind": "ichi",
+  "prov": "陸奥国",
+  "name": "鹽竈神社",
+  "wiki": "鹽竈神社",
+  "place": "宮城県塩竈市",
+  "coords": [
+   141.01256,
+   38.31875
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 4,
+  "muni": "04203"
+ },
+ {
+  "id": "ichi-陸奥-2",
+  "kind": "ichi",
+  "prov": "陸奥国",
+  "name": "都都古和氣神社",
+  "wiki": "都々古別神社#都都古和氣神社 (棚倉町棚倉)",
+  "place": "福島県東白川郡棚倉町",
+  "coords": [
+   140.3388,
+   37.006
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 7,
+  "muni": "07481"
+ },
+ {
+  "id": "ichi-陸奥-3",
+  "kind": "ichi",
+  "prov": "陸奥国",
+  "name": "都々古別神社",
+  "wiki": "都々古別神社#都々古別神社 (棚倉町八槻)",
+  "place": "福島県東白川郡棚倉町",
+  "coords": [
+   140.3388,
+   37.006
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 7,
+  "muni": "07481"
+ },
+ {
+  "id": "ichi-出羽-1",
+  "kind": "ichi",
+  "prov": "出羽国",
+  "name": "鳥海山大物忌神社",
+  "wiki": "鳥海山大物忌神社",
+  "place": "山形県飽海郡遊佐町",
+  "coords": [
+   139.87889,
+   39.075
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 6,
+  "muni": "06461"
+ },
+ {
+  "id": "ichi-若狭-1",
+  "kind": "ichi",
+  "prov": "若狭国",
+  "name": "若狭彦神社",
+  "wiki": "若狭彦神社",
+  "place": "福井県小浜市",
+  "coords": [
+   135.77847,
+   35.46608
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 18,
+  "muni": "18204"
+ },
+ {
+  "id": "ichi-越前-1",
+  "kind": "ichi",
+  "prov": "越前国",
+  "name": "氣比神宮",
+  "wiki": "氣比神宮",
+  "place": "福井県敦賀市",
+  "coords": [
+   136.0747,
+   35.65496
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 18,
+  "muni": "18202"
+ },
+ {
+  "id": "ichi-加賀-1",
+  "kind": "ichi",
+  "prov": "加賀国",
+  "name": "白山比咩神社",
+  "wiki": "白山比咩神社",
+  "place": "石川県白山市",
+  "coords": [
+   136.6362,
+   36.43489
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 17,
+  "muni": "17210"
+ },
+ {
+  "id": "ichi-能登-1",
+  "kind": "ichi",
+  "prov": "能登国",
+  "name": "氣多大社",
+  "wiki": "気多大社",
+  "place": "石川県羽咋市",
+  "coords": [
+   136.76744,
+   36.92601
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 17,
+  "muni": "17207"
+ },
+ {
+  "id": "ichi-越中-1",
+  "kind": "ichi",
+  "prov": "越中国",
+  "name": "気多神社",
+  "wiki": "気多神社",
+  "place": "富山県高岡市",
+  "coords": [
+   137.04466,
+   36.80021
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16202"
+ },
+ {
+  "id": "ichi-越中-2",
+  "kind": "ichi",
+  "prov": "越中国",
+  "name": "高瀬神社",
+  "wiki": "高瀬神社",
+  "place": "富山県南砺市",
+  "coords": [
+   136.94825,
+   36.57186
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16210"
+ },
+ {
+  "id": "ichi-越中-3",
+  "kind": "ichi",
+  "prov": "越中国",
+  "name": "射水神社",
+  "wiki": "射水神社",
+  "place": "富山県高岡市",
+  "coords": [
+   137.02116,
+   36.74853
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16202"
+ },
+ {
+  "id": "ichi-越中-4",
+  "kind": "ichi",
+  "prov": "越中国",
+  "name": "雄山神社",
+  "wiki": "雄山神社",
+  "place": "富山県中新川郡立山町",
+  "coords": [
+   137.61792,
+   36.57318
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16323"
+ },
+ {
+  "id": "ichi-越後-1",
+  "kind": "ichi",
+  "prov": "越後国",
+  "name": "彌彦神社",
+  "wiki": "彌彦神社",
+  "place": "新潟県西蒲原郡弥彦村",
+  "coords": [
+   138.826,
+   37.70669
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 15,
+  "muni": "15342"
+ },
+ {
+  "id": "ichi-越後-2",
+  "kind": "ichi",
+  "prov": "越後国",
+  "name": "居多神社",
+  "wiki": "居多神社",
+  "place": "新潟県上越市",
+  "coords": [
+   138.22334,
+   37.16646
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 15,
+  "muni": "15222"
+ },
+ {
+  "id": "ichi-佐渡-1",
+  "kind": "ichi",
+  "prov": "佐渡国",
+  "name": "度津神社",
+  "wiki": "度津神社",
+  "place": "新潟県佐渡市",
+  "coords": [
+   138.33074,
+   37.86032
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 15,
+  "muni": "15224"
+ },
+ {
+  "id": "ichi-丹波-1",
+  "kind": "ichi",
+  "prov": "丹波国",
+  "name": "出雲大神宮",
+  "wiki": "出雲大神宮",
+  "place": "京都府亀岡市",
+  "coords": [
+   135.57838,
+   35.05925
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26206"
+ },
+ {
+  "id": "ichi-丹後-1",
+  "kind": "ichi",
+  "prov": "丹後国",
+  "name": "籠神社",
+  "wiki": "籠神社",
+  "place": "京都府宮津市",
+  "coords": [
+   135.19667,
+   35.58281
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26205"
+ },
+ {
+  "id": "ichi-但馬-1",
+  "kind": "ichi",
+  "prov": "但馬国",
+  "name": "出石神社",
+  "wiki": "出石神社",
+  "place": "兵庫県豊岡市",
+  "coords": [
+   134.87038,
+   35.48164
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28209"
+ },
+ {
+  "id": "ichi-因幡-1",
+  "kind": "ichi",
+  "prov": "因幡国",
+  "name": "宇倍神社",
+  "wiki": "宇倍神社",
+  "place": "鳥取県鳥取市",
+  "coords": [
+   134.26907,
+   35.48079
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31201"
+ },
+ {
+  "id": "ichi-伯耆-1",
+  "kind": "ichi",
+  "prov": "伯耆国",
+  "name": "倭文神社",
+  "wiki": "倭文神社 (湯梨浜町)",
+  "place": "鳥取県東伯郡湯梨浜町",
+  "coords": [
+   133.90297,
+   35.49037
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31370"
+ },
+ {
+  "id": "ichi-出雲-1",
+  "kind": "ichi",
+  "prov": "出雲国",
+  "name": "出雲大社",
+  "wiki": "出雲大社",
+  "place": "島根県出雲市",
+  "coords": [
+   132.68544,
+   35.40194
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32203"
+ },
+ {
+  "id": "ichi-石見-1",
+  "kind": "ichi",
+  "prov": "石見国",
+  "name": "物部神社",
+  "wiki": "物部神社 (大田市)",
+  "place": "島根県大田市",
+  "coords": [
+   132.51331,
+   35.15474
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32205"
+ },
+ {
+  "id": "ichi-隠岐-1",
+  "kind": "ichi",
+  "prov": "隠岐国",
+  "name": "水若酢神社",
+  "wiki": "水若酢神社",
+  "place": "島根県隠岐郡隠岐の島町",
+  "coords": [
+   133.24904,
+   36.28022
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32528"
+ },
+ {
+  "id": "ichi-播磨-1",
+  "kind": "ichi",
+  "prov": "播磨国",
+  "name": "伊和神社",
+  "wiki": "伊和神社",
+  "place": "兵庫県宍粟市",
+  "coords": [
+   134.58642,
+   35.08769
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28227"
+ },
+ {
+  "id": "ichi-美作-1",
+  "kind": "ichi",
+  "prov": "美作国",
+  "name": "中山神社",
+  "wiki": "中山神社",
+  "place": "岡山県津山市",
+  "coords": [
+   133.9947,
+   35.10016
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33203"
+ },
+ {
+  "id": "ichi-備前-1",
+  "kind": "ichi",
+  "prov": "備前国",
+  "name": "吉備津彦神社",
+  "wiki": "吉備津彦神社",
+  "place": "岡山県岡山市北区",
+  "coords": [
+   133.86386,
+   34.67672
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33101"
+ },
+ {
+  "id": "ichi-備中-1",
+  "kind": "ichi",
+  "prov": "備中国",
+  "name": "吉備津神社",
+  "wiki": "吉備津神社",
+  "place": "岡山県岡山市北区",
+  "coords": [
+   133.85061,
+   34.67067
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33101"
+ },
+ {
+  "id": "ichi-備後-1",
+  "kind": "ichi",
+  "prov": "備後国",
+  "name": "吉備津神社",
+  "wiki": "吉備津神社 (福山市)",
+  "place": "広島県福山市",
+  "coords": [
+   133.27103,
+   34.56922
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34207"
+ },
+ {
+  "id": "ichi-安芸-1",
+  "kind": "ichi",
+  "prov": "安芸国",
+  "name": "厳島神社",
+  "wiki": "厳島神社",
+  "place": "広島県廿日市市",
+  "coords": [
+   132.31989,
+   34.29602
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34213"
+ },
+ {
+  "id": "ichi-周防-1",
+  "kind": "ichi",
+  "prov": "周防国",
+  "name": "玉祖神社",
+  "wiki": "玉祖神社",
+  "place": "山口県防府市",
+  "coords": [
+   131.53381,
+   34.05755
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35206"
+ },
+ {
+  "id": "ichi-長門-1",
+  "kind": "ichi",
+  "prov": "長門国",
+  "name": "住吉神社",
+  "wiki": "住吉神社 (下関市)",
+  "place": "山口県下関市",
+  "coords": [
+   130.95654,
+   33.99978
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35201"
+ },
+ {
+  "id": "ichi-紀伊-1",
+  "kind": "ichi",
+  "prov": "紀伊国",
+  "name": "日前神宮・國懸神宮",
+  "wiki": "日前神宮・國懸神宮",
+  "place": "和歌山県和歌山市",
+  "coords": [
+   135.20199,
+   34.2284
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 30,
+  "muni": "30201"
+ },
+ {
+  "id": "ichi-紀伊-2",
+  "kind": "ichi",
+  "prov": "紀伊国",
+  "name": "丹生都比売神社",
+  "wiki": "丹生都比売神社",
+  "place": "和歌山県伊都郡かつらぎ町",
+  "coords": [
+   135.522,
+   34.26272
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 30,
+  "muni": "30341"
+ },
+ {
+  "id": "ichi-紀伊-3",
+  "kind": "ichi",
+  "prov": "紀伊国",
+  "name": "伊太祁󠄀曽神社",
+  "wiki": "伊太祁曽神社",
+  "place": "和歌山県和歌山市",
+  "coords": [
+   135.25,
+   34.20169
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 30,
+  "muni": "30201"
+ },
+ {
+  "id": "ichi-淡路-1",
+  "kind": "ichi",
+  "prov": "淡路国",
+  "name": "伊弉諾神宮",
+  "wiki": "伊弉諾神宮",
+  "place": "兵庫県淡路市",
+  "coords": [
+   134.85222,
+   34.46
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28226"
+ },
+ {
+  "id": "ichi-阿波-1",
+  "kind": "ichi",
+  "prov": "阿波国",
+  "name": "上一宮大粟神社",
+  "wiki": "上一宮大粟神社",
+  "place": "徳島県名西郡神山町",
+  "coords": [
+   134.36697,
+   33.97101
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36342"
+ },
+ {
+  "id": "ichi-阿波-2",
+  "kind": "ichi",
+  "prov": "阿波国",
+  "name": "一宮神社",
+  "wiki": "一宮神社 (徳島市)",
+  "place": "徳島県徳島市",
+  "coords": [
+   134.46264,
+   34.03781
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36201"
+ },
+ {
+  "id": "ichi-阿波-3",
+  "kind": "ichi",
+  "prov": "阿波国",
+  "name": "大麻比古神社",
+  "wiki": "大麻比古神社",
+  "place": "徳島県鳴門市",
+  "coords": [
+   134.50256,
+   34.17075
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36202"
+ },
+ {
+  "id": "ichi-阿波-4",
+  "kind": "ichi",
+  "prov": "阿波国",
+  "name": "八倉比売神社",
+  "wiki": "八倉比売神社",
+  "place": "徳島県徳島市",
+  "coords": [
+   134.46496,
+   34.05578
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36201"
+ },
+ {
+  "id": "ichi-讃岐-1",
+  "kind": "ichi",
+  "prov": "讃岐国",
+  "name": "田村神社",
+  "wiki": "田村神社 (高松市)",
+  "place": "香川県高松市",
+  "coords": [
+   134.02728,
+   34.28653
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 37,
+  "muni": "37201"
+ },
+ {
+  "id": "ichi-伊予-1",
+  "kind": "ichi",
+  "prov": "伊予国",
+  "name": "大山祇神社",
+  "wiki": "大山祇神社",
+  "place": "愛媛県今治市",
+  "coords": [
+   133.00581,
+   34.24789
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 38,
+  "muni": "38202"
+ },
+ {
+  "id": "ichi-土佐-1",
+  "kind": "ichi",
+  "prov": "土佐国",
+  "name": "土佐神社",
+  "wiki": "土佐神社",
+  "place": "高知県高知市",
+  "coords": [
+   133.57704,
+   33.59266
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 39,
+  "muni": "39201"
+ },
+ {
+  "id": "ichi-筑前-1",
+  "kind": "ichi",
+  "prov": "筑前国",
+  "name": "住吉神社",
+  "wiki": "住吉神社 (福岡市)",
+  "place": "福岡県福岡市博多区",
+  "coords": [
+   130.41375,
+   33.58575
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40132"
+ },
+ {
+  "id": "ichi-筑後-1",
+  "kind": "ichi",
+  "prov": "筑後国",
+  "name": "高良大社",
+  "wiki": "高良大社",
+  "place": "福岡県久留米市",
+  "coords": [
+   130.56589,
+   33.30161
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40203"
+ },
+ {
+  "id": "ichi-豊前-1",
+  "kind": "ichi",
+  "prov": "豊前国",
+  "name": "宇佐神宮",
+  "wiki": "宇佐神宮",
+  "place": "大分県宇佐市",
+  "coords": [
+   131.37717,
+   33.52347
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 44,
+  "muni": "44211"
+ },
+ {
+  "id": "ichi-豊後-1",
+  "kind": "ichi",
+  "prov": "豊後国",
+  "name": "柞原八幡宮",
+  "wiki": "柞原八幡宮",
+  "place": "大分県大分市",
+  "coords": [
+   131.551,
+   33.2384
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 44,
+  "muni": "44201"
+ },
+ {
+  "id": "ichi-肥前-1",
+  "kind": "ichi",
+  "prov": "肥前国",
+  "name": "與止日女神社",
+  "wiki": "與止日女神社",
+  "place": "佐賀県佐賀市",
+  "coords": [
+   130.26829,
+   33.32627
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 41,
+  "muni": "41201"
+ },
+ {
+  "id": "ichi-肥前-2",
+  "kind": "ichi",
+  "prov": "肥前国",
+  "name": "千栗八幡宮",
+  "wiki": "千栗八幡宮",
+  "place": "佐賀県三養基郡みやき町",
+  "coords": [
+   130.479,
+   33.3314
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 41,
+  "muni": "41346"
+ },
+ {
+  "id": "ichi-肥後-1",
+  "kind": "ichi",
+  "prov": "肥後国",
+  "name": "阿蘇神社",
+  "wiki": "阿蘇神社",
+  "place": "熊本県阿蘇市",
+  "coords": [
+   131.11597,
+   32.94778
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 43,
+  "muni": "43214"
+ },
+ {
+  "id": "ichi-日向-1",
+  "kind": "ichi",
+  "prov": "日向国",
+  "name": "都農神社",
+  "wiki": "都農神社",
+  "place": "宮崎県児湯郡都農町",
+  "coords": [
+   131.55867,
+   32.26313
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 45,
+  "muni": "45406"
+ },
+ {
+  "id": "ichi-大隅-1",
+  "kind": "ichi",
+  "prov": "大隅国",
+  "name": "鹿児島神宮",
+  "wiki": "鹿児島神宮",
+  "place": "鹿児島県霧島市",
+  "coords": [
+   130.73786,
+   31.75371
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46218"
+ },
+ {
+  "id": "ichi-薩摩-1",
+  "kind": "ichi",
+  "prov": "薩摩国",
+  "name": "枚聞神社",
+  "wiki": "枚聞神社",
+  "place": "鹿児島県指宿市",
+  "coords": [
+   130.53963,
+   31.20795
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46210"
+ },
+ {
+  "id": "ichi-薩摩-2",
+  "kind": "ichi",
+  "prov": "薩摩国",
+  "name": "新田神社",
+  "wiki": "新田神社 (薩摩川内市)",
+  "place": "鹿児島県薩摩川内市",
+  "coords": [
+   130.29271,
+   31.82773
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46215"
+ },
+ {
+  "id": "ichi-壱岐-1",
+  "kind": "ichi",
+  "prov": "壱岐国",
+  "name": "興神社",
+  "wiki": "興神社",
+  "place": "長崎県壱岐市",
+  "coords": [
+   129.73173,
+   33.76969
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 42,
+  "muni": "42210"
+ },
+ {
+  "id": "ichi-対馬-1",
+  "kind": "ichi",
+  "prov": "対馬国",
+  "name": "海神神社",
+  "wiki": "海神神社",
+  "place": "長崎県対馬市",
+  "coords": [
+   129.28304,
+   34.46409
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 42,
+  "muni": "42209"
+ },
+ {
+  "id": "ichi-対馬-2",
+  "kind": "ichi",
+  "prov": "対馬国",
+  "name": "厳原八幡宮神社",
+  "wiki": "厳原八幡宮神社",
+  "place": "長崎県対馬市",
+  "coords": [
+   129.28925,
+   34.2065
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 42,
+  "muni": "42209"
+ },
+ {
+  "id": "fu-山城-1",
+  "kind": "fu",
+  "prov": "山城国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府木津川市山城町上狛",
+  "coords": [
+   135.8614,
+   34.7545
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26214"
+ },
+ {
+  "id": "fu-山城-2",
+  "kind": "fu",
+  "prov": "山城国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府京都市右京区太秦",
+  "coords": [
+   135.6307,
+   35.1235
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26108"
+ },
+ {
+  "id": "fu-山城-3",
+  "kind": "fu",
+  "prov": "山城国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府長岡京市神足",
+  "coords": [
+   135.682,
+   34.9215
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26209"
+ },
+ {
+  "id": "fu-山城-4",
+  "kind": "fu",
+  "prov": "山城国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府乙訓郡大山崎町大山崎 （河陽離宮［離宮八幡宮］）",
+  "coords": [
+   135.688,
+   34.9025
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26303"
+ },
+ {
+  "id": "fu-大和-1",
+  "kind": "fu",
+  "prov": "大和国",
+  "name": "",
+  "wiki": null,
+  "place": "奈良県大和郡山市今国府町または高市郡高取町下土佐",
+  "coords": [
+   135.7798,
+   34.63
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 29,
+  "muni": "29203"
+ },
+ {
+  "id": "fu-河内-1",
+  "kind": "fu",
+  "prov": "河内国",
+  "name": "",
+  "wiki": null,
+  "place": "大阪府藤井寺市国府・惣社 (志貴県主神社付近)",
+  "coords": [
+   135.6058,
+   34.5745
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27226"
+ },
+ {
+  "id": "fu-和泉-1",
+  "kind": "fu",
+  "prov": "和泉国",
+  "name": "",
+  "wiki": null,
+  "place": "大阪府和泉市府中町",
+  "coords": [
+   135.483,
+   34.4315
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27219"
+ },
+ {
+  "id": "fu-摂津-1",
+  "kind": "fu",
+  "prov": "摂津国",
+  "name": "",
+  "wiki": null,
+  "place": "大阪府大阪市天王寺区国分町・生野区生野西",
+  "coords": [
+   135.5182,
+   34.655
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 27,
+  "muni": "27109"
+ },
+ {
+  "id": "fu-摂津-2",
+  "kind": "fu",
+  "prov": "摂津国",
+  "name": "",
+  "wiki": null,
+  "place": "大阪府大阪市中央区法円坂または森ノ宮中央",
+  "coords": [
+   135.5155,
+   34.679
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 27,
+  "muni": "27128"
+ },
+ {
+  "id": "fu-伊賀-1",
+  "kind": "fu",
+  "prov": "伊賀国",
+  "name": "",
+  "wiki": "伊賀国庁跡",
+  "place": "三重県伊賀市坂之下",
+  "coords": [
+   136.15791,
+   34.80251
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24216"
+ },
+ {
+  "id": "fu-伊勢-1",
+  "kind": "fu",
+  "prov": "伊勢国",
+  "name": "",
+  "wiki": "伊勢国府跡",
+  "place": "三重県鈴鹿市広瀬町<!--奈良時代中頃-->",
+  "coords": [
+   136.5651,
+   34.895
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24207"
+ },
+ {
+  "id": "fu-伊勢-2",
+  "kind": "fu",
+  "prov": "伊勢国",
+  "name": "",
+  "wiki": null,
+  "place": "三重県鈴鹿市国府町<!--奈良時代後期以降-->",
+  "coords": [
+   136.5651,
+   34.895
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 24,
+  "muni": "24207"
+ },
+ {
+  "id": "fu-志摩-1",
+  "kind": "fu",
+  "prov": "志摩国",
+  "name": "",
+  "wiki": null,
+  "place": "三重県志摩市阿児町国府",
+  "coords": [
+   136.8144,
+   34.3365
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24215"
+ },
+ {
+  "id": "fu-尾張-1",
+  "kind": "fu",
+  "prov": "尾張国",
+  "name": "",
+  "wiki": null,
+  "place": "愛知県稲沢市国府宮町",
+  "coords": [
+   136.7647,
+   35.235
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23220"
+ },
+ {
+  "id": "fu-三河-1",
+  "kind": "fu",
+  "prov": "三河国",
+  "name": "",
+  "wiki": null,
+  "place": "愛知県豊川市白鳥町<!--『国史大辞典』の一覧表では国府町とするが、『国史大辞典』三河国項の解説と近年の発掘調査結果を考慮-->",
+  "coords": [
+   137.3487,
+   34.8465
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23207"
+ },
+ {
+  "id": "fu-遠江-1",
+  "kind": "fu",
+  "prov": "遠江国",
+  "name": "",
+  "wiki": null,
+  "place": "静岡県磐田市見附",
+  "coords": [
+   137.8547,
+   34.768
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22211"
+ },
+ {
+  "id": "fu-駿河-1",
+  "kind": "fu",
+  "prov": "駿河国",
+  "name": "",
+  "wiki": null,
+  "place": "静岡県静岡市葵区長谷町",
+  "coords": [
+   138.2433,
+   35.2985
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22101"
+ },
+ {
+  "id": "fu-伊豆-1",
+  "kind": "fu",
+  "prov": "伊豆国",
+  "name": "",
+  "wiki": null,
+  "place": "静岡県三島市泉町",
+  "coords": [
+   138.9424,
+   35.1325
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 22,
+  "muni": "22206"
+ },
+ {
+  "id": "fu-甲斐-1",
+  "kind": "fu",
+  "prov": "甲斐国",
+  "name": "",
+  "wiki": null,
+  "place": "山梨県笛吹市春日居町国府",
+  "coords": [
+   138.6877,
+   35.611
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 19,
+  "muni": "19211"
+ },
+ {
+  "id": "fu-甲斐-2",
+  "kind": "fu",
+  "prov": "甲斐国",
+  "name": "",
+  "wiki": null,
+  "place": "山梨県笛吹市一宮町国分・一宮町東原",
+  "coords": [
+   138.6877,
+   35.611
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 19,
+  "muni": "19211"
+ },
+ {
+  "id": "fu-甲斐-3",
+  "kind": "fu",
+  "prov": "甲斐国",
+  "name": "",
+  "wiki": null,
+  "place": "山梨県笛吹市御坂町国衙",
+  "coords": [
+   138.6877,
+   35.611
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 19,
+  "muni": "19211"
+ },
+ {
+  "id": "fu-相模-1",
+  "kind": "fu",
+  "prov": "相模国",
+  "name": "",
+  "wiki": null,
+  "place": "神奈川県平塚市四之宮（最有力候補地）",
+  "coords": [
+   139.3204,
+   35.359
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 14,
+  "muni": "14203"
+ },
+ {
+  "id": "fu-相模-2",
+  "kind": "fu",
+  "prov": "相模国",
+  "name": "",
+  "wiki": null,
+  "place": "神奈川県海老名市国分北・国分南",
+  "coords": [
+   139.3908,
+   35.438
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 14,
+  "muni": "14215"
+ },
+ {
+  "id": "fu-相模-3",
+  "kind": "fu",
+  "prov": "相模国",
+  "name": "",
+  "wiki": null,
+  "place": "神奈川県伊勢原市笠窪三ノ輪または比々多",
+  "coords": [
+   139.2996,
+   35.4075
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 14,
+  "muni": "14214"
+ },
+ {
+  "id": "fu-相模-4",
+  "kind": "fu",
+  "prov": "相模国",
+  "name": "",
+  "wiki": null,
+  "place": "神奈川県中郡大磯町国府本郷（移転先候補地）",
+  "coords": [
+   139.2962,
+   35.3155
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 14,
+  "muni": "14341"
+ },
+ {
+  "id": "fu-武蔵-1",
+  "kind": "fu",
+  "prov": "武蔵国",
+  "name": "",
+  "wiki": "武蔵国府跡",
+  "place": "東京都府中市宮町",
+  "coords": [
+   139.47986,
+   35.669
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 13,
+  "muni": "13206"
+ },
+ {
+  "id": "fu-安房-1",
+  "kind": "fu",
+  "prov": "安房国",
+  "name": "",
+  "wiki": null,
+  "place": "千葉県南房総市府中",
+  "coords": [
+   139.9594,
+   35.0135
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12234"
+ },
+ {
+  "id": "fu-上総-1",
+  "kind": "fu",
+  "prov": "上総国",
+  "name": "",
+  "wiki": null,
+  "place": "千葉県市原市惣社",
+  "coords": [
+   140.1434,
+   35.394
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 12,
+  "muni": "12219"
+ },
+ {
+  "id": "fu-下総-1",
+  "kind": "fu",
+  "prov": "下総国",
+  "name": "",
+  "wiki": null,
+  "place": "千葉県市川市国府台",
+  "coords": [
+   139.9244,
+   35.715
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12203"
+ },
+ {
+  "id": "fu-常陸-1",
+  "kind": "fu",
+  "prov": "常陸国",
+  "name": "",
+  "wiki": "常陸国府跡",
+  "place": "茨城県石岡市石岡ほか",
+  "coords": [
+   140.26883,
+   36.1897
+  ],
+  "precise": true,
+  "presumed": true,
+  "pref": 8,
+  "muni": "08205"
+ },
+ {
+  "id": "fu-近江-1",
+  "kind": "fu",
+  "prov": "近江国",
+  "name": "",
+  "wiki": "近江国庁跡",
+  "place": "滋賀県大津市神領・大江",
+  "coords": [
+   135.92011,
+   34.97456
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 25,
+  "muni": "25201"
+ },
+ {
+  "id": "fu-美濃-1",
+  "kind": "fu",
+  "prov": "美濃国",
+  "name": "",
+  "wiki": "美濃国府跡",
+  "place": "岐阜県不破郡垂井町府中",
+  "coords": [
+   136.52389,
+   35.3775
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 21,
+  "muni": "21361"
+ },
+ {
+  "id": "fu-飛騨-1",
+  "kind": "fu",
+  "prov": "飛騨国",
+  "name": "",
+  "wiki": null,
+  "place": "岐阜県高山市七日町または国府町",
+  "coords": [
+   137.2579,
+   36.158
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 21,
+  "muni": "21203"
+ },
+ {
+  "id": "fu-信濃-1",
+  "kind": "fu",
+  "prov": "信濃国",
+  "name": "",
+  "wiki": null,
+  "place": "長野県上田市古里",
+  "coords": [
+   138.2337,
+   36.3875
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 20,
+  "muni": "20203"
+ },
+ {
+  "id": "fu-信濃-2",
+  "kind": "fu",
+  "prov": "信濃国",
+  "name": "",
+  "wiki": null,
+  "place": "長野県松本市大村",
+  "coords": [
+   137.857,
+   36.1925
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 20,
+  "muni": "20202"
+ },
+ {
+  "id": "fu-上野-1",
+  "kind": "fu",
+  "prov": "上野国",
+  "name": "",
+  "wiki": null,
+  "place": "群馬県前橋市元総社町",
+  "coords": [
+   139.128,
+   36.4435
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 10,
+  "muni": "10201"
+ },
+ {
+  "id": "fu-下野-1",
+  "kind": "fu",
+  "prov": "下野国",
+  "name": "",
+  "wiki": "下野国庁跡",
+  "place": "栃木県栃木市田村町",
+  "coords": [
+   139.78508,
+   36.37986
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 9,
+  "muni": "09203"
+ },
+ {
+  "id": "fu-陸奥-1",
+  "kind": "fu",
+  "prov": "陸奥国",
+  "name": "",
+  "wiki": "郡山遺跡",
+  "place": "宮城県仙台市太白区郡山",
+  "coords": [
+   140.5873,
+   38.2755
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 4,
+  "muni": "04104"
+ },
+ {
+  "id": "fu-陸奥-2",
+  "kind": "fu",
+  "prov": "陸奥国",
+  "name": "",
+  "wiki": "多賀城",
+  "place": "宮城県多賀城市市川",
+  "coords": [
+   140.9883,
+   38.3067
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 4,
+  "muni": "04209"
+ },
+ {
+  "id": "fu-出羽-1",
+  "kind": "fu",
+  "prov": "出羽国",
+  "name": "",
+  "wiki": "城輪柵",
+  "place": "山形県酒田市城輪",
+  "coords": [
+   139.90922,
+   38.96361
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 6,
+  "muni": "06204"
+ },
+ {
+  "id": "fu-出羽-2",
+  "kind": "fu",
+  "prov": "出羽国",
+  "name": "",
+  "wiki": null,
+  "place": "秋田県秋田市寺内",
+  "coords": [
+   140.1856,
+   39.6615
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 5,
+  "muni": "05201"
+ },
+ {
+  "id": "fu-若狭-1",
+  "kind": "fu",
+  "prov": "若狭国",
+  "name": "",
+  "wiki": null,
+  "place": "福井県小浜市府中",
+  "coords": [
+   135.7276,
+   35.4785
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 18,
+  "muni": "18204"
+ },
+ {
+  "id": "fu-越前-1",
+  "kind": "fu",
+  "prov": "越前国",
+  "name": "",
+  "wiki": null,
+  "place": "福井県越前市国府",
+  "coords": [
+   136.163,
+   35.8785
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 18,
+  "muni": "18209"
+ },
+ {
+  "id": "fu-加賀-1",
+  "kind": "fu",
+  "prov": "加賀国",
+  "name": "",
+  "wiki": null,
+  "place": "石川県小松市古府",
+  "coords": [
+   136.4851,
+   36.295
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 17,
+  "muni": "17203"
+ },
+ {
+  "id": "fu-能登-1",
+  "kind": "fu",
+  "prov": "能登国",
+  "name": "",
+  "wiki": null,
+  "place": "石川県七尾市古府町または府中町",
+  "coords": [
+   136.9868,
+   37.133
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 17,
+  "muni": "17202"
+ },
+ {
+  "id": "fu-越中-1",
+  "kind": "fu",
+  "prov": "越中国",
+  "name": "",
+  "wiki": null,
+  "place": "富山県高岡市伏木古国府",
+  "coords": [
+   136.9407,
+   36.7395
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16202"
+ },
+ {
+  "id": "fu-越後-1",
+  "kind": "fu",
+  "prov": "越後国",
+  "name": "",
+  "wiki": null,
+  "place": "新潟県上越市国府",
+  "coords": [
+   138.304,
+   37.1265
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 15,
+  "muni": "15222"
+ },
+ {
+  "id": "fu-佐渡-1",
+  "kind": "fu",
+  "prov": "佐渡国",
+  "name": "",
+  "wiki": null,
+  "place": "新潟県佐渡市真野",
+  "coords": [
+   138.3512,
+   38.0685
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 15,
+  "muni": "15224"
+ },
+ {
+  "id": "fu-丹波-1",
+  "kind": "fu",
+  "prov": "丹波国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府亀岡市千代川町拝田",
+  "coords": [
+   135.5422,
+   35.0075
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26206"
+ },
+ {
+  "id": "fu-丹波-2",
+  "kind": "fu",
+  "prov": "丹波国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府南丹市八木町北屋賀国府",
+  "coords": [
+   135.5226,
+   35.202
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 26,
+  "muni": "26213"
+ },
+ {
+  "id": "fu-丹後-1",
+  "kind": "fu",
+  "prov": "丹後国",
+  "name": "",
+  "wiki": null,
+  "place": "京都府宮津市府中",
+  "coords": [
+   135.186,
+   35.575
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26205"
+ },
+ {
+  "id": "fu-但馬-1",
+  "kind": "fu",
+  "prov": "但馬国",
+  "name": "",
+  "wiki": null,
+  "place": "兵庫県豊岡市日高町祢布（祢布ヶ森遺跡）",
+  "coords": [
+   134.7767,
+   35.5285
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28209"
+ },
+ {
+  "id": "fu-因幡-1",
+  "kind": "fu",
+  "prov": "因幡国",
+  "name": "",
+  "wiki": "因幡国庁跡",
+  "place": "鳥取県鳥取市国府町中郷",
+  "coords": [
+   134.26611,
+   35.47511
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31201"
+ },
+ {
+  "id": "fu-伯耆-1",
+  "kind": "fu",
+  "prov": "伯耆国",
+  "name": "",
+  "wiki": "伯耆国庁跡",
+  "place": "鳥取県倉吉市国府",
+  "coords": [
+   133.78542,
+   35.43117
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31203"
+ },
+ {
+  "id": "fu-出雲-1",
+  "kind": "fu",
+  "prov": "出雲国",
+  "name": "",
+  "wiki": "出雲国府跡",
+  "place": "島根県松江市竹矢町・大草町・山代町",
+  "coords": [
+   133.10419,
+   35.42794
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32201"
+ },
+ {
+  "id": "fu-石見-1",
+  "kind": "fu",
+  "prov": "石見国",
+  "name": "",
+  "wiki": null,
+  "place": "島根県浜田市下府町",
+  "coords": [
+   132.1918,
+   34.8335
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32202"
+ },
+ {
+  "id": "fu-隠岐-1",
+  "kind": "fu",
+  "prov": "隠岐国",
+  "name": "",
+  "wiki": null,
+  "place": "島根県隠岐郡隠岐の島町下西",
+  "coords": [
+   133.2765,
+   36.2545
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32528"
+ },
+ {
+  "id": "fu-播磨-1",
+  "kind": "fu",
+  "prov": "播磨国",
+  "name": "",
+  "wiki": null,
+  "place": "兵庫県姫路市城東町・国府寺町",
+  "coords": [
+   134.6688,
+   34.9255
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28201"
+ },
+ {
+  "id": "fu-美作-1",
+  "kind": "fu",
+  "prov": "美作国",
+  "name": "",
+  "wiki": null,
+  "place": "岡山県津山市総社",
+  "coords": [
+   134.0587,
+   35.147
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33203"
+ },
+ {
+  "id": "fu-備前-1",
+  "kind": "fu",
+  "prov": "備前国",
+  "name": "",
+  "wiki": null,
+  "place": "岡山県岡山市中区国府市場",
+  "coords": [
+   133.9634,
+   34.6595
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33102"
+ },
+ {
+  "id": "fu-備中-1",
+  "kind": "fu",
+  "prov": "備中国",
+  "name": "",
+  "wiki": null,
+  "place": "岡山県総社市金井戸（北国府・南国府）",
+  "coords": [
+   133.7089,
+   34.704
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33208"
+ },
+ {
+  "id": "fu-備後-1",
+  "kind": "fu",
+  "prov": "備後国",
+  "name": "",
+  "wiki": "備後国府跡",
+  "place": "広島県府中市府川町",
+  "coords": [
+   133.18556,
+   34.57778
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34208"
+ },
+ {
+  "id": "fu-安芸-1",
+  "kind": "fu",
+  "prov": "安芸国",
+  "name": "",
+  "wiki": null,
+  "place": "広島県安芸郡府中町",
+  "coords": [
+   132.5152,
+   34.399
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34302"
+ },
+ {
+  "id": "fu-周防-1",
+  "kind": "fu",
+  "prov": "周防国",
+  "name": "",
+  "wiki": "周防国衙跡",
+  "place": "山口県防府市国衙・惣社町・警固町",
+  "coords": [
+   131.58636,
+   34.05764
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35206"
+ },
+ {
+  "id": "fu-長門-1",
+  "kind": "fu",
+  "prov": "長門国",
+  "name": "",
+  "wiki": null,
+  "place": "山口県下関市長府",
+  "coords": [
+   130.9934,
+   34.151
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35201"
+ },
+ {
+  "id": "fu-紀伊-1",
+  "kind": "fu",
+  "prov": "紀伊国",
+  "name": "",
+  "wiki": null,
+  "place": "和歌山県和歌山市府中",
+  "coords": [
+   135.2165,
+   34.2365
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 30,
+  "muni": "30201"
+ },
+ {
+  "id": "fu-淡路-1",
+  "kind": "fu",
+  "prov": "淡路国",
+  "name": "",
+  "wiki": null,
+  "place": "兵庫県南あわじ市神代國衙",
+  "coords": [
+   134.748,
+   34.273
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28224"
+ },
+ {
+  "id": "fu-阿波-1",
+  "kind": "fu",
+  "prov": "阿波国",
+  "name": "",
+  "wiki": null,
+  "place": "徳島県徳島市国府町府中",
+  "coords": [
+   134.5058,
+   34.0425
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36201"
+ },
+ {
+  "id": "fu-讃岐-1",
+  "kind": "fu",
+  "prov": "讃岐国",
+  "name": "",
+  "wiki": null,
+  "place": "香川県坂出市府中町",
+  "coords": [
+   133.9031,
+   34.3265
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 37,
+  "muni": "37203"
+ },
+ {
+  "id": "fu-伊予-1",
+  "kind": "fu",
+  "prov": "伊予国",
+  "name": "",
+  "wiki": null,
+  "place": "愛媛県今治市桜井",
+  "coords": [
+   132.9303,
+   34.0225
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 38,
+  "muni": "38202"
+ },
+ {
+  "id": "fu-土佐-1",
+  "kind": "fu",
+  "prov": "土佐国",
+  "name": "",
+  "wiki": null,
+  "place": "高知県南国市国分",
+  "coords": [
+   133.6195,
+   33.6125
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 39,
+  "muni": "39204"
+ },
+ {
+  "id": "fu-筑前-1",
+  "kind": "fu",
+  "prov": "筑前国",
+  "name": "",
+  "wiki": null,
+  "place": "福岡県太宰府市国分または通古賀",
+  "coords": [
+   130.5136,
+   33.514
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 40,
+  "muni": "40221"
+ },
+ {
+  "id": "fu-筑後-1",
+  "kind": "fu",
+  "prov": "筑後国",
+  "name": "",
+  "wiki": null,
+  "place": "福岡県久留米市合川町",
+  "coords": [
+   130.5431,
+   33.295
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40203"
+ },
+ {
+  "id": "fu-豊前-1",
+  "kind": "fu",
+  "prov": "豊前国",
+  "name": "",
+  "wiki": null,
+  "place": "福岡県京都郡みやこ町国作（旧仲津郡）",
+  "coords": [
+   130.9363,
+   33.614
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40625"
+ },
+ {
+  "id": "fu-豊前-2",
+  "kind": "fu",
+  "prov": "豊前国",
+  "name": "",
+  "wiki": null,
+  "place": "福岡県行橋市上津熊・下津熊",
+  "coords": [
+   130.9821,
+   33.713
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 40,
+  "muni": "40213"
+ },
+ {
+  "id": "fu-豊後-1",
+  "kind": "fu",
+  "prov": "豊後国",
+  "name": "",
+  "wiki": null,
+  "place": "大分県大分市古国府",
+  "coords": [
+   131.6191,
+   33.174
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 44,
+  "muni": "44201"
+ },
+ {
+  "id": "fu-肥前-1",
+  "kind": "fu",
+  "prov": "肥前国",
+  "name": "",
+  "wiki": "肥前国庁跡",
+  "place": "佐賀県佐賀市大和町大字久池井",
+  "coords": [
+   130.274,
+   33.31694
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 41,
+  "muni": "41201"
+ },
+ {
+  "id": "fu-肥後-1",
+  "kind": "fu",
+  "prov": "肥後国",
+  "name": "",
+  "wiki": null,
+  "place": "熊本県熊本市南区城南町宮地（益城国府）",
+  "coords": [
+   130.6822,
+   32.724
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 43,
+  "muni": "43104"
+ },
+ {
+  "id": "fu-肥後-2",
+  "kind": "fu",
+  "prov": "肥後国",
+  "name": "",
+  "wiki": null,
+  "place": "熊本県熊本市中央区国府本町（託麻国府）",
+  "coords": [
+   130.7224,
+   32.798
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 43,
+  "muni": "43101"
+ },
+ {
+  "id": "fu-肥後-3",
+  "kind": "fu",
+  "prov": "肥後国",
+  "name": "",
+  "wiki": null,
+  "place": "熊本県熊本市西区二本木府中（飽田国府）",
+  "coords": [
+   130.6477,
+   32.808
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 43,
+  "muni": "43103"
+ },
+ {
+  "id": "fu-日向-1",
+  "kind": "fu",
+  "prov": "日向国",
+  "name": "",
+  "wiki": null,
+  "place": "宮崎県西都市三宅国分",
+  "coords": [
+   131.3439,
+   32.1795
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 45,
+  "muni": "45208"
+ },
+ {
+  "id": "fu-大隅-1",
+  "kind": "fu",
+  "prov": "大隅国",
+  "name": "",
+  "wiki": null,
+  "place": "鹿児島県霧島市国分府中町",
+  "coords": [
+   130.7855,
+   31.775
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46218"
+ },
+ {
+  "id": "fu-薩摩-1",
+  "kind": "fu",
+  "prov": "薩摩国",
+  "name": "",
+  "wiki": null,
+  "place": "鹿児島県薩摩川内市国分寺町・御陵下町",
+  "coords": [
+   130.3057,
+   31.8475
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46215"
+ },
+ {
+  "id": "fu-壱岐-1",
+  "kind": "fu",
+  "prov": "壱岐国",
+  "name": "",
+  "wiki": null,
+  "place": "長崎県壱岐市芦辺町那賀または同市石田町湯岳興触",
+  "coords": [
+   129.7105,
+   33.7845
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 42,
+  "muni": "42210"
+ },
+ {
+  "id": "fu-対馬-1",
+  "kind": "fu",
+  "prov": "対馬国",
+  "name": "",
+  "wiki": null,
+  "place": "長崎県対馬市厳原町国分",
+  "coords": [
+   129.3624,
+   34.5015
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 42,
+  "muni": "42209"
+ },
+ {
+  "id": "ji-大和-1",
+  "kind": "ji",
+  "prov": "大和国",
+  "name": "大和国分寺",
+  "wiki": null,
+  "place": "奈良県奈良市雑司町",
+  "coords": [
+   135.83972,
+   34.68917
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 29,
+  "muni": "29201",
+  "status": "国の史跡 東大寺（総国分寺）"
+ },
+ {
+  "id": "ji-山城-1",
+  "kind": "ji",
+  "prov": "山城国",
+  "name": "山城国分寺",
+  "wiki": "山城国分寺跡",
+  "place": "京都府木津川市加茂町例幣",
+  "coords": [
+   135.86191,
+   34.76587
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26214",
+  "status": "国の史跡（恭仁宮跡（山城国分寺跡）） 国分寺"
+ },
+ {
+  "id": "ji-河内-1",
+  "kind": "ji",
+  "prov": "河内国",
+  "name": "河内国分寺",
+  "wiki": "河内国分寺跡",
+  "place": "大阪府柏原市国分東条町",
+  "coords": [
+   135.6576,
+   34.56708
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27221",
+  "status": "（指定なし） 真言宗河内国分寺"
+ },
+ {
+  "id": "ji-和泉-1",
+  "kind": "ji",
+  "prov": "和泉国",
+  "name": "和泉国分寺",
+  "wiki": "和泉国分寺",
+  "place": "大阪府和泉市国分町",
+  "coords": [
+   135.48451,
+   34.43714
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27219",
+  "status": "（指定なし） 護国山国分寺"
+ },
+ {
+  "id": "ji-摂津-1",
+  "kind": "ji",
+  "prov": "摂津国",
+  "name": "摂津国分寺",
+  "wiki": null,
+  "place": "大阪府大阪市天王寺区国分町",
+  "coords": [
+   135.51442,
+   34.71036
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 27,
+  "muni": "27127",
+  "status": "（指定なし） 天德山国分寺 護国山金剛院国分寺"
+ },
+ {
+  "id": "ji-伊賀-1",
+  "kind": "ji",
+  "prov": "伊賀国",
+  "name": "伊賀国分寺",
+  "wiki": "伊賀国分寺跡",
+  "place": "三重県伊賀市西明寺",
+  "coords": [
+   136.15362,
+   34.75872
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24216",
+  "status": "国の史跡 上寺山国分寺"
+ },
+ {
+  "id": "ji-伊勢-1",
+  "kind": "ji",
+  "prov": "伊勢国",
+  "name": "伊勢国分寺",
+  "wiki": "伊勢国分寺跡",
+  "place": "三重県鈴鹿市国分町",
+  "coords": [
+   136.56375,
+   34.90876
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24207",
+  "status": "国の史跡 護国山人生尹丸刀院国分寺 明星山国分寺 常慶山金光明院国分寺"
+ },
+ {
+  "id": "ji-志摩-1",
+  "kind": "ji",
+  "prov": "志摩国",
+  "name": "志摩国分寺",
+  "wiki": "志摩国分寺",
+  "place": "三重県志摩市阿児町国府",
+  "coords": [
+   136.88001,
+   34.34847
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 24,
+  "muni": "24215",
+  "status": "三重県指定史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-尾張-1",
+  "kind": "ji",
+  "prov": "尾張国",
+  "name": "尾張国分寺",
+  "wiki": "尾張国分寺",
+  "place": "愛知県稲沢市矢合町",
+  "coords": [
+   136.77475,
+   35.24109
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23220",
+  "status": "国の史跡 鈴置山国分寺"
+ },
+ {
+  "id": "ji-三河-1",
+  "kind": "ji",
+  "prov": "三河国",
+  "name": "三河国分寺",
+  "wiki": "三河国分寺",
+  "place": "愛知県豊川市八幡町",
+  "coords": [
+   137.34194,
+   34.83833
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 23,
+  "muni": "23207",
+  "status": "国の史跡 国府荘山国分寺"
+ },
+ {
+  "id": "ji-遠江-1",
+  "kind": "ji",
+  "prov": "遠江国",
+  "name": "遠江国分寺",
+  "wiki": "遠江国分寺跡",
+  "place": "静岡県磐田市見付",
+  "coords": [
+   137.85157,
+   34.71962
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22211",
+  "status": "国の特別史跡 參慶山延命院国分寺"
+ },
+ {
+  "id": "ji-駿河-1",
+  "kind": "ji",
+  "prov": "駿河国",
+  "name": "駿河国分寺",
+  "wiki": "駿河国分寺跡",
+  "place": "静岡県静岡市駿河区大谷",
+  "coords": [
+   138.42662,
+   34.96423
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22102",
+  "status": "国の史跡 （伝）龍頭山国分寺"
+ },
+ {
+  "id": "ji-伊豆-1",
+  "kind": "ji",
+  "prov": "伊豆国",
+  "name": "伊豆国分寺",
+  "wiki": "伊豆国分寺",
+  "place": "静岡県三島市泉町",
+  "coords": [
+   138.90975,
+   35.12008
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 22,
+  "muni": "22206",
+  "status": "塔跡は国の史跡 宝樹山国分寺"
+ },
+ {
+  "id": "ji-甲斐-1",
+  "kind": "ji",
+  "prov": "甲斐国",
+  "name": "甲斐国分寺",
+  "wiki": "甲斐国分寺跡",
+  "place": "山梨県笛吹市一宮町国分",
+  "coords": [
+   138.68127,
+   35.63649
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 19,
+  "muni": "19211",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-相模-1",
+  "kind": "ji",
+  "prov": "相模国",
+  "name": "相模国分寺",
+  "wiki": "相模国分寺",
+  "place": "神奈川県海老名市国分南",
+  "coords": [
+   139.39914,
+   35.45267
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 14,
+  "muni": "14215",
+  "status": "国の史跡 東光山医王院国分寺"
+ },
+ {
+  "id": "ji-武蔵-1",
+  "kind": "ji",
+  "prov": "武蔵国",
+  "name": "武蔵国分寺",
+  "wiki": "武蔵国分寺跡",
+  "place": "東京都国分寺市西元町",
+  "coords": [
+   139.47181,
+   35.69243
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 13,
+  "muni": "13214",
+  "status": "国の史跡 医王山最勝院国分寺"
+ },
+ {
+  "id": "ji-安房-1",
+  "kind": "ji",
+  "prov": "安房国",
+  "name": "安房国分寺",
+  "wiki": "安房国分寺",
+  "place": "千葉県館山市国分",
+  "coords": [
+   139.88951,
+   34.99339
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12205",
+  "status": "千葉県指定史跡 館山市指定史跡 日色山国分寺"
+ },
+ {
+  "id": "ji-上総-1",
+  "kind": "ji",
+  "prov": "上総国",
+  "name": "上総国分寺",
+  "wiki": "上総国分寺",
+  "place": "千葉県市原市惣社",
+  "coords": [
+   140.11114,
+   35.49692
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12219",
+  "status": "国の史跡 医王山清浄院国分寺"
+ },
+ {
+  "id": "ji-下総-1",
+  "kind": "ji",
+  "prov": "下総国",
+  "name": "下総国分寺",
+  "wiki": "下総国分寺",
+  "place": "千葉県市川市国分",
+  "coords": [
+   139.91652,
+   35.74414
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 12,
+  "muni": "12203",
+  "status": "国の史跡 国分山国分寺"
+ },
+ {
+  "id": "ji-常陸-1",
+  "kind": "ji",
+  "prov": "常陸国",
+  "name": "常陸国分寺",
+  "wiki": "常陸国分寺",
+  "place": "茨城県石岡市府中",
+  "coords": [
+   140.27336,
+   36.19621
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 8,
+  "muni": "08205",
+  "status": "国の特別史跡 浄瑠璃山東方院国分寺"
+ },
+ {
+  "id": "ji-近江-1",
+  "kind": "ji",
+  "prov": "近江国",
+  "name": "近江国分寺",
+  "wiki": "近江国分寺",
+  "place": "滋賀県甲賀市信楽町黄瀬・牧 （紫香楽宮跡内裏野地区） 滋賀県大津市野郷原・神領 （瀬田廃寺跡） 滋賀県大津市光が丘町 （国昌寺跡推定地）",
+  "coords": [
+   135.90025,
+   34.973
+  ],
+  "precise": true,
+  "presumed": true,
+  "pref": 25,
+  "muni": "25201",
+  "status": "1：国の史跡（紫香楽宮跡） 別所山国分寺"
+ },
+ {
+  "id": "ji-美濃-1",
+  "kind": "ji",
+  "prov": "美濃国",
+  "name": "美濃国分寺",
+  "wiki": "美濃国分寺",
+  "place": "岐阜県大垣市青野町",
+  "coords": [
+   136.55185,
+   35.38695
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 21,
+  "muni": "21202",
+  "status": "国の史跡 金銀山瑠璃光院国分寺"
+ },
+ {
+  "id": "ji-飛騨-1",
+  "kind": "ji",
+  "prov": "飛騨国",
+  "name": "飛騨国分寺",
+  "wiki": "飛騨国分寺",
+  "place": "岐阜県高山市総和町",
+  "coords": [
+   137.25369,
+   36.14335
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 21,
+  "muni": "21203",
+  "status": "塔跡は国の史跡 医王山国分寺"
+ },
+ {
+  "id": "ji-信濃-1",
+  "kind": "ji",
+  "prov": "信濃国",
+  "name": "信濃国分寺",
+  "wiki": "信濃国分寺",
+  "place": "長野県上田市国分",
+  "coords": [
+   138.27108,
+   36.38304
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 20,
+  "muni": "20203",
+  "status": "国の史跡 国分寺"
+ },
+ {
+  "id": "ji-上野-1",
+  "kind": "ji",
+  "prov": "上野国",
+  "name": "上野国分寺",
+  "wiki": "上野国分寺跡",
+  "place": "群馬県高崎市東国分",
+  "coords": [
+   139.02243,
+   36.39509
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 10,
+  "muni": "10202",
+  "status": "国の史跡 国分寺<!--山号不明-->"
+ },
+ {
+  "id": "ji-下野-1",
+  "kind": "ji",
+  "prov": "下野国",
+  "name": "下野国分寺",
+  "wiki": "下野国分寺跡",
+  "place": "栃木県下野市国分寺",
+  "coords": [
+   139.8061,
+   36.38506
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 9,
+  "muni": "09216",
+  "status": "国の史跡 瑠璃光山安養院国分寺"
+ },
+ {
+  "id": "ji-陸奥-1",
+  "kind": "ji",
+  "prov": "陸奥国",
+  "name": "陸奥国分寺",
+  "wiki": "陸奥国分寺",
+  "place": "宮城県仙台市若林区木ノ下",
+  "coords": [
+   140.90056,
+   38.25056
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 4,
+  "muni": "04103",
+  "status": "国の史跡 護国山医王院国分寺"
+ },
+ {
+  "id": "ji-出羽-1",
+  "kind": "ji",
+  "prov": "出羽国",
+  "name": "出羽国分寺",
+  "wiki": null,
+  "place": "山形県酒田市城輪 山形県鶴岡市平形国分",
+  "coords": [
+   139.7893,
+   38.5735
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 6,
+  "muni": "06203",
+  "status": "1：国の史跡（堂の前遺跡） 護国山柏山寺"
+ },
+ {
+  "id": "ji-若狭-1",
+  "kind": "ji",
+  "prov": "若狭国",
+  "name": "若狭国分寺",
+  "wiki": "若狭国分寺",
+  "place": "福井県小浜市国分",
+  "coords": [
+   135.78864,
+   35.48024
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 18,
+  "muni": "18204",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-加賀-1",
+  "kind": "ji",
+  "prov": "加賀国",
+  "name": "加賀国分寺",
+  "wiki": null,
+  "place": "石川県小松市古府町",
+  "coords": [
+   136.4851,
+   36.295
+  ],
+  "precise": false,
+  "presumed": true,
+  "pref": 17,
+  "muni": "17203",
+  "status": "（指定なし） （後継なし）"
+ },
+ {
+  "id": "ji-能登-1",
+  "kind": "ji",
+  "prov": "能登国",
+  "name": "能登国分寺",
+  "wiki": "能登国分寺",
+  "place": "石川県七尾市国分町",
+  "coords": [
+   136.9575,
+   37.025
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 17,
+  "muni": "17202",
+  "status": "国の史跡 （後継なし）"
+ },
+ {
+  "id": "ji-越中-1",
+  "kind": "ji",
+  "prov": "越中国",
+  "name": "越中国分寺",
+  "wiki": "越中国分寺",
+  "place": "富山県高岡市伏木一宮",
+  "coords": [
+   137.04942,
+   36.79789
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 16,
+  "muni": "16202",
+  "status": "富山県指定史跡 <!--一宮山：典拠不明-->国分寺"
+ },
+ {
+  "id": "ji-越後-1",
+  "kind": "ji",
+  "prov": "越後国",
+  "name": "越後国分寺",
+  "wiki": null,
+  "place": "新潟県上越市五智・国府",
+  "coords": [
+   138.22494,
+   37.16856
+  ],
+  "precise": true,
+  "presumed": true,
+  "pref": 15,
+  "muni": "15222",
+  "status": "（指定なし） 安国山華蔵院国分寺（五智国分寺）"
+ },
+ {
+  "id": "ji-佐渡-1",
+  "kind": "ji",
+  "prov": "佐渡国",
+  "name": "佐渡国分寺",
+  "wiki": "佐渡国分寺",
+  "place": "新潟県佐渡市国分寺",
+  "coords": [
+   138.36867,
+   37.96706
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 15,
+  "muni": "15224",
+  "status": "国の史跡 医王山瑠璃光院国分寺"
+ },
+ {
+  "id": "ji-丹波-1",
+  "kind": "ji",
+  "prov": "丹波国",
+  "name": "丹波国分寺",
+  "wiki": "丹波国分寺",
+  "place": "京都府亀岡市千歳町国分",
+  "coords": [
+   135.57852,
+   35.04224
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26206",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-丹後-1",
+  "kind": "ji",
+  "prov": "丹後国",
+  "name": "丹後国分寺",
+  "wiki": "丹後国分寺",
+  "place": "京都府宮津市国分",
+  "coords": [
+   135.18006,
+   35.58006
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 26,
+  "muni": "26205",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-但馬-1",
+  "kind": "ji",
+  "prov": "但馬国",
+  "name": "但馬国分寺",
+  "wiki": "但馬国分寺",
+  "place": "兵庫県豊岡市日高町国分寺",
+  "coords": [
+   134.77314,
+   35.47242
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28209",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-因幡-1",
+  "kind": "ji",
+  "prov": "因幡国",
+  "name": "因幡国分寺",
+  "wiki": "因幡国分寺",
+  "place": "鳥取県鳥取市国府町国分寺",
+  "coords": [
+   134.26167,
+   35.47027
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31201",
+  "status": "（指定なし） 最勝山国分寺"
+ },
+ {
+  "id": "ji-伯耆-1",
+  "kind": "ji",
+  "prov": "伯耆国",
+  "name": "伯耆国分寺",
+  "wiki": "伯耆国分寺",
+  "place": "鳥取県倉吉市国分寺",
+  "coords": [
+   133.78981,
+   35.43256
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 31,
+  "muni": "31203",
+  "status": "国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-出雲-1",
+  "kind": "ji",
+  "prov": "出雲国",
+  "name": "出雲国分寺",
+  "wiki": null,
+  "place": "島根県松江市竹矢町",
+  "coords": [
+   133.0575,
+   35.4685
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32201",
+  "status": "国の史跡 （後継なし）"
+ },
+ {
+  "id": "ji-石見-1",
+  "kind": "ji",
+  "prov": "石見国",
+  "name": "石見国分寺",
+  "wiki": null,
+  "place": "島根県浜田市国分町",
+  "coords": [
+   132.1918,
+   34.8335
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32202",
+  "status": "国の史跡 東光山国分寺"
+ },
+ {
+  "id": "ji-隠岐-1",
+  "kind": "ji",
+  "prov": "隠岐国",
+  "name": "隠岐国分寺",
+  "wiki": "隠岐国分寺",
+  "place": "島根県隠岐郡隠岐の島町池田",
+  "coords": [
+   133.30737,
+   36.22435
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 32,
+  "muni": "32528",
+  "status": "国の史跡 禅尾山国分寺"
+ },
+ {
+  "id": "ji-播磨-1",
+  "kind": "ji",
+  "prov": "播磨国",
+  "name": "播磨国分寺",
+  "wiki": "播磨国分寺",
+  "place": "兵庫県姫路市御国野町国分寺",
+  "coords": [
+   134.73139,
+   34.82028
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28201",
+  "status": "国の史跡 牛堂山国分寺"
+ },
+ {
+  "id": "ji-美作-1",
+  "kind": "ji",
+  "prov": "美作国",
+  "name": "美作国分寺",
+  "wiki": "美作国分寺",
+  "place": "岡山県津山市国分寺",
+  "coords": [
+   134.04188,
+   35.05004
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33203",
+  "status": "国の史跡 龍壽山国分寺"
+ },
+ {
+  "id": "ji-備前-1",
+  "kind": "ji",
+  "prov": "備前国",
+  "name": "備前国分寺",
+  "wiki": "備前国分寺跡",
+  "place": "岡山県赤磐市馬屋",
+  "coords": [
+   133.99981,
+   34.73861
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33213",
+  "status": "国の史跡 金光山圓壽院善教寺"
+ },
+ {
+  "id": "ji-備中-1",
+  "kind": "ji",
+  "prov": "備中国",
+  "name": "備中国分寺",
+  "wiki": "備中国分寺",
+  "place": "岡山県総社市上林",
+  "coords": [
+   133.78216,
+   34.66641
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 33,
+  "muni": "33208",
+  "status": "国の史跡 日照山總持院国分寺"
+ },
+ {
+  "id": "ji-備後-1",
+  "kind": "ji",
+  "prov": "備後国",
+  "name": "備後国分寺",
+  "wiki": "備後国分寺",
+  "place": "広島県福山市神辺町下御領",
+  "coords": [
+   133.39327,
+   34.56489
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34207",
+  "status": "（指定なし） 唐尾山医王院国分寺"
+ },
+ {
+  "id": "ji-安芸-1",
+  "kind": "ji",
+  "prov": "安芸国",
+  "name": "安芸国分寺",
+  "wiki": "安芸国分寺",
+  "place": "広島県東広島市西条町吉行",
+  "coords": [
+   132.74875,
+   34.43424
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 34,
+  "muni": "34212",
+  "status": "国の史跡 金嶽山常光院国分寺"
+ },
+ {
+  "id": "ji-周防-1",
+  "kind": "ji",
+  "prov": "周防国",
+  "name": "周防国分寺",
+  "wiki": "周防国分寺",
+  "place": "山口県防府市国分寺町",
+  "coords": [
+   131.57936,
+   34.06206
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35206",
+  "status": "国の史跡 浄瑠璃山国分寺"
+ },
+ {
+  "id": "ji-長門-1",
+  "kind": "ji",
+  "prov": "長門国",
+  "name": "長門国分寺",
+  "wiki": null,
+  "place": "山口県下関市長府宮の内町",
+  "coords": [
+   130.9934,
+   34.151
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 35,
+  "muni": "35201",
+  "status": "（指定なし） 浄瑠璃山国分寺"
+ },
+ {
+  "id": "ji-紀伊-1",
+  "kind": "ji",
+  "prov": "紀伊国",
+  "name": "紀伊国分寺",
+  "wiki": "紀伊国分寺",
+  "place": "和歌山県紀の川市東国分",
+  "coords": [
+   135.33917,
+   34.26878
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 30,
+  "muni": "30208",
+  "status": "国の史跡 八光山医王院国分寺"
+ },
+ {
+  "id": "ji-淡路-1",
+  "kind": "ji",
+  "prov": "淡路国",
+  "name": "淡路国分寺",
+  "wiki": "淡路国分寺",
+  "place": "兵庫県南あわじ市八木国分",
+  "coords": [
+   134.78264,
+   34.29853
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 28,
+  "muni": "28224",
+  "status": "塔跡は国の史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-阿波-1",
+  "kind": "ji",
+  "prov": "阿波国",
+  "name": "阿波国分寺",
+  "wiki": "阿波国分寺",
+  "place": "徳島県徳島市国府町矢野",
+  "coords": [
+   134.47361,
+   34.05561
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 36,
+  "muni": "36201",
+  "status": "徳島県指定史跡 薬王山（法養山）金色院国分寺"
+ },
+ {
+  "id": "ji-讃岐-1",
+  "kind": "ji",
+  "prov": "讃岐国",
+  "name": "讃岐国分寺",
+  "wiki": "讃岐国分寺",
+  "place": "香川県高松市国分寺町国分",
+  "coords": [
+   133.94417,
+   34.30306
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 37,
+  "muni": "37201",
+  "status": "国の特別史跡 白牛山千手院国分寺"
+ },
+ {
+  "id": "ji-伊予-1",
+  "kind": "ji",
+  "prov": "伊予国",
+  "name": "伊予国分寺",
+  "wiki": "伊予国分寺",
+  "place": "愛媛県今治市国分町",
+  "coords": [
+   133.02544,
+   34.02617
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 38,
+  "muni": "38202",
+  "status": "塔跡は国の史跡 金光山最勝院国分寺"
+ },
+ {
+  "id": "ji-土佐-1",
+  "kind": "ji",
+  "prov": "土佐国",
+  "name": "土佐国分寺",
+  "wiki": "土佐国分寺",
+  "place": "高知県南国市国分",
+  "coords": [
+   133.64042,
+   33.59869
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 39,
+  "muni": "39204",
+  "status": "国の史跡 摩尼山宝蔵院国分寺"
+ },
+ {
+  "id": "ji-筑前-1",
+  "kind": "ji",
+  "prov": "筑前国",
+  "name": "筑前国分寺",
+  "wiki": "筑前国分寺",
+  "place": "福岡県太宰府市国分",
+  "coords": [
+   130.50666,
+   33.52069
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40221",
+  "status": "国の史跡 龍頭光山国分寺"
+ },
+ {
+  "id": "ji-筑後-1",
+  "kind": "ji",
+  "prov": "筑後国",
+  "name": "筑後国分寺",
+  "wiki": "筑後国分寺跡",
+  "place": "福岡県久留米市国分町",
+  "coords": [
+   130.53791,
+   33.29529
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40203",
+  "status": "久留米市指定史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-豊前-1",
+  "kind": "ji",
+  "prov": "豊前国",
+  "name": "豊前国分寺",
+  "wiki": "豊前国分寺跡",
+  "place": "福岡県京都郡みやこ町国分",
+  "coords": [
+   130.98083,
+   33.67944
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 40,
+  "muni": "40625",
+  "status": "国の史跡 金光明山国分寺"
+ },
+ {
+  "id": "ji-豊後-1",
+  "kind": "ji",
+  "prov": "豊後国",
+  "name": "豊後国分寺",
+  "wiki": "豊後国分寺",
+  "place": "大分県大分市国分",
+  "coords": [
+   131.55414,
+   33.19464
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 44,
+  "muni": "44201",
+  "status": "国の史跡 医王山国分寺"
+ },
+ {
+  "id": "ji-肥前-1",
+  "kind": "ji",
+  "prov": "肥前国",
+  "name": "肥前国分寺",
+  "wiki": "肥前国分寺跡",
+  "place": "佐賀県佐賀市大和町尼寺",
+  "coords": [
+   130.28746,
+   33.31388
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 41,
+  "muni": "41201",
+  "status": "佐賀市指定史跡 金光明王山国分寺"
+ },
+ {
+  "id": "ji-肥後-1",
+  "kind": "ji",
+  "prov": "肥後国",
+  "name": "肥後国分寺",
+  "wiki": null,
+  "place": "熊本県熊本市中央区出水",
+  "coords": [
+   130.7224,
+   32.798
+  ],
+  "precise": false,
+  "presumed": false,
+  "pref": 43,
+  "muni": "43101",
+  "status": "（指定なし） 医王山国分寺"
+ },
+ {
+  "id": "ji-日向-1",
+  "kind": "ji",
+  "prov": "日向国",
+  "name": "日向国分寺",
+  "wiki": "日向国分寺跡",
+  "place": "宮崎県西都市三宅",
+  "coords": [
+   131.39691,
+   32.10242
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 45,
+  "muni": "45208",
+  "status": "国の史跡 （後継なし）"
+ },
+ {
+  "id": "ji-大隅-1",
+  "kind": "ji",
+  "prov": "大隅国",
+  "name": "大隅国分寺",
+  "wiki": "大隅国分寺跡",
+  "place": "鹿児島県霧島市国分中央",
+  "coords": [
+   130.77136,
+   31.74117
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46218",
+  "status": "国の史跡 （後継なし）"
+ },
+ {
+  "id": "ji-薩摩-1",
+  "kind": "ji",
+  "prov": "薩摩国",
+  "name": "薩摩国分寺",
+  "wiki": "薩摩国分寺跡",
+  "place": "鹿児島県薩摩川内市国分寺町",
+  "coords": [
+   130.30633,
+   31.832
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 46,
+  "muni": "46215",
+  "status": "国の史跡 （後継なし）"
+ },
+ {
+  "id": "ji-壱岐-1",
+  "kind": "ji",
+  "prov": "壱岐国",
+  "name": "壱岐島分寺",
+  "wiki": "壱岐国分寺",
+  "place": "長崎県壱岐市芦辺町国分本村触",
+  "coords": [
+   129.72236,
+   33.79684
+  ],
+  "precise": true,
+  "presumed": false,
+  "pref": 42,
+  "muni": "42210",
+  "status": "長崎県指定史跡 護国山国分寺"
+ },
+ {
+  "id": "ji-対馬-1",
+  "kind": "ji",
+  "prov": "対馬国",
+  "name": "対馬島分寺",
+  "wiki": "対馬国分寺",
+  "place": "長崎県対馬市厳原町今屋敷",
+  "coords": [
+   129.29365,
+   34.20539
+  ],
+  "precise": true,
+  "presumed": true,
+  "pref": 42,
+  "muni": "42209",
+  "status": "（指定なし） 天德山国分寺"
+ }
+]

@@ -24,6 +24,7 @@
 | **広重の浮世絵** | 歌川広重『六十余州名所図会』（1853–56）全69点。旧国地図で国をクリックすると広重が描いたその国の風景と、描かれた場所が今どの県・市にあるかを表示。詳細カードにも県ごとの作品を並べ、拡大して1点ずつ見られます |
 | **今も残る国名** | 68 か国で計 190 件、旧国名を今に伝えるもの：信濃川、讃岐うどん、伊予柑、備前焼、サツマイモ、近江鉄道……。旧国地図のツールチップ、国のカード、詳細カードで見られます。名前の由来と場所はすべて Wikipedia で確認済み |
 | **現在地** | 地図の 📍 ボタンで、いまいる場所がどの令制国か、現在の県・市区町村、明治の郡を表示。その国の広重の浮世絵と今も残る国名も。位置は端末内で計算し、送信しません |
+| **古国めぐり** | 5 つ目のレイヤー：68 旧国の地図に諸国一宮（論社を含む 85 社）・国府（推定地 85 か所）・国分寺（67 か所）。一宮はサイト上で参拝して御朱印、神社から 1 km 以内なら「現地でチェックイン」で金の御朱印。御朱印帳に「諸国一宮」編を追加 |
 | **風土レイヤー** | ご当地ラーメン図鑑（一杯の断面図つき）と地酒名醸マップ |
 | **市区町村マップ** | 県を選んで全国 1,900 余りの市区町村へ。令制国別・人口別に色分けし、読み・旧国・明治の旧郡・現在の郡・人口を表示。検索欄から市区町村名（漢字・かな・英語）でも探せ、同名は別々に表示。地図に地名を表示し、選んだ市区町村について AI 案内人にも質問できます。リンクで市区町村を直接共有可能 |
 | **聖地巡礼** | 4 つ目のレイヤー：アニメ聖地と NHK 大河ドラマゆかりの地のピンを「すべて / アニメ / 大河」で絞り込み。ピンをタップすると作品・撮影地・場面・巡礼のコツを表示し、AI 案内人が熱血アニメファン／ドラマ評論家の口調で解説。座標と「作品 ↔ 場所」の対応はすべて Wikipedia で検証（47 都道府県・111 か所） |
@@ -38,6 +39,15 @@
 ## 📜 アップデート履歴
 
 > 冒険者の皆さま、新バージョンが到着しました。これまでのお知らせ一覧です（新しい順）。
+
+### ⛩️ v2.7「諸国一宮めぐり」
+- **新レイヤー「古国めぐり」！** 68 旧国の地図に諸国一宮・国府・国分寺を表示し、種類で絞り込み
+- 一宮は 85 社で全 68 か国を網羅（一宮を称する神社が複数ある国は論社もすべて収録、どれか一社の参拝で達成）
+- 一宮で「参拝して御朱印」。神社から 1 km 以内で「現地でチェックイン」すると金の「現地参拝」印
+- 御朱印帳に「諸国一宮」編：68 か国を道ごとに集め、現地参拝の印は金色に光ります
+- 国府の多くは推定地で、候補が複数ある国もそのまま表示。正確な座標がないものは市区町村の位置（白抜きのピン）
+- 詳細カードに「古国の三遺跡」を追加：その県の一宮・国府・国分寺
+- 日本語版 Wikipedia から整理し、すべての位置がその国の中にあることを確認。確認の過程で土佐国府、大和・出羽国分寺などの位置を修正
 
 ### 🕰️ v2.6「旧国の誕生と分立」
 - **旧国地図に年表を追加：712・757・824・1869！**
@@ -187,7 +197,7 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 
 全国地図：出典「地球地図日本」（国土地理院）。[dataofjapan/land](https://github.com/dataofjapan/land) による GeoJSON 変換版を使用。
 
-市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`（年表 `province_eras.json` も生成。明治の分国の対応表 `tools/meiji_provinces.json` は `python -X utf8 tools/fetch_meiji.py` で作成）。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。
+市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`（年表 `province_eras.json` も生成。明治の分国の対応表 `tools/meiji_provinces.json` は `python -X utf8 tools/fetch_meiji.py` で作成）。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。古国めぐり（`src/data/koku_sites.json`）は `python -X utf8 tools/fetch_koku.py`（shapely が必要）で Wikipedia の「一宮」「国府」「国分寺」の表から整理・確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。
 
 ## 著作権とライセンス
 

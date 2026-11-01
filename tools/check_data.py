@@ -309,6 +309,29 @@ def check_province_names():
                 err('province_names', f'{k} {it.get("ja")}：类型或字段不全')
 
 
+def check_koku():
+    """古国巡礼：三类齐全、每国都有一宫与国府、旧国合法、坐标在日本范围内（与维基的核验见 tools/fetch_koku.py）"""
+    path = os.path.join(ROOT, 'src', 'data', 'koku_sites.json')
+    if not os.path.exists(path):
+        return
+    sites = load('src', 'data', 'koku_sites.json')
+    provs = {f['properties']['key'] for f in load('src', 'data', 'provinces.json')['features']} - {'-', '蝦夷地', '琉球王国'}
+    ids = set()
+    for s in sites:
+        if s['id'] in ids:
+            err('koku', f'{s["id"]} 重复')
+        ids.add(s['id'])
+        if s['kind'] not in ('ichi', 'fu', 'ji') or s['prov'] not in provs:
+            err('koku', f'{s["id"]}：类型或旧国非法')
+        x, y = s['coords']
+        if not (122 < x < 154 and 24 < y < 46):
+            err('koku', f'{s["id"]}：坐标 {s["coords"]} 不在日本范围内')
+    for kind in ('ichi', 'fu'):
+        miss = provs - {s['prov'] for s in sites if s['kind'] == kind}
+        if miss:
+            err('koku', f'{kind} 缺 {sorted(miss)}')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -331,7 +354,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_pilgrimage, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

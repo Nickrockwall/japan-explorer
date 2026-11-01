@@ -86,6 +86,24 @@ def province_names(lang):
     } for k, items in load(path).items()]
 
 
+# 古国巡礼：一宫、国府、国分寺。名称与地址保留日文原文；旧国名与今日市区町村按语言给出
+def koku(lang):
+    path = os.path.join(DATA, 'koku_sites.json')
+    if not os.path.exists(path):
+        return []
+    prov_names, muni_names = {}, {}
+    for i in range(1, 48):
+        d = load(os.path.join(DATA, 'municipalities', f'{i:02d}.json'))
+        prov_names.update(d['provinces'])
+        for f in d['features']:
+            q = f['properties']
+            muni_names[q['code']] = q['en'] if lang == 'en' and q.get('en') else q['name']
+    circuit = {f['properties']['key']: f['properties']['circuit'] for f in load(os.path.join(DATA, 'provinces.json'))['features']}
+    keep = ('id', 'kind', 'prov', 'name', 'place', 'coords', 'precise', 'presumed', 'pref', 'muni', 'status', 'wiki')
+    return [{**{k: s[k] for k in keep if k in s}, 'provLabel': prov_names[s['prov']][lang], 'circuit': circuit[s['prov']],
+             'muniLabel': muni_names.get(s['muni'])} for s in load(path)]
+
+
 def build(lang):
     """生成某种语言的数据包文本（tools/check_data.py 也用它来判断已提交的包是否过期）"""
     index = load(os.path.join(DATA, 'index.json'))
@@ -105,7 +123,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang)}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang)}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

@@ -521,7 +521,9 @@ body.resizing { cursor: row-resize; user-select: none; }
 
 /* ── 工具条：风土图层 + 时空滤镜 ───────────────────────────── */
 .map-toolbar { flex-direction: column; align-items: stretch; }
-.toolbar-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; pointer-events: none; }
+.toolbar-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; pointer-events: none; max-width: 100%; }
+/* 图层按钮多于屏宽时在行内横滑，不撑宽整个地图区（flex 子项默认不肯缩到内容以下） */
+.toolbar-row > .layers { min-width: 0; }
 .toolbar-row > * { pointer-events: auto; }
 .map-toolbar .filters { align-self: flex-start; }
 .layers {
@@ -844,6 +846,29 @@ body.in-battle .art-card, body.muni-open .art-card { display: none; }
 .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
 .art-grid figure { margin: 0; }
 .art-grid figcaption { margin-top: 5px; font-size: 11.5px; line-height: 1.45; color: var(--text-2); }
+/* 古国巡礼 */
+.koku-filter { display: none; }
+body[data-layer="koku"] .koku-filter { display: inline-flex; align-self: flex-start; }
+body[data-layer="koku"] .koku-filter button.on { background: #b8483c; }
+body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
+.koku-flags { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
+.koku-flag { font-size: 11px; padding: 1px 8px; border-radius: 10px; border: 1px dashed var(--line); color: var(--muted); }
+.koku-stamp { border-top: 1px solid var(--line-soft); margin-top: 6px; padding-top: 8px; }
+.koku-done { font-size: 12.5px; color: #8fd18f; display: grid; gap: 2px; }
+.koku-done b { color: #ffd27a; font-weight: 700; }
+.koku-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.koku-btns .btn { padding: 5px 12px; font-size: 12.5px; }
+/* 御朱印帐是和纸色，切换钮跟随册子配色 */
+.book-modes { display: inline-flex; gap: 2px; padding: 2px; margin-top: 6px; border-radius: 8px; border: 1px solid #c9b08a; background: rgba(120,80,40,.06); }
+.book-modes button { border: 0; background: transparent; cursor: pointer; padding: 4px 12px; border-radius: 6px; font-size: 12.5px; color: #5a4a3f; }
+.book-modes button[aria-selected="true"] { background: var(--shu); color: #fff; font-weight: 700; }
+.ichi-seal {
+  display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; margin: 0 auto;
+  font: 900 24px var(--serif); color: #c23531; border: 3px double #c23531; transform: rotate(-6deg);
+}
+.slot.real .ichi-seal { color: #b8862f; border-color: #d4a84a; box-shadow: 0 0 12px rgba(255,210,122,.45); }
+.slot.real { border-color: rgba(212,168,74,.7); }
+
 /* 古国演变时间轴：只在古国底图下显示 */
 .prov-eras { display: none; }
 body.prov-mode .prov-eras { display: inline-flex; align-self: flex-start; }

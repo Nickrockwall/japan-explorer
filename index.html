@@ -87,6 +87,8 @@
         <div class="filters" id="filters" role="tablist" data-i18n-aria="filters.aria" aria-label="时空滤镜"></div>
         <!-- 圣地巡礼图层的子分类（仅该图层显示） -->
         <div class="filters pil-filter" id="pil-filter" role="tablist" data-i18n-aria="pil.aria" aria-label="巡礼分类"></div>
+        <!-- 古国巡礼图层的子分类（仅该图层显示） -->
+        <div class="filters koku-filter" id="koku-filter" role="tablist" data-i18n-aria="koku.aria" aria-label="古国巡礼分类"></div>
         <!-- 古国演变时间轴（仅古国底图显示） -->
         <div class="filters prov-eras" id="prov-eras" role="tablist" data-i18n-aria="prov.eras" aria-label="古国演变"></div>
       </div>
@@ -138,6 +140,8 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <div class="muni-card art-card loc-card" id="loc-card" hidden aria-live="polite"></div>
+      <!-- 古国巡礼：一宫 / 国府 / 国分寺的卡片（koku.js） -->
+      <div class="muni-card pil-card koku-card" id="koku-card" hidden aria-live="polite"></div>
 
       <!-- 古国地图：点一国弹出广重《六十余州名所图会》（hiroshige.js 填充） -->
       <div class="muni-card art-card" id="art-card" hidden aria-live="polite"></div>

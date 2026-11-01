@@ -92,6 +92,9 @@ class Case:
     def no_overflow(self, page):
         over = page.evaluate('document.scrollingElement.scrollWidth - innerWidth')
         assert over <= 1, f'页面横向溢出 {over}px'
+        # 地图区本身也不能被撑宽（overflow 为 visible 时页面不溢出，但点击时会被浏览器横向滚动）
+        pane = page.evaluate("(() => { const e = document.querySelector('.map-pane'); return e.scrollWidth - e.clientWidth; })()")
+        assert pane <= 1, f'地图区横向溢出 {pane}px（工具栏或图层按钮太宽）'
 
     def muni(self, page):
         page.wait_for_selector('.muni-card:not([hidden])', timeout=15000)
@@ -292,6 +295,22 @@ class Case:
         page.click('#loc-card [data-act="loc-muni"]')
         page.wait_for_selector('.muni-card:not([hidden])', timeout=15000)
 
+    def koku(self, page):
+        # 古国巡礼：68 古国底图 + 三种图钉；点出云大社 → 参拜盖印 → 模拟在神社旁实地打卡得亲临金印；御朱印帐一宫篇
+        self.tab(page, 'map')
+        page.click('[data-layer="koku"]')
+        page.wait_for_function("document.getElementById('legend-items').textContent.includes('85')", timeout=15000)
+        page.evaluate("() => { echarts.getInstanceByDom(document.getElementById('map')).trigger('click', { seriesId: 'koku', data: { id: 'ichi-出雲-1' } }); }")
+        page.wait_for_selector('#koku-card:not([hidden])')
+        assert '出雲大社' in page.text_content('#koku-card'), '卡片应是出云大社'
+        page.click('#koku-card [data-act="koku-pray"]')
+        page.click('#koku-card [data-act="koku-checkin"]')
+        page.wait_for_function("(localStorage.getItem('je.ichinomiya') || '').includes('\"real\":true')", timeout=10000)
+        page.click('#btn-book')
+        page.click('#book [data-mode="ichi"]')
+        assert page.locator('#book .slot.got.real').count() == 1, '一宫篇应有一枚亲临印'
+        page.keyboard.press('Escape')
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -310,7 +329,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 
@@ -331,7 +350,8 @@ def main():
                     page = None
                     try:
                         page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken',
-                                      geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate' else None)
+                                      geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
+                                      else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
                         for step in steps:
                             getattr(c, step)(page)
                         page.wait_for_timeout(300)

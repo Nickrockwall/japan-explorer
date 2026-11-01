@@ -1,5 +1,5 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
-import { loadAll, loadProvinces, loadProvinceEras, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, ichinomiya, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide, testConnection } from './guide.js';
@@ -9,6 +9,7 @@ import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
 import { getPosition, placeAt, locCard } from './locate.js';
+import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
@@ -360,7 +361,7 @@ async function main() {
     if (!app.currentId) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
-    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
   }
@@ -474,6 +475,87 @@ async function main() {
     });
   }
 
+  // ── 古国巡礼：一宫 / 国府 / 国分寺；一宫可参拜盖印，人在神社附近可实地打卡（亲临金印） ──
+  const kokuSites = data.koku || [];
+  const kokuCardEl = $('koku-card');
+  let kokuCur = null;
+  function closeKoku() {
+    if (kokuCardEl.hidden) return;
+    kokuCardEl.hidden = true;
+    kokuCur = null;
+    map.focusKoku(null);
+  }
+  function renderKokuCard() {
+    const s = kokuCur;
+    kokuCardEl.innerHTML = kokuCard(s, {
+      prefLabel, entry: ichinomiya.get()[s.prov],
+      peers: kokuSites.filter((x) => x.kind === 'ichi' && x.prov === s.prov).length,
+    });
+  }
+  function openKoku(s) {
+    if (!s) return;
+    if (app.battle) exitBattle();
+    closeMuni();
+    closeLocCard();
+    if (app.layer !== 'koku') applyLayer('koku');
+    if (map.state.kokuType !== 'all' && map.state.kokuType !== s.kind) applyKokuType('all');
+    if (s.pref && app.currentId !== s.pref) map.onSelect(s.pref);
+    kokuCur = s;
+    map.focusKoku(s);
+    renderKokuCard();
+    kokuCardEl.hidden = false;
+    kokuCardEl.scrollTop = 0;
+    map.hideTip();
+    tabs.set('map');
+  }
+  function afterStamp(book) {
+    map.setKokuStamps(book);
+    renderKokuCard();
+    renderCurrent();
+  }
+  async function kokuCheckin(btn) {
+    const s = kokuCur;
+    btn.disabled = true;
+    try {
+      const { pt } = await getPosition();
+      let ok;
+      let msg;
+      if (s.precise) {
+        const km = distanceKm(pt, s.coords);
+        ok = km <= CHECKIN_KM;
+        msg = t('koku.far', { km: km < 10 ? km.toFixed(1) : Math.round(km) });
+      } else {
+        // 神社只定位到市区町村：人在同一个市区町村即算
+        const pid = map.prefAt(pt);
+        const place = pid ? await placeAt(pid, pt) : null;
+        ok = place?.props.code === s.muni;
+        msg = t('koku.farMuni', { muni: s.muniLabel });
+      }
+      if (!ok) { toast(msg); return; }
+      audio.play('drum');
+      toast(t('koku.realOk'));
+      afterStamp(ichinomiya.checkin(s.prov, s.id));
+    } catch (err) {
+      console.warn('实地打卡定位失败', err);
+      toast(t(err.key || 'loc.fail'));
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  kokuCardEl.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="koku-close"]')) closeKoku();
+    if (e.target.closest('[data-act="koku-pray"]') && kokuCur) {
+      audio.play('stamp');
+      afterStamp(ichinomiya.pray(kokuCur.prov, kokuCur.id));
+    }
+    const c = e.target.closest('[data-act="koku-checkin"]');
+    if (c && kokuCur) kokuCheckin(c);
+  });
+  detailEl.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act="koku"]');
+    if (b) openKoku(kokuSites.find((s) => s.id === b.dataset.id));
+  });
+
   // ── 圣地巡礼 ──
   const pil = data.pilgrimage || { done: [], spots: [] };
   const spotsOf = (id) => pil.spots.filter((s) => s.pref === id);
@@ -507,6 +589,8 @@ async function main() {
   const map = createMap($('map'), data.geo, prefs, {
     spots: pil.spots,
     onSpot: (s) => openSpot(s),
+    koku: kokuSites,
+    onKoku: (s) => openKoku(s),
     onProvince: (p) => openArtCard(p),
     provTipExtra: (key) => namesTip(namesByKey.get(key)),
     onSelect(id) {
@@ -675,6 +759,8 @@ async function main() {
   function applyLayer(l) {
     if (l !== 'history') stopPlay();
     if (l !== 'pilgrimage') closeSpot();
+    if (l !== 'koku') closeKoku();
+    else ensureProvinces(); // 古国巡礼以 68 古国作底图
     app.layer = map.setLayer(l);
     uiPref.set('layer', app.layer);
     document.body.dataset.layer = app.layer;
@@ -714,6 +800,26 @@ async function main() {
     if (b) applyPilType(b.dataset.pil);
   });
   applyPilType('all');
+
+  // 古国巡礼的子分类：全部 / 一宫 / 国府 / 国分寺
+  const kokuBox = $('koku-filter');
+  kokuBox.innerHTML = ['all', 'ichi', 'fu', 'ji']
+    .map((k) => `<button type="button" role="tab" data-koku="${k}">${k === 'all' ? esc(t('book.all')) : `${t(`koku.icon.${k}`)} ${esc(t(`koku.${k}`))}`}</button>`).join('');
+  function applyKokuType(k) {
+    map.setKokuType(k);
+    kokuBox.querySelectorAll('[data-koku]').forEach((b) => {
+      const on = b.dataset.koku === k;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on);
+    });
+    if (kokuCur && k !== 'all' && kokuCur.kind !== k) closeKoku();
+    updateLegend(map);
+  }
+  kokuBox.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-koku]');
+    if (b) applyKokuType(b.dataset.koku);
+  });
+  applyKokuType('all');
 
   // ── 合战沙盘 ──
   const battleDlg = $('battles');
@@ -814,7 +920,8 @@ async function main() {
   $('hud-exit').addEventListener('click', exitBattle);
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-    if (!artCard.hidden) closeArtCard();
+    if (!kokuCardEl.hidden) closeKoku();
+    else if (!artCard.hidden) closeArtCard();
     else if (!locCardEl.hidden) closeLocCard();
     else if (!pilCard.hidden) closeSpot();
     else if (app.battle) exitBattle();
@@ -848,7 +955,14 @@ async function main() {
     updateGoshuinCount();
   });
 
-  const bookUI = createBook($('book'), prefs, { getBook: goshuinBook.get, onPick: (id) => map.onSelect(id) });
+  const bookUI = createBook($('book'), prefs, {
+    getBook: goshuinBook.get, onPick: (id) => map.onSelect(id),
+    ichi: {
+      sites: kokuSites, getBook: ichinomiya.get,
+      onPick: (prov) => openKoku(kokuSites.find((s) => s.id === ichinomiya.get()[prov]?.site)
+        || kokuSites.find((s) => s.kind === 'ichi' && s.prov === prov)),
+    },
+  });
   $('btn-book').addEventListener('click', () => bookUI.open());
 
   createSearch($('search'), { prefs, onPref: (id) => map.onSelect(id), onMuni: focusMuni });
@@ -858,6 +972,8 @@ async function main() {
   openSettings = setupSettings(guide, () => {
     visited.clear();
     goshuinBook.clear();
+    ichinomiya.clear();
+    map.setKokuStamps({});
     const set = new Set(app.currentId ? [app.currentId] : []);
     if (app.currentId) visited.add(app.currentId);
     updateCounter(set);
@@ -872,6 +988,7 @@ async function main() {
   updateCounter(set);
   updateGoshuinCount();
   map.setVisited(set);
+  map.setKokuStamps(ichinomiya.get());
   if (map.setMode(uiPref.get('filter', 'explore')) === 'circuit') ensureProvinces();
   applyLayer(uiPref.get('layer', 'history'));
   renderWelcome(detailEl);
