@@ -17,6 +17,7 @@
   - `je.api` — LLM 接口配置 `{provider, baseUrl, model, apiKey}`（仅存于用户浏览器）
   - `je.goshuin` — 御朱印 `{ [id]: 盖印时间 ISO }`
   - `je.ui.filter` / `je.ui.guideMode` / `je.ui.split` / `je.ui.layer` — 当前滤镜、向导模式（scholar|hero）、右侧上下比例（%）、风土图层（history|ramen|sake）
+  - `je.ui.kosekiName` — 古代户籍的户主名（只存本机）
   - `je.ui.audio` — 声音 `{muted, bgm, bgmVol, sfxVol}`（默认音效开、背景音乐关）
 
 ## 目录结构
@@ -46,6 +47,8 @@ src/data/koku_sites.json       古国巡礼：诸国一宫·国府·国分寺（
 src/js/koku.js                 古国巡礼的卡片、详卡「古国三迹」、御朱印帐「诸国一宫」篇
 src/data/kokuryoku.json        古国国力：68 国今日人口 / 面积 / 市区町村数 + 江户人口与石高（tools/build_kokuryoku.py 生成，打进数据包）
 src/js/kokuryoku.js            古国国力：指标、着色、提示、反常识头条、榜单与宿敌 PK 卡片
+src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）
+tools/domains.json             幕末各郡的领主与町村数（tools/fetch_domains.py 由维基各郡条目的《旧高旧領取調帳》表整理，build_bundle 拼进数据包 domains）
 src/js/locate.js               「我在哪」：浏览器定位 → 县（map.prefAt）→ 市区町村（该县的 municipalities 文件）→ 结果卡片
 ```
 
@@ -200,6 +203,13 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 反常识头条全部由数字算出（`headlines()`），条件不成立的那条不出；东京巨蛋按棒球赛约 43,500 席（日文维基）。宿敌 PK 预设在 `PK`，一方可以是几国之和（长州 = 周防 + 长门）或一个郡。
 - 前端：`map.setPower(power)` 后滤镜 `power` 生效（`powerMode()`；旧国边界未载入时按探索进度显示）；`body.power-mode` 显示指标行 `#power-metrics`，一进入就摊开 `#power-card`。卡片摊开时 `map.setInset` 让地图中心避开它（宽屏让右侧、窄屏让底部）。点地图上的国 → `onPower(key)` 高亮榜单该行；点榜单 → `map.focusProvince` 飞过去。
 
+### 古代户籍（koseki.js）
+
+- 入口：市区町村详情卡（单个市町村）与「我在哪」卡片的「📜 古代户籍」按钮，深链接 `#pref=20&muni=1&m=20203&koseki=1`（关掉对话框时地址栏去掉 `koseki=1`）。`openKoseki(pid, code, pt)`：经 `locate.js` 的 `muniGeo(pid)` 取该市町村，`pt` 缺省为市町村质心（定位进来的用真实位置）。
+- 各栏与精确度印（`seal`）：本贯（道 · 国 · 明治旧郡，市）、氏神（本国最近的一宫，方向 + 直线距离，市）、律令（最近的国府与国分寺，步行天数按 30 公里/天，市）、战国 1572（`map_filters.sengoku_1572`，县）、幕末领主（郡；查不到时用县的 `edo_domains`，县）、戊辰（`map_filters.bakumatsu`，县）、今日国力（kokuryoku 的人口排名，国）、乡音（`dialect.phrases[0]`，县；按钮调 `guide.askQuick('dialect')`）。令制外（虾夷地、琉球）不出氏神与国府。只用已核验数据计算，不给单个市町村手写剧情。
+- 幕末领主：`python -X utf8 tools/fetch_domains.py` 读 `tools/districts.json` 里每个郡的维基条目，解析「旧高旧領取調帳」后的「知行 / 村数」表；没有表的读正文「全域が○○藩領であった」。知行规范化为幕府领（含代官所、郡代、预地）/ 旗本领 / 寺社领 / 相给（几方共管）/ 藩 / 明治初设的府县 / 其他；藩名去掉开头的旧国名（同名而国不同的保留，如纪伊田边藩），英文名取 Wikidata。`build_bundle.py` 按县 id → 郡名输出前 3 位 + 其余合计（`@bakufu` 等代号由前端翻译），中文藩名按 search.js 对照表反向转简体。按市町村约 79%、按人口约 84% 能精确到郡；多摩郡、都筑郡等条目写法不同，未解析。
+- 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
+
 ### 古国演变时间轴（712 / 757 / 824 / 1869）
 
 - 824 年（多褹岛并入大隅、68 国定型）就是 `provinces.json` 的底图；其他三档在 `build_provinces.py` 的 `ERAS` 里定义：`merge`（子国并回母国）、`tane`（种子岛·屋久岛四市町为多褹岛）、`meiji`（东北与北海道按明治国）。各档只存与 824 年不同的国，写进 `province_eras.json`（`{年: {remove: [key], add: [Feature]}}`，第一次点时间轴时才下载）。所有档都由同一批「旧国 × 明治国 × 县」小块一起简化后拼出，边界完全对齐。
@@ -317,7 +327,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

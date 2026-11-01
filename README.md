@@ -24,6 +24,7 @@
 | **我在哪** | 地图上的 📍 按钮：用手机定位告诉你此刻身在哪个令制国、今天的哪个县与市区町村、明治的哪个郡，并附上该国的广重浮世绘与今日国名；位置只在本机计算，不会上传 |
 | **古国巡礼** | 第 5 个图层：68 古国底图上的诸国一宫（85 社，含论社）、国府（85 处推定地）、国分寺（67 处）。一宫可在网站上参拜盖印；人在神社 1 公里内时「实地打卡」，盖金色的「亲临」印；御朱印帐新增「诸国一宫」篇 |
 | **古国国力** | 「时空滤镜」新增一档：把今天的人口按 68 个古国重新加起来，与江户时代（1721 年幕府调查）的人口、石高对比——武藏一国住着全日本 21% 的人，河内从江户第 43 逆袭到今天第 8，佐渡今天的人比 1721 年还少。榜单、反常识头条与「宿敌 PK」（伊贺 vs 甲贺、尾张 vs 三河……也可任选两国） |
+| **古代户籍** | 选一个市区町村，或用「我在哪」定位，生成一份《古今人别帐》：你是哪个道、哪个国、哪个郡的人；氏神（一宫）在哪个方向、多远；去国府交租要走几天；战国归谁、幕末那个郡的村子归哪个藩（如「小县郡 158 町村：上田藩 106、旗本领 20……」）、戊辰站哪边；附乡音，一键让向导用方言问候。每一栏盖印注明精确到市区町村、郡、县还是国；可写上户主名，存成图片或复制链接 |
 | **风土图层** | 拉面流派图鉴（含一碗拉面的解构图）、地酒名酿地图 |
 | **市区町村地图** | 点进任一县，看全部 1,900 多个市区町村，按古代令制国或人口着色；悬停可看读音、旧国、明治时期的旧郡、现属郡与人口。搜索框可直接搜市町村（支持简体字、假名、英文），重名分条列出；地图上显示地名；选中后 AI 向导也能就此回答；链接可直接分享到某个市町村 |
 | **圣地巡礼** | 第 4 个风土图层：动漫圣地与 NHK 大河剧名所的图钉，可按「全部 / 动漫 / 大河剧」筛选；点图钉看作品、取景地、场景与巡礼贴士，AI 向导会以热血漫迷 / 剧评人的口吻解说。每处的坐标与「作品 ↔ 地点」都经维基百科核验（47 都道府县共 111 处） |
@@ -38,6 +39,13 @@
 ## 📜 更新日志
 
 > 冒险者们，新版本已降临。以下为历次版本公告（最新在上）。
+
+### 📜 v2.9「古今人别帐」
+- **新功能「古代户籍」开放！** 市区町村卡片或「我在哪」里点「📜 古代户籍」，看你脚下这片土地在各个时代归谁管
+- 幕末领主精确到郡：整理自日文维基百科各郡条目里的《旧高旧领取调帐》（明治初年各村的支配），覆盖约八成人口所在的市町村；查不到的退回县一级，并如实盖「县」字印
+- 氏神、国府、国分寺按真实坐标量直线距离与方向；去国府交租按一天走 30 公里估算
+- 写上户主名（只存在你的浏览器里），一键存成竖版图片或复制链接；朋友点开链接直接看到同一份户籍
+- 「乡音」一栏可一键让向导用当地方言向你问候
 
 ### 📊 v2.8「六十八国国力榜」
 - **新滤镜「古国国力」开放！** 今天全日本约 1.26 亿人按 68 个古国重新分组，地图按人口、江户人口、人口密度、石高或「三百年逆袭」着色
@@ -203,7 +211,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 
 全国地图：出典「地球地図日本」（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换为 GeoJSON。
 
-市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`（同时生成时间轴 `province_eras.json`；明治分国对照由 `python -X utf8 tools/fetch_meiji.py` 生成 `tools/meiji_provinces.json`）。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。古国巡礼（`src/data/koku_sites.json`）：`python -X utf8 tools/fetch_koku.py`（需 shapely）从维基「一宮」「国府」「国分寺」条目的表格整理并核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。 古国国力（`src/data/kokuryoku.json`）：`python -X utf8 tools/build_kokuryoku.py`（需 shapely），今日人口按市区町村汇总；江户人口与石高整理自[日文维基百科](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」（CC BY-SA 4.0）。
+市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`（同时生成时间轴 `province_eras.json`；明治分国对照由 `python -X utf8 tools/fetch_meiji.py` 生成 `tools/meiji_provinces.json`）。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。古国巡礼（`src/data/koku_sites.json`）：`python -X utf8 tools/fetch_koku.py`（需 shapely）从维基「一宮」「国府」「国分寺」条目的表格整理并核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。 古国国力（`src/data/kokuryoku.json`）：`python -X utf8 tools/build_kokuryoku.py`（需 shapely），今日人口按市区町村汇总；江户人口与石高整理自[日文维基百科](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」（CC BY-SA 4.0）。 古代户籍的幕末领主（`tools/domains.json`）：`python -X utf8 tools/fetch_domains.py` 从[日文维基百科](https://ja.wikipedia.org/)各郡条目的《旧高旧領取調帳》表整理（CC BY-SA 4.0），藩的英文名来自 Wikidata（CC0）。
 
 ## 版权与许可
 

@@ -8,7 +8,8 @@ import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
-import { getPosition, placeAt, locCard } from './locate.js';
+import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
+import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
@@ -419,7 +420,7 @@ async function main() {
       locCardEl.innerHTML = locCard(place, prefLabel(pid), accuracy, extra);
       locCardEl.hidden = false;
       locCardEl.scrollTop = 0;
-      located = { pid, props: place.props };
+      located = { pid, props: place.props, pt };
       map.setYou(pt);
       audio.play('click');
     } catch (err) {
@@ -434,8 +435,85 @@ async function main() {
   locCardEl.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="loc-close"]')) closeLocCard();
     if (e.target.closest('[data-act="loc-muni"]') && located) openMuni(located.pid, { codes: [located.props.code] });
+    if (e.target.closest('[data-act="loc-koseki"]') && located) openKoseki(located.pid, located.props.code, located.pt);
     const b = e.target.closest('[data-act="art"]');
     if (b) viewer.open(+b.dataset.no);
+  });
+
+  // ── 古代户籍《古今人别帐》：某个市区町村（或定位点）在各时代归谁管；pt 缺省时取市町村的质心 ──
+  const ksDlg = $('koseki');
+  let ks = null; // { ctx, data }
+  const kosekiHash = (pid, code) => `${stateHash(pid)}&muni=1&m=${code}&koseki=1`;
+  async function openKoseki(pid, code, pt) {
+    let geo;
+    try { geo = await muniGeo(pid); } catch (err) {
+      console.warn('市区町村数据加载失败', err);
+      toast(t('ks.loadFail'));
+      return;
+    }
+    const f = geo.features.find((x) => x.properties.code === code);
+    if (!f) return;
+    if (pid !== app.currentId) map.onSelect(pid);
+    const ctx = {
+      pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
+      sites: kokuSites, domains: data.domains, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
+    };
+    ks = { ctx, data: kosekiRows(ctx), pid, code };
+    ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''));
+    if (!ksDlg.open) ksDlg.showModal();
+    ksDlg.scrollTop = 0;
+    history.replaceState(null, '', kosekiHash(pid, code));
+    audio.play('click');
+  }
+  ksDlg.addEventListener('close', () => {
+    if (ks && /koseki=1/.test(location.hash)) history.replaceState(null, '', location.hash.replace('&koseki=1', ''));
+  });
+  ksDlg.addEventListener('input', (e) => {
+    if (e.target.matches('[data-ks-name]')) uiPref.set('kosekiName', e.target.value.trim());
+  });
+  ksDlg.addEventListener('click', async (e) => {
+    if (e.target === ksDlg || e.target.closest('[data-act="ks-close"]')) { ksDlg.close(); return; }
+    const b = e.target.closest('[data-act]');
+    if (!b || !ks) return;
+    if (b.dataset.act === 'art') viewer.open(+b.dataset.no);
+    if (b.dataset.act === 'ks-voice') {
+      ksDlg.close();
+      tabs.set('guide');
+      guide.askQuick('dialect');
+    }
+    if (b.dataset.act === 'ks-link') {
+      const url = `${location.origin}${location.pathname}${kosekiHash(ks.pid, ks.code)}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        toast(t('share.copied'));
+      } catch {
+        toast(t(legacyCopy(url) ? 'share.copied' : 'share.fail'));
+      }
+    }
+    if (b.dataset.act === 'ks-image') {
+      b.disabled = true;
+      try {
+        const blob = await kosekiImage(ks.ctx, ks.data, uiPref.get('kosekiName', ''));
+        const file = new File([blob], `koseki-${ks.code}.png`, { type: 'image/png' });
+        // 手机上走系统分享（可存到相册）；不支持就直接下载
+        if (navigator.canShare?.({ files: [file] }) && matchMedia('(pointer: coarse)').matches) {
+          try { await navigator.share({ files: [file], title: t('ks.title') }); return; } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = file.name;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        toast(t('ks.saved'));
+      } catch (err) {
+        console.warn('户籍图片生成失败', err);
+        toast(t('ks.fail'));
+      } finally {
+        b.disabled = false;
+      }
+    }
   });
 
   // 离开古国底图（换滤镜、时代、图层、合战、下钻）时收起卡片，并显示 / 隐藏古国时间轴
@@ -703,6 +781,7 @@ async function main() {
   const muniHash = (id, codes = []) => `${stateHash(id)}&muni=1${codes.length ? `&m=${codes.join('.')}` : ''}`;
   const muni = createMuniView($('muni'), {
     onClose: () => closeMuni(),
+    onKoseki: (pid, code) => openKoseki(pid, code),
     onSelect: (codes, place) => {
       if (!muni.open) return;
       history.replaceState(null, '', muniHash(app.currentId, codes));
@@ -1089,6 +1168,7 @@ async function main() {
   const m = location.hash.match(/pref=(\d+)/);
   // 先读出来：onSelect 会改写地址栏
   const wantMuni = /(^|[#&])muni=1/.test(location.hash);
+  const wantKoseki = /(^|[#&])koseki=1/.test(location.hash);
   const codes = (new URLSearchParams(location.hash.slice(1)).get('m') || '').split('.').filter((c) => /^\d{5}$/.test(c));
   if (m && prefs.has(+m[1])) {
     map.onSelect(+m[1]);
@@ -1102,6 +1182,7 @@ async function main() {
         if (row) focus.city = { name: row[1], kana: row[2], en: row[3], pop: row[5], pop_year: row[6] };
       }
       openMuni(+m[1], focus);
+      if (wantKoseki && codes.length === 1) openKoseki(+m[1], codes[0]);
     }
   }
 }

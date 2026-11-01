@@ -34,13 +34,18 @@ function nearest(g, [x, y]) {
 }
 
 const cache = new Map();
-// 县内找所在的市区町村：{ props, provinces（旧国名三语）}
-export async function placeAt(pid, pt) {
+// 某县的市区町村 GeoJSON（缓存）
+export function muniGeo(pid) {
   if (!cache.has(pid)) {
     cache.set(pid, fetch(`src/data/municipalities/${String(pid).padStart(2, '0')}.json`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status)))));
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
+      .catch((err) => { cache.delete(pid); throw err; }));
   }
-  const geo = await cache.get(pid);
+  return cache.get(pid);
+}
+// 县内找所在的市区町村：{ props, provinces（旧国名三语）}
+export async function placeAt(pid, pt) {
+  const geo = await muniGeo(pid);
   const hit = geo.features.find((f) => contains(f.geometry, pt))
     || geo.features.reduce((a, f) => (nearest(f.geometry, pt) < nearest(a.geometry, pt) ? f : a));
   return { props: hit.properties, provinces: geo.provinces };
@@ -63,6 +68,7 @@ export function locCard({ props, provinces }, prefLabel, accuracy, extra) {
     <div class="muni-row"><span>${esc(t('loc.today'))}</span><b>${esc(prefLabel)} ${esc(muni)}${props.kana && lang !== 'en' ? ` <i>${esc(props.kana)}</i>` : ''}</b></div>
     ${gun ? `<div class="muni-row"><span>${esc(t('muni.old'))}</span><b>${esc(gun)}</b></div>` : ''}
     <div class="loc-actions">
+      <button type="button" class="btn" data-act="loc-koseki">${esc(t('ks.open'))}</button>
       <button type="button" class="btn btn-ghost" data-act="loc-muni">${esc(t('loc.muni'))}</button>
     </div>
     ${extra}

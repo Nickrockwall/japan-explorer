@@ -26,6 +26,7 @@
 | **現在地** | 地図の 📍 ボタンで、いまいる場所がどの令制国か、現在の県・市区町村、明治の郡を表示。その国の広重の浮世絵と今も残る国名も。位置は端末内で計算し、送信しません |
 | **古国めぐり** | 5 つ目のレイヤー：68 旧国の地図に諸国一宮（論社を含む 85 社）・国府（推定地 85 か所）・国分寺（67 か所）。一宮はサイト上で参拝して御朱印、神社から 1 km 以内なら「現地でチェックイン」で金の御朱印。御朱印帳に「諸国一宮」編を追加 |
 | **旧国の国力** | 地図の色分けに新メニュー：現在の人口を 68 の旧国ごとに集計し直し、江戸時代（享保6年の幕府調査）の人口・石高と比べます。武蔵一国に日本の 21%、河内は江戸の 43 位から現在 8 位へ、佐渡は 1721 年より人が少ない。ランキング・意外な見出し・「宿敵対決」（伊賀 vs 甲賀、尾張 vs 三河…好きな二国も） |
+| **古代の戸籍** | 市区町村を選ぶか「現在地」から、《古今人別帳》を作成：どの道・国・郡の人か、氏神（一宮）はどの方角に何 km、国府まで徒歩何日、1572年の主導勢力、幕末にその郡の村々を治めた領主（例：「小県郡の158町村：上田藩106、旗本領20…」）、戊辰戦争の立場、お国言葉（案内人があいさつ）。各欄に「市・郡・県・国」の印で精度を明記。戸主名を書いて画像保存やリンク共有も |
 | **風土レイヤー** | ご当地ラーメン図鑑（一杯の断面図つき）と地酒名醸マップ |
 | **市区町村マップ** | 県を選んで全国 1,900 余りの市区町村へ。令制国別・人口別に色分けし、読み・旧国・明治の旧郡・現在の郡・人口を表示。検索欄から市区町村名（漢字・かな・英語）でも探せ、同名は別々に表示。地図に地名を表示し、選んだ市区町村について AI 案内人にも質問できます。リンクで市区町村を直接共有可能 |
 | **聖地巡礼** | 4 つ目のレイヤー：アニメ聖地と NHK 大河ドラマゆかりの地のピンを「すべて / アニメ / 大河」で絞り込み。ピンをタップすると作品・撮影地・場面・巡礼のコツを表示し、AI 案内人が熱血アニメファン／ドラマ評論家の口調で解説。座標と「作品 ↔ 場所」の対応はすべて Wikipedia で検証（47 都道府県・111 か所） |
@@ -40,6 +41,13 @@
 ## 📜 アップデート履歴
 
 > 冒険者の皆さま、新バージョンが到着しました。これまでのお知らせ一覧です（新しい順）。
+
+### 📜 v2.9「古今人別帳」
+- **新機能「古代の戸籍」登場！** 市区町村カードや「現在地」の「📜 古代の戸籍」から、足もとの土地が各時代に誰の支配だったかを一覧に
+- 幕末の領主は郡単位：日本語版ウィキペディア各郡の記事にある「旧高旧領取調帳」（明治初年の村ごとの支配）より。人口のおよそ8割の市町村をカバーし、それ以外は県単位に切り替えて「県」の印で明記
+- 氏神・国府・国分寺までの方角と直線距離は実座標から。国府までの日数は1日30kmで概算
+- 戸主名（ブラウザ内のみに保存）を書いて、縦長の画像保存やリンク共有。リンクを開くと同じ戸籍が表示されます
+- 「お国言葉」欄から案内人が方言であいさつ
 
 ### 📊 v2.8「六十八国国力番付」
 - **新メニュー「旧国の国力」登場！** 現在の約 1.26 億人を 68 の旧国に組み直し、人口・江戸の人口・人口密度・石高・「三百年の逆転」で色分け
@@ -205,7 +213,7 @@ python -X utf8 tests/smoke.py             # 画面のスモークテスト：PC 
 
 全国地図：出典「地球地図日本」（国土地理院）。[dataofjapan/land](https://github.com/dataofjapan/land) による GeoJSON 変換版を使用。
 
-市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`（年表 `province_eras.json` も生成。明治の分国の対応表 `tools/meiji_provinces.json` は `python -X utf8 tools/fetch_meiji.py` で作成）。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。古国めぐり（`src/data/koku_sites.json`）は `python -X utf8 tools/fetch_koku.py`（shapely が必要）で Wikipedia の「一宮」「国府」「国分寺」の表から整理・確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。 旧国の国力（`src/data/kokuryoku.json`）：`python -X utf8 tools/build_kokuryoku.py`（shapely が必要）。現在の人口は市区町村から集計、江戸の人口と石高は[日本語版ウィキペディア](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」より（CC BY-SA 4.0）。
+市区町村の境界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（[smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) による簡素化版）。読み・人口・英語名は [Wikidata](https://www.wikidata.org/)（CC0）。各市区町村の旧国は手作業の対応表（`tools/province_overrides.json`）を Wikidata・旧郡データと突き合わせて作成し、複数の国にまたがる場合は主な部分で示しています。旧郡（明治の郡区町村編制による郡域）は[日本語版 Wikipedia](https://ja.wikipedia.org/) の各郡記事（CC BY-SA 4.0）から `tools/districts.json` に整理（再整理は `python -X utf8 tools/fetch_districts.py`）。再生成は `python -X utf8 tools/build_municipalities.py`。68 令制国の境界（`src/data/provinces.json`）は市区町村を旧国ごとに結合したもの：`pip install shapely` のうえ `python -X utf8 tools/build_provinces.py`（年表 `province_eras.json` も生成。明治の分国の対応表 `tools/meiji_provinces.json` は `python -X utf8 tools/fetch_meiji.py` で作成）。今も残る国名（`src/data/province_names.json`）を追加・修正したら `python -X utf8 tools/province_names_tool.py verify` で確認。古国めぐり（`src/data/koku_sites.json`）は `python -X utf8 tools/fetch_koku.py`（shapely が必要）で Wikipedia の「一宮」「国府」「国分寺」の表から整理・確認。広重の浮世絵（`src/data/hiroshige.json` と `src/assets/hiroshige/`）は `pip install pillow` のうえ `python -X utf8 tools/fetch_hiroshige.py`（パブリックドメインのみ。場所を特定できない作品や別の国に当たった作品は要確認として表示）。 旧国の国力（`src/data/kokuryoku.json`）：`python -X utf8 tools/build_kokuryoku.py`（shapely が必要）。現在の人口は市区町村から集計、江戸の人口と石高は[日本語版ウィキペディア](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」より（CC BY-SA 4.0）。 古代の戸籍の幕末の領主（`tools/domains.json`）：`python -X utf8 tools/fetch_domains.py`、[日本語版ウィキペディア](https://ja.wikipedia.org/)各郡の記事の「旧高旧領取調帳」の表より（CC BY-SA 4.0）。藩の英語名は Wikidata（CC0）。
 
 ## 著作権とライセンス
 

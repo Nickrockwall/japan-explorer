@@ -340,6 +340,32 @@ class Case:
         page.wait_for_timeout(300)
         assert page.is_hidden('#power-card') and page.is_hidden('#power-metrics'), '离开国力后卡片与指标行应收起'
 
+    def koseki(self, page):
+        # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106）；
+        # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        rows = page.locator('.ks-row').all_inner_texts()
+        assert len(rows) == 8, f'应有 8 栏：{rows}'
+        assert any('106' in r and '158' in r for r in rows), f'幕末领主应写出小县郡 158 町村中上田藩 106：{rows}'
+        assert any('諏訪大社' in r for r in rows), '氏神应是诹访大社'
+        box = page.locator('#koseki').bounding_box()
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'户籍卷轴超出屏幕：{box}'
+        page.fill('[data-ks-name]', '真田太郎')
+        if not self.narrow:
+            with page.expect_download() as dl:
+                page.click('[data-act="ks-image"]')
+            assert dl.value.suggested_filename == 'koseki-20203.png'
+        page.click('[data-act="ks-close"]')
+        assert 'koseki' not in page.evaluate('location.hash'), '关掉后地址栏应去掉 koseki'
+        page.click('.muni-card [data-act="koseki"]')
+        page.wait_for_selector('#koseki[open]')
+        assert page.input_value('[data-ks-name]') == '真田太郎', '户主名应记住'
+        page.click('[data-act="ks-voice"]')
+        page.wait_for_selector('#koseki', state='hidden')
+        if self.narrow:
+            assert page.evaluate('document.body.dataset.tab') == 'guide', '乡音应切到向导页'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -352,7 +378,8 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow'])]
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
+             ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),

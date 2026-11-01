@@ -86,6 +86,54 @@ def province_names(lang):
     } for k, items in load(path).items()]
 
 
+# 日本新字体 → 简体：取 search.js 的对照表（简体 → 新字体）反过来用，再补几个表里没有的字
+def ja_to_zh_table():
+    import re
+    src = open(os.path.join(ROOT, 'src', 'js', 'search.js'), encoding='utf-8').read()
+    body = ''.join(re.findall(r"'([^']*)'", src[src.find('KANJI_FOLD'):src.find(').match(')]))
+    pairs = [body[i:i + 2] for i in range(0, len(body) - 1, 2)]
+    table = {}
+    for zh, ja in pairs:
+        if zh != ja and ja not in table:
+            table[ja] = zh
+    table.update({'濃': '浓', '會': '会', '姫': '姬', '條': '条', '舘': '馆', '﨑': '崎', '嶋': '岛', '澤': '泽', '濱': '滨'})
+    return table
+
+
+# 幕末各郡的领主（tools/fetch_domains.py → tools/domains.json）：按县 id → 明治旧郡名，取前 3 位 + 其余合计。
+# 幕府领 / 旗本领 / 寺社领 / 相给写成 @代号，由前端按语言显示；藩名中文按字形转换，英文取 Wikidata 标签（没有就用日文）
+def domains(lang):
+    path = os.path.join(ROOT, 'tools', 'domains.json')
+    if not os.path.exists(path):
+        return {}
+    d = load(path)
+    lords, by_title = d['lords'], d['districts']
+    conv = ja_to_zh_table() if lang == 'zh' else {}
+    generic = {'bakufu', 'hatamoto', 'jisha', 'mixed'}
+
+    def label(name):
+        lord = lords.get(name, {'kind': 'other'})
+        if lord['kind'] in generic:
+            return '@' + lord['kind']
+        if lang == 'en':
+            return lord.get('en') or name
+        return ''.join(conv.get(c, c) for c in name) if lang == 'zh' else name
+
+    out = {}
+    for pref, ds in load(os.path.join(ROOT, 'tools', 'districts.json')).items():
+        if pref.startswith('_'):
+            continue
+        for name, info in ds.items():
+            rows = by_title.get(info['title'])
+            if not rows:
+                continue
+            total = sum(n for _, n in rows)
+            top = [[label(k), n] for k, n in rows[:3] if n]
+            rest = total - sum(n for _, n in top)
+            out.setdefault(pref, {})[name] = {'t': total, 'r': top + ([['@other', rest]] if rest > 0 else [])}
+    return out
+
+
 # 古国巡礼：一宫、国府、国分寺。名称与地址保留日文原文；旧国名与今日市区町村按语言给出
 def koku(lang):
     path = os.path.join(DATA, 'koku_sites.json')
@@ -123,7 +171,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json'))}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json')), 'domains': domains(lang)}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

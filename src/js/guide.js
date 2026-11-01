@@ -533,6 +533,13 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       renderQuick();
       if (x) addMsg('sys', esc(t('g.place.sys', { name: x.name })));
     },
+    // 从别处（如古代户籍的「乡音」）触发一个快捷提问；正在打字的开场白先补完
+    askQuick(key) {
+      if (!pref || battle) return;
+      const q = quickQuestions(pref).find((x) => x.key === key);
+      finishTyping?.();
+      if (q) ask(q.text, key);
+    },
     setPrefecture(p) {
       pref = p;
       place = null;

@@ -21,7 +21,7 @@ export const PK = [
 const fmt = (n, d = 0) => n.toLocaleString(lang === 'zh' ? 'zh-CN' : lang, { maximumFractionDigits: d });
 export function fmtPeople(n) {
   if (n == null) return '—';
-  if (lang === 'en') return n >= 1e6 ? `${fmt(n / 1e6, 1)}M` : n >= 1e4 ? `${fmt(n / 1e3)}K` : fmt(n);
+  if (lang === 'en') return n >= 1e6 ? `${fmt(n / 1e6, n < 1e7 ? 2 : 1)}M` : n >= 1e4 ? `${fmt(n / 1e3)}K` : fmt(n);
   return n >= 1e4 ? t('kr.wan', { n: fmt(n / 1e4, n < 1e5 ? 1 : 0) }) : fmt(n);
 }
 const fmtKoku = (n) => (n == null ? '—' : lang === 'en' ? `${fmt(n / 1e6, 2)}M koku` : t('kr.koku.v', { n: fmt(n / 1e4, n < 1e5 ? 1 : 0) }));

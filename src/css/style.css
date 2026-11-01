@@ -869,6 +869,45 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .slot.real .ichi-seal { color: #b8862f; border-color: #d4a84a; box-shadow: 0 0 12px rgba(255,210,122,.45); }
 .slot.real { border-color: rgba(212,168,74,.7); }
 
+/* 古代户籍《古今人别帐》：和纸卷轴，与御朱印帐同一套纸色 */
+.koseki {
+  width: min(560px, calc(100vw - 24px - var(--safe-l) - var(--safe-r))); overflow-y: auto; overscroll-behavior: contain;
+  padding: 22px 24px 18px; background: linear-gradient(#f3ead9, #e6d9bf); color: #2b2420; border: 10px solid #3a1f1c;
+}
+.koseki .book-close { position: absolute; top: 12px; right: 12px; }
+.ks-head { padding-right: 36px; margin-bottom: 10px; }
+.ks-kicker { font-size: 12px; color: #8a3b33; letter-spacing: .08em; }
+.ks-head h2 { margin: 2px 0 2px; font: 900 28px var(--serif); letter-spacing: .25em; color: #2b2420; }
+.ks-place { font-size: 13px; color: #5a4a3e; }
+.ks-name { display: flex; align-items: center; gap: 4px; margin-top: 8px; font: 700 14px var(--serif); color: #5a4a3e; }
+.ks-name input { flex: 1; min-width: 0; max-width: 220px; border: 0; border-bottom: 1px dashed #b89a74; background: transparent;
+  font: 700 16px var(--serif); color: #2b2420; padding: 2px 4px; outline: none; }
+.ks-name input:focus { border-bottom-color: #8a3b33; }
+.ks-name input::placeholder { color: #b0a08a; font-weight: 400; }
+.ks-rows { border-top: 2px solid #3a1f1c; }
+.ks-row { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid #d8c6a6; }
+.ks-k { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; font: 700 13px var(--serif); color: #8a3b33; padding-top: 2px; }
+.ks-seal { flex: none; font-style: normal; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 3px; border-radius: 3px;
+  background: #b83a30; color: #f3ead9; font: 700 11px var(--serif); cursor: help; }
+:root[lang="en"] .ks-seal { font-size: 9px; }
+.ks-v b { display: block; font: 700 16px/1.45 var(--serif); color: #2b2420; }
+.ks-v span { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.55; color: #5a4a3e; }
+.ks-voice { margin-top: 6px; border: 1px solid #c9a67a; background: transparent; color: #8a3b33; border-radius: 14px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+.ks-voice:hover { background: #3a1f1c; color: #f3ead9; }
+.ks-art { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 12px; padding: 6px; border: 1px solid #d8c6a6; border-radius: 8px;
+  background: rgba(255,255,255,.35); cursor: zoom-in; text-align: left; color: #5a4a3e; font-size: 12.5px; }
+.ks-art img { width: 52px; height: auto; border-radius: 3px; flex: none; }
+.ks-note { margin: 12px 0 0; font-size: 11px; line-height: 1.6; color: #8a7a68; }
+.ks-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.ks-actions .btn { color: #2b2420; border-color: #b89a74; }
+.ks-actions .btn:first-child { background: #8a3b33; border-color: #8a3b33; color: #f3ead9; }
+.muni-card .ks-open, .loc-actions .btn[data-act="loc-koseki"] { margin-top: 8px; }
+@media (max-width: 560px) {
+  .koseki { padding: 16px 16px 14px; border-width: 7px; }
+  .ks-row { grid-template-columns: 82px minmax(0, 1fr); gap: 8px; }
+  .ks-head h2 { font-size: 24px; }
+}
+
 /* 古国演变时间轴：只在古国底图下显示 */
 .prov-eras { display: none; }
 body.prov-mode .prov-eras { display: inline-flex; align-self: flex-start; }

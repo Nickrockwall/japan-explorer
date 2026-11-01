@@ -50,7 +50,7 @@ function ramp(k) {
 
 const fmtPop = (n) => (n == null ? '—' : n.toLocaleString(lang === 'zh' ? 'zh-CN' : lang));
 
-export function createMuniView(root, { onClose, onSelect = () => {} }) {
+export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = () => {} }) {
   root.innerHTML = `
     <div class="muni-map"></div>
     <div class="muni-bar">
@@ -119,7 +119,8 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
     const head = `<div class="muni-name">${esc(dn(p))}</div>${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}`;
     if (!full) return head + body;
     const note = p.old_districts?.length ? `<div class="muni-note">${esc(t('muni.oldNote'))}</div>` : '';
-    return closeBtn() + head + body + note + wiki(p.label, p.en);
+    const koseki = `<button type="button" class="btn ks-open" data-act="koseki" data-code="${esc(p.code)}">${esc(t('ks.open'))}</button>`;
+    return closeBtn() + head + body + note + koseki + wiki(p.label, p.en);
   }
 
   const closeBtn = () => `<button type="button" class="muni-card-x" data-act="unselect" aria-label="${esc(t('close'))}">×</button>`;
@@ -285,6 +286,7 @@ export function createMuniView(root, { onClose, onSelect = () => {} }) {
     if (!b) return;
     if (b.dataset.act === 'close') onClose();
     else if (b.dataset.act === 'unselect') select([]);
+    else if (b.dataset.act === 'koseki') onKoseki(cur.pref.id, b.dataset.code);
     else if (b.dataset.mode && b.dataset.mode !== mode) { mode = b.dataset.mode; render(); }
   });
 
