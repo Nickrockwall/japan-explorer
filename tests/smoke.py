@@ -251,6 +251,7 @@ class Case:
         (page.touchscreen.tap if self.narrow else page.mouse.click)(x, y)
         page.wait_for_selector('#art-card:not([hidden])')
         assert page.locator('#art-card .art-row').count() == 2, '武藏国应有两幅（武藏、江户）'
+        assert page.locator('#art-card .pn-chip').count() >= 3, '武藏国卡片应列出「国名今犹在」'
         page.click('#art-card [data-act="art"] >> nth=0')
         page.wait_for_selector('#art[open] .art-big img')
         page.wait_for_function("document.querySelector('#art .art-big img').naturalWidth > 0", timeout=10000)  # 大图加载出来
@@ -259,6 +260,7 @@ class Case:
         page.keyboard.press('Escape')
         self.tab(page, 'detail')
         assert page.locator('.art-section .art-thumb').count() == 2, '东京都详卡应列出两幅'
+        assert page.locator('.pn-section .pn-row').count() >= 2, '东京都详卡应列出武藏、伊豆的今日国名'
 
     def tabs(self, page):
         if not self.narrow:

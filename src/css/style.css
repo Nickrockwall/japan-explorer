@@ -844,6 +844,19 @@ body.in-battle .art-card, body.muni-open .art-card { display: none; }
 .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
 .art-grid figure { margin: 0; }
 .art-grid figcaption { margin-top: 5px; font-size: 11.5px; line-height: 1.45; color: var(--text-2); }
+/* 国名今犹在 */
+.pn-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pn-chip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 7px; border-radius: 12px;
+  font-size: 12px; line-height: 1.4; border: 1px solid var(--line); background: var(--panel); color: var(--text);
+}
+.pn-chip i { font-style: normal; font-size: 12px; }
+.pn-block { padding: 8px 0 2px; border-top: 1px solid var(--line-soft); }
+.pn-h { font: 700 12px var(--serif); letter-spacing: .1em; color: var(--kin); margin-bottom: 6px; }
+.pn-section { margin-top: 18px; padding: 12px 14px 14px; border: 1px solid var(--line); border-radius: var(--r); }
+.pn-row { display: grid; gap: 6px; padding: 8px 0; border-top: 1px solid var(--line-soft); }
+.pn-row:first-of-type { border-top: 0; padding-top: 0; }
+.pn-row b { font: 700 13px var(--serif); }
 /* 大图浏览 */
 .art-dlg {
   border: 0; padding: 0; background: transparent; color: var(--text); max-width: 100vw; max-height: var(--vh);
@@ -962,7 +975,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .muni-bar .search { flex: 1; min-width: 0; }
   .muni-bar .search input { width: 100%; }
   .muni-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-width: none; }
-  .muni-card.art-card { top: auto; bottom: 10px; max-height: 38%; padding: 10px 12px; }
+  .muni-card.art-card { top: auto; bottom: 10px; width: auto; max-width: none; max-height: 38%; padding: 10px 12px; }
   .art-card .muni-name { font-size: 16px; }
   .art-card .muni-sub { margin-bottom: 4px; }
   .art-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; padding-top: 6px; }

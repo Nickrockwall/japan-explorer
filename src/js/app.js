@@ -8,6 +8,7 @@ import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, hiroshigeSection, createViewer } from './hiroshige.js';
+import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { lang, LANGS, setLang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
@@ -358,22 +359,25 @@ async function main() {
     if (!app.currentId) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
-    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + pilgrimageSection(p, pil.spots, pil.done) });
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, extra: hiroshigeSection(p, art, prefLabel) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
   }
 
   // ── 广重《六十余州名所图会》：古国地图上点一国弹卡片，详卡列出本县的画，点缩略图看大图 ──
   const art = data.hiroshige || [];
+  const provNames = data.provinceNames || [];
+  const namesByKey = new Map(provNames.map((g) => [g.key, g]));
   const prefLabel = (id) => prefName(prefs.get(id));
   const viewer = createViewer($('art'), art, prefLabel);
   const artCard = $('art-card');
   function closeArtCard() { artCard.hidden = true; }
   function openArtCard(p) {
     const prints = art.filter((h) => h.province === p.key || (p.key === '武蔵国' && h.province === '江戸'));
-    if (!prints.length) { closeArtCard(); return; }
+    const names = namesByKey.get(p.key);
+    if (!prints.length && !names) { closeArtCard(); return; }
     const info = map.provInfo(p);
-    artCard.innerHTML = provinceCard(info.label, info.now, prints, prefLabel);
+    artCard.innerHTML = provinceCard(info.label, info.now, prints, prefLabel, namesBlock(names));
     artCard.hidden = false;
     artCard.scrollTop = 0;
     map.hideTip(); // 触屏点按后提示框会留在原处，盖住卡片
@@ -422,6 +426,7 @@ async function main() {
     spots: pil.spots,
     onSpot: (s) => openSpot(s),
     onProvince: (p) => openArtCard(p),
+    provTipExtra: (key) => namesTip(namesByKey.get(key)),
     onSelect(id) {
       if (app.battle) exitBattle();
       if (id === app.currentId) return;

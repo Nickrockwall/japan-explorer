@@ -277,6 +277,22 @@ def check_hiroshige():
             err(where, '缺画中地点所在的县')
 
 
+def check_province_names():
+    """「旧国名活在今天」：旧国合法、类型合法、三语齐全、写明维基条目（与维基的核验用 tools/province_names_tool.py verify）"""
+    path = os.path.join(ROOT, 'src', 'data', 'province_names.json')
+    if not os.path.exists(path):
+        return
+    provs = {f['properties']['key'] for f in load('src', 'data', 'provinces.json')['features']}
+    sys.path.insert(0, os.path.dirname(__file__))
+    from province_names_tool import TYPES
+    for k, items in load('src', 'data', 'province_names.json').items():
+        if k not in provs:
+            err('province_names', f'旧国「{k}」不在 provinces.json 里')
+        for it in items:
+            if it.get('type') not in TYPES or not all(it.get(x) for x in ('ja', 'zh', 'en', 'wiki')):
+                err('province_names', f'{k} {it.get("ja")}：类型或字段不全')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -299,7 +315,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_pilgrimage, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_pilgrimage, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

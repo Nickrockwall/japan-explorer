@@ -18,7 +18,7 @@ const thumb = (h, cls = '') => `
   </button>`;
 
 // 古国地图上点一国弹出的卡片：该国的作品（武藏另有「江户」一幅）
-export function provinceCard(provLabel, nowList, prints, prefName) {
+export function provinceCard(provLabel, nowList, prints, prefName, extra = '') {
   return `
     <button type="button" class="muni-card-x" data-act="art-close" aria-label="${esc(t('close'))}">×</button>
     <div class="muni-name">${esc(provLabel)}</div>
@@ -31,7 +31,8 @@ export function provinceCard(provLabel, nowList, prints, prefName) {
           <div class="art-title">${titleHTML(h)}</div>
           <div class="art-where">${esc(where(h, prefName))}</div>
         </div>
-      </div>`).join('')}`;
+      </div>`).join('')}
+    ${extra}`;
 }
 
 // 详卡：画中地点今天在本县的作品

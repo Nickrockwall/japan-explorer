@@ -1,0 +1,1472 @@
+{
+ "山城国": [
+  {
+   "ja": "南山城村",
+   "zh": "南山城村",
+   "en": "Minamiyamashiro",
+   "type": "place",
+   "wiki": "南山城村"
+  },
+  {
+   "ja": "山城青谷駅",
+   "zh": "山城青谷站",
+   "en": "Yamashiro-Aodani Station",
+   "type": "transit",
+   "wiki": "山城青谷駅"
+  }
+ ],
+ "大和国": [
+  {
+   "ja": "大和川",
+   "zh": "大和川",
+   "en": "Yamato River",
+   "type": "nature",
+   "wiki": "大和川"
+  },
+  {
+   "ja": "大和郡山市",
+   "zh": "大和郡山市",
+   "en": "Yamatokōriyama",
+   "type": "place",
+   "wiki": "大和郡山市"
+  },
+  {
+   "ja": "大和茶",
+   "zh": "大和茶",
+   "en": "Yamato tea",
+   "type": "food",
+   "wiki": "大和茶"
+  },
+  {
+   "ja": "戦艦大和",
+   "zh": "战舰大和",
+   "en": "Battleship Yamato",
+   "type": "culture",
+   "wiki": "大和 (戦艦)"
+  }
+ ],
+ "河内国": [
+  {
+   "ja": "河内長野市",
+   "zh": "河内长野市",
+   "en": "Kawachinagano",
+   "type": "place",
+   "wiki": "河内長野市"
+  },
+  {
+   "ja": "河内音頭",
+   "zh": "河内音头",
+   "en": "Kawachi ondo (folk song)",
+   "type": "culture",
+   "wiki": "河内音頭"
+  },
+  {
+   "ja": "河内弁",
+   "zh": "河内方言",
+   "en": "Kawachi dialect",
+   "type": "culture",
+   "wiki": "河内弁"
+  }
+ ],
+ "和泉国": [
+  {
+   "ja": "和泉市",
+   "zh": "和泉市",
+   "en": "Izumi",
+   "type": "place",
+   "wiki": "和泉市"
+  },
+  {
+   "ja": "和泉山脈",
+   "zh": "和泉山脉",
+   "en": "Izumi Mountains",
+   "type": "nature",
+   "wiki": "和泉山脈"
+  },
+  {
+   "ja": "泉州水なす",
+   "zh": "泉州水茄子",
+   "en": "Senshū water eggplant",
+   "type": "food",
+   "wiki": "水ナス"
+  }
+ ],
+ "摂津国": [
+  {
+   "ja": "摂津市",
+   "zh": "摄津市",
+   "en": "Settsu",
+   "type": "place",
+   "wiki": "摂津市"
+  },
+  {
+   "ja": "摂津峡",
+   "zh": "摄津峡",
+   "en": "Settsu Gorge",
+   "type": "nature",
+   "wiki": "摂津峡"
+  },
+  {
+   "ja": "摂津本山駅",
+   "zh": "摄津本山站",
+   "en": "Settsu-Motoyama Station",
+   "type": "transit",
+   "wiki": "摂津本山駅"
+  }
+ ],
+ "伊賀国": [
+  {
+   "ja": "伊賀市",
+   "zh": "伊贺市",
+   "en": "Iga",
+   "type": "place",
+   "wiki": "伊賀市"
+  },
+  {
+   "ja": "伊賀流",
+   "zh": "伊贺流（忍术）",
+   "en": "Iga-ryū (ninjutsu)",
+   "type": "culture",
+   "wiki": "伊賀流"
+  },
+  {
+   "ja": "伊賀焼",
+   "zh": "伊贺烧",
+   "en": "Iga ware",
+   "type": "craft",
+   "wiki": "伊賀焼"
+  }
+ ],
+ "伊勢国": [
+  {
+   "ja": "伊勢湾",
+   "zh": "伊势湾",
+   "en": "Ise Bay",
+   "type": "nature",
+   "wiki": "伊勢湾"
+  },
+  {
+   "ja": "伊勢海老",
+   "zh": "伊势龙虾",
+   "en": "Japanese spiny lobster (Ise-ebi)",
+   "type": "food",
+   "wiki": "イセエビ"
+  },
+  {
+   "ja": "伊勢市",
+   "zh": "伊势市",
+   "en": "Ise",
+   "type": "place",
+   "wiki": "伊勢市"
+  },
+  {
+   "ja": "伊勢うどん",
+   "zh": "伊势乌冬",
+   "en": "Ise udon",
+   "type": "food",
+   "wiki": "伊勢うどん"
+  }
+ ],
+ "志摩国": [
+  {
+   "ja": "志摩市",
+   "zh": "志摩市",
+   "en": "Shima",
+   "type": "place",
+   "wiki": "志摩市"
+  },
+  {
+   "ja": "志摩半島",
+   "zh": "志摩半岛",
+   "en": "Shima Peninsula",
+   "type": "nature",
+   "wiki": "志摩半島"
+  },
+  {
+   "ja": "志摩スペイン村",
+   "zh": "志摩西班牙村",
+   "en": "Shima Spain Village",
+   "type": "culture",
+   "wiki": "志摩スペイン村"
+  }
+ ],
+ "尾張国": [
+  {
+   "ja": "尾張旭市",
+   "zh": "尾张旭市",
+   "en": "Owariasahi",
+   "type": "place",
+   "wiki": "尾張旭市"
+  },
+  {
+   "ja": "尾張瀬戸駅",
+   "zh": "尾张濑户站",
+   "en": "Owari-Seto Station",
+   "type": "transit",
+   "wiki": "尾張瀬戸駅"
+  },
+  {
+   "ja": "尾張一宮駅",
+   "zh": "尾张一宫站",
+   "en": "Owari-Ichinomiya Station",
+   "type": "transit",
+   "wiki": "尾張一宮駅"
+  }
+ ],
+ "三河国": [
+  {
+   "ja": "三河湾",
+   "zh": "三河湾",
+   "en": "Mikawa Bay",
+   "type": "nature",
+   "wiki": "三河湾"
+  },
+  {
+   "ja": "三河弁",
+   "zh": "三河方言",
+   "en": "Mikawa dialect",
+   "type": "culture",
+   "wiki": "三河弁"
+  },
+  {
+   "ja": "三州瓦",
+   "zh": "三州瓦",
+   "en": "Sanshū roof tiles",
+   "type": "craft",
+   "wiki": "三州瓦"
+  }
+ ],
+ "遠江国": [
+  {
+   "ja": "遠州灘",
+   "zh": "远州滩",
+   "en": "Enshū-nada Sea",
+   "type": "nature",
+   "wiki": "遠州灘"
+  },
+  {
+   "ja": "遠州鉄道",
+   "zh": "远州铁道",
+   "en": "Enshū Railway",
+   "type": "transit",
+   "wiki": "遠州鉄道"
+  }
+ ],
+ "駿河国": [
+  {
+   "ja": "駿河湾",
+   "zh": "骏河湾",
+   "en": "Suruga Bay",
+   "type": "nature",
+   "wiki": "駿河湾"
+  },
+  {
+   "ja": "駿河区",
+   "zh": "骏河区",
+   "en": "Suruga Ward",
+   "type": "place",
+   "wiki": "駿河区"
+  }
+ ],
+ "甲斐国": [
+  {
+   "ja": "甲斐市",
+   "zh": "甲斐市",
+   "en": "Kai",
+   "type": "place",
+   "wiki": "甲斐市"
+  },
+  {
+   "ja": "甲斐駒ヶ岳",
+   "zh": "甲斐驹岳",
+   "en": "Mount Kaikoma",
+   "type": "nature",
+   "wiki": "甲斐駒ヶ岳"
+  },
+  {
+   "ja": "甲州ワイン",
+   "zh": "甲州葡萄酒",
+   "en": "Kōshū wine",
+   "type": "food",
+   "wiki": "甲州 (ブドウ)"
+  },
+  {
+   "ja": "甲州街道",
+   "zh": "甲州街道",
+   "en": "Kōshū Kaidō highway",
+   "type": "transit",
+   "wiki": "甲州街道"
+  }
+ ],
+ "伊豆国": [
+  {
+   "ja": "伊豆半島",
+   "zh": "伊豆半岛",
+   "en": "Izu Peninsula",
+   "type": "nature",
+   "wiki": "伊豆半島"
+  },
+  {
+   "ja": "伊豆市",
+   "zh": "伊豆市",
+   "en": "Izu",
+   "type": "place",
+   "wiki": "伊豆市"
+  },
+  {
+   "ja": "伊豆諸島",
+   "zh": "伊豆诸岛",
+   "en": "Izu Islands",
+   "type": "nature",
+   "wiki": "伊豆諸島"
+  }
+ ],
+ "相模国": [
+  {
+   "ja": "相模原市",
+   "zh": "相模原市",
+   "en": "Sagamihara",
+   "type": "place",
+   "wiki": "相模原市"
+  },
+  {
+   "ja": "相模湾",
+   "zh": "相模湾",
+   "en": "Sagami Bay",
+   "type": "nature",
+   "wiki": "相模湾"
+  },
+  {
+   "ja": "相模川",
+   "zh": "相模川",
+   "en": "Sagami River",
+   "type": "nature",
+   "wiki": "相模川"
+  },
+  {
+   "ja": "相模鉄道",
+   "zh": "相模铁道",
+   "en": "Sagami Railway",
+   "type": "transit",
+   "wiki": "相模鉄道"
+  }
+ ],
+ "武蔵国": [
+  {
+   "ja": "武蔵野市",
+   "zh": "武藏野市",
+   "en": "Musashino",
+   "type": "place",
+   "wiki": "武蔵野市"
+  },
+  {
+   "ja": "武蔵小杉駅",
+   "zh": "武藏小杉站",
+   "en": "Musashi-Kosugi Station",
+   "type": "transit",
+   "wiki": "武蔵小杉駅"
+  },
+  {
+   "ja": "武蔵野線",
+   "zh": "武藏野线",
+   "en": "Musashino Line",
+   "type": "transit",
+   "wiki": "武蔵野線"
+  }
+ ],
+ "安房国": [
+  {
+   "ja": "安房鴨川駅",
+   "zh": "安房鸭川站",
+   "en": "Awa-Kamogawa Station",
+   "type": "transit",
+   "wiki": "安房鴨川駅"
+  },
+  {
+   "ja": "房総半島",
+   "zh": "房总半岛",
+   "en": "Bōsō Peninsula",
+   "type": "nature",
+   "wiki": "房総半島"
+  }
+ ],
+ "上総国": [
+  {
+   "ja": "上総掘り",
+   "zh": "上总掘（凿井法）",
+   "en": "Kazusa-bori well drilling",
+   "type": "craft",
+   "wiki": "上総掘り"
+  },
+  {
+   "ja": "上総一ノ宮駅",
+   "zh": "上总一之宫站",
+   "en": "Kazusa-Ichinomiya Station",
+   "type": "transit",
+   "wiki": "上総一ノ宮駅"
+  }
+ ],
+ "下総国": [
+  {
+   "ja": "下総台地",
+   "zh": "下总台地",
+   "en": "Shimōsa Plateau",
+   "type": "nature",
+   "wiki": "下総台地"
+  },
+  {
+   "ja": "下総中山駅",
+   "zh": "下总中山站",
+   "en": "Shimōsa-Nakayama Station",
+   "type": "transit",
+   "wiki": "下総中山駅"
+  }
+ ],
+ "常陸国": [
+  {
+   "ja": "常陸太田市",
+   "zh": "常陆太田市",
+   "en": "Hitachiōta",
+   "type": "place",
+   "wiki": "常陸太田市"
+  },
+  {
+   "ja": "常陸牛",
+   "zh": "常陆牛",
+   "en": "Hitachi beef",
+   "type": "food",
+   "wiki": "常陸牛"
+  },
+  {
+   "ja": "常陸那珂港区",
+   "zh": "常陆那珂港",
+   "en": "Hitachinaka Port",
+   "type": "transit",
+   "wiki": "茨城港"
+  }
+ ],
+ "近江国": [
+  {
+   "ja": "近江八幡市",
+   "zh": "近江八幡市",
+   "en": "Ōmihachiman",
+   "type": "place",
+   "wiki": "近江八幡市"
+  },
+  {
+   "ja": "近江牛",
+   "zh": "近江牛",
+   "en": "Ōmi beef",
+   "type": "food",
+   "wiki": "近江牛"
+  },
+  {
+   "ja": "近江商人",
+   "zh": "近江商人",
+   "en": "Ōmi merchants",
+   "type": "culture",
+   "wiki": "近江商人"
+  },
+  {
+   "ja": "近江鉄道",
+   "zh": "近江铁道",
+   "en": "Ōmi Railway",
+   "type": "transit",
+   "wiki": "近江鉄道"
+  }
+ ],
+ "美濃国": [
+  {
+   "ja": "美濃市",
+   "zh": "美浓市",
+   "en": "Mino",
+   "type": "place",
+   "wiki": "美濃市"
+  },
+  {
+   "ja": "美濃焼",
+   "zh": "美浓烧",
+   "en": "Mino ware",
+   "type": "craft",
+   "wiki": "美濃焼"
+  },
+  {
+   "ja": "美濃和紙",
+   "zh": "美浓和纸",
+   "en": "Mino washi paper",
+   "type": "craft",
+   "wiki": "美濃和紙"
+  }
+ ],
+ "飛騨国": [
+  {
+   "ja": "飛騨市",
+   "zh": "飞驒市",
+   "en": "Hida",
+   "type": "place",
+   "wiki": "飛騨市"
+  },
+  {
+   "ja": "飛騨牛",
+   "zh": "飞驒牛",
+   "en": "Hida beef",
+   "type": "food",
+   "wiki": "飛騨牛"
+  },
+  {
+   "ja": "飛騨山脈",
+   "zh": "飞驒山脉",
+   "en": "Hida Mountains",
+   "type": "nature",
+   "wiki": "飛騨山脈"
+  }
+ ],
+ "信濃国": [
+  {
+   "ja": "信濃川",
+   "zh": "信浓川",
+   "en": "Shinano River",
+   "type": "nature",
+   "wiki": "信濃川",
+   "evidence": [
+    "長野県"
+   ],
+   "evidence_note": "河口在越后（新潟），上游千曲川流经长野县（信浓国），因而得名"
+  },
+  {
+   "ja": "信州そば",
+   "zh": "信州荞麦面",
+   "en": "Shinshū soba",
+   "type": "food",
+   "wiki": "信州そば"
+  },
+  {
+   "ja": "信濃毎日新聞",
+   "zh": "信浓每日新闻",
+   "en": "Shinano Mainichi Shimbun",
+   "type": "culture",
+   "wiki": "信濃毎日新聞"
+  }
+ ],
+ "上野国": [
+  {
+   "ja": "上毛かるた",
+   "zh": "上毛纸牌",
+   "en": "Jōmō karuta cards",
+   "type": "culture",
+   "wiki": "上毛かるた"
+  },
+  {
+   "ja": "上信電鉄",
+   "zh": "上信电铁",
+   "en": "Jōshin Electric Railway",
+   "type": "transit",
+   "wiki": "上信電鉄"
+  },
+  {
+   "ja": "上越線",
+   "zh": "上越线",
+   "en": "Jōetsu Line",
+   "type": "transit",
+   "wiki": "上越線"
+  }
+ ],
+ "下野国": [
+  {
+   "ja": "下野市",
+   "zh": "下野市",
+   "en": "Shimotsuke",
+   "type": "place",
+   "wiki": "下野市"
+  },
+  {
+   "ja": "下野新聞",
+   "zh": "下野新闻",
+   "en": "Shimotsuke Shimbun",
+   "type": "culture",
+   "wiki": "下野新聞"
+  }
+ ],
+ "陸奥国": [
+  {
+   "ja": "陸奥湾",
+   "zh": "陆奥湾",
+   "en": "Mutsu Bay",
+   "type": "nature",
+   "wiki": "陸奥湾"
+  },
+  {
+   "ja": "むつ市",
+   "zh": "陆奥市",
+   "en": "Mutsu",
+   "type": "place",
+   "wiki": "むつ市"
+  },
+  {
+   "ja": "三陸海岸",
+   "zh": "三陆海岸",
+   "en": "Sanriku Coast",
+   "type": "nature",
+   "wiki": "三陸海岸"
+  }
+ ],
+ "出羽国": [
+  {
+   "ja": "出羽三山",
+   "zh": "出羽三山",
+   "en": "Three Mountains of Dewa",
+   "type": "nature",
+   "wiki": "出羽三山"
+  },
+  {
+   "ja": "出羽山地",
+   "zh": "出羽山地",
+   "en": "Dewa Mountains",
+   "type": "nature",
+   "wiki": "出羽山地"
+  },
+  {
+   "ja": "羽越本線",
+   "zh": "羽越本线",
+   "en": "Uetsu Main Line",
+   "type": "transit",
+   "wiki": "羽越本線"
+  }
+ ],
+ "若狭国": [
+  {
+   "ja": "若狭湾",
+   "zh": "若狭湾",
+   "en": "Wakasa Bay",
+   "type": "nature",
+   "wiki": "若狭湾"
+  },
+  {
+   "ja": "若狭町",
+   "zh": "若狭町",
+   "en": "Wakasa Town",
+   "type": "place",
+   "wiki": "若狭町"
+  },
+  {
+   "ja": "若狭塗",
+   "zh": "若狭涂（漆器）",
+   "en": "Wakasa lacquerware",
+   "type": "craft",
+   "wiki": "若狭塗"
+  }
+ ],
+ "越前国": [
+  {
+   "ja": "越前市",
+   "zh": "越前市",
+   "en": "Echizen",
+   "type": "place",
+   "wiki": "越前市"
+  },
+  {
+   "ja": "越前ガニ",
+   "zh": "越前蟹",
+   "en": "Echizen crab",
+   "type": "food",
+   "wiki": "ズワイガニ"
+  },
+  {
+   "ja": "越前和紙",
+   "zh": "越前和纸",
+   "en": "Echizen washi paper",
+   "type": "craft",
+   "wiki": "越前和紙"
+  }
+ ],
+ "加賀国": [
+  {
+   "ja": "加賀市",
+   "zh": "加贺市",
+   "en": "Kaga",
+   "type": "place",
+   "wiki": "加賀市"
+  },
+  {
+   "ja": "加賀友禅",
+   "zh": "加贺友禅",
+   "en": "Kaga yūzen dyeing",
+   "type": "craft",
+   "wiki": "加賀友禅"
+  },
+  {
+   "ja": "加賀棒茶",
+   "zh": "加贺棒茶",
+   "en": "Kaga bōcha tea",
+   "type": "food",
+   "wiki": "ほうじ茶"
+  }
+ ],
+ "能登国": [
+  {
+   "ja": "能登半島",
+   "zh": "能登半岛",
+   "en": "Noto Peninsula",
+   "type": "nature",
+   "wiki": "能登半島"
+  },
+  {
+   "ja": "能登町",
+   "zh": "能登町",
+   "en": "Noto Town",
+   "type": "place",
+   "wiki": "能登町"
+  },
+  {
+   "ja": "能登空港",
+   "zh": "能登机场",
+   "en": "Noto Airport",
+   "type": "transit",
+   "wiki": "能登空港"
+  }
+ ],
+ "越中国": [
+  {
+   "ja": "越中八尾駅",
+   "zh": "越中八尾站",
+   "en": "Etchū-Yatsuo Station",
+   "type": "transit",
+   "wiki": "越中八尾駅"
+  },
+  {
+   "ja": "越中おわら節",
+   "zh": "越中风之盆小调",
+   "en": "Etchū Owara bushi",
+   "type": "culture",
+   "wiki": "おわら風の盆"
+  }
+ ],
+ "越後国": [
+  {
+   "ja": "越後山脈",
+   "zh": "越后山脉",
+   "en": "Echigo Mountains",
+   "type": "nature",
+   "wiki": "越後山脈"
+  },
+  {
+   "ja": "越後平野",
+   "zh": "越后平原",
+   "en": "Echigo Plain",
+   "type": "nature",
+   "wiki": "越後平野"
+  },
+  {
+   "ja": "越後湯沢駅",
+   "zh": "越后汤泽站",
+   "en": "Echigo-Yuzawa Station",
+   "type": "transit",
+   "wiki": "越後湯沢駅"
+  },
+  {
+   "ja": "越後線",
+   "zh": "越后线",
+   "en": "Echigo Line",
+   "type": "transit",
+   "wiki": "越後線"
+  }
+ ],
+ "佐渡国": [
+  {
+   "ja": "佐渡市",
+   "zh": "佐渡市",
+   "en": "Sado",
+   "type": "place",
+   "wiki": "佐渡市"
+  },
+  {
+   "ja": "佐渡おけさ",
+   "zh": "佐渡小调",
+   "en": "Sado Okesa (folk song)",
+   "type": "culture",
+   "wiki": "佐渡おけさ"
+  }
+ ],
+ "丹波国": [
+  {
+   "ja": "丹波市",
+   "zh": "丹波市",
+   "en": "Tanba",
+   "type": "place",
+   "wiki": "丹波市"
+  },
+  {
+   "ja": "丹波篠山市",
+   "zh": "丹波筱山市",
+   "en": "Tanbasasayama",
+   "type": "place",
+   "wiki": "丹波篠山市"
+  },
+  {
+   "ja": "丹波黒",
+   "zh": "丹波黑豆",
+   "en": "Tanba black soybeans",
+   "type": "food",
+   "wiki": "丹波黒"
+  },
+  {
+   "ja": "丹波栗",
+   "zh": "丹波栗",
+   "en": "Tanba chestnuts",
+   "type": "food",
+   "wiki": "丹波栗"
+  }
+ ],
+ "丹後国": [
+  {
+   "ja": "京丹後市",
+   "zh": "京丹后市",
+   "en": "Kyōtango",
+   "type": "place",
+   "wiki": "京丹後市"
+  },
+  {
+   "ja": "丹後ちりめん",
+   "zh": "丹后绉绸",
+   "en": "Tango chirimen silk crepe",
+   "type": "craft",
+   "wiki": "丹後ちりめん"
+  },
+  {
+   "ja": "丹後半島",
+   "zh": "丹后半岛",
+   "en": "Tango Peninsula",
+   "type": "nature",
+   "wiki": "丹後半島"
+  }
+ ],
+ "但馬国": [
+  {
+   "ja": "但馬牛",
+   "zh": "但马牛",
+   "en": "Tajima cattle",
+   "type": "food",
+   "wiki": "但馬牛"
+  },
+  {
+   "ja": "コウノトリ但馬空港",
+   "zh": "鹳鸟但马机场",
+   "en": "Tajima Airport",
+   "type": "transit",
+   "wiki": "但馬空港"
+  }
+ ],
+ "因幡国": [
+  {
+   "ja": "因幡の白兎",
+   "zh": "因幡白兔（神话）",
+   "en": "Hare of Inaba (myth)",
+   "type": "culture",
+   "wiki": "因幡の白兎"
+  },
+  {
+   "ja": "因美線",
+   "zh": "因美线",
+   "en": "Inbi Line",
+   "type": "transit",
+   "wiki": "因美線"
+  }
+ ],
+ "伯耆国": [
+  {
+   "ja": "伯耆町",
+   "zh": "伯耆町",
+   "en": "Hōki Town",
+   "type": "place",
+   "wiki": "伯耆町"
+  },
+  {
+   "ja": "伯耆大山駅",
+   "zh": "伯耆大山站",
+   "en": "Hōki-Daisen Station",
+   "type": "transit",
+   "wiki": "伯耆大山駅"
+  }
+ ],
+ "出雲国": [
+  {
+   "ja": "出雲市",
+   "zh": "出云市",
+   "en": "Izumo",
+   "type": "place",
+   "wiki": "出雲市"
+  },
+  {
+   "ja": "出雲そば",
+   "zh": "出云荞麦面",
+   "en": "Izumo soba",
+   "type": "food",
+   "wiki": "出雲そば"
+  },
+  {
+   "ja": "出雲空港",
+   "zh": "出云机场",
+   "en": "Izumo Airport",
+   "type": "transit",
+   "wiki": "出雲空港"
+  }
+ ],
+ "石見国": [
+  {
+   "ja": "石見銀山",
+   "zh": "石见银山",
+   "en": "Iwami Ginzan silver mine",
+   "type": "culture",
+   "wiki": "石見銀山"
+  },
+  {
+   "ja": "石見神楽",
+   "zh": "石见神乐",
+   "en": "Iwami kagura",
+   "type": "culture",
+   "wiki": "石見神楽"
+  },
+  {
+   "ja": "石見空港",
+   "zh": "石见机场",
+   "en": "Iwami Airport",
+   "type": "transit",
+   "wiki": "萩・石見空港"
+  }
+ ],
+ "隠岐国": [
+  {
+   "ja": "隠岐の島町",
+   "zh": "隐岐之岛町",
+   "en": "Okinoshima",
+   "type": "place",
+   "wiki": "隠岐の島町"
+  },
+  {
+   "ja": "隠岐諸島",
+   "zh": "隐岐诸岛",
+   "en": "Oki Islands",
+   "type": "nature",
+   "wiki": "隠岐諸島"
+  }
+ ],
+ "播磨国": [
+  {
+   "ja": "播磨町",
+   "zh": "播磨町",
+   "en": "Harima Town",
+   "type": "place",
+   "wiki": "播磨町"
+  },
+  {
+   "ja": "播磨灘",
+   "zh": "播磨滩",
+   "en": "Harima-nada Sea",
+   "type": "nature",
+   "wiki": "播磨灘"
+  },
+  {
+   "ja": "播州そろばん",
+   "zh": "播州算盘",
+   "en": "Banshū abacus",
+   "type": "craft",
+   "wiki": "播州そろばん"
+  }
+ ],
+ "美作国": [
+  {
+   "ja": "美作市",
+   "zh": "美作市",
+   "en": "Mimasaka",
+   "type": "place",
+   "wiki": "美作市"
+  },
+  {
+   "ja": "美作滝尾駅",
+   "zh": "美作泷尾站",
+   "en": "Mimasaka-Takio Station",
+   "type": "transit",
+   "wiki": "美作滝尾駅"
+  },
+  {
+   "ja": "美作河井駅",
+   "zh": "美作河井站",
+   "en": "Mimasaka-Kawai Station",
+   "type": "transit",
+   "wiki": "美作河井駅"
+  }
+ ],
+ "備前国": [
+  {
+   "ja": "備前市",
+   "zh": "备前市",
+   "en": "Bizen",
+   "type": "place",
+   "wiki": "備前市"
+  },
+  {
+   "ja": "備前焼",
+   "zh": "备前烧",
+   "en": "Bizen ware",
+   "type": "craft",
+   "wiki": "備前焼"
+  },
+  {
+   "ja": "備前長船",
+   "zh": "备前长船（刀）",
+   "en": "Bizen Osafune swords",
+   "type": "craft",
+   "wiki": "長船派"
+  }
+ ],
+ "備中国": [
+  {
+   "ja": "備中松山城",
+   "zh": "备中松山城",
+   "en": "Bitchū Matsuyama Castle",
+   "type": "culture",
+   "wiki": "備中松山城"
+  },
+  {
+   "ja": "備中神楽",
+   "zh": "备中神乐",
+   "en": "Bitchū kagura",
+   "type": "culture",
+   "wiki": "備中神楽"
+  }
+ ],
+ "備後国": [
+  {
+   "ja": "備後絣",
+   "zh": "备后絣（织物）",
+   "en": "Bingo kasuri textile",
+   "type": "craft",
+   "wiki": "備後絣"
+  },
+  {
+   "ja": "備後灘",
+   "zh": "备后滩",
+   "en": "Bingo-nada Sea",
+   "type": "nature",
+   "wiki": "備後灘"
+  }
+ ],
+ "安芸国": [
+  {
+   "ja": "安芸高田市",
+   "zh": "安艺高田市",
+   "en": "Akitakata",
+   "type": "place",
+   "wiki": "安芸高田市"
+  },
+  {
+   "ja": "安芸灘",
+   "zh": "安艺滩",
+   "en": "Aki-nada Sea",
+   "type": "nature",
+   "wiki": "安芸灘"
+  },
+  {
+   "ja": "安芸太田町",
+   "zh": "安艺太田町",
+   "en": "Akiōta",
+   "type": "place",
+   "wiki": "安芸太田町"
+  }
+ ],
+ "周防国": [
+  {
+   "ja": "周防大島町",
+   "zh": "周防大岛町",
+   "en": "Suō-Ōshima",
+   "type": "place",
+   "wiki": "周防大島町"
+  },
+  {
+   "ja": "周防灘",
+   "zh": "周防滩",
+   "en": "Suō-nada Sea",
+   "type": "nature",
+   "wiki": "周防灘"
+  }
+ ],
+ "長門国": [
+  {
+   "ja": "長門市",
+   "zh": "长门市",
+   "en": "Nagato",
+   "type": "place",
+   "wiki": "長門市"
+  },
+  {
+   "ja": "長州藩",
+   "zh": "长州藩",
+   "en": "Chōshū Domain",
+   "type": "culture",
+   "wiki": "長州藩"
+  }
+ ],
+ "紀伊国": [
+  {
+   "ja": "紀伊半島",
+   "zh": "纪伊半岛",
+   "en": "Kii Peninsula",
+   "type": "nature",
+   "wiki": "紀伊半島"
+  },
+  {
+   "ja": "紀州備長炭",
+   "zh": "纪州备长炭",
+   "en": "Kishū binchōtan charcoal",
+   "type": "craft",
+   "wiki": "備長炭"
+  },
+  {
+   "ja": "紀ノ川",
+   "zh": "纪之川",
+   "en": "Kino River",
+   "type": "nature",
+   "wiki": "紀ノ川"
+  },
+  {
+   "ja": "紀州梅",
+   "zh": "纪州梅",
+   "en": "Kishū plums",
+   "type": "food",
+   "wiki": "南高梅"
+  }
+ ],
+ "淡路国": [
+  {
+   "ja": "淡路島",
+   "zh": "淡路岛",
+   "en": "Awaji Island",
+   "type": "nature",
+   "wiki": "淡路島"
+  },
+  {
+   "ja": "淡路市",
+   "zh": "淡路市",
+   "en": "Awaji",
+   "type": "place",
+   "wiki": "淡路市"
+  }
+ ],
+ "阿波国": [
+  {
+   "ja": "阿波踊り",
+   "zh": "阿波舞",
+   "en": "Awa Odori dance",
+   "type": "culture",
+   "wiki": "阿波踊り"
+  },
+  {
+   "ja": "阿波市",
+   "zh": "阿波市",
+   "en": "Awa",
+   "type": "place",
+   "wiki": "阿波市"
+  },
+  {
+   "ja": "阿波尾鶏",
+   "zh": "阿波尾鸡",
+   "en": "Awa-odori chicken",
+   "type": "food",
+   "wiki": "阿波尾鶏"
+  }
+ ],
+ "讃岐国": [
+  {
+   "ja": "讃岐うどん",
+   "zh": "讃岐乌冬",
+   "en": "Sanuki udon",
+   "type": "food",
+   "wiki": "讃岐うどん"
+  },
+  {
+   "ja": "さぬき市",
+   "zh": "讃岐市",
+   "en": "Sanuki",
+   "type": "place",
+   "wiki": "さぬき市"
+  },
+  {
+   "ja": "讃岐山脈",
+   "zh": "讃岐山脉",
+   "en": "Sanuki Mountains",
+   "type": "nature",
+   "wiki": "讃岐山脈"
+  }
+ ],
+ "伊予国": [
+  {
+   "ja": "伊予市",
+   "zh": "伊予市",
+   "en": "Iyo",
+   "type": "place",
+   "wiki": "伊予市"
+  },
+  {
+   "ja": "伊予柑",
+   "zh": "伊予柑",
+   "en": "Iyokan citrus",
+   "type": "food",
+   "wiki": "イヨカン"
+  },
+  {
+   "ja": "伊予灘",
+   "zh": "伊予滩",
+   "en": "Iyo-nada Sea",
+   "type": "nature",
+   "wiki": "伊予灘"
+  },
+  {
+   "ja": "伊予鉄道",
+   "zh": "伊予铁道",
+   "en": "Iyo Railway",
+   "type": "transit",
+   "wiki": "伊予鉄道"
+  }
+ ],
+ "土佐国": [
+  {
+   "ja": "土佐市",
+   "zh": "土佐市",
+   "en": "Tosa",
+   "type": "place",
+   "wiki": "土佐市"
+  },
+  {
+   "ja": "土佐湾",
+   "zh": "土佐湾",
+   "en": "Tosa Bay",
+   "type": "nature",
+   "wiki": "土佐湾"
+  },
+  {
+   "ja": "土佐弁",
+   "zh": "土佐方言",
+   "en": "Tosa dialect",
+   "type": "culture",
+   "wiki": "土佐弁"
+  }
+ ],
+ "筑前国": [
+  {
+   "ja": "筑前煮",
+   "zh": "筑前煮",
+   "en": "Chikuzen-ni (simmered dish)",
+   "type": "food",
+   "wiki": "筑前煮"
+  },
+  {
+   "ja": "筑前町",
+   "zh": "筑前町",
+   "en": "Chikuzen Town",
+   "type": "place",
+   "wiki": "筑前町"
+  }
+ ],
+ "筑後国": [
+  {
+   "ja": "筑後川",
+   "zh": "筑后川",
+   "en": "Chikugo River",
+   "type": "nature",
+   "wiki": "筑後川"
+  },
+  {
+   "ja": "筑後市",
+   "zh": "筑后市",
+   "en": "Chikugo",
+   "type": "place",
+   "wiki": "筑後市"
+  }
+ ],
+ "豊前国": [
+  {
+   "ja": "豊前市",
+   "zh": "丰前市",
+   "en": "Buzen",
+   "type": "place",
+   "wiki": "豊前市"
+  },
+  {
+   "ja": "豊前海",
+   "zh": "丰前海",
+   "en": "Buzen Sea",
+   "type": "nature",
+   "wiki": "豊前海"
+  }
+ ],
+ "豊後国": [
+  {
+   "ja": "豊後水道",
+   "zh": "丰后水道",
+   "en": "Bungo Channel",
+   "type": "nature",
+   "wiki": "豊後水道"
+  },
+  {
+   "ja": "豊後高田市",
+   "zh": "丰后高田市",
+   "en": "Bungotakada",
+   "type": "place",
+   "wiki": "豊後高田市"
+  },
+  {
+   "ja": "豊後大野市",
+   "zh": "丰后大野市",
+   "en": "Bungo-ōno",
+   "type": "place",
+   "wiki": "豊後大野市"
+  }
+ ],
+ "肥前国": [
+  {
+   "ja": "肥前鹿島駅",
+   "zh": "肥前鹿岛站",
+   "en": "Hizen-Kashima Station",
+   "type": "transit",
+   "wiki": "肥前鹿島駅"
+  },
+  {
+   "ja": "肥前名護屋城",
+   "zh": "肥前名护屋城",
+   "en": "Hizen-Nagoya Castle",
+   "type": "place",
+   "wiki": "名護屋城"
+  },
+  {
+   "ja": "肥前浜駅",
+   "zh": "肥前滨站",
+   "en": "Hizen-Hama Station",
+   "type": "transit",
+   "wiki": "肥前浜駅"
+  }
+ ],
+ "肥後国": [
+  {
+   "ja": "肥後もっこす",
+   "zh": "肥后倔脾气",
+   "en": "Higo mokkosu (local temperament)",
+   "type": "culture",
+   "wiki": "肥後もっこす"
+  },
+  {
+   "ja": "肥後守",
+   "zh": "肥后守（折刀）",
+   "en": "Higonokami folding knife",
+   "type": "craft",
+   "wiki": "肥後守"
+  }
+ ],
+ "日向国": [
+  {
+   "ja": "日向市",
+   "zh": "日向市",
+   "en": "Hyūga",
+   "type": "place",
+   "wiki": "日向市"
+  },
+  {
+   "ja": "日向夏",
+   "zh": "日向夏（柑橘）",
+   "en": "Hyūganatsu citrus",
+   "type": "food",
+   "wiki": "日向夏"
+  },
+  {
+   "ja": "日向灘",
+   "zh": "日向滩",
+   "en": "Hyūga-nada Sea",
+   "type": "nature",
+   "wiki": "日向灘"
+  }
+ ],
+ "大隅国": [
+  {
+   "ja": "大隅半島",
+   "zh": "大隅半岛",
+   "en": "Ōsumi Peninsula",
+   "type": "nature",
+   "wiki": "大隅半島"
+  },
+  {
+   "ja": "大隅海峡",
+   "zh": "大隅海峡",
+   "en": "Ōsumi Strait",
+   "type": "nature",
+   "wiki": "大隅海峡"
+  }
+ ],
+ "薩摩国": [
+  {
+   "ja": "サツマイモ",
+   "zh": "萨摩芋（番薯）",
+   "en": "Satsuma sweet potato",
+   "type": "food",
+   "wiki": "サツマイモ"
+  },
+  {
+   "ja": "薩摩焼",
+   "zh": "萨摩烧",
+   "en": "Satsuma ware",
+   "type": "craft",
+   "wiki": "薩摩焼"
+  },
+  {
+   "ja": "薩摩揚げ",
+   "zh": "萨摩炸鱼饼",
+   "en": "Satsuma-age fish cake",
+   "type": "food",
+   "wiki": "さつま揚げ"
+  },
+  {
+   "ja": "薩摩川内市",
+   "zh": "萨摩川内市",
+   "en": "Satsumasendai",
+   "type": "place",
+   "wiki": "薩摩川内市"
+  }
+ ],
+ "壱岐国": [
+  {
+   "ja": "壱岐市",
+   "zh": "壹岐市",
+   "en": "Iki",
+   "type": "place",
+   "wiki": "壱岐市"
+  },
+  {
+   "ja": "壱岐焼酎",
+   "zh": "壹岐烧酒",
+   "en": "Iki shōchū",
+   "type": "food",
+   "wiki": "壱岐焼酎"
+  }
+ ],
+ "対馬国": [
+  {
+   "ja": "対馬市",
+   "zh": "对马市",
+   "en": "Tsushima",
+   "type": "place",
+   "wiki": "対馬市"
+  },
+  {
+   "ja": "対馬海峡",
+   "zh": "对马海峡",
+   "en": "Tsushima Strait",
+   "type": "nature",
+   "wiki": "対馬海峡"
+  },
+  {
+   "ja": "ツシマヤマネコ",
+   "zh": "对马山猫",
+   "en": "Tsushima leopard cat",
+   "type": "nature",
+   "wiki": "ツシマヤマネコ"
+  }
+ ]
+}

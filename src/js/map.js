@@ -138,7 +138,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, spots = [] }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, provTipExtra = () => '', spots = [] }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -389,10 +389,11 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
     if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
     const [lb, color] = FILTERS.circuit.cats[p.circuit];
+    const extra = provTipExtra(p.key);
     const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#b4ada3">${p.kana}</span>` : '';
     return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}${kana}</div>
       <div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color};margin-right:6px"></span>${lb}</div>
-      <div style="color:#d4a373;margin-top:3px">${now}</div>`;
+      <div style="color:#d4a373;margin-top:3px">${now}</div>${extra ? `<div style="color:#b4ada3;margin-top:3px">${extra}</div>` : ''}`;
   }
 
   chart.setOption({

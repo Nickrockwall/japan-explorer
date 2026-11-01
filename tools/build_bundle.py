@@ -74,6 +74,18 @@ def hiroshige(lang):
     return out
 
 
+# 「旧国名活在今天」：每国一组，带旧国显示名与今属县（详卡按县筛选）
+def province_names(lang):
+    path = os.path.join(DATA, 'province_names.json')
+    if not os.path.exists(path):
+        return []
+    feats = {f['properties']['key']: f['properties'] for f in load(os.path.join(DATA, 'provinces.json'))['features']}
+    return [{
+        'key': k, 'prov': feats[k][lang], 'prefs': feats[k]['prefs'],
+        'items': [{'n': it[lang], 'o': it['ja'], 't': it['type']} for it in items],
+    } for k, items in load(path).items()]
+
+
 def build(lang):
     """生成某种语言的数据包文本（tools/check_data.py 也用它来判断已提交的包是否过期）"""
     index = load(os.path.join(DATA, 'index.json'))
@@ -93,7 +105,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang)}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang)}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

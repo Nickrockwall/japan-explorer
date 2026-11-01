@@ -20,6 +20,7 @@
 | **时空穿越** | 拖动滑块或自动播放，看飞鸟到现代九个时代的版图与政权中枢 |
 | **合战演武** | 桶狭间、川中岛、关原、坛之浦、西南战争——布阵 → 开战 → 转折 → 结局四阶段沙盘推演，名将亲自解说 |
 | **广重浮世绘** | 歌川广重《六十余州名所图会》（1853–56）全 69 幅：在古国地图上点一国，看广重笔下那里的风景，以及画中地点今天在哪个县、哪个市；详卡里列出本县的画，可放大并逐幅翻看 |
+| **国名今犹在** | 68 国共 190 个今天还带着旧国名的东西：信浓川、讃岐乌冬、伊予柑、备前烧、萨摩芋、近江铁道……古国地图的悬停提示、古国卡片与详卡里都能看到；每一条都用维基百科核验过名字来历与地点 |
 | **风土图层** | 拉面流派图鉴（含一碗拉面的解构图）、地酒名酿地图 |
 | **市区町村地图** | 点进任一县，看全部 1,900 多个市区町村，按古代令制国或人口着色；悬停可看读音、旧国、明治时期的旧郡、现属郡与人口。搜索框可直接搜市町村（支持简体字、假名、英文），重名分条列出；地图上显示地名；选中后 AI 向导也能就此回答；链接可直接分享到某个市町村 |
 | **圣地巡礼** | 第 4 个风土图层：动漫圣地与 NHK 大河剧名所的图钉，可按「全部 / 动漫 / 大河剧」筛选；点图钉看作品、取景地、场景与巡礼贴士，AI 向导会以热血漫迷 / 剧评人的口吻解说。每处的坐标与「作品 ↔ 地点」都经维基百科核验（47 都道府县共 111 处） |
@@ -34,6 +35,12 @@
 ## 📜 更新日志
 
 > 冒险者们，新版本已降临。以下为历次版本公告（最新在上）。
+
+### 🏷️ v2.4「国名今犹在」
+- **新增 190 个「今天还在用的旧国名」！** 信浓川、讃岐乌冬、伊予柑、备前烧、萨摩芋、近江铁道……原来天天听到的名字，就是一千多年前的国名
+- 古国地图上悬停即可看到，点一国在卡片里看全部；详卡新增「国名今犹在」，按本县涉及的旧国列出
+- 别称也算：信州荞麦面（信浓）、甲州葡萄酒（甲斐）、纪州梅（纪伊）、播州算盘（播磨）……
+- 每一条都经维基百科核验：名字里确实带着国名，地名与山河的坐标确实落在那个国，物产的条目确实提到那个国或县；对不上的一律不收
 
 ### 🎨 v2.3「广重的六十余州」
 - **收录歌川广重《六十余州名所图会》全 69 幅！** 每个令制国一幅，外加江户
@@ -163,7 +170,7 @@ python -X utf8 tests/smoke.py             # 界面冒烟测试：电脑 / 平板
 
 全国地图：出典「地球地図日本」（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换为 GeoJSON。
 
-市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。
+市区町村边界：「国土数値情報（行政区域データ）」（国土交通省）を加工して作成（经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化）；读音、人口、英文名来自 [Wikidata](https://www.wikidata.org/)（CC0）。市区町村的旧国按人工对照表整理（`tools/province_overrides.json`），并用 Wikidata 与旧郡数据交叉核对，横跨多国时取主要部分。旧郡（明治郡制的郡域）整理自[日文维基百科](https://ja.wikipedia.org/)各郡条目（CC BY-SA 4.0），见 `tools/districts.json`，重新整理：`python -X utf8 tools/fetch_districts.py`。重新生成：`python -X utf8 tools/build_municipalities.py`。68 令制国边界（`src/data/provinces.json`）由市区町村按旧国合并而成：`pip install shapely` 后运行 `python -X utf8 tools/build_provinces.py`。今日国名（`src/data/province_names.json`）新增或修改后运行 `python -X utf8 tools/province_names_tool.py verify` 核验。广重浮世绘（`src/data/hiroshige.json` 与 `src/assets/hiroshige/`）：`pip install pillow` 后运行 `python -X utf8 tools/fetch_hiroshige.py`（只收公有领域，画中地点不明或定位到别国时会列出待人工确认）。
 
 ## 版权与许可
 

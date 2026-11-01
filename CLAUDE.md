@@ -39,6 +39,8 @@ src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
 src/data/hiroshige.json        广重《六十余州名所图会》69 幅（tools/fetch_hiroshige.py 生成；图片在 src/assets/hiroshige/NN.jpg）
 src/js/hiroshige.js            古国地图上的作品卡、详卡「广重笔下」、大图浏览
+src/data/province_names.json   「国名今犹在」：旧国 → 今天仍带国名的东西（tools/province_names_tool.py 核验）
+src/js/provnames.js            国名标签：古国悬停提示、古国卡片、详卡
 ```
 
 ## 核心模型：现代 47 都道府县 ⇄ 古代 68 令制国
@@ -189,6 +191,7 @@ src/js/hiroshige.js            古国地图上的作品卡、详卡「广重笔�
 - `python -X utf8 tools/fetch_hiroshige.py`（需 `pip install pillow`）：解析日文维基百科「六十余州名所図会」的表格（69 幅，第 70 幅目录页跳过）→ 在 Commons 核对许可，**只收公有领域** → 原图缓存到 `.cache/hiroshige/`，缩到宽 560px 存 `src/assets/hiroshige/NN.jpg`（Commons 在国内打不开，图片随站点发布）。
 - 画中地点：画题里第一个有坐标的链接条目（`PLACE` 可指定别的条目、或写 None 表示不用链接），落到市区町村边界里；**定位结果的旧国（`province` 或 `partial`）必须与作品的国一致**，否则列为待处理。画题无链接的：该国只有一个市町村就取它；`MANUAL` 里人工确认的取人工值（市区町村名为 None = 只确定到县）；其余只记县、界面写「具体地点不详」。不要为了填满而猜地点。
 - 题名译文在工具的 `TITLES`（中 / 英；日文界面显示原题）。`build_bundle.py` 按语言拼好 `title_t`、旧国名 `prov`、市区町村名 `place` 放进数据包的 `hiroshige`（逐个文件回退加载时不显示浮世绘）。
+- 「国名今犹在」（provnames.js）：`province_names.json` 为 `{ 旧国: [{ja, zh, en, type, wiki, evidence?, evidence_note?}] }`，type ∈ place / nature / food / craft / transit / culture。新增后必须跑 `python -X utf8 tools/province_names_tool.py verify`（需 shapely）：① 名字里含国名简称或 `ALIASES` 别称；② place / transit / nature 的条目坐标在该国内（自然地物容许 60 公里），food / craft / culture 的条目正文提到该国或今属县名。通不过就不收，确需例外写 `evidence` 并在 `evidence_note` 说明（如信浓川：河口在越后）。数据包 `province_names` 每国带 `prov` 显示名与 `prefs`；`map` 的 `provTipExtra` 往古国提示里加一行，古国卡片 `namesBlock`，详卡 `namesSection`（按县涉及的旧国）。
 - 前端：古国底图下 `map` 的 `onProvince(properties)` → `#art-card`（武藏另带第 17 图「江户」）；离开古国底图时 `syncArtCard` 收起。详卡 `hiroshigeSection` 列出画中地点在本县的作品。`#art` 大图对话框按编号循环翻页（‹ › / 方向键）。
 
 ## historical_events.json
