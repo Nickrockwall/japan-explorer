@@ -23,6 +23,26 @@ const COLOR = {
   neutral: '#b9b4a8',
 };
 
+// 历代政区（src/data/korea/eras/，tools/build_korea_eras.py 生成）：从古到今排，默认「今天」
+const ERA_KEYS = ['silla', 'goryeo', 'joseon', '1896', 'today'];
+const ERA_STAGE = { silla: 'silla', goryeo: 'goryeo', joseon: 'joseon', 1896: 'modern' }; // 详卡时间轴里对应的一段
+const ERA_PALETTE = ['#2f6f8f', '#c8432f', '#e2bd57', '#5f8f6e', '#9a6fa8', '#c97a46', '#4f8fa0', '#a8584f', '#7f9a4a', '#6a6fb0', '#b8865a', '#3f7f6f', '#a87090'];
+const SCHEME = { in: '#5f8f80', out: '#262d2b', tamna: '#6e6a5e' };
+const LL = (o) => (lang === 'en' ? o.en : lang === 'ja' ? o.ja : o.zh);
+
+function inPolys(pt, geometry) {
+  const polys = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
+  const inRing = (ring) => {
+    let c = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  };
+  return polys.some((q) => inRing(q[0]) && !q.slice(1).some(inRing));
+}
+
 const nameOf = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
 function fmtPop(n) {
@@ -80,6 +100,17 @@ function contentHTML(c) {
       <p class="feat">${esc(c.dialect.features)}</p>
       ${c.dialect.phrases.map(([ph, m]) => `<div class="phrase"><span class="p" lang="ko">${esc(ph)}</span><span class="m">${esc(m)}</span></div>`).join('')}
     </div>`;
+}
+
+// 选了某个历代图层时，详卡时间轴展开对应的一段
+function openStage(el, era) {
+  const stage = ERA_STAGE[era];
+  if (!stage) return;
+  for (const d of el.querySelectorAll('.tl')) {
+    const on = d.dataset.stage === stage;
+    d.open = on;
+    d.classList.toggle('hl', on);
+  }
 }
 
 function renderRegion(el, p, c, translated = true) {
@@ -150,7 +181,8 @@ export async function main() {
 
   const detailEl = $('detail');
   const card = $('art-card');
-  const app = { currentId: null };
+  const app = { currentId: null, era: 'today' };
+  const eraCache = new Map();
   const narrow = () => matchMedia(NARROW).matches;
   const tabs = setupTabs(() => { chart.resize(); counties.resize(); }, () => {});
 
@@ -189,6 +221,17 @@ export async function main() {
   })();
 
   // 着色走 geo.regions（map 系列绑在 geo 上时，系列数据里的颜色不生效）
+  function eraRegions(era) {
+    const d = eraCache.get(era);
+    const keys = d.features.map((f) => f.properties.key);
+    return d.features.map((f, i) => {
+      const k = f.properties.key;
+      const c = d.units ? ERA_PALETTE[i % ERA_PALETTE.length] : SCHEME[k];
+      return { name: k, itemStyle: { areaColor: c, borderColor: COLOR.border, borderWidth: 0.8 },
+        emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.2), borderColor: COLOR.line, borderWidth: 1.2 } } };
+    }).filter((r) => keys.includes(r.name));
+  }
+  const paint = () => chart.setOption({ geo: { regions: app.era === 'today' ? regionData() : eraRegions(app.era) } });
   function regionData() {
     const seen = visited.get();
     return geo.features.map(({ properties: p }) => {
@@ -209,6 +252,8 @@ export async function main() {
       borderColor: '#34423e',
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (x) => {
+        if (x.seriesId === 'regions' && app.era !== 'today') return `<b>${esc(eraName(app.era, x.name))}</b>`;
+        if (x.seriesId === 'seats') return `<b>${esc(t(`kr.s.${app.era}.${x.data.key}`))}</b>`;
         if (x.seriesId === 'regions') {
           const p = regions.get(idByName.get(x.name));
           return p ? `<b>${esc(nameOf(p))}</b> <span style="color:#b4ada3">${esc(p.name)}</span>` : '';
@@ -250,11 +295,67 @@ export async function main() {
         data: [{ value: geo.dokdo.coords }],
       },
       {
+        id: 'seats', type: 'scatter', coordinateSystem: 'geo', z: 6, symbol: 'circle', symbolSize: 6, data: [],
+        itemStyle: { color: '#f3ede2', borderColor: '#151a19', borderWidth: 1 },
+        label: { show: true, position: 'right', color: '#f3ede2', fontSize: 11, fontWeight: 700, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5,
+          formatter: (x) => t(`kr.s.${app.era}.${x.data.key}`) },
+        labelLayout: { hideOverlap: true },
+      },
+      {
         id: 'sea', type: 'scatter', coordinateSystem: 'geo', symbolSize: 0, silent: true, z: 3, data: [{ value: [130.9, 39.6] }],
         label: { show: true, formatter: t('kr.sea'), color: 'rgba(185,180,168,.75)', fontSize: 12, fontStyle: 'italic' },
       },
     ],
   });
+
+  function eraName(era, key) {
+    const d = eraCache.get(era);
+    if (d?.units?.[key]) { const [ko, zh, ja, en] = d.units[key]; return lang === 'en' ? en : lang === 'ja' ? ja : zh; }
+    return t(`kr.e.${era}.${key}`);
+  }
+  async function setEra(era) {
+    if (era === app.era) return;
+    if (era !== 'today' && !eraCache.has(era)) {
+      const d = await getJSON(`${MAP.data}/eras/${era}.json`);
+      if (!d) { toast(t('muni.error')); return; }
+      for (const f of d.features) f.properties.name = f.properties.key;
+      echarts.registerMap(`kera-${era}`, d);
+      eraCache.set(era, d);
+    }
+    app.era = era;
+    const today = era === 'today';
+    const d = eraCache.get(era);
+    chart.setOption({
+      geo: { map: today ? 'korea' : `kera-${era}`, regions: today ? regionData() : eraRegions(era) },
+      series: [
+        { id: 'regions', data: (today ? geo.features.map((f) => f.properties.name) : d.features.map((f) => f.properties.key)).map((name) => ({ name })) },
+        { id: 'mdl', data: today ? geo.mdl.map((coords) => ({ coords })) : [] },
+        { id: 'mdl-label', data: today ? [{ value: mdlMid }] : [] },
+        { id: 'seats', data: d?.seats ? d.seats.map((s) => ({ value: s.coords, key: s.key })) : [] },
+      ],
+    });
+    eraBox.querySelectorAll('button').forEach((b) => { const on = b.dataset.era === era; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+    const lg = $('legend');
+    lg.hidden = today;
+    document.documentElement.classList.toggle('kr-era', !today);
+    if (!today) {
+      $('legend-caption').textContent = t(`kr.e.cap.${era}`);
+      $('legend-items').innerHTML = d.features.map((f, i) => {
+        const c = d.units ? ERA_PALETTE[i % ERA_PALETTE.length] : SCHEME[f.properties.key];
+        return `<span><i class="sw" style="background:${c}"></i>${esc(eraName(era, f.properties.key))}</span>`;
+      }).join('');
+    }
+    if (app.currentId) openStage(detailEl, era);
+    audio.play('click');
+  }
+  const eraBox = document.createElement('div');
+  eraBox.className = 'filters kr-eras';
+  eraBox.id = 'kr-eras';
+  eraBox.setAttribute('role', 'radiogroup');
+  eraBox.setAttribute('aria-label', t('kr.e.aria'));
+  eraBox.innerHTML = ERA_KEYS.map((k) => `<button type="button" role="radio" data-era="${k}" aria-checked="${k === 'today'}" class="${k === 'today' ? 'on' : ''}">${esc(t(`kr.e.${k}`))}<small>${esc(t(`kr.e.${k}.s`))}</small></button>`).join('');
+  document.querySelector('.map-pane').appendChild(eraBox);
+  eraBox.addEventListener('click', (e) => { const b = e.target.closest('[data-era]'); if (b) setEra(b.dataset.era); });
 
   function updateCounter() {
     const n = visited.get().size;
@@ -277,8 +378,9 @@ export async function main() {
     app.currentId = id;
     visited.add(id);
     updateCounter();
-    chart.setOption({ geo: { regions: regionData() } });
+    paint();
     renderRegion(detailEl, p, content[id], translated);
+    openStage(detailEl, app.era);
     $('tab-pref').textContent = nameOf(p);
     history.replaceState(null, '', stateHash(id));
     tabs.ping('detail');
@@ -287,7 +389,8 @@ export async function main() {
   chart.on('click', (x) => {
     if (x.seriesId === 'dokdo') { openDokdo(); return; }
     if (x.seriesId !== 'regions') return;
-    const id = idByName.get(x.name);
+    const id = app.era === 'today' ? idByName.get(x.name)
+      : geo.features.find((f) => inPolys(chart.convertFromPixel({ geoIndex: 0 }, [x.event.offsetX, x.event.offsetY]), f.geometry))?.properties.id;
     if (id) { closeCard(); select(id); audio.play('click'); }
   });
   card.addEventListener('click', (e) => { if (e.target.closest('[data-act="card-close"]')) closeCard(); });
@@ -312,7 +415,7 @@ export async function main() {
     visited.clear();
     if (app.currentId) visited.add(app.currentId);
     updateCounter();
-    chart.setOption({ geo: { regions: regionData() } });
+    paint();
   }, () => {});
   window.addEventListener('resize', () => chart.resize());
 

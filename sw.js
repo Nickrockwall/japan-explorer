@@ -1,6 +1,6 @@
 // 离线缓存：本站文件网络优先（总拿最新版，断网时用缓存），CDN 库与字体缓存优先。
 // 只处理 GET；LLM 接口都是 POST，不会被缓存。修改应用外壳文件列表时把 VERSION 加一。
-const VERSION = 'je-v17';
+const VERSION = 'je-v18';
 const SHELL = [
   './',
   'index.html',

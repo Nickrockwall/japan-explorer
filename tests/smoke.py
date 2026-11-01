@@ -274,6 +274,32 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_selector('#muni', state='hidden')
 
+    def korea_eras(self, page):
+        self.tab(page, 'map')
+        counts = {}
+        for era in ('silla', 'goryeo', 'joseon', '1896'):
+            page.click(f'#kr-eras [data-era="{era}"]')
+            page.wait_for_function(f"document.querySelector('#kr-eras [data-era=\"{era}\"]').classList.contains('on')")
+            page.wait_for_timeout(400)
+            assert page.is_visible('#legend'), f'{era} 应显示图例'
+            counts[era] = page.locator('#legend-items span').count()
+        assert counts == {'silla': 3, 'goryeo': 3, 'joseon': 8, '1896': 13}, f'图例条数 {counts}'
+        # 新罗图层下点庆州：选中今天的庆尚北道，详卡时间轴展开「统一新罗」一段
+        page.click('#kr-eras [data-era="silla"]')
+        page.wait_for_timeout(300)
+        page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).setOption({ geo: { center: [128.9, 36.3], zoom: 3 } })")
+        page.wait_for_timeout(400)
+        self._click_geo(page, [128.9, 36.3])
+        page.wait_for_function("document.querySelector('.modern-title .kana')?.textContent === '경상북도'", timeout=5000)
+        assert page.evaluate("document.querySelector('#detail .tl.hl')?.dataset.stage") == 'silla'
+        seats = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'seats').data.length")
+        assert seats == 10, f'新罗州治 {seats}'
+        self.tab(page, 'map')
+        page.click('#kr-eras [data-era="today"]')
+        page.wait_for_timeout(300)
+        assert not page.is_visible('#legend'), '回到今天时图例应收起'
+        self.no_overflow(page)
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -592,7 +618,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
