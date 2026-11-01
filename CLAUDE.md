@@ -34,6 +34,8 @@ src/js/shell.js                两种地图共用的外壳：标签页、提示�
 src/js/korea.js                朝鲜半岛模式的入口（地图、详卡、争议标注）
 src/js/disputed.js             有争议的地区（竹岛、北方四岛）：外框、splitDisputed 拆分、disputedAt、争议卡片（两种地图共用）
 src/data/korea/regions.json    半岛 29 个一级行政区 + 军事分界线 + 独岛位置（tools/build_korea_geo.py 生成）
+src/data/korea/counties/NN.json 各一级区的市郡区（同一脚本生成，下钻时才加载）
+src/js/korea-counties.js       半岛的市郡区下钻（#muni 容器，按人口着色）
 src/js/store.js                数据加载 + localStorage 读写
 src/js/map.js                  ECharts 地图（geo 坐标系）+ 时空滤镜 FILTERS + 风土图层 LAYERS + 时代/合战叠加层
 src/js/detail.js               右上：地区风土与历史详卡
@@ -68,9 +70,10 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 
 - **名称规矩**：模式叫朝鲜半岛 / Korean Peninsula / 朝鮮半島，不叫「韩国」。地名写「当前语言名 / 한글 / 罗马字」（详卡沿用 `.modern-title` 的 kanji / kana / romaji 三格）。界面不加韩文。
 - **争议标注**：独岛 / 竹岛是中性灰的空心点，不属于任何区、不着色；标签与卡片两个名字并列，三语顺序固定（`kr.dokdo*`）。卡片列出位置、现状与韩日双方立场（含韩方「不存在领土争端」），不作判断。海名「日本海 / 东海」（`kr.sea`）。南北之间画「军事分界线」（`kr.mdl`），不叫国界。
-- **数据**：`python -X utf8 tools/build_korea_geo.py`（需 shapely）。geoBoundaries 的韩国 ADM2（2020）/ 朝鲜 ADM2（2019）按 ADM1 归属，再按韩文维基改成现行区划：军威郡 → 大邱（2023）、光州 + 全南 → 全南光州统合特别市（2026-07-01）、罗先与开城（含 2023 年并入的长丰郡）单列。南北在非军事区里的重叠从北侧裁掉，约 3 公里内的缝隙并给接触边最长的一侧，全部一起 `coverage_simplify`；军事分界线取北侧边界里离南侧不到约 300 米的部分。名称表 `UNITS` 手写，与 Wikidata 韩文标签逐个比对（`KO_ALIAS` 是核对过的简称）；人口取最新年份的 P1082（朝鲜多为 2008 年普查，开城的说明在 `NOTES`）。下载缓存在 `.cache/korea/`。
+- **数据**：`python -X utf8 tools/build_korea_geo.py`（需 shapely）一次生成一级区与市郡区。先做市郡：韩国 ADM2（2020）逐块配 Wikidata 条目（各一级区的 P150 下级；坐标落在块里 + 罗马字名对得上，同名的区取最近），**一级区由配上的条目定**（geoBoundaries 的韩国 ADM1 来自 Natural Earth，太粗，会把首尔恩平区、仁川西区 / 江华 / 瓮津划进京畿；脚本断言这些已归对）；韩国每个市郡必须恰好配上一块。ADM2 缺了全南灵光郡，用 ADM3 里没被盖住的邑面洞补（板门店一带无条目的碎片并给相邻市郡）。仁川按 2026-07-01 区划拼成济物浦区 / 永宗区 / 检丹区 / 西海区（ADM3 的旧检丹 1～5 洞）。朝鲜 ADM2（2019）按同源 ADM1 归属（按块，不按名字：两道各有一个 Unsan），配不上的按罗马字名搜 Wikidata（只收坐标在块里的「…군/시/구역/地区」），仍配不上的 3 个只有罗马字名。市郡一起简化后合并成一级区，再整体粗一点简化。下载缓存在 `.cache/korea/`（出错的回应不缓存，429 会等）。改正为现行区划：军威郡 → 大邱（2023）、光州 + 全南 → 全南光州统合特别市（2026-07-01）、罗先与开城（含 2023 年并入的长丰郡）单列。南北在非军事区里的重叠从北侧裁掉，约 3 公里内的缝隙并给接触边最长的一侧，全部一起 `coverage_simplify`；军事分界线取北侧边界里离南侧不到约 300 米的部分。名称表 `UNITS` 手写，与 Wikidata 韩文标签逐个比对（`KO_ALIAS` 是核对过的简称）；人口取最新年份的 P1082（朝鲜多为 2008 年普查，开城的说明在 `NOTES`）。下载缓存在 `.cache/korea/`。
 - `regions.json`：`features[].properties` = `{id 1–16 南 / 17–29 北, name 한글全称（ECharts 区域名）, side, zh, ja, en, rr, wd, pop, pop_year, area, note}`；`mdl` 为折线数组；`dokdo.coords`。
-- 存储：探索进度 `je.korea.visited`（`MAP.store`）。深链接 `#map=korea&pref=1`，编号不在 1–29 时回到欢迎卡。
+- 存储：探索进度 `je.korea.visited`（`MAP.store`）。深链接 `#map=korea&pref=1`，编号不在 1–29 时回到欢迎卡；`&muni=1` 打开市郡区下钻，`&m=4-3` 并选中（代码为 `一级区-序号`）。
+- 市郡区下钻（korea-counties.js）：详卡「市郡区」按钮进入，按人口（对数）着色，名字取当前语言标签、缺时用韩文；图例底部注明南北数据来源与精度。
 - 向导、历代政区、市郡下钻、我在哪等在后续步骤做；现在向导区只放一条说明，输入框禁用。
 
 ## 有争议的地区（disputed.js）
@@ -363,7 +366,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / battle / koseki / tour；`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）；`country`（`#map=nope` 退回日本、日本链接不带 `map=`、`pickMap` 规则、仍写 `je.visited`）；`korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本）；`korea`（三语首尔详卡与韩文名、分母 29、日本按钮隐藏、只有首尔着色、`pref=99` 回欢迎卡）；`korea_dispute`（点独岛弹卡、两个名字顺序固定、卡片不出屏、Esc 关闭）；`disputed_split`（拆分不误伤根室、争议岛不再属于县、不改入参）；`disputed_jp`（日本地图点竹岛圆点 / 国后岛弹卡、不选中北海道）；`locate_kurils`（定位在国后岛弹争议卡）；`disputed_muni`（北海道下钻里齿舞与色丹同为灰、标题数量不含争议块、点齿舞弹卡）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / battle / koseki / tour；`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）；`country`（`#map=nope` 退回日本、日本链接不带 `map=`、`pickMap` 规则、仍写 `je.visited`）；`korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本）；`korea`（三语首尔详卡与韩文名、分母 29、日本按钮隐藏、只有首尔着色、`pref=99` 回欢迎卡）；`korea_dispute`（点独岛弹卡、两个名字顺序固定、卡片不出屏、Esc 关闭）；`disputed_split`（拆分不误伤根室、争议岛不再属于县、不改入参）；`disputed_jp`（日本地图点竹岛圆点 / 国后岛弹卡、不选中北海道）；`locate_kurils`（定位在国后岛弹争议卡）；`korea_counties`（仁川 11 区、深链接选中永宗区、不溢出、Esc 退出）；`disputed_muni`（北海道下钻里齿舞与色丹同为灰、标题数量不含争议块、点齿舞弹卡）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

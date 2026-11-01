@@ -7,6 +7,7 @@ import { lang, t, applyStatic, stateHash, shareURL } from './i18n.js';
 import { esc, legalHTML } from './detail.js';
 import { audio } from './audio.js';
 import { disputeCard } from './disputed.js';
+import { createCountyView } from './korea-counties.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -69,6 +70,10 @@ function renderRegion(el, p) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.8-4M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           <span>${t('share')}</span>
         </button>
+        <button class="share-btn" type="button" data-act="counties" title="${esc(t('kr.c.open.title'))}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <span>${t('kr.c.open')}</span>
+        </button>
       </div>
     </div>
     <div class="stats">
@@ -111,7 +116,7 @@ export async function main() {
   const card = $('art-card');
   const app = { currentId: null };
   const narrow = () => matchMedia(NARROW).matches;
-  const tabs = setupTabs(() => chart.resize(), () => {});
+  const tabs = setupTabs(() => { chart.resize(); counties.resize(); }, () => {});
 
   // 向导：半岛的史料还在整理，先放一条说明，输入框保持禁用
   $('guide-name').textContent = t('kr.guide.name');
@@ -122,6 +127,25 @@ export async function main() {
   const guideStub = { refreshMode() {} };
 
   const chart = echarts.init($('map'), null, { renderer: 'canvas' });
+  // 市郡区下钻：叠在地图区上层（与日本的市区町村下钻同一容器）
+  const counties = createCountyView($('muni'), {
+    onClose: closeCounties,
+    onSelect: (code) => history.replaceState(null, '', `${stateHash(app.currentId)}&muni=1${code ? `&m=${code}` : ''}`),
+  });
+  function openCounties(id, code = null) {
+    const p = regions.get(id);
+    if (!p) return;
+    if (id !== app.currentId) select(id);
+    closeCard();
+    if (narrow()) tabs.set('map');
+    counties.show({ id, label: nameOf(p), en: p.en, side: p.side }, code);
+    history.replaceState(null, '', `${stateHash(id)}&muni=1${code ? `&m=${code}` : ''}`);
+  }
+  function closeCounties() {
+    counties.hide();
+    if (app.currentId) history.replaceState(null, '', stateHash(app.currentId));
+    chart.resize();
+  }
   const mdlMid = (() => {
     const longest = geo.mdl.reduce((a, b) => (b.length > a.length ? b : a));
     const [x, y] = longest[Math.floor(longest.length * 0.55)];
@@ -231,9 +255,13 @@ export async function main() {
     if (id) { closeCard(); select(id); audio.play('click'); }
   });
   card.addEventListener('click', (e) => { if (e.target.closest('[data-act="card-close"]')) closeCard(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCard(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+    if (!card.hidden) closeCard(); else if (counties.open) closeCounties();
+  });
 
   detailEl.addEventListener('click', async (e) => {
+    if (e.target.closest('[data-act="counties"]') && app.currentId) { openCounties(app.currentId); return; }
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
     const url = shareURL(app.currentId);
     try {
@@ -256,10 +284,12 @@ export async function main() {
   updateCounter();
   loading.classList.add('hidden');
 
-  // 深链接：#map=korea&pref=1（编号 1–29）
-  const want = Number(new URLSearchParams(location.hash.slice(1)).get('pref'));
+  // 深链接：#map=korea&pref=1（编号 1–29）；&muni=1 打开市郡区，&m=4-3 并选中
+  const hp = new URLSearchParams(location.hash.slice(1));
+  const want = Number(hp.get('pref'));
   if (regions.has(want)) {
     select(want);
-    if (narrow()) tabs.set('detail');
+    if (hp.get('muni') === '1') openCounties(want, hp.get('m'));
+    else if (narrow()) tabs.set('detail');
   }
 }

@@ -254,6 +254,24 @@ class Case:
         page.wait_for_selector('#muni .muni-card:not([hidden])', timeout=5000)
         assert self.DSP_KURIL[self.lang] in page.text_content('#muni .muni-card')
 
+    def korea_counties(self, page):
+        # 仁川（2026 年新区划）：11 个区，含永宗区；详卡按钮进入，深链接带 muni=1
+        page.click('#detail [data-act="counties"]')
+        page.wait_for_selector('#muni .muni-map canvas', timeout=15000)
+        page.wait_for_timeout(400)
+        assert '11' in page.text_content('#muni .muni-title'), page.text_content('#muni .muni-title')
+        assert 'muni=1' in page.evaluate('location.hash')
+        code = page.evaluate("""(async () => (await (await fetch('src/data/korea/counties/04.json')).json())
+            .features.find((f) => f.properties.ko === '영종구').properties.code)()""")
+        page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=4&muni=1&m={code}')
+        page.reload()
+        page.wait_for_selector('#muni .muni-card:not([hidden])', timeout=15000)
+        assert '영종구' in page.text_content('#muni .muni-card'), page.text_content('#muni .muni-card')[:80]
+        self.no_overflow(page)
+        page.keyboard.press('Escape')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('#muni', state='hidden')
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -572,7 +590,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

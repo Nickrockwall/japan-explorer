@@ -8,11 +8,11 @@ import { splitDisputed, disputeCard, disputeLabel } from './disputed.js';
 const PALETTE = ['#c25a56', '#d4a373', '#6f9fb8', '#7a9a6a', '#9a86b8', '#4f9c94', '#c9784f', '#b86a8e'];
 const OUTSIDE = '#4a4a53';
 const DISPUTED = '#77736b'; // 有争议的岛：中性灰（disputed.js）
-const POP_STOPS = ['#2f3440', '#6f7f96', '#d4a373', '#c23531']; // 人口：少 → 多（对数刻度）
+export const POP_STOPS = ['#2f3440', '#6f7f96', '#d4a373', '#c23531']; // 人口：少 → 多（对数刻度）
 const CREDIT = '「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 · Wikidata';
 
 // 地名标签的位置：最大一块多边形外环的面积加权中心
-function center(geometry) {
+export function center(geometry) {
   let best = null, bestA = 0;
   for (const poly of geometry.coordinates) {
     const ring = poly[0];
@@ -27,7 +27,7 @@ function center(geometry) {
 }
 
 // 取景范围：排除构建时标记为 remote 的远岛（如小笠原），远岛仍可拖动查看
-function bounds(features) {
+export function bounds(features) {
   const main = features.filter((f) => !f.properties.remote);
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const f of main.length ? main : features) {
@@ -45,7 +45,7 @@ function mix(a, b, k) {
   const [x, y] = [p(a), p(b)];
   return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * k)).join(',')})`;
 }
-function ramp(k) {
+export function ramp(k) {
   const n = POP_STOPS.length - 1;
   const i = Math.min(n - 1, Math.floor(k * n));
   return mix(POP_STOPS[i], POP_STOPS[i + 1], k * n - i);
