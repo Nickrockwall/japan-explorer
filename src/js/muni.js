@@ -1,5 +1,6 @@
 // 市区町村下钻地图：在地图区上层叠一张独立的 ECharts 地图，全国地图留在下面不动。
 // 数据由 tools/build_municipalities.py 生成，每县一个文件，进入时才加载。
+import { MAP } from './country.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 
@@ -75,7 +76,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
 
   async function load(pid) {
     if (cache.has(pid)) return cache.get(pid);
-    const res = await fetch(`src/data/municipalities/${String(pid).padStart(2, '0')}.json`);
+    const res = await fetch(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.json`);
     if (!res.ok) throw new Error(`${res.status}`);
     const geo = await res.json();
     for (const f of geo.features) {

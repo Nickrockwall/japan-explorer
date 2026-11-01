@@ -1,5 +1,7 @@
-// 数据加载与浏览器本地存储
-const VISITED_KEY = 'je.visited';
+// 数据加载与浏览器本地存储（路径与键名按当前地图，见 country.js；日本即原来的路径与键名）
+import { MAP } from './country.js';
+
+const VISITED_KEY = `${MAP.store}visited`;
 const API_KEY = 'je.api';
 
 async function fetchJSON(url) {
@@ -9,16 +11,16 @@ async function fetchJSON(url) {
 }
 
 // 令制国真实边界（五畿七道滤镜用到时才下载）
-export const loadProvinces = () => fetchJSON('src/data/provinces.json');
+export const loadProvinces = () => fetchJSON(`${MAP.data}/provinces.json`);
 // 古国演变时间轴（用到时才下载）
-export const loadProvinceEras = () => fetchJSON('src/data/province_eras.json');
+export const loadProvinceEras = () => fetchJSON(`${MAP.data}/province_eras.json`);
 
 // 优先读取 tools/build_bundle.py 生成的单文件包（每种语言 1 个请求）；
 // 包不存在时回退为逐个文件加载
 export async function loadAll(lang = 'zh', merge = (b) => b) {
-  const geoP = fetchJSON('src/assets/geojson/japan.json');
+  const geoP = fetchJSON(MAP.geo);
   try {
-    const b = await fetchJSON(`src/data/bundle/${lang}.json`);
+    const b = await fetchJSON(`${MAP.data}/bundle/${lang}.json`);
     return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null, emblems: b.emblems || {} };
   } catch {
     return loadFiles(lang, merge);
@@ -29,27 +31,27 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
 // 未翻译的县保持中文，并标记 _translated = false
 async function loadFiles(lang, merge) {
   const [index, geo, events, manifest] = await Promise.all([
-    fetchJSON('src/data/index.json'),
-    fetchJSON('src/assets/geojson/japan.json'),
-    fetchJSON('src/data/historical_events.json'),
-    lang === 'zh' ? null : fetchJSON('src/data/i18n/manifest.json'),
+    fetchJSON(`${MAP.data}/index.json`),
+    fetchJSON(MAP.geo),
+    fetchJSON(`${MAP.data}/historical_events.json`),
+    lang === 'zh' ? null : fetchJSON(`${MAP.data}/i18n/manifest.json`),
   ]);
   const done = new Set(manifest?.[lang]?.prefectures || []);
-  const dir = `src/data/i18n/${lang}`;
+  const dir = `${MAP.data}/i18n/${lang}`;
   const prefs = await Promise.all(index.map(async (e) => {
-    const base = await fetchJSON(`src/data/prefectures/${e.file}`);
+    const base = await fetchJSON(`${MAP.data}/prefectures/${e.file}`);
     if (lang === 'zh') return { ...base, _translated: true };
     if (!done.has(e.id)) return { ...base, _translated: false };
     return { ...merge(base, await fetchJSON(`${dir}/prefectures/${e.file}`)), _translated: true };
   }));
   const ev = manifest?.[lang]?.events ? merge(events, await fetchJSON(`${dir}/historical_events.json`)) : events;
   // 圣地巡礼：译文按 id 叠加（与 tools/build_bundle.py 的 pilgrimage() 一致）
-  const pil = await fetchJSON('src/data/pilgrimage.json');
+  const pil = await fetchJSON(`${MAP.data}/pilgrimage.json`);
   const over = lang === 'zh' ? {} : await fetchJSON(`${dir}/pilgrimage.json`).catch(() => ({}));
   const pilgrimage = { done: pil.done, spots: pil.spots.map((s) => ({ ...s, ...(over[s.id] || {}) })) };
   // 广重浮世绘只随数据包发布（题名译文、市区町村名由 build_bundle.py 拼好）；回退加载时不显示
-  const kokuryoku = await fetchJSON('src/data/kokuryoku.json').catch(() => null);
-  const emblems = Object.fromEntries(Object.entries(await fetchJSON('src/data/emblems.json').catch(() => ({}))).map(([k, v]) => [k, v.file]));
+  const kokuryoku = await fetchJSON(`${MAP.data}/kokuryoku.json`).catch(() => null);
+  const emblems = Object.fromEntries(Object.entries(await fetchJSON(`${MAP.data}/emblems.json`).catch(() => ({}))).map(([k, v]) => [k, v.file]));
   return { index, geo, events: ev, prefs: new Map(prefs.map((p) => [p.id, p])), pilgrimage, hiroshige: [], provinceNames: [], koku: [], kokuryoku, emblems };
 }
 
@@ -81,7 +83,7 @@ export const visited = {
 };
 
 // 御朱印：{ [id]: 盖印时间 ISO 字符串 }
-const GOSHUIN_KEY = 'je.goshuin';
+const GOSHUIN_KEY = `${MAP.store}goshuin`;
 export const goshuinBook = {
   get: () => read(GOSHUIN_KEY, {}),
   stamp(id) {
@@ -94,7 +96,7 @@ export const goshuinBook = {
 };
 
 // 诸国一宫：{ [旧国]: { at 参拜时间, site 神社 id, real 是否亲临, realAt 亲临时间 } }
-const ICHI_KEY = 'je.ichinomiya';
+const ICHI_KEY = `${MAP.store}ichinomiya`;
 export const ichinomiya = {
   get: () => read(ICHI_KEY, {}),
   pray(prov, site) {
@@ -114,10 +116,12 @@ export const ichinomiya = {
   clear: () => write(ICHI_KEY, null),
 };
 
-// 界面偏好：滤镜模式、向导模式、右侧上下比例
+// 界面偏好：滤镜模式、向导模式、右侧上下比例。滤镜与图层每张地图各记各的，其余全站共用
+const PER_MAP = new Set(['filter', 'layer']);
+const prefKey = (name) => `${PER_MAP.has(name) ? MAP.store : 'je.'}ui.${name}`;
 export const uiPref = {
-  get: (name, fallback) => read(`je.ui.${name}`, fallback),
-  set: (name, value) => write(`je.ui.${name}`, value),
+  get: (name, fallback) => read(prefKey(name), fallback),
+  set: (name, value) => write(prefKey(name), value),
 };
 
 export const DEFAULT_API = {

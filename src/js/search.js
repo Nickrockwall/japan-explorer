@@ -1,4 +1,5 @@
 // 搜索：县 / 旧国 / 市区町村，自定义下拉（替代浏览器自带的 datalist）
+import { MAP } from './country.js';
 import { lang, t, prefName } from './i18n.js';
 import { esc } from './detail.js';
 
@@ -25,7 +26,7 @@ export function fold(str) {
 // 市区町村索引：[县id, 名称, 读音, 英文名, [代码…], 人口, 年份]（tools/build_municipalities.py 生成）
 let indexLoad = null;
 export function loadMuniIndex() {
-  indexLoad ||= fetch('src/data/municipalities/index.json')
+  indexLoad ||= fetch(`${MAP.data}/municipalities/index.json`)
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
     .catch((e) => { indexLoad = null; throw e; });
   return indexLoad;
