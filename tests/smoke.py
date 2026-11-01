@@ -357,7 +357,8 @@ class Case:
                 page.click('[data-act="ks-image"]')
             assert dl.value.suggested_filename == 'koseki-20203.png'
         page.click('[data-act="ks-close"]')
-        assert 'koseki' not in page.evaluate('location.hash'), '关掉后地址栏应去掉 koseki'
+        # 对话框的 close 事件是异步派发的，等它改完地址栏
+        page.wait_for_function("!location.hash.includes('koseki')", timeout=3000)
         page.click('.muni-card [data-act="koseki"]')
         page.wait_for_selector('#koseki[open]')
         assert page.input_value('[data-ks-name]') == '真田太郎', '户主名应记住'
@@ -418,6 +419,9 @@ def main():
                         msg = str(e).splitlines()[0][:300]
                         failures.append(f'{label}: {msg}')
                         print(f'✗ {label}: {msg}')
+                        if os.environ.get('GITHUB_ACTIONS'):
+                            # 写成 Actions 的错误标注：仓库公开时不登录也能从 API 读到失败原因
+                            print(f'::error title=smoke {label.split()[0]} {lang} {name}::{msg}')
                         if page:
                             page.screenshot(path=os.path.join(ART, f'{vp}-{lang}-{name}.png'))
                     finally:
