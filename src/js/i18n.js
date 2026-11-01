@@ -2,6 +2,7 @@
 // 语言在页面加载时确定（手动选择 > 浏览器语言），切换语言会重新载入页面。
 // 数据翻译以「覆盖层」形式存放在 src/data/i18n/{lang}/，只覆盖文字字段；分类键（地方、五畿七道、时代等）不翻译，显示时经 t() 转换。
 import { uiPref } from './store.js';
+import { mapKey } from './country.js';
 
 export const LANGS = {
   zh: { label: '中文', short: '中', html: 'zh-CN' },
@@ -40,16 +41,17 @@ export function setLang(l) {
   uiPref.set('lang', l);
   // 地址栏里的 lang 优先级最高，切换时一并改掉，否则重新载入后又会回到旧语言
   const h = new URLSearchParams(location.hash.slice(1));
-  if (h.has('lang') || h.has('pref')) {
+  if (h.has('lang') || h.has('pref') || h.has('map')) {
     h.set('lang', l);
     location.hash = h.toString();
   }
   location.reload();
 }
 
-// 当前页面状态的地址片段：#pref=26&lang=ja
+// 当前页面状态的地址片段：#pref=26&lang=ja（日本以外的地图在最前面加 map=）
 export function stateHash(prefId) {
   const h = new URLSearchParams();
+  if (mapKey !== 'japan') h.set('map', mapKey);
   if (prefId) h.set('pref', prefId);
   h.set('lang', lang);
   return `#${h.toString()}`;

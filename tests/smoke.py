@@ -95,6 +95,17 @@ class Case:
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
 
+    def country(self, page):
+        # #map=nope 退回日本，并且日本模式的链接里不出现 map=
+        assert page.evaluate("import('./src/js/country.js').then((m) => m.mapKey)") == 'japan'
+        assert 'map=' not in page.evaluate('location.hash'), '日本模式的地址栏不应带 map='
+        # 规则本身（不依赖已登记哪些地图）
+        rules = page.evaluate("""import('./src/js/country.js').then(({ pickMap: p }) => [
+            p('', null), p('#map=nope', null), p('#pref=26&lang=ja', 'japan'), p('#pref=26', 'nope')])""")
+        assert rules == ['japan'] * 4, f'pickMap 结果 {rules}'
+        # 老用户数据键名不变
+        assert page.evaluate("JSON.parse(localStorage.getItem('je.visited') || '[]').includes(26)"), '日本模式应写入 je.visited'
+
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
 
@@ -420,7 +431,7 @@ def plan(lang):
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
-                  ('china', 'pref=26', ['deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
+                  ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
                   ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 

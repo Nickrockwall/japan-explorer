@@ -1,4 +1,5 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
+import { MAP } from './country.js';
 import { loadAll, loadProvinces, loadProvinceEras, ichinomiya, visited, apiConfig, DEFAULT_API, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
@@ -21,7 +22,7 @@ const $ = (id) => document.getElementById(id);
 
 function updateCounter(set) {
   $('visited-count').textContent = set.size;
-  $('visited-bar').style.width = `${(set.size / 47) * 100}%`;
+  $('visited-bar').style.width = `${(set.size / MAP.units) * 100}%`;
 }
 
 const NARROW = '(max-width: 900px), (max-height: 520px) and (orientation: landscape)';
