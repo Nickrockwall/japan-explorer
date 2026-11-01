@@ -66,7 +66,7 @@ class Case:
         if no_audio:
             ctx.add_init_script(NO_AUDIO)
         if not fresh:
-            ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); } catch (e) {}")
+            ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); localStorage.setItem('je.ui.tourKorea', 'true'); } catch (e) {}")
         page = ctx.new_page()
         if china:
             page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
@@ -639,6 +639,23 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_selector('.tour', state='detached')
 
+    def korea_tour(self, page):
+        # 半岛的新手教程：第一次进半岛自动出现，7 步，气泡不出屏、聚光灯对准；走完单独记住
+        page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
+        n = int(page.text_content('.tour-n').split('/')[1])
+        assert n == 7, f'半岛教程应有 7 步，实际 {n}'
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        for i in range(n):
+            page.wait_for_timeout(300)
+            box = page.locator('.tour-tip').bounding_box()
+            assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'第 {i + 1} 步气泡出屏：{box}'
+            if 0 < i < n - 1:
+                hole = page.locator('.tour-hole').bounding_box()
+                assert hole and hole['width'] > 10 and hole['height'] > 10, f'第 {i + 1} 步没有对准控件'
+            page.click('[data-tour="next"]')
+        page.wait_for_selector('.tour', state='detached')
+        assert page.evaluate("localStorage.getItem('je.ui.tourKorea')") == 'true', '走完半岛教程应记住'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -650,7 +667,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
@@ -680,7 +697,7 @@ def main():
                     total += 1
                     page = None
                     try:
-                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name == 'tour',
+                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'),
                                       geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
                                       else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
                                       else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'

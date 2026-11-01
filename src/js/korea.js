@@ -11,6 +11,8 @@ import { createCountyView } from './korea-counties.js';
 import { placeHistory, placeCard } from './korea-place.js';
 import { getPosition } from './locate.js';
 import { disputedAt } from './disputed.js';
+import { createTour } from './tour.js';
+import { uiPref } from './store.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -71,6 +73,7 @@ function renderWelcome(el) {
       <h2>${t('kr.w.h')}</h2>
       <p>${t('kr.w.p1')}</p>
       <p>${t('kr.w.p2')}</p>
+      <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
       <p class="legal">${legalHTML()}</p>
     </div>`;
 }
@@ -486,17 +489,31 @@ export async function main() {
   });
 
   setupSplitter(() => chart.resize());
+  // 半岛的新手教程：第一次进半岛（且不是点分享链接进来的）时自动开始，与日本的教程分开记
+  const onMap = () => { if (narrow()) tabs.set('map'); };
+  const tour = createTour([
+    { key: 'krhi' },
+    { key: 'krmap', target: () => $('map'), before: onMap },
+    { key: 'kreras', target: () => $('kr-eras'), before: onMap },
+    { key: 'krdetail', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="detail"]') : detailEl) },
+    { key: 'krlocate', target: () => $('btn-locate'), before: onMap },
+    { key: 'krguide', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="guide"]') : document.querySelector('.guide')) },
+    { key: 'krend' },
+  ], { onEnd: () => uiPref.set('tourKorea', true) });
+  const startTour = () => { closeCard(); closePlace(); if (counties.open) closeCounties(); tour.start(); };
   setupSettings(guideStub, () => {
     visited.clear();
     if (app.currentId) visited.add(app.currentId);
     updateCounter();
     paint();
-  }, () => {});
+  }, () => startTour());
   window.addEventListener('resize', () => chart.resize());
 
   renderWelcome(detailEl);
+  detailEl.addEventListener('click', (e) => { if (e.target.closest('[data-act="tour"]')) startTour(); });
   updateCounter();
   loading.classList.add('hidden');
+  if (!uiPref.get('tourKorea', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 
   // 深链接：#map=korea&pref=1（编号 1–29）；&muni=1 打开市郡区，&m=4-3 并选中
   const hp = new URLSearchParams(location.hash.slice(1));

@@ -4,6 +4,7 @@
 // （不自动探测文件是否存在：请求不存在的文件会在控制台留下 404。）
 // 任何音频故障都只在控制台警告，绝不影响地图与主流程。
 import { uiPref } from './store.js';
+import { mapKey } from './country.js';
 
 const DIR = 'src/assets/audio/';
 const FILES = {
@@ -268,8 +269,14 @@ function play(name) {
 }
 
 // ── 背景音乐：都节音阶（E F A B C）随机生成的古筝拨弦 + 柔和持续低音，不循环 ──
+// 朝鲜半岛模式换成平调五声音阶（G A C D E）、G/D 持续低音，拨弦带伽倻琴式的「弄弦」（较宽的慢颤音）
+const KOREA = mapKey === 'korea';
 const MIYAKO = [0, 1, 5, 7, 8];
-const SCALE = [-1, 0, 1].flatMap((o) => MIYAKO.map((s) => 329.63 * 2 ** ((o * 12 + s) / 12)));
+const PYEONGJO = [0, 2, 5, 7, 9];
+const SCALE = KOREA
+  ? [-1, 0, 1].flatMap((o) => PYEONGJO.map((s) => 196 * 2 ** ((o * 12 + s) / 12)))
+  : [-1, 0, 1].flatMap((o) => MIYAKO.map((s) => 329.63 * 2 ** ((o * 12 + s) / 12)));
+const DRONE = KOREA ? [98, 146.83, 196] : [82.41, 123.47, 164.81];
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 function pluck(t, freq, vel, out) {
@@ -282,8 +289,18 @@ function pluck(t, freq, vel, out) {
   const o = ctx.createOscillator();
   o.type = 'triangle';
   o.frequency.setValueAtTime(freq, t);
-  // 偶尔「押し」：弦被按压，音高微微上推再回落
-  if (Math.random() < 0.12) {
+  if (KOREA && Math.random() < 0.55) {
+    // 弄弦：按弦的手在余音里上下揉弦
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 4.5 + Math.random() * 1.5;
+    const depth = ctx.createGain();
+    depth.gain.setValueAtTime(0, t);
+    depth.gain.linearRampToValueAtTime(freq * 0.018, t + 0.6);
+    lfo.connect(depth).connect(o.frequency);
+    lfo.start(t + 0.2);
+    lfo.stop(t + 2.5);
+  } else if (Math.random() < 0.12) {
+    // 偶尔「押し」：弦被按压，音高微微上推再回落
     o.frequency.setValueAtTime(freq, t + 0.3);
     o.frequency.linearRampToValueAtTime(freq * 1.03, t + 0.55);
     o.frequency.linearRampToValueAtTime(freq, t + 1.1);
@@ -307,7 +324,7 @@ function synthMusic() {
   send.gain.value = 0.7;
   out.connect(send).connect(nodes.verb);
 
-  // 持续低音：E2 + B2，慢速起伏
+  // 持续低音：E2 + B2（半岛模式 G2 + D3），慢速起伏
   const drone = ctx.createGain();
   drone.gain.value = 0.05;
   const dlp = ctx.createBiquadFilter();
@@ -319,7 +336,7 @@ function synthMusic() {
   const lfoDepth = ctx.createGain();
   lfoDepth.gain.value = 0.025;
   lfo.connect(lfoDepth).connect(drone.gain);
-  const oscs = [lfo, ...[82.41, 123.47, 164.81].map((f, i) => {
+  const oscs = [lfo, ...DRONE.map((f, i) => {
     const o = ctx.createOscillator();
     o.type = i === 2 ? 'sine' : 'triangle';
     o.frequency.value = f;
