@@ -125,7 +125,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       <ol class="sg-rows sg-roles">${roles}</ol>
       ${rel ? `<div class="sg-rels"><span>${esc(t('sg.related'))}</span>${rel}</div>` : ''}
       <a class="sg-wiki" href="${wikiLink(title, p.qid)}" target="_blank" rel="noopener">${esc(t('sg.wiki'))} ↗</a>
-      ${bio?.img ? `<p class="kr-note">${esc(t('sg.img'))}</p>` : ''}</div>`;
+      ${bio?.img ? `<p class="kr-note">${esc(bio.author ? t('sg.img.by', { author: bio.author, license: bio.license }) : t('sg.img'))}</p>` : ''}</div>`;
   }
 
   function card() {

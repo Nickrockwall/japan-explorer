@@ -44,7 +44,7 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/data/koku_sites.json`（一宫·国府·国分寺的名称、所在地与现状） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「一宮」「国府」「国分寺」条目的一览表与各社寺条目的坐标 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/kokuryoku.json` 中的江户人口（1721、1846）与石高（1834） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」的旧国别人口表 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/assets/emblems/`（47 都道府县章）与 `src/data/emblems.json` | [Wikimedia Commons](https://commons.wikimedia.org/) 各县章 SVG（文件名见 emblems.json 的 `commons`），转成透明底 PNG | **公有领域**（工具逐个核对，只收公有领域 / CC0） |
-| `src/assets/people/`（人物肖像） | 各人物 Wikidata P18 指向的 [Wikimedia Commons](https://commons.wikimedia.org/) 图像（文件名见 `src/data/people.json` 的 `commons`），缩到宽 240px | **公有领域**（`tools/people_tool.py` 逐个核对，非公有领域的不收） |
+| `src/assets/people/`（人物肖像） | 各人物 Wikidata P18 指向的 [Wikimedia Commons](https://commons.wikimedia.org/) 图像（文件名见 `src/data/people.json` 的 `commons`），缩到宽 240px | 多为**公有领域**；山名宗全（Musuketeer.3）、岛津义久（Ginger1192）两张为 **CC BY-SA 3.0**，卡片上注明作者与许可（`tools/people_tool.py` 逐个核对许可，其余许可不收） |
 | `src/data/sengoku.json`、`rulers.json`、`people.json` | 势力归属、天皇 / 将军 / 执权在位年份按[日本語版ウィキペディア](https://ja.wikipedia.org/)各条目整理并核对（事实数据）；人物简介为本项目自行撰写 | 本项目内容（简介）；年份等事实不受著作权保护 |
 | `tools/domains.json` 及数据包中的 `domains`（幕末各郡的领主与町村数） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)各郡条目「近世以降の沿革」中的《旧高旧領取調帳》表；藩的英文名来自 [Wikidata](https://www.wikidata.org/)（CC0） | **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/korea/regions.json` 的边界（朝鲜半岛模式） | [geoBoundaries](https://www.geoboundaries.org/)（gbOpen）：韩国 ADM1 取自 Natural Earth，ADM2 取自 citypopulation.de；朝鲜 ADM1/ADM2 取自 WFP / OCHA ROAP。按现行区划合并、简化 | 韩国 ADM1 公有领域；韩国 ADM2 CC BY 3.0；朝鲜 CC BY 3.0 IGO（均须署名） |

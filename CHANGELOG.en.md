@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.5 · 2026-11-02
+
+- Sengoku map, 1590: still all under Toyotomi, but the domains of the great lords — Tokugawa (six Kantō provinces), Mōri, Maeda, Uesugi, Date, Mogami, Shimazu, Kobayakawa and others — now have their own colors and leading figures
+- Share links remember the Sengoku map: the address carries the year and the open province (e.g. `#sg=1600&sgp=美濃国`), so whoever opens it sees the same map and card
+- The guide knows the Sengoku map: opening a province adds a quick question ("Who held Mino in 1600?") that lists all six years even offline; with an API key the record goes to the guide
+- Portraits for 55 people: where Wikidata has no image the lead image of the Wikipedia article is used, and CC BY-SA images are now accepted with the author and license shown on the card; signatures and monuments are left out
+
 ## 3.4 · 2026-11-02
 
 - Sengoku map: the "Sengoku powers" filter now colors the 68 provinces and switches between six years — 1467 at the start of the Ōnin War (the shugo governors: Yamana and Hosokawa ten provinces each), 1560 Okehazama, 1573 the fall of the shogunate, 1582 on the eve of Honnō-ji, 1590 unification under Toyotomi, and 1600 Sekigahara (Eastern army / Western army / switched sides / divided / stayed out). Provinces split between powers say so, unclear ones are shown as local lords or contested, and every entry is checked by script against the shugo lists and biographies on Japanese Wikipedia

@@ -5,8 +5,8 @@
 - 简介是自己写的（维基百科正文是 CC BY-SA，不能搬），中 / 英 / 日三语意思一致，两三句。
 - 每条的 ev 是简介里的关键事实（年份、事件、人名）在日文维基该人物条目里的写法，必须都出现在条目正文里；
   related 里的人必须也在本表或 sengoku.json / rulers.json 里。
-- 肖像：Wikidata P18 → Wikimedia Commons，**只收公有领域**，缩到宽 240px 存 src/assets/people/<QID>.jpg
-  （Commons 在国内打不开，随站点发布）。不是公有领域或没有图的不放，界面改用家纹 / 名字首字。
+- 肖像：Wikidata P18（没有则取日文维基条目首图）→ Wikimedia Commons，收公有领域与 CC BY / BY-SA（记下作者，卡片上署名），
+  缩到宽 240px 存 src/assets/people/<QID>.jpg（Commons 在国内打不开，随站点发布）。人工看过不是肖像的（花押、石碑）写进 NOT_PORTRAIT。
 - crest 是 crests.js 的印纹代号（只写家纹确实是这个图案的：德川三叶葵、武田菱、毛利一文字三星、岛津丸十字、
   织田木瓜、北条三鳞、足利一门二引两、佐竹扇、千叶月星、浅井龟甲花菱、土岐桔梗、大内花菱、皇室菊）。
 需 pillow。缓存在 .cache/sengoku/。
@@ -14,6 +14,7 @@
 import io
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -31,6 +32,9 @@ IMG_DIR = os.path.join(ROOT, 'src', 'assets', 'people')
 wiki.CACHE = os.path.join(ROOT, '.cache', 'sengoku')
 UA = {'User-Agent': 'japan-explorer-data-tool/1.0 (https://github.com/Nickrockwall/japan-explorer)'}
 FREE = ('public domain', 'pd', 'cc0')
+ATTRIB = ('cc by-sa', 'cc by')  # 署名即可用：卡片上注明作者与许可（登记在 LICENSE-CONTENT）
+# 没有 Wikidata P18 时改用日文维基条目的首图（pageimages）；人工看过不是本人肖像的写进 NOT_PORTRAIT
+NOT_PORTRAIT = {'足利政知の花押.jpg', '上杉顕定の花押.jpg', 'Rokugojohi.JPG'}  # 花押（签名）与石碑照片
 
 # 日文条目名: (中文, English, 日本語, ev, related, crest)
 P = {
@@ -392,7 +396,8 @@ def api(url, params):
 
 
 def portraits():
-    """Wikidata P18 → Commons 许可核对（只收公有领域）→ 240px 缩略图。返回 {条目名: {qid, img?, commons?}}。"""
+    """Wikidata P18（没有则取日文维基条目首图）→ Commons 许可核对（公有领域；CC BY / BY-SA 记下作者）→ 240px 缩略图。
+    返回 {条目名: {qid, img?, commons?, license?, author?}}。"""
     path = os.path.join(wiki.CACHE, 'people-img.json')
     cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
     todo = [t for t in P if t not in cache]
@@ -405,20 +410,32 @@ def portraits():
                 continue
             files = [c['mainsnak'].get('datavalue', {}).get('value') for c in e.get('claims', {}).get('P18', [])]
             cache[e['sitelinks']['jawiki']['title']] = {'qid': qid, 'file': next((f for f in files if f), None)}
+    need = [t for t in P if t in cache and not cache[t].get('file') and 'pageimage' not in cache[t]]
+    if need:
+        d = api('https://ja.wikipedia.org/w/api.php', {'action': 'query', 'titles': '|'.join(need), 'prop': 'pageimages',
+                                                      'piprop': 'name', 'formatversion': 2})
+        for pg in d['query']['pages']:
+            if pg['title'] in cache:
+                cache[pg['title']]['pageimage'] = pg.get('pageimage')
+                cache[pg['title']]['file'] = cache[pg['title']]['file'] or pg.get('pageimage')
     os.makedirs(IMG_DIR, exist_ok=True)
     out = {}
     for t in P:
         c = cache.get(t) or {}
         out[t] = {'qid': c.get('qid')}
-        if not c.get('file'):
+        if not c.get('file') or c['file'] in NOT_PORTRAIT:
             continue
-        if 'license' not in c:
+        if 'author' not in c:
             d = api('https://commons.wikimedia.org/w/api.php', {'action': 'query', 'titles': 'File:' + c['file'], 'prop': 'imageinfo',
                                                                  'iiprop': 'url|extmetadata', 'iiurlwidth': 240})
             ii = (next(iter(d['query']['pages'].values())).get('imageinfo') or [{}])[0]
-            c['license'] = ii.get('extmetadata', {}).get('LicenseShortName', {}).get('value', '')
+            meta = ii.get('extmetadata', {})
+            c['license'] = meta.get('LicenseShortName', {}).get('value', '')
+            c['author'] = re.sub(r'<[^>]+>', '', meta.get('Artist', {}).get('value', '')).strip()
             c['thumb'] = ii.get('thumburl')
-        if not c['license'].lower().startswith(FREE) or not c.get('thumb'):
+        lic = c['license'].lower()
+        free = lic.startswith(FREE)
+        if not (free or (lic.startswith(ATTRIB) and c['author'])) or not c.get('thumb'):
             print(f'不收肖像：{t} {c["file"]}（{c["license"] or "无许可信息"}）')
             continue
         dest = os.path.join(IMG_DIR, f'{c["qid"]}.jpg')
@@ -434,7 +451,8 @@ def portraits():
                         raise
             im.thumbnail((240, 320))
             im.save(dest, quality=82, optimize=True)
-        out[t].update(img=f'src/assets/people/{c["qid"]}.jpg', commons='File:' + c['file'], license=c['license'])
+        out[t].update(img=f'src/assets/people/{c["qid"]}.jpg', commons='File:' + c['file'], license=c['license'],
+                      **({} if free else {'author': c['author']}))
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False)
     return out
