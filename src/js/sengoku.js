@@ -107,8 +107,10 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const roles = [
       ...(rulerBy[title]?.roles || []).map(([role, n, a, b]) => `<li><span class="sg-y sg-span">${yr(a)}–${b == null ? '' : yr(b)}</span><span>${esc(roleText(role, n))}</span></li>`),
       ...data.years.flatMap((y) => Object.entries(data.heads[y] || {}).filter(([, v]) => v === title).map(([c]) => {
-        const n = keys.filter((k) => !isOutside(k) && entry(k, y).c === c).length;
-        return `<li><span class="sg-y">${y}</span><span>${esc(t(y === '1600' ? 'sg.role.side' : 'sg.role', { clan: clanName(y, c), n }))}</span></li>`;
+        // 1590 年秀吉是整个丰臣政权的代表，按全国计
+        const all = c === 'toyo_small';
+        const n = keys.filter((k) => !isOutside(k) && (all || entry(k, y).c === c)).length;
+        return `<li><span class="sg-y">${y}</span><span>${esc(t(y === '1600' ? 'sg.role.side' : 'sg.role', { clan: clanName(y, all ? 'toyotomi' : c), n }))}</span></li>`;
       })),
     ].join('');
     const sub = [lang === 'ja' ? p.en : p.ja, data.people[title] ? life(p) : ''].filter(Boolean).join(' · ');

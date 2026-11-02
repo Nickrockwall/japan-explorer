@@ -88,6 +88,11 @@ CLANS = {
     'gunyu': ('国人割据', 'Local lords, none dominant', '国人割拠', '#5a5a63', None),
     'contest': ('多方争夺', 'Contested', '係争中', '#6a5a63', None),
     'toyotomi': ('丰臣政权', 'Toyotomi regime', '豊臣政権', '#c9a227', None),
+    'toyo_small': ('丰臣直辖与中小大名', 'Toyotomi lands and smaller lords', '豊臣蔵入地・中小大名', '#6e6248', None),
+    'date': ('伊达', 'Date', '伊達', '#5a4a9a', '伊達氏'),
+    'mogami': ('最上', 'Mogami', '最上', '#8f6a4a', '最上氏'),
+    'maeda': ('前田', 'Maeda', '前田', '#b0507a', '前田氏'),
+    'kobayakawa': ('小早川', 'Kobayakawa', '小早川', '#5fa58f', '小早川氏'),
     'outside': ('令制外', 'Outside the provinces', '令制外', '#33333a', None),
 }
 # 1600 年关原的站队
@@ -185,6 +190,19 @@ DATA = {
     '-': ['outside'] * 6,
 }
 
+# 1590 年（小田原征伐与奥州仕置之后）：全国归丰臣政权；大大名的领国单独着色，其余为丰臣直辖与中小大名（toyo_small）
+Y1590 = {
+    '陸奥国': 'date', '出羽国': 'mogami', '常陸国': 'satake', '安房国': 'satomi',
+    '伊豆国': 'tokugawa', '相模国': 'tokugawa', '武蔵国': 'tokugawa', '上総国': 'tokugawa', '下総国': 'tokugawa', '上野国': 'tokugawa',
+    '越後国': 'uesugi', '佐渡国': 'uesugi', '越中国': 'maeda', '能登国': 'maeda', '加賀国': 'maeda',
+    '安芸国': 'mori', '周防国': 'mori', '長門国': 'mori', '石見国': 'mori', '出雲国': 'mori', '隠岐国': 'mori', '備後国': 'mori',
+    '備中国': 'mori', '伯耆国': 'mori', '備前国': 'ukita', '美作国': 'ukita', '筑前国': 'kobayakawa', '筑後国': 'kobayakawa',
+    '土佐国': 'chosokabe', '豊後国': 'otomo', '肥前国': 'ryuzoji', '薩摩国': 'shimazu', '大隅国': 'shimazu', '対馬国': 'so',
+}
+for _p, _row in DATA.items():
+    if _row[4] == T:
+        _row[4] = Y1590.get(_p, 'toyo_small')
+
 # 几家分占：(国, 年) → 其他几家（主要控制者之外）
 SPLIT = {
     ('伊勢国', '1560'): ['gunyu'],
@@ -204,6 +222,9 @@ SPLIT = {
     ('大隅国', '1560'): ['gunyu'],
     ('土佐国', '1573'): ['gunyu'],
     ('豊前国', '1582'): ['otomo', 'gunyu'],
+    ('陸奥国', '1590'): ['toyo_small'], ('出羽国', '1590'): ['uesugi', 'toyo_small'], ('伯耆国', '1590'): ['toyo_small'],
+    ('備中国', '1590'): ['ukita'], ('筑後国', '1590'): ['toyo_small'], ('肥前国', '1590'): ['toyo_small'],
+    ('大隅国', '1590'): ['toyo_small'],
     ('筑前国', '1582'): ['otomo', 'gunyu'],
     ('備中国', '1560'): ['mimura', 'amago'],
     ('伊勢国', '1573'): ['ikko'],
@@ -215,6 +236,7 @@ SPLIT = {
 CHECKED = {
     ('志摩国', 'isshiki'): ('伊勢国', '志摩国守護も兼任'),
     ('能登国', 'oda'): ('前田利家', '信長の命により、菅屋長頼らともに能登国を治める'),
+    ('上野国', 'tokugawa'): ('徳川家康', '武蔵国・伊豆国・相模国・上野国・上総国・下総国'),
 }
 
 
@@ -347,7 +369,10 @@ HEADS = {
         'ryuzoji': '龍造寺隆信', 'satake': '佐竹義重 (十八代当主)', 'satomi': '里見義頼', 'shimazu': '島津義久',
         'tokugawa': '徳川家康', 'uesugi': '上杉景勝', 'ukita': '宇喜多秀家',
     },
-    '1590': {'toyotomi': '豊臣秀吉'},
+    '1590': {'toyo_small': '豊臣秀吉', 'tokugawa': '徳川家康', 'date': '伊達政宗', 'mogami': '最上義光', 'satake': '佐竹義宣 (右京大夫)',
+             'satomi': '里見義康', 'uesugi': '上杉景勝', 'maeda': '前田利家', 'mori': '毛利輝元', 'ukita': '宇喜多秀家',
+             'kobayakawa': '小早川隆景', 'chosokabe': '長宗我部元親', 'otomo': '大友義統', 'ryuzoji': '鍋島直茂',
+             'shimazu': '島津義久', 'so': '宗義智'},
     '1600': {'east': '徳川家康', 'west': '石田三成'},
 }
 # 生卒不详、按条目原文确认那一年在位的：(年, 家) → (日文维基条目, 原文)
@@ -360,7 +385,7 @@ HEAD_EV = {
 # Wikidata 没有英文名的（读音取日文条目首句）
 EN_PEOPLE = {'宗成職': 'Sō Shigemoto', '小山持政': 'Oyama Mochimasa', '菊池重朝': 'Kikuchi Shigetomo'}
 # 条目里核对的字（默认取家名）
-HEAD_SURNAME = {'ikko': '本願寺', 'anegakoji': '姉小路', 'toyotomi': '豊臣', 'east': '関ヶ原', 'west': '関ヶ原', 'horigoe': '堀越',
+HEAD_SURNAME = {'ikko': '本願寺', 'anegakoji': '姉小路', 'toyotomi': '豊臣', 'toyo_small': '豊臣', 'ryuzoji': '龍造寺', 'east': '関ヶ原', 'west': '関ヶ原', 'horigoe': '堀越',
                 'miyoshi': '三好'}
 
 
