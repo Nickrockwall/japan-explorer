@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 3.1 · 2026-11-02
+
+- Shared history grows from 2 episodes to 9, in date order: migrants and Buddhism, Baekgang, the Mongol invasions, the Imjin War, the Joseon embassies, the road to annexation, Japanese rule, normalisation, and repatriation and the abductions. Each still has facts both sides accept, each side's account and sources, with North Korea's account where it is involved
+- Renamed "Shared history: Japan and the Korean Peninsula"; one entry button on the welcome card, and the episode tabs scroll sideways in a single row
+- Fix: in Peninsula mode the guide's quick-question buttons had a pale background that hid their text
+
 ## 3.0 · 2026-11-02
 
 - New Korean Peninsula mode, switched from next to the title: 29 regions North and South (2026 divisions) and 400-plus cities and counties, named in English, Korean script and romanization

@@ -1,6 +1,155 @@
 {
  "events": [
   {
+   "key": "torai",
+   "years": {"zh": "4–7 世纪", "en": "4th–7th c.", "ja": "4〜7世紀"},
+   "title": {"zh": "渡来人与佛教东传", "en": "Migrants & Buddhism", "ja": "渡来人と仏教公伝"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "渡来人（过去多称「归化人」）", "en": "toraijin, \"people who came across\" (formerly kikajin)", "ja": "渡来人（かつては帰化人）"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "渡来人（도래인）、渡倭人", "en": "dorae-in (도래인), \"people who went over to Wa\"", "ja": "渡来人（도래인）・渡倭人"}}
+   ],
+   "facts": {
+    "zh": [
+     "4 世纪末到 7 世纪后半，许多人从朝鲜半岛和中国大陆移居日本列岛，有工匠也有亡命的贵族，不少人在大和朝廷做官；秦氏、东汉氏、西文氏是有代表性的半岛系氏族。",
+     "百济圣明王把佛像和经典送给倭国朝廷，史称「佛教公传」。年代有 538 年（《元兴寺缘起》等）和 552 年（《日本书纪》）两说，现在多取 538 年。",
+     "815 年编成的《新撰姓氏录》收录 1182 个氏族，其中 326 个属于「诸蕃」（渡来系），约占三成；出身地以汉（163）、百济（104）、高句丽（41）为多。",
+     "往来是双向的：倭国与百济结盟，4 世纪后半到 5 世纪多次出兵半岛；百济、伽倻一带也有倭人移居的痕迹。",
+     "《日本书纪》里的「任那日本府」，过去被说成大和朝廷统治半岛南部的机构。2002–2010 年的日韩历史共同研究中，两国学者都不认为存在那样的常设统治机构，日本文部科学省也表示近年不支持这种说法。"
+    ],
+    "en": [
+     "From the late 4th to the late 7th century many people moved from the Korean Peninsula and mainland China to the Japanese archipelago — craftsmen as well as exiled nobles — and many served at the Yamato court; the Hata, Yamato-no-Aya and Kawachi-no-Fumi are well-known clans of peninsular origin.",
+     "King Seong of Baekje sent Buddhist images and scriptures to the Wa court, the official introduction of Buddhism. Two dates are given, 538 (Gangō-ji engi and others) and 552 (Nihon Shoki); 538 is now more widely accepted.",
+     "The Shinsen Shōjiroku, compiled in 815, lists 1,182 clans, of which 326 — about 30% — are classed as \"foreign\" (shoban); most trace their origin to Han China (163), Baekje (104) and Goguryeo (41).",
+     "Traffic ran both ways: Wa was allied with Baekje and sent troops to the peninsula repeatedly in the late 4th and 5th centuries, and there are traces of Wa people settling in Baekje and Gaya.",
+     "The \"Mimana Nihonfu\" of the Nihon Shoki was once described as a Yamato government ruling the southern peninsula. In the Japan–Korea Joint History Research (2002–2010) scholars from both countries rejected the idea of such a standing administration, and Japan's education ministry says it is no longer supported."
+    ],
+    "ja": [
+     "4世紀末から7世紀後半にかけて、朝鮮半島や中国大陸から多くの人々が日本列島に移り住んだ。技術者も亡命した貴族もおり、ヤマト王権に仕えた者も多い。秦氏・東漢氏・西文氏が代表的な半島系の氏族である。",
+     "百済の聖明王が仏像と経典を倭の朝廷に贈った（仏教公伝）。年代は538年（『元興寺縁起』など）と552年（『日本書紀』）の2説があり、現在は538年が有力。",
+     "815年に編まれた『新撰姓氏録』の1182氏のうち326氏、約3割が「諸蕃」（渡来系）で、出自は漢（163）、百済（104）、高句麗（41）が多い。",
+     "往来は一方通行ではなく、倭は百済と結んで4世紀後半から5世紀にたびたび半島に出兵し、百済や伽耶にも倭人が移り住んだ跡がある。",
+     "『日本書紀』の「任那日本府」は、かつてヤマト王権が半島南部を治めた機関と説明された。2002〜2010年の日韓歴史共同研究では両国の研究者ともそのような常設の統治機構を認めず、文部科学省も近年は支持されていないとしている。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "教科书一般称「渡来人」（过去常称「归化人」），把他们带来的技术、文字和佛教看作古代国家形成的重要因素。「任那日本府」战前曾被拿来为吞并朝鲜辩护；现在学界不认为它是统治机构，但倭国在半岛南部的活动有多大，仍有不同说法。",
+              "en": "Textbooks now generally say toraijin rather than kikajin and treat the skills, writing and Buddhism they brought as key to the formation of the ancient state. Before the war the \"Mimana Nihonfu\" was used to justify the annexation of Korea; scholars no longer see it as a ruling body, though how far Wa was active in the southern peninsula is still debated.",
+              "ja": "教科書では「帰化人」より「渡来人」と呼ぶのが一般的で、彼らがもたらした技術・文字・仏教を古代国家形成の大きな要素とする。「任那日本府」は戦前、韓国併合を正当化する根拠に使われた。現在の学界は統治機関とは見ないが、半島南部での倭の活動の規模については諸説ある。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "「任那日本府说」被看作皇国史观、殖民史观的产物而受到批判。韩方把 2010 年共同研究的结论理解为日本府本身并不存在，同时批评日本部分教科书仍沿用相关说法。",
+              "en": "The \"Mimana Nihonfu theory\" is criticised as a product of imperial and colonial historiography. Korean commentators read the 2010 joint research as confirming that no such body existed, and criticise some Japanese textbooks for still repeating the theory.",
+              "ja": "「任那日本府説」は皇国史観・植民史観の産物として批判されている。2010年の共同研究の結論は日本府そのものがなかったことの確認と受け止められ、日本の一部の教科書がなお同説に沿った記述をしていることが批判されている。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "1963 年金锡亨提出「分国论」，主张方向正好相反：是半岛的三韩、三国在日本列岛建立了分国（殖民地）。",
+              "en": "In 1963 Kim Sok-hyong proposed the \"branch-state theory\", which turns the story around: it was the Three Han and Three Kingdoms of the peninsula that set up branch states (colonies) in the Japanese archipelago.",
+              "ja": "1963年に金錫亨が「分国論」を発表し、逆に朝鮮半島の三韓・三国が日本列島に分国（植民地）を持っていたと主張した。"}}
+   ],
+   "sources": [
+    {"title": "渡来人 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/渡来人"},
+    {"title": "仏教公伝 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/仏教公伝"},
+    {"title": "任那日本府 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/任那日本府"},
+    {"title": "도래인 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/도래인"},
+    {"title": "임나일본부설 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/임나일본부설"}
+   ]
+  },
+  {
+   "key": "baekgang",
+   "years": "663",
+   "title": {"zh": "白村江之战", "en": "Battle of Baekgang", "ja": "白村江の戦い"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "白村江之战（はくすきのえ）", "en": "Battle of Hakusukinoe", "ja": "白村江の戦い"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "白江之战（백강 전투）", "en": "Battle of Baekgang (백강 전투)", "ja": "白江の戦い（백강 전투）"}},
+    {"who": {"zh": "中国", "en": "China", "ja": "中国"}, "name": {"zh": "白江口之战", "en": "Battle of Baijiangkou", "ja": "白江口の戦い"}}
+   ],
+   "facts": {
+    "zh": [
+     "660 年唐与新罗联军灭百济；百济遗臣鬼室福信等拥立留在倭国的王子丰璋，向倭国求援。",
+     "663 年 8 月（公历 10 月），倭国与百济复兴军在白村江（今锦江河口一带）与唐、新罗联军交战，倭国水军大败，百济复兴运动失败。",
+     "战败的倭军带着许多百济遗民渡海回国。天智天皇在百济移民协助下，于对马、北九州到濑户内海一带修筑水城和朝鲜式山城，配置防人，667 年迁都近江。",
+     "668 年唐又灭高句丽。",
+     "战败促使倭国改革国防与政治体制；701 年制定《大宝律令》前后，国号由「倭」改为「日本」。"
+    ],
+    "en": [
+     "In 660 a Tang–Silla alliance destroyed Baekje. Baekje loyalists led by Gwisil Boksin set up Prince Buyeo Pung, who was living in Wa, as their king and asked Wa for help.",
+     "In the 8th month of 663 (October), Wa and the Baekje restoration army fought the Tang–Silla forces at Baekgang (near the mouth of today's Geum River). The Wa fleet was crushed and the Baekje restoration failed.",
+     "The beaten Wa forces brought many Baekje refugees home with them. With their help Emperor Tenji built the Mizuki dyke and Korean-style mountain forts from Tsushima and northern Kyushu along the Inland Sea, posted sakimori border guards, and in 667 moved the capital to Ōmi.",
+     "In 668 Tang destroyed Goguryeo as well.",
+     "The defeat pushed Wa to reform its defence and government; around the Taihō Code of 701 the country's name changed from Wa to Nihon (Japan)."
+    ],
+    "ja": [
+     "660年、唐・新羅の連合軍が百済を滅ぼした。鬼室福信ら百済の遺臣は倭にいた王子豊璋を擁立し、倭に救援を求めた。",
+     "663年8月（新暦10月）、倭・百済復興軍は白村江（現在の錦江河口付近）で唐・新羅軍と戦い、倭の水軍は大敗、百済復興は失敗に終わった。",
+     "敗れた倭軍は多くの百済遺民を乗せて帰国した。天智天皇は百済からの亡命者の協力で、対馬・北九州から瀬戸内沿岸に水城や朝鮮式山城を築き、防人を置き、667年に近江へ遷都した。",
+     "668年には唐が高句麗も滅ぼした。",
+     "敗戦は倭の国防と政治体制の変革を促し、701年の大宝律令制定のころ国号が「倭」から「日本」に改められた。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "多被当作古代日本第一次大规模对外战争与惨败来讲，重点放在战后的国防建设和律令国家、「日本」国号的形成。",
+              "en": "Usually told as ancient Japan's first large overseas war and a heavy defeat, with the emphasis on what followed: new defences, the ritsuryō state and the name \"Nihon\".",
+              "ja": "古代日本初の大規模な対外戦争とその大敗として語られることが多く、重点は戦後の国防整備と律令国家、「日本」の国号の成立に置かれる。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "放在百济灭亡、百济复兴运动失败和新罗统一三国的脉络里讲，认为这一战对新罗统一起了决定性作用；也注意到倭国与百济的密切关系，以及新罗为拆散百济与倭国所做的外交努力。",
+              "en": "Told as part of the fall of Baekje, the failed restoration movement and Silla's unification of the Three Kingdoms, on which the battle is seen as decisive; accounts also note the close Baekje–Wa tie and Silla's diplomacy to split the two.",
+              "ja": "百済の滅亡と復興運動の失敗、新羅の三国統一の流れの中で語られ、新羅の統一に決定的な影響を与えた戦いとされる。百済と倭の緊密な関係や、両者を引き離そうとした新羅の外交にも触れられる。"}}
+   ],
+   "sources": [
+    {"title": "白村江の戦い (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/白村江の戦い"},
+    {"title": "백강 전투 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/백강_전투"},
+    {"title": "Battle of Baekgang (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Battle_of_Baekgang"}
+   ]
+  },
+  {
+   "key": "mongol",
+   "years": "1274, 1281",
+   "title": {"zh": "元丽联军征日", "en": "Mongol invasions", "ja": "元寇"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "元寇、蒙古袭来（文永之役、弘安之役）", "en": "Genkō, Mōko shūrai (the Bun'ei and Kōan campaigns)", "ja": "元寇・蒙古襲来（文永の役・弘安の役）"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "元朝的日本远征（원나라의 일본 원정）", "en": "Yuan expeditions to Japan (원나라의 일본 원정)", "ja": "元の日本遠征（원나라의 일본 원정）"}},
+    {"who": {"zh": "中国", "en": "China", "ja": "中国"}, "name": {"zh": "元日战争", "en": "Yuan–Japan War", "ja": "元日戦争"}}
+   ],
+   "facts": {
+    "zh": [
+     "高丽成为元的属国后，1266–1273 年蒙古与高丽的使节六次赴日要求臣服，镰仓幕府不予理会。",
+     "1274 年（文永之役），元与高丽军从合浦（今马山）出发，攻占对马、壹岐，守军与岛民死伤惨重；随后在博多湾登陆，不久撤回。高丽奉命备齐大小军船 900 艘。",
+     "1281 年（弘安之役），从高丽出发的东路军与从中国江南出发的江南军两路来攻，是当时世界上规模最大的舰队。日本已沿博多湾筑起约 20 公里的石墙（元寇防垒）；（旧历）七月三十日夜台风来袭，元军船只大量沉没。",
+     "元强令高丽国王出兵，两次远征的造船、兵员和粮食给高丽带来沉重负担。",
+     "当时公家的日记把逆风称作「神明的加护」。"
+    ],
+    "en": [
+     "After Goryeo became a Yuan vassal, Mongol and Korean envoys went to Japan six times between 1266 and 1273 demanding submission; the Kamakura shogunate ignored them.",
+     "In 1274 (the Bun'ei campaign) Yuan and Goryeo forces sailed from Happo (today's Masan), took Tsushima and Iki with heavy losses among defenders and islanders, landed at Hakata Bay and soon withdrew. Goryeo had been ordered to provide some 900 ships.",
+     "In 1281 (the Kōan campaign) an Eastern Route Army sailing from Goryeo and a Jiangnan Army sailing from southern China attacked together — the largest fleet in the world at the time. Japan had built a stone wall about 20 km long around Hakata Bay; on the night of the 30th day of the seventh month (lunar calendar) a typhoon struck and sank much of the Yuan fleet.",
+     "Yuan forced the Goryeo king to take part, and the ships, men and grain for the two expeditions weighed heavily on Goryeo.",
+     "A court noble's diary of the time called the contrary wind \"the protection of the gods\"."
+    ],
+    "ja": [
+     "高麗が元の属国となったのち、1266〜1273年にモンゴルと高麗の使節が6度来日して服属を求めたが、鎌倉幕府は応じなかった。",
+     "1274年（文永の役）、元・高麗軍は合浦（現在の馬山）を出て対馬・壱岐を襲い、守備兵と島民に大きな被害が出た。続いて博多湾に上陸し、ほどなく撤退した。高麗は大小900艘の軍船を用意させられた。",
+     "1281年（弘安の役）、高麗から出た東路軍と中国江南から出た江南軍の二手で来襲し、当時世界最大規模の艦隊となった。日本は博多湾岸に約20kmの石築地（元寇防塁）を築いて守り、7月30日夜半の台風で元軍の船の多くが沈んだ。",
+     "元は高麗国王に出兵を強い、二度の遠征の造船・兵員・兵糧は高麗に重い負担となった。",
+     "当時の公家の日記は逆風を「神明のご加護」と記している。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "称「元寇」（这个词始见于江户时代编纂的《大日本史》）或「蒙古袭来」，近年较多使用后者这样不带「寇」字的名称。叙述以镰仓武士的防战、石垒和台风为中心。",
+              "en": "Called Genkō (a term first used in the Edo-period Dai Nihon-shi) or Mōko shūrai; recently the latter kind of name, without the word for \"raiders\", is used more. Accounts centre on the samurai defence, the stone wall and the typhoons.",
+              "ja": "「元寇」（江戸時代の『大日本史』が初出）または「蒙古襲来」と呼ばれ、近年は「寇」の字を使わない後者などの呼び方も増えている。鎌倉武士の防戦、石築地、台風が語りの中心である。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "称「元朝的日本远征」，强调高丽国王是被忽必烈强迫出兵，被强行动员的高丽百姓为造船、征兵付出了难以形容的代价。",
+              "en": "Called the Yuan expeditions to Japan, with the stress on Goryeo's king being forced by Kublai to join and on the suffering of Goryeo farmers mobilised to build ships and fight.",
+              "ja": "「元の日本遠征」と呼び、高麗国王がクビライに出兵を強いられたこと、造船や徴兵に動員された高麗の民の惨状を強調する。"}}
+   ],
+   "sources": [
+    {"title": "元寇 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/元寇"},
+    {"title": "원나라의 일본 원정 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/원나라의_일본_원정"},
+    {"title": "Mongol invasions of Japan (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Mongol_invasions_of_Japan"}
+   ]
+  },
+  {
    "key": "imjin",
    "years": "1592–1598",
    "title": {"zh": "壬辰战争", "en": "The Imjin War", "ja": "壬辰戦争（文禄・慶長の役）"},
@@ -54,6 +203,106 @@
    ]
   },
   {
+   "key": "tongsinsa",
+   "years": "1607–1811",
+   "title": {"zh": "朝鲜通信使", "en": "Joseon embassies", "ja": "朝鮮通信使"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "朝鲜通信使（幕府当时称「来聘」）", "en": "Chōsen tsūshinshi (the shogunate called the visits raihei)", "ja": "朝鮮通信使（幕府は「来聘」と呼んだ）"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "通信使（통신사）", "en": "Tongsinsa (통신사)", "ja": "通信使（통신사）"}}
+   ],
+   "facts": {
+    "zh": [
+     "壬辰战争后，经对马藩宗氏居间斡旋，1607 年朝鲜派使节到江户，两国恢复往来。",
+     "江户时代共派出 12 次，多在将军继位等时节以祝贺为名；最后一次在 1811 年，只到对马为止。",
+     "使节团从釜山出发，经对马、壹岐走海路到大阪，再走陆路到江户，往返要半年到一年；除正使、副使、书状官外，还有医师、译官、乐队等，人数众多。",
+     "沿途各藩以国宾之礼接待，日本的儒者文人争相与使节笔谈唱和；画家把行列画成屏风与画卷，许多流传至今。",
+     "2017 年 10 月，「朝鲜通信使相关记录」由日韩共同申请，列入联合国教科文组织「世界记忆」名录。"
+    ],
+    "en": [
+     "After the Imjin War, with the Sō family of Tsushima acting as go-between, Joseon sent an embassy to Edo in 1607 and relations resumed.",
+     "There were 12 embassies in the Edo period, usually sent to congratulate a new shogun; the last, in 1811, went no further than Tsushima.",
+     "They sailed from Busan by Tsushima and Iki to Osaka, then went overland to Edo — six months to a year there and back — with doctors, interpreters and musicians alongside the envoys.",
+     "Domains along the way received them as state guests, Japanese scholars crowded in to exchange poems and written conversation, and painters recorded the processions on screens and scrolls, many of which survive.",
+     "In October 2017 the Documents on Joseon Tongsinsa, nominated jointly by Japan and Korea, were inscribed on UNESCO's Memory of the World register."
+    ],
+    "ja": [
+     "壬辰戦争（文禄・慶長の役）のあと、対馬藩の宗氏の仲介で1607年に朝鮮の使節が江戸を訪れ、往来が再開した。",
+     "江戸時代には計12回、主に将軍の代替わりの祝賀として派遣された。最後の1811年は対馬止まりだった。",
+     "一行は釜山から対馬・壱岐を経て海路で大坂へ、そこから陸路で江戸へ向かい、往復に半年から1年かかった。正使・副使・書状官のほか、医師・通訳・楽隊など大人数だった。",
+     "沿道の諸藩は国賓として迎え、日本の儒者や文人は争って筆談や詩の応酬をした。行列は屏風や絵巻に描かれ、多くが今に伝わる。",
+     "2017年10月、「朝鮮通信使に関する記録」が日韓共同申請によりユネスコ「世界の記憶」に登録された。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "幕府当时用「来聘」一词，带有对方前来朝贡的意味，也有日本人把通信使看作朝贡使节。今天日本各地仍有再现通信使行列的活动，2015 年起还与韩国共同复原通信使船。也有说法认为当时的文化差异反而造成了偏见。",
+              "en": "The shogunate used the word raihei, implying tribute, and some Japanese of the time saw the embassies as tribute missions. Today towns across Japan re-enact the processions, and since 2015 a replica embassy ship has been built jointly with Korea. Some argue the cultural gap of the time bred prejudice instead.",
+              "ja": "幕府は朝貢の意味を含む「来聘」の語を用い、通信使を朝貢使節とみる日本人もいた。現在は各地で行列の再現行事があり、2015年からは韓国と共同で通信使船を復元している。当時の文化の違いがかえって偏見を生んだとする説もある。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "强调通信使起初是维持两国和平的手段，后来成为朝鲜向日本传递先进文化的窗口。对日本部分学者视之为朝贡使节的说法，认为朝鲜对日本奉行的是对等的「交邻」，而非「事大」。",
+              "en": "Stresses that the embassies began as a way of keeping the peace and became a channel through which Joseon passed advanced culture to Japan. Against the view of some Japanese scholars that they were tribute missions, it holds that Joseon treated Japan as an equal neighbour (gyorin), not as a power to defer to (sadae).",
+              "ja": "通信使は当初両国の平和を保つ手段であり、のちに朝鮮から日本へ先進文化を伝える窓口になったと強調する。日本の一部学界の朝貢使節説に対しては、朝鮮にとって日本は「事大」ではなく対等な「交隣」の相手だったとする。"}}
+   ],
+   "sources": [
+    {"title": "朝鮮通信使 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/朝鮮通信使"},
+    {"title": "조선 통신사 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/조선통신사"},
+    {"title": "Joseon missions to Japan (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Joseon_missions_to_Japan"}
+   ]
+  },
+  {
+   "key": "annex",
+   "years": "1876–1910",
+   "title": {"zh": "从江华岛到合并", "en": "Road to annexation", "ja": "江華島から併合へ"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "日朝修好条规、韩国合并", "en": "Japan–Korea Treaty of Amity; annexation of Korea", "ja": "日朝修好条規・韓国併合"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "江华岛条约（강화도 조약）、庚戌国耻（경술국치）", "en": "Ganghwa Treaty (강화도 조약); Gyeongsul gukchi, \"national humiliation of 1910\" (경술국치)", "ja": "江華島条約（강화도 조약）・庚戌国恥（경술국치）"}}
+   ],
+   "facts": {
+    "zh": [
+     "1875 年日本军舰云扬号的小艇在江华岛附近遭炮台炮击、日方还击（江华岛事件）；1876 年两国签订《日朝修好条规》，朝鲜除釜山外又开放元山（1880）、仁川（1883）。条约含日方单方面的领事裁判权等不平等条款。",
+     "1895 年 10 月 8 日，日本公使三浦梧楼等人策划，日本守备队、警察和浪人等闯入景福宫，杀害王妃闵氏（乙未事变）。",
+     "日俄战争前后，日本通过 1904 年的《日韩议定书》和三次日韩协约逐步掌握大韩帝国：1905 年第二次日韩协约夺去外交权；1907 年海牙密使事件后高宗退位，第三次协约交出内政权，军队被解散。",
+     "1909 年 10 月 26 日，安重根在哈尔滨车站枪杀前统监伊藤博文，1910 年 3 月 26 日在旅顺被处死。",
+     "1910 年 8 月 22 日统监寺内正毅与总理大臣李完用签订合并条约，29 日公布，大韩帝国灭亡。"
+    ],
+    "en": [
+     "In 1875 a boat from the Japanese warship Un'yō was fired on by forts at Ganghwa Island and Japan struck back (the Ganghwa Island incident). The 1876 Japan–Korea Treaty of Amity opened Wonsan (1880) and Incheon (1883) as well as Busan, and included unequal terms such as one-sided consular jurisdiction for Japan.",
+     "On 8 October 1895, in a plot led by the Japanese minister Miura Gorō, Japanese garrison troops, police and adventurers broke into Gyeongbokgung and killed Queen Min (the Eulmi incident).",
+     "Around the Russo-Japanese War Japan took control of the Korean Empire step by step through the 1904 Japan–Korea Protocol and three agreements: the second (1905) removed its diplomatic rights; after the 1907 Hague secret envoy affair Emperor Gojong abdicated, the third agreement handed over domestic government and the army was disbanded.",
+     "On 26 October 1909 An Jung-geun shot the former Resident-General Itō Hirobumi at Harbin station; he was executed at Port Arthur on 26 March 1910.",
+     "On 22 August 1910 Resident-General Terauchi Masatake and Prime Minister Yi Wan-yong signed the annexation treaty, promulgated on the 29th; the Korean Empire ceased to exist."
+    ],
+    "ja": [
+     "1875年、軍艦雲揚の端艇が江華島の砲台から砲撃され日本側が応戦した（江華島事件）。1876年の日朝修好条規で、釜山に加えて元山（1880）・仁川（1883）が開港した。条約には片務的な領事裁判権など不平等な条項が含まれていた。",
+     "1895年10月8日、三浦梧楼公使らの計画で日本軍守備隊・領事館警察・大陸浪人らが景福宮に乱入し、王妃閔氏を殺害した（乙未事変）。",
+     "日露戦争の前後、日本は1904年の日韓議定書と3次の日韓協約で大韓帝国を段階的に掌握した。1905年の第二次日韓協約で外交権を奪い、1907年のハーグ密使事件後に高宗が退位、第三次日韓協約で内政権を握り、軍隊を解散させた。",
+     "1909年10月26日、安重根がハルビン駅で前統監伊藤博文を射殺し、1910年3月26日に旅順で処刑された。",
+     "1910年8月22日、寺内正毅統監と李完用首相が併合条約に調印し、29日に公布、大韓帝国は消滅した。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "政府立场是合并条约在当时合法签订（见「日本统治时期」）。对安重根，2013–2014 年官房长官菅义伟称他是「杀害我国首任首相、被判死刑的恐怖分子」；另一方面，他在狱中与日本看守、典狱长的交往也常被提起。",
+              "en": "The government's position is that the annexation treaty was lawfully concluded at the time (see \"Japanese rule\"). Of An Jung-geun, Chief Cabinet Secretary Suga Yoshihide said in 2013–14 that he was \"a terrorist sentenced to death for killing our first prime minister\"; his friendship with Japanese guards and the prison governor is also often recalled.",
+              "ja": "政府の立場は、併合条約は当時合法に締結されたというもの（「日本統治時代」参照）。安重根について、菅義偉官房長官は2013〜2014年に「わが国の初代首相を殺害し、死刑判決を受けたテロリスト」と述べた。一方、獄中で日本人の看守や典獄と交流したことも語り継がれている。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "认为乙巳条约（第二次日韩协约）和合并条约是在胁迫下签订、自始无效，把这段历史看作国权被夺的过程，合并称「庚戌国耻」。安重根被尊为「义士」、抗日英雄。",
+              "en": "Holds that the 1905 Eulsa treaty and the annexation treaty were signed under coercion and void from the start, and sees the period as the loss of national sovereignty — the annexation is called the \"national humiliation of 1910\". An Jung-geun is honoured as a righteous patriot (uisa) and hero of the anti-Japanese struggle.",
+              "ja": "乙巳条約（第二次日韓協約）と併合条約は強制によるもので当初から無効とし、この時期を国権が奪われた過程とみる。併合は「庚戌国恥」と呼ばれる。安重根は「義士」、抗日の英雄とされる。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "2014 年《劳动新闻》批评日本政府称安重根为「恐怖分子」，称他是「反日爱国烈士」；不过朝鲜过去的评价也指出他出身两班、缺乏解决办法。",
+              "en": "In 2014 the Rodong Sinmun condemned the Japanese government for calling An Jung-geun a terrorist, calling him \"an anti-Japanese patriotic martyr\"; earlier North Korean assessments had also noted his yangban background and lack of a real programme.",
+              "ja": "2014年に『労働新聞』は、安重根を「テロリスト」と呼んだ日本政府を批判し「反日愛国の烈士」と称した。ただし北朝鮮のかつての評価は、両班出身で解決策を持たなかったとも指摘していた。"}}
+   ],
+   "sources": [
+    {"title": "日朝修好条規 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日朝修好条規"},
+    {"title": "乙未事変 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/乙未事変"},
+    {"title": "韓国併合 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/韓国併合"},
+    {"title": "安重根 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/安重根"},
+    {"title": "강화도 조약 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/강화도_조약"}
+   ]
+  },
+  {
    "key": "rule",
    "years": "1910–1945",
    "title": {"zh": "日本统治时期", "en": "Japanese rule", "ja": "日本統治時代"},
@@ -104,6 +353,111 @@
     {"title": "村山談話 / 河野談話 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/村山談話"},
     {"title": "日韓請求権並びに経済協力協定 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日韓請求権並びに経済協力協定"},
     {"title": "Korea under Japanese rule (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Korea_under_Japanese_rule"}
+   ]
+  },
+  {
+   "key": "normalization",
+   "years": "1965",
+   "title": {"zh": "日韩邦交正常化", "en": "Normalisation", "ja": "日韓国交正常化"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "日韩基本条约", "en": "Treaty on Basic Relations", "ja": "日韓基本条約"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "韩日基本条约（한일기본조약）", "en": "Korea–Japan Basic Treaty (한일기본조약)", "ja": "韓日基本条約（한일기본조약）"}}
+   ],
+   "facts": {
+    "zh": [
+     "韩国未获准参加 1951 年的旧金山和会；同年 10 月起日韩开始交涉，前后七次会谈、约 14 年。",
+     "1964 年韩国在野党与学生批评交涉草率且不公开，6 月 3 日在国会前举行大规模示威。",
+     "1965 年 6 月 22 日签署基本条约，12 月 18 日生效：第 2 条确认 1910 年 8 月 22 日以前两国间的一切条约「已经无效」，第 3 条确认大韩民国政府是朝鲜半岛唯一的合法政府。",
+     "同时签订的请求权协定规定日本在 10 年内提供无偿 3 亿美元、有偿 2 亿美元，双方确认请求权问题「完全且最终解决」；资金大多用于韩国的经济建设。",
+     "对「已经无效」，韩方解释为那些条约自始无效，日方解释为当时有效、到这时才失效，这一分歧至今未解。"
+    ],
+    "en": [
+     "South Korea was not allowed to attend the 1951 San Francisco peace conference; talks with Japan began that October and ran through seven rounds over some 14 years.",
+     "In 1964 South Korean opposition parties and students attacked the talks as rushed and secret; on 3 June there were mass demonstrations in front of the National Assembly.",
+     "The Basic Treaty was signed on 22 June 1965 and took effect on 18 December. Article 2 confirms that all treaties between the two countries before 22 August 1910 are \"already null and void\"; Article 3 confirms the Republic of Korea government as the only lawful government in Korea.",
+     "The accompanying claims agreement provided $300 million in grants and $200 million in loans over ten years, and both sides confirmed that claims were \"settled completely and finally\"; most of the money went into South Korea's economic development.",
+     "Korea reads \"already null and void\" as void from the start; Japan reads it as valid at the time and void only from then on. The disagreement remains."
+    ],
+    "ja": [
+     "韓国は1951年のサンフランシスコ講和会議への参加を認められず、同年10月から日韓会談が始まって、7次・約14年に及んだ。",
+     "1964年、韓国の野党と学生は密室での拙速な交渉だと批判し、6月3日に国会議事堂前で大規模なデモが起きた。",
+     "1965年6月22日に基本条約が調印され、12月18日に発効した。第2条は1910年8月22日以前の両国間の条約がすべて「もはや無効」であることを確認し、第3条は大韓民国政府を朝鮮にある唯一の合法的な政府と確認した。",
+     "同時に結ばれた請求権協定で、日本は10年間に無償3億ドル・有償2億ドルを供与し、請求権問題の「完全かつ最終的な解決」を確認した。資金の多くは韓国の経済開発に使われた。",
+     "「もはや無効」について、韓国は当初から無効、日本は当時は有効で以後無効になったと解釈しており、この違いは今も続いている。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "看作战后日韩关系的基础。政府立场是财产与请求权问题已由 1965 年协定完全且最终地解决（见「日本统治时期」）。",
+              "en": "Seen as the foundation of post-war relations. The government's position is that property and claims issues were settled completely and finally by the 1965 agreement (see \"Japanese rule\").",
+              "ja": "戦後の日韓関係の基礎とされる。政府の立場は、財産・請求権の問題は1965年の協定で完全かつ最終的に解決済みというもの（「日本統治時代」参照）。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "一方面肯定资金对经济发展的作用，一方面批评条约没有写明殖民统治的非法性与责任，受害者个人没有得到充分补偿，这成为后来强征劳工诉讼等争议的根源。",
+              "en": "Credits the money with helping economic growth, but faults the treaty for not stating that colonial rule was illegal or assigning responsibility and for leaving individual victims without adequate compensation — the root of later disputes such as the forced-labour lawsuits.",
+              "ja": "資金が経済発展に役立ったことは認めつつ、植民地支配の違法性と責任が明記されず、被害者個人が十分に補償されなかったと批判する。これがのちの徴用工訴訟などの争点の根にある。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "称之为日本与南方「傀儡」之间的「协定」，主张自始无效，尤其反对它承认大韩民国为唯一合法政府；并表示日本还没有对朝鲜作出战后赔偿和道歉。朝鲜与日本至今没有建交；2002 年的《日朝平壤宣言》中，日本对殖民统治表示反省，双方确认重启邦交正常化谈判。",
+              "en": "Calls it a mere \"agreement\" between Japan and a US \"puppet\" in the South, void from the start, objecting above all to its recognition of the Republic of Korea as the only lawful government, and says Japan has yet to pay reparations or apologise to the North. The two still have no diplomatic relations; in the 2002 Pyongyang Declaration Japan expressed remorse for colonial rule and both agreed to resume normalisation talks.",
+              "ja": "「日本・南朝鮮協定」と呼び、米国の「傀儡」と旧宗主国の間で結ばれた当初から無効なものと主張し、特に大韓民国を唯一の合法政府と認めた点に反発した。日本は北朝鮮にまだ戦後賠償も謝罪もしていないとする。両国はいまも国交がなく、2002年の日朝平壌宣言で日本は植民地支配への反省を表明し、国交正常化交渉の再開を確認した。"}}
+   ],
+   "sources": [
+    {"title": "日韓基本条約 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日韓基本条約"},
+    {"title": "日朝平壌宣言 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日朝平壌宣言"},
+    {"title": "한일기본조약 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/한일기본조약"},
+    {"title": "Treaty on Basic Relations between Japan and the Republic of Korea (English Wikipedia)", "url": "https://en.wikipedia.org/wiki/Treaty_on_Basic_Relations_between_Japan_and_the_Republic_of_Korea"}
+   ]
+  },
+  {
+   "key": "dprk",
+   "years": "1959–2002",
+   "title": {"zh": "归国事业与绑架", "en": "Repatriation & abductions", "ja": "帰還事業と拉致"},
+   "names": [
+    {"who": {"zh": "日本", "en": "Japan", "ja": "日本"}, "name": {"zh": "在日朝鲜人归还事业、北朝鲜绑架日本人问题", "en": "Repatriation of Koreans in Japan; North Korea's abductions of Japanese", "ja": "在日朝鮮人の帰還事業・北朝鮮による日本人拉致問題"}},
+    {"who": {"zh": "韩国", "en": "South Korea", "ja": "韓国"}, "name": {"zh": "北送事业（북송사업）", "en": "Buksong, \"sending north\" (북송사업)", "ja": "北送事業（북송사업）"}},
+    {"who": {"zh": "朝鲜", "en": "North Korea", "ja": "北朝鮮"}, "name": {"zh": "归国事业（귀국사업）", "en": "Gwiguk saeop, \"return home\" (귀국사업)", "ja": "帰国事業（귀국사업）"}}
+   ],
+   "facts": {
+    "zh": [
+     "依据日本红十字会与朝鲜红十字会 1959 年在加尔各答签订的协定，在日朝鲜人及其家属移居北朝鲜，主要在 1959–1967 年，到 1984 年约 9 万 3000 人，其中日本籍妻子约 1831 人。",
+     "朝鲜总联当时把北朝鲜宣传为「地上乐园」，而移居者后来多数生活困苦，与日本亲属难以往来。韩国李承晚政府强烈反对。",
+     "1970–80 年代北朝鲜特工绑架日本人，日本政府认定 12 件 17 人，其中包括 1977 年在新潟被绑走的 13 岁中学生横田惠。",
+     "2002 年 9 月 17 日首相小泉纯一郎访问平壤，金正日首次承认绑架并道歉，双方签署《日朝平壤宣言》；10 月 15 日有 5 人回到日本。",
+     "北朝鲜称其余 12 人中 8 人死亡、4 人未入境，「问题已经解决」；日本政府不接受这一说法。"
+    ],
+    "en": [
+     "Under a 1959 agreement signed in Calcutta by the Japanese and North Korean Red Cross societies, Koreans in Japan and their families moved to North Korea — mostly in 1959–67, about 93,000 people by 1984, including some 1,831 Japanese wives.",
+     "Chongryon promoted the North as a \"paradise on earth\"; most of those who went later lived in hardship, with little contact with family in Japan. The Syngman Rhee government in Seoul strongly opposed the programme.",
+     "In the 1970s and 80s North Korean agents abducted Japanese citizens; the Japanese government recognises 17 victims in 12 cases, among them Megumi Yokota, a 13-year-old schoolgirl taken in Niigata in 1977.",
+     "On 17 September 2002 Prime Minister Koizumi Jun'ichirō visited Pyongyang; Kim Jong-il admitted the abductions for the first time and apologised, and the two signed the Pyongyang Declaration. Five abductees returned to Japan on 15 October.",
+     "North Korea says that of the remaining 12, eight have died and four never entered the country, and that the matter is \"resolved\"; the Japanese government does not accept this."
+    ],
+    "ja": [
+     "1959年に日本赤十字社と朝鮮赤十字会がカルカッタで結んだ協定に基づき、在日朝鮮人とその家族が北朝鮮へ渡った。主に1959〜1967年で、1984年までに約9万3000人、うち日本人妻は約1831人。",
+     "朝鮮総連は北朝鮮を「地上の楽園」と宣伝したが、渡った人々の多くはのちに苦しい生活を送り、日本の家族との往来も難しかった。韓国の李承晩政権は強く反対した。",
+     "1970〜80年代に北朝鮮の工作員が日本人を拉致した。日本政府が認定した被害者は12件17人で、1977年に新潟で拉致された13歳の中学生横田めぐみさんも含まれる。",
+     "2002年9月17日に小泉純一郎首相が平壌を訪れ、金正日が初めて拉致を認めて謝罪し、日朝平壌宣言に署名した。10月15日に5人が帰国した。",
+     "北朝鮮は残る12人について「8人死亡、4人は入境せず」とし、問題は「解決済み」と主張している。日本政府はこれを受け入れていない。"
+    ]
+   },
+   "views": [
+    {"who": {"zh": "日本方面的主流叙述", "en": "Mainstream account in Japan", "ja": "日本側の主流の語り方"},
+     "text": {"zh": "归还事业当时被当作尊重居住地选择自由的人道问题来推动，日本社会对北朝鲜的实际情况所知甚少。绑架问题被视为对国家主权和人权的严重侵害，政府立场是认定的受害者都应全部回国。",
+              "en": "At the time the repatriation was promoted as a humanitarian matter of free choice of residence, with little known in Japan about conditions in the North. The abductions are seen as a grave violation of sovereignty and human rights, and the government's position is that all recognised victims must come home.",
+              "ja": "帰還事業は当時、居住地選択の自由を尊重する人道問題として進められ、北朝鮮の実情はほとんど知られていなかった。拉致は国家主権と人権に対する重大な侵害とされ、政府は認定被害者全員の帰国を求める立場をとる。"}},
+    {"who": {"zh": "韩国方面的主流叙述", "en": "Mainstream account in South Korea", "ja": "韓国側の主流の語り方"},
+     "text": {"zh": "称「北送」，认为是把同胞送进北方体制的政治行为；当时的李承晚政府在日本、美国和联合国内外开展外交活动表示反对。",
+              "en": "Calls it buksong, \"sending north\" — a political act that delivered compatriots into the Northern regime; the Rhee government campaigned against it in Japan, the US and at the UN.",
+              "ja": "「北送」と呼び、同胞を北の体制へ送り込む政治的行為とみる。当時の李承晩政権は日本・米国・国連の内外で反対の外交活動を展開した。"}},
+    {"who": {"zh": "朝鲜方面的主流叙述", "en": "Mainstream account in North Korea", "ja": "北朝鮮側の主流の語り方"},
+     "text": {"zh": "称「归国事业」，即在日同胞回归社会主义祖国。对绑架问题主张「已经解决」，并指责日本夸大此事是为了掩盖过去对朝鲜人民犯下的罪行。",
+              "en": "Calls it the \"return home\" of compatriots to the socialist homeland. On the abductions it says the matter is resolved and accuses Japan of exaggerating it to cover up its past crimes against the Korean people.",
+              "ja": "「帰国事業」、すなわち在日同胞の社会主義祖国への帰国と呼ぶ。拉致については「解決済み」とし、日本は過去に朝鮮人民に働いた犯罪を覆い隠すために問題を誇張していると非難する。"}}
+   ],
+   "sources": [
+    {"title": "在日朝鮮人の帰還事業 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/在日朝鮮人の帰還事業"},
+    {"title": "北朝鮮による日本人拉致問題 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/北朝鮮による日本人拉致問題"},
+    {"title": "日朝平壌宣言 (日本語版ウィキペディア)", "url": "https://ja.wikipedia.org/wiki/日朝平壌宣言"},
+    {"title": "재일 조선인 북송사업 (한국어 위키백과)", "url": "https://ko.wikipedia.org/wiki/재일_조선인_북송사업"}
    ]
   }
  ]

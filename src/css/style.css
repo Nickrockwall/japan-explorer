@@ -1376,7 +1376,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 @media (max-width: 560px) { .kr-eras button small { display: none; } }
 .kr-origin { border-left-color: var(--ai); }
 
-/* 日韩共同历史（shared.js）：两种地图共用的对话框 */
+/* 日本与朝鲜半岛的共同历史（shared.js）：两种地图共用的对话框 */
 dialog.shared { width: min(720px, calc(100vw - 24px)); max-height: calc(var(--vh) - 40px); padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--text); }
 dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .sh-inner { display: flex; flex-direction: column; max-height: calc(var(--vh) - 42px); }
@@ -1384,8 +1384,8 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .sh-inner header h2 { margin: 0; font: 700 19px var(--serif); }
 .sh-inner header .muni-card-x { position: static; }
 .sh-sub { margin: 4px 18px 10px; color: var(--text-2); font-size: 12.5px; }
-.sh-tabs { display: flex; gap: 6px; padding: 0 18px 10px; border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
-.sh-tabs button { border: 1px solid var(--line); background: var(--bg); color: var(--text-2); border-radius: 8px; padding: 5px 12px; cursor: pointer; font: 700 13px var(--sans); }
+.sh-tabs { flex: none; display: flex; gap: 6px; padding: 0 18px 10px; border-bottom: 1px solid var(--line-soft); overflow-x: auto; scrollbar-width: thin; position: relative; }
+.sh-tabs button { flex: none; white-space: nowrap; border: 1px solid var(--line); background: var(--bg); color: var(--text-2); border-radius: 8px; padding: 5px 12px; cursor: pointer; font: 700 13px var(--sans); }
 .sh-tabs button small { margin-left: 6px; font-weight: 400; opacity: .75; }
 .sh-tabs button.on { background: var(--shu); border-color: var(--shu); color: #fff; }
 .sh-body { overflow-y: auto; padding: 12px 18px 18px; font-size: 13.5px; line-height: 1.75; }

@@ -360,16 +360,33 @@ class Case:
         page.wait_for_function("(() => { const x = [...document.querySelectorAll('#chat .msg.ai')].pop()?.textContent || ''; return x.includes('尚州') || x.includes('Sangju'); })()", timeout=8000)
 
     def shared(self, page):
-        # 日韩共同历史：欢迎卡进入，三层结构（事实 / 各方叙述 / 来源），日本与半岛两种模式内容一致
+        # 共同历史：欢迎卡一个入口，9 件事按年代排成一行标签；三层结构（事实 / 各方叙述 / 来源），日本与半岛两种模式内容一致
         self.tab(page, 'detail')
-        page.click('#detail [data-act="shared"][data-key="rule"]')
+        page.click('#detail [data-act="shared"]')
         page.wait_for_selector('dialog#shared[open]')
+        keys = page.eval_on_selector_all('#shared [data-sh]', 'els => els.map((e) => e.dataset.sh)')
+        assert keys == ['torai', 'baekgang', 'mongol', 'imjin', 'tongsinsa', 'annex', 'rule', 'normalization', 'dprk'], keys
+        assert page.get_attribute('#shared [data-sh="torai"]', 'aria-selected') == 'true'
+        # 标签只占一行（横向滑动），不把对话框撑宽
+        tops = page.eval_on_selector_all('#shared [data-sh]', 'els => [...new Set(els.map((e) => e.offsetTop))]')
+        assert len(tops) == 1, f'标签换行了 {tops}'
+        for k in keys:
+            page.click(f'#shared [data-sh="{k}"]')
+            assert page.get_attribute(f'#shared [data-sh="{k}"]', 'aria-selected') == 'true'
+            # 选中的标签滚进视野
+            vis = page.evaluate("""() => { const row = document.querySelector('#shared .sh-tabs').getBoundingClientRect();
+              const on = document.querySelector('#shared .sh-tabs .on'), b = on.getBoundingClientRect();
+              return b.left >= row.left - 1 && b.right <= row.right + 1 && b.top >= row.top - 1 && b.bottom <= row.bottom + 1
+                && on.scrollHeight <= on.clientHeight + 1; }""")
+            assert vis, f'{k} 的标签不在视野里或被压扁'
+            n = page.locator('#shared .sh-facts li').count()
+            assert 4 <= n <= 6, f'{k} 事实 {n} 条'
+            assert page.locator('#shared .sh-view').count() >= 2, k
+            assert page.locator('#shared .sh-src a').count() >= 2, k
+        page.click('#shared [data-sh="rule"]')
         assert page.locator('#shared .sh-facts li').count() == 5
         assert page.locator('#shared .sh-view').count() == 3
-        assert page.locator('#shared .sh-src a').count() >= 3
         text = page.text_content('#shared .sh-body')
-        page.click('#shared [data-sh="imjin"]')
-        assert page.locator('#shared .sh-facts li').count() == 5
         box = page.evaluate("(() => { const r = document.querySelector('dialog#shared').getBoundingClientRect(); return [r.left, r.right, r.bottom, innerWidth, innerHeight]; })()")
         assert box[0] >= 0 and box[1] <= box[3] + 1 and box[2] <= box[4] + 1, f'对话框出屏 {box}'
         page.keyboard.press('Escape')
@@ -379,8 +396,9 @@ class Case:
         page.reload()
         page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
         self.tab(page, 'detail')
-        page.click('#detail [data-act="shared"][data-key="rule"]')
+        page.click('#detail [data-act="shared"]')
         page.wait_for_selector('dialog#shared[open]')
+        page.click('#shared [data-sh="rule"]')
         assert page.text_content('#shared .sh-body') == text, '两种模式的共同历史内容应相同'
 
     def deeplink_any(self, page):

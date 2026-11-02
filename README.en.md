@@ -56,7 +56,7 @@ The 'Japan / Korean Peninsula' switch next to the title opens the peninsula map 
 - 29 first-level regions, North and South (divisions as of 2026), each with its name in English, Korean script and romanization, history across six eras, sights, food and dialect, and a drill-down to 400-plus cities and counties
 - Historical divisions: Silla's nine provinces, Goryeo's circuits, Joseon's eight provinces and the thirteen provinces of 1896; the Joseon layer marks the towns each province is named after (Gyeongsang = Gyeongju + Sangju…)
 - Where am I / Then and now: what your spot belonged to under Silla, Goryeo, Joseon and in 1896
-- Shared history of Japan and Korea: the Imjin War and Japanese rule, set out as facts both sides accept, each side's mainstream account, and sources — the same text in both modes
+- Shared history of Japan and the Korean Peninsula: nine episodes from ancient migrants to the abductions, set out as facts both sides accept, each side's mainstream account, and sources — the same text in both modes
 - Disputed places show both names and list each side's position: Dokdo / Takeshima, Sea of Japan / East Sea; Japan mode now draws Takeshima and the Northern Territories the same way
 - Dancheong colours and gayageum-style music; the guide, Dancheong, answers questions even without an AI key
 
