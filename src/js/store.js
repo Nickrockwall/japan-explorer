@@ -116,6 +116,27 @@ export const ichinomiya = {
   clear: () => write(ICHI_KEY, null),
 };
 
+// 半岛乡校：{ [Wikidata id]: { at 到访时间, real 是否亲临, realAt 亲临时间 } }
+const HY_KEY = `${MAP.store}hyanggyo`;
+export const hyanggyoBook = {
+  get: () => read(HY_KEY, {}),
+  visit(id) {
+    const book = this.get();
+    if (!book[id]) book[id] = { at: new Date().toISOString() };
+    write(HY_KEY, book);
+    return book;
+  },
+  // 实地打卡：没记过到访的顺带记上
+  checkin(id) {
+    const book = this.get();
+    const now = new Date().toISOString();
+    book[id] = { at: book[id]?.at || now, real: true, realAt: now };
+    write(HY_KEY, book);
+    return book;
+  },
+  clear: () => write(HY_KEY, null),
+};
+
 // 界面偏好：滤镜模式、向导模式、右侧上下比例。滤镜与图层每张地图各记各的，其余全站共用
 const PER_MAP = new Set(['filter', 'layer']);
 const prefKey = (name) => `${PER_MAP.has(name) ? MAP.store : 'je.'}ui.${name}`;

@@ -14,7 +14,8 @@ import { disputedAt } from './disputed.js';
 import { createTour } from './tour.js';
 import { createKoreaGuide } from './korea-guide.js';
 import { openShared, sharedButtons } from './shared.js';
-import { uiPref, apiConfig } from './store.js';
+import { uiPref, apiConfig, goshuinBook, hyanggyoBook } from './store.js';
+import { createKoreaBook, stampButton, playStamp, hyCard, hySection, hyName, hyCounty, distanceKm, CHECKIN_KM } from './korea-book.js';
 import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
@@ -158,7 +159,8 @@ function originText(id, names) {
   return text;
 }
 
-function renderRegion(el, p, c, translated = true, names = null, sul = null) {
+// x：{ stampedAt 本区盖印时间, hy 本区乡校, hyBook 乡校到访记录 }
+function renderRegion(el, p, c, translated = true, names = null, sul = null, x = {}) {
   const side = t(`kr.side.${p.side}`);
   el.innerHTML = `
     <div class="hero">
@@ -180,6 +182,7 @@ function renderRegion(el, p, c, translated = true, names = null, sul = null) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
           <span>${t('kr.c.open')}</span>
         </button>
+        ${stampButton(x.stampedAt)}
       </div>
     </div>
     <div class="stats">
@@ -191,6 +194,7 @@ function renderRegion(el, p, c, translated = true, names = null, sul = null) {
     ${p.note ? `<div class="note">${esc(p.note[lang] || p.note.zh)}</div>` : ''}
     ${originHTML(p.id, names)}
     ${contentHTML(c, sul)}
+    ${hySection(x.hy || [], x.hyBook || {})}
     <p class="legal">${t('kr.src.region')}</p>`;
   if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
   el.scrollTop = 0;
@@ -224,6 +228,8 @@ export async function main() {
   if (!content) content = await getJSON(`${MAP.data}/content/zh.json`) || {};
   const names = await getJSON(`${MAP.data}/names.json`);
   const sul = await getJSON(`${MAP.data}/sul.json`) || {};
+  const hyang = await getJSON(`${MAP.data}/hyanggyo.json`) || [];
+  const hyById = new Map(hyang.map((h) => [h.id, h]));
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
@@ -309,6 +315,7 @@ export async function main() {
         }
         if (x.seriesId === 'mdl' || x.seriesId === 'mdl-label') return `<b>${esc(t('kr.mdl'))}</b><br><span style="color:#b4ada3">${esc(t('kr.mdl.tip'))}</span>`;
         if (x.seriesId === 'dokdo') return `<b>${esc(t('kr.dokdo'))}</b>`;
+        if (x.seriesId === 'hy') { const h = hyById.get(x.data.id); return h ? `<b>${esc(hyName(h))}</b> <span style="color:#b4ada3">${esc(hyCounty(h))}</span>` : ''; }
         return '';
       },
     },
@@ -348,6 +355,12 @@ export async function main() {
         itemStyle: { color: '#f3ede2', borderColor: '#151a19', borderWidth: 1 },
         label: { show: true, position: 'right', color: '#f3ede2', fontSize: 11, fontWeight: 700, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5,
           formatter: (x) => x.data.label },
+        labelLayout: { hideOverlap: true },
+      },
+      {
+        id: 'hy', type: 'scatter', coordinateSystem: 'geo', z: 6, symbol: 'diamond', symbolSize: 10, data: [], cursor: 'pointer',
+        itemStyle: { color: 'rgba(226,189,87,.35)', borderColor: COLOR.line, borderWidth: 1.5 },
+        label: { show: true, position: 'right', color: '#f3ede2', fontSize: 10.5, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5, formatter: (x) => x.data.name },
         labelLayout: { hideOverlap: true },
       },
       {
@@ -402,6 +415,7 @@ export async function main() {
       }).join('');
     }
     if (app.currentId) openStage(detailEl, era);
+    paintHy();
     audio.play('click');
   }
   const eraBox = document.createElement('div');
@@ -460,7 +474,7 @@ export async function main() {
     $('visited-bar').style.width = `${(n / MAP.units) * 100}%`;
   }
 
-  function closeCard() { card.hidden = true; }
+  function closeCard() { card.hidden = true; if (hyCur) { hyCur = null; paintHy(); } }
   function openDokdo() {
     card.innerHTML = disputeCard('takeshima');
     card.hidden = false;
@@ -469,6 +483,84 @@ export async function main() {
     audio.play('click');
   }
 
+  // 当前区的详卡（盖印、乡校到访之后也要重画）
+  function renderCurrent() {
+    const id = app.currentId;
+    const p = regions.get(id);
+    if (!p) return;
+    const top = detailEl.scrollTop;
+    renderRegion(detailEl, p, content[id], translated, names, sul[id],
+      { stampedAt: goshuinBook.get()[id], hy: hyang.filter((h) => h.region === id), hyBook: hyanggyoBook.get() });
+    openStage(detailEl, app.era);
+    detailEl.scrollTop = top;
+  }
+
+  // 乡校：选中的区在地图上标出本区的乡校；点了弹卡片（#art-card），可记下到访或实地打卡
+  let hyCur = null;
+  function paintHy() {
+    const book = hyanggyoBook.get();
+    const list = app.era === 'today' ? hyang.filter((h) => h.region === app.currentId) : [];
+    chart.setOption({ series: [{ id: 'hy', data: list.map((h) => ({ value: h.coords, id: h.id, name: hyName(h),
+      itemStyle: book[h.id]?.real ? { color: '#ffd27a', borderColor: '#fff' } : book[h.id] ? { color: COLOR.line } : {},
+      symbolSize: h.id === hyCur?.id ? 15 : 10 })) }] });
+  }
+  const hyWhere = (h) => `${nameOf(regions.get(h.region))} ${hyCounty(h)}`;
+  function openHy(h) {
+    if (!h) return;
+    if (h.region !== app.currentId) select(h.region);
+    hyCur = h;
+    closePlace();
+    if (counties.open) closeCounties();
+    card.innerHTML = hyCard(h, hyanggyoBook.get()[h.id], hyWhere(h));
+    card.hidden = false;
+    card.scrollTop = 0;
+    paintHy();
+    chart.setOption({ geo: { center: h.coords, zoom: Math.max(chart.getOption().geo[0].zoom || 1, 6) } });
+    if (narrow()) tabs.set('map');
+  }
+  function afterHy() {
+    if (hyCur && !card.hidden) card.innerHTML = hyCard(hyCur, hyanggyoBook.get()[hyCur.id], hyWhere(hyCur));
+    paintHy();
+    renderCurrent();
+  }
+  async function hyCheckin(btn) {
+    const h = hyCur;
+    btn.disabled = true;
+    try {
+      const { pt } = await getPosition();
+      const km = distanceKm(pt, h.coords);
+      if (km > CHECKIN_KM) { toast(t('kr.hy.far', { km: km < 10 ? km.toFixed(1) : Math.round(km) })); return; }
+      audio.play('drum');
+      toast(t('koku.realOk'));
+      hyanggyoBook.checkin(h.id);
+      afterHy();
+    } catch (err) {
+      console.warn('实地打卡定位失败', err);
+      toast(t(err.key || 'loc.fail'));
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  card.addEventListener('click', (e) => {
+    if (!hyCur || card.hidden) return;
+    if (e.target.closest('[data-act="hy-visit"]')) { audio.play('stamp'); hyanggyoBook.visit(hyCur.id); afterHy(); }
+    const c = e.target.closest('[data-act="hy-checkin"]');
+    if (c) hyCheckin(c);
+  });
+
+  // 印帐：顶栏按钮与对话框沿用日本的 #btn-book / #book
+  const bookBtn = $('btn-book');
+  bookBtn.querySelector('[data-i18n="btn.book"]').textContent = t('kr.book');
+  bookBtn.title = t('kr.book.title');
+  bookBtn.lastChild.textContent = `/${MAP.units})`;
+  const updateBookCount = () => { $('goshuin-count').textContent = Object.keys(goshuinBook.get()).length; };
+  const bookUI = createKoreaBook($('book'), {
+    regions, getBook: goshuinBook.get, hyang, getHy: hyanggyoBook.get,
+    onPick: (id) => { closeCard(); select(id); if (narrow()) tabs.set('detail'); },
+    onPickHy: (id) => openHy(hyById.get(id)),
+  });
+  bookBtn.addEventListener('click', () => bookUI.open());
+
   function select(id) {
     const p = regions.get(id);
     if (!p) return;
@@ -476,9 +568,10 @@ export async function main() {
     visited.add(id);
     updateCounter();
     paint();
-    renderRegion(detailEl, p, content[id], translated, names, sul[id]);
+    renderCurrent();
     guide.setRegion(p, content[id], nameOf(p));
-    openStage(detailEl, app.era);
+    if (hyCur && hyCur.region !== id) hyCur = null;
+    paintHy();
     $('tab-pref').textContent = nameOf(p);
     history.replaceState(null, '', stateHash(id));
     tabs.ping('detail');
@@ -486,6 +579,7 @@ export async function main() {
 
   chart.on('click', (x) => {
     if (x.seriesId === 'dokdo') { openDokdo(); return; }
+    if (x.seriesId === 'hy') { openHy(hyById.get(x.data.id)); audio.play('click'); return; }
     if (x.seriesId !== 'regions') return;
     const id = app.era === 'today' ? idByName.get(x.name)
       : geo.features.find((f) => inPolys(chart.convertFromPixel({ geoIndex: 0 }, [x.event.offsetX, x.event.offsetY]), f.geometry))?.properties.id;
@@ -499,6 +593,15 @@ export async function main() {
 
   detailEl.addEventListener('click', async (e) => {
     if (e.target.closest('[data-act="counties"]') && app.currentId) { openCounties(app.currentId); return; }
+    if (e.target.closest('[data-act="stamp"]') && app.currentId) {
+      audio.play('stamp');
+      const book = goshuinBook.stamp(app.currentId);
+      playStamp(detailEl, regions.get(app.currentId), book[app.currentId]);
+      updateBookCount();
+      return;
+    }
+    const hb = e.target.closest('[data-act="hy"]');
+    if (hb) { openHy(hyById.get(hb.dataset.id)); return; }
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
     const url = shareURL(app.currentId);
     try {
@@ -523,6 +626,10 @@ export async function main() {
   const startTour = () => { closeCard(); closePlace(); if (counties.open) closeCounties(); tour.start(); };
   openSettings = setupSettings(guide, () => {
     visited.clear();
+    goshuinBook.clear();
+    hyanggyoBook.clear();
+    updateBookCount();
+    closeCard();
     if (app.currentId) visited.add(app.currentId);
     updateCounter();
     paint();
@@ -536,6 +643,7 @@ export async function main() {
     if (sh) openShared(sh.dataset.key);
   });
   updateCounter();
+  updateBookCount();
   loading.classList.add('hidden');
   if (!uiPref.get('tourKorea', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 

@@ -334,6 +334,47 @@ class Case:
         assert self.KR_HAMNAM[self.lang] in page.text_content('#loc-card'), page.text_content('#loc-card')[:120]
         self.no_overflow(page)
 
+    def korea_book(self, page):
+        # 半岛印帐：庆北盖印（印面「경북」、顶栏计数 1）；印帐 29 格、八道分组；乡校篇 141 所；
+        # 详卡点乡校弹卡片、记下到访；模拟定位在庆州乡校：离庆山乡校太远打不了卡，庆州乡校可以（亲临）
+        page.click('#detail [data-act="stamp"]')
+        page.wait_for_selector('#detail .stamp-btn.done')
+        assert page.text_content('#goshuin-count') == '1'
+        assert page.text_content('.seal-drop .kr-seal').strip() == '경북', page.text_content('.seal-drop .kr-seal')
+        page.wait_for_selector('.seal-drop', state='detached', timeout=5000)
+        page.click('#btn-book')
+        page.wait_for_selector('dialog#book[open]')
+        assert page.locator('#book .slot').count() == 29
+        assert page.locator('#book .slot.got .kr-seal').count() == 1
+        page.click('#book [data-group="pyeongan"]')
+        assert page.locator('#book .slot').count() == 5
+        page.click('#book [data-mode="hy"]')
+        assert page.locator('#book .slot').count() == 141
+        tabs = page.evaluate("(() => { const r = document.querySelector('#book .book-tabs'); return r.scrollHeight <= r.clientHeight + 1; })()")
+        assert tabs, '印帐的标签被压扁了'
+        page.keyboard.press('Escape')
+        page.wait_for_selector('dialog#book', state='hidden')
+        # 详卡里的乡校：庆北 19 所
+        self.tab(page, 'detail')
+        chips = page.locator('#detail .kr-hy-chips [data-act="hy"]')
+        assert chips.count() == 19, chips.count()
+        page.click('#detail [data-act="hy"][data-id="Q19939314"]')  # 庆山乡校
+        page.wait_for_selector('#art-card:not([hidden]) [data-act="hy-visit"]')
+        page.click('#art-card [data-act="hy-visit"]')
+        page.wait_for_selector('#art-card .koku-done')
+        page.click('#art-card [data-act="hy-checkin"]')
+        page.wait_for_selector('.toast.show', timeout=8000)
+        assert 'km' in page.text_content('.toast') or '公里' in page.text_content('.toast')
+        assert not page.evaluate("JSON.parse(localStorage.getItem('je.korea.hyanggyo'))['Q19939314'].real")
+        self.tab(page, 'detail')
+        page.click('#detail [data-act="hy"][data-id="Q5624067"]')  # 庆州乡校
+        page.wait_for_selector('#art-card:not([hidden]) [data-act="hy-checkin"]')
+        page.click('#art-card [data-act="hy-checkin"]')
+        page.wait_for_function("JSON.parse(localStorage.getItem('je.korea.hyanggyo') || '{}')['Q5624067']?.real === true", timeout=8000)
+        self.tab(page, 'detail')
+        assert page.locator('#detail .kr-hy-chips .real').count() == 1
+        self.no_overflow(page)
+
     def korea_sul(self, page):
         # 传统酒：庆北两种（安东烧酒、庆州校洞法酒），平壤的文配酒按原产地收录，慈江道没有资料就不出这一栏
         assert page.locator('#detail .kr-sul li').count() == 2
@@ -749,7 +790,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
@@ -783,6 +824,7 @@ def main():
                                       geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
                                       else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
                                       else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
+                                      else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
                                       else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
                         for step in steps:
                             getattr(c, step)(page)

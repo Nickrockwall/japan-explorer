@@ -1324,7 +1324,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 }
 
 /* ── 朝鲜半岛模式：日本独有的按钮、工具条、时代滑块与定位先隐藏（korea.js） ── */
-:root[data-map="korea"] #btn-battle, :root[data-map="korea"] #btn-book, :root[data-map="korea"] .map-toolbar,
+:root[data-map="korea"] #btn-battle, :root[data-map="korea"] .map-toolbar,
 :root[data-map="korea"] #timebar, :root[data-map="korea"] #persona-switch,
 :root[data-map="korea"] #legend { display: none; }
 .kr-soon { opacity: .85; }
@@ -1372,6 +1372,28 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .kr-eras button { white-space: nowrap; }
 .kr-eras button small { margin-left: 4px; opacity: .7; font-size: 10px; }
 :root[data-map="korea"].kr-era #legend { display: block; }
+/* 半岛印帐（korea-book.js）：韩式方印，印面只有韩文简称；两字竖排一列，四字排成 2×2（右列先读） */
+.kr-seal {
+  display: inline-grid; grid-auto-flow: column; grid-template-rows: repeat(2, 1fr); direction: rtl; place-items: center;
+  width: 54px; height: 54px; margin: 0 auto; padding: 3px; border: 3px solid #c23531; border-radius: 6px;
+  color: #c23531; font: 900 19px/1 var(--serif); transform: rotate(-4deg); box-shadow: inset 0 0 0 1px rgba(194,53,49,.35);
+}
+.kr-seal.four { font-size: 15px; grid-template-columns: repeat(2, 1fr); }
+.kr-seal i { font-style: normal; }
+.kr-seal.big { width: 104px; height: 104px; border-width: 5px; font-size: 38px; border-radius: 10px; }
+.kr-seal.big.four { font-size: 30px; }
+.seal-face.kr-face { border-radius: 18px; gap: 10px; }
+.kr-stamp-ico { display: inline-grid; place-items: center; width: 18px; height: 18px; margin-right: 6px; border: 1.5px solid currentColor; border-radius: 3px; font: 900 11px var(--serif); }
+.kr-book-note { margin: 0; padding: 6px 22px 8px; font-size: 11.5px; color: #9a8466; border-bottom: 1px solid #d8c6a6; }
+:root[data-map="korea"] .book-tabs { border-bottom: 0; padding-bottom: 4px; }
+@media (max-width: 560px) {
+  :root[data-map="korea"] .book-tabs { flex: none; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  :root[data-map="korea"] .book-tabs::-webkit-scrollbar { display: none; }
+  :root[data-map="korea"] .book-tab { flex: none; white-space: nowrap; }
+}
+.kr-hy-seal { font-size: 17px; border-radius: 6px; }
+.kr-hy-chips .pn-chip.got { border-color: var(--kin); color: var(--kin); }
+.kr-hy-chips .pn-chip.real { border-color: #ffd27a; color: #ffd27a; box-shadow: 0 0 8px rgba(255,210,122,.3); }
 .kr-sul li + li { margin-top: 6px; }
 .kr-sul i { font-style: normal; color: var(--text-2); font-size: 12px; font-weight: 400; }
 .kr-sul-origin { margin-left: 4px; padding: 0 6px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; color: var(--kin); white-space: nowrap; }
