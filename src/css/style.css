@@ -1500,3 +1500,51 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .rl-face img { width: 24px; height: 30px; object-fit: cover; object-position: top; border-radius: 3px; }
 .rl-dot { width: 7px; height: 7px; border-radius: 50%; background: #c23531; }
 .rl-note { margin: 14px 0 0; font-size: 11px; line-height: 1.6; color: #8a7a68; }
+
+/* 彼时今日 */
+.kako { margin: 14px 0 6px; padding: 10px 12px 8px; border: 1px solid rgba(212,163,115,.3); border-radius: 10px; background: rgba(212,163,115,.06); }
+.kk-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kako .section-h { margin: 0; }
+.kk-date { position: relative; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--kin); cursor: pointer; }
+.kk-date input { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 6px; padding: 2px 6px; font-size: 12px; color-scheme: dark; max-width: 140px; }
+.kk-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.kk-item { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; width: 100%; padding: 7px 6px; border: 0; border-top: 1px solid var(--line-soft);
+  background: none; color: var(--text); text-align: left; cursor: pointer; border-radius: 6px; font: inherit; }
+.kk-list li:first-child .kk-item { border-top: 0; }
+.kk-item:hover { background: rgba(255,255,255,.05); }
+.kk-y { font: 700 16px var(--serif); color: var(--kin); font-variant-numeric: tabular-nums; display: flex; flex-direction: column; line-height: 1.15; }
+.kk-y small { font: 400 10.5px var(--sans); color: var(--muted); margin-top: 2px; }
+.kk-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kk-main b { font: 700 14px var(--serif); }
+.kk-main span { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.kk-foot { display: flex; align-items: center; gap: 10px; margin-top: 6px; font-size: 11.5px; color: var(--muted); }
+.kk-more { border: 1px solid var(--line); background: transparent; color: var(--kin); border-radius: 14px; padding: 2px 10px; font-size: 12px; cursor: pointer; }
+.kk-more:first-of-type { margin-left: auto; }
+.kk-none { font-size: 12.5px; color: var(--text-2); margin: 8px 0 0; }
+.kk-note { margin: 6px 0 0; font-size: 10.5px; line-height: 1.5; color: var(--muted); }
+.kk-pref .kk-y { font-size: 13px; }
+
+/* 江户诸藩 · 历代藩主 */
+.hn-sec { margin-top: 14px; }
+.hn-sec > summary { cursor: pointer; list-style: none; }
+.hn-sec > summary::before { content: '▸ '; color: var(--kin); }
+.hn-sec[open] > summary::before { content: '▾ '; }
+.hn-list { display: grid; gap: 6px; margin-top: 8px; }
+.hn-han { border: 1px solid var(--line-soft); border-radius: 8px; padding: 6px 10px; background: rgba(255,255,255,.02); }
+.hn-han summary { cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
+.hn-han summary b { font: 700 14px var(--serif); }
+.hn-han summary small { font-size: 11.5px; color: var(--muted); }
+.hn-fam { margin-top: 6px; }
+.hn-fam-h { font-size: 12px; color: var(--kin); margin-bottom: 2px; }
+.hn-fam ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12.5px; }
+.hn-fam li { display: inline-flex; gap: 4px; align-items: baseline; }
+.hn-fam a { color: var(--text-2); text-decoration: none; border-bottom: 1px dotted var(--line); }
+.hn-fam a:hover { color: var(--kin); }
+.hn-i { font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hn-fam small { font-size: 10.5px; color: var(--muted); }
+.hn-wiki { display: inline-block; margin-top: 6px; font-size: 12px; color: var(--kin); }
+.kk-t { font: 400 10.5px var(--sans); font-style: normal; padding: 0 5px; border-radius: 8px; margin-left: 4px; vertical-align: 1px; }
+.kk-born { background: rgba(122,160,90,.25); color: #b9d99a; }
+.kk-died { background: rgba(140,140,150,.25); color: #c9c4bb; }
+.kk-prefhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kk-prefhead .kk-more { margin-left: 0; }

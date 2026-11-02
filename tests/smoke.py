@@ -862,6 +862,41 @@ class Case:
         page.keyboard.press('Escape')
         assert 'sgp=' not in page.evaluate('location.hash'), '关卡片后地址栏不应再带 sgp'
 
+    def kako(self, page):
+        # 彼时今日：深链接 #kako=06-21 打开 6 月 21 日（1582 年本能寺之变 / 信长忌日在其中），每页 3 条可换一批，
+        # 同一天刷新顺序不变；点一条选中所在县并在地图上插图钉
+        if self.narrow:
+            self.tab(page, 'detail')
+        page.wait_for_selector('.kako .kk-item', timeout=15000)
+        assert page.locator('.kako .kk-item').count() == 3, '每页应有 3 条'
+        first = page.text_content('.kako .kk-item >> nth=0')
+        page.reload()
+        if self.narrow:
+            self.tab(page, 'detail')
+        page.wait_for_selector('.kako .kk-item', timeout=15000)
+        assert page.text_content('.kako .kk-item >> nth=0') == first, '同一天刷新后顺序应不变'
+        seen = set()
+        for _ in range(12):
+            seen.update(x.text_content() for x in page.query_selector_all('.kako .kk-item'))
+            if any('1582' in x for x in seen):
+                break
+            page.click('[data-act="kk-more"]')
+        assert any('1582' in x for x in seen), '6 月 21 日应有 1582 年的条目'
+        page.click('.kako .kk-item >> nth=0')
+        page.wait_for_timeout(500)
+        assert 'pref=' in page.evaluate('location.hash'), '点一条应选中所在县'
+
+    def han(self, page):
+        # 江户诸藩：长野县详卡列出藩（≥5，含上田藩），点开上田藩有真田信之
+        page.wait_for_selector('.hn-sec', timeout=15000)
+        if self.narrow:
+            self.tab(page, 'detail')
+        page.click('.hn-sec > summary')
+        assert page.locator('.hn-han').count() >= 5, '长野县应有 5 个以上的藩'
+        han = page.locator('.hn-han', has_text=('上田' if self.lang != 'en' else 'Ueda'))
+        han.locator('summary').click()
+        assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'
+
     def koseki(self, page):
         # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106）；
         # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
@@ -945,7 +980,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('kako', 'kako=06-21', ['kako']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

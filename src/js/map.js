@@ -180,6 +180,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 「我在哪」的位置标记
   let you = null;
+  let kako = null; // 彼时今日选中的事件 { c, label }
   // 有争议的岛（disputed.js 从县里拆出来的多边形）：中性灰、虚线框、两个名字，可点；旧国底图（历史边界）与合战时不画
   const dspKeys = Object.keys(disputed);
   const dspAt = (ll) => dspKeys.find((k) => disputed[k].some((q) => inRing(ll, q[0])));
@@ -210,6 +211,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         data: on ? dspKeys.map((k) => ({ value: DISPUTED[k].label, symbolSize: DISPUTED[k].point ? 9 : 0 })) : [],
       },
     ];
+  }
+
+  // 彼时今日：选中事件的地点（朱红图钉 + 年份与名字）
+  function kakoSeries() {
+    return {
+      id: 'kako', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, animation: false,
+      rippleEffect: { scale: 3.5, brushType: 'stroke', period: 2.8 },
+      symbol: 'pin', symbolSize: 26, symbolOffset: [0, '-40%'],
+      itemStyle: { color: '#e2573a', borderColor: '#fff3d6', borderWidth: 1.5, shadowBlur: 10, shadowColor: '#e2573a' },
+      label: { show: true, position: 'right', color: '#ffe3c8', fontSize: 12.5, fontWeight: 700, fontFamily: 'Noto Serif SC',
+        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: () => kako?.label || '' },
+      data: kako && !state.battle ? [{ value: kako.c }] : [],
+    };
   }
 
   function youSeries() {
@@ -570,7 +584,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       geo: geoOpt,
       series: [
         { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), youSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
       ],
     });
   }
@@ -688,7 +702,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), youSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
     ],
   });
   render();
@@ -841,9 +855,16 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       setView(view || homeView());
     },
     get state() { return { ...state }; },
+    get kakoOn() { return !!kako; },
     get provMode() { return provMode(); },
     hideTip: () => chart.dispatchAction({ type: 'hideTip' }),
     prefAt,
+    // 彼时今日：标出事件地点并拉近（null 时去掉）
+    setKako(x) {
+      kako = x;
+      render();
+      if (x) setView({ center: x.c, zoom: Math.max(getView().zoom, 4) });
+    },
     // 标出「我在哪」的位置并拉近（null 时去掉标记）
     setYou(pt) {
       you = pt;

@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 3.6 · 2026-11-03
+
+- On this day: the welcome card shows what happened in Japan on today's date centuries ago — events and the births and deaths of historical figures, from the date articles of Japanese Wikipedia, checked against Wikidata for year (exact date for births and deaths) and place. Everyone gets a different order (the seed stays on your device), stable for the day; show others, or pick any date such as your birthday; tap one to drop a pin and select the prefecture. Gregorian dates, Julian before 1582
+- "On this day here" at the end of each prefecture card: the next few anniversaries in that prefecture
+- Edo domains: each prefecture card lists the domains seated there that lasted until their abolition in 1871 (261 domains, 3,194 lords) with their lords by house, linked to Wikipedia
+
 ## 3.5 · 2026-11-02
 
 - Sengoku map, 1590: still all under Toyotomi, but the domains of the great lords — Tokugawa (six Kantō provinces), Mōri, Maeda, Uesugi, Date, Mogami, Shimazu, Kobayakawa and others — now have their own colors and leading figures

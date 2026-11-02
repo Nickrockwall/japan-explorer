@@ -15,6 +15,10 @@ export const loadProvinces = () => fetchJSON(`${MAP.data}/provinces.json`);
 // 古国演变时间轴（用到时才下载）
 export const loadProvinceEras = () => fetchJSON(`${MAP.data}/province_eras.json`);
 // 战国势力图（68 国 × 6 个年份，用到时才下载）
+// 彼时今日（几百年前的今天；读不到就不显示这一节）
+// 江户诸藩的历代藩主（详卡用，用到时才下载）
+export const loadHan = () => fetchJSON(`${MAP.data}/han.json`).catch(() => null);
+export const loadKako = () => fetchJSON(`${MAP.data}/kako.json`).catch(() => null);
 export const loadSengoku = () => fetchJSON(`${MAP.data}/sengoku.json`);
 // 天皇 · 将军 · 执权年表与人物详写（人物卡用；读不到时人物卡只有基本信息）
 export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);

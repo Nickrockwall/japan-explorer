@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadSengoku, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -14,6 +14,8 @@ import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
 import { rulersHTML } from './rulers.js';
+import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
+import { hanSection } from './han.js';
 import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
@@ -125,10 +127,61 @@ async function main() {
     if (detailStale) return;
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
-    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, emblem: data.emblems?.[p.id], extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) });
+    renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, emblem: data.emblems?.[p.id], extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) + (kako.all ? kakoPrefHTML(kako.all, p.id) : '') + hanSection(han, p.id) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
   }
+
+  // ── 彼时今日：欢迎卡上「N 年前的今天」（每人一个种子，只存本机），详卡末尾本县最近的周年；点一条在地图上标出地点 ──
+  const kako = { all: null, key: dayKey(), page: 0 };
+  const kakoSeed = (() => {
+    let s = uiPref.get('kakoSeed', 0);
+    if (!s) { s = Math.floor(Math.random() * 2 ** 31) + 1; uiPref.set('kakoSeed', s); }
+    return s;
+  })();
+  const kakoProv = (key) => namesByKey.get(key)?.prov || key;
+  function renderKako() {
+    const box = detailEl.querySelector('.welcome');
+    if (!box || !kako.all) return;
+    const list = dayOrder(kako.all[kako.key] || [], kako.key, kakoSeed, visited.get());
+    const html = kakoHTML({ key: kako.key, list, page: kako.page, prefName: prefLabel, provName: kakoProv });
+    const old = box.querySelector('.kako');
+    if (old) old.outerHTML = html;
+    else box.querySelector('.tour-again')?.closest('p').insertAdjacentHTML('beforebegin', html);
+  }
+  function showKako(q) {
+    const e = Object.values(kako.all || {}).flat().find((x) => x.q === q);
+    if (!e) return;
+    if (app.battle) exitBattle();
+    closeMuni();
+    map.onSelect(e.p);
+    map.setKako({ c: e.c, label: kakoLabel(e) });
+    if (narrow()) tabs.set('map');
+    audio.play('click');
+  }
+  detailEl.addEventListener('click', (e) => {
+    const it = e.target.closest('[data-kako]');
+    if (it) { showKako(it.dataset.kako); return; }
+    if (e.target.closest('[data-act="kk-more"]')) { kako.page += 1; renderKako(); audio.play('click'); }
+    if (e.target.closest('[data-act="kk-today"]')) { kako.key = dayKey(); kako.page = 0; renderKako(); }
+    if (e.target.closest('[data-act="kk-home"]')) { renderWelcome(detailEl); renderKako(); detailEl.scrollTop = 0; } // 县详卡里回到全国的彼时今日
+  });
+  detailEl.addEventListener('change', (e) => {
+    const inp = e.target.closest('[data-kk-date]');
+    const m = inp?.value.match(/^\d+-(\d\d)-(\d\d)$/);
+    if (m) { kako.key = `${m[1]}-${m[2]}`; kako.page = 0; renderKako(); }
+  });
+  loadKako().then((d) => {
+    kako.all = d;
+    renderKako();
+    if (d && app.currentId) renderCurrent();
+  });
+  // 江户诸藩：数据到了再补进详卡
+  let han = null;
+  loadHan().then((d) => {
+    han = d;
+    if (d && app.currentId) renderCurrent();
+  });
 
   // ── 广重《六十余州名所图会》：古国地图上点一国弹卡片，详卡列出本县的画，点缩略图看大图 ──
   const art = data.hiroshige || [];
@@ -1011,6 +1064,7 @@ async function main() {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
     if (!kokuCardEl.hidden) closeKoku();
     else if (!sgCard.hidden) closeSengoku();
+    else if (map.kakoOn) map.setKako(null);
     else if (!artCard.hidden) closeArtCard();
     else if (!locCardEl.hidden) closeLocCard();
     else if (!pilCard.hidden) closeSpot();
@@ -1083,7 +1137,10 @@ async function main() {
   if (['circuit', 'power'].includes(mode0)) ensureProvinces();
   if (mode0 === 'sengoku') ensureSengoku();
   applyLayer(uiPref.get('layer', 'history'));
+  const kakoHash = new URLSearchParams(location.hash.slice(1)).get('kako');
+  if (/^\d\d-\d\d$/.test(kakoHash || '')) kako.key = kakoHash; // #kako=11-02 打开某一天
   renderWelcome(detailEl);
+  renderKako();
   guide.refreshMode();
   guide.showIntro();
   loading.classList.add('hidden');
