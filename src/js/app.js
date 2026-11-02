@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadSengoku, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadSengoku, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -758,10 +758,10 @@ async function main() {
   let sengokuLoad = null;
   function ensureSengoku() {
     ensureProvinces();
-    sengokuLoad ??= Promise.all([loadSengoku(), provinces])
-      .then(([d, g]) => {
+    sengokuLoad ??= Promise.all([loadSengoku(), provinces, loadRulers(), loadBios()])
+      .then(([d, g, rulers, bios]) => {
         if (!g) return;
-        sg = createSengoku(d, g, uiPref.get('sgYear', '1560'));
+        sg = createSengoku(d, g, uiPref.get('sgYear', '1560'), { rulers, bios });
         sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('');
         map.setSengoku(sg);
         updateLegend(map);

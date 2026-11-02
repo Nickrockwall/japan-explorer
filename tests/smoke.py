@@ -821,6 +821,15 @@ class Case:
         assert '1447' in page.text_content('#sg-card'), '人物卡应显示武田信昌的生年'
         page.click('#sg-card [data-act="sg-back"]')
         assert page.locator('#sg-card .sg-rows li').count() == 6, '返回后应回到甲斐的六个年份'
+        # 详写：武田信玄有肖像、简介（三方原）与相关人物，点相关人物上杉谦信换人
+        page.click('#sg-card li[data-y="1560"] .sg-who')
+        page.wait_for_selector('#sg-card img.sg-face', timeout=5000)
+        page.wait_for_function("document.querySelector('#sg-card img.sg-face').naturalWidth > 0", timeout=10000)
+        assert any(x in page.text_content('#sg-card .sg-bio') for x in ('三方原', 'Mikatagahara', '三方ヶ原')), '信玄简介应提到三方原'
+        page.click('#sg-card .sg-rel >> nth=0')
+        assert any(x in page.text_content('#sg-card .muni-name') for x in ('谦信', 'Kenshin', '謙信')), '相关人物第一位应是上杉谦信'
+        self.inside(page, '#sg-card')
+        page.click('#sg-card [data-act="sg-back"]')
         page.keyboard.press('Escape')
         assert page.is_hidden('#sg-card'), 'Esc 应收起卡片'
         page.click('[data-filter="circuit"]')

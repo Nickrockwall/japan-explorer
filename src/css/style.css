@@ -1013,7 +1013,6 @@ body.sg-mode .sg-years button.on { background: #9c3a32; }
 .sg-with { font: 400 11px var(--sans); color: var(--muted); margin-top: 2px; }
 .sg-who { border: 0; background: none; padding: 0; color: var(--text-2); font-size: 12px; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; text-align: right; }
 .sg-who:hover { color: var(--kin); }
-.sg-roles li { grid-template-columns: 38px minmax(0, 1fr); }
 .sg-back { border: 0; background: none; padding: 0 0 6px; color: var(--kin); font-size: 12px; cursor: pointer; }
 .sg-wiki { display: inline-block; margin-top: 10px; color: var(--kin); font-size: 12.5px; }
 
@@ -1470,3 +1469,15 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .sh-src a { color: var(--kin); }
 .sh-note { margin-top: 14px; font-size: 12px; color: var(--muted); }
 .sh-entry { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 12px; }
+.sg-head { display: flex; gap: 12px; align-items: center; margin-bottom: 6px; }
+.sg-face { flex: none; width: 64px; height: 80px; object-fit: cover; object-position: top; border-radius: 6px; border: 1px solid var(--line); background: #2a2a31; }
+.sg-crest { display: grid; place-items: center; color: var(--kin); }
+.sg-crest svg { width: 44px; height: 44px; }
+.sg-mon { display: inline-block; width: 18px; height: 18px; margin-left: 8px; vertical-align: -2px; color: var(--kin); }
+.sg-mon svg { width: 100%; height: 100%; }
+.sg-bio { margin: 2px 0 8px; font-size: 13px; line-height: 1.7; color: var(--text); }
+.sg-span { white-space: nowrap; font-size: 11.5px; }
+.sg-roles li { grid-template-columns: auto minmax(0, 1fr); }
+.sg-rels { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: 11.5px; color: var(--muted); }
+.sg-rel { border: 1px solid var(--line); background: transparent; color: var(--text-2); border-radius: 14px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
+.sg-rel:hover { border-color: var(--kin); color: var(--kin); }

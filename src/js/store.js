@@ -16,6 +16,9 @@ export const loadProvinces = () => fetchJSON(`${MAP.data}/provinces.json`);
 export const loadProvinceEras = () => fetchJSON(`${MAP.data}/province_eras.json`);
 // 战国势力图（68 国 × 6 个年份，用到时才下载）
 export const loadSengoku = () => fetchJSON(`${MAP.data}/sengoku.json`);
+// 天皇 · 将军 · 执权年表与人物详写（人物卡用；读不到时人物卡只有基本信息）
+export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);
+export const loadBios = () => fetchJSON(`${MAP.data}/people.json`).catch(() => ({}));
 
 // 优先读取 tools/build_bundle.py 生成的单文件包（每种语言 1 个请求）；
 // 包不存在时回退为逐个文件加载
