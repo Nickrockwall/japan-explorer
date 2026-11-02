@@ -337,6 +337,19 @@ class Case:
     def korea_guide(self, page):
         # 离线向导：济州的方言快捷提问给出济州语原句；庆尚北道的「名字」讲庆州、尚州
         self.tab(page, 'guide')
+        # 快捷提问的字要看得清：不透明底色时，文字与底色的对比度至少 3
+        low = page.evaluate("""() => [...document.querySelectorAll('#quick button')].map((b) => {
+          const cs = getComputedStyle(b);
+          const rgba = (s) => s.match(/[\\d.]+/g).map(Number);
+          const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; })
+            .reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+          const bg = rgba(cs.backgroundColor), fg = rgba(cs.color);
+          if ((bg[3] ?? 1) < .5) return null;
+          const [a, z] = [lum(bg), lum(fg)].sort((x, y) => y - x);
+          const ratio = (a + .05) / (z + .05);
+          return ratio < 3 ? `${b.textContent}: ${cs.color} on ${cs.backgroundColor}` : null;
+        }).filter(Boolean)""")
+        assert not low, low
         page.click('#quick [data-q="dialect"]')
         page.wait_for_function("[...document.querySelectorAll('#chat .msg.ai')].pop()?.textContent.includes('혼저 옵서예')", timeout=8000)
         page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=14')

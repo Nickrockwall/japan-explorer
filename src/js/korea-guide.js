@@ -161,7 +161,7 @@ export function createKoreaGuide(els, { getConfig, openSettings, origin = () => 
       title.textContent = t('kr.g.title', { r: label });
       addMsg('sys', esc(t('kr.g.switch', { r: label })));
       addMsg('ai', fmt(t('kr.g.open', { r: label })));
-      quick.innerHTML = QUICK.map((k) => `<button type="button" data-q="${k}">${esc(t(`kr.q.${k}`))}</button>`).join('');
+      quick.innerHTML = QUICK.map((k) => `<button type="button" class="bubble" data-q="${k}">${esc(t(`kr.q.${k}`))}</button>`).join('');
       setBusy(false);
     },
     askQuick: (k) => { const b = quick.querySelector(`[data-q="${k}"]`); if (b) ask(b.textContent, k); },
