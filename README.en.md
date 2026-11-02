@@ -34,12 +34,13 @@ All of these come from the app's Rankings and Ancestral register views, and you 
 **Read the history**
 - A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
 - Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals
+- Sengoku map: who held each of the 68 provinces in six years — 1467 Ōnin, 1560 Okehazama, 1573, 1582 Honnō-ji, 1590 and 1600 Sekigahara — with the leading figure of each; plus an emperors and shoguns timeline and bios and portraits for 61 people
 - Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)
 - All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces*, with where each scene is today; 190 things that still carry an old province name (the Shinano River, Sanuki udon, Iyokan…)
 
 **About you**
 - Where am I?: find out which ancient province and district you're standing in
-- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the 1572 power, the late-Edo lords, your Boshin War side and a local greeting; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
+- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the Sengoku-era holders of your province, the late-Edo lords, your Boshin War side and a local greeting; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
 - Goshuin book: a stamp for every prefecture you visit; pay respects at each province's ichinomiya shrine online, and earn an "in person" stamp when you're actually there
 
 **Just for fun**
@@ -80,7 +81,8 @@ Everything on the map has a source where possible, and the app says so where som
 - **From Japanese Wikipedia** (CC BY-SA 4.0): Meiji-era districts; ichinomiya shrines, provincial capitals and kokubunji temples; Edo-period population and rice yield by province; late-Edo lords by district (旧高旧領取調帳). Each entry is checked by script — for example, that its coordinates fall inside its province — and anything that doesn't match is left out.
 - **Wikidata** (CC0): municipal readings, populations and English names; English names of domains.
 - **Korean Peninsula**: boundaries from geoBoundaries (South: Natural Earth, citypopulation.de; North: WFP / OCHA ROAP), names and populations from Wikidata, updated to the 2026 divisions using Korean Wikipedia (e.g. Jeonnam-Gwangju, Incheon's new districts). Historical divisions are pieced together from today's counties; Silla's nine provinces follow the present-day locations in the Korean Wikipedia's nine-province tables, Goryeo's circuits follow the Goryeosa geography treatise, and the Three Kingdoms layer (c. 500) is inferred from the origins of Silla's provinces — all approximate. Households and farmland for 1432 come from the original text of the Annals of King Sejong (National Institute of Korean History site); battle texts are checked against the Korean, English and Japanese Wikipedia. Hyanggyo locations come from Wikidata (none verifiable yet in the North); liquors from Korean Wikipedia's intangible-heritage and Food Master lists; the Daedongyeojido is the Seoul National University Kyujanggak copy (public domain), with each region's area estimated by aligning the old map to today's coastline.
-- **Ukiyo-e and emblems**: Hiroshige's prints and the 47 prefectural emblems are in the public domain; images from Wikimedia Commons.
+- **Ukiyo-e, emblems and portraits**: Hiroshige's prints, the 47 prefectural emblems and the portraits of historical figures are in the public domain; images from Wikimedia Commons.
+- **Sengoku map and people**: who held each province in each year, and the reign years of emperors, shoguns and regents, follow the shugo lists, list articles and biographies on Japanese Wikipedia, checked entry by entry by script; the bios are written for this site, with every year and event checked against the person's article. Where several powers shared a province only the main one is colored, so the map is approximate.
 - History, in-jokes, ramen and sake follow common accounts, some coloring is approximate (e.g. by a prefecture's dominant power), and uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
 
 ## License

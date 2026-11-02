@@ -57,6 +57,11 @@ src/data/koku_sites.json       古国巡礼：诸国一宫·国府·国分寺（
 src/js/koku.js                 古国巡礼的卡片、详卡「古国三迹」、御朱印帐「诸国一宫」篇
 src/data/kokuryoku.json        古国国力：68 国今日人口 / 面积 / 市区町村数 + 江户人口与石高（tools/build_kokuryoku.py 生成，打进数据包）
 src/js/kokuryoku.js            古国国力：指标、着色、提示、反常识头条、榜单与宿敌 PK 卡片
+src/data/sengoku.json          战国势力：68 国 × 6 个年份的归属、各家代表人物（tools/sengoku_tool.py 生成并核对）
+src/data/rulers.json           天皇 126 代 · 将军 · 镰仓执权的代数与在位年份（tools/rulers_tool.py）
+src/data/people.json           人物详写：三语简介、相关人物、家纹、肖像（tools/people_tool.py；肖像在 src/assets/people/QID.jpg）
+src/js/sengoku.js              战国势力：着色、提示、图例、国别卡片与人物卡
+src/js/rulers.js               天皇 · 将军年表对话框
 src/data/emblems.json          47 都道府县章（tools/fetch_emblems.py：Wikidata P94 → Commons 只收公有领域 → src/assets/emblems/NN.png 透明底），详卡头像
 src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）
@@ -236,7 +241,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 | 探索进度 | 未探索 / 已探索 / 当前 |
 | 现代区划 | `region` 八地方 |
 | 五畿七道 | **底图换成 68 令制国真实边界**（`provinces.json`，首次选该滤镜时才下载），按旧国的 `circuit` 着色；加载失败时退回按县内首个令制国着色 |
-| 战国势力 | `map_filters.sengoku_1572`：固定 **1572 年（元龟三年）信玄西上前夕** 的县内主导势力 |
+| 战国势力 | **底图换成 68 国（824 年）**，按 `sengoku.json` 的所选年份着色（见下「战国势力」）；数据未就绪时退回 `map_filters.sengoku_1572` 按县着色 |
 | 幕末阵营 | `map_filters.bakumatsu`：戊辰战争时县内主导势力立场（萨长土肥 / 新政府方 / 佐幕方 / 天领直辖） |
 | 古国国力 | 底图同样换成 68 国（824 年），按 `kokuryoku.js` 的指标着色（见下「古国国力」） |
 
@@ -256,10 +261,17 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 反常识头条全部由数字算出（`headlines()`），条件不成立的那条不出；东京巨蛋按棒球赛约 43,500 席（日文维基）。宿敌 PK 预设在 `PK`，一方可以是几国之和（长州 = 周防 + 长门）或一个郡。
 - 前端：`map.setPower(power)` 后滤镜 `power` 生效（`powerMode()`；旧国边界未载入时按探索进度显示）；`body.power-mode` 显示指标行 `#power-metrics`，一进入就摊开 `#power-card`。卡片摊开时 `map.setInset` 让地图中心避开它（宽屏让右侧、窄屏让底部）。点地图上的国 → `onPower(key)` 高亮榜单该行；点榜单 → `map.focusProvince` 飞过去。
 
+### 战国势力（sengoku.js）
+
+- 数据：`python -X utf8 tools/sengoku_tool.py [--check]` 写出 `src/data/sengoku.json`。`DATA` 是每国 `[1467, 1560, 1573, 1582, 1590, 1600]` 的主要控制者（`CLANS` 的键；1600 年为 `SIDES` 的东军 / 西军 / 倒戈 / 分裂 / 观望），几家分占写进 `SPLIT`（界面「分治」），拿不准的用总称 `gunyu`（国人割据）/ `contest`（多方争夺），不硬涂。核对（日文维基，缓存 `.cache/sengoku/`）：1467 年要在该国条目「守護 → 室町幕府」名单里任期覆盖 1467 的那一行出现家名；其余年份要该国条目出现家名，或该家条目出现国名；通不过的人工确认后写进 `CHECKED`（条目 + 原文）。1600 年的倒戈 / 分裂 / 观望必须在 `SIDE_EV` 写依据原文。`HEADS` 是各年份各家的代表人物，Wikidata（缺时取信息框）的生卒要覆盖该年，或在 `HEAD_EV` 写原文依据。
+- 天皇 / 将军 / 执权：`python -X utf8 tools/rulers_tool.py`（需 zhconv）解析「天皇の一覧」「征夷大将軍」「鎌倉幕府の執権一覧」的 wikitext，核对代数连续、起止不倒退；西历年只取括号里的（前面的是和历）；后小松从 1392 年南北朝合一算起；尊氏、义稙的再任带 `again`。女性天皇英文写 Empress（`EMPRESS`）。
+- 人物详写：`python -X utf8 tools/people_tool.py [--check]`（需 pillow）。简介自己写（维基正文是 CC BY-SA），`ev` 里的每个词与简介里的西历年都必须出现在该人日文维基条目里，三语年份要一致；肖像取 Wikidata P18，只收 Commons 标为公有领域的，宽 240px 存 `src/assets/people/<QID>.jpg`；`crest` 只写确实是该图案的家纹。
+- 前端：选「战国势力」时 `ensureSengoku` 下载 sengoku / rulers / people 三个文件（与旧国边界一起），`map.setSengoku(createSengoku(...))` 后 `sgMode()` 生效（底图 824 年）。`#sg-years` 年份行（选的年份存 `ui.sgYear`，默认 1560）末尾「年表」打开 `dialog#rulers`（`rulers.js`：天皇按时代分组写都城，镰仓到江户写平安京 + 幕府所在地）。点国 → `#sg-card` 国别卡（6 个年份 + 代表人物），点人名或年表的一行 → 人物卡（`showPerson`；从年表来的「返回」回年表）。图例：超过 12 家时只占一国的合成一项。
+
 ### 古代户籍（koseki.js）
 
 - 入口：市区町村详情卡（单个市町村）与「我在哪」卡片的「📜 古代户籍」按钮，深链接 `#pref=20&muni=1&m=20203&koseki=1`（关掉对话框时地址栏去掉 `koseki=1`）。`openKoseki(pid, code, pt)`：经 `locate.js` 的 `muniGeo(pid)` 取该市町村，`pt` 缺省为市町村质心（定位进来的用真实位置）。
-- 各栏与精确度印（`seal`）：本贯（道 · 国 · 明治旧郡，市）、氏神（本国最近的一宫，方向 + 直线距离，市）、律令（最近的国府与国分寺，步行天数按 30 公里/天，市）、战国 1572（`map_filters.sengoku_1572`，县）、幕末领主（郡；查不到时用县的 `edo_domains`，县）、戊辰（`map_filters.bakumatsu`，县）、今日国力（kokuryoku 的人口排名，国）、乡音（`dialect.phrases[0]`，县；按钮调 `guide.askQuick('dialect')`）。令制外（虾夷地、琉球）不出氏神与国府。只用已核验数据计算，不给单个市町村手写剧情。
+- 各栏与精确度印（`seal`）：本贯（道 · 国 · 明治旧郡，市）、氏神（本国最近的一宫，方向 + 直线距离，市）、律令（最近的国府与国分寺，步行天数按 30 公里/天，市）、战国（`sengoku6`：所属旧国在 6 个年份的归属，国；没有 sengoku.json 时退回 `map_filters.sengoku_1572`，县）、幕末领主（郡；查不到时用县的 `edo_domains`，县）、戊辰（`map_filters.bakumatsu`，县）、今日国力（kokuryoku 的人口排名，国）、乡音（`dialect.phrases[0]`，县；按钮调 `guide.askQuick('dialect')`）。令制外（虾夷地、琉球）不出氏神与国府。只用已核验数据计算，不给单个市町村手写剧情。
 - 幕末领主：`python -X utf8 tools/fetch_domains.py` 读 `tools/districts.json` 里每个郡的维基条目，解析「旧高旧領取調帳」后的「知行 / 村数」表；没有表的读正文「全域が○○藩領であった」。知行规范化为幕府领（含代官所、郡代、预地）/ 旗本领 / 寺社领 / 相给（几方共管）/ 藩 / 明治初设的府县 / 其他；藩名去掉开头的旧国名（同名而国不同的保留，如纪伊田边藩），英文名取 Wikidata。`build_bundle.py` 按县 id → 郡名输出前 3 位 + 其余合计（`@bakufu` 等代号由前端翻译），中文藩名按 search.js 对照表反向转简体。按市町村约 79%、按人口约 84% 能精确到郡；多摩郡、都筑郡等条目写法不同，未解析。
 - 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
 
@@ -382,7 +394,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试 → （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
-- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / battle / koseki / tour；`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）；`country`（`#map=nope` 退回日本、日本链接不带 `map=`、`pickMap` 规则、仍写 `je.visited`）；`korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本）；`korea`（三语首尔详卡与韩文名、分母 29、日本按钮隐藏、只有首尔着色、`pref=99` 回欢迎卡）；`korea_dispute`（点独岛弹卡、两个名字顺序固定、卡片不出屏、Esc 关闭）；`disputed_split`（拆分不误伤根室、争议岛不再属于县、不改入参）；`disputed_jp`（日本地图点竹岛圆点 / 国后岛弹卡、不选中北海道）；`locate_kurils`（定位在国后岛弹争议卡）；`korea_counties`（仁川 11 区、深链接选中永宗区、不溢出、Esc 退出）；`korea_eras`（五个历代图层的图例条数 5 / 12 / 10 / 8 / 13、三国图层扶余 = 百济 · 金海 = 伽倻、新罗图层点庆州选中庆尚北道并展开统一新罗一段、州治 10 个、回到今天收起图例）；`korea_locate`（模拟定位庆州：卡片含庆尚北道 / 庆尚道 / 王京，详卡道名来历含尚州）；`korea_koseki`（元山的古今户籍：1896 年属咸镜南道）；`korea_tour`（全新访客进半岛自动出现 7 步、气泡不出屏、记住）；`korea_sul`（庆北两种酒、平壤문배주带原产地标、慈江道不出这一栏）；`korea_book`（庆北盖印得「경북」印、计数 1；印帐 29 格、平安组 5 格、乡校篇 141 所、标签不被压扁；详卡点庆山乡校记下到访，模拟定位在庆州乡校时庆山打不了卡、庆州可以）；`korea_power`（国力 28 区、户数第一庆北、换指标、对决、点平壤）；`korea_battle`（6 场、鸣梁推到底、旁述、Esc、深链接萨水）；`korea_daedong`（29 张图都在、平壤详卡图加载、大图不出屏、点图放大、Esc 关闭）；`korea_guide`（快捷提问字与底色对比度 ≥3；离线：济州方言给出「혼저 옵서예」、庆尚北道名字来历讲尚州）；`shared`（共同历史对话框：9 件按年代、标签一行且选中的不被截断或压扁、每件 4–6 条事实 / ≥2 方叙述 / ≥2 条来源、不出屏，日本与半岛两种模式内容一致）；`disputed_muni`（北海道下钻里齿舞与色丹同为灰、标题数量不含争议块、点齿舞弹卡）。
+- 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景：`tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour；`koseki`（深链接打开上田市户籍：8 栏、小县郡 158 町村中上田藩 106、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）；`sengoku`（默认 1560 年三好 9 国居首、图例合并单国家、1600 年 6 类西军 27 国、甲斐 6 个年份 1573 胜赖、人物简卡与详写（信玄肖像 / 三方原 / 相关人物谦信）、年表天皇 126 行将军 41 届、点义满开人物卡并返回年表、Esc、离开后隐藏；三语与横屏都跑）；`power`（古国国力：榜首武藏、逆袭首位河内、卡片不出屏、点武藏国选中埼玉并高亮榜单、PK 表与自选、离开后收起；三语都跑）；`koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）；`provinces` 另含时间轴（1869 年底图、点札幌选中北海道、712 年、离开后隐藏）；`locate`（模拟定位京都：卡片内容、选中京都府、带浮世绘、打开市区町村地图）、`hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）、`provinces`（换成旧国底图、点武藏国里的埼玉仍选中埼玉、换滤镜后换回县）、`sound`（音效触发、静音保存、开背景音乐）、`audio_broken`（声音不可用时照常运行）、`pilgrimage`（切图层、点图钉、子分类、详卡条目、离线漫迷解说）、`era_stable`（换时代时图例与报幕横幅尺寸不变）、`search_fits`（搜索下拉完整落在屏幕内）、`china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）；`country`（`#map=nope` 退回日本、日本链接不带 `map=`、`pickMap` 规则、仍写 `je.visited`）；`korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本）；`korea`（三语首尔详卡与韩文名、分母 29、日本按钮隐藏、只有首尔着色、`pref=99` 回欢迎卡）；`korea_dispute`（点独岛弹卡、两个名字顺序固定、卡片不出屏、Esc 关闭）；`disputed_split`（拆分不误伤根室、争议岛不再属于县、不改入参）；`disputed_jp`（日本地图点竹岛圆点 / 国后岛弹卡、不选中北海道）；`locate_kurils`（定位在国后岛弹争议卡）；`korea_counties`（仁川 11 区、深链接选中永宗区、不溢出、Esc 退出）；`korea_eras`（五个历代图层的图例条数 5 / 12 / 10 / 8 / 13、三国图层扶余 = 百济 · 金海 = 伽倻、新罗图层点庆州选中庆尚北道并展开统一新罗一段、州治 10 个、回到今天收起图例）；`korea_locate`（模拟定位庆州：卡片含庆尚北道 / 庆尚道 / 王京，详卡道名来历含尚州）；`korea_koseki`（元山的古今户籍：1896 年属咸镜南道）；`korea_tour`（全新访客进半岛自动出现 7 步、气泡不出屏、记住）；`korea_sul`（庆北两种酒、平壤문배주带原产地标、慈江道不出这一栏）；`korea_book`（庆北盖印得「경북」印、计数 1；印帐 29 格、平安组 5 格、乡校篇 141 所、标签不被压扁；详卡点庆山乡校记下到访，模拟定位在庆州乡校时庆山打不了卡、庆州可以）；`korea_power`（国力 28 区、户数第一庆北、换指标、对决、点平壤）；`korea_battle`（6 场、鸣梁推到底、旁述、Esc、深链接萨水）；`korea_daedong`（29 张图都在、平壤详卡图加载、大图不出屏、点图放大、Esc 关闭）；`korea_guide`（快捷提问字与底色对比度 ≥3；离线：济州方言给出「혼저 옵서예」、庆尚北道名字来历讲尚州）；`shared`（共同历史对话框：9 件按年代、标签一行且选中的不被截断或压扁、每件 4–6 条事实 / ≥2 方叙述 / ≥2 条来源、不出屏，日本与半岛两种模式内容一致）；`disputed_muni`（北海道下钻里齿舞与色丹同为灰、标题数量不含争议块、点齿舞弹卡）。
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

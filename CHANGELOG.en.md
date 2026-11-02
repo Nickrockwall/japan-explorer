@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.4 · 2026-11-02
+
+- Sengoku map: the "Sengoku powers" filter now colors the 68 provinces and switches between six years — 1467 at the start of the Ōnin War (the shugo governors: Yamana and Hosokawa ten provinces each), 1560 Okehazama, 1573 the fall of the shogunate, 1582 on the eve of Honnō-ji, 1590 unification under Toyotomi, and 1600 Sekigahara (Eastern army / Western army / switched sides / divided / stayed out). Provinces split between powers say so, unclear ones are shown as local lords or contested, and every entry is checked by script against the shugo lists and biographies on Japanese Wikipedia
+- Click a province to see who held it in each of the six years and who led them; click a name for the person card
+- Person cards: 61 emperors, shoguns, regents and Sengoku lords have a short bio in three languages (written for this site, every year and event checked against their Wikipedia article) and related people; 53 have a public-domain portrait, some a family crest
+- Emperors and shoguns timeline: a "Timeline" button at the end of the year row lists the 126 emperors by period with their capital (plus the shogunate's seat from Kamakura to Edo), and the shoguns and Kamakura regents by shogunate; tap a row for the person card
+- The Sengoku line of the "Register of Then and Now" now lists the province's holders in all six years
+
 ## 3.3 · 2026-11-02
 
 - Peninsula power: a "Power" button at the end of the era bar counts the households, people and farmland registered for each county in the 1432 gazetteer of the Annals of King Sejong into today's 29 regions and sets them against today's population — five metrics, rankings, headlines worked out from the numbers, and face-offs such as Seoul vs Pyongyang or the two Gangwons. For the southern provinces, county totals match the gazetteer's provincial totals to within 10 households
