@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadSengoku, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -12,6 +12,7 @@ import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } fro
 import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
 import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { createPower, METRICS } from './kokuryoku.js';
+import { createSengoku } from './sengoku.js';
 import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
@@ -290,6 +291,7 @@ async function main() {
     if (!map.provMode) closeArtCard();
     syncProvEras();
     syncPower();
+    syncSengoku();
   };
 
   // ── 古国国力：68 国按指标着色 + 榜单 / 宿敌 PK 卡片（旧国边界载入后才建） ──
@@ -368,6 +370,70 @@ async function main() {
   powerCard.addEventListener('change', (e) => {
     const sel = e.target.closest('[data-pk-side]');
     if (sel && power) { power.pick(sel); renderPower(); }
+  });
+
+  // ── 战国势力：年份行 + 国别 / 人物卡片（sengoku.json 与旧国边界都就绪后才建） ──
+  let sg = null;
+  const sgCard = $('sg-card');
+  const sgYears = $('sg-years');
+  function renderSengoku() {
+    if (!sg || sgCard.hidden) return;
+    sgCard.innerHTML = sg.card();
+    insetSengoku();
+  }
+  function insetSengoku() {
+    if (sgCard.hidden) { map.setInset({}); return; }
+    const card = sgCard.getBoundingClientRect();
+    const pane = $('map').getBoundingClientRect();
+    map.setInset(card.width < pane.width * 0.6
+      ? { right: Math.round(pane.right - card.left + 8) }
+      : { bottom: Math.round(pane.bottom - card.top + 10) });
+  }
+  function closeSengoku() {
+    if (sgCard.hidden) return;
+    sgCard.hidden = true;
+    sg?.setFocus(null);
+    map.redraw();
+    insetSengoku();
+  }
+  function focusSengoku(key) {
+    if (!sg) return;
+    sg.setFocus(key);
+    map.redraw();
+    sgCard.hidden = false;
+    renderSengoku();
+    map.hideTip();
+  }
+  function syncSengoku() {
+    const on = map.sgMode;
+    document.body.classList.toggle('sg-mode', on);
+    sgYears.querySelectorAll('[data-y]').forEach((b) => {
+      const sel = b.dataset.y === sg?.year;
+      b.classList.toggle('on', sel);
+      b.setAttribute('aria-selected', String(sel));
+    });
+    if (on) sgYears.querySelector('.on')?.scrollIntoView({ inline: 'nearest', block: 'nearest' }); // 手机上年份行横滑，选中的要露出来
+    else closeSengoku();
+  }
+  function setSengokuYear(y) {
+    if (!sg || y === sg.year) return;
+    sg.setYear(y);
+    uiPref.set('sgYear', y);
+    map.redraw();
+    updateLegend(map);
+    syncSengoku();
+    renderSengoku();
+    audio.play('click');
+  }
+  sgYears.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-y]');
+    if (b) setSengokuYear(b.dataset.y);
+  });
+  sgCard.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="sg-close"]')) { closeSengoku(); return; }
+    const r = sg?.handle(e);
+    if (r?.year) setSengokuYear(r.year);
+    else if (r) renderSengoku();
   });
 
   // ── 古国演变时间轴：712 / 757 / 824 / 1869（时间轴数据第一次用到时才下载） ──
@@ -531,6 +597,7 @@ async function main() {
     onKoku: (s) => openKoku(s),
     onProvince: (p) => openArtCard(p),
     onPower: (key) => focusPower(key, false),
+    onSengoku: (key) => focusSengoku(key),
     provTipExtra: (key) => namesTip(namesByKey.get(key)),
     onSelect(id) {
       if (app.battle) exitBattle();
@@ -683,11 +750,28 @@ async function main() {
         }
         updateLegend(map);
         syncArtCard();
+        return g;
       })
       .catch((err) => console.warn('令制国边界加载失败，改按县近似着色', err));
   }
+  // 战国势力第一次打开时再下载 sengoku.json；失败就沿用按县（1572）着色
+  let sengokuLoad = null;
+  function ensureSengoku() {
+    ensureProvinces();
+    sengokuLoad ??= Promise.all([loadSengoku(), provinces])
+      .then(([d, g]) => {
+        if (!g) return;
+        sg = createSengoku(d, g, uiPref.get('sgYear', '1560'));
+        sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('');
+        map.setSengoku(sg);
+        updateLegend(map);
+        syncArtCard();
+      })
+      .catch((err) => console.warn('战国势力数据加载失败，改按县着色', err));
+  }
   function applyFilter(m) {
     if (m === 'circuit' || m === 'power') ensureProvinces();
+    if (m === 'sengoku') ensureSengoku();
     queueMicrotask(syncArtCard);
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
     uiPref.set('filter', map.setMode(m));
@@ -878,6 +962,7 @@ async function main() {
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
     if (!kokuCardEl.hidden) closeKoku();
+    else if (!sgCard.hidden) closeSengoku();
     else if (!artCard.hidden) closeArtCard();
     else if (!locCardEl.hidden) closeLocCard();
     else if (!pilCard.hidden) closeSpot();
@@ -946,7 +1031,9 @@ async function main() {
   updateGoshuinCount();
   map.setVisited(set);
   map.setKokuStamps(ichinomiya.get());
-  if (['circuit', 'power'].includes(map.setMode(uiPref.get('filter', 'explore')))) ensureProvinces();
+  const mode0 = map.setMode(uiPref.get('filter', 'explore'));
+  if (['circuit', 'power'].includes(mode0)) ensureProvinces();
+  if (mode0 === 'sengoku') ensureSengoku();
   applyLayer(uiPref.get('layer', 'history'));
   renderWelcome(detailEl);
   guide.refreshMode();

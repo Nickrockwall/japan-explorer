@@ -28,7 +28,7 @@ VIEWPORTS = {
     'landscape': dict(viewport={'width': 844, 'height': 390}, is_mobile=True, has_touch=True, device_scale_factor=2),
 }
 # 横屏手机只跑与布局相关的场景（中文）
-LANDSCAPE_CASES = {'deeplink', 'power', 'battle', 'koseki', 'tour'}
+LANDSCAPE_CASES = {'deeplink', 'power', 'sengoku', 'battle', 'koseki', 'tour'}
 # 与功能无关、可忽略的控制台消息
 IGNORE = re.compile(r'navigator\.vibrate|mobile-web-app-capable|fonts\.(googleapis|gstatic)\.com|favicon')
 SEARCH = {'zh': '丰田', 'en': 'Toyota', 'ja': 'とよた'}
@@ -795,6 +795,38 @@ class Case:
         page.wait_for_timeout(300)
         assert page.is_hidden('#power-card') and page.is_hidden('#power-metrics'), '离开国力后卡片与指标行应收起'
 
+    def sengoku(self, page):
+        # 战国势力：68 国按年份着色（默认 1560，三好 9 国居首；单国的家合成一项）；1600 按站队 6 类；
+        # 点甲斐出六个年份（1573 武田胜赖）；点人名看人物简卡（武田信昌 1447–）、返回、Esc 收起；离开滤镜后年份行隐藏
+        self.tab(page, 'map')
+        page.click('[data-filter="sengoku"]')
+        page.wait_for_selector('#sg-years button.on', timeout=15000)
+        assert page.get_attribute('#sg-years button.on', 'data-y') == '1560', '默认应为 1560 年'
+        first = page.text_content('#legend-items span >> nth=0')
+        assert '9' in first and any(x in first for x in ('三好', 'Miyoshi')), f'1560 年图例首位应是三好 9 国：{first}'
+        assert page.locator('#legend-items span').count() <= 14, '1560 年图例应合并只占一国的家'
+        page.click('#sg-years [data-y="1600"]')
+        page.wait_for_timeout(300)
+        assert page.locator('#legend-items span').count() == 6, '1600 年图例应为 6 类'
+        assert '27' in page.text_content('#legend-items span >> nth=0'), '1600 年西军 27 国居首'
+        self.inside(page, '#sg-years button.on')
+        self._click_geo(page, [138.6, 35.65])
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=5000)
+        page.wait_for_timeout(800)
+        assert page.locator('#sg-card .sg-rows li').count() == 6, '甲斐应列出 6 个年份'
+        row = page.text_content('#sg-card li[data-y="1573"]')
+        assert any(x in row for x in ('胜赖', 'Katsuyori', '勝頼')), f'1573 年甲斐应是武田胜赖：{row}'
+        self.inside(page, '#sg-card')
+        page.click('#sg-card li[data-y="1467"] .sg-who')
+        assert '1447' in page.text_content('#sg-card'), '人物卡应显示武田信昌的生年'
+        page.click('#sg-card [data-act="sg-back"]')
+        assert page.locator('#sg-card .sg-rows li').count() == 6, '返回后应回到甲斐的六个年份'
+        page.keyboard.press('Escape')
+        assert page.is_hidden('#sg-card'), 'Esc 应收起卡片'
+        page.click('[data-filter="circuit"]')
+        page.wait_for_timeout(300)
+        assert page.is_hidden('#sg-years'), '离开战国势力后年份行应隐藏'
+
     def koseki(self, page):
         # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106）；
         # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
@@ -877,7 +909,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

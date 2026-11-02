@@ -32,7 +32,7 @@ YEARS = ['1467', '1560', '1573', '1582', '1590', '1600']
 
 # 键: (中文, English, 日本語, 颜色, 日文维基条目)；条目为 None 的是总称，不核对
 CLANS = {
-    'hosokawa': ('细川', 'Hosokawa', '細川', '#5f8fbf', '細川氏'),
+    'hosokawa': ('细川', 'Hosokawa', '細川', '#3da5b8', '細川氏'),
     'hatakeyama': ('畠山', 'Hatakeyama', '畠山', '#8f7fbf', '畠山氏'),
     'yamana': ('山名', 'Yamana', '山名', '#c25a56', '山名氏'),
     'shiba': ('斯波', 'Shiba', '斯波', '#b8a04f', '斯波氏'),

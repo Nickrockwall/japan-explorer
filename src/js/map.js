@@ -149,7 +149,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {}, disputed = {}, onDispute = () => {} }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onSengoku = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {}, disputed = {}, onDispute = () => {} }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -489,9 +489,12 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   // 古国国力：同样用 824 年的 68 国（统计是按这 68 国做的）
   let power = null;
   const powerMode = () => !!prov && !!power && state.layer === 'history' && !state.era && !state.battle && state.filter === 'power';
-  // 旧国底图：五畿七道滤镜、古国国力，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
-  const provBaseOn = () => !!prov && !state.battle && (provMode() || powerMode() || state.layer === 'koku');
-  const curProv = () => (state.layer === 'koku' || powerMode() ? buildProv('824') : prov);
+  // 战国势力：数据（sengoku.js）就绪后按 824 年的 68 国、所选年份着色；未就绪时仍按县（map_filters.sengoku_1572）
+  let sg = null;
+  const sgMode = () => !!prov && !!sg && state.layer === 'history' && !state.era && !state.battle && state.filter === 'sengoku';
+  // 旧国底图：五畿七道滤镜、古国国力、战国势力，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
+  const provBaseOn = () => !!prov && !state.battle && (provMode() || powerMode() || sgMode() || state.layer === 'koku');
+  const curProv = () => (state.layer === 'koku' || powerMode() || sgMode() ? buildProv('824') : prov);
 
   function provRegion(f) {
     if (state.layer === 'koku') {
@@ -502,8 +505,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         label: { show: false },
       };
     }
-    const c = (powerMode() ? power.color(f.properties.key) : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
-    const on = powerMode() && f.properties.key === power.focus;
+    const c = (powerMode() ? power.color(f.properties.key) : sgMode() ? sg.color(f.properties.key)
+      : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
+    const on = (powerMode() && f.properties.key === power.focus) || (sgMode() && f.properties.key === sg.focus);
     return {
       name: f.properties.key,
       itemStyle: on ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.55)', shadowBlur: 8 }
@@ -605,6 +609,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const p = f.properties;
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
     if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
+    if (sgMode()) {
+      return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}</div>
+        <div style="color:#d4a373;margin-top:2px">${now}</div>${sg.tip(p.key)}`;
+    }
     if (powerMode()) {
       return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}</div>
         <div style="color:#d4a373;margin-top:2px">${now}</div><div style="margin-top:4px;line-height:1.6">${power.tip(p.key)}</div>`;
@@ -725,6 +733,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (id) onSelect(id);
       if (f && provMode()) onProvince(f.properties);
       if (f?.properties.zh && powerMode()) onPower(f.properties.key);
+      if (f?.properties.zh && sgMode()) onSengoku(f.properties.key);
       return;
     }
     const id = idByName.get(params.name);
@@ -772,6 +781,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     get provEra() { return provEra; },
     // 古国国力：传入 kokuryoku.js 的 createPower() 结果；换指标、选中某国后调 redraw
     setPower(p) { power = p; render(); },
+    // 战国势力：传入 sengoku.js 的 createSengoku() 结果；换年份、选中某国后调 redraw
+    setSengoku(s) { sg = s; render(); },
+    get sgMode() { return sgMode(); },
     setInset(i) {
       const next = { left: 0, right: 0, bottom: 0, ...i };
       if (next.left === inset.left && next.right === inset.right && next.bottom === inset.bottom) return; // 卡片重绘时尺寸没变就不挪地图
@@ -875,6 +887,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         };
       } else if (powerMode()) {
         return power.legend();
+      } else if (sgMode()) {
+        return sg.legend();
       } else if (provMode()) {
         const counts = new Map();
         for (const f of prov.features) if (f.properties.zh) counts.set(f.properties.circuit, (counts.get(f.properties.circuit) || 0) + 1);

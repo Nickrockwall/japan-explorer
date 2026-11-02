@@ -996,6 +996,27 @@ body.power-mode .power-metrics button.on { background: #b0703c; }
 .kr-note { margin: 8px 0 0; font-size: 10.5px; line-height: 1.5; color: var(--muted); }
 .power-card > :not(.kr-body) { flex: none; }
 
+/* 战国势力：年份行 + 国别 / 人物卡片 */
+.sg-years { display: none; }
+body.sg-mode .sg-years { display: inline-flex; align-self: flex-start; max-width: 100%; }
+body.sg-mode .sg-years button.on { background: #9c3a32; }
+.sg-years button { white-space: nowrap; }
+.sg-rows { list-style: none; margin: 4px 0 0; padding: 0; font-size: 12.5px; }
+.sg-rows li { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 8px; align-items: start; padding: 6px 4px; border-radius: 6px; border-top: 1px solid var(--line-soft); }
+.sg-rows li:first-child { border-top: 0; }
+.sg-rows li[data-y] { cursor: pointer; }
+.sg-rows li[data-y]:hover { background: rgba(255,255,255,.05); }
+.sg-rows li.on { background: rgba(212,163,115,.16); }
+.sg-y { color: var(--kin); font-variant-numeric: tabular-nums; font-weight: 700; }
+.sg-c { font-family: var(--serif); font-weight: 700; }
+.sg-c i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+.sg-with { font: 400 11px var(--sans); color: var(--muted); margin-top: 2px; }
+.sg-who { border: 0; background: none; padding: 0; color: var(--text-2); font-size: 12px; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; text-align: right; }
+.sg-who:hover { color: var(--kin); }
+.sg-roles li { grid-template-columns: 38px minmax(0, 1fr); }
+.sg-back { border: 0; background: none; padding: 0 0 6px; color: var(--kin); font-size: 12px; cursor: pointer; }
+.sg-wiki { display: inline-block; margin-top: 10px; color: var(--kin); font-size: 12.5px; }
+
 /* 我在哪 */
 .locate-btn {
   position: absolute; right: 16px; bottom: 104px; z-index: 3; width: 42px; height: 42px; border-radius: 50%;
