@@ -1372,6 +1372,9 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .kr-eras button { white-space: nowrap; }
 .kr-eras button small { margin-left: 4px; opacity: .7; font-size: 10px; }
 :root[data-map="korea"].kr-era #legend { display: block; }
+.kr-sul li + li { margin-top: 6px; }
+.kr-sul i { font-style: normal; color: var(--text-2); font-size: 12px; font-weight: 400; }
+.kr-sul-origin { margin-left: 4px; padding: 0 6px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; color: var(--kin); white-space: nowrap; }
 .timeline .tl.hl > summary { box-shadow: inset 3px 0 0 var(--kin); }
 @media (max-width: 560px) { .kr-eras button small { display: none; } }
 .kr-origin { border-left-color: var(--ai); }

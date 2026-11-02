@@ -1,0 +1,60 @@
+{
+ "1": [
+  {"ko": "삼해주", "hanja": "三亥酒", "zh": "三亥酒", "ja": "三亥酒", "rr": "Samhaeju", "src": "서울특별시의_무형문화재",
+   "note": {"zh": "首尔市无形遗产；从正月第一个亥日（猪日）起，每逢亥日下酿一次，共三次，因而得名", "en": "Seoul intangible heritage; brewed in three stages, starting on the first pig (hae) day of the first lunar month and adding to it on each hae day after, hence the name", "ja": "ソウル市無形文化財。正月最初の亥の日から亥の日ごとに三度に分けて仕込むことからの名"}}
+ ],
+ "2": [
+  {"ko": "금정산성 막걸리", "hanja": "", "rr": "Geumjeong Sanseong makgeolli", "src": "대한민국식품명인", "find": "산성막걸리",
+   "note": {"zh": "金井山城的浊酒，酿造者是大韩民国食品名人第 49 号（釜山金井区）", "en": "Rice wine from Geumjeong Fortress; its brewer is Korea's designated Food Master no. 49 (Geumjeong-gu, Busan)", "ja": "金井山城のマッコリ。造り手は大韓民国食品名人第49号（釜山金井区）"}}
+ ],
+ "3": [
+  {"ko": "하향주", "hanja": "荷香酒", "zh": "荷香酒", "ja": "荷香酒", "rr": "Hahyangju", "src": "대구광역시의_무형문화재",
+   "note": {"zh": "大邱市无形遗产，产于达城郡瑜伽邑，用琵瑟山一带的忍冬、艾草、菊花等作辅料", "en": "Daegu intangible heritage from Yuga-eup, Dalseong County, flavoured with honeysuckle, mugwort and chrysanthemum from around Biseulsan", "ja": "大邱市無形文化財。達城郡瑜伽邑の酒で、琵瑟山一帯のスイカズラ・ヨモギ・菊などを加えて醸す"}}
+ ],
+ "5": [
+  {"ko": "송순주", "hanja": "松筍酒", "zh": "松笋酒", "ja": "松筍酒", "rr": "Songsunju", "src": "대전광역시의_무형문화재",
+   "note": {"zh": "大田市无形遗产", "en": "Daejeon intangible heritage", "ja": "大田市無形文化財"}}
+ ],
+ "8": [
+  {"ko": "남한산성소주", "hanja": "南漢山城燒酒", "zh": "南汉山城烧酒", "ja": "南漢山城焼酒", "rr": "Namhansanseong soju", "src": "경기도의_무형문화재",
+   "note": {"zh": "京畿道无形遗产，南汉山城一带的烧酒", "en": "Gyeonggi intangible heritage, a soju from around Namhansanseong", "ja": "京畿道無形文化財。南漢山城一帯の焼酎"}},
+  {"ko": "계명주", "hanja": "鷄鳴酒", "zh": "鸡鸣酒", "ja": "鶏鳴酒", "rr": "Gyemyeongju", "src": "경기도의_무형문화재",
+   "note": {"zh": "京畿道无形遗产（南扬州）；傍晚酿下，到第二天鸡叫时就熟了，因而得名", "en": "Gyeonggi intangible heritage (Namyangju); 'cock-crow wine', because brewed in the evening it is ready by the time the cock crows next morning", "ja": "京畿道無形文化財（南楊州）。夕方に仕込むと翌朝鶏が鳴くころには熟すことからの名"}}
+ ],
+ "10": [
+  {"ko": "충주 청명주", "hanja": "忠州 淸明酒", "zh": "忠州 清明酒", "ja": "忠州 清明酒", "rr": "Chungju Cheongmyeongju", "src": "충청북도의_무형문화재",
+   "note": {"zh": "忠清北道无形遗产，清明时节酿的酒", "en": "North Chungcheong intangible heritage, a wine brewed at Qingming (Cheongmyeong)", "ja": "忠清北道無形文化財。清明のころに醸す酒"}}
+ ],
+ "11": [
+  {"ko": "한산소곡주", "hanja": "韓山素穀酒", "zh": "韩山素谷酒", "ja": "韓山素穀酒", "rr": "Hansan sogokju", "src": "충청남도의_무형문화재",
+   "note": {"zh": "忠清南道无形遗产（舒川郡韩山面）", "en": "South Chungcheong intangible heritage (Hansan-myeon, Seocheon)", "ja": "忠清南道無形文化財（舒川郡韓山面）"}}
+ ],
+ "12": [
+  {"ko": "이강주", "hanja": "梨薑酒", "zh": "梨姜酒", "ja": "梨薑酒", "rr": "Igangju", "src": "전북특별자치도의_무형문화재",
+   "note": {"zh": "全北无形遗产（全州），用梨和姜调味的烧酒；朝鲜时代在全罗道与黄海道都有酿造", "en": "Jeonbuk intangible heritage (Jeonju), soju flavoured with pear and ginger; in the Joseon era it was made in both Jeolla and Hwanghae", "ja": "全北無形文化財（全州）。梨と生姜を加えた焼酎で、朝鮮時代には全羅道と黄海道で造られた"}}
+ ],
+ "13": [
+  {"ko": "진도홍주", "hanja": "珍島紅酒", "zh": "珍岛红酒", "ja": "珍島紅酒", "rr": "Jindo hongju", "src": "전남광주통합특별시의_무형문화재",
+   "note": {"zh": "全南光州无形遗产，珍岛的红酒", "en": "Jeonnam-Gwangju intangible heritage, the red liquor of Jindo", "ja": "全南光州無形文化財。珍島の紅酒"}}
+ ],
+ "14": [
+  {"ko": "안동소주", "hanja": "安東燒酎", "zh": "安东烧酎", "ja": "安東焼酎", "rr": "Andong soju", "src": "경상북도의_무형문화재",
+   "note": {"zh": "庆尚北道无形遗产，安东的蒸馏烧酒", "en": "North Gyeongsang intangible heritage, the distilled soju of Andong", "ja": "慶尚北道無形文化財。安東の蒸留焼酎"}},
+  {"ko": "경주교동법주", "hanja": "慶州校洞法酒", "zh": "庆州校洞法酒", "ja": "慶州校洞法酒", "rr": "Gyeongju Gyodong beopju", "src": "경주교동법주",
+   "note": {"zh": "韩国国家无形遗产（1986 年指定），庆州校洞的法酒", "en": "Korean national intangible heritage (1986), the beopju of Gyodong, Gyeongju", "ja": "韓国国家無形文化財（1986年指定）。慶州校洞の法酒"}}
+ ],
+ "15": [
+  {"ko": "함양 송순주", "hanja": "咸陽 松筍酒", "zh": "咸阳 松笋酒", "ja": "咸陽 松筍酒", "rr": "Hamyang songsunju", "src": "경상남도의_무형문화재",
+   "note": {"zh": "庆尚南道无形遗产", "en": "South Gyeongsang intangible heritage", "ja": "慶尚南道無形文化財"}}
+ ],
+ "16": [
+  {"ko": "고소리술", "hanja": "", "rr": "Gosorisul", "src": "제주특별자치도의_무형문화재",
+   "note": {"zh": "济州无形遗产，把小米浊酒 오메기술 蒸馏而成（고소리 是蒸馏用的器具）", "en": "Jeju intangible heritage, distilled from omegisul millet wine (the gosori is the still)", "ja": "済州無形文化財。粟の濁り酒オメギスルを蒸留したもの（コソリは蒸留器）"}},
+  {"ko": "오메기술", "hanja": "", "rr": "Omegisul", "src": "제주특별자치도의_무형문화재", "find": "오메기술",
+   "note": {"zh": "济州无形遗产（城邑民俗村），用小米酿的浊酒；오메기 是酿酒用的米糕", "en": "Jeju intangible heritage (Seongeup Folk Village), a cloudy millet wine; omegi is the cake it is brewed from", "ja": "済州無形文化財（城邑民俗村）。粟で醸す濁り酒で、オメギは仕込みに使う餅の名"}}
+ ],
+ "17": [
+  {"ko": "문배주", "hanja": "", "rr": "Munbaeju", "src": "문배주", "origin": true,
+   "note": {"zh": "原是平壤一带的乡土酒，相传用大同江边石灰岩层的地下水酿造；朝鲜战争后在韩国延续，1986 年列为韩国国家无形遗产，今在京畿金浦酿造", "en": "Originally a local spirit of the Pyongyang area, said to have been made with groundwater from the limestone by the Taedong River; after the Korean War it carried on in the South, became a South Korean national intangible heritage in 1986 and is now made in Gimpo, Gyeonggi", "ja": "もとは平壌一帯の地酒で、大同江沿いの石灰岩層の地下水で醸したと伝わる。朝鮮戦争後は韓国で受け継がれ、1986年に韓国の国家無形文化財に指定、いまは京畿道金浦で造られている"}}
+ ]
+}

@@ -84,7 +84,17 @@ function renderWelcome(el) {
 // 各区的史话（src/data/korea/content/{lang}.json）：时间轴固定 6 段，顺序同 ERAS
 const ERAS = ['samguk', 'silla', 'goryeo', 'joseon', 'modern', 'today'];
 
-function contentHTML(c) {
+// 传统酒（sul.json，tools/korea_sul_tool.py 核验）：名字按当前语言的汉字写法，没有汉字的用韩文 + 罗马字
+function sulHTML(items) {
+  if (!items?.length) return '';
+  const nm = (x) => (lang === 'en' ? '' : (lang === 'ja' ? x.ja : x.zh) || '');
+  return `<div class="section-h">${t('kr.sul.h')} <small>Sul</small></div>
+    <ul class="items kr-sul">${items.map((x) => `<li><span class="n">${nm(x) ? `${esc(nm(x))} ` : ''}<span lang="ko">${esc(x.ko)}</span> <i>${esc(x.rr)}</i>${x.origin ? ` <small class="kr-sul-origin">${t('kr.sul.origin')}</small>` : ''}</span>
+      <span class="d">${esc(x.note[lang] || x.note.zh)}</span></li>`).join('')}</ul>
+    <p class="legal">${t('kr.sul.src')}</p>`;
+}
+
+function contentHTML(c, sul) {
   if (!c) return `<div class="note kr-soon">${t('kr.soon')}</div>`;
   const items = (xs) => xs.map(([n, d]) => `<li><span class="n">${esc(n)}</span><span class="d">${esc(d)}</span></li>`).join('');
   return `
@@ -105,6 +115,7 @@ function contentHTML(c) {
       <div><div class="section-h">${t('sec.landmarks')} <small>Landmarks</small></div><ul class="items">${items(c.landmarks)}</ul></div>
       <div><div class="section-h">${t('sec.specialties')} <small>Specialties</small></div><ul class="items">${items(c.specialties)}</ul></div>
     </div>
+    ${sulHTML(sul)}
     <div class="section-h">${t('sec.dialect')} <small>${esc(c.dialect.name)}</small></div>
     <div class="dialect-box">
       <p class="feat">${esc(c.dialect.features)}</p>
@@ -147,7 +158,7 @@ function originText(id, names) {
   return text;
 }
 
-function renderRegion(el, p, c, translated = true, names = null) {
+function renderRegion(el, p, c, translated = true, names = null, sul = null) {
   const side = t(`kr.side.${p.side}`);
   el.innerHTML = `
     <div class="hero">
@@ -179,7 +190,7 @@ function renderRegion(el, p, c, translated = true, names = null) {
     </div>
     ${p.note ? `<div class="note">${esc(p.note[lang] || p.note.zh)}</div>` : ''}
     ${originHTML(p.id, names)}
-    ${contentHTML(c)}
+    ${contentHTML(c, sul)}
     <p class="legal">${t('kr.src.region')}</p>`;
   if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
   el.scrollTop = 0;
@@ -212,6 +223,7 @@ export async function main() {
   const translated = !!content;
   if (!content) content = await getJSON(`${MAP.data}/content/zh.json`) || {};
   const names = await getJSON(`${MAP.data}/names.json`);
+  const sul = await getJSON(`${MAP.data}/sul.json`) || {};
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
@@ -464,7 +476,7 @@ export async function main() {
     visited.add(id);
     updateCounter();
     paint();
-    renderRegion(detailEl, p, content[id], translated, names);
+    renderRegion(detailEl, p, content[id], translated, names, sul[id]);
     guide.setRegion(p, content[id], nameOf(p));
     openStage(detailEl, app.era);
     $('tab-pref').textContent = nameOf(p);
