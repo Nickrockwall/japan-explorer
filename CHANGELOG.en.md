@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.3 · 2026-11-02
+
+- Peninsula power: a "Power" button at the end of the era bar counts the households, people and farmland registered for each county in the 1432 gazetteer of the Annals of King Sejong into today's 29 regions and sets them against today's population — five metrics, rankings, headlines worked out from the numbers, and face-offs such as Seoul vs Pyongyang or the two Gangwons. For the southern provinces, county totals match the gazetteer's provincial totals to within 10 households
+- Peninsula battlefields: Salsu (612), Hwangsanbeol (660), Gwiju (1019), Cheoin (1232), Hansan Island (1592) and Myeongnyang (1597), replayed on the map in four stages with the guide Dancheong narrating; the Korean War is not included. Text checked against the Korean, English and Japanese Wikipedia
+- Historical divisions: a new Three Kingdoms layer (c. 500: Goguryeo, Baekje, Silla, Gaya); Unified Silla now shows its nine provinces and royal capital, Goryeo its five circuits, two frontiers and capital region — all pieced together from today's counties (approximate)
+- The "here, then and now" card adds a Three Kingdoms row and names the Silla province and Goryeo circuit
+
 ## 3.2 · 2026-11-02
 
 Peninsula mode gets its own versions of Japan-only features:

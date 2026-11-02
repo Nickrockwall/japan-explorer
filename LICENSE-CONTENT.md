@@ -51,6 +51,9 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/data/korea/hyanggyo.json`（半岛乡校的位置与名称） | [Wikidata](https://www.wikidata.org/)；汉字写法取自[한국어 위키백과](https://ko.wikipedia.org/)各乡校条目 | Wikidata 部分 CC0；汉字写法 **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/korea/sul.json`（半岛传统酒） | 整理自[한국어 위키백과](https://ko.wikipedia.org/)各市道「무형문화재」名录、「대한민국식품명인」名录与各酒条目 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/assets/daedong/`（《大东舆地图》局部） | 金正浩《大东舆地图》（1861），首尔大学奎章阁藏本，图像取自 [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Daedongyeojido-full.jpg)，由 `tools/build_daedong.py` 裁切 | 公有领域 |
+| `src/data/korea/power.json`（1432 年各区的户、口、垦田） | 《世宗实录·地理志》原文（15 世纪，公有领域），取自国史编纂委员会[「조선왕조실록」网站](https://sillok.history.go.kr/)，只用数字；郡县今地按 `tools/sejong_locate.py` 用[한국어 위키백과](https://ko.wikipedia.org/)核对 | 公有领域（只取原文数字） |
+| `src/data/korea/eras/silla.json`、`samguk.json` 的州 / 国归属 | 整理自[한국어 위키백과](https://ko.wikipedia.org/)「신라의 행정 구역」九州表格；高丽各道据《高丽史·地理志》（[维基文库](https://zh.wikisource.org/)，公有领域） | **CC BY-SA 4.0**（新罗九州部分，不适用 NC） |
+| `src/data/korea/battles.json`（半岛古战场） | 自写，内容据[한국어](https://ko.wikipedia.org/)、[English](https://en.wikipedia.org/)、[日本語](https://ja.wikipedia.org/)维基百科各战役条目核对 | CC BY-NC 4.0（本项目） |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 
 作品名、人物名、商标（动画、大河剧、酒造、拉面店等）归各自权利人所有，本项目仅作介绍性引用。
