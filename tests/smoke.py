@@ -832,6 +832,19 @@ class Case:
         page.click('#sg-card [data-act="sg-back"]')
         page.keyboard.press('Escape')
         assert page.is_hidden('#sg-card'), 'Esc 应收起卡片'
+        # 年表：天皇 126 行、将军 41 行；点足利义满打开人物卡（带简介），返回回到年表
+        page.click('#sg-years [data-act="rl-open"]')
+        page.wait_for_selector('#rulers[open] .rl-list li')
+        assert page.locator('#rulers .rl-list li').count() == 126, '天皇应有 126 行'
+        self.inside(page, '#rulers .book-inner')
+        page.click('#rulers [data-rl-tab="shogun"]')
+        assert page.locator('#rulers .rl-list li').count() == 41, '将军应有 41 届'
+        page.click('#rulers li[data-person="足利義満"]')
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-bio', timeout=5000)
+        assert '1392' in page.text_content('#sg-card .sg-bio'), '义满简介应提到 1392 年'
+        page.click('#sg-card [data-act="sg-back"]')
+        page.wait_for_selector('#rulers[open]')
+        page.click('#rulers [data-act="rl-close"]')
         page.click('[data-filter="circuit"]')
         page.wait_for_timeout(300)
         assert page.is_hidden('#sg-years'), '离开战国势力后年份行应隐藏'
@@ -844,6 +857,7 @@ class Case:
         assert len(rows) == 8, f'应有 8 栏：{rows}'
         assert any('106' in r and '158' in r for r in rows), f'幕末领主应写出小县郡 158 町村中上田藩 106：{rows}'
         assert any('諏訪大社' in r for r in rows), '氏神应是诹访大社'
+        assert any('1560' in r and '1600' in r and '1467' in r for r in rows), f'战国一栏应按信浓国列出 6 个年份：{rows}'
         box = page.locator('#koseki').bounding_box()
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'户籍卷轴超出屏幕：{box}'

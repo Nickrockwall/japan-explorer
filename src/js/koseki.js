@@ -45,8 +45,8 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, power, prints, prefLabel }
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, prints, prefLabel }) {
+// ctx：{ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku }
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -78,7 +78,17 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
   }
 
   const f = pref.map_filters;
-  rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });
+  // 战国：有 sengoku.json 时按旧国列出 6 个年份（主行 1560 → 1582 → 1600，副行其余三年）；没有时退回县的 1572
+  const sg = sengoku?.provinces?.[key];
+  if (sg && props.province !== '-') {
+    const at = (y) => {
+      const g = (y === '1600' ? sengoku.sides : sengoku.clans)[sg[y].c];
+      return `${y} ${g[lang] || g.zh}`;
+    };
+    rows.push({ k: 'sengoku6', seal: 'prov', main: ['1560', '1582', '1600'].map(at).join(' → '), sub: ['1467', '1573', '1590'].map(at).join(' · ') });
+  } else {
+    rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });
+  }
 
   const d = gun && domains?.[pref.id]?.[gun];
   if (d) {

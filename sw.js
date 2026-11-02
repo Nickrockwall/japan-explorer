@@ -7,7 +7,7 @@ const SHELL = [
   'manifest.webmanifest',
   'src/css/style.css',
   'src/js/app.js', 'src/js/country.js', 'src/js/shell.js', 'src/js/korea.js', 'src/js/disputed.js', 'src/js/korea-counties.js', 'src/js/korea-place.js', 'src/js/korea-guide.js', 'src/js/korea-book.js', 'src/js/korea-power.js', 'src/js/korea-battle.js', 'src/js/shared.js', 'src/js/store.js', 'src/js/map.js', 'src/js/detail.js',
-  'src/js/guide.js', 'src/js/goshuin.js', 'src/js/crests.js', 'src/js/i18n.js', 'src/js/muni.js', 'src/js/search.js', 'src/js/pilgrimage.js', 'src/js/audio.js', 'src/js/hiroshige.js', 'src/js/provnames.js', 'src/js/locate.js', 'src/js/koku.js', 'src/js/kokuryoku.js', 'src/js/sengoku.js', 'src/js/koseki.js', 'src/js/tour.js',
+  'src/js/guide.js', 'src/js/goshuin.js', 'src/js/crests.js', 'src/js/i18n.js', 'src/js/muni.js', 'src/js/search.js', 'src/js/pilgrimage.js', 'src/js/audio.js', 'src/js/hiroshige.js', 'src/js/provnames.js', 'src/js/locate.js', 'src/js/koku.js', 'src/js/kokuryoku.js', 'src/js/sengoku.js', 'src/js/rulers.js', 'src/js/koseki.js', 'src/js/tour.js',
   'src/vendor/echarts.min.js',
   'src/assets/geojson/japan.json',
   'src/assets/icons/icon-192.png',

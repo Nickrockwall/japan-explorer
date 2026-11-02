@@ -13,6 +13,7 @@ import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
 import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
+import { rulersHTML } from './rulers.js';
 import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
@@ -227,6 +228,7 @@ async function main() {
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
       sites: kokuSites, domains: data.domains, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
+      sengoku: await sengokuData(),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''));
@@ -426,13 +428,39 @@ async function main() {
     audio.play('click');
   }
   sgYears.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="rl-open"]')) { openRulers(); return; }
     const b = e.target.closest('[data-y]');
     if (b) setSengokuYear(b.dataset.y);
+  });
+
+  // ── 天皇 · 将军 · 执权年表：点一行在地图上打开人物卡 ──
+  let rl = null; // { rulers, bios }
+  let rlTab = 'emperor';
+  const rlDlg = $('rulers');
+  function openRulers() {
+    if (!rl) return;
+    rlDlg.innerHTML = rulersHTML(rl.rulers, data.events.timeline_eras, rl.bios, rlTab);
+    if (!rlDlg.open) rlDlg.showModal();
+    rlDlg.querySelector('.rl-body').scrollTop = 0;
+    audio.play('click');
+  }
+  rlDlg.addEventListener('click', (e) => {
+    if (e.target === rlDlg || e.target.closest('[data-act="rl-close"]')) { rlDlg.close(); return; }
+    const tb = e.target.closest('[data-rl-tab]');
+    if (tb) { rlTab = tb.dataset.rlTab; openRulers(); return; }
+    const li = e.target.closest('li[data-person]');
+    if (li && sg?.showPerson(li.dataset.person)) {
+      rlDlg.close();
+      if (narrow()) tabs.set('map');
+      sgCard.hidden = false;
+      renderSengoku();
+    }
   });
   sgCard.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="sg-close"]')) { closeSengoku(); return; }
     const r = sg?.handle(e);
     if (r?.year) setSengokuYear(r.year);
+    else if (r?.rulers) { closeSengoku(); openRulers(); }
     else if (r) renderSengoku();
   });
 
@@ -756,13 +784,17 @@ async function main() {
   }
   // 战国势力第一次打开时再下载 sengoku.json；失败就沿用按县（1572）着色
   let sengokuLoad = null;
+  let sgDataLoad = null;
+  const sengokuData = () => (sgDataLoad ??= loadSengoku().catch(() => null)); // 户籍也用（读不到就退回县的 1572）
   function ensureSengoku() {
     ensureProvinces();
-    sengokuLoad ??= Promise.all([loadSengoku(), provinces, loadRulers(), loadBios()])
+    sengokuLoad ??= Promise.all([sengokuData(), provinces, loadRulers(), loadBios()])
       .then(([d, g, rulers, bios]) => {
         if (!g) return;
         sg = createSengoku(d, g, uiPref.get('sgYear', '1560'), { rulers, bios });
-        sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('');
+        rl = rulers && { rulers, bios };
+        sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('')
+          + (rl ? `<button type="button" class="kr-open" data-act="rl-open">${esc(t('rl.open'))}</button>` : '');
         map.setSengoku(sg);
         updateLegend(map);
         syncArtCard();

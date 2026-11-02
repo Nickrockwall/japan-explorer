@@ -144,7 +144,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     handle(e) {
       const who = e.target.closest('[data-person]');
       if (who) { person = who.dataset.person; return true; }
-      if (e.target.closest('[data-act="sg-back"]')) { person = null; return true; }
+      if (e.target.closest('[data-act="sg-back"]')) { person = null; return focus ? true : { rulers: true }; } // 从年表打开的回到年表
       const row = e.target.closest('.sg-rows li[data-y]');
       if (row && !person) return { year: row.dataset.y };
       return false;
