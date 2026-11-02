@@ -21,7 +21,7 @@ import { audio } from './audio.js';
 import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
 import { openShared } from './shared.js';
 import { NARROW, SHORT, setupTabs, setupBattleVoice, setupHudFold, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
-import { lang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
+import { lang, t, label, prefName, deepMerge, applyStatic, stateHash } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -376,6 +376,12 @@ async function main() {
 
   // ── 战国势力：年份行 + 国别 / 人物卡片（sengoku.json 与旧国边界都就绪后才建） ──
   let sg = null;
+  // 地址栏 / 分享链接带上战国图的状态：#…&sg=1600&sgp=美濃国（打开时还原）
+  function pageHash(id) {
+    if (!sg || !map.sgMode) return stateHash(id);
+    return `${stateHash(id)}&sg=${sg.year}${sg.focus ? `&sgp=${encodeURIComponent(sg.focus)}` : ''}`;
+  }
+  const syncHash = () => history.replaceState(null, '', pageHash(app.currentId));
   const sgCard = $('sg-card');
   const sgYears = $('sg-years');
   function renderSengoku() {
@@ -397,6 +403,7 @@ async function main() {
     sg?.setFocus(null);
     map.redraw();
     insetSengoku();
+    syncHash();
   }
   function focusSengoku(key) {
     if (!sg) return;
@@ -405,6 +412,7 @@ async function main() {
     sgCard.hidden = false;
     renderSengoku();
     map.hideTip();
+    syncHash();
   }
   function syncSengoku() {
     const on = map.sgMode;
@@ -425,6 +433,7 @@ async function main() {
     updateLegend(map);
     syncSengoku();
     renderSengoku();
+    syncHash();
     audio.play('click');
   }
   sgYears.addEventListener('click', (e) => {
@@ -639,7 +648,7 @@ async function main() {
       renderCurrent();
       if (app.layer === 'pilgrimage') guide.setPilgrimage(spotsOf(id)); // 先换巡礼点，载入新县时快捷提问一并带上
       guide.setPrefecture(prefs.get(id));
-      history.replaceState(null, '', stateHash(id));
+      history.replaceState(null, '', pageHash(id));
       $('tab-pref').textContent = prefName(prefs.get(id));
       tabs.ping('detail');
       if (muni.open || pendingFocus) {
@@ -690,7 +699,7 @@ async function main() {
     searchHome.appendChild(searchForm);
     guide.setPlace(null);
     map.resize(); // 窗口在下钻期间改过大小时，全国地图需要重算
-    history.replaceState(null, '', stateHash(app.currentId));
+    history.replaceState(null, '', pageHash(app.currentId));
   }
   detailEl.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="muni"]') && app.currentId) openMuni(app.currentId);
@@ -785,6 +794,7 @@ async function main() {
   // 战国势力第一次打开时再下载 sengoku.json；失败就沿用按县（1572）着色
   let sengokuLoad = null;
   let sgDataLoad = null;
+  let sgWant = null; // 深链接要打开的 { prov }
   const sengokuData = () => (sgDataLoad ??= loadSengoku().catch(() => null)); // 户籍也用（读不到就退回县的 1572）
   function ensureSengoku() {
     ensureProvinces();
@@ -798,6 +808,9 @@ async function main() {
         map.setSengoku(sg);
         updateLegend(map);
         syncArtCard();
+        if (sgWant?.prov && d.provinces[sgWant.prov]) focusSengoku(sgWant.prov);
+        sgWant = null;
+        syncHash();
       })
       .catch((err) => console.warn('战国势力数据加载失败，改按县着色', err));
   }
@@ -1005,7 +1018,7 @@ async function main() {
   // ── 分享：手机用系统分享面板，电脑复制链接 ──
   detailEl.addEventListener('click', async (e) => {
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
-    const url = muni.open ? `${location.origin}${location.pathname}${muniHash(app.currentId, muni.selection)}` : shareURL(app.currentId);
+    const url = `${location.origin}${location.pathname}${muni.open ? muniHash(app.currentId, muni.selection) : pageHash(app.currentId)}`;
     const text = t('share.text', { name: prefName(prefs.get(app.currentId)) });
     if (navigator.share && matchMedia('(pointer: coarse)').matches) {
       try { await navigator.share({ title: 'Japan Explorer', text, url }); return; } catch (err) {
@@ -1093,6 +1106,14 @@ async function main() {
   });
   if (!uiPref.get('tourDone', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 
+  // 深链接：#sg=1600&sgp=美濃国 打开战国势力的某个年份（与某国的卡片）
+  const hp = new URLSearchParams(location.hash.slice(1));
+  if (/^(1467|1560|1573|1582|1590|1600)$/.test(hp.get('sg') || '')) {
+    uiPref.set('sgYear', hp.get('sg'));
+    sgWant = { prov: hp.get('sgp') };
+    if (map.state.filter !== 'sengoku') applyFilter('sengoku'); else ensureSengoku();
+  }
+  const sgLink = !!sgWant;
   // 深链接：#pref=26 直接打开京都
   const m = location.hash.match(/pref=(\d+)/);
   // 先读出来：onSelect 会改写地址栏
@@ -1101,7 +1122,7 @@ async function main() {
   const codes = (new URLSearchParams(location.hash.slice(1)).get('m') || '').split('.').filter((c) => /^\d{5}$/.test(c));
   if (m && prefs.has(+m[1])) {
     map.onSelect(+m[1]);
-    if (!wantMuni && narrow()) tabs.set('detail');
+    if (!wantMuni && !sgLink && narrow()) tabs.set('detail'); // 战国图的链接留在地图页看卡片
     // #pref=23&muni=1&m=23211 直接打开市区町村地图并选中；政令市整市从索引里找回市名与人口
     if (wantMuni) {
       let focus = codes.length ? { codes } : null;

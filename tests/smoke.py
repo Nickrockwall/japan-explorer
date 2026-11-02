@@ -849,6 +849,16 @@ class Case:
         page.wait_for_timeout(300)
         assert page.is_hidden('#sg-years'), '离开战国势力后年份行应隐藏'
 
+    def sengoku_link(self, page):
+        # 深链接 #sg=1600&sgp=美濃国：打开战国势力 1600 年并弹出美浓卡片；换年份后地址栏跟着变，Esc 后去掉 sgp
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=20000)
+        assert page.get_attribute('#sg-years button.on', 'data-y') == '1600', '深链接应打开 1600 年'
+        assert any(x in page.text_content('#sg-card .muni-name') for x in ('美浓', 'Mino', '美濃')), '应弹出美浓国卡片'
+        page.click('#sg-years [data-y="1560"]')
+        assert 'sg=1560' in page.evaluate('location.hash'), '换年份后地址栏应带 sg=1560'
+        page.keyboard.press('Escape')
+        assert 'sgp=' not in page.evaluate('location.hash'), '关卡片后地址栏不应再带 sgp'
+
     def koseki(self, page):
         # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106）；
         # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
@@ -932,7 +942,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
