@@ -368,7 +368,7 @@ const D = {
     'kr.seal.south': `南`, 'kr.seal.north': `北`, 'kr.st.side': `State`, 'kr.st.year': `Pop. year`,
     'kr.soon': `History, landmarks and dialect for this region are being prepared.`,
     'kr.src.region': `Population and area from Wikidata (years vary; most North figures are from the 2008 census). Divisions as of 2026.`,
-    'kr.book': `Peninsula seal book`, 'kr.book.title': `See the seals you have collected`, 'kr.stamp.do': `Get seal`,
+    'kr.book': `Seal book`, 'kr.book.title': `Peninsula seal book: see the seals you have collected`, 'kr.stamp.do': `Get seal`,
     'kr.book.mode.region': `29 regions`, 'kr.book.mode.hy': `Hyanggyo`, 'kr.book.progress': `{n} of {total} seals`,
     'kr.book.groups': `Grouped roughly by the eight Joseon provinces; each region goes with the province covering most of it.`,
     'kr.g.gyeonggi': `Gyeonggi`, 'kr.g.chungcheong': `Chungcheong`, 'kr.g.jeolla': `Jeolla`, 'kr.g.gyeongsang': `Gyeongsang`, 'kr.g.gangwon': `Gangwon`, 'kr.g.hwanghae': `Hwanghae`, 'kr.g.pyeongan': `Pyeongan`, 'kr.g.hamgyeong': `Hamgyeong`,
