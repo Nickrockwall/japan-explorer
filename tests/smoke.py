@@ -854,6 +854,9 @@ class Case:
         page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=20000)
         assert page.get_attribute('#sg-years button.on', 'data-y') == '1600', '深链接应打开 1600 年'
         assert any(x in page.text_content('#sg-card .muni-name') for x in ('美浓', 'Mino', '美濃')), '应弹出美浓国卡片'
+        if not self.narrow:  # 向导多出「1600 年美浓是谁的地盘」，离线列出六个年份
+            page.wait_for_selector('#quick button')
+            assert '1600' in page.text_content('#quick button >> nth=0'), '向导第一个快捷提问应问 1600 年美浓'
         page.click('#sg-years [data-y="1560"]')
         assert 'sg=1560' in page.evaluate('location.hash'), '换年份后地址栏应带 sg=1560'
         page.keyboard.press('Escape')

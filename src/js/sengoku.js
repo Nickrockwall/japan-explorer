@@ -132,6 +132,16 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const x = `<button class="muni-card-x" type="button" data-act="sg-close" aria-label="${esc(t('close'))}">×</button>`;
     return x + (person ? personCard(person) : provCard(focus));
   }
+  // 交给向导的：当前年份与这一国 6 个年份的归属（名字已按界面语言）
+  function guideInfo(k) {
+    if (!k || isOutside(k)) return null;
+    const rows = data.years.map((y) => {
+      const e = entry(k, y);
+      const head = headOf(y, e.c);
+      return { year: y, clan: clanName(y, e.c), head: head ? personName(head) : '', with: e.with?.map((c) => clanName(y, c)).join(' · ') || '' };
+    });
+    return { prov: provName(k), year, rows };
+  }
   // 从外部（年表等）直接打开某人的卡片
   function showPerson(title) { person = base(title) ? title : null; return !!person; }
 
@@ -141,7 +151,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     setYear(y) { if (data.years.includes(y)) year = y; },
     get focus() { return focus; },
     setFocus(k) { focus = k; person = null; },
-    color, legend, tip, card, entry, showPerson,
+    color, legend, tip, card, entry, showPerson, guideInfo,
     // 卡片里的点击；返回 true 表示需要重绘卡片
     handle(e) {
       const who = e.target.closest('[data-person]');

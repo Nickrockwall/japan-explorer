@@ -75,13 +75,19 @@ const ROLE = {
 const R = ROLE[lang];
 const RULES = PROMPT_RULES[lang];
 
+const SG_RULE = {
+  zh: '用户正在看「战国势力」地图并点开了一个国。下面是本站整理的这一国在六个年份的主要控制者与代表人物（每国只取一个主要控制者，几家分占的另列），问到战国势力时据此回答，不要编造这里没有的年份归属；分治与「国人割据」「多方争夺」要照实说明。',
+  en: 'The user is viewing the "Sengoku powers" map and has opened a province. Below is this site\'s record of who mainly held it in six years and who led them (one main holder per province, with sharers listed separately). Answer questions about Sengoku powers from it; do not invent holders for other years, and be clear about shared, local-lords or contested entries.',
+  ja: 'ユーザーは「戦国勢力」の地図で一つの国を開いています。以下は本サイトがまとめた、六つの年におけるこの国の主な支配者と代表人物です（各国の主な支配者は一つで、分け合う勢力は別記）。戦国の勢力についてはこれに基づいて答え、ここにない年の支配者を作らず、分立・国人割拠・係争中はそのまま説明してください。',
+};
+
 const PIL_RULE = {
   zh: '用户正在看「圣地巡礼」图层。下面是本县收录的动漫圣地与大河剧名所，问到巡礼时：动漫部分用热血漫迷的口吻，大河剧部分用剧评人的口吻；只依据列表介绍，不要编造新的取景地，不剧透关键情节，提醒遵守当地礼仪。',
   en: 'The user is viewing the "Pilgrimage" layer. Below are the anime and taiga-drama locations recorded for this prefecture. When asked about them, talk about anime like an enthusiastic otaku and about taiga dramas like a drama critic; stick to this list, do not invent other locations, avoid major spoilers, and remind people of local etiquette.',
   ja: 'ユーザーは「聖地巡礼」レイヤーを見ています。以下は本県のアニメ聖地と大河ドラマゆかりの地です。巡礼について聞かれたら、アニメは熱血アニメファンの口調、大河ドラマはドラマ評論家の口調で紹介してください。リストにない撮影地を作らず、重要なネタバレは避け、地元のマナーにも触れてください。',
 };
 
-export function buildSystemPrompt(p, P, place = null, pil = null) {
+export function buildSystemPrompt(p, P, place = null, pil = null, sg = null) {
   const { guide, hero_persona, _translated, ...data } = p;
   return `${P.hero ? R.hero(P) : R.guide(P)}
 
@@ -89,8 +95,16 @@ ${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
-${place ? `\n${R.place(place)}\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
+${place ? `\n${R.place(place)}\n` : ''}${sg ? `\n${SG_RULE[lang]}\n<sengoku province="${sg.prov}" year="${sg.year}">\n${JSON.stringify(sg.rows, null, 1)}\n</sengoku>\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
 ${RULES.reply}. ${RULES.rules}`;
+}
+
+// 战国势力图上点开的国：6 个年份的归属（离线解答照着念，在线写进 System Prompt）
+function sgAnswer(x, P) {
+  const now = x.rows.find((r) => r.year === x.year);
+  const line = (r) => `· **${r.year}**${t('o.eq')}${r.clan}${r.head ? paren(r.head) : ''}${r.with ? t('o.sg.with', { list: r.with }) : ''}`;
+  return [t('o.sg.now', { self: P.self, prov: x.prov, year: x.year, clan: now.clan, head: now.head ? paren(now.head) : '' }),
+    t('o.sg.all'), x.rows.map(line).join('\n'), t('o.sg.note')].join('\n\n') + `\n\n${P.tail}`;
 }
 
 // 圣地巡礼（离线）：动漫部分换热血漫迷口吻，大河剧部分换剧评人口吻，最后回到原身份收尾
@@ -347,6 +361,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
   let battle = null; // 合战沙盘进行中时：{ b, field }
   let place = null; // 下钻地图里选中的市区町村
   let pil = null; // 圣地巡礼图层下本县的巡礼点
+  let sg = null; // 战国势力图上点开的国 { prov, year, rows }
   let P = null;
   let history = [];
   let busy = false;
@@ -413,7 +428,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const myCtrl = (ctrl = new AbortController());
     let out = '';
     try {
-      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place, pil);
+      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place, pil, sg);
       for await (const chunk of streamChat(cfg, system, history, myCtrl.signal)) {
         out += chunk;
         div.innerHTML = fmt(out);
@@ -439,6 +454,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       ? (key ? battleAnswer(key, battle.b, P) : battleFreeText(text, battle.b, P))
       : key === 'place' && place ? placeAnswer(place, pref, P)
         : key === 'pil' && pil?.length ? pilAnswer(pil, pref, P)
+        : key === 'sg' && sg ? sgAnswer(sg, P)
         : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
     typeOut(ans || t('g.fallback', { self: P.self }), offlineHint());
   }
@@ -486,6 +502,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const qs = battle ? battleQuestions() : quickQuestions(pref);
     if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
     if (pil?.length && !battle) qs.unshift({ key: 'pil', text: t('q.pil') });
+    if (sg && !battle) qs.unshift({ key: 'sg', text: t('q.sg', { prov: sg.prov, year: sg.year }) });
     for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';
@@ -524,6 +541,13 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       const next = list?.length ? list : null;
       const changed = (next?.map((s) => s.id).join() || '') !== (pil?.map((s) => s.id).join() || '');
       pil = next;
+      if (pref && !battle && P && changed) renderQuick();
+    },
+    // 战国势力图上点开的国（null 表示没有）：不重置对话，只换快捷提问、补进 System Prompt
+    setSengoku(x) {
+      const key = (v) => (v ? `${v.prov}|${v.year}` : '');
+      const changed = key(x) !== key(sg);
+      sg = x;
       if (pref && !battle && P && changed) renderQuick();
     },
     setPlace(x) {

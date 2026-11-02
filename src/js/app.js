@@ -404,6 +404,7 @@ async function main() {
     map.redraw();
     insetSengoku();
     syncHash();
+    guide.setSengoku(null);
   }
   function focusSengoku(key) {
     if (!sg) return;
@@ -413,6 +414,7 @@ async function main() {
     renderSengoku();
     map.hideTip();
     syncHash();
+    guide.setSengoku(sg.guideInfo(key));
   }
   function syncSengoku() {
     const on = map.sgMode;
@@ -434,6 +436,7 @@ async function main() {
     syncSengoku();
     renderSengoku();
     syncHash();
+    if (sg.focus) guide.setSengoku(sg.guideInfo(sg.focus));
     audio.play('click');
   }
   sgYears.addEventListener('click', (e) => {
