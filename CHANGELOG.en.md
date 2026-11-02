@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.2 · 2026-11-02
+
+Peninsula mode gets its own versions of Japan-only features:
+- Peninsula seal book: one hangul square seal per region (no emblems or flags), grouped by the eight Joseon provinces; a hyanggyo chapter with the 141 hyanggyo that have coordinates on Wikidata — mark a visit, or check in within 1 km for a gold seal. No verifiable locations yet for hyanggyo in the North, and the book says so
+- Traditional liquor: 16, only those on South Korean intangible-heritage or Food Master registers; Munbaeju is listed under Pyongyang, where it originated
+- Here on the Daedongyeojido: each region on Kim Jeong-ho's 1861 map (Kyujanggak copy), zoomable; the old map is aligned automatically with today's coastline, so the area shown is an estimate
+
 ## 3.1 · 2026-11-02
 
 - Shared history grows from 2 episodes to 9, in date order: migrants and Buddhism, Baekgang, the Mongol invasions, the Imjin War, the Joseon embassies, the road to annexation, Japanese rule, normalisation, and repatriation and the abductions. Each still has facts both sides accept, each side's account and sources, with North Korea's account where it is involved

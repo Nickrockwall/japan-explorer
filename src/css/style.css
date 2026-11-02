@@ -1395,6 +1395,20 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .kr-hy-chips .pn-chip.got { border-color: var(--kin); color: var(--kin); }
 .kr-hy-chips .pn-chip.real { border-color: #ffd27a; color: #ffd27a; box-shadow: 0 0 8px rgba(255,210,122,.3); }
 .kr-sul li + li { margin-top: 6px; }
+/* 《大东舆地图》局部（korea.js ddHTML）与大图对话框 */
+.kr-dd { display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: var(--r-sm); background: #efe6d2; cursor: zoom-in; overflow: hidden; }
+.kr-dd img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: cover; }
+.kr-dd-view { border: 1px solid var(--line); border-radius: var(--r); padding: 0; background: var(--panel); color: var(--text);
+  width: min(960px, calc(100vw - 24px - var(--safe-l) - var(--safe-r))); }
+.kr-dd-view::backdrop { background: rgba(0,0,0,.6); }
+.kr-dd-inner { display: flex; flex-direction: column; max-height: calc(var(--vh) - 32px); }
+.kr-dd-inner header { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 8px; }
+.kr-dd-inner header h2 { margin: 0; font: 700 17px var(--serif); }
+.kr-dd-inner header .muni-card-x { position: static; }
+.kr-dd-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; background: #efe6d2; }
+.kr-dd-scroll img { display: block; max-width: 100%; max-height: calc(var(--vh) - 150px); margin: 0 auto; cursor: zoom-in; }
+.kr-dd-view.zoom .kr-dd-scroll img { max-width: none; max-height: none; cursor: zoom-out; }
+.kr-dd-inner .legal { flex: none; margin: 8px 16px 12px; }
 .kr-sul i { font-style: normal; color: var(--text-2); font-size: 12px; font-weight: 400; }
 .kr-sul-origin { margin-left: 4px; padding: 0 6px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; color: var(--kin); white-space: nowrap; }
 .timeline .tl.hl > summary { box-shadow: inset 3px 0 0 var(--kin); }

@@ -142,9 +142,10 @@ class Case:
         hot = page.evaluate("""(() => { const g = echarts.getInstanceByDom(document.getElementById('map')).getOption().geo[0];
             const base = g.itemStyle.areaColor; return g.regions.filter((r) => r.itemStyle.areaColor !== base && !r.itemStyle.areaColor.startsWith('rgba')).map((r) => r.name); })()""")
         assert hot == ['서울특별시'], f'着色的区 {hot}'
-        # 日本独有的按钮不出现
-        for sel in ('#btn-battle', '#btn-book', '#timebar', '.map-toolbar'):
+        # 日本独有的按钮不出现；印帐换成半岛印帐（/29）
+        for sel in ('#btn-battle', '#timebar', '.map-toolbar'):
             assert not page.is_visible(sel), f'半岛模式不应显示 {sel}'
+        assert page.is_visible('#btn-book') and '/29' in page.text_content('#btn-book'), page.text_content('#btn-book')
         # 越界编号：不报错、回到欢迎卡
         page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=99')
         page.reload()
@@ -334,6 +335,24 @@ class Case:
         assert self.KR_HAMNAM[self.lang] in page.text_content('#loc-card'), page.text_content('#loc-card')[:120]
         self.no_overflow(page)
 
+    def korea_daedong(self, page):
+        # 《大东舆地图》局部：29 张都在；平壤详卡里的图加载出来，点开大图不出屏，点图放大，Esc 关闭
+        missing = page.evaluate("""async () => { const d = await (await fetch('src/data/korea/daedong.json')).json();
+          const bad = []; for (const id of Object.keys(d)) { const r = await fetch(`src/assets/daedong/${id.padStart(2, '0')}.jpg`, { method: 'HEAD' }); if (!r.ok) bad.push(id); }
+          return [Object.keys(d).length, bad]; }""")
+        assert missing == [29, []], missing
+        page.wait_for_function("(() => { const i = document.querySelector('#detail .kr-dd img'); i?.scrollIntoView(); return i && i.complete && i.naturalWidth > 0; })()", timeout=15000)
+        page.click('#detail [data-act="daedong"]')
+        page.wait_for_selector('dialog#kr-dd-view[open]')
+        page.wait_for_function("document.querySelector('#kr-dd-view img').naturalWidth > 0", timeout=15000)
+        box = page.evaluate("(() => { const r = document.querySelector('#kr-dd-view').getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom, innerWidth, innerHeight]; })()")
+        assert box[0] >= 0 and box[1] <= box[4] + 1 and box[2] >= 0 and box[3] <= box[5] + 1, f'大图出屏 {box}'
+        page.click('#kr-dd-view .kr-dd-scroll img')
+        assert page.evaluate("document.querySelector('#kr-dd-view').classList.contains('zoom')")
+        page.keyboard.press('Escape')
+        page.wait_for_selector('dialog#kr-dd-view', state='hidden')
+        self.no_overflow(page)
+
     def korea_book(self, page):
         # 半岛印帐：庆北盖印（印面「경북」、顶栏计数 1）；印帐 29 格、八道分组；乡校篇 141 所；
         # 详卡点乡校弹卡片、记下到访；模拟定位在庆州乡校：离庆山乡校太远打不了卡，庆州乡校可以（亲临）
@@ -376,7 +395,7 @@ class Case:
         self.no_overflow(page)
 
     def korea_sul(self, page):
-        # 传统酒：庆北两种（安东烧酒、庆州校洞法酒），平壤的文配酒按原产地收录，慈江道没有资料就不出这一栏
+        # 传统酒：庆北两种（安东烧酒、庆州校洞法酒），平壤的문배주按原产地收录，慈江道没有资料就不出这一栏
         assert page.locator('#detail .kr-sul li').count() == 2
         assert '안동소주' in page.text_content('#detail .kr-sul')
         for pref, n, origin in [(17, 1, 1), (23, 0, 0)]:
@@ -790,7 +809,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

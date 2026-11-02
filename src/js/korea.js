@@ -159,7 +159,18 @@ function originText(id, names) {
   return text;
 }
 
-// x：{ stampedAt 本区盖印时间, hy 本区乡校, hyBook 乡校到访记录 }
+// 「大东舆地图上的这里」（tools/build_daedong.py 生成 src/assets/daedong/NN.jpg，dd = [宽, 高]）：点开看大图
+function ddHTML(id, dd) {
+  if (!dd) return '';
+  const src = `src/assets/daedong/${String(id).padStart(2, '0')}.jpg`;
+  return `<div class="section-h">${t('kr.dd.h')} <small>${t('kr.dd.sub')}</small></div>
+    <button type="button" class="kr-dd" data-act="daedong" aria-label="${esc(t('kr.dd.open'))}">
+      <img src="${src}" width="${dd[0]}" height="${dd[1]}" loading="lazy" alt="${esc(t('kr.dd.alt'))}">
+    </button>
+    <p class="legal">${t('kr.dd.note')}</p>`;
+}
+
+// x：{ stampedAt 本区盖印时间, hy 本区乡校, hyBook 乡校到访记录, dd 大东舆地图那一块的尺寸 }
 function renderRegion(el, p, c, translated = true, names = null, sul = null, x = {}) {
   const side = t(`kr.side.${p.side}`);
   el.innerHTML = `
@@ -194,6 +205,7 @@ function renderRegion(el, p, c, translated = true, names = null, sul = null, x =
     ${p.note ? `<div class="note">${esc(p.note[lang] || p.note.zh)}</div>` : ''}
     ${originHTML(p.id, names)}
     ${contentHTML(c, sul)}
+    ${ddHTML(p.id, x.dd)}
     ${hySection(x.hy || [], x.hyBook || {})}
     <p class="legal">${t('kr.src.region')}</p>`;
   if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
@@ -230,6 +242,7 @@ export async function main() {
   const sul = await getJSON(`${MAP.data}/sul.json`) || {};
   const hyang = await getJSON(`${MAP.data}/hyanggyo.json`) || [];
   const hyById = new Map(hyang.map((h) => [h.id, h]));
+  const daedong = await getJSON(`${MAP.data}/daedong.json`) || {};
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
@@ -490,7 +503,7 @@ export async function main() {
     if (!p) return;
     const top = detailEl.scrollTop;
     renderRegion(detailEl, p, content[id], translated, names, sul[id],
-      { stampedAt: goshuinBook.get()[id], hy: hyang.filter((h) => h.region === id), hyBook: hyanggyoBook.get() });
+      { stampedAt: goshuinBook.get()[id], hy: hyang.filter((h) => h.region === id), hyBook: hyanggyoBook.get(), dd: daedong[id] });
     openStage(detailEl, app.era);
     detailEl.scrollTop = top;
   }
@@ -548,6 +561,31 @@ export async function main() {
     if (c) hyCheckin(c);
   });
 
+  // 《大东舆地图》大图：先按窗口缩放，点一下看原尺寸（可拖动滚动），再点回去
+  let ddDlg = null;
+  function openDaedong(id) {
+    if (!ddDlg) {
+      ddDlg = document.createElement('dialog');
+      ddDlg.className = 'kr-dd-view';
+      ddDlg.id = 'kr-dd-view';
+      ddDlg.innerHTML = `<div class="kr-dd-inner">
+        <header><h2></h2><button type="button" class="muni-card-x" data-act="dd-close" aria-label="${esc(t('close'))}">×</button></header>
+        <div class="kr-dd-scroll"><img alt=""></div>
+        <p class="legal">${t('kr.dd.note')} ${t('kr.dd.zoom')}</p></div>`;
+      document.body.appendChild(ddDlg);
+      ddDlg.addEventListener('click', (e) => {
+        if (e.target === ddDlg || e.target.closest('[data-act="dd-close"]')) { ddDlg.close(); return; }
+        if (e.target.closest('.kr-dd-scroll img')) ddDlg.classList.toggle('zoom');
+      });
+    }
+    ddDlg.classList.remove('zoom');
+    ddDlg.querySelector('h2').textContent = t('kr.dd.title', { name: nameOf(regions.get(id)) });
+    const img = ddDlg.querySelector('img');
+    img.src = `src/assets/daedong/${String(id).padStart(2, '0')}.jpg`;
+    img.alt = t('kr.dd.alt');
+    ddDlg.showModal();
+  }
+
   // 印帐：顶栏按钮与对话框沿用日本的 #btn-book / #book
   const bookBtn = $('btn-book');
   bookBtn.querySelector('[data-i18n="btn.book"]').textContent = t('kr.book');
@@ -602,6 +640,7 @@ export async function main() {
     }
     const hb = e.target.closest('[data-act="hy"]');
     if (hb) { openHy(hyById.get(hb.dataset.id)); return; }
+    if (e.target.closest('[data-act="daedong"]') && app.currentId) { openDaedong(app.currentId); return; }
     if (!e.target.closest('[data-act="share"]') || !app.currentId) return;
     const url = shareURL(app.currentId);
     try {
