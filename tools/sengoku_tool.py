@@ -15,9 +15,14 @@ import json
 import os
 import re
 import sys
+import urllib.parse
+import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
 import korea_battles_tool as wiki  # noqa: E402  复用维基条目抓取与缓存
+import zhconv  # noqa: E402
+import rulers_tool as rulers  # noqa: E402
+from rulers_tool import JA_ZH  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'src', 'data', 'sengoku.json')
@@ -68,7 +73,7 @@ CLANS = {
     'honma': ('本间', 'Honma', '本間', '#7f8f9f', '本間氏'),
     'amago': ('尼子', 'Amago', '尼子', '#b85a8e', '尼子氏'),
     'akamatsu': ('赤松', 'Akamatsu', '赤松', '#d47a5a', '赤松氏'),
-    'urakami': ('浦上', 'Urakami', '浦上', '#a08fbf', '浦上氏'),
+    'urakami': ('浦上', 'Uragami', '浦上', '#a08fbf', '浦上氏'),
     'ukita': ('宇喜多', 'Ukita', '宇喜多', '#bf6f8f', '宇喜多氏'),
     'mimura': ('三村', 'Mimura', '三村', '#8fa07a', '三村氏'),
     'mori': ('毛利', 'Mōri', '毛利', '#3b8f6a', '毛利氏'),
@@ -312,17 +317,135 @@ def check():
     return bad, warn
 
 
-def build():
+# 各年份各家的代表人物（日文维基条目名；家督与实权者不一致时取实权者）。拿不准的不写。
+# 核对：Wikidata 生卒年要覆盖该年份（卒年可等于该年），条目正文要出现该家的姓
+HEADS = {
+    '1467': {
+        'horigoe': '足利政知', 'hosokawa': '細川勝元', 'imagawa': '今川義忠', 'isshiki': '一色義直',
+        'kikuchi': '菊池重朝', 'kyogoku': '京極持清', 'ouchi': '大内政弘', 'oyama': '小山持政', 'rokkaku': '六角高頼',
+        'shimazu': '島津立久', 'so': '宗成職', 'takeda': '武田信昌', 'togashi': '富樫政親', 'toki': '土岐成頼',
+        'uesugi': '上杉顕定', 'wakasa_takeda': '武田信賢', 'yamana': '山名宗全',
+    },
+    '1560': {
+        'amago': '尼子晴久', 'anegakoji': '姉小路良頼', 'asakura': '朝倉義景', 'azai': '浅井長政', 'chiba': '千葉胤富',
+        'hatakeyama': '畠山義綱', 'hojo': '北条氏康', 'ikko': '顕如', 'imagawa': '今川義元', 'ito': '伊東義祐',
+        'kitabatake': '北畠具教', 'kono': '河野通宣 (左京大夫)', 'mimura': '三村家親', 'miyoshi': '三好長慶',
+        'mori': '毛利元就', 'oda': '織田信長', 'otomo': '大友義鎮', 'rokkaku': '六角義賢', 'ryuzoji': '龍造寺隆信',
+        'saito': '斎藤義龍', 'satake': '佐竹義昭', 'satomi': '里見義堯', 'shimazu': '島津貴久', 'so': '宗義調',
+        'takeda': '武田信玄', 'uesugi': '上杉謙信', 'urakami': '浦上宗景', 'wakasa_takeda': '武田義統', 'yamana': '山名祐豊',
+    },
+    '1573': {
+        'anegakoji': '姉小路頼綱', 'chiba': '千葉胤富', 'chosokabe': '長宗我部元親', 'hojo': '北条氏政', 'ikko': '顕如',
+        'ito': '伊東義祐', 'kono': '河野通直 (伊予守)', 'mimura': '三村元親', 'miyoshi': '三好長治', 'mori': '毛利輝元',
+        'oda': '織田信長', 'otomo': '大友義鎮', 'ryuzoji': '龍造寺隆信', 'satake': '佐竹義重 (十八代当主)',
+        'satomi': '里見義弘', 'shimazu': '島津義久', 'takeda': '武田勝頼', 'tokugawa': '徳川家康', 'uesugi': '上杉謙信',
+        'ukita': '宇喜多直家', 'urakami': '浦上宗景', 'yamana': '山名祐豊',
+    },
+    '1582': {
+        'anegakoji': '姉小路頼綱', 'chiba': '千葉邦胤', 'chosokabe': '長宗我部元親', 'hojo': '北条氏政',
+        'kono': '河野通直 (伊予守)', 'miyoshi': '十河存保', 'mori': '毛利輝元', 'oda': '織田信長', 'otomo': '大友義統',
+        'ryuzoji': '龍造寺隆信', 'satake': '佐竹義重 (十八代当主)', 'satomi': '里見義頼', 'shimazu': '島津義久',
+        'tokugawa': '徳川家康', 'uesugi': '上杉景勝', 'ukita': '宇喜多秀家',
+    },
+    '1590': {'toyotomi': '豊臣秀吉'},
+    '1600': {'east': '徳川家康', 'west': '石田三成'},
+}
+# 生卒不详、按条目原文确认那一年在位的：(年, 家) → (日文维基条目, 原文)
+HEAD_EV = {
+    ('1467', 'isshiki'): ('伊勢国', '一色義直（1451年 - 1467年）'),
+    ('1467', 'oyama'): ('下野国', '1441年～1471年 - 小山持政'),
+    ('1560', 'urakami'): ('浦上宗景', '天神山城で旗揚げした宗景は'),
+    ('1573', 'urakami'): ('浦上宗景', '天正3年（1575年）6月、毛利軍は三村元親を攻め滅ぼして'),
+}
+# Wikidata 没有英文名的（读音取日文条目首句）
+EN_PEOPLE = {'宗成職': 'Sō Shigemoto', '小山持政': 'Oyama Mochimasa', '菊池重朝': 'Kikuchi Shigetomo'}
+# 条目里核对的字（默认取家名）
+HEAD_SURNAME = {'ikko': '本願寺', 'anegakoji': '姉小路', 'toyotomi': '豊臣', 'east': '関ヶ原', 'west': '関ヶ原', 'horigoe': '堀越',
+                'miyoshi': '三好'}
+
+
+def lifespans(titles):
+    """日文条目名 → {qid, en, born, died}（Wikidata P569 / P570 的年份）。"""
+    path = os.path.join(wiki.CACHE, 'wd-people.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        url = 'https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'sites': 'jawiki', 'titles': '|'.join(part), 'props': 'labels|sitelinks|claims',
+             'languages': 'en', 'sitefilter': 'jawiki', 'format': 'json'})
+        with urllib.request.urlopen(urllib.request.Request(url, headers=wiki.UA), timeout=60) as r:
+            d = json.load(r)
+        for qid, e in d.get('entities', {}).items():
+            if qid.startswith('-'):
+                continue
+
+            def year(pid):
+                for c in e.get('claims', {}).get(pid, []):
+                    v = c['mainsnak'].get('datavalue', {}).get('value', {}).get('time')
+                    if v:
+                        return int(v[1:5]) * (-1 if v[0] == '-' else 1)
+            cache[e['sitelinks']['jawiki']['title']] = {'qid': qid, 'en': e.get('labels', {}).get('en', {}).get('value'),
+                                                         'born': year('P569'), 'died': year('P570')}
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(cache, f, ensure_ascii=False)
+    return cache
+
+
+def check_heads(bad):
+    used = {y: set() for y in YEARS}
+    for prov, row in DATA.items():
+        for y, k in zip(YEARS, row):
+            used[y].add(k)
+            used[y].update(SPLIT.get((prov, y), []))
+    people = lifespans(sorted({t for hs in HEADS.values() for t in hs.values()}))
+    for y, hs in HEADS.items():
+        for k, title in hs.items():
+            if k not in used[y]:
+                bad.append(f'HEADS {y} {k}：这一年地图上没有这一家')
+            p = people.get(title)
+            if not p:
+                bad.append(f'HEADS {y} {k}：Wikidata 找不到 {title}')
+                continue
+            if p['born'] is None or p['died'] is None:  # Wikidata 缺生卒：取条目信息框「生誕 / 死没」
+                w = rulers.wikitext(title)
+                for key, field in (('born', '生誕'), ('died', '死没')):
+                    m = re.search(rf'\|\s*{field}\s*=[^\n]*?(\d{{3,4}})年', w)
+                    if p[key] is None and m:
+                        p[key] = int(m.group(1))
+            if (y, k) in HEAD_EV:
+                art, quote = HEAD_EV[(y, k)]
+                if quote not in wiki.article('ja', art):
+                    bad.append(f'HEADS {y} {k}：依据「{quote}」不在 {art} 条目里')
+            elif not (p['born'] and p['died'] and p['born'] < int(y) <= p['died']):
+                bad.append(f'HEADS {y} {k}：{title} 生卒 {p["born"]}–{p["died"]} 不覆盖 {y}')
+            name = HEAD_SURNAME.get(k) or surname(k)
+            if name not in wiki.article('ja', title):
+                bad.append(f'HEADS {y} {k}：{title} 条目没有「{name}」')
+    return people
+
+
+def zh(ja):
+    return ''.join(JA_ZH.get(ch, ch) for ch in zhconv.convert(ja, 'zh-cn'))
+
+
+def build(people):
     clans = {k: {'zh': v[0], 'en': v[1], 'ja': v[2], 'color': v[3]} for k, v in CLANS.items()}
     sides = {k: {'zh': v[0], 'en': v[1], 'ja': v[2], 'color': v[3]} for k, v in SIDES.items()}
     prov = {}
     for p, row in DATA.items():
         prov[p] = {y: ({'c': k, 'with': SPLIT[(p, y)]} if (p, y) in SPLIT else {'c': k}) for y, k in zip(YEARS, row)}
-    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov}
+    persons = {}
+    for t in sorted({t for hs in HEADS.values() for t in hs.values()}):
+        ja = re.sub(r' \(.*\)$', '', t)
+        persons[t] = {'ja': ja, 'zh': zh(ja), **{k: people[t][k] for k in ('en', 'born', 'died', 'qid')}}
+        persons[t]['en'] = persons[t]['en'] or EN_PEOPLE[t]
+    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'heads': HEADS, 'people': persons}
 
 
 def main():
     bad, warn = check()
+    people = check_heads(bad)
     for w in warn:
         print('待核', w)
     for b in bad:
@@ -331,7 +454,7 @@ def main():
     if '--check' in sys.argv or bad:
         sys.exit(1 if bad else 0)
     with open(OUT, 'w', encoding='utf-8') as f:
-        json.dump(build(), f, ensure_ascii=False, separators=(',', ':'))
+        json.dump(build(people), f, ensure_ascii=False, separators=(',', ':'))
     print('写出', OUT)
 
 
