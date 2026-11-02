@@ -1,5 +1,5 @@
 // 朝鲜半岛的「此地古今」：给一个点（定位或市郡的中心），查出它今天属于哪个区与市郡、1896 年与朝鲜王朝属于哪个道、
-// 是否在 11 世纪高丽与 8 世纪统一新罗的疆域里，以及最近的新罗州治。全部在本机计算，位置不上传。
+// 11 世纪属高丽哪一道、8 世纪属新罗哪一州（与到州治的距离）、约 500 年属三国中的哪一国。全部在本机计算，位置不上传。
 import { MAP } from './country.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
@@ -47,21 +47,19 @@ export async function placeHistory(regions, pt) {
   const region = pick(regions, pt);
   if (!region) return null;
   const rid = region.properties.id;
-  const [cs, e1896, ejoseon, egoryeo, esilla] = await Promise.all([loadCounties(rid), loadEra('1896'), loadEra('joseon'), loadEra('goryeo'), loadEra('silla')]);
+  const [cs, e1896, ejoseon, egoryeo, esilla, esamguk] = await Promise.all([loadCounties(rid), loadEra('1896'), loadEra('joseon'), loadEra('goryeo'), loadEra('silla'), loadEra('samguk')]);
   const county = pick(cs.features, pt, 0.05)?.properties || null;
   const key = (era) => pick(era.features, pt, 0.05)?.properties.key || null;
-  const k1896 = key(e1896), kjoseon = key(ejoseon), kgoryeo = key(egoryeo), ksilla = key(esilla);
-  let seat = null;
-  if (ksilla === 'in') {
-    for (const s of esilla.seats) {
-      const d = km(pt, s.coords);
-      if (!seat || d < seat.km) seat = { key: s.key, km: d };
-    }
-  }
+  const k1896 = key(e1896), kjoseon = key(ejoseon), kgoryeo = key(egoryeo), ksilla = key(esilla), ksamguk = key(esamguk);
+  // 新罗：所属的州与到州治（王京）的直线距离
+  const s = esilla.seats.find((x) => x.key === ksilla);
+  const seat = s ? { key: s.key, km: km(pt, s.coords) } : null;
+  const unit = (era, k) => (era.units?.[k] ? unitName(era.units[k]) : null);
   return {
     pt, region: region.properties, county,
     p1896: k1896 && unitName(e1896.units[k1896]), approx1896: e1896.approx.includes(rid),
-    joseon: kjoseon && unitName(ejoseon.units[kjoseon]), goryeo: kgoryeo, silla: ksilla, seat,
+    joseon: kjoseon && unitName(ejoseon.units[kjoseon]), goryeo: kgoryeo, goryeoName: unit(egoryeo, kgoryeo),
+    silla: ksilla, sillaName: unit(esilla, ksilla), seat, samguk: ksamguk, samgukName: unit(esamguk, ksamguk),
   };
 }
 
@@ -69,9 +67,10 @@ export async function placeHistory(regions, pt) {
 export function placeCard(h, regionName, { dialect = null, accuracy = null, located = false } = {}) {
   const row = (k, v) => `<div class="muni-row"><span>${esc(k)}</span><b>${v}</b></div>`;
   const today = `${esc(regionName)}${h.county ? ` · ${esc(countyLabel(h.county))}` : ''}${h.county?.ko && countyLabel(h.county) !== h.county.ko ? ` <i lang="ko">${esc(h.county.ko)}</i>` : ''}`;
-  const silla = h.silla === 'in'
-    ? `${esc(t('kr.e.silla.in'))}<small>${esc(t('kr.r.seat', { n: t(`kr.s.silla.${h.seat.key}`), km: Math.round(h.seat.km) }))}</small>`
+  const silla = h.sillaName
+    ? `${esc(h.sillaName)}${h.seat ? `<small>${esc(t('kr.r.seat', { n: t(`kr.s.silla.${h.seat.key}`), km: Math.round(h.seat.km) }))}</small>` : ''}`
     : esc(t(`kr.e.silla.${h.silla || 'out'}`));
+  const other = (era, k, name) => esc(name || t(`kr.e.${era}.${k || 'out'}`));
   return `
     <button type="button" class="muni-card-x" data-act="card-close" aria-label="${esc(t('close'))}">×</button>
     <div class="loc-kicker">${esc(t(located ? 'kr.loc.h' : 'kr.ks.h'))}</div>
@@ -79,8 +78,9 @@ export function placeCard(h, regionName, { dialect = null, accuracy = null, loca
     ${row(t('kr.e.today'), today)}
     ${row(t('kr.r.1896'), `${esc(h.p1896 || '—')}${h.approx1896 ? `<small>${esc(t('kr.r.approx'))}</small>` : ''}`)}
     ${row(t('kr.r.joseon'), esc(h.joseon || '—'))}
-    ${row(t('kr.r.goryeo'), esc(t(`kr.e.goryeo.${h.goryeo || 'out'}`)))}
+    ${row(t('kr.r.goryeo'), other('goryeo', h.goryeo, h.goryeoName))}
     ${row(t('kr.r.silla'), silla)}
+    ${row(t('kr.r.samguk'), other('samguk', h.samguk, h.samgukName))}
     ${dialect ? row(t('kr.r.dialect'), `<span lang="ko">${esc(dialect[0])}</span><small>${esc(dialect[1])}</small>`) : ''}
     <div class="loc-actions"><button type="button" class="btn btn-ghost" data-act="place-counties">${esc(t('kr.c.open'))}</button></div>
     <div class="muni-note">${esc(accuracy != null ? t('loc.note', { m: Math.round(accuracy) }) : t('kr.ks.note'))}</div>`;

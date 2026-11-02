@@ -1,0 +1,1807 @@
+{
+ "_note": "半岛古战场（korea-battle.js）。三语写在同一个文件里；路线与位置是示意。兵力等有争议的数字写明出处或「一说」。evidence 是 tools/korea_battles_tool.py 在出处条目里核对的词。",
+ "battles": [
+  {
+   "key": "salsu",
+   "year": 612,
+   "region": 21,
+   "field": {
+    "coords": [
+     125.66,
+     39.6
+    ],
+    "name": {
+     "zh": "萨水（今清川江）",
+     "en": "Salsu River (today's Chongchon)",
+     "ja": "薩水（今の清川江）"
+    }
+   },
+   "view": {
+    "center": [
+     125.4,
+     39.6
+    ],
+    "zoom": 3.2
+   },
+   "name": {
+    "zh": "萨水之战",
+    "en": "Battle of the Salsu River",
+    "ja": "薩水の戦い"
+   },
+   "factions": [
+    {
+     "key": "goguryeo",
+     "color": "#c8432f",
+     "name": {
+      "zh": "高句丽",
+      "en": "Goguryeo",
+      "ja": "高句麗"
+     },
+     "leader": {
+      "zh": "乙支文德",
+      "en": "Eulji Mundeok",
+      "ja": "乙支文徳"
+     },
+     "strength": {
+      "zh": "兵力不详",
+      "en": "strength unknown",
+      "ja": "兵力不明"
+     }
+    },
+    {
+     "key": "sui",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "隋",
+      "en": "Sui",
+      "ja": "隋"
+     },
+     "leader": {
+      "zh": "宇文述、于仲文",
+      "en": "Yuwen Shu, Yu Zhongwen",
+      "ja": "宇文述・于仲文"
+     },
+     "strength": {
+      "zh": "别动队约 30.5 万（《隋书》）",
+      "en": "detached force c. 305,000 (Book of Sui)",
+      "ja": "別働隊 約30万5千（『隋書』）"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "sui",
+     "from": {
+      "coords": [
+       124.45,
+       40.12
+      ],
+      "name": {
+       "zh": "鸭绿江西岸",
+       "en": "West bank of the Yalu",
+       "ja": "鴨緑江西岸"
+      }
+     },
+     "via": [
+      [
+       124.9,
+       39.9
+      ]
+     ],
+     "to": {
+      "coords": [
+       125.62,
+       39.62
+      ]
+     }
+    },
+    {
+     "faction": "sui",
+     "from": {
+      "coords": [
+       125.62,
+       39.62
+      ],
+      "name": {
+       "zh": "萨水",
+       "en": "Salsu",
+       "ja": "薩水"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       125.74,
+       39.17
+      ]
+     }
+    },
+    {
+     "faction": "sui",
+     "from": {
+      "coords": [
+       125.74,
+       39.17
+      ],
+      "name": {
+       "zh": "平壤城外三十里",
+       "en": "30 li from Pyongyang",
+       "ja": "平壌城外三十里"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       125.64,
+       39.58
+      ]
+     }
+    },
+    {
+     "faction": "goguryeo",
+     "from": {
+      "coords": [
+       125.75,
+       39.02
+      ],
+      "name": {
+       "zh": "平壤城",
+       "en": "Pyongyang",
+       "ja": "平壌城"
+      }
+     },
+     "via": [
+      [
+       125.8,
+       39.3
+      ]
+     ],
+     "to": {
+      "coords": [
+       125.68,
+       39.56
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "隋炀帝第二次征高句丽，派别动队渡鸭绿江直扑平壤。乙支文德且战且退，把隋军引到平壤城外，再趁其撤退渡萨水时截击，隋军大败。",
+    "en": "In Emperor Yang of Sui's second campaign against Goguryeo, a detached army crossed the Yalu to strike at Pyongyang. Eulji Mundeok fell back step by step, drew it to the walls of Pyongyang, then struck as it retreated across the Salsu.",
+    "ja": "隋の煬帝の二度目の高句麗遠征で、別働隊が鴨緑江を渡って平壌を目指した。乙支文徳は戦っては退き、隋軍を平壌城外まで誘い込み、撤退して薩水を渡るところを討った。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "渡江",
+      "en": "Crossing",
+      "ja": "渡河"
+     },
+     "time": {
+      "zh": "612 年夏",
+      "en": "Summer 612",
+      "ja": "612年夏"
+     },
+     "desc": {
+      "zh": "隋军主力围辽东城久攻不下，炀帝另派宇文述、于仲文率别动队渡鸭绿江，直取平壤。士兵自带百日粮，不少人偷偷埋掉减负，没走多远就缺粮。",
+      "en": "With the main Sui army stalled before Liaodong fortress, Emperor Yang sent Yuwen Shu and Yu Zhongwen across the Yalu with a detached force aimed at Pyongyang. Each soldier carried a hundred days' rations; many secretly buried theirs, and food ran short early.",
+      "ja": "隋の本隊が遼東城を落とせずにいる間に、煬帝は宇文述・于仲文の別働隊に鴨緑江を渡らせ、平壌を直撃させた。兵は百日分の糧を背負わされ、多くがひそかに埋めて身軽になったため、早々に食糧が尽きかけた。"
+     },
+     "routes": [
+      0
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "诱敌",
+      "en": "The lure",
+      "ja": "誘い込み"
+     },
+     "time": {
+      "zh": "612 年夏",
+      "en": "Summer 612",
+      "ja": "612年夏"
+     },
+     "desc": {
+      "zh": "乙支文德先以诈降入隋营探虚实，随后且战且退，一天交战七次，次次让隋军「得胜」。隋军渡过萨水，进到离平壤城三十里处扎营，却已饥疲不堪。",
+      "en": "Eulji Mundeok first entered the Sui camp under a pretended surrender to see their condition, then fought and fell back — seven clashes in a single day, each one a Sui \"victory\". The Sui crossed the Salsu and camped thirty li from Pyongyang, hungry and worn out.",
+      "ja": "乙支文徳はまず偽って降伏し隋の陣中を探り、その後は戦っては退き、一日に七度戦ってすべて隋軍に「勝たせた」。隋軍は薩水を渡り、平壌城から三十里の地に陣を張ったが、飢えと疲れで限界だった。"
+     },
+     "routes": [
+      1
+     ],
+     "markers": [
+      {
+       "coords": [
+        125.75,
+        39.02
+       ],
+       "name": {
+        "zh": "平壤城",
+        "en": "Pyongyang",
+        "ja": "平壌城"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "一首诗",
+      "en": "A poem",
+      "ja": "一首の詩"
+     },
+     "time": {
+      "zh": "612 年夏",
+      "en": "Summer 612",
+      "ja": "612年夏"
+     },
+     "desc": {
+      "zh": "乙支文德给于仲文送去一首五言诗，末句「战胜功既高，知足愿云止」；又遣使诈称若隋军撤退，便奉高句丽王去朝见。平壤城坚，隋军粮尽，只得回师。",
+      "en": "Eulji Mundeok sent Yu Zhongwen a five-character poem ending, \"Your victories are great, your merit high — know contentment, and stop.\" He also offered, falsely, to bring the king to court if the Sui withdrew. Facing strong walls and empty stores, the Sui turned back.",
+      "ja": "乙支文徳は于仲文に五言詩を送った。結びは「戦勝の功すでに高し、足るを知りて止まんことを願う」。さらに隋軍が退けば王を伴って朝見すると偽って申し入れた。城は堅く糧は尽き、隋軍は引き返した。"
+     },
+     "routes": [
+      2
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "萨水",
+      "en": "The Salsu",
+      "ja": "薩水"
+     },
+     "time": {
+      "zh": "612 年 7 月",
+      "en": "Seventh month, 612",
+      "ja": "612年7月"
+     },
+     "desc": {
+      "zh": "隋军撤到萨水，渡到一半时高句丽军从后面掩杀，隋军溃散。据《隋书》，渡辽水而来的三十万五千人，回到辽东城的只有二千七百人。隋朝此后又两次征高句丽，都没有成功。",
+      "en": "When the Sui army was halfway across the Salsu, Goguryeo forces fell on its rear and it broke. According to the Book of Sui, of the 305,000 who had crossed the Liao, only 2,700 made it back to Liaodong. Sui launched two more campaigns against Goguryeo; both failed.",
+      "ja": "隋軍が薩水を半ば渡ったところで高句麗軍が背後から襲い、隋軍は総崩れとなった。『隋書』によれば、遼水を渡った三十万五千人のうち遼東城に戻れたのは二千七百人。隋はその後も二度高句麗を攻めたが、いずれも失敗した。"
+     },
+     "routes": [
+      3
+     ],
+     "markers": [],
+     "impact": true
+    }
+   ],
+   "sources": {
+    "ko": "살수 대첩",
+    "en": "Battle of Salsu",
+    "ja": "隋の高句麗遠征"
+   },
+   "evidence": {
+    "ko": [
+     "을지문덕",
+     "305,000",
+     "2,700",
+     "100일",
+     "7번",
+     "30리",
+     "知足願云止"
+    ],
+    "en": [
+     "Ŭlchi Mundŏk"
+    ],
+    "ja": [
+     "薩水",
+     "乙支文徳"
+    ]
+   }
+  },
+  {
+   "key": "hwangsanbeol",
+   "year": 660,
+   "region": 11,
+   "field": {
+    "coords": [
+     127.2,
+     36.2
+    ],
+    "name": {
+     "zh": "黄山之原（今论山连山面）",
+     "en": "Hwangsan plain (Yeonsan, Nonsan today)",
+     "ja": "黄山の原（今の論山市連山面）"
+    }
+   },
+   "view": {
+    "center": [
+     127.6,
+     36.1
+    ],
+    "zoom": 3.4
+   },
+   "name": {
+    "zh": "黄山伐之战",
+    "en": "Battle of Hwangsanbeol",
+    "ja": "黄山伐の戦い"
+   },
+   "factions": [
+    {
+     "key": "silla",
+     "color": "#c8432f",
+     "name": {
+      "zh": "新罗",
+      "en": "Silla",
+      "ja": "新羅"
+     },
+     "leader": {
+      "zh": "金庾信",
+      "en": "Kim Yu-sin",
+      "ja": "金庾信"
+     },
+     "strength": {
+      "zh": "约 5 万（《三国史记》）",
+      "en": "c. 50,000 (Samguk sagi)",
+      "ja": "約5万（『三国史記』）"
+     }
+    },
+    {
+     "key": "baekje",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "百济",
+      "en": "Baekje",
+      "ja": "百済"
+     },
+     "leader": {
+      "zh": "阶伯",
+      "en": "Gyebaek",
+      "ja": "階伯"
+     },
+     "strength": {
+      "zh": "5,000 决死之士",
+      "en": "5,000 picked men",
+      "ja": "決死の兵5千"
+     }
+    },
+    {
+     "key": "tang",
+     "color": "#d4a373",
+     "name": {
+      "zh": "唐",
+      "en": "Tang",
+      "ja": "唐"
+     },
+     "leader": {
+      "zh": "苏定方",
+      "en": "Su Dingfang",
+      "ja": "蘇定方"
+     },
+     "strength": {
+      "zh": "约 13 万（《三国史记》）",
+      "en": "c. 130,000 (Samguk sagi)",
+      "ja": "約13万（『三国史記』）"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "silla",
+     "from": {
+      "coords": [
+       129.21,
+       35.84
+      ],
+      "name": {
+       "zh": "金城（庆州）",
+       "en": "Geumseong (Gyeongju)",
+       "ja": "金城（慶州）"
+      }
+     },
+     "via": [
+      [
+       128.6,
+       35.9
+      ],
+      [
+       127.95,
+       36.1
+      ],
+      [
+       127.48,
+       36.18
+      ]
+     ],
+     "to": {
+      "coords": [
+       127.24,
+       36.2
+      ]
+     }
+    },
+    {
+     "faction": "tang",
+     "from": {
+      "coords": [
+       126.28,
+       37.23
+      ],
+      "name": {
+       "zh": "德物岛",
+       "en": "Deokmul Island",
+       "ja": "徳物島"
+      }
+     },
+     "via": [
+      [
+       126.3,
+       36.6
+      ]
+     ],
+     "to": {
+      "coords": [
+       126.68,
+       36.02
+      ]
+     }
+    },
+    {
+     "faction": "baekje",
+     "from": {
+      "coords": [
+       126.91,
+       36.28
+      ],
+      "name": {
+       "zh": "泗沘城（扶余）",
+       "en": "Sabi (Buyeo)",
+       "ja": "泗沘城（扶余）"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       127.16,
+       36.21
+      ]
+     }
+    },
+    {
+     "faction": "silla",
+     "from": {
+      "coords": [
+       127.2,
+       36.2
+      ],
+      "name": {
+       "zh": "黄山之原",
+       "en": "Hwangsan",
+       "ja": "黄山の原"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       126.94,
+       36.28
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "新罗与唐分两路攻百济：金庾信率新罗军从东面翻山而来，苏定方的唐军从海路登陆。百济将军阶伯以五千人在黄山之原阻击，四战四胜，终因寡不敌众战死。十余天后泗沘城陷落，百济灭亡。",
+    "en": "Silla and Tang attacked Baekje on two fronts: Kim Yu-sin's Silla army over the mountains from the east, Su Dingfang's Tang fleet by sea. Baekje's general Gyebaek held the Hwangsan plain with 5,000 men, won four clashes, and fell to sheer numbers. Within days Sabi fell and Baekje was gone.",
+    "ja": "新羅と唐は二方面から百済を攻めた。金庾信の新羅軍は東から山を越え、蘇定方の唐軍は海から上陸した。百済の将軍階伯は五千の兵で黄山の原に立ちはだかり四戦四勝したが、衆寡敵せず戦死。まもなく泗沘城が落ち、百済は滅んだ。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "两路出兵",
+      "en": "Two fronts",
+      "ja": "二方面作戦"
+     },
+     "time": {
+      "zh": "660 年 7 月",
+      "en": "Seventh month, 660",
+      "ja": "660年7月"
+     },
+     "desc": {
+      "zh": "唐将苏定方率水军渡海，新罗太宗武烈王派金庾信等率五万人西进，约定七月十日在泗沘城下会师。",
+      "en": "The Tang general Su Dingfang crossed the sea with a fleet; King Muyeol of Silla sent Kim Yu-sin west with 50,000 men. They agreed to meet below Sabi on the tenth day of the seventh month.",
+      "ja": "唐の蘇定方は水軍を率いて海を渡り、新羅の武烈王は金庾信らに五万の兵を与えて西進させた。七月十日に泗沘城下で合流する約束だった。"
+     },
+     "routes": [
+      0,
+      1
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "阶伯出阵",
+      "en": "Gyebaek takes the field",
+      "ja": "階伯出陣"
+     },
+     "time": {
+      "zh": "660 年 7 月",
+      "en": "Seventh month, 660",
+      "ja": "660年7月"
+     },
+     "desc": {
+      "zh": "百济朝廷意见不一，错过了守住险要的时机。阶伯挑选五千名决死之士赶到黄山之原，抢在新罗军之前布好阵地。",
+      "en": "Baekje's court argued and lost the moment to hold the passes. Gyebaek picked 5,000 men ready to die and reached the Hwangsan plain ahead of the Silla army.",
+      "ja": "百済の朝廷は意見が割れ、要地を固める機を逃した。階伯は決死の兵五千を選び、新羅軍より先に黄山の原に陣を敷いた。"
+     },
+     "routes": [
+      0,
+      2
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "四战四胜",
+      "en": "Four clashes",
+      "ja": "四戦四勝"
+     },
+     "time": {
+      "zh": "660 年 7 月 9 日",
+      "en": "9th day, seventh month, 660",
+      "ja": "660年7月9日"
+     },
+     "desc": {
+      "zh": "百济军以少击众，四次击退新罗军。新罗少年花郎官昌单骑冲阵被俘，阶伯放他回去；他再次冲阵，被斩首送回。新罗军为之激愤，全军压上。",
+      "en": "Outnumbered ten to one, Baekje threw Silla back four times. The young hwarang Gwanchang charged alone and was captured; Gyebaek sent him back. He charged again and was beheaded, his head returned to the Silla lines. Enraged, the whole Silla army surged forward.",
+      "ja": "百済軍は寡兵で新羅軍を四度退けた。新羅の少年花郎・官昌は単騎で突入して捕らえられたが、階伯はいったん帰した。再び突入した官昌は斬られ、首が新羅軍に返された。奮い立った新羅軍は総攻撃に出た。"
+     },
+     "routes": [],
+     "markers": [],
+     "impact": true
+    },
+    {
+     "title": {
+      "zh": "泗沘陷落",
+      "en": "Sabi falls",
+      "ja": "泗沘陥落"
+     },
+     "time": {
+      "zh": "660 年 7 月",
+      "en": "Seventh month, 660",
+      "ja": "660年7月"
+     },
+     "desc": {
+      "zh": "阶伯战死，百济军覆没。新罗军比约定晚到，苏定方一度要斩新罗的督军，被金庾信顶了回去。两军会师围攻泗沘，百济灭亡。此后百济遗民起兵复国，倭国派兵相助，三年后在白村江战败（见「共同历史」）。",
+      "en": "Gyebaek died and his army was destroyed. Silla arrived later than agreed; Su Dingfang was ready to behead a Silla officer until Kim Yu-sin faced him down. Together they besieged Sabi, and Baekje fell. Baekje loyalists later rose to restore it with help from Yamato and were defeated three years on at Baekgang (see Shared history).",
+      "ja": "階伯は戦死し百済軍は壊滅した。新羅軍は約束より遅れて着き、蘇定方は新羅の督軍を斬ろうとしたが金庾信に押し返された。両軍は合流して泗沘を囲み、百済は滅んだ。その後の百済復興の挙兵には倭国も援軍を送り、三年後に白村江で敗れる（「共通の歴史」参照）。"
+     },
+     "routes": [
+      3,
+      1
+     ],
+     "markers": [
+      {
+       "coords": [
+        126.91,
+        36.28
+       ],
+       "name": {
+        "zh": "泗沘城",
+        "en": "Sabi",
+        "ja": "泗沘城"
+       }
+      }
+     ],
+     "impact": false
+    }
+   ],
+   "sources": {
+    "ko": "황산벌 전투",
+    "en": "Battle of Hwangsanbeol",
+    "ja": "階伯"
+   },
+   "evidence": {
+    "ko": [
+     "계백",
+     "관창",
+     "김유신",
+     "5만",
+     "5천",
+     "13만",
+     "네 번",
+     "소정방",
+     "늦었다"
+    ],
+    "en": [
+     "Gwanchang",
+     "fifty-thousand"
+    ]
+   }
+  },
+  {
+   "key": "gwiju",
+   "year": 1019,
+   "region": 22,
+   "field": {
+    "coords": [
+     125.25,
+     39.95
+    ],
+    "name": {
+     "zh": "龟州（今龟城）",
+     "en": "Gwiju (Kusong today)",
+     "ja": "亀州（今の亀城）"
+    }
+   },
+   "view": {
+    "center": [
+     125.7,
+     39.3
+    ],
+    "zoom": 2.6
+   },
+   "name": {
+    "zh": "龟州大捷",
+    "en": "Battle of Gwiju",
+    "ja": "亀州の戦い"
+   },
+   "factions": [
+    {
+     "key": "goryeo",
+     "color": "#c8432f",
+     "name": {
+      "zh": "高丽",
+      "en": "Goryeo",
+      "ja": "高麗"
+     },
+     "leader": {
+      "zh": "姜邯赞",
+      "en": "Gang Gam-chan",
+      "ja": "姜邯賛"
+     },
+     "strength": {
+      "zh": "约 20.8 万",
+      "en": "c. 208,000",
+      "ja": "約20万8千"
+     }
+    },
+    {
+     "key": "liao",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "辽（契丹）",
+      "en": "Liao (Khitan)",
+      "ja": "遼（契丹）"
+     },
+     "leader": {
+      "zh": "萧排押",
+      "en": "Xiao Paiya",
+      "ja": "蕭排押"
+     },
+     "strength": {
+      "zh": "约 10 万",
+      "en": "c. 100,000",
+      "ja": "約10万"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "liao",
+     "from": {
+      "coords": [
+       124.4,
+       40.15
+      ],
+      "name": {
+       "zh": "鸭绿江",
+       "en": "Yalu River",
+       "ja": "鴨緑江"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       124.62,
+       40.1
+      ]
+     }
+    },
+    {
+     "faction": "liao",
+     "from": {
+      "coords": [
+       124.62,
+       40.1
+      ],
+      "name": {
+       "zh": "兴化镇",
+       "en": "Heunghwa",
+       "ja": "興化鎮"
+      }
+     },
+     "via": [
+      [
+       125.6,
+       39.6
+      ],
+      [
+       126.0,
+       39.0
+      ]
+     ],
+     "to": {
+      "coords": [
+       126.45,
+       38.55
+      ]
+     }
+    },
+    {
+     "faction": "liao",
+     "from": {
+      "coords": [
+       126.45,
+       38.55
+      ],
+      "name": {
+       "zh": "新恩县",
+       "en": "Sineun",
+       "ja": "新恩県"
+      }
+     },
+     "via": [
+      [
+       125.9,
+       39.3
+      ]
+     ],
+     "to": {
+      "coords": [
+       125.3,
+       39.92
+      ]
+     }
+    },
+    {
+     "faction": "goryeo",
+     "from": {
+      "coords": [
+       125.66,
+       39.6
+      ],
+      "name": {
+       "zh": "高丽主力",
+       "en": "Goryeo main army",
+       "ja": "高麗主力"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       125.3,
+       39.9
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "辽与高丽的第三次战争。萧排押率十万契丹军南下，绕过高丽主力直扑开京，在开京附近无功而返，撤到龟州时被姜邯赞率领的高丽军截住，几乎全军覆没。此后辽没有再入侵高丽。",
+    "en": "The third Goryeo–Khitan war. Xiao Paiya led 100,000 Khitan south, bypassed the Goryeo main army and made for Gaegyeong, then turned back empty-handed; at Gwiju, Goryeo under Gang Gam-chan caught and all but destroyed them. Liao never invaded again.",
+    "ja": "遼と高麗の三度目の戦争。蕭排押の契丹軍十万は高麗の主力を避けて開京を目指したが、得るものなく引き返し、亀州で姜邯賛率いる高麗軍に捕捉されてほぼ全滅した。以後、遼が高麗に侵攻することはなかった。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "南下",
+      "en": "Invasion",
+      "ja": "南下"
+     },
+     "time": {
+      "zh": "1018 年 12 月",
+      "en": "Twelfth month, 1018",
+      "ja": "1018年12月"
+     },
+     "desc": {
+      "zh": "辽第三次大举入侵高丽，萧排押率十万人渡鸭绿江。高丽以姜邯赞为上元帅、姜民瞻为副，领二十万八千人迎战。",
+      "en": "Liao invaded Goryeo for the third time: Xiao Paiya crossed the Yalu with 100,000 men. Goryeo made Gang Gam-chan commander-in-chief, with Gang Min-cheom as deputy, at the head of 208,000.",
+      "ja": "遼は三度目の高麗侵攻に踏み切り、蕭排押が十万を率いて鴨緑江を渡った。高麗は姜邯賛を上元帥、姜民瞻を副として二十万八千の兵で迎え撃った。"
+     },
+     "routes": [
+      0
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "兴化镇放水",
+      "en": "The dam at Heunghwa",
+      "ja": "興化鎮の堰"
+     },
+     "time": {
+      "zh": "1018 年 12 月",
+      "en": "Twelfth month, 1018",
+      "ja": "1018年12月"
+     },
+     "desc": {
+      "zh": "高丽军在兴化镇的三桥川先胜一仗——英文维基记作堵住河流、趁契丹军渡河时放水冲击。契丹军绕过高丽主力，直奔开京。",
+      "en": "Goryeo won the first clash at the Samgyo stream by Heunghwa — damming it, the English Wikipedia says, and releasing the water as the Khitan crossed. The Khitan bypassed the Goryeo main army and made for Gaegyeong.",
+      "ja": "高麗軍は興化鎮の三橋川で緒戦に勝った。英語版ウィキペディアは、川をせき止めて契丹軍の渡河時に放流したと記す。契丹軍は高麗の主力を避けて開京へ向かった。"
+     },
+     "routes": [
+      0
+     ],
+     "markers": [
+      {
+       "coords": [
+        124.62,
+        40.1
+       ],
+       "name": {
+        "zh": "兴化镇",
+        "en": "Heunghwa",
+        "ja": "興化鎮"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "孤军深入",
+      "en": "Deep thrust",
+      "ja": "深入り"
+     },
+     "time": {
+      "zh": "1019 年正月",
+      "en": "First month, 1019",
+      "ja": "1019年正月"
+     },
+     "desc": {
+      "zh": "契丹军一路被追击，在大同江边的马滩又折损一万人，到了离开京约百里的新恩县。高丽坚壁清野，开京守备严密，萧排押只得决定撤退。",
+      "en": "Harried all the way and losing 10,000 more at Matan on the Taedong, the Khitan reached Sineun, about a hundred li from Gaegyeong. Facing stripped countryside and a well-defended capital, Xiao Paiya decided to withdraw.",
+      "ja": "契丹軍は追撃を受け続け、大同江の馬灘でさらに一万を失いながら、開京から約百里の新恩県に達した。焦土作戦と開京の堅い守りを前に、蕭排押は撤退を決めた。"
+     },
+     "routes": [
+      1
+     ],
+     "markers": [
+      {
+       "coords": [
+        126.55,
+        37.97
+       ],
+       "name": {
+        "zh": "开京",
+        "en": "Gaegyeong",
+        "ja": "開京"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "龟州",
+      "en": "Gwiju",
+      "ja": "亀州"
+     },
+     "time": {
+      "zh": "1019 年 2 月",
+      "en": "Second month, 1019",
+      "ja": "1019年2月"
+     },
+     "desc": {
+      "zh": "撤退的契丹军在龟州与高丽军主力正面决战，大败。据《高丽史节要》，活着回去的契丹兵只有数千人。此后两国议和，辽没有再入侵高丽。",
+      "en": "The retreating Khitan met the Goryeo main army head-on at Gwiju and were crushed. The Goryeosa jeolyo says only a few thousand Khitan soldiers got home. Peace followed, and Liao never invaded Goryeo again.",
+      "ja": "撤退する契丹軍は亀州で高麗の主力と正面から決戦し、大敗した。『高麗史節要』によれば、生還した契丹兵は数千人にすぎない。以後両国は講和し、遼が高麗に侵攻することはなかった。"
+     },
+     "routes": [
+      2,
+      3
+     ],
+     "markers": [],
+     "impact": true
+    }
+   ],
+   "sources": {
+    "ko": "귀주 대첩",
+    "en": "Battle of Gwiju",
+    "ja": "姜邯賛"
+   },
+   "evidence": {
+    "ko": [
+     "강감찬",
+     "강민첨",
+     "소배압",
+     "20만 8천",
+     "10만",
+     "삼교천",
+     "마탄",
+     "신은현",
+     "100리",
+     "수천"
+    ],
+    "en": [
+     "dammed a stream",
+     "did not invade Korea again"
+    ],
+    "ja": [
+     "亀州"
+    ]
+   }
+  },
+  {
+   "key": "cheoin",
+   "year": 1232,
+   "region": 8,
+   "field": {
+    "coords": [
+     127.2,
+     37.19
+    ],
+    "name": {
+     "zh": "处仁城（今龙仁）",
+     "en": "Cheoin Fortress (Yongin today)",
+     "ja": "処仁城（今の竜仁）"
+    }
+   },
+   "view": {
+    "center": [
+     126.9,
+     37.8
+    ],
+    "zoom": 3.3
+   },
+   "name": {
+    "zh": "处仁城之战",
+    "en": "Battle of Cheoin",
+    "ja": "処仁城の戦い"
+   },
+   "factions": [
+    {
+     "key": "goryeo",
+     "color": "#c8432f",
+     "name": {
+      "zh": "高丽",
+      "en": "Goryeo",
+      "ja": "高麗"
+     },
+     "leader": {
+      "zh": "金允侯（僧人）",
+      "en": "Kim Yun-hu (a monk)",
+      "ja": "金允侯（僧）"
+     },
+     "strength": {
+      "zh": "百姓约千人、僧兵约百人",
+      "en": "c. 1,000 civilians and 100 monks",
+      "ja": "民約千人・僧兵約百人"
+     }
+    },
+    {
+     "key": "mongol",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "蒙古",
+      "en": "Mongols",
+      "ja": "モンゴル"
+     },
+     "leader": {
+      "zh": "撒礼塔",
+      "en": "Sartaq",
+      "ja": "撒礼塔（サルタク）"
+     },
+     "strength": {
+      "zh": "兵力不详",
+      "en": "strength unknown",
+      "ja": "兵力不明"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "goryeo",
+     "from": {
+      "coords": [
+       126.55,
+       37.97
+      ],
+      "name": {
+       "zh": "开京",
+       "en": "Gaegyeong",
+       "ja": "開京"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       126.49,
+       37.74
+      ]
+     }
+    },
+    {
+     "faction": "mongol",
+     "from": {
+      "coords": [
+       125.75,
+       39.02
+      ],
+      "name": {
+       "zh": "西京（平壤）",
+       "en": "Seogyeong (Pyongyang)",
+       "ja": "西京（平壌）"
+      }
+     },
+     "via": [
+      [
+       126.4,
+       38.2
+      ],
+      [
+       127.0,
+       37.6
+      ]
+     ],
+     "to": {
+      "coords": [
+       127.18,
+       37.47
+      ]
+     }
+    },
+    {
+     "faction": "mongol",
+     "from": {
+      "coords": [
+       127.18,
+       37.47
+      ],
+      "name": {
+       "zh": "广州城",
+       "en": "Gwangju fortress",
+       "ja": "広州城"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       127.2,
+       37.21
+      ]
+     }
+    },
+    {
+     "faction": "mongol",
+     "from": {
+      "coords": [
+       127.2,
+       37.21
+      ],
+      "name": {
+       "zh": "处仁城",
+       "en": "Cheoin",
+       "ja": "処仁城"
+      }
+     },
+     "via": [
+      [
+       126.8,
+       38.0
+      ]
+     ],
+     "to": {
+      "coords": [
+       125.9,
+       39.2
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "蒙古第二次入侵高丽时，高丽朝廷迁到江华岛坚守。蒙古元帅撒礼塔南下，在龙仁的小土城处仁城前被一箭射死，蒙古军随即撤退。守城的是僧人金允侯和当地「部曲」的百姓。",
+    "en": "During the second Mongol invasion, the Goryeo court withdrew to Ganghwa Island. Driving south, the Mongol commander Sartaq was killed by an arrow before Cheoin, a small earthen fort in Yongin, and his army withdrew. The defenders were the monk Kim Yun-hu and the people of a bugok, a low-status village.",
+    "ja": "モンゴルの二度目の侵攻のとき、高麗朝廷は江華島に移って籠った。南下したモンゴルの元帥撒礼塔は、竜仁の小さな土城・処仁城の前で矢に倒れ、軍は撤退した。城を守ったのは僧の金允侯と、身分の低い「部曲」の民だった。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "迁都江华",
+      "en": "Court to Ganghwa",
+      "ja": "江華遷都"
+     },
+     "time": {
+      "zh": "1232 年 6–7 月",
+      "en": "Summer 1232",
+      "ja": "1232年6〜7月"
+     },
+     "desc": {
+      "zh": "掌权的崔氏武臣政权不愿再向蒙古屈服，把朝廷从开京迁到江华岛，赌蒙古骑兵不善渡海。",
+      "en": "The ruling Choe military regime refused to bow to the Mongols again and moved the court from Gaegyeong to Ganghwa Island, betting that Mongol horsemen could not cross the water.",
+      "ja": "実権を握る崔氏の武臣政権はモンゴルへの再屈服を拒み、騎馬のモンゴル軍は海を渡れまいと見て、朝廷を開京から江華島へ移した。"
+     },
+     "routes": [
+      0
+     ],
+     "markers": [
+      {
+       "coords": [
+        126.49,
+        37.74
+       ],
+       "name": {
+        "zh": "江华岛",
+        "en": "Ganghwa Island",
+        "ja": "江華島"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "南下",
+      "en": "Drive south",
+      "ja": "南下"
+     },
+     "time": {
+      "zh": "1232 年秋冬",
+      "en": "Autumn–winter 1232",
+      "ja": "1232年秋冬"
+     },
+     "desc": {
+      "zh": "撒礼塔攻下开京、汉阳后放弃渡海，向南推进；11 月攻广州城不下，留下大部分兵力继续封锁江华，自己带余部南下到处仁。",
+      "en": "After taking Gaegyeong and Hanyang, Sartaq gave up on crossing to the island and pushed south. Failing to take Gwangju fortress in November, he left most of his army to blockade Ganghwa and went on south with the rest to Cheoin.",
+      "ja": "撒礼塔は開京・漢陽を落とした後、渡海をあきらめて南へ進んだ。11月に広州城を落とせず、主力を江華島の封鎖に残して残りの兵で処仁へ向かった。"
+     },
+     "routes": [
+      1,
+      2
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "一箭",
+      "en": "One arrow",
+      "ja": "一矢"
+     },
+     "time": {
+      "zh": "1232 年 12 月",
+      "en": "Twelfth month, 1232",
+      "ja": "1232年12月"
+     },
+     "desc": {
+      "zh": "处仁城是周长约四百多米的小土城，城里避难的约有一千名百姓和一百来名僧兵，推僧人金允侯为首。12 月 16 日，撒礼塔中箭身亡，一般认为是城里的僧兵射中的。",
+      "en": "Cheoin was a small earthen fort about 425 m around, sheltering some 1,000 civilians and about 100 monk soldiers who chose the monk Kim Yun-hu to lead them. On 16 December Sartaq was killed by an arrow, presumably shot by one of the monks inside.",
+      "ja": "処仁城は周囲約425メートルの小さな土城で、避難した民約千人と僧兵百人ほどが僧の金允侯を指揮者に立てた。12月16日、撒礼塔は矢に当たって死んだ。城内の僧兵が射たものとされる。"
+     },
+     "routes": [],
+     "markers": [],
+     "impact": true
+    },
+    {
+     "title": {
+      "zh": "撤兵",
+      "en": "Withdrawal",
+      "ja": "撤兵"
+     },
+     "time": {
+      "zh": "1232–1233 年",
+      "en": "1232–1233",
+      "ja": "1232〜1233年"
+     },
+     "desc": {
+      "zh": "主帅一死，蒙古军撤回北方，第二次入侵就此结束。朝廷要按射杀敌帅之功提拔金允侯，他推辞说当时手里没有弓箭。处仁部曲后来升格为县，摆脱了贱民聚落的身份。",
+      "en": "With its commander dead, the Mongol army withdrew and the second invasion ended. The court offered Kim Yun-hu promotion as the man who shot Sartaq; he refused, saying he had held no bow during the battle. Cheoin bugok was later raised to a county and freed from its outcast status.",
+      "ja": "総大将を失ったモンゴル軍は北へ退き、二度目の侵攻は終わった。朝廷は撒礼塔を射た功で金允侯を昇進させようとしたが、彼は戦いのとき弓矢を持っていなかったと辞退した。処仁部曲はのちに県に格上げされ、賤民の村という身分から解かれた。"
+     },
+     "routes": [
+      3
+     ],
+     "markers": [],
+     "impact": false
+    }
+   ],
+   "sources": {
+    "ko": "처인성 전투",
+    "en": "Battle of Cheoin",
+    "ja": "処仁城の戦い"
+   },
+   "evidence": {
+    "ko": [
+     "김윤후",
+     "살리타",
+     "강화도"
+    ],
+    "en": [
+     "Saritai",
+     "Kim Yun-hu",
+     "425",
+     "1,000",
+     "100 monk",
+     "Gwangju",
+     "refused",
+     "promoted to a hyeon",
+     "December 16"
+    ]
+   }
+  },
+  {
+   "key": "hansando",
+   "year": 1592,
+   "region": 15,
+   "field": {
+    "coords": [
+     128.47,
+     34.79
+    ],
+    "name": {
+     "zh": "闲山岛外海（今统营）",
+     "en": "Off Hansan Island (Tongyeong today)",
+     "ja": "閑山島沖（今の統営）"
+    }
+   },
+   "view": {
+    "center": [
+     128.2,
+     34.85
+    ],
+    "zoom": 7
+   },
+   "name": {
+    "zh": "闲山岛海战",
+    "en": "Battle of Hansan Island",
+    "ja": "閑山島海戦"
+   },
+   "factions": [
+    {
+     "key": "joseon",
+     "color": "#c8432f",
+     "name": {
+      "zh": "朝鲜水军",
+      "en": "Joseon navy",
+      "ja": "朝鮮水軍"
+     },
+     "leader": {
+      "zh": "李舜臣（与李亿祺、元均）",
+      "en": "Yi Sun-sin (with Yi Eok-gi, Won Gyun)",
+      "ja": "李舜臣（李億祺・元均とともに）"
+     },
+     "strength": {
+      "zh": "战船 56 艘",
+      "en": "56 warships",
+      "ja": "軍船56隻"
+     }
+    },
+    {
+     "key": "japan",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "日本水军",
+      "en": "Japanese navy",
+      "ja": "日本水軍"
+     },
+     "leader": {
+      "zh": "胁坂安治",
+      "en": "Wakisaka Yasuharu",
+      "ja": "脇坂安治"
+     },
+     "strength": {
+      "zh": "73 艘",
+      "en": "73 ships",
+      "ja": "73隻"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "joseon",
+     "from": {
+      "coords": [
+       127.74,
+       34.74
+      ],
+      "name": {
+       "zh": "全罗左水营（丽水）",
+       "en": "Left Jeolla Naval HQ (Yeosu)",
+       "ja": "全羅左水営（麗水）"
+      }
+     },
+     "via": [
+      [
+       127.95,
+       34.92
+      ],
+      [
+       128.3,
+       34.75
+      ]
+     ],
+     "to": {
+      "coords": [
+       128.44,
+       34.78
+      ]
+     }
+    },
+    {
+     "faction": "japan",
+     "from": {
+      "coords": [
+       128.72,
+       35.1
+      ],
+      "name": {
+       "zh": "熊川",
+       "en": "Ungcheon",
+       "ja": "熊川"
+      }
+     },
+     "via": [
+      [
+       128.6,
+       34.98
+      ]
+     ],
+     "to": {
+      "coords": [
+       128.47,
+       34.92
+      ]
+     }
+    },
+    {
+     "faction": "joseon",
+     "from": {
+      "coords": [
+       128.47,
+       34.8
+      ],
+      "name": {
+       "zh": "诱敌船队",
+       "en": "Decoy ships",
+       "ja": "おとりの船"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       128.47,
+       34.9
+      ]
+     }
+    },
+    {
+     "faction": "japan",
+     "from": {
+      "coords": [
+       128.47,
+       34.92
+      ],
+      "name": {
+       "zh": "见乃梁",
+       "en": "Gyeonnaeryang",
+       "ja": "見乃梁"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       128.47,
+       34.81
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "壬辰战争第一年。日本水军将领胁坂安治率 73 艘船进入狭窄的见乃梁海峡。李舜臣派几艘船进去诱敌，佯败退到闲山岛外的开阔海面，再以「鹤翼阵」围攻。没参战的 14 艘逃走，其余都被击毁，胁坂退回金海。此后日本水军在南海岸的行动受到遏制。",
+    "en": "The first year of the Imjin War. Wakisaka Yasuharu took 73 Japanese ships into the narrow Gyeonnaeryang strait. Yi Sun-sin sent a few ships in as bait, fell back to open water off Hansan Island and closed in a crane-wing formation. Fourteen ships that had not engaged escaped; the rest were destroyed, and Wakisaka withdrew to Gimhae. Japanese naval operations along the southern coast were checked.",
+    "ja": "壬辰戦争の一年目。脇坂安治は日本船73隻を率いて狭い見乃梁海峡に入った。李舜臣は数隻をおとりに送り、敗走を装って閑山島沖の広い海へ誘い出し、「鶴翼の陣」で包囲した。戦闘に加わらなかった14隻は逃れ、残りは撃破され、脇坂は金海へ退いた。以後、南海岸での日本水軍の動きは封じられた。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "集结",
+      "en": "Gathering",
+      "ja": "集結"
+     },
+     "time": {
+      "zh": "1592 年 7 月（阴历）",
+      "en": "Seventh lunar month, 1592",
+      "ja": "1592年7月（陰暦）"
+     },
+     "desc": {
+      "zh": "日本陆军已占汉城、平壤，水军却在玉浦等地接连失利。李舜臣在丽水与全罗右水使李亿祺会合，又在露梁与庆尚右水使元均会合，共 56 艘战船，在唐浦得知日本船队从釜山西来。",
+      "en": "Japan's armies held Hanseong and Pyongyang, but its fleet had lost at Okpo and elsewhere. Yi Sun-sin joined Yi Eok-gi at Yeosu and Won Gyun at Noryang — 56 warships in all — and at Dangpo heard that a Japanese fleet was sailing west from Busan.",
+      "ja": "日本の陸軍は漢城・平壌を押さえたが、水軍は玉浦などで敗れ続けていた。李舜臣は麗水で全羅右水使・李億祺と、露梁で慶尚右水使・元均と合流して軍船56隻となり、唐浦で日本船団が釜山から西へ向かっていると知った。"
+     },
+     "routes": [
+      0,
+      1
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "诱敌",
+      "en": "The bait",
+      "ja": "誘い出し"
+     },
+     "time": {
+      "zh": "7 月 8 日（阴历）",
+      "en": "8th day, seventh lunar month",
+      "ja": "7月8日（陰暦）"
+     },
+     "desc": {
+      "zh": "日本船队停在见乃梁。海峡狭窄多暗礁，大船难以展开。李舜臣只派五六艘板屋船进去挑战，接着佯装败退。",
+      "en": "The Japanese fleet lay in Gyeonnaeryang, a narrow strait full of reefs where big ships could not deploy. Yi sent in just five or six panokseon to challenge them, then feigned flight.",
+      "ja": "日本船団は見乃梁に停泊していた。狭く暗礁の多い海峡では大船が展開できない。李舜臣は板屋船を五、六隻だけ送って挑み、敗走を装わせた。"
+     },
+     "routes": [
+      2
+     ],
+     "markers": [
+      {
+       "coords": [
+        128.47,
+        34.92
+       ],
+       "name": {
+        "zh": "见乃梁",
+        "en": "Gyeonnaeryang",
+        "ja": "見乃梁"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "鹤翼阵",
+      "en": "Crane wing",
+      "ja": "鶴翼の陣"
+     },
+     "time": {
+      "zh": "7 月 8 日（阴历）",
+      "en": "8th day, seventh lunar month",
+      "ja": "7月8日（陰暦）"
+     },
+     "desc": {
+      "zh": "日本船队追出海峡。朝鲜船队在闲山岛外展开成 U 字形的鹤翼阵，两艘龟船等大船居中，轻船分列两翼，集中攻击。战斗持续了一整天。",
+      "en": "The Japanese followed out of the strait. Off Hansan Island the Joseon fleet opened into a U-shaped crane-wing formation — big ships, two turtle ships among them, in the center, lighter ships on the wings — and closed in. The fighting went on all day.",
+      "ja": "日本船団は海峡から追って出た。朝鮮船団は閑山島沖でU字形の鶴翼の陣に開き、亀甲船2隻などの大船を中央に、軽い船を両翼に置いて包囲攻撃した。戦いは一日中続いた。"
+     },
+     "routes": [
+      3
+     ],
+     "markers": [],
+     "impact": true
+    },
+    {
+     "title": {
+      "zh": "之后",
+      "en": "Aftermath",
+      "ja": "その後"
+     },
+     "time": {
+      "zh": "1592 年 7 月",
+      "en": "1592",
+      "ja": "1592年7月"
+     },
+     "desc": {
+      "zh": "73 艘中没参战的 14 艘逃走，其余都被击毁，胁坂安治退回金海。败讯几小时后传到釜山，九鬼嘉隆、加藤嘉明率 42 艘船赶到安骨浦，又在那里被朝鲜水军击败。这一仗与安骨浦之战之后，日本水军在南海岸的行动受到遏制。",
+      "en": "Of the 73 ships, fourteen that had not engaged escaped and the rest were destroyed; Wakisaka withdrew to Gimhae. The news reached Busan within hours; Kuki Yoshitaka and Katō Yoshiaki sailed 42 ships to Angolpo and were beaten there too. After Hansan and Angolpo, Japanese naval operations along the southern coast were checked.",
+      "ja": "73隻のうち戦闘に加わらなかった14隻は逃れ、残りは撃破され、脇坂安治は金海へ退いた。敗報は数時間で釜山に届き、九鬼嘉隆・加藤嘉明が42隻で安骨浦に向かったが、そこでも朝鮮水軍に敗れた。閑山島と安骨浦の戦いの後、南海岸での日本水軍の動きは封じられた。"
+     },
+     "routes": [],
+     "markers": [],
+     "impact": false
+    }
+   ],
+   "sources": {
+    "ko": "한산도 대첩",
+    "en": "Battle of Hansan Island",
+    "ja": "閑山島海戦"
+   },
+   "evidence": {
+    "ko": [
+     "견내량",
+     "학익진",
+     "와키자카",
+     "73척",
+     "56척",
+     "14척",
+     "김해",
+     "안골포",
+     "42척"
+    ],
+    "en": [
+     "Wakizaka",
+     "73",
+     "56",
+     "Fourteen",
+     "turtle ships"
+    ],
+    "ja": [
+     "脇坂安治",
+     "見乃梁"
+    ]
+   }
+  },
+  {
+   "key": "myeongnyang",
+   "year": 1597,
+   "region": 13,
+   "field": {
+    "coords": [
+     126.31,
+     34.57
+    ],
+    "name": {
+     "zh": "鸣梁海峡（蔚突项）",
+     "en": "Myeongnyang Strait (Uldolmok)",
+     "ja": "鳴梁海峡（ウルドルモク）"
+    }
+   },
+   "view": {
+    "center": [
+     126.3,
+     34.5
+    ],
+    "zoom": 9
+   },
+   "name": {
+    "zh": "鸣梁海战",
+    "en": "Battle of Myeongnyang",
+    "ja": "鳴梁海戦"
+   },
+   "factions": [
+    {
+     "key": "joseon",
+     "color": "#c8432f",
+     "name": {
+      "zh": "朝鲜水军",
+      "en": "Joseon navy",
+      "ja": "朝鮮水軍"
+     },
+     "leader": {
+      "zh": "李舜臣",
+      "en": "Yi Sun-sin",
+      "ja": "李舜臣"
+     },
+     "strength": {
+      "zh": "13 艘",
+      "en": "13 ships",
+      "ja": "13隻"
+     }
+    },
+    {
+     "key": "japan",
+     "color": "#4f86b8",
+     "name": {
+      "zh": "日本水军",
+      "en": "Japanese navy",
+      "ja": "日本水軍"
+     },
+     "leader": {
+      "zh": "来岛通总、藤堂高虎等",
+      "en": "Kurushima Michifusa, Tōdō Takatora and others",
+      "ja": "来島通総・藤堂高虎ら"
+     },
+     "strength": {
+      "zh": "《乱中日记》记敌船 133 艘，说法不一",
+      "en": "133 ships per Yi's war diary; accounts vary",
+      "ja": "『乱中日記』では133隻、諸説あり"
+     }
+    }
+   ],
+   "routes": [
+    {
+     "faction": "japan",
+     "from": {
+      "coords": [
+       126.4,
+       34.36
+      ],
+      "name": {
+       "zh": "於兰浦",
+       "en": "Eoranpo",
+       "ja": "於蘭浦"
+      }
+     },
+     "via": [
+      [
+       126.36,
+       34.48
+      ]
+     ],
+     "to": {
+      "coords": [
+       126.315,
+       34.56
+      ]
+     }
+    },
+    {
+     "faction": "joseon",
+     "from": {
+      "coords": [
+       126.33,
+       34.6
+      ],
+      "name": {
+       "zh": "右水营",
+       "en": "Right Jeolla Naval HQ",
+       "ja": "右水営"
+      }
+     },
+     "via": [],
+     "to": {
+      "coords": [
+       126.31,
+       34.575
+      ]
+     }
+    },
+    {
+     "faction": "joseon",
+     "from": {
+      "coords": [
+       126.3,
+       34.6
+      ],
+      "name": {
+       "zh": "鸣梁",
+       "en": "Myeongnyang",
+       "ja": "鳴梁"
+      }
+     },
+     "via": [
+      [
+       126.2,
+       34.9
+      ]
+     ],
+     "to": {
+      "coords": [
+       126.1,
+       35.4
+      ]
+     }
+    }
+   ],
+   "brief": {
+    "zh": "1597 年漆川梁海战中朝鲜水军几乎覆没，重新起用的李舜臣手里只剩 12 艘船，开战前又补到 13 艘。他在潮流湍急的鸣梁海峡迎战日本船队，初战击沉对方三十余艘，自己没有损失战船，日本将领来岛通总战死。",
+    "en": "After the Joseon fleet was nearly wiped out at Chilcheollyang in 1597, the reinstated Yi Sun-sin had only 12 ships, 13 by the day of battle. In the racing current of the Myeongnyang Strait he met the Japanese fleet, sank some thirty ships in the opening fight and lost none of his own; the Japanese commander Kurushima Michifusa was killed.",
+    "ja": "1597年の漆川梁海戦で朝鮮水軍はほぼ壊滅し、再起用された李舜臣の手元には12隻、開戦までに13隻しかなかった。潮流の激しい鳴梁海峡で日本船団を迎え撃ち、緒戦で三十余隻を沈め、自らは一隻も失わなかった。日本の将・来島通総が戦死した。"
+   },
+   "phases": [
+    {
+     "title": {
+      "zh": "十三艘",
+      "en": "Thirteen ships",
+      "ja": "十三隻"
+     },
+     "time": {
+      "zh": "1597 年 8–9 月（阴历）",
+      "en": "Eighth–ninth lunar months, 1597",
+      "ja": "1597年8〜9月（陰暦）"
+     },
+     "desc": {
+      "zh": "漆川梁一战元均大败，朝鲜失去制海权，宣祖一度想撤销水军。复任三道水军统制使的李舜臣上奏「臣尚有战船十二」，收拢残船，退到珍岛与海南之间的鸣梁一带。",
+      "en": "After Won Gyun's defeat at Chilcheollyang, Joseon lost control of the sea and King Seonjo considered abolishing the navy. Reappointed naval commander, Yi Sun-sin replied that he \"still had twelve ships\", gathered them and fell back to Myeongnyang, between Jindo and Haenam.",
+      "ja": "漆川梁で元均が大敗して朝鮮は制海権を失い、宣祖は水軍の廃止まで考えた。三道水軍統制使に復帰した李舜臣は「臣にはなお戦船十二隻あり」と上申し、残った船を集めて珍島と海南の間の鳴梁に退いた。"
+     },
+     "routes": [
+      1
+     ],
+     "markers": [],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "入峡",
+      "en": "Into the strait",
+      "ja": "海峡へ"
+     },
+     "time": {
+      "zh": "9 月 16 日（阴历）清晨",
+      "en": "Dawn, 16th day, ninth lunar month",
+      "ja": "9月16日（陰暦）早朝"
+     },
+     "desc": {
+      "zh": "鸣梁海峡（蔚突项）狭窄、潮流极快。从於兰浦出发的日本船队乘着顺流涌入海峡，来岛通总、藤堂高虎、胁坂安治等都在其中。",
+      "en": "The Myeongnyang Strait (Uldolmok) is narrow and its tide runs very fast. The Japanese fleet from Eoranpo poured in on the flowing current, with Kurushima Michifusa, Tōdō Takatora and Wakisaka Yasuharu among its commanders.",
+      "ja": "鳴梁海峡（ウルドルモク）は狭く、潮の流れが非常に速い。於蘭浦を発した日本船団は順潮に乗って海峡に押し寄せた。来島通総・藤堂高虎・脇坂安治らがその中にいた。"
+     },
+     "routes": [
+      0
+     ],
+     "markers": [
+      {
+       "coords": [
+        126.31,
+        34.57
+       ],
+       "name": {
+        "zh": "蔚突项",
+        "en": "Uldolmok",
+        "ja": "ウルドルモク"
+       }
+      }
+     ],
+     "impact": false
+    },
+    {
+     "title": {
+      "zh": "激战",
+      "en": "The fight",
+      "ja": "激戦"
+     },
+     "time": {
+      "zh": "9 月 16 日（阴历）",
+      "en": "16th day, ninth lunar month",
+      "ja": "9月16日（陰暦）"
+     },
+     "desc": {
+      "zh": "朝鲜水军借急流限制日本船队的行动。来岛通总战死，日本船三十余艘在初战中被击沉，朝鲜方面没有一艘战船被击沉。",
+      "en": "The Joseon ships used the rushing current to hem in the Japanese fleet. Kurushima Michifusa was killed and some thirty Japanese ships were sunk in the opening fight; not one Joseon warship was sunk.",
+      "ja": "朝鮮水軍は急流を利用して日本船団の動きを封じた。来島通総が戦死し、日本船三十余隻が緒戦で沈んだ。朝鮮側の軍船は一隻も沈まなかった。"
+     },
+     "routes": [
+      0,
+      1
+     ],
+     "markers": [],
+     "impact": true
+    },
+    {
+     "title": {
+      "zh": "退出",
+      "en": "Withdrawal",
+      "ja": "撤収"
+     },
+     "time": {
+      "zh": "1597 年 9 月",
+      "en": "Ninth lunar month, 1597",
+      "ja": "1597年9月"
+     },
+     "desc": {
+      "zh": "傍晚战斗结束，日本船队退出海峡。李舜臣自知兵力悬殊，随后也率船北撤。这一仗挡住了日本水军这一次的西进；日方投入的船数，各种记载从一百多到三百多艘不等。",
+      "en": "The fighting ended toward evening and the Japanese fleet withdrew. Knowing how outnumbered he was, Yi then pulled his ships north as well. The battle halted this Japanese push west by sea; accounts of how many Japanese ships took part range from over a hundred to over three hundred.",
+      "ja": "夕方に戦いは終わり、日本船団は海峡から退いた。兵力差を知る李舜臣もその後北へ退いた。この戦いは日本水軍の今回の西進を食い止めた。投入された日本船の数は、記録により百余隻から三百余隻までさまざまである。"
+     },
+     "routes": [
+      2
+     ],
+     "markers": [],
+     "impact": false
+    }
+   ],
+   "sources": {
+    "ko": "명량 해전",
+    "en": "Battle of Myeongnyang",
+    "ja": "鳴梁海戦"
+   },
+   "evidence": {
+    "ko": [
+     "울돌목",
+     "구루시마",
+     "칠천량",
+     "12척",
+     "13척",
+     "133척",
+     "30여 척",
+     "도도 다카토라",
+     "와키자카",
+     "어란포"
+    ],
+    "ja": [
+     "来島通総"
+    ]
+   }
+  }
+ ]
+}

@@ -16,7 +16,9 @@ import { createKoreaGuide } from './korea-guide.js';
 import { openShared, sharedButtons } from './shared.js';
 import { uiPref, apiConfig, goshuinBook, hyanggyoBook } from './store.js';
 import { createKoreaBook, stampButton, playStamp, hyCard, hySection, hyName, hyCounty, distanceKm, CHECKIN_KM } from './korea-book.js';
-import { NARROW, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
+import { createKoreaPower } from './korea-power.js';
+import { createKoreaBattle } from './korea-battle.js';
+import { NARROW, setupTabs, setupBattleVoice, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -32,10 +34,18 @@ const COLOR = {
 };
 
 // 历代政区（src/data/korea/eras/，tools/build_korea_eras.py 生成）：从古到今排，默认「今天」
-const ERA_KEYS = ['silla', 'goryeo', 'joseon', '1896', 'today'];
-const ERA_STAGE = { silla: 'silla', goryeo: 'goryeo', joseon: 'joseon', 1896: 'modern' }; // 详卡时间轴里对应的一段
+const ERA_KEYS = ['samguk', 'silla', 'goryeo', 'joseon', '1896', 'today'];
+const ERA_STAGE = { samguk: 'samguk', silla: 'silla', goryeo: 'goryeo', joseon: 'joseon', 1896: 'modern' }; // 详卡时间轴里对应的一段
 const ERA_PALETTE = ['#2f6f8f', '#c8432f', '#e2bd57', '#5f8f6e', '#9a6fa8', '#c97a46', '#4f8fa0', '#a8584f', '#7f9a4a', '#6a6fb0', '#b8865a', '#3f7f6f', '#a87090'];
-const SCHEME = { in: '#5f8f80', out: '#262d2b', tamna: '#6e6a5e' };
+const SCHEME = { out: '#262d2b', tamna: '#6e6a5e' };
+// 有 units 的图层按单位的顺序取色（三国用固定的四色）；out / tamna 用中性色
+const SAMGUK_COLOR = { goguryeo: '#2f6f8f', baekje: '#c8432f', silla: '#e2bd57', gaya: '#5f8f6e' };
+function unitColor(d, era, k, i) {
+  if (SCHEME[k]) return SCHEME[k];
+  if (era === 'samguk' && SAMGUK_COLOR[k]) return SAMGUK_COLOR[k];
+  const idx = d.units ? Object.keys(d.units).indexOf(k) : i;
+  return ERA_PALETTE[(idx < 0 ? i : idx) % ERA_PALETTE.length];
+}
 const LL = (o) => (lang === 'en' ? o.en : lang === 'ja' ? o.ja : o.zh);
 
 function inPolys(pt, geometry) {
@@ -243,12 +253,14 @@ export async function main() {
   const hyang = await getJSON(`${MAP.data}/hyanggyo.json`) || [];
   const hyById = new Map(hyang.map((h) => [h.id, h]));
   const daedong = await getJSON(`${MAP.data}/daedong.json`) || {};
+  const battleData = (await getJSON(`${MAP.data}/battles.json`))?.battles || [];
   const idByName = new Map(geo.features.map((f) => [f.properties.name, f.properties.id]));
   echarts.registerMap('korea', geo);
 
   const detailEl = $('detail');
   const card = $('art-card');
   const app = { currentId: null, era: 'today' };
+  let power = null; // 国力：第一次点「国力」时才加载
   const eraCache = new Map();
   const narrow = () => matchMedia(NARROW).matches;
   const tabs = setupTabs(() => { chart.resize(); counties.resize(); }, () => {});
@@ -294,16 +306,23 @@ export async function main() {
     const keys = d.features.map((f) => f.properties.key);
     return d.features.map((f, i) => {
       const k = f.properties.key;
-      const c = d.units ? ERA_PALETTE[i % ERA_PALETTE.length] : SCHEME[k];
+      const c = unitColor(d, era, k, i);
       return { name: k, itemStyle: { areaColor: c, borderColor: COLOR.border, borderWidth: 0.8 },
         emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.2), borderColor: COLOR.line, borderWidth: 1.2 } } };
     }).filter((r) => keys.includes(r.name));
   }
-  const paint = () => chart.setOption({ geo: { regions: app.era === 'today' ? regionData() : eraRegions(app.era) } });
+  const todayMap = () => app.era === 'today' || app.era === 'power'; // 国力也画在今天的区上
+  const paint = () => chart.setOption({ geo: { regions: todayMap() ? regionData() : eraRegions(app.era) } });
   function regionData() {
     const seen = visited.get();
+    const pw = app.era === 'power' && power;
     return geo.features.map(({ properties: p }) => {
       const active = p.id === app.currentId;
+      if (pw) {
+        const c = power.color(p.id) || COLOR.base;
+        return { name: p.name, itemStyle: { areaColor: c, borderColor: active ? '#fff' : COLOR.border, borderWidth: active ? 2 : 0.8 },
+          emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.15), borderColor: COLOR.line, borderWidth: 1.2 } } };
+      }
       return {
         name: p.name,
         itemStyle: { areaColor: active ? COLOR.active : seen.has(p.id) ? COLOR.visited : COLOR.base, borderColor: COLOR.border, borderWidth: 0.8 },
@@ -320,7 +339,11 @@ export async function main() {
       borderColor: '#34423e',
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (x) => {
-        if (x.seriesId === 'regions' && app.era !== 'today') return `<b>${esc(eraName(app.era, x.name))}</b>`;
+        if (x.seriesId === 'regions' && app.era === 'power') {
+          const id = idByName.get(x.name);
+          return `<b>${esc(nameOf(regions.get(id)))}</b><br>${power.tip(id)}`;
+        }
+        if (x.seriesId === 'regions' && !todayMap()) return `<b>${esc(eraName(app.era, x.name))}</b>`;
         if (x.seriesId === 'seats') return x.data.prov ? `<b>${esc(x.data.label)}</b><br><span style="color:#b4ada3">${esc(t('kr.n.tip', { p: (names.provs[x.data.prov] || [])[lang === 'en' ? 3 : lang === 'ja' ? 2 : 1] || '' }))}</span>` : `<b>${esc(x.data.label)}</b>`;
         if (x.seriesId === 'regions') {
           const p = regions.get(idByName.get(x.name));
@@ -376,6 +399,29 @@ export async function main() {
         label: { show: true, position: 'right', color: '#f3ede2', fontSize: 10.5, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5, formatter: (x) => x.data.name },
         labelLayout: { hideOverlap: true },
       },
+      // 古战场（korea-battle.js 换数据）：进军路线、出发点、要地、交战点
+      {
+        id: 'b-routes', type: 'lines', coordinateSystem: 'geo', zlevel: 3, polyline: true, silent: true, data: [],
+        lineStyle: { width: 2.4, opacity: 0.6, curveness: 0 },
+        effect: { show: true, period: 4, symbol: 'arrow', symbolSize: 10, trailLength: 0 }, // 拖尾会让缩放时留残影
+      },
+      {
+        id: 'b-origins', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'diamond', symbolSize: 10, silent: true, data: [],
+        label: { show: true, position: 'top', color: '#fff', fontSize: 11, textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: '{b}' },
+        labelLayout: { hideOverlap: true },
+      },
+      {
+        id: 'b-markers', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'pin', symbolSize: 22, silent: true, data: [],
+        itemStyle: { color: '#d4a373', borderColor: '#151a19', borderWidth: 1 },
+        label: { show: true, position: 'right', color: '#ffe9c4', fontSize: 11.5, fontWeight: 700, textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+        labelLayout: { hideOverlap: true },
+      },
+      {
+        id: 'b-impact', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, data: [],
+        rippleEffect: { scale: 6, brushType: 'fill', period: 1.6, number: 3 }, symbolSize: 20,
+        itemStyle: { color: '#ffb648', shadowBlur: 24, shadowColor: '#ff6a3d' },
+        label: { show: true, position: 'bottom', distance: 10, color: '#ffe3a8', fontSize: 13, fontWeight: 900, textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '⚔ {b}' },
+      },
       {
         id: 'you', type: 'effectScatter', coordinateSystem: 'geo', z: 7, silent: true, symbolSize: 12, data: [],
         rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
@@ -396,7 +442,13 @@ export async function main() {
   }
   async function setEra(era) {
     if (era === app.era) return;
-    if (era !== 'today' && !eraCache.has(era)) {
+    if (era !== 'today' && battle?.active) battle.exit();
+    if (era === 'power' && !power) {
+      const d = await getJSON(`${MAP.data}/power.json`);
+      if (!d) { toast(t('muni.error')); return; }
+      power = createKoreaPower(d, regions, nameOf);
+    }
+    if (era !== 'today' && era !== 'power' && !eraCache.has(era)) {
       const d = await getJSON(`${MAP.data}/eras/${era}.json`);
       if (!d) { toast(t('muni.error')); return; }
       for (const f of d.features) f.properties.name = f.properties.key;
@@ -404,7 +456,7 @@ export async function main() {
       eraCache.set(era, d);
     }
     app.era = era;
-    const today = era === 'today';
+    const today = todayMap();
     const d = eraCache.get(era);
     chart.setOption({
       geo: { map: today ? 'korea' : `kera-${era}`, regions: today ? regionData() : eraRegions(era) },
@@ -418,16 +470,17 @@ export async function main() {
     });
     eraBox.querySelectorAll('button').forEach((b) => { const on = b.dataset.era === era; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
     const lg = $('legend');
-    lg.hidden = today;
-    document.documentElement.classList.toggle('kr-era', !today);
+    lg.hidden = era === 'today';
+    document.documentElement.classList.toggle('kr-era', era !== 'today');
+    if (era === 'power') { powerLegend(); openPower(); } else closePower();
     if (!today) {
       $('legend-caption').textContent = t(`kr.e.cap.${era}`);
       $('legend-items').innerHTML = d.features.map((f, i) => {
-        const c = d.units ? ERA_PALETTE[i % ERA_PALETTE.length] : SCHEME[f.properties.key];
+        const c = unitColor(d, era, f.properties.key, i);
         return `<span><i class="sw" style="background:${c}"></i>${esc(eraName(era, f.properties.key))}</span>`;
       }).join('');
     }
-    if (app.currentId) openStage(detailEl, era);
+    if (app.currentId && !today) openStage(detailEl, era);
     paintHy();
     audio.play('click');
   }
@@ -436,9 +489,40 @@ export async function main() {
   eraBox.id = 'kr-eras';
   eraBox.setAttribute('role', 'radiogroup');
   eraBox.setAttribute('aria-label', t('kr.e.aria'));
-  eraBox.innerHTML = ERA_KEYS.map((k) => `<button type="button" role="radio" data-era="${k}" aria-checked="${k === 'today'}" class="${k === 'today' ? 'on' : ''}">${esc(t(`kr.e.${k}`))}<small>${esc(t(`kr.e.${k}.s`))}</small></button>`).join('');
+  eraBox.innerHTML = [...ERA_KEYS, 'power'].map((k) => `<button type="button" role="radio" data-era="${k}" aria-checked="${k === 'today'}" class="${k === 'today' ? 'on' : ''}${k === 'power' ? ' kp-btn' : ''}">${esc(t(`kr.e.${k}`))}<small>${esc(t(`kr.e.${k}.s`))}</small></button>`).join('');
   document.querySelector('.map-pane').appendChild(eraBox);
   eraBox.addEventListener('click', (e) => { const b = e.target.closest('[data-era]'); if (b) setEra(b.dataset.era); });
+
+  // 国力（power.json，tools/fetch_sejong.py 生成）：今天的区按指标着色，卡片（#power-card）里是头条、榜单与对决
+  const powerCard = $('power-card');
+  function powerLegend() {
+    const { caption, items } = power.legend();
+    $('legend-caption').textContent = caption;
+    $('legend-items').innerHTML = items.map(([label, c, n]) => `<span><i class="sw" style="background:${c}"></i>${esc(label)}<small> ${n}</small></span>`).join('');
+  }
+  function renderPower() {
+    if (!power || powerCard.hidden) return;
+    const top = powerCard.querySelector('.kr-body')?.scrollTop;
+    powerCard.innerHTML = power.card();
+    const body = powerCard.querySelector('.kr-body');
+    if (body && top) body.scrollTop = top;
+  }
+  function openPower() { powerCard.hidden = false; renderPower(); }
+  function closePower() { powerCard.hidden = true; }
+  powerCard.addEventListener('click', (e) => {
+    if (e.target.closest('[data-act="kp-close"]')) { setEra('today'); return; }
+    const li = e.target.closest('.kr-list li[data-k]');
+    if (li) { const id = Number(li.dataset.k); power.setFocus(id); select(id); renderPower(); return; }
+    const before = power.metric;
+    if (power.handle(e)) {
+      if (power.metric !== before) { paint(); powerLegend(); }
+      renderPower();
+    }
+  });
+  powerCard.addEventListener('change', (e) => {
+    const sel = e.target.closest('[data-pk-side]');
+    if (sel && power) { power.pick(sel); renderPower(); }
+  });
 
   // 「此地古今」：定位或市郡中心 → 卡片（#loc-card）
   const locCardEl = $('loc-card');
@@ -512,7 +596,7 @@ export async function main() {
   let hyCur = null;
   function paintHy() {
     const book = hyanggyoBook.get();
-    const list = app.era === 'today' ? hyang.filter((h) => h.region === app.currentId) : [];
+    const list = todayMap() ? hyang.filter((h) => h.region === app.currentId) : [];
     chart.setOption({ series: [{ id: 'hy', data: list.map((h) => ({ value: h.coords, id: h.id, name: hyName(h),
       itemStyle: book[h.id]?.real ? { color: '#ffd27a', borderColor: '#fff' } : book[h.id] ? { color: COLOR.line } : {},
       symbolSize: h.id === hyCur?.id ? 15 : 10 })) }] });
@@ -599,6 +683,22 @@ export async function main() {
   });
   bookBtn.addEventListener('click', () => bookUI.open());
 
+  // 古战场：沿用日本的合战按钮、列表与面板；进入时回到「今天」图层、收起各种卡片
+  const syncVoice = setupBattleVoice(() => tabs.set('guide'));
+  const battle = createKoreaBattle({
+    chart, battles: battleData, guide,
+    onStart: (b) => {
+      closeCard();
+      closePlace();
+      if (counties.open) closeCounties();
+      if (app.era !== 'today') setEra('today');
+      history.replaceState(null, '', `#map=korea&battle=${b.key}`);
+      syncVoice();
+      if (narrow()) tabs.set('map');
+    },
+    onEnd: () => history.replaceState(null, '', app.currentId ? stateHash(app.currentId) : '#map=korea'),
+  });
+
   function select(id) {
     const p = regions.get(id);
     if (!p) return;
@@ -616,17 +716,23 @@ export async function main() {
   }
 
   chart.on('click', (x) => {
+    if (battle.active) return; // 古战场里点地图不换区
     if (x.seriesId === 'dokdo') { openDokdo(); return; }
     if (x.seriesId === 'hy') { openHy(hyById.get(x.data.id)); audio.play('click'); return; }
     if (x.seriesId !== 'regions') return;
-    const id = app.era === 'today' ? idByName.get(x.name)
+    const id = todayMap() ? idByName.get(x.name)
       : geo.features.find((f) => inPolys(chart.convertFromPixel({ geoIndex: 0 }, [x.event.offsetX, x.event.offsetY]), f.geometry))?.properties.id;
-    if (id) { closeCard(); select(id); audio.play('click'); }
+    if (id) {
+      closeCard();
+      select(id);
+      audio.play('click');
+      if (app.era === 'power') { power.setFocus(id); renderPower(); powerCard.querySelector('.kr-list li.on')?.scrollIntoView({ block: 'nearest' }); }
+    }
   });
   card.addEventListener('click', (e) => { if (e.target.closest('[data-act="card-close"]')) closeCard(); });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-    if (!card.hidden) closeCard(); else if (!locCardEl.hidden) closePlace(); else if (counties.open) closeCounties();
+    if (!card.hidden) closeCard(); else if (!locCardEl.hidden) closePlace(); else if (counties.open) closeCounties(); else if (battle.active) battle.exit();
   });
 
   detailEl.addEventListener('click', async (e) => {
@@ -689,7 +795,9 @@ export async function main() {
   // 深链接：#map=korea&pref=1（编号 1–29）；&muni=1 打开市郡区，&m=4-3 并选中
   const hp = new URLSearchParams(location.hash.slice(1));
   const want = Number(hp.get('pref'));
-  if (regions.has(want)) {
+  const bk = battle.byKey(hp.get('battle'));
+  if (bk) battle.start(bk);
+  else if (regions.has(want)) {
     select(want);
     if (hp.get('muni') === '1') openCounties(want, hp.get('m'));
     else if (narrow()) tabs.set('detail');

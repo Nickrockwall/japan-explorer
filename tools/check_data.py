@@ -342,7 +342,7 @@ def check_korea():
         c = load('src', 'data', 'korea', 'counties', f'{i:02d}.json')
         if not c['features'] or any(f['properties']['region'] != i for f in c['features']):
             err(f'korea/counties/{i:02d}.json', '为空或混入了别的区')
-    for era, n in (('1896', 13), ('joseon', 8), ('goryeo', 3), ('silla', 3)):
+    for era, n in (('1896', 13), ('joseon', 8), ('goryeo', 10), ('silla', 12), ('samguk', 5)):
         e = load('src', 'data', 'korea', 'eras', f'{era}.json')
         if len(e['features']) != n:
             err(f'korea/eras/{era}.json', f'应有 {n} 块，实为 {len(e["features"])}（重跑 tools/build_korea_eras.py）')

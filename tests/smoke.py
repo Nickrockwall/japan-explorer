@@ -142,9 +142,10 @@ class Case:
         hot = page.evaluate("""(() => { const g = echarts.getInstanceByDom(document.getElementById('map')).getOption().geo[0];
             const base = g.itemStyle.areaColor; return g.regions.filter((r) => r.itemStyle.areaColor !== base && !r.itemStyle.areaColor.startsWith('rgba')).map((r) => r.name); })()""")
         assert hot == ['서울특별시'], f'着色的区 {hot}'
-        # 日本独有的按钮不出现；印帐换成半岛印帐（/29）
-        for sel in ('#btn-battle', '#timebar', '.map-toolbar'):
+        # 日本独有的时代滑块与工具条不出现；合战按钮换成「古战场」；印帐换成半岛印帐（/29）
+        for sel in ('#timebar', '.map-toolbar'):
             assert not page.is_visible(sel), f'半岛模式不应显示 {sel}'
+        assert page.is_visible('#btn-battle') and page.text_content('#btn-battle .battle-ico') == '戰'
         assert page.is_visible('#btn-book') and '/29' in page.text_content('#btn-book'), page.text_content('#btn-book')
         # 越界编号：不报错、回到欢迎卡
         page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=99')
@@ -278,15 +279,17 @@ class Case:
         page.wait_for_selector('#muni', state='hidden')
 
     def korea_eras(self, page):
+        # 历代图层：图例条数；新罗点庆州选中庆北并展开统一新罗；三国图层里扶余（泗沘）在百济、金海在伽倻
         self.tab(page, 'map')
         counts = {}
-        for era in ('silla', 'goryeo', 'joseon', '1896'):
+        for era in ('samguk', 'silla', 'goryeo', 'joseon', '1896'):
             page.click(f'#kr-eras [data-era="{era}"]')
             page.wait_for_function(f"document.querySelector('#kr-eras [data-era=\"{era}\"]').classList.contains('on')")
             page.wait_for_timeout(400)
             assert page.is_visible('#legend'), f'{era} 应显示图例'
             counts[era] = page.locator('#legend-items span').count()
-        assert counts == {'silla': 3, 'goryeo': 3, 'joseon': 8, '1896': 13}, f'图例条数 {counts}'
+        # 三国 = 高句丽 / 百济 / 新罗 / 伽倻 + 耽罗；新罗 = 九州 + 王京 + 渤海与边地 + 耽罗；高丽 = 五道两界 + 京畿 + 女真等 + 耽罗
+        assert counts == {'samguk': 5, 'silla': 12, 'goryeo': 10, 'joseon': 8, '1896': 13}, f'图例条数 {counts}'
         # 新罗图层下点庆州：选中今天的庆尚北道，详卡时间轴展开「统一新罗」一段
         page.click('#kr-eras [data-era="silla"]')
         page.wait_for_timeout(300)
@@ -297,6 +300,13 @@ class Case:
         assert page.evaluate("document.querySelector('#detail .tl.hl')?.dataset.stage") == 'silla'
         seats = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'seats').data.length")
         assert seats == 10, f'新罗州治 {seats}'
+        units = page.evaluate("""(async () => {
+          const d = await (await fetch('src/data/korea/eras/samguk.json')).json();
+          const at = (x, y) => d.features.find((f) => { const g = f.geometry; const ps = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+            return ps.some((q) => { let c = false; const r = q[0]; for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+              const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; }); })?.properties.key;
+          return [at(126.91, 36.28), at(128.88, 35.23), at(125.75, 39.02), at(129.21, 35.84)]; })()""")
+        assert units == ['baekje', 'gaya', 'goguryeo', 'silla'], units
         self.tab(page, 'map')
         page.click('#kr-eras [data-era="today"]')
         page.wait_for_timeout(300)
@@ -394,6 +404,59 @@ class Case:
         assert page.locator('#detail .kr-hy-chips .real').count() == 1
         self.no_overflow(page)
 
+    def korea_power(self, page):
+        # 半岛国力：历代按钮末尾的「国力」；28 区有 1432 年数据（罗先没有），户数第一是庆尚北道；换指标、对决表、点榜单选中该区、离开收起
+        self.tab(page, 'map')
+        page.click('#kr-eras [data-era="power"]')
+        page.wait_for_selector('#power-card:not([hidden]) .kr-list li', timeout=15000)
+        assert page.locator('#power-card .kr-list li').count() == 28
+        assert page.get_attribute('#power-card .kr-list li:first-child', 'data-k') == '14'
+        assert page.is_visible('#legend'), '国力应显示图例'
+        self.inside(page, '#power-card')
+        page.click('#power-card [data-kp-metric="rise"]')
+        page.wait_for_selector('#power-card [data-kp-metric="rise"].on')
+        assert page.locator('#power-card .kr-list li').count() == 28
+        page.click('#power-card [data-kr-tab="pk"]')
+        assert page.locator('#power-card .pk-table tr:first-child th').count() == 3
+        page.click('#power-card [data-pk="capitals"]')
+        assert page.locator('#power-card .pk-table td.win').count() >= 3
+        page.click('#power-card [data-kr-tab="rank"]')
+        page.click('#power-card .kr-list li[data-k="17"]')
+        page.wait_for_selector('#power-card .kr-list li.on[data-k="17"]')
+        assert '평양' in page.text_content('#detail .modern-title')
+        self.tab(page, 'map')
+        page.click('#kr-eras [data-era="today"]')
+        page.wait_for_selector('#power-card', state='hidden')
+        self.no_overflow(page)
+
+    def korea_battle(self, page):
+        # 半岛古战场：6 场按年代；鸣梁推演到第 4 阶段，向导逐段旁述；Esc 退出；深链接直接进萨水
+        self.tab(page, 'map')
+        page.click('#btn-battle')
+        page.wait_for_selector('dialog#battles[open]')
+        cards = page.locator('#battle-list .battle-card')
+        assert cards.count() == 6
+        assert page.text_content('#battle-list .battle-card:first-child .bc-year').strip() == '612'
+        page.click('#battle-list [data-k="myeongnyang"]')
+        page.wait_for_selector('#battle-hud:not([hidden])')
+        assert page.evaluate("document.body.classList.contains('in-battle')")
+        if page.is_visible('#hud-fold') and page.get_attribute('#hud-fold', 'aria-expanded') == 'false':
+            page.click('#hud-fold')
+        for _ in range(3):
+            page.click('#hud-next')
+        assert page.is_disabled('#hud-next')
+        self.inside(page, '#battle-hud')
+        n = page.evaluate("document.querySelectorAll('#chat .msg.ai').length")
+        assert n >= 3, f'向导旁述只有 {n} 条'
+        page.keyboard.press('Escape')
+        page.wait_for_selector('#battle-hud', state='hidden')
+        assert not page.evaluate("document.body.classList.contains('in-battle')")
+        page.goto(f'{self.base}#lang={self.lang}&map=korea&battle=salsu')
+        page.reload()
+        page.wait_for_selector('#battle-hud:not([hidden])', timeout=30000)
+        assert page.text_content('#hud-title').strip() in ('萨水之战', 'Battle of the Salsu River', '薩水の戦い')
+        self.no_overflow(page)
+
     def korea_sul(self, page):
         # 传统酒：庆北两种（安东烧酒、庆州校洞法酒），平壤的문배주按原产地收录，慈江道没有资料就不出这一栏
         assert page.locator('#detail .kr-sul li').count() == 2
@@ -476,6 +539,10 @@ class Case:
 
     def deeplink_any(self, page):
         assert page.locator('.modern-title .kanji').count() == 1, '详卡没有正常显示'
+
+    def inside(self, page, sel):
+        box = page.evaluate(f"(() => {{ const r = document.querySelector('{sel}').getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom, innerWidth, innerHeight]; }})()")
+        assert box[0] >= -1 and box[1] <= box[4] + 1 and box[2] >= -1 and box[3] <= box[5] + 1, f'{sel} 出屏 {box}'
 
     def no_overflow(self, page):
         over = page.evaluate('document.scrollingElement.scrollWidth - innerWidth')
@@ -809,7 +876,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:

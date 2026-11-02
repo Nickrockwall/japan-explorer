@@ -234,3 +234,46 @@ export function setupMapSwitch() {
     if (b) setMap(b.dataset.map);
   });
 }
+
+// 窄屏时页面上下堆叠，向导在地图下方很远，合战中看不到解说（两种地图的合战沙盘共用）。
+// 把向导最新一条发言（含打字机效果与 LLM 流式输出）同步到地图底部的浮窗。
+export function setupBattleVoice(onAsk) {
+  const chat = $('chat');
+  const text = $('bv-text');
+  const sync = () => {
+    if (!document.body.classList.contains('in-battle')) return;
+    const last = [...chat.querySelectorAll('.msg.ai')].pop();
+    $('bv-name').textContent = $('guide-name').textContent;
+    const ava = $('bv-ava'), src = $('guide-avatar');
+    ava.textContent = src.textContent;
+    ava.className = `${src.className} bv-ava`;
+    ava.style.cssText = src.style.cssText;
+    text.innerHTML = last ? last.innerHTML : '';
+    text.classList.toggle('cursor', !!last?.classList.contains('cursor'));
+    text.scrollTop = text.scrollHeight;
+  };
+  new MutationObserver(sync).observe(chat, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class'] });
+  $('bv-ask').addEventListener('click', () => {
+    onAsk();
+    $('chat-input').focus({ preventScroll: true });
+  });
+  return sync;
+}
+
+// 合战面板折叠：收起后只留标题栏、阶段条与翻页按钮
+export function setupHudFold() {
+  const hud = $('battle-hud');
+  const btn = $('hud-fold');
+  const apply = (folded) => {
+    hud.classList.toggle('folded', folded);
+    btn.setAttribute('aria-expanded', String(!folded));
+    btn.title = t(folded ? 'hud.expand' : 'hud.collapse');
+    btn.textContent = folded ? '▸' : '▾';
+  };
+  apply(!!uiPref.get('hudFolded', matchMedia('(max-width: 560px), (max-height: 520px)').matches)); // 手机默认收起
+  btn.addEventListener('click', () => {
+    const folded = !hud.classList.contains('folded');
+    uiPref.set('hudFolded', folded);
+    apply(folded);
+  });
+}

@@ -18,7 +18,7 @@ import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
 import { openShared } from './shared.js';
-import { NARROW, SHORT, setupTabs, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
+import { NARROW, SHORT, setupTabs, setupBattleVoice, setupHudFold, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash, shareURL } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -26,31 +26,6 @@ const $ = (id) => document.getElementById(id);
 function updateCounter(set) {
   $('visited-count').textContent = set.size;
   $('visited-bar').style.width = `${(set.size / MAP.units) * 100}%`;
-}
-
-// 窄屏时页面上下堆叠，向导在地图下方很远，合战中看不到名将解说。
-// 把向导最新一条发言（含打字机效果与 LLM 流式输出）同步到地图底部的浮窗。
-function setupBattleVoice(onAsk) {
-  const chat = $('chat');
-  const text = $('bv-text');
-  const sync = () => {
-    if (!document.body.classList.contains('in-battle')) return;
-    const last = [...chat.querySelectorAll('.msg.ai')].pop();
-    $('bv-name').textContent = $('guide-name').textContent;
-    const ava = $('bv-ava'), src = $('guide-avatar');
-    ava.textContent = src.textContent;
-    ava.className = `${src.className} bv-ava`;
-    ava.style.cssText = src.style.cssText;
-    text.innerHTML = last ? last.innerHTML : '';
-    text.classList.toggle('cursor', !!last?.classList.contains('cursor'));
-    text.scrollTop = text.scrollHeight;
-  };
-  new MutationObserver(sync).observe(chat, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class'] });
-  $('bv-ask').addEventListener('click', () => {
-    onAsk();
-    $('chat-input').focus({ preventScroll: true });
-  });
-  return sync;
 }
 
 function updateGoshuinCount() {
@@ -91,24 +66,6 @@ function showEraBanner(era) {
   el.classList.remove('show');
   void el.offsetWidth;
   el.classList.add('show');
-}
-
-// 合战面板折叠：收起后只留标题栏、阶段条与翻页按钮
-function setupHudFold() {
-  const hud = $('battle-hud');
-  const btn = $('hud-fold');
-  const apply = (folded) => {
-    hud.classList.toggle('folded', folded);
-    btn.setAttribute('aria-expanded', String(!folded));
-    btn.title = t(folded ? 'hud.expand' : 'hud.collapse');
-    btn.textContent = folded ? '▸' : '▾';
-  };
-  apply(!!uiPref.get('hudFolded', matchMedia('(max-width: 560px), (max-height: 520px)').matches)); // 手机默认收起
-  btn.addEventListener('click', () => {
-    const folded = !hud.classList.contains('folded');
-    uiPref.set('hudFolded', folded);
-    apply(folded);
-  });
 }
 
 async function main() {

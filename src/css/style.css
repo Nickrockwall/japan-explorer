@@ -1148,6 +1148,9 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .power-card .kr-tabs button { padding: 4px 0; }
   .kr-pk-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .kr-pk-chips::-webkit-scrollbar { display: none; }
+  .kp-metrics { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .kp-metrics::-webkit-scrollbar { display: none; }
+  .kp-metrics button { flex: none; }
   .kr-pk-chips button { flex: none; }
   .art-card .muni-name { font-size: 16px; }
   .art-card .muni-sub { margin-bottom: 4px; }
@@ -1324,9 +1327,18 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 }
 
 /* ── 朝鲜半岛模式：日本独有的按钮、工具条、时代滑块与定位先隐藏（korea.js） ── */
-:root[data-map="korea"] #btn-battle, :root[data-map="korea"] .map-toolbar,
+:root[data-map="korea"] .map-toolbar,
 :root[data-map="korea"] #timebar, :root[data-map="korea"] #persona-switch,
 :root[data-map="korea"] #legend { display: none; }
+/* 半岛：古战场时收起历代图层、国力卡片；国力卡片放在历代按钮下方 */
+:root[data-map="korea"] body.in-battle .kr-eras, :root[data-map="korea"] body.in-battle .power-card { display: none; }
+@media (min-width: 901px) { :root[data-map="korea"] .muni-card.power-card { top: 60px; left: auto; right: 12px; max-height: calc(100% - 120px); } }
+:root[data-map="korea"] .kr-list li { grid-template-columns: 22px 7.5em minmax(0, 1fr) auto; }
+.kp-metrics { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.kp-metrics button { border: 1px solid var(--line); background: transparent; color: var(--text-2); border-radius: 14px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
+.kp-metrics button.on { background: #b0703c; border-color: #b0703c; color: #fff; }
+.kr-eras .kp-btn { border-left: 1px solid var(--line); }
+.kb-note { margin: 4px 2px 0; }
 .kr-soon { opacity: .85; }
 
 /* ── 朝鲜半岛模式的皮肤：丹青（青绿底、朱红、石黄）+ 韩纸纤维纹；只换颜色与质感，布局不动 ── */
