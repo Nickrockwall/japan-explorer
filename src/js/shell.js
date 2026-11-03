@@ -277,3 +277,134 @@ export function setupHudFold() {
     apply(folded);
   });
 }
+
+// 手机（≤560px）：顶栏只留印章、地图开关、探索计数和「更多」，合战、御朱印、声音、设置、语言收进菜单
+export const PHONE = '(max-width: 560px)';
+export function setupMenu() {
+  const btn = $('btn-more');
+  const menu = $('topbar-menu');
+  const set = (open) => {
+    document.body.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  };
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    set(!document.body.classList.contains('menu-open'));
+  });
+  // 点了菜单里的按钮（打开对话框、换语言）或菜单外面就收起；声音开关留着菜单，教程气泡上的点击不算
+  // （教程翻页时气泡整块重写，被点的按钮已不在页面上，所以按事件路径判断）
+  document.addEventListener('click', (e) => {
+    if (!document.body.classList.contains('menu-open')) return;
+    if (e.composedPath().some((n) => n.id === 'btn-sound' || n.classList?.contains('tour'))) return;
+    if (menu.contains(e.target) && !e.target.closest('button')) return;
+    set(false);
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+  matchMedia(PHONE).addEventListener('change', () => set(false));
+  return { open: () => set(true), close: () => set(false), get phone() { return matchMedia(PHONE).matches; } };
+}
+
+// 手机上图例只留一行色块，说明文字点一下图例才展开
+export function setupLegendCaption() {
+  const box = $('legend');
+  box.addEventListener('click', () => { if (matchMedia(PHONE).matches) box.classList.toggle('show-cap'); });
+}
+
+// 窄屏竖屏：地图上的卡片是底部抽屉——平时只露一截，地图还看得见；点顶上的把手或往上拖展开，往下拖收回，再往下拖关闭。
+// 卡片内容由各模块整块重写（innerHTML），所以把手是 CSS 画的，这里按「按在卡片顶部 26px 内」判断
+export function setupSheets() {
+  const on = () => matchMedia('(max-width: 900px)').matches && !matchMedia(SHORT).matches;
+  const sync = () => document.body.classList.toggle('sheets', on());
+  sync();
+  addEventListener('resize', sync);
+  // 卡片重新出现时回到只露一截
+  new MutationObserver((ms) => {
+    for (const m of ms) if (m.target.classList?.contains('muni-card') && !m.target.hidden) m.target.classList.remove('sheet-full');
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
+
+  let drag = null;
+  const start = (target, y) => {
+    if (!document.body.classList.contains('sheets')) return false;
+    const card = target.closest?.('.muni-card');
+    if (!card || target.closest('.muni-card-x')) return false;
+    if (y - card.getBoundingClientRect().top > 26) return false;
+    drag = { card, y, dy: 0 };
+    return true;
+  };
+  const move = (y) => {
+    drag.dy = y - drag.y;
+    drag.card.style.transform = drag.dy > 0 ? `translateY(${drag.dy}px)` : '';
+  };
+  const end = () => {
+    const { card, dy } = drag;
+    drag = null;
+    card.style.transform = '';
+    const full = card.classList.contains('sheet-full');
+    if (Math.abs(dy) < 8) card.classList.toggle('sheet-full');
+    else if (dy < -24) card.classList.add('sheet-full');
+    else if (dy > 24) {
+      if (full) card.classList.remove('sheet-full');
+      else card.querySelector('.muni-card-x')?.click();
+    }
+  };
+  // 触摸用 touch 事件（按住把手时拦下页面滚动），鼠标用 pointer 事件
+  document.addEventListener('touchstart', (e) => { if (e.touches.length === 1) start(e.target, e.touches[0].clientY); }, { passive: true });
+  document.addEventListener('touchmove', (e) => { if (drag) { e.preventDefault(); move(e.touches[0].clientY); } }, { passive: false });
+  document.addEventListener('touchend', () => { if (drag) end(); });
+  document.addEventListener('touchcancel', () => { if (drag) { drag.card.style.transform = ''; drag = null; } });
+  document.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse' && start(e.target, e.clientY)) e.preventDefault(); });
+  document.addEventListener('pointermove', (e) => { if (drag && e.pointerType === 'mouse') move(e.clientY); });
+  document.addEventListener('pointerup', (e) => { if (drag && e.pointerType === 'mouse') end(); });
+}
+
+// 地图上摊开的卡片（国力榜、浮世绘、古国巡礼……）占去底部或右侧时，地图中心随之避开（setInset），
+// 并把刚点的地方挪到露出来的那块里（reveal）。展开成整屏的抽屉不算，免得地图跟着跳
+export function watchCards(pane, mapEl, setInset) {
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    if (document.body.classList.contains('in-battle')) return;
+    const box = mapEl.getBoundingClientRect();
+    if (!box.height) return;
+    const open = [...pane.querySelectorAll(':scope > .muni-card')].filter((c) => !c.hidden && c.offsetHeight);
+    if (open.some((c) => c.classList.contains('sheet-full'))) return;
+    const card = open.map((c) => c.getBoundingClientRect()).sort((a, b) => a.top - b.top)[0];
+    if (!card) { setInset({}); return; }
+    setInset(card.width < box.width * 0.6
+      ? { right: Math.round(box.right - card.left + 8) }
+      : { bottom: Math.round(box.bottom - card.top + 10) });
+  };
+  const soon = () => { if (!raf) raf = requestAnimationFrame(update); };
+  const ro = new ResizeObserver(soon);
+  pane.querySelectorAll(':scope > .muni-card').forEach((c) => ro.observe(c));
+  for (const c of pane.querySelectorAll(':scope > .muni-card')) new MutationObserver(soon).observe(c, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  return soon;
+}
+
+// 能横滑的一行按钮：右边（或左边）还有内容时边缘渐隐，提示可以滑
+const HINT = '.filters, .legend-items, .quick, .kr-eras, .book-tabs, .sh-tabs, .kr-pk-chips, .kp-metrics, .rl-jump, .toc';
+export function setupScrollHints() {
+  const mark = (el) => {
+    const max = el.scrollWidth - el.clientWidth;
+    el.classList.toggle('more-r', max > 2 && el.scrollLeft < max - 2);
+    el.classList.toggle('more-l', max > 2 && el.scrollLeft > 2);
+  };
+  document.addEventListener('scroll', (e) => { if (e.target.matches?.(HINT)) mark(e.target); }, true);
+  // 选中的按钮换了（如进入「古国国力」）时把它滚进视野
+  const reveal = (el) => {
+    const on = el.querySelector(':scope > .on, :scope > [aria-selected="true"]');
+    if (!on || on === el.lastOn) return;
+    const r = on.getBoundingClientRect(), b = el.getBoundingClientRect();
+    if (!r.width || !b.width) return;
+    el.lastOn = on;
+    if (r.left < b.left || r.right > b.right) el.scrollLeft += r.left - b.left - 24;
+  };
+  let raf = 0;
+  const all = () => { raf = 0; document.querySelectorAll(HINT).forEach((el) => { if (el.clientWidth) reveal(el); mark(el); }); };
+  const soon = () => { if (!raf) raf = requestAnimationFrame(all); };
+  addEventListener('resize', soon);
+  // 向导打字时 #chat 每个字都在变，不必跟着量
+  new MutationObserver((ms) => { if (ms.some((m) => !(m.target.parentElement || m.target).closest?.('#chat'))) soon(); })
+    .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
+  soon();
+}

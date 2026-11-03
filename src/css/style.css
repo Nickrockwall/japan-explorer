@@ -20,6 +20,7 @@
   --r: 10px;
   --r-sm: 6px;
   --gap: 14px;
+  --card-bg: #1e1e23;      /* 浮在地图上的卡片与下拉：不透明，底下的字不会透出来 */
 }
 
 :root {
@@ -160,7 +161,7 @@ button, input, select { font: inherit; color: inherit; }
 .search-pop {
   position: absolute; top: calc(100% + 6px); right: 0; z-index: 20; width: max(100%, 300px); max-width: calc(100vw - 32px);
   margin: 0; padding: 4px; list-style: none; border-radius: 12px; overflow-y: auto; overscroll-behavior: contain;
-  background: rgba(30,30,35,.98); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0,0,0,.55);
+  background: var(--card-bg); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0,0,0,.55);
 }
 .search-pop[hidden] { display: none; }
 .search-pop li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; cursor: pointer; }
@@ -1095,7 +1096,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
 .muni-credit { margin-top: 6px; font-size: 10px; color: var(--muted); line-height: 1.4; }
 .muni-card {
   position: absolute; right: 16px; bottom: 14px; z-index: 3; width: 290px; max-width: calc(100% - 32px);
-  padding: 14px 16px; border-radius: 12px; background: rgba(30,30,35,.96); border: 1px solid rgba(212,163,115,.45);
+  padding: 14px 16px; border-radius: 12px; background: var(--card-bg); border: 1px solid rgba(212,163,115,.45);
   box-shadow: 0 10px 28px rgba(0,0,0,.5);
 }
 .muni-card[hidden] { display: none; }
@@ -1382,6 +1383,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   --kin: #e2bd57;          /* 石黄 */
   --kin-soft: rgba(226, 189, 87, .14);
   --ai: #3f8f7f;           /* 青绿 */
+  --card-bg: #1a2120;
 }
 :root[data-map="korea"] body {
   /* 韩纸：两层极淡的斜向纤维 */
@@ -1397,7 +1399,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   border-image: linear-gradient(90deg, #2f6f8f 0 10%, #c8432f 10% 20%, #e2bd57 20% 30%, #e9e4d6 30% 40%, #0c0c0c 40% 50%,
     #2f6f8f 50% 60%, #c8432f 60% 70%, #e2bd57 70% 80%, #e9e4d6 80% 90%, #0c0c0c 90% 100%) 1;
 }
-:root[data-map="korea"] .muni-card { background: rgba(26,33,32,.97); border-color: rgba(226,189,87,.45); }
+:root[data-map="korea"] .muni-card { border-color: rgba(226,189,87,.45); }
 @media (max-width: 560px) {
   /* 半岛模式没有合战与御朱印按钮，设置按钮不再拉满整行 */
   :root[data-map="korea"] #btn-settings { flex: 0 0 auto; margin-left: auto; }
@@ -1583,3 +1585,149 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .hn-kk { border: 0; border-radius: 8px; padding: 0 5px; font-size: 10.5px; cursor: pointer; }
 .hn-kk:hover { filter: brightness(1.3); }
 .ks-han .hn-kk { background: rgba(138,59,51,.12); color: #8a3b33; }
+
+/* ── 手机体验（3.8）：顶栏一行 + 「更多」菜单、图层下拉、底部抽屉、按钮放大、字号下限、横滑提示、详卡目录 ── */
+.btn-more, .layer-pick, .menu-lbl { display: none; }
+
+/* 能横滑的一行：还有内容的那一侧边缘渐隐（shell.js setupScrollHints） */
+.more-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); }
+.more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px); mask-image: linear-gradient(90deg, transparent, #000 24px); }
+.more-l.more-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 32px), transparent); }
+
+/* 详卡目录（toc.js）：停在详卡顶部，可横滑 */
+.toc {
+  position: sticky; top: -18px; z-index: 3; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+  margin: 12px -20px 0; padding: 8px 20px; background: var(--bg); border-bottom: 1px solid var(--line-soft);
+}
+.toc::-webkit-scrollbar { display: none; }
+.toc button {
+  flex: none; white-space: nowrap; cursor: pointer; padding: 5px 12px; border-radius: 16px; font-size: 12.5px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text-2);
+}
+.toc button:hover { border-color: var(--kin); color: var(--kin); }
+.toc button.on { background: var(--kin-soft); border-color: var(--kin); color: var(--kin); }
+
+/* 江户诸藩：藩多的县先列 6 个 */
+.hn-list:not(.all) .hn-x { display: none; }
+.hn-more { justify-self: start; margin-top: 2px; padding: 6px 14px; border-radius: 16px; border: 1px solid var(--line); background: transparent; color: var(--kin); font-size: 12.5px; cursor: pointer; }
+.hn-more:hover { border-color: var(--kin); }
+
+/* 年表：按时代跳转 */
+.rl-jump { flex: none; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 22px 8px; }
+.rl-jump::-webkit-scrollbar { display: none; }
+.rl-jump button { flex: none; white-space: nowrap; cursor: pointer; padding: 4px 10px; border-radius: 14px; border: 1px solid #c9b08a; background: transparent; color: #5a4a3f; font-size: 12px; }
+.rl-jump button:hover { border-color: var(--shu); color: var(--shu); }
+
+/* 窄屏竖屏：地图上的卡片是底部抽屉（shell.js setupSheets）。只露一截，点把手或往上拖展开，往下拖收回 / 关闭 */
+body.sheets .muni-card {
+  left: 0; right: 0; bottom: 0; top: auto; width: auto; max-width: none; max-height: 44%;
+  overflow-y: auto; overscroll-behavior: contain; padding: 0 16px 14px;
+  border-radius: 16px 16px 0 0; border-bottom: 0; box-shadow: 0 -10px 30px rgba(0,0,0,.5);
+  transition: max-height .25s ease;
+}
+body.sheets .muni-card.power-card { overflow: hidden; }
+body.sheets .muni-card.sheet-full { max-height: calc(100% - 8px); }
+body.sheets .muni-card::before {
+  content: ""; display: block; flex: none; position: sticky; top: 0; z-index: 2; height: 24px; margin: 0 -16px 2px; cursor: grab;
+  background: linear-gradient(#5a5a63, #5a5a63) center 10px / 40px 4px no-repeat, var(--card-bg);
+}
+body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
+@media (prefers-reduced-motion: reduce) { body.sheets .muni-card { transition: none; } }
+
+@media (max-width: 560px) {
+  /* 顶栏一行：印章 · 日本 / 半岛 · 探索计数 · 更多 */
+  .topbar { position: relative; z-index: 50; flex-wrap: nowrap; padding: calc(6px + var(--safe-t)) 10px 6px; gap: 8px; }
+  .brand { flex: 1 1 auto; }
+  .map-switch button { padding: 7px 12px; font-size: 13px; }
+  .explore-counter { flex: none; }
+  .btn-more { display: inline-grid; place-items: center; order: 3; flex: none; width: 42px; height: 40px; padding: 0; }
+  .btn-more svg { width: 20px; height: 20px; }
+  body.menu-open .btn-more { border-color: var(--kin); color: var(--kin); }
+  .topbar-right { display: none; }
+  body.menu-open .topbar-right {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; position: absolute; top: calc(100% + 4px); right: calc(8px + var(--safe-r));
+    width: min(290px, calc(100vw - 16px)); padding: 12px; border-radius: 12px; z-index: 60;
+    background: var(--card-bg); border: 1px solid rgba(212,163,115,.45); box-shadow: 0 16px 40px rgba(0,0,0,.6);
+  }
+  body.menu-open .topbar-right > .btn, body.menu-open #btn-settings { width: 100%; min-height: 46px; justify-content: flex-start; padding: 8px 14px; font-size: 14px; }
+  .btn-book > [data-i18n], #btn-settings > [data-i18n], .menu-lbl { display: inline; }
+  .btn-sound svg { width: 22px; height: 22px; }
+  .lang-switch { display: flex; padding: 3px; }
+  .lang-switch button { flex: 1; min-height: 40px; font-size: 14px; }
+
+  /* 工具条：图层收成左边的下拉按钮，与滤镜同一行；年份、指标等子选项单独一行 */
+  .map-toolbar { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
+  .toolbar-row { display: contents; }
+  .layer-pick {
+    display: inline-flex; align-items: center; gap: 4px; order: 0; flex: none; max-width: 42%; height: 40px; padding: 0 10px 0 12px; cursor: pointer;
+    border-radius: 10px; border: 1px solid rgba(212,163,115,.55); background: var(--card-bg); color: var(--kin); font: 700 13px var(--serif);
+  }
+  .layer-pick span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .layer-pick i { font-style: normal; font-size: 11px; color: var(--text-2); }
+  body.layers-open .layer-pick { border-color: var(--kin); }
+  .map-toolbar .layers {
+    display: none; position: absolute; top: 46px; left: 0; z-index: 8; flex-direction: column; gap: 2px; padding: 6px; min-width: 210px; max-width: none;
+    background: var(--card-bg); border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.6);
+  }
+  body.layers-open .map-toolbar .layers { display: flex; }
+  .map-toolbar .layers button { min-height: 44px; padding: 0 14px; text-align: left; font-size: 14px; }
+  .map-toolbar .filters { order: 1; flex: 1 1 0; min-width: 0; height: 40px; align-items: center; }
+  .map-toolbar .prov-eras, .map-toolbar .power-metrics, .map-toolbar .sg-years { order: 3; flex: 0 1 auto; } /* 上一行的滤镜已撑满，自然换到下一行 */
+  .map-toolbar .filters button { min-height: 32px; padding: 0 12px; font-size: 13px; }
+  .toolbar-row > .search { order: 2; width: 40px; height: 40px; }
+  .map-toolbar .search input, .map-toolbar .search input:focus { width: 40px; height: 40px; border-radius: 20px; padding-left: 38px; background-position: 12px 50%; }
+  .map-toolbar .search input:focus, .map-toolbar .search input:not(:placeholder-shown) { width: calc(100vw - 20px - var(--safe-l) - var(--safe-r)); }
+  .locate-btn { top: 104px; width: 44px; height: 44px; }
+
+  /* 底部：图例一行（说明点一下才展开）+ 时空滑块一行 */
+  .timebar { grid-template-columns: 34px auto minmax(0, 1fr) auto; align-items: center; column-gap: 10px; padding: 4px 8px; }
+  .tb-play { grid-row: 1; width: 34px; height: 34px; box-shadow: none; }
+  .tb-info { grid-row: 1; grid-column: 2; max-width: 7.5em; }
+  .tb-track { grid-row: 1; grid-column: 3; }
+  .tb-track input[type="range"] { height: 32px; }
+  .tb-exit { grid-row: 1; grid-column: 4; width: 34px; height: 34px; }
+  .map-legend { bottom: 60px; padding: 5px 30px 5px 10px; cursor: pointer; }
+  .map-legend:not(.muni-legend) .legend-caption { display: none; }
+  .map-legend.show-cap .legend-caption { display: block; white-space: normal; margin-bottom: 4px; }
+  .map-legend:not(.muni-legend)::after { content: "\24D8"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; }
+  .map-legend.show-cap::after { top: 14px; }
+
+  /* 按钮至少约 36–44px 高，手指点得准 */
+  .muni-card-x { width: 34px; height: 34px; font-size: 17px; }
+  .book-close { width: 40px; height: 40px; }
+  .book-tab, .book-modes button, .kr-tabs button { min-height: 38px; }
+  .rl-list li { min-height: 42px; }
+  .rl-jump button, .toc button { min-height: 34px; padding: 0 12px; font-size: 13px; }
+  .hud-nav .btn, .hud-exit, .hud-fold { min-height: 38px; }
+  .hud-fold { width: 38px; }
+  .hud-phases li { min-height: 36px; }
+  .kk-more, .sg-rel, .kr-pk-chips button, .kp-metrics button, .ks-voice, .pn-chip, .hn-more { min-height: 34px; padding-left: 12px; padding-right: 12px; }
+  .kr-fact button, .sg-back, .sg-who { min-height: 32px; padding: 4px 0; }
+  .muni-wiki, .hn-wiki, .sg-wiki { display: inline-flex; align-items: center; min-height: 36px; }
+  .hn-han summary { min-height: 40px; align-items: center; }
+  .hn-fam ol { gap: 2px 6px; }
+  .hn-fam li { align-items: center; }
+  .hn-fam a { display: inline-block; padding: 7px 2px; }
+  .hn-kk { padding: 4px 7px; }
+  .kk-item, .bd-item { min-height: 48px; }
+  .kr-list li { min-height: 36px; }
+  .koku-btns .btn, .loc-actions .btn, .muni-card .btn { min-height: 40px; }
+  .search-pop li { min-height: 46px; }
+  .sh-tabs button { min-height: 38px; }
+  .quick button { min-height: 38px; }
+  .persona-switch button { min-height: 36px; }
+
+  /* 字号下限 12px（原先图例、读音、标签等只有 10–11px） */
+  .legend-items, .legend-caption, .legend-items small, .stat .k, .prov .kana, .prov .meta, .prov .cross, .section-h small,
+  .kk-y small, .kk-t, .kk-note, .bd-y small, .bd-fact span, .bd-fact small, .slot-date, .book-tab small, .book-tab b,
+  .kr-list .no, .kr-list .val, .kr-note, .hn-i, .hn-fam small, .hn-kk, .muni-note, .muni-credit, .muni-ramp-l, .sg-with, .sg-span, .art-series,
+  .hud-tag, .ph-t, .side small, .ks-seal, .ks-note, .rl-n, .rl-name em, .rl-note, .tabbar button, .sr-type, .sr-main small,
+  .pil-block b, .pil-section summary small, .art-section-h small, .art-credit, .focus-tag, .fudo-k, .fudo-card small,
+  .koku-flag, .famous, .quad .ax, .tour-n, .kr-sul-origin, .kr-book-note, .explore-counter .label { font-size: 12px; }
+  .tabbar small { font-size: 11px; }
+  .legal { font-size: 11.5px; }
+  .toc { margin: 10px -16px 0; padding: 8px 16px; top: -16px; }
+  body.sheets .muni-card.art-card { padding: 0 14px 12px; }
+  .kp-metrics { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .kp-metrics button { flex: none; }
+}

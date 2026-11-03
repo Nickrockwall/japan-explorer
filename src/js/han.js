@@ -58,17 +58,21 @@ export function findHan(data, name, pid) {
   return list.filter(hit).sort((a, b) => order(a) - order(b))[0] || null;
 }
 
+const SHOW = 6;
 export function hanSection(data, pid) {
   const list = (data?.han || []).filter((h) => h.p === pid);
   if (!list.length) return '';
+  // 藩多的县先只列前 SHOW 个（存续到 1871 年的在前），其余点「显示其余」再展开
+  const fold = list.length > SHOW + 2;
+  let i = 0;
   const item = (h) => {
     const yrs = h.y ? `${h.y[0] ?? ''}–${h.y[1] ?? ''}` : '';  // 只知道一头的写成「1819–」「–1609」
-    return `<details class="hn-han"><summary><b>${esc(nm(h.n))}</b><small>${esc(t('hn.count', { f: h.f.length, n: count(h) }))}${yrs ? ` · ${yrs}` : ''}</small></summary>${lordsHTML(h)}
+    return `<details class="hn-han${fold && i++ >= SHOW ? ' hn-x' : ''}"><summary><b>${esc(nm(h.n))}</b><small>${esc(t('hn.count', { f: h.f.length, n: count(h) }))}${yrs ? ` · ${yrs}` : ''}</small></summary>${lordsHTML(h)}
       <a class="hn-wiki" href="${wikiLink(h.t)}" target="_blank" rel="noopener">${esc(t('sg.wiki'))} ↗</a></details>`;
   };
   const kept = list.filter((h) => h.k), gone = list.filter((h) => !h.k);
   return `<details class="hn-sec"><summary class="section-h">${esc(t('hn.h', { n: list.length }))}</summary>
-    <div class="hn-list">${kept.map(item).join('')}${gone.length ? `<div class="hn-sub">${esc(t('hn.gone', { n: gone.length }))}</div>${gone.map(item).join('')}` : ''}</div>
+    <div class="hn-list">${kept.map(item).join('')}${gone.length ? `<div class="hn-sub${fold && kept.length >= SHOW ? ' hn-x' : ''}">${esc(t('hn.gone', { n: gone.length }))}</div>${gone.map(item).join('')}` : ''}${fold ? `<button type="button" class="hn-more" data-act="hn-more">${esc(t('hn.more', { n: list.length - SHOW }))}</button>` : ''}</div>
     <p class="kk-note">${esc(t('hn.note'))}</p></details>`;
 }
 

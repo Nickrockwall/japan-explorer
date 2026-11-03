@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.8 · 2026-11-03
+
+- A bigger map on phones: the top bar is a single row, with battles, goshuin, sound, settings and language moved into the ☰ menu; layers became a drop-down at the left of the toolbar, sharing a row with the filters; the legend is one row of swatches (tap it for the caption) and the time slider is one row too
+- Cards on the map (rankings, prints, ancient sites, Sengoku, towns…) are bottom sheets on phones and tablets: they open part-way, tap the handle or drag up to expand, drag down to shrink and again to close; the map moves out of the way so the place you tapped stays visible, and cards are no longer see-through
+- The detail card has a row of section links (overview, provinces, timeline, dialect, Edo domains…) that jump straight there and follow your scrolling; prefectures with many domains list six first, with "Show more"
+- The emperor and shogun timeline can jump by era
+- Phone buttons are now big enough to tap (mostly 36–44 px tall), small text is at least 12 px, and rows that scroll sideways fade at the edge to show there is more
+
 ## 3.7 · 2026-11-03
 
 - New "🎂 Birthday card": pick a date in On this day (your birthday, say) to see everyone born and who died that day and what happened, plus how eventful the day is among all 366, how long ago the earliest entry was, and which prefecture it's most tied to; add a name and save it as an image, or copy a link

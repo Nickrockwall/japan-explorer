@@ -97,6 +97,18 @@ class Case:
         page.wait_for_timeout(800)
         return page
 
+    # 手机上合战、御朱印、声音、设置在「更多」菜单里，图层在下拉里：先打开再点
+    def top(self, page, sel):
+        if not page.is_visible(sel) and page.is_visible('#btn-more'):
+            page.click('#btn-more')
+        page.click(sel)
+
+    def layer(self, page, key):
+        sel = f'[data-layer="{key}"]'
+        if not page.is_visible(sel) and page.is_visible('#layer-pick'):
+            page.click('#layer-pick')
+        page.click(sel)
+
     def tab(self, page, name):
         if self.narrow:
             page.click(f'#tabbar [data-tab="{name}"]')
@@ -163,8 +175,11 @@ class Case:
         # 日本独有的时代滑块与工具条不出现；合战按钮换成「古战场」；印帐换成半岛印帐（/29）
         for sel in ('#timebar', '.map-toolbar'):
             assert not page.is_visible(sel), f'半岛模式不应显示 {sel}'
+        if page.is_visible('#btn-more'):  # 手机上这两个按钮在「更多」菜单里
+            page.click('#btn-more')
         assert page.is_visible('#btn-battle') and page.text_content('#btn-battle .battle-ico') == '戰'
         assert page.is_visible('#btn-book') and '/29' in page.text_content('#btn-book'), page.text_content('#btn-book')
+        page.keyboard.press('Escape')
         # 越界编号：不报错、回到欢迎卡
         page.goto(f'{self.base}#lang={self.lang}&map=korea&pref=99')
         page.reload()
@@ -389,7 +404,7 @@ class Case:
         assert page.text_content('#goshuin-count') == '1'
         assert page.text_content('.seal-drop .kr-seal').strip() == '경북', page.text_content('.seal-drop .kr-seal')
         page.wait_for_selector('.seal-drop', state='detached', timeout=5000)
-        page.click('#btn-book')
+        self.top(page, '#btn-book')
         page.wait_for_selector('dialog#book[open]')
         assert page.locator('#book .slot').count() == 29
         assert page.locator('#book .slot.got .kr-seal').count() == 1
@@ -450,7 +465,7 @@ class Case:
     def korea_battle(self, page):
         # 半岛古战场：6 场按年代；鸣梁推演到第 4 阶段，向导逐段旁述；Esc 退出；深链接直接进萨水
         self.tab(page, 'map')
-        page.click('#btn-battle')
+        self.top(page, '#btn-battle')
         page.wait_for_selector('dialog#battles[open]')
         cards = page.locator('#battle-list .battle-card')
         assert cards.count() == 6
@@ -585,7 +600,7 @@ class Case:
         assert 'm=23211' in page.evaluate('location.hash'), '地址栏应带上选中的市町村'
 
     def battle(self, page):
-        page.click('#btn-battle')
+        self.top(page, '#btn-battle')
         page.click('#battles .battle-card >> nth=0')
         page.wait_for_selector('#battle-hud:not([hidden])')
         if self.narrow:
@@ -641,7 +656,7 @@ class Case:
 
     def pilgrimage(self, page):
         self.tab(page, 'map')
-        page.click('[data-layer="pilgrimage"]')
+        self.layer(page, 'pilgrimage')
         page.wait_for_timeout(500)
         legend = page.text_content('#legend-items')
         assert legend.strip(), '巡礼图层没有图例'
@@ -667,17 +682,17 @@ class Case:
         self.tab(page, 'detail')
         page.click('.stamp-btn')
         self.tab(page, 'map')
-        page.click('#btn-battle')
+        self.top(page, '#btn-battle')
         page.click('#battles .battle-card >> nth=0')
         page.wait_for_selector('#battle-hud:not([hidden])')
         page.click('#hud-exit')
         d = page.evaluate(AUDIO_DEBUG)
         assert d['ready'], f'首次点击后音频没有解锁：{d}'
         assert d['played'].get('stamp') == 1 and d['played'].get('battle') == 1, f'音效没有触发：{d}'
-        page.click('#btn-sound')
+        self.top(page, '#btn-sound')
         assert page.get_attribute('#btn-sound', 'aria-pressed') == 'true', '喇叭没有切到静音'
         assert '"muted":true' in page.evaluate("localStorage.getItem('je.ui.audio')"), '静音状态没有保存'
-        page.click('#btn-settings')
+        self.top(page, '#btn-settings')
         page.check('#snd-bgm')
         page.wait_for_timeout(300)
         d = page.evaluate(AUDIO_DEBUG)
@@ -689,8 +704,8 @@ class Case:
         self.stamp(page)
         self.tab(page, 'map')
         self.battle(page)
-        page.click('#btn-sound')
-        page.click('#btn-settings')
+        self.top(page, '#btn-sound')
+        self.top(page, '#btn-settings')
         page.check('#snd-bgm')
         page.wait_for_timeout(300)
         assert not page.evaluate(AUDIO_DEBUG)['ready']
@@ -771,7 +786,7 @@ class Case:
     def koku(self, page):
         # 古国巡礼：68 古国底图 + 三种图钉；点出云大社 → 参拜盖印 → 模拟在神社旁实地打卡得亲临金印；御朱印帐一宫篇
         self.tab(page, 'map')
-        page.click('[data-layer="koku"]')
+        self.layer(page, 'koku')
         page.wait_for_function("document.getElementById('legend-items').textContent.includes('85')", timeout=15000)
         page.evaluate("() => { echarts.getInstanceByDom(document.getElementById('map')).trigger('click', { seriesId: 'koku', data: { id: 'ichi-出雲-1' } }); }")
         page.wait_for_selector('#koku-card:not([hidden])')
@@ -779,7 +794,7 @@ class Case:
         page.click('#koku-card [data-act="koku-pray"]')
         page.click('#koku-card [data-act="koku-checkin"]')
         page.wait_for_function("(localStorage.getItem('je.ichinomiya') || '').includes('\"real\":true')", timeout=10000)
-        page.click('#btn-book')
+        self.top(page, '#btn-book')
         page.click('#book [data-mode="ichi"]')
         assert page.locator('#book .slot.got.real').count() == 1, '一宫篇应有一枚亲临印'
         page.keyboard.press('Escape')
@@ -938,6 +953,10 @@ class Case:
         han = page.locator('.hn-han', has_text=('上田' if self.lang != 'en' else 'Ueda'))
         han.locator('summary').click()
         assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'
+        # 藩多的县先列 6 个，其余点「显示其余」展开
+        assert page.locator('.hn-han:visible').count() == 6, f'应先列 6 个藩，实际 {page.locator(".hn-han:visible").count()}'
+        page.click('[data-act="hn-more"]')
+        assert page.locator('.hn-han:visible').count() == page.locator('.hn-han').count(), '显示其余后应列出全部的藩'
         # 藩主 ⇄ 彼时今日：高远藩的保科正之带 6/17 诞生的标签，点了选中出生地所在的县（东京）并标出图钉
         takato = page.locator('.hn-han', has_text=('高遠' if self.lang == 'ja' else 'Takat' if self.lang == 'en' else '高远'))
         takato.locator('summary').click()
@@ -997,7 +1016,7 @@ class Case:
         page.wait_for_selector('#loading.hidden', state='attached')
         page.wait_for_timeout(900)
         assert page.locator('.tour').count() == 0, '看过教程后不应再自动出现'
-        page.click('#btn-settings')
+        self.top(page, '#btn-settings')
         page.click('#settings button[value="tour"]')
         page.wait_for_selector('.tour')
         page.keyboard.press('Escape')
@@ -1020,6 +1039,51 @@ class Case:
         page.wait_for_selector('.tour', state='detached')
         assert page.evaluate("localStorage.getItem('je.ui.tourKorea')") == 'true', '走完半岛教程应记住'
 
+    def phone_ui(self, page):
+        # 手机体验：顶栏一行 +「更多」菜单、图层下拉、详卡目录、底部抽屉（点把手展开，往下拖收回、再拖关闭）
+        vw = page.viewport_size['width']
+        self.tab(page, 'detail')
+        assert page.locator('#detail .toc button').count() >= 8, '详卡应有目录'
+        page.click('#detail .toc button >> nth=-1')
+        page.wait_for_timeout(900)
+        assert page.evaluate("document.getElementById('detail').scrollTop") > 400, '点目录最后一项应滚到详卡下方'
+        assert page.locator('#detail .toc button.on').count() == 1, '目录应标出当前所在的一节'
+        self.tab(page, 'map')
+        if vw <= 560:
+            h = page.locator('.topbar').bounding_box()['height']
+            assert h <= 64, f'手机顶栏应只有一行（高 {h:.0f}）'
+            assert not page.is_visible('#btn-battle'), '手机上合战按钮应收进「更多」菜单'
+            page.click('#btn-more')
+            assert page.is_visible('#btn-battle') and page.is_visible('#lang-switch'), '菜单里应有合战与语言'
+            self.inside(page, '#topbar-menu')
+            page.click('.brand-seal')
+            assert not page.is_visible('#btn-battle'), '点菜单外面应收起菜单'
+            assert not page.is_visible('#layers'), '手机上图层应收成下拉'
+            self.layer(page, 'ramen')
+            assert not page.is_visible('#layers'), '选好图层后下拉应收起'
+            assert page.text_content('#layer-pick-lbl') == page.text_content('#layers [data-layer="ramen"]'), '下拉按钮应显示当前图层'
+            self.layer(page, 'history')
+            # 工具条与底部控件够大，手指点得准
+            small = page.evaluate('''() => [...document.querySelectorAll('.map-toolbar button, .timebar button, #btn-more, #layer-pick')]
+                .filter((b) => b.offsetParent).map((b) => [b.textContent.trim(), b.getBoundingClientRect().height]).filter((x) => x[1] < 32)''')
+            assert not small, f'这些按钮太矮：{small}'
+        page.click('[data-filter="power"]')
+        page.wait_for_selector('#power-card:not([hidden])')
+        if page.evaluate("document.body.classList.contains('sheets')"):
+            b0 = page.locator('#power-card').bounding_box()
+            page.click('#power-card', position={'x': b0['width'] / 2, 'y': 10})
+            page.wait_for_timeout(500)
+            b1 = page.locator('#power-card').bounding_box()
+            assert b1['height'] > b0['height'] + 80, f'点把手应展开抽屉：{b0["height"]:.0f} → {b1["height"]:.0f}'
+            for _ in range(2):  # 第一次收回，第二次关闭
+                b = page.locator('#power-card').bounding_box()
+                page.mouse.move(b['x'] + b['width'] / 2, b['y'] + 10)
+                page.mouse.down()
+                page.mouse.move(b['x'] + b['width'] / 2, b['y'] + 160, steps=6)
+                page.mouse.up()
+                page.wait_for_timeout(500)
+            assert page.is_hidden('#power-card'), '往下拖两次应关闭抽屉'
+
     def tabs(self, page):
         if not self.narrow:
             assert not page.is_visible('#tabbar'), '宽屏不应显示标签栏'
@@ -1036,7 +1100,7 @@ def plan(lang):
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
-                  ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']),
+                  ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
                   ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]

@@ -604,11 +604,23 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       return [x, Math.round((top + bottom) / 2)];
     }
     if (innerWidth > 560) return [x, inset.bottom ? Math.round((pane.height - inset.bottom) / 2) : '50%'];
-    const top = (pad('.toolbar-row')?.bottom ?? pane.top) - pane.top + 44; // 再留一行滤镜
-    let bottom = (pad('.timebar')?.top || pane.bottom) - pane.top - 60;     // 图例约 60px
-    if (inset.bottom) bottom = Math.min(bottom, pane.height - inset.bottom - 10);
+    const [top, bottom] = openArea();
     return [x, Math.round((top + bottom) / 2)];
   }
+  // 手机竖屏上地图露出来的那一段（相对地图容器）：工具条以下、图例 / 时空滑块 / 卡片以上
+  function openArea() {
+    const pane = el.getBoundingClientRect();
+    const box = (sel) => {
+      const r = el.parentElement.querySelector(sel)?.getBoundingClientRect();
+      return r && r.height ? r : null;
+    };
+    const top = (box('.map-toolbar')?.bottom ?? pane.top) - pane.top;
+    let bottom = Math.min(pane.bottom, ...['.map-legend', '.timebar'].map((s) => box(s)?.top ?? pane.bottom)) - pane.top;
+    if (inset.bottom) bottom = Math.min(bottom, pane.height - inset.bottom - 10);
+    return [top, bottom];
+  }
+  // 刚点过的地方（卡片弹出后把它挪进露出来的那块）
+  let lastTap = null;
 
   // 提示框里的县章：透明底 PNG 当遮罩涂成金色（与详卡头像同一做法）
   const emblemTip = (id) => {
@@ -709,6 +721,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 有争议的岛：按点击坐标判断落在哪块岛上（标签与竹岛的圆点另由 disputed-names 的系列点击处理）
   chart.getZr().on('click', (e) => {
+    const coord = chart.convertFromPixel({ geoIndex: 0 }, [e.offsetX, e.offsetY]);
+    if (coord) lastTap = { coord, at: Date.now() };
     if (!dspOn()) return;
     const k = dspAt(chart.convertFromPixel({ geoIndex: 0 }, [e.offsetX, e.offsetY]));
     if (k) onDispute(k);
@@ -803,6 +817,18 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (next.left === inset.left && next.right === inset.right && next.bottom === inset.bottom) return; // 卡片重绘时尺寸没变就不挪地图
       inset = next;
       chart.setOption({ geo: { layoutCenter: layoutCenter() } });
+    },
+    // 底部卡片刚弹出、而刚才点的地方被它盖住时，把地图往上挪，让那一点落在露出来的那块中间
+    reveal() {
+      if (!lastTap || Date.now() - lastTap.at > 2000 || !inset.bottom || innerWidth > 900) return;
+      lastTap.at = 0;
+      const [top, bottom] = openArea();
+      const p = chart.convertToPixel({ geoIndex: 0 }, lastTap.coord);
+      if (!p || (p[1] > top + 24 && p[1] < bottom - 24)) return;
+      const g = chart.getOption().geo[0];
+      const c = chart.convertToPixel({ geoIndex: 0 }, g.center);
+      const to = chart.convertFromPixel({ geoIndex: 0 }, [c[0], c[1] + p[1] - (top + bottom) / 2]);
+      if (to) chart.setOption({ geo: { center: to } });
     },
     get powerMode() { return powerMode(); },
     redraw: () => render(),

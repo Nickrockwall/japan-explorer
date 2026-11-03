@@ -18,7 +18,8 @@ import { uiPref, apiConfig, goshuinBook, hyanggyoBook } from './store.js';
 import { createKoreaBook, stampButton, playStamp, hyCard, hySection, hyName, hyCounty, distanceKm, CHECKIN_KM } from './korea-book.js';
 import { createKoreaPower } from './korea-power.js';
 import { createKoreaBattle } from './korea-battle.js';
-import { NARROW, setupTabs, setupBattleVoice, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
+import { NARROW, setupTabs, setupBattleVoice, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch, setupMenu, setupLegendCaption, setupSheets, setupScrollHints, watchCards } from './shell.js';
+import { addToc } from './toc.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -234,6 +235,10 @@ export async function main() {
   setupLangSwitch();
   setupMapSwitch();
   setupSound();
+  setupMenu();
+  setupLegendCaption();
+  setupSheets();
+  setupScrollHints();
   $('settings-legal').innerHTML = legalHTML();
 
   const geo = await (await fetch(MAP.geo)).json();
@@ -589,6 +594,7 @@ export async function main() {
     renderRegion(detailEl, p, content[id], translated, names, sul[id],
       { stampedAt: goshuinBook.get()[id], hy: hyang.filter((h) => h.region === id), hyBook: hyanggyoBook.get(), dd: daedong[id] });
     openStage(detailEl, app.era);
+    addToc(detailEl);
     detailEl.scrollTop = top;
   }
 
@@ -674,7 +680,7 @@ export async function main() {
   const bookBtn = $('btn-book');
   bookBtn.querySelector('[data-i18n="btn.book"]').textContent = t('kr.book');
   bookBtn.title = t('kr.book.title');
-  bookBtn.lastChild.textContent = `/${MAP.units})`;
+  bookBtn.querySelector('.bk-n').lastChild.textContent = `/${MAP.units})`;
   const updateBookCount = () => { $('goshuin-count').textContent = Object.keys(goshuinBook.get()).length; };
   const bookUI = createKoreaBook($('book'), {
     regions, getBook: goshuinBook.get, hyang, getHy: hyanggyoBook.get,
@@ -780,6 +786,11 @@ export async function main() {
     paint();
   }, () => startTour());
   window.addEventListener('resize', () => chart.resize());
+  // 地图上摊开的卡片（国力榜、乡校、此地古今……）占去底部或右侧时，地图中心随之避开
+  watchCards(document.querySelector('.map-pane'), $('map'), ({ right = 0, bottom = 0 }) => {
+    const box = $('map');
+    chart.setOption({ geo: { layoutCenter: [right ? Math.round((box.clientWidth - right) / 2) : '50%', bottom ? Math.round((box.clientHeight - bottom) / 2) : '50%'] } });
+  });
 
   renderWelcome(detailEl);
   detailEl.addEventListener('click', (e) => {

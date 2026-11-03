@@ -29,6 +29,7 @@ function row(r, bios, extra = '') {
 export function rulersHTML(rulers, eras, bios, tab) {
   const tabs = RULER_TABS.map((k) => `<button type="button" class="book-tab ${k === tab ? 'on' : ''}" data-rl-tab="${k}" aria-pressed="${k === tab}">${esc(t(`rl.tab.${k}`))}</button>`).join('');
   let body = '';
+  let jump = [];
   if (tab === 'emperor') {
     const groups = [];
     for (const r of rulers.emperors) {
@@ -44,15 +45,16 @@ export function rulersHTML(rulers, eras, bios, tab) {
       if (!BAKUFU.includes(e.key)) return t('rl.capital', { name: e.capital.name });
       return `${t('rl.capital', { name: heian.capital.name })} · ${t('rl.seat', { name: e.capital.name })}`;
     };
-    body = groups.map(({ e, rows }) => `<section class="rl-group"><h3>${esc(e ? e.short : t('rl.early'))}<small>${esc(where(e))}</small></h3>
+    jump = groups.map(({ e }) => (e ? e.short : t('rl.early')));
+    body = groups.map(({ e, rows }, i) => `<section class="rl-group" data-rl-g="${i}"><h3>${esc(e ? e.short : t('rl.early'))}<small>${esc(where(e))}</small></h3>
       <ol class="rl-list">${rows.map((r) => row(r, bios)).join('')}</ol></section>`).join('');
   } else {
     const list = tab === 'shogun' ? rulers.shoguns : rulers.shikken.map((r) => ({ ...r, bakufu: '鎌倉' }));
-    body = Object.keys(BAKUFU_ERA).map((b) => {
+    body = Object.keys(BAKUFU_ERA).filter((b) => list.some((r) => r.bakufu === b)).map((b, i) => {
       const rows = list.filter((r) => r.bakufu === b);
-      if (!rows.length) return '';
       const e = eras.find((x) => x.key === BAKUFU_ERA[b]);
-      return `<section class="rl-group"><h3>${esc(t(`rl.bakufu.${b}`))}${e ? `<small>${esc(t('rl.seat', { name: e.capital.name }))}</small>` : ''}</h3>
+      jump.push(t(`rl.bakufu.${b}`));
+      return `<section class="rl-group" data-rl-g="${i}"><h3>${esc(t(`rl.bakufu.${b}`))}${e ? `<small>${esc(t('rl.seat', { name: e.capital.name }))}</small>` : ''}</h3>
         <ol class="rl-list">${rows.map((r) => row(r, bios, r.again ? ` <em>${esc(t('rl.again'))}</em>` : '')).join('')}</ol></section>`;
     }).join('');
   }
@@ -60,5 +62,6 @@ export function rulersHTML(rulers, eras, bios, tab) {
     <header class="book-head"><div><h2 id="rulers-h">${esc(t('rl.title'))}</h2><p class="book-progress">${esc(t('rl.sub'))}</p></div>
       <button type="button" class="book-close" data-act="rl-close" aria-label="${esc(t('close'))}">×</button></header>
     <nav class="book-tabs">${tabs}</nav>
+    <nav class="rl-jump" aria-label="${esc(t('rl.jump'))}">${jump.map((x, i) => `<button type="button" data-rl-jump="${i}">${esc(x)}</button>`).join('')}</nav>
     <div class="rl-body">${body}<p class="rl-note">${esc(t('rl.note'))}</p></div></div>`;
 }

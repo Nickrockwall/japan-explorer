@@ -23,7 +23,8 @@ import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
 import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
 import { openShared } from './shared.js';
-import { NARROW, SHORT, setupTabs, setupBattleVoice, setupHudFold, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch } from './shell.js';
+import { NARROW, SHORT, setupTabs, setupBattleVoice, setupHudFold, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch, setupMenu, setupLegendCaption, setupSheets, watchCards, setupScrollHints } from './shell.js';
+import { addToc } from './toc.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -80,6 +81,10 @@ async function main() {
   setupMapSwitch();
   setupHudFold();
   setupSound();
+  const menu = setupMenu();
+  setupLegendCaption();
+  setupSheets();
+  setupScrollHints();
   $('settings-legal').innerHTML = legalHTML();
   let data;
   try {
@@ -142,6 +147,7 @@ async function main() {
     renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, emblem: data.emblems?.[p.id], extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) + (kako.all ? kakoPrefHTML(kako.all, p.id) : '') + hanSection(han, p.id) });
     if (app.layer === 'pilgrimage') detailEl.querySelector('.pil-section')?.setAttribute('open', '');
     if (app.layer === 'history' && app.eraIdx != null) highlightEra(detailEl, eras[app.eraIdx]);
+    addToc(detailEl);
   }
 
   // ── 彼时今日：欢迎卡上「N 年前的今天」（每人一个种子，只存本机），详卡末尾本县最近的周年；点一条在地图上标出地点 ──
@@ -432,22 +438,10 @@ async function main() {
     powerCard.innerHTML = power.card();
     const body = powerCard.querySelector('.kr-body');
     if (body && top != null) body.scrollTop = top;
-    insetPower();
-  }
-  // 卡片摊开时地图中心避开它：宽屏让出右侧，窄屏让出底部
-  function insetPower() {
-    if (powerCard.hidden) { map.setInset({}); return; }
-    // 按卡片实际的位置：靠右的窄卡（宽屏、横屏）让出右侧，铺满底部的（竖屏手机、平板）让出底部
-    const card = powerCard.getBoundingClientRect();
-    const pane = $('map').getBoundingClientRect();
-    map.setInset(card.width < pane.width * 0.6
-      ? { right: Math.round(pane.right - card.left + 8) }
-      : { bottom: Math.round(pane.bottom - card.top + 10) });
   }
   function closePower() {
     if (powerCard.hidden) return;
     powerCard.hidden = true;
-    insetPower();
   }
   function openPower() {
     if (!power) return;
@@ -511,22 +505,12 @@ async function main() {
   function renderSengoku() {
     if (!sg || sgCard.hidden) return;
     sgCard.innerHTML = sg.card();
-    insetSengoku();
-  }
-  function insetSengoku() {
-    if (sgCard.hidden) { map.setInset({}); return; }
-    const card = sgCard.getBoundingClientRect();
-    const pane = $('map').getBoundingClientRect();
-    map.setInset(card.width < pane.width * 0.6
-      ? { right: Math.round(pane.right - card.left + 8) }
-      : { bottom: Math.round(pane.bottom - card.top + 10) });
   }
   function closeSengoku() {
     if (sgCard.hidden) return;
     sgCard.hidden = true;
     sg?.setFocus(null);
     map.redraw();
-    insetSengoku();
     syncHash();
     guide.setSengoku(null);
   }
@@ -584,6 +568,13 @@ async function main() {
     if (e.target === rlDlg || e.target.closest('[data-act="rl-close"]')) { rlDlg.close(); return; }
     const tb = e.target.closest('[data-rl-tab]');
     if (tb) { rlTab = tb.dataset.rlTab; openRulers(); return; }
+    const jump = e.target.closest('[data-rl-jump]');
+    if (jump) {
+      const body = rlDlg.querySelector('.rl-body');
+      const sec = body.querySelector(`[data-rl-g="${jump.dataset.rlJump}"]`);
+      if (sec) body.scrollTo({ top: sec.offsetTop - body.offsetTop, behavior: 'smooth' });
+      return;
+    }
     const li = e.target.closest('li[data-person]');
     if (li && sg?.showPerson(li.dataset.person)) {
       rlDlg.close();
@@ -786,6 +777,9 @@ async function main() {
     },
   });
 
+  // 地图上摊开的卡片：地图中心避开它，刚点的地方挪到露出来的那块
+  watchCards(document.querySelector('.map-pane'), $('map'), (inset) => { map.setInset(inset); map.reveal(); });
+
   // ── 市区町村下钻 ──
   // 下钻时的地址：#pref=23&lang=zh&muni=1&m=23211（m 为选中的团体代码，政令市整市为各区代码以 . 连接）
   const muniHash = (id, codes = []) => `${stateHash(id)}&muni=1${codes.length ? `&m=${codes.join('.')}` : ''}`;
@@ -972,6 +966,8 @@ async function main() {
       b.classList.toggle('on', on);
       b.setAttribute('aria-selected', on);
     });
+    $('layer-pick-lbl').textContent = LAYERS[app.layer].label;
+    setLayerMenu(false);
     syncFilterButtons();
     updateLegend(map);
     syncArtCard();
@@ -982,6 +978,18 @@ async function main() {
     const b = e.target.closest('[data-layer]');
     if (b) applyLayer(b.dataset.layer);
   });
+  // 手机：图层收成工具条左边的下拉按钮
+  const layerPick = $('layer-pick');
+  function setLayerMenu(open) {
+    document.body.classList.toggle('layers-open', open);
+    $('layer-pick').setAttribute('aria-expanded', String(open));
+  }
+  layerPick.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setLayerMenu(!document.body.classList.contains('layers-open'));
+  });
+  document.addEventListener('click', (e) => { if (!e.target.closest('#layers')) setLayerMenu(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') setLayerMenu(false); });
 
   // 圣地巡礼的子分类：全部 / 动漫 / 大河剧
   const pilBox = $('pil-filter');
@@ -1219,7 +1227,7 @@ async function main() {
   loading.classList.add('hidden');
 
   // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始；设置里与欢迎卡上可再看
-  const onMap = () => { if (narrow()) tabs.set('map'); };
+  const onMap = () => { menu.close(); if (narrow()) tabs.set('map'); };
   const tour = createTour([
     { key: 'hi' },
     { key: 'map', target: () => $('map'), before: onMap },
@@ -1228,11 +1236,13 @@ async function main() {
     { key: 'tools', target: () => document.querySelector('.map-toolbar'), before: onMap },
     { key: 'time', target: () => $('timebar'), before: onMap },
     { key: 'locate', target: () => $('btn-locate'), before: onMap },
-    { key: 'battle', target: () => $('btn-battle') },
-    { key: 'end' },
-  ], { onEnd: () => uiPref.set('tourDone', true) });
+    { key: 'battle', target: () => $('btn-battle'), always: true, before: () => { if (menu.phone) menu.open(); } }, // 手机上合战、御朱印在「更多」菜单里，开到这一步才展开
+    { key: 'end', before: () => menu.close() },
+  ], { onEnd: () => { menu.close(); uiPref.set('tourDone', true); } });
   startTour = () => { if (app.battle) exitBattle(); closeMuni(); tour.start(); };
   detailEl.addEventListener('click', (e) => {
+    const more = e.target.closest('[data-act="hn-more"]');
+    if (more) { more.closest('.hn-list').classList.add('all'); more.remove(); return; }
     if (e.target.closest('[data-act="tour"]')) startTour();
     const sh = e.target.closest('[data-act="shared"]');
     if (sh) openShared(sh.dataset.key);
