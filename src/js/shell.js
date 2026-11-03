@@ -307,7 +307,10 @@ export function setupMenu() {
 // 手机上图例只留一行色块，说明文字点一下图例才展开
 export function setupLegendCaption() {
   const box = $('legend');
-  box.addEventListener('click', () => { if (matchMedia(PHONE).matches) box.classList.toggle('show-cap'); });
+  box.addEventListener('click', (e) => {
+    if (e.target.closest('[data-clan]')) return; // 战国势力图例里的家：打开势力总览，不展开说明
+    if (matchMedia(PHONE).matches) box.classList.toggle('show-cap');
+  });
 }
 
 // 窄屏竖屏：地图上的卡片是底部抽屉——平时只露一截，地图还看得见；点顶上的把手或往上拖展开，往下拖收回，再往下拖关闭。

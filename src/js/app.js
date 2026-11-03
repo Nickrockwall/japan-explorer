@@ -42,7 +42,10 @@ function updateLegend(map) {
   const { caption, items } = map.legend();
   $('legend-caption').textContent = caption;
   $('legend-items').innerHTML = items
-    .map(([label, color, n]) => `<span><i class="sw" style="background:${color}"></i>${esc(label)}${n ? `<small>${n}</small>` : ''}</span>`)
+    // 第 4 项是战国势力图里的家（总称没有）：做成按钮，点开这一家的势力总览
+    .map(([label, color, n, clan]) => (clan
+      ? `<button type="button" class="lg-clan" data-clan="${clan}" title="${esc(t('sg.c.open'))}"><i class="sw" style="background:${color}"></i>${esc(label)}${n ? `<small>${n}</small>` : ''}</button>`
+      : `<span><i class="sw" style="background:${color}"></i>${esc(label)}${n ? `<small>${n}</small>` : ''}</span>`))
     .join('');
 }
 
@@ -494,17 +497,21 @@ async function main() {
 
   // ── 战国势力：年份行 + 国别 / 人物卡片（sengoku.json 与旧国边界都就绪后才建） ──
   let sg = null;
-  // 地址栏 / 分享链接带上战国图的状态：#…&sg=1600&sgp=美濃国（打开时还原）
+  // 地址栏 / 分享链接带上战国图的状态：#…&sg=1600&sgp=美濃国&sgc=oda（打开时还原）
   function pageHash(id) {
     if (!sg || !map.sgMode) return stateHash(id);
-    return `${stateHash(id)}&sg=${sg.year}${sg.focus ? `&sgp=${encodeURIComponent(sg.focus)}` : ''}`;
+    return `${stateHash(id)}&sg=${sg.year}${sg.focus ? `&sgp=${encodeURIComponent(sg.focus)}` : ''}${sg.clan ? `&sgc=${sg.clan}` : ''}`;
   }
+  // 向导跟着卡片：势力总览优先，其次国别卡
+  const guideSengoku = () => guide.setSengoku(sg?.clan ? sg.clanGuide() : sg?.focus ? sg.guideInfo(sg.focus) : null);
   const syncHash = () => history.replaceState(null, '', pageHash(app.currentId));
   const sgCard = $('sg-card');
   const sgYears = $('sg-years');
   function renderSengoku() {
     if (!sg || sgCard.hidden) return;
-    sgCard.innerHTML = sg.card();
+    const html = sg.card();
+    if (html) sgCard.innerHTML = html;
+    else closeSengoku();
   }
   function closeSengoku() {
     if (sgCard.hidden) return;
@@ -522,7 +529,18 @@ async function main() {
     renderSengoku();
     map.hideTip();
     syncHash();
-    guide.setSengoku(sg.guideInfo(key));
+    guideSengoku();
+  }
+  // 某家的势力总览（图例、国别卡里的家名、深链接 sgc）：地图聚光到它的领国
+  function openClan(c) {
+    if (!sg?.setClan(c)) return;
+    map.redraw();
+    sgCard.hidden = false;
+    renderSengoku();
+    sgCard.scrollTop = 0;
+    map.hideTip();
+    syncHash();
+    guideSengoku();
   }
   function syncSengoku() {
     const on = map.sgMode;
@@ -544,9 +562,21 @@ async function main() {
     syncSengoku();
     renderSengoku();
     syncHash();
-    if (sg.focus) guide.setSengoku(sg.guideInfo(sg.focus));
+    guideSengoku();
     audio.play('click');
   }
+  $('legend-items').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-clan]');
+    if (!b || !map.sgMode) return;
+    if (sg.clan === b.dataset.clan) { // 再点一次收起
+      sg.setClan(null);
+      if (!sg.focus) { closeSengoku(); return; }
+      map.redraw(); renderSengoku(); syncHash(); guideSengoku(); return;
+    }
+    if (narrow()) tabs.set('map');
+    openClan(b.dataset.clan);
+    audio.play('click');
+  });
   sgYears.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="rl-open"]')) { openRulers(); return; }
     const b = e.target.closest('[data-y]');
@@ -586,9 +616,12 @@ async function main() {
   sgCard.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="sg-close"]')) { closeSengoku(); return; }
     const r = sg?.handle(e);
+    if (r?.prov) { focusSengoku(r.prov); return; }
+    if (r?.close) { closeSengoku(); return; }
     if (r?.year) setSengokuYear(r.year);
     else if (r?.rulers) { closeSengoku(); openRulers(); }
     else if (r) renderSengoku();
+    if (r?.clan) { map.redraw(); sgCard.scrollTop = 0; syncHash(); guideSengoku(); }
   });
 
   // ── 古国演变时间轴：712 / 757 / 824 / 1869（时间轴数据第一次用到时才下载） ──
@@ -753,6 +786,7 @@ async function main() {
     onProvince: (p) => openArtCard(p),
     onPower: (key) => focusPower(key, false),
     onSengoku: (key) => focusSengoku(key),
+    onClan: (c) => { openClan(c); audio.play('click'); },
     provTipExtra: (key) => namesTip(namesByKey.get(key)),
     onSelect(id) {
       if (app.battle) exitBattle();
@@ -930,6 +964,7 @@ async function main() {
         updateLegend(map);
         syncArtCard();
         if (sgWant?.prov && d.provinces[sgWant.prov]) focusSengoku(sgWant.prov);
+        if (sgWant?.clan) openClan(sgWant.clan);
         sgWant = null;
         syncHash();
       })
@@ -1249,11 +1284,11 @@ async function main() {
   });
   if (!uiPref.get('tourDone', false) && !/pref=\d/.test(location.hash)) setTimeout(startTour, 500);
 
-  // 深链接：#sg=1600&sgp=美濃国 打开战国势力的某个年份（与某国的卡片）
+  // 深链接：#sg=1600&sgp=美濃国 打开战国势力的某个年份（与某国的卡片）；&sgc=oda 打开某家的势力总览
   const hp = new URLSearchParams(location.hash.slice(1));
   if (/^(1467|1560|1573|1582|1590|1600)$/.test(hp.get('sg') || '')) {
     uiPref.set('sgYear', hp.get('sg'));
-    sgWant = { prov: hp.get('sgp') };
+    sgWant = { prov: hp.get('sgp'), clan: hp.get('sgc') };
     if (map.state.filter !== 'sengoku') applyFilter('sengoku'); else ensureSengoku();
   }
   const sgLink = !!sgWant;

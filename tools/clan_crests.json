@@ -1,0 +1,402 @@
+{
+ "hosokawa": {
+  "file": "Japanese Crest Hosokawa Kuyou.svg",
+  "name": "細川九曜（肥後細川家）",
+  "wiki": "細川氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Hosokawa_Kuyou.svg"
+ },
+ "hatakeyama": {
+  "file": "Ashikaga mon rev.svg",
+  "name": "足利二つ引",
+  "wiki": "畠山氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Original: Fraxinus2 Vector: Majo statt Senf",
+  "page": "https://commons.wikimedia.org/wiki/File:Ashikaga_mon_rev.svg"
+ },
+ "yamana": {
+  "file": "五七桐に七葉根笹.png",
+  "name": "五七桐七葉根笹",
+  "wiki": "山名氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Houunji 1642",
+  "page": "https://commons.wikimedia.org/wiki/File:%E4%BA%94%E4%B8%83%E6%A1%90%E3%81%AB%E4%B8%83%E8%91%89%E6%A0%B9%E7%AC%B9.png"
+ },
+ "shiba": {
+  "file": "Ashikaga mon rev.svg",
+  "name": "足利二つ引",
+  "wiki": "斯波氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Original: Fraxinus2 Vector: Majo statt Senf",
+  "page": "https://commons.wikimedia.org/wiki/File:Ashikaga_mon_rev.svg"
+ },
+ "kyogoku": {
+  "file": "Japanese crest Yotumeyui.svg",
+  "name": "平四つ目結",
+  "wiki": "京極氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Yotumeyui.svg"
+ },
+ "toki": {
+  "file": "Tokikikyo.svg",
+  "name": "土岐桔梗",
+  "wiki": "土岐氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Tokikikyo.svg"
+ },
+ "isshiki": {
+  "file": "Ashikaga mon rev.svg",
+  "name": "足利二つ引",
+  "wiki": "一色氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Original: Fraxinus2 Vector: Majo statt Senf",
+  "page": "https://commons.wikimedia.org/wiki/File:Ashikaga_mon_rev.svg"
+ },
+ "niki": {
+  "file": "Ashikaga mon.svg",
+  "name": "足利二つ引両",
+  "wiki": "仁木氏",
+  "license": "CC BY 2.5",
+  "author": "Ash Crow",
+  "page": "https://commons.wikimedia.org/wiki/File:Ashikaga_mon.svg"
+ },
+ "takeda": {
+  "file": "Japanese Crest Takeda Hisi.svg",
+  "name": "武田菱",
+  "wiki": "甲斐武田氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Takeda_Hisi.svg"
+ },
+ "wakasa_takeda": {
+  "file": "Japanese Crest Takeda Hisi.svg",
+  "name": "武田菱",
+  "wiki": "若狭武田氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Takeda_Hisi.svg"
+ },
+ "imagawa": {
+  "file": "Imagawa Akadori (No background and Black color drawing).svg",
+  "name": "今川赤鳥",
+  "wiki": "今川氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Gameposo, vectorised by Marnanel",
+  "page": "https://commons.wikimedia.org/wiki/File:Imagawa_Akadori_(No_background_and_Black_color_drawing).svg"
+ },
+ "uesugi": {
+  "file": "Japanese Crest Uesugi Sasa.svg",
+  "name": "上杉笹",
+  "wiki": "上杉氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Uesugi_Sasa.svg"
+ },
+ "ouchi": {
+  "file": "Japanese Crest Oouchi Hisi.svg",
+  "name": "大内菱",
+  "wiki": "大内氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Oouchi_Hisi.svg"
+ },
+ "otomo": {
+  "file": "Japanese Crest Daki hana Gyouyou.svg",
+  "name": "花杏葉",
+  "wiki": "大友氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Daki_hana_Gyouyou.svg"
+ },
+ "shoni": {
+  "file": "Yorikakari no meyui.png",
+  "name": "寄懸り目結",
+  "wiki": "少弐氏",
+  "license": "CC0",
+  "author": "赤口利之助三郎",
+  "page": "https://commons.wikimedia.org/wiki/File:Yorikakari_no_meyui.png"
+ },
+ "kikuchi": {
+  "file": "Japanese crest narabi Takanoha.svg",
+  "name": "並び鷹の羽",
+  "wiki": "菊池氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_narabi_Takanoha.svg"
+ },
+ "shimazu": {
+  "file": "Maru ni Jū-monji (Kutsuwa) inverted.svg",
+  "name": "丸に十文字",
+  "wiki": "島津氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Maru_ni_J%C5%AB-monji_(Kutsuwa)_inverted.svg"
+ },
+ "kono": {
+  "file": "Kounoke kamon.png",
+  "name": "隅切折敷縮三文字",
+  "wiki": "河野氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Shimomurake",
+  "page": "https://commons.wikimedia.org/wiki/File:Kounoke_kamon.png"
+ },
+ "so": {
+  "file": "So clan mon.svg",
+  "name": "隅立て四つ目結",
+  "wiki": "宗氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:So_clan_mon.svg"
+ },
+ "togashi": {
+  "file": "Hachiyou.svg",
+  "name": "八曜紋",
+  "wiki": "富樫氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Gameposo",
+  "page": "https://commons.wikimedia.org/wiki/File:Hachiyou.svg"
+ },
+ "ogasawara": {
+  "file": "Mon ogasawara.svg",
+  "name": "三階菱",
+  "wiki": "小笠原氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mangwanani based on bitmap by Minamoto at fr.wikipedia",
+  "page": "https://commons.wikimedia.org/wiki/File:Mon_ogasawara.svg"
+ },
+ "satomi": {
+  "file": "Futatsuhikiryo sw.jpg",
+  "name": "二つ引両",
+  "wiki": "里見氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Fraxinus2",
+  "page": "https://commons.wikimedia.org/wiki/File:Futatsuhikiryo_sw.jpg"
+ },
+ "oyama": {
+  "file": "Oyama.png",
+  "name": "左二つ巴",
+  "wiki": "小山氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Oyama.png"
+ },
+ "miyoshi": {
+  "file": "Japanese crest Sanngai Hisi ni itutu Kuginuki.svg",
+  "name": "三階菱に五つ釘抜",
+  "wiki": "三好氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Sanngai_Hisi_ni_itutu_Kuginuki.svg"
+ },
+ "kitabatake": {
+  "file": "Sasa Rindō inverted.png",
+  "name": "笹竜胆",
+  "wiki": "北畠氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Sasa_Rind%C5%8D_inverted.png"
+ },
+ "oda": {
+  "file": "Odauri.png",
+  "name": "織田瓜",
+  "wiki": "織田氏",
+  "license": "CC0",
+  "author": "Gagaho Denjiji",
+  "page": "https://commons.wikimedia.org/wiki/File:Odauri.png"
+ },
+ "hojo": {
+  "file": "Japanese Crest Houjou Uroko.svg",
+  "name": "北条鱗",
+  "wiki": "後北条氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Houjou_Uroko.svg"
+ },
+ "chiba": {
+  "file": "Japanese crest Tsuki ni Hoshi.svg",
+  "name": "月星",
+  "wiki": "千葉氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Tsuki_ni_Hoshi.svg"
+ },
+ "satake": {
+  "file": "Japanese Crest Hinomaru Oogi.svg",
+  "name": "佐竹扇（五本骨扇に月丸）",
+  "wiki": "佐竹氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Hinomaru_Oogi.svg"
+ },
+ "azai": {
+  "file": "Japanese Crest mitumori Kikkou ni Hanabishi.svg",
+  "name": "三つ盛亀甲に唐花菱",
+  "wiki": "浅井氏",
+  "license": "CC BY-SA 3.0",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_mitumori_Kikkou_ni_Hanabishi.svg"
+ },
+ "rokkaku": {
+  "file": "Sumitateyotsumeyui（２）.png",
+  "name": "隅立て四つ目",
+  "wiki": "六角氏",
+  "license": "CC0",
+  "author": "赤口利之助三郎",
+  "page": "https://commons.wikimedia.org/wiki/File:Sumitateyotsumeyui%EF%BC%88%EF%BC%92%EF%BC%89.png"
+ },
+ "saito": {
+  "file": "Japanese crest Sagari Fuji.svg",
+  "name": "下り藤",
+  "wiki": "美濃斎藤氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Sagari_Fuji.svg"
+ },
+ "asakura": {
+  "file": "Japanese Crest mitumori mokkou.svg",
+  "name": "三つ盛木瓜",
+  "wiki": "朝倉氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_mitumori_mokkou.svg"
+ },
+ "honma": {
+  "file": "Honma clans family crest circle.svg",
+  "name": "十六目結",
+  "wiki": "本間氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Gameposo, vectorised by Marnanel",
+  "page": "https://commons.wikimedia.org/wiki/File:Honma_clans_family_crest_circle.svg"
+ },
+ "amago": {
+  "file": "Japanese crest Yotumeyui.svg",
+  "name": "平四つ目結",
+  "wiki": "尼子氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Yotumeyui.svg"
+ },
+ "akamatsu": {
+  "file": "二つ引き両に右三つ巴.png",
+  "name": "二つ引両 に 右三つ巴",
+  "wiki": "赤松氏",
+  "license": "CC BY-SA 4.0",
+  "author": "KfskzsuRPkwt",
+  "page": "https://commons.wikimedia.org/wiki/File:%E4%BA%8C%E3%81%A4%E5%BC%95%E3%81%8D%E4%B8%A1%E3%81%AB%E5%8F%B3%E4%B8%89%E3%81%A4%E5%B7%B4.png"
+ },
+ "urakami": {
+  "file": "Japanese Crest Hioogi.svg",
+  "name": "檜扇",
+  "wiki": "浦上氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Hioogi.svg"
+ },
+ "ukita": {
+  "file": "Jimonji.svg",
+  "name": "児文字",
+  "wiki": "宇喜多氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Jimonji.svg"
+ },
+ "mimura": {
+  "file": "Ken-Katabami inverted.png",
+  "name": "剣片喰",
+  "wiki": "三村氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Ken-Katabami_inverted.png"
+ },
+ "mori": {
+  "file": "Ichimonjimitsuboshi.png",
+  "name": "一文字三星（長門星）",
+  "wiki": "毛利氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Kashiwamon",
+  "page": "https://commons.wikimedia.org/wiki/File:Ichimonjimitsuboshi.png"
+ },
+ "ryuzoji": {
+  "file": "Japanese Crest Kawarijuunihiashi.svg",
+  "name": "変わり十二日足",
+  "wiki": "龍造寺氏",
+  "license": "CC BY-SA 4.0",
+  "author": "Gameposo",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Kawarijuunihiashi.svg"
+ },
+ "ito": {
+  "file": "Japanese Crest Iori ni Mokkou.svg",
+  "name": "庵木瓜",
+  "wiki": "伊東氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Iori_ni_Mokkou.svg"
+ },
+ "tokugawa": {
+  "file": "Japanese crest Tokugawa Aoi.svg",
+  "name": "徳川葵",
+  "wiki": "徳川氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Tokugawa_Aoi.svg"
+ },
+ "chosokabe": {
+  "file": "Nanatsukatabami.svg",
+  "name": "丸に七つ片喰",
+  "wiki": "長宗我部氏",
+  "license": "CC BY-SA 3.0",
+  "author": "百楽兎",
+  "page": "https://commons.wikimedia.org/wiki/File:Nanatsukatabami.svg"
+ },
+ "matsura": {
+  "file": "Japanese Crest Matsura mitu Hosi.svg",
+  "name": "松浦星",
+  "wiki": "松浦氏",
+  "license": "CC BY-SA 3.0",
+  "author": "user:Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_Crest_Matsura_mitu_Hosi.svg"
+ },
+ "yamato_tsutsui": {
+  "file": "Japanese crest Umebachi.svg",
+  "name": "梅鉢",
+  "wiki": "筒井氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Umebachi.svg"
+ },
+ "date": {
+  "file": "Take ni Suzume.svg",
+  "name": "仙台笹",
+  "wiki": "伊達氏",
+  "license": "Public domain",
+  "author": "",
+  "page": "https://commons.wikimedia.org/wiki/File:Take_ni_Suzume.svg"
+ },
+ "mogami": {
+  "file": "Ashikaga mon.svg",
+  "name": "足利二つ引",
+  "wiki": "最上氏",
+  "license": "CC BY 2.5",
+  "author": "Ash Crow",
+  "page": "https://commons.wikimedia.org/wiki/File:Ashikaga_mon.svg"
+ },
+ "maeda": {
+  "file": "Japanese crest Kaga Umebachi.svg",
+  "name": "加賀梅鉢",
+  "wiki": "前田氏",
+  "license": "CC BY-SA 3.0",
+  "author": "Mukai",
+  "page": "https://commons.wikimedia.org/wiki/File:Japanese_crest_Kaga_Umebachi.svg"
+ },
+ "kobayakawa": {
+  "file": "Hidari mitsudomoe.svg",
+  "name": "左三つ巴",
+  "wiki": "小早川氏",
+  "license": "CC BY-SA 3.0",
+  "author": "BraneJ",
+  "page": "https://commons.wikimedia.org/wiki/File:Hidari_mitsudomoe.svg"
+ }
+}

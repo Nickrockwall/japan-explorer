@@ -835,13 +835,13 @@ class Case:
         page.click('[data-filter="sengoku"]')
         page.wait_for_selector('#sg-years button.on', timeout=15000)
         assert page.get_attribute('#sg-years button.on', 'data-y') == '1560', '默认应为 1560 年'
-        first = page.text_content('#legend-items span >> nth=0')
+        first = page.text_content('#legend-items > * >> nth=0')
         assert '9' in first and any(x in first for x in ('三好', 'Miyoshi')), f'1560 年图例首位应是三好 9 国：{first}'
-        assert page.locator('#legend-items span').count() <= 14, '1560 年图例应合并只占一国的家'
+        assert page.locator('#legend-items > *').count() <= 14, '1560 年图例应合并只占一国的家'
         page.click('#sg-years [data-y="1600"]')
         page.wait_for_timeout(300)
-        assert page.locator('#legend-items span').count() == 6, '1600 年图例应为 6 类'
-        assert '27' in page.text_content('#legend-items span >> nth=0'), '1600 年西军 27 国居首'
+        assert page.locator('#legend-items > *').count() == 6, '1600 年图例应为 6 类'
+        assert '27' in page.text_content('#legend-items > * >> nth=0'), '1600 年西军 27 国居首'
         self.inside(page, '#sg-years button.on')
         self._click_geo(page, [138.6, 35.65])
         page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=5000)
@@ -881,6 +881,49 @@ class Case:
         page.click('[data-filter="circuit"]')
         page.wait_for_timeout(300)
         assert page.is_hidden('#sg-years'), '离开战国势力后年份行应隐藏'
+
+    def sengoku_clan(self, page):
+        # 势力总览：深链接 #sg=1573&sgc=takeda 打开武田（3 国 + 2 分治、5 个国名、各年份 5 根柱、接壤首位北条）；
+        # 地图合并国界（sgedges 有内容）；点柱子换年份、点接壤的家换人、图例的家能点开、换到 1600 年后家族总览收起
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-stats', timeout=20000)
+        assert any(x in page.text_content('#sg-card .muni-name') for x in ('武田', 'Takeda')), '应打开武田的势力总览'
+        assert page.locator('#sg-card .sg-pv').count() == 5 and page.locator('#sg-card .sg-pv.part').count() == 2, '1573 年武田应有 3 国 + 2 国分治'
+        assert page.locator('#sg-card .sg-trend li').count() == 5, '各年份应有 1467–1590 五根柱'
+        assert page.get_attribute('#sg-card .sg-trend li.on', 'data-y') == '1573', '当前年份的柱子应标出'
+        assert any(x in page.text_content('#sg-card .sg-near li >> nth=0') for x in ('北条', 'Hōjō', 'Hojo')), '接壤首位应是北条'
+        assert any(x in page.text_content('#sg-card .kr-note') for x in ('1598',)), '应注明按 1598 年国高折算'
+        self.inside(page, '#sg-card')
+        edges = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgedges').data.length")
+        assert edges == 1, '战国势力图应画合并后的国界'
+        # 家纹旗：图画好后至少有武田、织田等几面；看武田时武田的旗在内
+        page.wait_for_function("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length >= 5", timeout=10000)
+        flags = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.map((d) => d.clan)")
+        assert 'takeda' in flags and 'oda' in flags, f'1573 年应有武田、织田的家纹旗：{flags}'
+        page.wait_for_function("document.querySelector('#sg-card .sg-mon-big i') && getComputedStyle(document.querySelector('#sg-card .sg-mon-big i')).maskImage.includes('takeda')")
+        assert 'CC BY-SA' in page.text_content('#sg-card .sg-credit'), '应注明家纹图的许可'
+        if not self.narrow:
+            page.wait_for_selector('#quick button')
+            assert any(x in page.text_content('#quick button >> nth=0') for x in ('武田', 'Takeda')), '向导第一个快捷提问应问武田'
+        page.click('#sg-card .sg-trend li[data-y="1560"]')
+        page.wait_for_timeout(300)
+        assert 'sg=1560' in page.evaluate('location.hash') and 'sgc=takeda' in page.evaluate('location.hash'), '点柱子应换到 1560 年并留在武田'
+        page.click('#sg-card .sg-near button >> nth=0')
+        page.wait_for_timeout(300)
+        assert 'sgc=takeda' not in page.evaluate('location.hash'), '点接壤的家应换成那一家'
+        page.click('#sg-years [data-y="1582"]')
+        page.wait_for_timeout(300)
+        if self.narrow:  # 窄屏上卡片贴底时图例让出位置，先关卡片
+            page.keyboard.press('Escape')
+            assert 'sgc=' not in page.evaluate('location.hash'), 'Esc 应关掉势力总览'
+        page.click('#legend-items [data-clan="oda"]')
+        page.wait_for_selector('#sg-card .sg-stats')
+        assert 'sgc=oda' in page.evaluate('location.hash'), '点图例里的织田应打开织田'
+        assert page.text_content('#sg-card .sg-stats > div >> nth=3').strip().startswith(('第 1 位', 'No. 1', '1 位')), '1582 年织田应居首'
+        page.click('#sg-years [data-y="1600"]')
+        page.wait_for_timeout(300)
+        assert page.is_hidden('#sg-card') and 'sgc=' not in page.evaluate('location.hash'), '换到 1600 年后家族的总览应收起'
+        flags = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length")
+        assert flags == 0, '1600 年按东西军，不插家纹旗'
 
     def sengoku_link(self, page):
         # 深链接 #sg=1600&sgp=美濃国：打开战国势力 1600 年并弹出美浓卡片；换年份后地址栏跟着变，Esc 后去掉 sgp
@@ -1096,7 +1139,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

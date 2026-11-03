@@ -45,6 +45,8 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/data/kokuryoku.json` 中的江户人口（1721、1846）与石高（1834） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「江戸時代の日本の人口統計」的旧国别人口表 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/assets/emblems/`（47 都道府县章）与 `src/data/emblems.json` | [Wikimedia Commons](https://commons.wikimedia.org/) 各县章 SVG（文件名见 emblems.json 的 `commons`），转成透明底 PNG | **公有领域**（工具逐个核对，只收公有领域 / CC0） |
 | `src/assets/people/`（人物肖像） | 各人物 Wikidata P18 指向的 [Wikimedia Commons](https://commons.wikimedia.org/) 图像（文件名见 `src/data/people.json` 的 `commons`），缩到宽 240px | 多为**公有领域**；山名宗全（Musuketeer.3）、岛津义久（Ginger1192）两张为 **CC BY-SA 3.0**，卡片上注明作者与许可（`tools/people_tool.py` 逐个核对许可，其余许可不收） |
+| `src/assets/crests/`（家纹旗） | 各家日文维基条目信息框「家紋」指向的 [Wikimedia Commons](https://commons.wikimedia.org/) 图像（文件、作者与许可见 `tools/clan_crests.json`），统一处理成 96px 单色图 | **公有领域**、**CC0**、**CC BY 2.5** 或 **CC BY-SA 3.0 / 4.0**（多为 Mukai 绘制）；势力总览卡片注明家纹名、许可、作者并链接到文件页（`tools/crest_tool.py` 逐个核对许可，其余许可不收）。改编图同样按原许可发布 |
+| `src/data/sengoku.json` 中的各国石高（`koku`，1598 年太阁检地高） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)「石高」的「旧国別石高の変遷」表 | **CC BY-SA 4.0**（不适用 NC） |
 | `src/data/sengoku.json`、`rulers.json`、`people.json` | 势力归属、天皇 / 将军 / 执权在位年份按[日本語版ウィキペディア](https://ja.wikipedia.org/)各条目整理并核对（事实数据）；人物简介为本项目自行撰写 | 本项目内容（简介）；年份等事实不受著作权保护 |
 | `src/data/kako.json`、`src/data/han.json` | 日期、事件与藩主名单整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)的日期条目、「藩の一覧」与各藩条目，名称与坐标取自 Wikidata（CC0）；彼时今日的日文原句摘自维基条目 | 日文原句为 **CC BY-SA 4.0**（不适用 NC）；其余为事实数据 |
 | `tools/domains.json` 及数据包中的 `domains`（幕末各郡的领主与町村数） | 整理自[日本語版ウィキペディア](https://ja.wikipedia.org/)各郡条目「近世以降の沿革」中的《旧高旧領取調帳》表；藩的英文名来自 [Wikidata](https://www.wikidata.org/)（CC0） | **CC BY-SA 4.0**（不适用 NC） |

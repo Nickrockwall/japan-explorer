@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.9 · 2026-11-03
+
+- The Sengoku map now reads like a map of rival domains: neighbouring provinces held by the same power merge into one block, and bright front lines run where two powers meet (in 1600, the line between East and West). Provinces held by local lords or shared between powers keep their borders
+- Crest banners on the map: Oda's mokkō, Takeda's diamonds, Hōjō's scales, Mōri's ichimonji mitsuboshi… 50 families in all, taken from each family's Japanese Wikipedia article; zoomed out you see the powers holding two or more provinces, zoom in for the smaller ones. Families with no known crest show their name
+- New power overview: tap a banner, a family in the legend, or a family name on a province card to see which provinces it held that year, an estimated koku total from the 1598 Taikō survey figures, its share of Japan and rank, how its provinces and koku changed from 1467 to 1590, and which powers bordered it by land; the map spotlights its territory. "Bordering" only means the provinces touch, not enmity or alliance
+- The guide follows the overview with a "How big was … in …?" question, answered offline too; share a link with `sgc=` to open a family directly
+
 ## 3.8 · 2026-11-03
 
 - A bigger map on phones: the top bar is a single row, with battles, goshuin, sound, settings and language moved into the ☰ menu; layers became a drop-down at the left of the toolbar, sharing a row with the filters; the legend is one row of swatches (tap it for the caption) and the time slider is one row too

@@ -10,6 +10,9 @@
 - 其余年份：该国条目正文出现该家的姓，或该家条目（CLANS[k]['wiki']）正文出现该国名（去掉「国」）；
 - 通不过的列出来，人工核对后写进 CHECKED（写明依据的条目）。
 总称（国人割据、多方争夺、丰臣政权、令制外等）不核对。
+
+各国石高（koku）：日文维基「石高」条目「旧国別石高の変遷」表的「慶長3年石高（1598年）」一列（太閤検地高），
+按国四舍五入到石。壱岐、対馬这一列是 0（未检地），记为 null；出羽国的数字条目自己注明明显偏少（置賜郡等可能算进了陆奥），界面注明。
 """
 import json
 import os
@@ -454,8 +457,43 @@ def zh(ja):
     return ''.join(JA_ZH.get(ch, ch) for ch in zhconv.convert(ja, 'zh-cn'))
 
 
+def wikitext(title):
+    path = os.path.join(wiki.CACHE, f'wt-{title}.txt')
+    if not os.path.exists(path):
+        os.makedirs(wiki.CACHE, exist_ok=True)
+        url = 'https://ja.wikipedia.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'parse', 'page': title, 'prop': 'wikitext', 'format': 'json', 'formatversion': 2})
+        with urllib.request.urlopen(urllib.request.Request(url, headers=wiki.UA), timeout=60) as r:
+            text = json.load(r)['parse']['wikitext']
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(text)
+    with open(path, encoding='utf-8') as f:
+        return f.read()
+
+
+def koku1598():
+    w = wikitext('石高')
+    i = w.index('|+旧国別石高の変遷')
+    table = w[i:w.index('\n|}', i)]
+    assert '慶長3年石高<br>(1598年)' in table.split('\n|-')[0].split('\n!')[2], '表的第一列不是慶長3年石高'
+    out = {}
+    for row in table.split('\n|-'):
+        m = re.match(r'\s*\|align=left\|\[\[([^\]|]+)\]\](?:<ref[^>]*/>)?\|\|([\d,.]+)\|\|', row)
+        if m and m.group(1) in DATA:
+            v = round(float(m.group(2).replace(',', '')))
+            out[m.group(1)] = v or None
+    missing = [p for p in DATA if p not in out and not all(k == 'outside' for k in DATA[p])]
+    assert not missing, f'石高表里找不到：{missing}'
+    assert out['山城国'] == 225262 and out['近江国'] == 775379 and out['壱岐国'] is None, '石高解析结果与条目对不上'
+    return out
+
+
 def build(people):
     clans = {k: {'zh': v[0], 'en': v[1], 'ja': v[2], 'color': v[3]} for k, v in CLANS.items()}
+    # 家纹（tools/crest_tool.py 抓取核对；图在 src/assets/crests/<键>.png）
+    mons = json.load(open(os.path.join(ROOT, 'tools', 'clan_crests.json'), encoding='utf-8'))
+    for k, m in mons.items():
+        clans[k]['mon'] = {x: m[x] for x in ('name', 'license', 'author', 'page')}
     sides = {k: {'zh': v[0], 'en': v[1], 'ja': v[2], 'color': v[3]} for k, v in SIDES.items()}
     prov = {}
     for p, row in DATA.items():
@@ -465,7 +503,7 @@ def build(people):
         ja = re.sub(r' \(.*\)$', '', t)
         persons[t] = {'ja': ja, 'zh': zh(ja), **{k: people[t][k] for k in ('en', 'born', 'died', 'qid')}}
         persons[t]['en'] = persons[t]['en'] or EN_PEOPLE[t]
-    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'heads': HEADS, 'people': persons}
+    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'heads': HEADS, 'people': persons, 'koku': koku1598()}
 
 
 def main():

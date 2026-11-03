@@ -33,12 +33,13 @@ def main():
         for lang in ('zh', 'en', 'ja'):
             desk = dict(viewport={'width': 1280, 'height': 800}, service_workers='block')
             phone = dict(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2, service_workers='block')
-            # 电脑：1582 年的战国势力图，弹出山城国的卡片
+            # 电脑：1582 年的战国势力图，打开织田的势力总览（家纹旗、合并后的领国）
             ctx = browser.new_context(**desk)
             ctx.add_init_script(DONE)
             page = ctx.new_page()
-            page.goto(f'{base}#lang={lang}&pref=26&sg=1582&sgp=%E5%B1%B1%E5%9F%8E%E5%9B%BD')
-            page.wait_for_selector('#sg-card:not([hidden]) .muni-name', timeout=20000)
+            page.goto(f'{base}#lang={lang}&pref=26&sg=1582&sgc=oda')
+            page.wait_for_selector('#sg-card:not([hidden]) .sg-stats', timeout=20000)
+            page.wait_for_function("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length > 0", timeout=10000)
             page.wait_for_timeout(1500)
             shot(page, 'sengoku', lang, 85)
             ctx.close()

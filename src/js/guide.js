@@ -81,6 +81,12 @@ const SG_RULE = {
   ja: 'ユーザーは「戦国勢力」の地図で一つの国を開いています。以下は本サイトがまとめた、六つの年におけるこの国の主な支配者と代表人物です（各国の主な支配者は一つで、分け合う勢力は別記）。戦国の勢力についてはこれに基づいて答え、ここにない年の支配者を作らず、分立・国人割拠・係争中はそのまま説明してください。',
 };
 
+const SG_CLAN_RULE = {
+  zh: '用户正在看「战国势力」地图里一家的势力总览。下面是本站按地图数据算出的：当年领有的国（分治的注明）、按 1598 年太阁检地国高折算的推算石高与名次、陆上接壤的别家。石高只是体量参考，不是当年实际的收入；「接壤」只表示领国相邻，不代表敌对或同盟——问到敌友、外交时要依据史实另说，拿不准就说不确定，不要从接壤推断。',
+  en: 'The user is viewing one power\'s overview on the "Sengoku powers" map. Below is what this site computes from the map data: provinces held that year (shared ones marked), an estimated koku total from the 1598 Taikō survey figures with its rank, and the other powers whose provinces border it by land. The koku figure only indicates scale, not actual income that year; "bordering" only means the provinces touch and implies neither hostility nor alliance — answer questions about enemies, allies or diplomacy from history, say when you are unsure, and never infer them from bordering.',
+  ja: 'ユーザーは「戦国勢力」の地図で一つの勢力の総覧を見ています。以下は本サイトが地図データから計算したもので、その年の領国（分立は注記）、1598年の太閤検地の国高で換算した推計石高と順位、陸で接する他の勢力です。石高は規模の目安で、当時の実収ではありません。「隣接」は領国が接していることだけを示し、敵対も同盟も意味しません。敵味方や外交を聞かれたら史実に基づいて別に答え、不確かならそう言い、隣接から推測しないでください。',
+};
+
 const PIL_RULE = {
   zh: '用户正在看「圣地巡礼」图层。下面是本县收录的动漫圣地与大河剧名所，问到巡礼时：动漫部分用热血漫迷的口吻，大河剧部分用剧评人的口吻；只依据列表介绍，不要编造新的取景地，不剧透关键情节，提醒遵守当地礼仪。',
   en: 'The user is viewing the "Pilgrimage" layer. Below are the anime and taiga-drama locations recorded for this prefecture. When asked about them, talk about anime like an enthusiastic otaku and about taiga dramas like a drama critic; stick to this list, do not invent other locations, avoid major spoilers, and remind people of local etiquette.',
@@ -95,12 +101,18 @@ ${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
-${place ? `\n${R.place(place)}\n` : ''}${sg ? `\n${SG_RULE[lang]}\n<sengoku province="${sg.prov}" year="${sg.year}">\n${JSON.stringify(sg.rows, null, 1)}\n</sengoku>\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
+${place ? `\n${R.place(place)}\n` : ''}${sg?.rows ? `\n${SG_RULE[lang]}\n<sengoku province="${sg.prov}" year="${sg.year}">\n${JSON.stringify(sg.rows, null, 1)}\n</sengoku>\n` : ''}${sg?.clan ? `\n${SG_CLAN_RULE[lang]}\n<sengoku-power year="${sg.year}">\n${JSON.stringify(sg, null, 1)}\n</sengoku-power>\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
 ${RULES.reply}. ${RULES.rules}`;
 }
 
 // 战国势力图上点开的国：6 个年份的归属（离线解答照着念，在线写进 System Prompt）
 function sgAnswer(x, P) {
+  if (x.clan) {
+    if (!x.provs.length) return t('o.sgc.none', { self: P.self, clan: x.clan, year: x.year }) + `\n\n${P.tail}`;
+    return [t('o.sgc.now', { self: P.self, clan: x.clan, year: x.year, head: x.head ? paren(x.head) : '', n: x.provs.length, list: x.provs.join(' · ') }),
+      t('o.sgc.koku', { koku: x.koku, rank: x.rank || '–' }),
+      x.near.length ? t('o.sgc.near', { list: x.near.join(' · ') }) : '', t('o.sgc.note')].filter(Boolean).join('\n\n') + `\n\n${P.tail}`;
+  }
   const now = x.rows.find((r) => r.year === x.year);
   const line = (r) => `· **${r.year}**${t('o.eq')}${r.clan}${r.head ? paren(r.head) : ''}${r.with ? t('o.sg.with', { list: r.with }) : ''}`;
   return [t('o.sg.now', { self: P.self, prov: x.prov, year: x.year, clan: now.clan, head: now.head ? paren(now.head) : '' }),
@@ -502,7 +514,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const qs = battle ? battleQuestions() : quickQuestions(pref);
     if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
     if (pil?.length && !battle) qs.unshift({ key: 'pil', text: t('q.pil') });
-    if (sg && !battle) qs.unshift({ key: 'sg', text: t('q.sg', { prov: sg.prov, year: sg.year }) });
+    if (sg && !battle) qs.unshift({ key: 'sg', text: sg.clan ? t('q.sgc', { clan: sg.clan, year: sg.year }) : t('q.sg', { prov: sg.prov, year: sg.year }) });
     for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';
@@ -545,7 +557,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     },
     // 战国势力图上点开的国（null 表示没有）：不重置对话，只换快捷提问、补进 System Prompt
     setSengoku(x) {
-      const key = (v) => (v ? `${v.prov}|${v.year}` : '');
+      const key = (v) => (v ? `${v.prov || v.clan}|${v.year}` : '');
       const changed = key(x) !== key(sg);
       sg = x;
       if (pref && !battle && P && changed) renderQuick();

@@ -149,7 +149,7 @@ const provLabel = (p) => (p.circuit === '令制外' ? provFull(p)
   : lang === 'en' ? p.en.replace(/ Province$/, '') : (lang === 'ja' ? p.ja : p.zh).replace(/国$/, ''));
 const provFull = (p) => (lang === 'en' ? p.en : lang === 'ja' ? p.ja : p.zh);
 
-export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onSengoku = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {}, disputed = {}, onDispute = () => {} }) {
+export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvince = () => {}, onPower = () => {}, onSengoku = () => {}, onClan = () => {}, onKoku = () => {}, provTipExtra = () => '', spots = [], koku = [], emblems = {}, disputed = {}, onDispute = () => {} }) {
   // properties.name 为规范汉字全称（如「京都府」），与 series.data 的 name 严格一致
   const nameById = new Map();
   const names = new Map(); // id → 当前语言的显示名
@@ -271,16 +271,18 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   // 把首尾相接的段串成长链（形状不变），元素数降到几百个
   let chains = null;
   function borderChains() {
-    if (chains) return chains;
+    chains ??= chainSegs(provBase.pref_borders.map((c) => c.slice()));
+    return chains;
+  }
+  function chainSegs(segs) {
     const key = ([x, y]) => `${x},${y}`;
     const ends = new Map();
-    const segs = provBase.pref_borders.map((c) => c.slice());
     segs.forEach((s, i) => {
       for (const k of [key(s[0]), key(s[s.length - 1])]) (ends.get(k) || ends.set(k, []).get(k)).push(i);
     });
     const used = new Set();
     const take = (k, from) => (ends.get(k) || []).find((j) => j !== from && !used.has(j));
-    chains = [];
+    const out = [];
     for (let i = 0; i < segs.length; i++) {
       if (used.has(i)) continue;
       used.add(i);
@@ -303,9 +305,38 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           }
         }
       }
-      chains.push({ coords: line });
+      out.push({ coords: line });
     }
-    return chains;
+    return out;
+  }
+
+  // 824 年 68 国之间的陆上交界：provinces.json 相邻两国的边共用同一串顶点，
+  // 出现在两国轮廓里的线段就是交界。按国对分组串成链：[{ a, b, coords }]
+  let provEdges = null;
+  function edgesOf() {
+    if (provEdges) return provEdges;
+    const owner = new Map();
+    const byPair = new Map();
+    const rings = (g) => (g.type === 'Polygon' ? g.coordinates : g.coordinates.flat());
+    for (const f of provBase.features) {
+      const k = f.properties.key;
+      for (const r of rings(f.geometry)) {
+        for (let i = 1; i < r.length; i++) {
+          const a = `${r[i - 1]}`, b = `${r[i]}`;
+          const sk = a < b ? `${a}|${b}` : `${b}|${a}`;
+          const o = owner.get(sk);
+          if (o == null) { owner.set(sk, k); continue; }
+          if (o === k) continue;
+          const pk = o < k ? `${o}	${k}` : `${k}	${o}`;
+          (byPair.get(pk) || byPair.set(pk, []).get(pk)).push([r[i - 1], r[i]]);
+        }
+      }
+    }
+    provEdges = [...byPair].flatMap(([pk, segs]) => {
+      const [a, b] = pk.split('	');
+      return chainSegs(segs).map(({ coords }) => ({ a, b, coords }));
+    });
+    return provEdges;
   }
 
   const chart = echarts.init(el, null, { renderer: 'canvas' });
@@ -522,12 +553,41 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const c = (powerMode() ? power.color(f.properties.key) : sgMode() ? sg.color(f.properties.key)
       : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
     const on = (powerMode() && f.properties.key === power.focus) || (sgMode() && f.properties.key === sg.focus);
+    // 战国势力图的国界由 sgedges 按归属重画，这里只留一道很淡的旧国纹理
+    const line = sgMode() ? { borderColor: 'rgba(0,0,0,.28)', borderWidth: 0.5 } : { borderColor: COLOR.border, borderWidth: 0.9 };
     return {
       name: f.properties.key,
       itemStyle: on ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.55)', shadowBlur: 8 }
-        : { areaColor: c, borderColor: COLOR.border, borderWidth: 0.9, shadowBlur: 0 },
+        : { areaColor: c, ...line, shadowBlur: 0 },
       emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.4 }, label: { show: false } },
       label: { show: false },
+    };
+  }
+
+  // 战国势力图的家纹旗：插在该家领国里离整片领地重心（按面积加权）最近的那一国，标在国名上方；
+  // 缩得较小时只插领有 2 国以上的家，放大到 KOKU_ZOOM 以上全部插上；看某家的势力总览时它的旗放大
+  let sgNear = false;
+  const flagAt = new Map(); // 年份|家|国 → 坐标
+  function sgFlagSeries() {
+    const on = provBaseOn() && sgMode();
+    const P = on ? buildProv('824') : null;
+    const data = on ? sg.banners().filter((b) => b.icon && (sgNear || b.provs.length > 1 || b.c === sg.clan)).map((b) => {
+      const id = `${sg.year}|${b.c}|${b.provs.join()}`;
+      if (!flagAt.has(id)) {
+        const pts = b.provs.map((k) => P.byKey.get(k)).filter(Boolean).map((f) => ({ c: centroid(f.geometry), a: areaOf(f.geometry) }));
+        const sum = pts.reduce((x, p) => x + p.a, 0);
+        const mid = [0, 1].map((i) => pts.reduce((x, p) => x + p.c[i] * p.a, 0) / sum);
+        const best = pts.reduce((x, p) => (Math.hypot(p.c[0] - mid[0], p.c[1] - mid[1]) < Math.hypot(x.c[0] - mid[0], x.c[1] - mid[1]) ? p : x));
+        flagAt.set(id, best.c);
+      }
+      const n = b.provs.length;
+      const size = (n >= 10 ? 34 : n >= 4 ? 29 : n >= 2 ? 25 : 21) * (b.c === sg.clan ? 1.3 : 1);
+      return { name: b.name, value: flagAt.get(id), clan: b.c, n, symbol: `image://${b.icon}`, symbolSize: size, symbolOffset: [0, -size / 2 - 7], z: b.c === sg.clan ? 3 : 2 };
+    }) : [];
+    return {
+      id: 'sgflags', type: 'scatter', coordinateSystem: 'geo', zlevel: 2, animation: false, cursor: 'pointer',
+      emphasis: { scale: 1.15 },
+      data,
     };
   }
 
@@ -538,7 +598,34 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const on = provBaseOn();
     const prov = on ? curProv() : null;
     const active = on && activeId ? prefShapes.find((x) => x.id === activeId) : null;
+    // 战国势力图：同一家的相邻领国之间不画国界（合成一片），两家领国之间画亮色的势力前线
+    const sgOn = on && sgMode();
+    const kinds = [[], [], []];
+    if (sgOn) for (const e of edgesOf()) kinds[sg.edgeKind(e.a, e.b)].push(e.coords);
+    const pathOf = (api, lines) => {
+      let d = '';
+      for (const coords of lines) {
+        for (let i = 0; i < coords.length; i++) {
+          const [x, y] = api.coord(coords[i]);
+          d += `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+        }
+      }
+      return d;
+    };
     return [
+      {
+        id: 'sgedges', type: 'custom', coordinateSystem: 'geo', zlevel: 1, silent: true, animation: false,
+        renderItem: (params, api) => {
+          const plain = pathOf(api, kinds[1]);
+          const front = pathOf(api, kinds[2]);
+          return { type: 'group', children: [
+            { type: 'path', shape: { pathData: plain }, style: { fill: null, stroke: COLOR.border, lineWidth: 0.9 } },
+            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: 'rgba(0,0,0,.55)', lineWidth: 3.4, lineJoin: 'round' } },
+            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: '#f3e2c0', lineWidth: 1.5, lineJoin: 'round' } },
+          ] };
+        },
+        data: sgOn ? [0] : [],
+      },
       {
         id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0, animation: false,
         label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
@@ -550,14 +637,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         // 全部县界画成一条路径（一个图形元素）：拖动、缩放时每帧只重算坐标，不再管理几千个线段元素
         id: 'prefborders', type: 'custom', coordinateSystem: 'geo', zlevel: 1, silent: true, animation: false,
         renderItem: (params, api) => {
-          let d = '';
-          for (const { coords } of prov.borders) {
-            for (let i = 0; i < coords.length; i++) {
-              const [x, y] = api.coord(coords[i]);
-              d += `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
-            }
-          }
-          return { type: 'path', shape: { pathData: d }, style: { fill: null, stroke: 'rgba(255,255,255,.5)', lineWidth: 0.8, lineDash: [3, 3] } };
+          const d = pathOf(api, prov.borders.map((b) => b.coords));
+          // 战国势力图上县界再淡一些，不打断合成一片的领国
+          return { type: 'path', shape: { pathData: d }, style: { fill: null, stroke: sgOn ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.5)', lineWidth: 0.8, lineDash: [3, 3] } };
         },
         data: on ? [0] : [],
       },
@@ -584,7 +666,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       geo: geoOpt,
       series: [
         { id: 'prefs', data: pm ? prov.features.map((f) => ({ name: f.properties.key, value: f.properties.key })) : [...nameById].map(([id, name]) => ({ name, value: id })) },
-        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
+        capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), sgFlagSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
       ],
     });
   }
@@ -662,6 +744,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       textStyle: { color: '#ece6dc', fontSize: 12 },
       formatter: (params) => {
         if (params.seriesId === 'disputed-names') return `<b>${disputeLabel(dspKeys[params.dataIndex])}</b>`;
+        if (params.seriesId === 'sgflags') return `<b>${params.name}</b> · ${t('sg.c.flag', { n: params.data.n })}`;
         if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
         if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#b4ada3">${params.name}</span>`;
         if (params.seriesId === 'spots') {
@@ -714,7 +797,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     },
     series: [
       { id: 'prefs', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
-      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
+      capitalSeries(), barrelSeries(), spotSeries(), kokuSeries(), ...battleSeries(), ...provSeries(), sgFlagSeries(), ...disputedSeries(), kakoSeries(), youSeries(),
     ],
   });
   render();
@@ -728,11 +811,11 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (k) onDispute(k);
   });
 
-  // 缩放跨过 KOKU_ZOOM 时重画古国巡礼的图钉
+  // 缩放跨过 KOKU_ZOOM 时重画古国巡礼的图钉、战国势力图的家纹旗
   chart.on('georoam', () => {
-    if (state.layer !== 'koku') return;
     const near = getView().zoom >= KOKU_ZOOM;
-    if (near !== kokuNear) { kokuNear = near; render(); }
+    if (state.layer === 'koku' && near !== kokuNear) { kokuNear = near; render(); }
+    if (sgMode() && near !== sgNear) { sgNear = near; render(); }
   });
 
   chart.on('click', (params) => {
@@ -750,6 +833,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (params.seriesId === 'koku') {
       const s = koku.find((x) => x.id === params.data?.id);
       if (s) onKoku(s);
+      return;
+    }
+    if (params.seriesId === 'sgflags') {
+      if (params.data?.clan) onClan(params.data.clan);
       return;
     }
     if (params.seriesId !== 'prefs' || state.battle) return;
@@ -788,6 +875,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   const setView = (v) => {
     chart.setOption({ geo: { center: v.center, zoom: v.zoom } });
     if ((v.zoom >= KOKU_ZOOM) !== kokuNear && state.layer === 'koku') { kokuNear = v.zoom >= KOKU_ZOOM; render(); }
+    if ((v.zoom >= KOKU_ZOOM) !== sgNear && sgMode()) { sgNear = v.zoom >= KOKU_ZOOM; render(); }
   };
 
   return {
@@ -810,7 +898,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     // 古国国力：传入 kokuryoku.js 的 createPower() 结果；换指标、选中某国后调 redraw
     setPower(p) { power = p; render(); },
     // 战国势力：传入 sengoku.js 的 createSengoku() 结果；换年份、选中某国后调 redraw
-    setSengoku(s) { sg = s; render(); },
+    setSengoku(s) {
+      sg = s;
+      if (provBase) sg.setAdjacency(edgesOf().map((e) => [e.a, e.b])); // 势力总览的「接壤」与聚光
+      sgNear = getView().zoom >= KOKU_ZOOM;
+      sg.loadIcons(() => render()); // 家纹旗画好后再重画一次
+      render();
+    },
     get sgMode() { return sgMode(); },
     setInset(i) {
       const next = { left: 0, right: 0, bottom: 0, ...i };

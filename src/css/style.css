@@ -1021,6 +1021,42 @@ body.sg-mode .sg-years button.on { background: #9c3a32; }
 .sg-who:hover { color: var(--kin); }
 .sg-back { border: 0; background: none; padding: 0 0 6px; color: var(--kin); font-size: 12px; cursor: pointer; }
 .sg-wiki { display: inline-block; margin-top: 10px; color: var(--kin); font-size: 12.5px; }
+/* 势力总览：图例里的家、国别卡里的家名都能点开 */
+.legend-items .lg-clan { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: pointer; }
+.legend-items .lg-clan:hover { color: var(--kin); }
+.sg-clan { border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.35); }
+.sg-clan:hover { color: var(--kin); }
+.sg-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: 1px; }
+.sg-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 6px 0 10px; }
+.sg-stats div { background: rgba(255,255,255,.04); border: 1px solid var(--line-soft); border-radius: 8px; padding: 7px 4px 6px; text-align: center; }
+.sg-stats b { display: block; font: 700 15px var(--serif); color: var(--kin); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sg-stats b small { font-size: 11px; color: var(--text-2); margin-left: 1px; }
+.sg-stats span { font-size: 11px; color: var(--muted); }
+.sg-pvs { display: flex; flex-wrap: wrap; gap: 5px; }
+.sg-pv { border: 1px solid var(--line); background: none; color: var(--text); border-radius: 12px; padding: 3px 9px; font: 500 12px var(--serif); cursor: pointer; }
+.sg-pv:hover { border-color: var(--kin); color: var(--kin); }
+.sg-pv.part { border-style: dashed; color: var(--text-2); }
+.sg-pv small { margin-left: 4px; font: 400 10.5px var(--sans); color: var(--muted); }
+.sg-sub { margin: 12px 0 5px; font-size: 11.5px; color: var(--muted); letter-spacing: .06em; }
+.sg-trend { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.sg-trend li { display: grid; justify-items: center; gap: 2px; padding: 4px 0; border-radius: 6px; cursor: pointer; }
+.sg-trend li:hover { background: rgba(255,255,255,.05); }
+.sg-trend li.on { background: rgba(212,163,115,.16); }
+.sg-bar { height: 40px; display: flex; align-items: flex-end; }
+.sg-bar b { display: block; width: 18px; border-radius: 3px 3px 0 0; }
+.sg-bn { font: 700 12.5px var(--serif); color: var(--text); }
+.sg-trend small { font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sg-near { list-style: none; margin: 0; padding: 0; font-size: 12.5px; }
+.sg-near li { display: grid; grid-template-columns: 9px auto minmax(0, 1fr); gap: 7px; align-items: baseline; padding: 4px 0; border-top: 1px solid var(--line-soft); }
+.sg-near li:first-child { border-top: 0; }
+.sg-near i { width: 9px; height: 9px; border-radius: 2px; }
+.sg-near button { font-family: var(--serif); font-weight: 700; }
+.sg-near span { color: var(--muted); font-size: 11.5px; }
+.sg-none { color: var(--text-2); font-size: 13px; }
+/* 势力总览标题前的家纹：PNG 当遮罩涂金色，外框是代表色（与地图上的旗同样式） */
+.sg-mon-big { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 9px; vertical-align: -7px; border-radius: 6px; background: #141418; box-shadow: inset 0 0 0 2.5px var(--c); }
+.sg-mon-big i { width: 19px; height: 19px; background: #f2dcae; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; } /* 图在行内 style 里给（url 按页面解析） */
+.sg-credit a { color: inherit; }
 
 /* 我在哪 */
 .locate-btn {
