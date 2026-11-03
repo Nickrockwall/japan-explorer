@@ -899,13 +899,16 @@ class Case:
         assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'
 
     def koseki(self, page):
-        # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106）；
+        # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106，可展开历代藩主）；
         # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
         assert len(rows) == 8, f'应有 8 栏：{rows}'
         assert any('106' in r and '158' in r for r in rows), f'幕末领主应写出小县郡 158 町村中上田藩 106：{rows}'
         assert any('諏訪大社' in r for r in rows), '氏神应是诹访大社'
+        ks_han = page.locator('#koseki .ks-han').first  # 幕末领主一栏能点开上田藩的历代藩主
+        ks_han.locator('summary').click()
+        assert any(x in ks_han.inner_text() for x in ('真田信之', 'Sanada Nobuyuki')), f'户籍里上田藩的藩主应有真田信之：{ks_han.inner_text()}'
         assert any('1560' in r and '1600' in r and '1467' in r for r in rows), f'战国一栏应按信浓国列出 6 个年份：{rows}'
         box = page.locator('#koseki').bounding_box()
         vw, vh = page.viewport_size['width'], page.viewport_size['height']

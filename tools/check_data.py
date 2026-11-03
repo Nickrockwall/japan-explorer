@@ -366,6 +366,41 @@ def check_korea():
                 err(where, '方言句子与中文不同（韩文原句应一致）')
 
 
+def check_han():
+    """江户诸藩：结构、按县覆盖（曾经只收存续藩，四个县一个藩都没有、静冈只剩 2 个却没被发现）与几个曾漏掉或放错县的藩"""
+    han = load('src', 'data', 'han.json')['han']
+    seen, by_pref, kept = set(), {}, {}
+    for h in han:
+        where = f'han {h["t"]}'
+        if h['t'] in seen:
+            err(where, '重复')
+        seen.add(h['t'])
+        if not 1 <= h['p'] <= 47 or h.get('k') not in (0, 1):
+            err(where, f'县 {h["p"]} 或 k={h.get("k")} 非法')
+        if not any(rows for _, _, rows in h['f']):
+            err(where, '没有藩主')
+        y = h.get('y')
+        if y and ((y[0] and y[1] and y[0] > y[1]) or any(v and not 1500 < v < 1900 for v in y)):
+            err(where, f'年份 {y} 不合理')
+        if y and y[1] and h.get('k') != int(y[1] >= 1871 and (y[0] or 0) <= 1871):
+            err(where, f'k 与年份 {y} 不符')
+        by_pref[h['p']] = by_pref.get(h['p'], 0) + 1
+        kept[h['p']] = kept.get(h['p'], 0) + (h.get('k') or 0)
+    # 东京（江户周边是幕府领）、山梨（甲府后为天领）、冲绳（琉球藩 1872 年才设）没有存续到废藩置县的藩，其余各县都有
+    for pid in range(1, 48):
+        if not by_pref.get(pid):
+            err('han', f'县 {pid} 一个藩都没有')
+        if pid not in (13, 19, 47) and not kept.get(pid):
+            err('han', f'县 {pid} 没有存续到废藩置县的藩')
+    total = sum(kept.values())
+    if not 255 <= total <= 280:
+        err('han', f'存续到废藩置县的藩 {total} 个，通常约 260–270')
+    where = {h['t']: h['p'] for h in han}
+    for name, pid in {'会津藩': 7, '浜松藩': 22, '甲府藩': 19, '徳島藩': 36, '備後福山藩': 34, '加賀藩': 17, '薩摩藩': 46}.items():
+        if where.get(name, 0) != pid and not (name == '薩摩藩' and where.get('鹿児島藩') == pid):
+            err('han', f'{name} 应在县 {pid}，实为 {where.get(name)}')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -388,7 +423,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

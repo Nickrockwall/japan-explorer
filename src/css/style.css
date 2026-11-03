@@ -934,6 +934,11 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
   background: #b83a30; color: #f3ead9; font: 700 11px var(--serif); cursor: help; }
 :root[lang="en"] .ks-seal { font-size: 9px; }
 .ks-v b { display: block; font: 700 16px/1.45 var(--serif); color: #2b2420; }
+.ks-han { margin-top: 6px; font-size: 12.5px; color: #5a4a3e; }
+.ks-han summary { cursor: pointer; color: #8a2b22; }
+.ks-han .hn-fam-h { color: #8a5a2b; }
+.ks-han .hn-fam a { color: #2b2420; border-bottom-color: #b8a07e; }
+.ks-han .hn-i, .ks-han .hn-fam small { color: #8a7a6a; }
 .ks-v span { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.55; color: #5a4a3e; }
 .ks-voice { margin-top: 6px; border: 1px solid #c9a67a; background: transparent; color: #8a3b33; border-radius: 14px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
 .ks-voice:hover { background: #3a1f1c; color: #f3ead9; }

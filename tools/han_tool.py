@@ -8,7 +8,7 @@
 - 所在县：名单里的国（明治分国后的国名）只对应一个县时就是它，否则看正文「現在の○○県」与分类「○○県の歴史」；
   两者不一致时打印出来；
 - 名字：日文取链接文字，中文按字形转简体，英文取 Wikidata 标签（没有就不写，前端用日文）。
-输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止], k, f:[[家, [[条目, 名, 备注]...]]]}] }。缓存在 .cache/han/。
+输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止]（不详的为 null）, k, f:[[家, [[条目, 名, 备注]...]]]}] }。缓存在 .cache/han/。
 需 zhconv。
 """
 import json
@@ -84,6 +84,31 @@ def en_labels(titles):
     return cache
 
 
+def wd_years(titles):
+    """Wikidata 的成立 / 废止年（P571 / P576），{条目: [起, 止]}，缺的为 None。"""
+    path = os.path.join(CACHE, 'years.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'sites': 'jawiki', 'titles': '|'.join(part), 'props': 'claims|sitelinks',
+             'sitefilter': 'jawiki', 'format': 'json'}))
+
+        def yr(e, p):
+            for c in e.get('claims', {}).get(p, []):
+                v = c['mainsnak'].get('datavalue', {}).get('value', {})
+                if isinstance(v, dict) and 'time' in v:
+                    return int(v['time'][1:5])
+            return None
+        got = {e['sitelinks']['jawiki']['title']: [yr(e, 'P571'), yr(e, 'P576')]
+               for k, e in d.get('entities', {}).items() if not k.startswith('-') and 'jawiki' in e.get('sitelinks', {})}
+        for t in part:
+            cache[t] = got.get(t, [None, None])
+        json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
 def zh(s):
     return ''.join(JA_ZH.get(ch, ch) for ch in zhconv.convert(s, 'zh-cn'))
 
@@ -95,18 +120,27 @@ def plain(s):
 
 
 def years(w):
-    """行政区变迁框的起止年；没有框为 None。徳島藩的框误写成 1971 年：1900 年以后的止年按 1871。"""
+    """行政区变迁框的起止年；没有框为 None。止年常是后来的县（1875 年等），也有写错的（徳島藩 1971），由 span 处理。"""
     m = re.search(r'\{\{s-ttl[^}]*?years\s*=([^|}]*)', w)
     ys = [int(y) for y in re.findall(r'(\d{4})年', m.group(1))] if m else []
     if not ys:
         return None
-    return [ys[0], 1871 if ys[-1] > 1900 else ys[-1]]
+    return [ys[0], ys[-1]]
 
 
-def survives(w):
-    """存续到 1871 年废藩置县：变迁框止于 1871 年，没有框的（如加贺藩）看正文有无「廃藩置県」。"""
-    y = years(w)
-    return y[1] == 1871 if y else '廃藩置県' in w
+def span(real, w, wd):
+    """藩的起止年与是否存续到 1871 年废藩置县（k）。
+    止年：Wikidata P576 与变迁框（晚于 1871 的按 1871，变迁框常写到后来的县）取较晚的——駿府藩 1869 年改称静冈藩，
+    Wikidata 记 1869、变迁框写到 1871。起年：变迁框，没有就取 Wikidata。都没有止年的看 KEPT。"""
+    if real in YEARS:
+        y = YEARS[real]
+    else:
+        box = years(w) or [None, None]
+        start = box[0] or wd[0]
+        ends = [e for e in (wd[1], box[1] and (1871 if box[1] > 1871 and (start or 0) <= 1871 else box[1])) if e]
+        y = [start, max(ends) if ends else None]
+    k = (y[1] >= 1871 and (y[0] or 0) <= 1871) if y[1] else real in KEPT
+    return (y if y[0] or y[1] else None), int(k)
 
 
 # 条目没有藩主列表、藩主写在正文里的：人工列出，工具核对每个名字在条目里有链接
@@ -124,6 +158,9 @@ LORDS = {
 # 上面这些没有变迁框，年份取正文（大坂藩正文提到「廃藩置県まで独立の藩が置かれることはなかった」，不能按有无这个词判断）
 YEARS = {'八幡山藩': [1590, 1601], '大坂藩': [1615, 1619], '味舌藩': [1600, 1615], '吉永藩': [1643, 1682],
          '川之江藩': [1636, 1642], '土佐中村藩': [1601, 1689]}
+
+# 变迁框与 Wikidata 都没有止年、正文写明存续到废藩置县的
+KEPT = {'七戸藩', '八戸藩', '湯長谷藩'}
 
 # 名单里的国与正文「現在の」对不上的，人工核对后定下（名单会把同一个藩列在几个国下，正文可能写的是转封前后的地方）
 PREF = {
@@ -151,8 +188,8 @@ def lords(w):
     """「歴代藩主」一节：列表行（# / * 开头，取行内第一个人名链接）或表格（每行第一个以链接开头的格子）。
     名字取条目名去掉括注（表格里常只写名不写姓）；「藩知事」小节不收。"""
     # 先找「歴代…」，再退到任何带「藩主」的小节；小节可能在条目末尾（后面只剩模板与分类，如米子藩）
-    sec = (re.search(r'==[ \t]*歴代[^=\n]*==\n(.*?)(?=\n==[^=]|\Z)', w, re.S)
-           or re.search(r'==[ \t]*[^=\n]*藩主[^=\n]*==\n(.*?)(?=\n==[^=]|\Z)', w, re.S))
+    sec = (re.search(r'==+[ \t]*歴代[^=\n]*==+\n(.*?)(?=\n==[^=]|\Z)', w, re.S)  # 也有写成「=== 歴代藩主 ===」的（豊後高田藩）
+           or re.search(r'==+[ \t]*[^=\n]*藩主[^=\n]*==+\n(.*?)(?=\n==[^=]|\Z)', w, re.S))
     if not sec:
         return []
     fams = [['', []]]
@@ -221,6 +258,7 @@ def main():
             prov_pref[k] = next(iter(ps))
     print('名单里的藩', len(titles))
     texts = wikitexts(titles)
+    wd = wd_years([v[0] for v in texts.values() if v])
     index = json.load(open(os.path.join(ROOT, 'src', 'data', 'index.json'), encoding='utf-8'))
     pref_id = {e['kanji']: e['id'] for e in index}
     out, todo = [], []
@@ -230,8 +268,10 @@ def main():
             todo.append(f'{t}：条目不存在')
             continue
         real, w = got
-        y = YEARS.get(real) or years(w)
-        if y and y[1] < 1600:  # 江户以前就没了
+        if not re.search(r'藩( \(.*\))?$', real):  # 重定向到「松平義行領」之类不是藩的条目
+            continue
+        y, kept = span(real, w, wd.get(real, [None, None]))
+        if y and y[1] and y[1] < 1600:  # 江户以前就没了
             continue
         if any(h['t'] == real for h in out):  # 名单里写了两次（别名）
             continue
@@ -255,7 +295,7 @@ def main():
         if pid is None or not fams:
             todo.append(f'{real}：{"找不到所在县" if pid is None else "没有解析出藩主"}')
             continue
-        out.append({'t': real, 'p': pid, 'y': y, 'k': int(y[1] == 1871) if y else int(survives(w)), 'f': fams})
+        out.append({'t': real, 'p': pid, 'y': y, 'k': kept, 'f': fams})
     names = en_labels([h['t'] for h in out] + [x[0] for h in out for f in h['f'] for x in f[1]])
     for h in out:
         ja = re.sub(r'\s*\(.*\)$', '', h['t'])

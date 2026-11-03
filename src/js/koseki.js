@@ -5,6 +5,7 @@ import { t, lang, label } from './i18n.js';
 import { esc } from './detail.js';
 import { distanceKm } from './koku.js';
 import { fmtPeople } from './kokuryoku.js';
+import { findHan, kosekiHanHTML } from './han.js';
 
 const WALK_KM = 30; // 估算步行天数：一天约 30 公里
 const DIRS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
@@ -45,8 +46,8 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku }
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku }) {
+// ctx：{ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku, han }
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku, han }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -93,7 +94,8 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
   const d = gun && domains?.[pref.id]?.[gun];
   if (d) {
     const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
-    rows.push({ k: 'edo', seal: 'gun', main: lord(d.r[0][0]), sub: t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) });
+    const hans = d.r.map(([n]) => !n.startsWith('@') && findHan(han, n, pref.id)).filter(Boolean);  // 点开看历代藩主
+    rows.push({ k: 'edo', seal: 'gun', main: lord(d.r[0][0]), sub: t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }), hans });
   } else {
     const list = pref.historical_lineage.edo_domains || [];
     rows.push({ k: 'edo', seal: 'pref', main: list.slice(0, 3).join(t('list.sep')) || '—', sub: list.length > 3 ? t('ks.more', { n: list.length - 3 }) : '' });
@@ -116,7 +118,7 @@ export function kosekiHTML(ctx, data, name) {
   const body = rows.map((r) => `
     <div class="ks-row">
       <div class="ks-k">${esc(t(`ks.r.${r.k}`))}<i class="ks-seal" title="${esc(t(`ks.p.${r.seal}.t`))}">${esc(t(`ks.p.${r.seal}`))}</i></div>
-      <div class="ks-v"><b>${esc(r.main)}</b>${r.sub ? `<span>${esc(r.sub)}</span>` : ''}
+      <div class="ks-v"><b>${esc(r.main)}</b>${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
         ${r.voice ? `<button type="button" class="ks-voice" data-act="ks-voice">${esc(t('ks.voice'))}</button>` : ''}</div>
     </div>`).join('');
   const art = print ? `<button type="button" class="ks-art" data-act="art" data-no="${print.no}"><img src="${esc(print.img)}" alt="" loading="lazy"><span>${esc(t('ks.art', { title: print.title_t || print.title }))}</span></button>` : '';

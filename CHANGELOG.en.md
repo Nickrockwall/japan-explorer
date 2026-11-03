@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.6.2 · 2026-11-03
+
+- The "Lord, late Edo" row of the old family register now expands to that domain's line of lords
+- Better "lasted until 1871" flags: Sasayama, Fukuchiyama, Miyazu, Izushi, Morioka and others that did last were filed as abolished, while Asakawa, Kuzuno and others long gone were counted as surviving. Years are now checked against Wikidata as well; 265 domains lasted until 1871. Domains with only one known year show it (e.g. "1819–")
+- Added Bungo-Takada; removed Matsudaira Yoshiyuki's fief, which was not a domain
+- The domain data (about 370 KB) is no longer downloaded on the home page, only when you open a prefecture
+- The data check now looks at coverage per prefecture, so a prefecture with no domains, an odd number of surviving domains, or Aizu and the like missing or misplaced fails before anything is published
+
 ## 3.6.1 · 2026-11-03
 
 - Edo domains completed: only domains that lasted until 1871 were listed, so Aizu, Hamamatsu, Kakegawa, Kōfu, Shirakawa and others that ended around the Boshin War or earlier were missing, and Yamanashi, Tokushima, Tokyo and Okinawa had none at all; Tokushima was dropped because of a wrong year in its article, and Bingo-Fukuyama was placed in Kanagawa. Now 498 domains and 4,257 lords: the 271 that lasted until 1871 first, the rest in a separate group, each with its years. Seven small domains whose lords appear only in the article text (Ōsaka, Tosa-Nakamura and others) were added by hand, each name checked against the article

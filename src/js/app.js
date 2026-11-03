@@ -120,11 +120,19 @@ async function main() {
   const detailEl = $('detail');
   const app = { currentId: null, layer: 'history', eraIdx: null, battle: null, phase: 0, savedView: null };
 
+  // 江户诸藩（约 370 KB）：第一次画详卡时才下载，到了再补进详卡；首页不用它
+  let han = null, hanReq = null;
+  const ensureHan = () => hanReq ||= loadHan().then((d) => {
+    han = d;
+    if (d && app.currentId) renderCurrent();
+  });
+
   // 依当前图层与时代重绘详卡
   function renderCurrent() {
     if (!app.currentId) return;
     detailStale = narrow() && tabs.current !== 'detail';
     if (detailStale) return;
+    ensureHan();
     const focus = app.layer === 'history' ? null : app.layer;
     const p = prefs.get(app.currentId);
     renderDetail(detailEl, p, { stampedAt: goshuinBook.get()[app.currentId], focus, emblem: data.emblems?.[p.id], extra: hiroshigeSection(p, art, prefLabel) + kokuSection(p, kokuSites, ichinomiya.get()) + namesSection(p, provNames) + pilgrimageSection(p, pil.spots, pil.done) + (kako.all ? kakoPrefHTML(kako.all, p.id) : '') + hanSection(han, p.id) });
@@ -174,12 +182,6 @@ async function main() {
   loadKako().then((d) => {
     kako.all = d;
     renderKako();
-    if (d && app.currentId) renderCurrent();
-  });
-  // 江户诸藩：数据到了再补进详卡
-  let han = null;
-  loadHan().then((d) => {
-    han = d;
     if (d && app.currentId) renderCurrent();
   });
 
@@ -281,7 +283,7 @@ async function main() {
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
       sites: kokuSites, domains: data.domains, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
-      sengoku: await sengokuData(),
+      sengoku: await sengokuData(), han: await ensureHan().then(() => han),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''));
