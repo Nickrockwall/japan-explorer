@@ -893,6 +893,7 @@ class Case:
             self.tab(page, 'detail')
         page.click('.hn-sec > summary')
         assert page.locator('.hn-han').count() >= 5, '长野县应有 5 个以上的藩'
+        assert page.locator('.hn-sub').count() == 1, '中途废藩或转封的藩应另列一组'
         han = page.locator('.hn-han', has_text=('上田' if self.lang != 'en' else 'Ueda'))
         han.locator('summary').click()
         assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'

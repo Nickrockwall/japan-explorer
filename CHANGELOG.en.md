@@ -4,6 +4,10 @@
 
 Newest first.
 
+## 3.6.1 · 2026-11-03
+
+- Edo domains completed: only domains that lasted until 1871 were listed, so Aizu, Hamamatsu, Kakegawa, Kōfu, Shirakawa and others that ended around the Boshin War or earlier were missing, and Yamanashi, Tokushima, Tokyo and Okinawa had none at all; Tokushima was dropped because of a wrong year in its article, and Bingo-Fukuyama was placed in Kanagawa. Now 491 domains and 4,246 lords: the 270 that lasted until 1871 first, the rest in a separate group, each with its years
+
 ## 3.6 · 2026-11-03
 
 - On this day: the welcome card shows what happened in Japan on today's date centuries ago — events and the births and deaths of historical figures, from the date articles of Japanese Wikipedia, checked against Wikidata for year (exact date for births and deaths) and place. Everyone gets a different order (the seed stays on your device), stable for the day; show others, or pick any date such as your birthday; tap one to drop a pin and select the prefecture. Gregorian dates, Julian before 1582

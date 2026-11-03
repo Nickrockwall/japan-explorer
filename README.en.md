@@ -35,7 +35,7 @@ All of these come from the app's Rankings and Ancestral register views, and you 
 - A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
 - Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals
 - On this day: what happened in Japan on today's date centuries ago (events, births and deaths of historical figures), in a different order for everyone — or look up your birthday
-- Edo domains: the lords of 261 domains, listed by prefecture
+- Edo domains: the lords of 491 domains (270 lasting until 1871), listed by prefecture
 - Sengoku map: who held each of the 68 provinces in six years — 1467 Ōnin, 1560 Okehazama, 1573, 1582 Honnō-ji, 1590 and 1600 Sekigahara — with the leading figure of each; plus an emperors and shoguns timeline and bios and portraits for 61 people
 - Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)
 - All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces*, with where each scene is today; 190 things that still carry an old province name (the Shinano River, Sanuki udon, Iyokan…)
