@@ -32,13 +32,13 @@ const pick = (o) => o?.[lang] || o?.zh || '';
 const tag = (e) => (e.t ? ` <em class="kk-t kk-${e.t}">${esc(t(`kk.t.${e.t}`))}</em>` : '');
 export const kakoLabel = (e) => `${e.y} ${pick(e.n)}${e.t ? ` · ${t(`kk.t.${e.t}`)}` : ''}`;
 
-export function kakoHTML({ key, list, page, prefName, provName, now = new Date() }) {
+export function kakoHTML({ key, list, page, prefName, provName, lordOf = () => '', now = new Date() }) {
   const [m, d] = key.split('-').map(Number);
   const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
   const shown = list.slice((page % pages) * PER_PAGE, (page % pages) * PER_PAGE + PER_PAGE);
   const ago = (y) => now.getFullYear() - y;
   const rows = shown.map((e) => {
-    const where = [prefName(e.p), e.k ? provName(e.k) : ''].filter(Boolean).join(' · ');
+    const where = [prefName(e.p), e.k ? provName(e.k) : '', lordOf(e)].filter(Boolean).join(' · ');
     const sub = lang === 'ja' ? e.s : where;
     return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}">
       <span class="kk-y">${e.y}<small>${esc(t('kk.ago', { n: ago(e.y) }))}</small></span>
@@ -51,7 +51,8 @@ export function kakoHTML({ key, list, page, prefName, provName, now = new Date()
     ${list.length ? `<ol class="kk-list">${rows}</ol>
       <div class="kk-foot"><span>${esc(t('kk.count', { n: list.length }))}</span>
         ${pages > 1 ? `<button type="button" class="kk-more" data-act="kk-more">${esc(t('kk.more'))} ↻</button>` : ''}
-        ${isToday ? '' : `<button type="button" class="kk-more" data-act="kk-today">${esc(t('kk.back'))}</button>`}</div>`
+        ${isToday ? '' : `<button type="button" class="kk-more" data-act="kk-today">${esc(t('kk.back'))}</button>`}
+        <button type="button" class="kk-more kk-bd" data-act="kk-bday">${esc(t('bd.open'))}</button></div>`
     : `<p class="kk-none">${esc(t('kk.none'))}</p>`}
     <p class="kk-note">${esc(t('kk.note'))}</p></section>`;
 }

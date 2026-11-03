@@ -15,7 +15,8 @@ import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
 import { rulersHTML } from './rulers.js';
 import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
-import { hanSection } from './han.js';
+import { hanSection, setLordDays, lordOfFn } from './han.js';
+import { bdayData, bdayHTML, bdayImage } from './bday.js';
 import { createTour } from './tour.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
@@ -122,9 +123,12 @@ async function main() {
 
   // 江户诸藩（约 370 KB）：第一次画详卡时才下载，到了再补进详卡；首页不用它
   let han = null, hanReq = null;
+  let lordOf = () => '';
   const ensureHan = () => hanReq ||= loadHan().then((d) => {
     han = d;
+    if (d) lordOf = lordOfFn(d);
     if (d && app.currentId) renderCurrent();
+    else if (d) renderKako();
   });
 
   // 依当前图层与时代重绘详卡
@@ -152,7 +156,7 @@ async function main() {
     const box = detailEl.querySelector('.welcome');
     if (!box || !kako.all) return;
     const list = dayOrder(kako.all[kako.key] || [], kako.key, kakoSeed, visited.get());
-    const html = kakoHTML({ key: kako.key, list, page: kako.page, prefName: prefLabel, provName: kakoProv });
+    const html = kakoHTML({ key: kako.key, list, page: kako.page, prefName: prefLabel, provName: kakoProv, lordOf });
     const old = box.querySelector('.kako');
     if (old) old.outerHTML = html;
     else box.querySelector('.tour-again')?.closest('p').insertAdjacentHTML('beforebegin', html);
@@ -172,6 +176,7 @@ async function main() {
     if (it) { showKako(it.dataset.kako); return; }
     if (e.target.closest('[data-act="kk-more"]')) { kako.page += 1; renderKako(); audio.play('click'); }
     if (e.target.closest('[data-act="kk-today"]')) { kako.key = dayKey(); kako.page = 0; renderKako(); }
+    if (e.target.closest('[data-act="kk-bday"]')) openBday(kako.key);
     if (e.target.closest('[data-act="kk-home"]')) { renderWelcome(detailEl); renderKako(); detailEl.scrollTop = 0; } // 县详卡里回到全国的彼时今日
   });
   detailEl.addEventListener('change', (e) => {
@@ -181,8 +186,68 @@ async function main() {
   });
   loadKako().then((d) => {
     kako.all = d;
+    setLordDays(d);
     renderKako();
+    const bk = new URLSearchParams(location.hash.slice(1)).get('bday');
+    if (d && /^\d\d-\d\d$/.test(bk || '')) openBday(bk);
     if (d && app.currentId) renderCurrent();
+  });
+
+  // ── 生日帖：彼时今日里某一天的全部条目 + 几个数字，可存图；深链接 #bday=MM-DD ──
+  const bdDlg = $('bday');
+  let bd = null;
+  const bdCtx = () => ({ prefName: prefLabel, lordOf, name: uiPref.get('kosekiName', '') });
+  async function openBday(key) {
+    if (!kako.all) return;
+    await ensureHan();
+    bd = bdayData(kako.all, key);
+    bdDlg.innerHTML = bdayHTML(bd, bdCtx());
+    if (!bdDlg.open) bdDlg.showModal();
+    bdDlg.scrollTop = 0;
+    history.replaceState(null, '', `#bday=${key}&lang=${lang}`);
+    audio.play('click');
+  }
+  bdDlg.addEventListener('close', () => {
+    if (/bday=/.test(location.hash)) history.replaceState(null, '', app.currentId ? stateHash(app.currentId) : location.pathname + location.search);
+  });
+  bdDlg.addEventListener('input', (e) => {
+    if (e.target.matches('[data-bd-name]')) uiPref.set('kosekiName', e.target.value.trim());
+  });
+  bdDlg.addEventListener('change', (e) => {
+    const m = e.target.closest('[data-bd-date]')?.value.match(/^\d+-(\d\d)-(\d\d)$/);
+    if (m) {
+      kako.key = `${m[1]}-${m[2]}`;
+      kako.page = 0;
+      renderKako();
+      openBday(kako.key);
+    }
+  });
+  bdDlg.addEventListener('click', async (e) => {
+    if (e.target === bdDlg || e.target.closest('[data-act="bd-close"]')) { bdDlg.close(); return; }
+    const it = e.target.closest('[data-kako]');
+    if (it) { bdDlg.close(); showKako(it.dataset.kako); return; }
+    const b = e.target.closest('[data-act]');
+    if (!b || !bd) return;
+    if (b.dataset.act === 'bd-link') {
+      const url = `${location.origin}${location.pathname}#bday=${bd.key}&lang=${lang}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        toast(t('share.copied'));
+      } catch {
+        toast(t(legacyCopy(url) ? 'share.copied' : 'share.fail'));
+      }
+    }
+    if (b.dataset.act === 'bd-image') {
+      b.disabled = true;
+      try {
+        await saveImage(await bdayImage(bd, bdCtx()), `birthday-${bd.key}.png`, t('bd.kicker'));
+      } catch (err) {
+        console.warn('生日帖图片生成失败', err);
+        toast(t('ks.fail'));
+      } finally {
+        b.disabled = false;
+      }
+    }
   });
 
   // ── 广重《六十余州名所图会》：古国地图上点一国弹卡片，详卡列出本县的画，点缩略图看大图 ──
@@ -267,6 +332,21 @@ async function main() {
   });
 
   // ── 古代户籍《古今人别帐》：某个市区町村（或定位点）在各时代归谁管；pt 缺省时取市町村的质心 ──
+  // 存图：手机上走系统分享（可存到相册）；不支持就直接下载
+  async function saveImage(blob, filename, title) {
+    const file = new File([blob], filename, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] }) && matchMedia('(pointer: coarse)').matches) {
+      try { await navigator.share({ files: [file], title }); return; } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = file.name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast(t('ks.saved'));
+  }
   const ksDlg = $('koseki');
   let ks = null; // { ctx, data }
   const kosekiHash = (pid, code) => `${stateHash(pid)}&muni=1&m=${code}&koseki=1`;
@@ -300,6 +380,8 @@ async function main() {
   });
   ksDlg.addEventListener('click', async (e) => {
     if (e.target === ksDlg || e.target.closest('[data-act="ks-close"]')) { ksDlg.close(); return; }
+    const kk = e.target.closest('[data-kako]');
+    if (kk) { ksDlg.close(); showKako(kk.dataset.kako); return; }
     const b = e.target.closest('[data-act]');
     if (!b || !ks) return;
     if (b.dataset.act === 'art') viewer.open(+b.dataset.no);
@@ -320,20 +402,7 @@ async function main() {
     if (b.dataset.act === 'ks-image') {
       b.disabled = true;
       try {
-        const blob = await kosekiImage(ks.ctx, ks.data, uiPref.get('kosekiName', ''));
-        const file = new File([blob], `koseki-${ks.code}.png`, { type: 'image/png' });
-        // 手机上走系统分享（可存到相册）；不支持就直接下载
-        if (navigator.canShare?.({ files: [file] }) && matchMedia('(pointer: coarse)').matches) {
-          try { await navigator.share({ files: [file], title: t('ks.title') }); return; } catch (err) {
-            if (err.name === 'AbortError') return;
-          }
-        }
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = file.name;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-        toast(t('ks.saved'));
+        await saveImage(await kosekiImage(ks.ctx, ks.data, uiPref.get('kosekiName', '')), `koseki-${ks.code}.png`, t('ks.title'));
       } catch (err) {
         console.warn('户籍图片生成失败', err);
         toast(t('ks.fail'));
@@ -1141,6 +1210,8 @@ async function main() {
   applyLayer(uiPref.get('layer', 'history'));
   const kakoHash = new URLSearchParams(location.hash.slice(1)).get('kako');
   if (/^\d\d-\d\d$/.test(kakoHash || '')) kako.key = kakoHash; // #kako=11-02 打开某一天
+  const bdayHash = new URLSearchParams(location.hash.slice(1)).get('bday');
+  if (/^\d\d-\d\d$/.test(bdayHash || '')) kako.key = bdayHash; // #bday=11-02 打开这一天的生日帖
   renderWelcome(detailEl);
   renderKako();
   guide.refreshMode();

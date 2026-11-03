@@ -29,6 +29,10 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 CACHE = os.path.join(ROOT, '.cache', 'kako')
 OUT = os.path.join(ROOT, 'src', 'data', 'kako.json')
 UA = {'User-Agent': 'japan-explorer-data-tool/1.0 (https://github.com/Nickrockwall/japan-explorer)'}
+# 1880 年以前出生的全收；1880–1949 年出生的近代人物要已经去世，按日文维基条目 2025 年一年的浏览量算知名度
+# （各语言条目数不行：日本足球国脚的条目被机器人建到几十种语言）：每天取浏览量最高的 MODERN_CAP 人，
+# 须 ≥ FAMOUS；这一天不足 3 条时再补到 3 条，补的须 ≥ FILL。先用条目数 ≥ PRE 粗筛（不足 3 条的日子不筛），免得查几千个浏览量
+OLD_BORN, MODERN_BORN, MODERN_CAP, FAMOUS, FILL, PRE = 1880, 1950, 2, 300_000, 30_000, 10
 DAYS = [(m, d) for m, n in enumerate([31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], 1) for d in range(1, n + 1)]
 
 
@@ -100,8 +104,8 @@ def entries(m, d):
             links = [x for x in links if x and not SKIP_LINK.match(x)]
             if kind != 'ev':
                 links = links[:1]  # 生卒只看这一行的主角（第一个链接）
-                if (kind == 'born' and year >= 1880) or (kind == 'died' and year >= 1990):
-                    continue  # 只收 1880 年以前出生的人：这里先粗筛，省得去查几万个近现代人物
+                if kind == 'born' and year >= MODERN_BORN:
+                    continue  # 1950 年以后出生的不收：这里先粗筛，省得去查更多近现代人物
             out.append({'kind': kind, 'y': year, 'text': plain(body), 'links': links})
     return out
 
@@ -184,6 +188,40 @@ def place_coords(ids):
     return cache
 
 
+def sitelink_counts(qids):
+    """QID → 各语言维基条目数（缓存在 sitelinks.json）。"""
+    path = os.path.join(CACHE, 'sitelinks.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = sorted(set(qids) - set(cache))
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'ids': '|'.join(part), 'props': 'sitelinks', 'format': 'json'}))
+        for q in part:
+            cache[q] = sum(1 for k in d.get('entities', {}).get(q, {}).get('sitelinks', {}) if k.endswith('wiki') and k != 'commonswiki')
+    json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
+def page_views(titles):
+    """日文维基条目名 → 2025 年全年浏览量（不含爬虫；缓存在 views-2025.json）。"""
+    path = os.path.join(CACHE, 'views-2025.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    for i, t in enumerate(sorted(set(titles) - set(cache))):
+        url = ('https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/ja.wikipedia/all-access/user/'
+               + urllib.parse.quote(t.replace(' ', '_'), safe='') + '/monthly/2025010100/2025123100')
+        try:
+            cache[t] = sum(x['views'] for x in get(url)['items'])
+        except urllib.error.HTTPError as e:
+            if e.code != 404:
+                raise
+            cache[t] = 0
+        if i % 200 == 0:
+            json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
 def coords_of(e, places):
     return e['c'] or next((places[q] for q in e['loc'] if places.get(q)), None)
 
@@ -218,7 +256,7 @@ def main():
             key = provs[i][0] if provs[i][1].distance(pt) < 0.05 else None
         return pid, key
 
-    out, stats = {}, {'date': 0, 'place': 0, 'label': 0, 'old': 0}
+    out, modern, stats = {}, {}, {'date': 0, 'place': 0, 'label': 0, 'old': 0}
     for (m, d), items in days.items():
         rows, seen = [], set()
         for it in items:
@@ -234,12 +272,13 @@ def main():
                         continue
                     c = coords_of(e, places)
                 else:
-                    # 生卒：Wikidata 的生日 / 忌日年月日都要对上；只收 1880 年以前出生的历史人物；地点取出生地 / 去世地
+                    # 生卒：Wikidata 的生日 / 忌日年月日都要对上；1880 年以前出生的历史人物，或 1950 年以前出生、已去世的近代人物；地点取出生地 / 去世地
                     ds = e['b'] if it['kind'] == 'born' else e['x']
                     if not any(y == it['y'] and mo == m and da == d for y, mo, da in ds):
                         stats['date'] += 1 if ds else 0
                         continue
-                    if not e['b'] or min(y for y, _, _ in e['b']) >= 1880:
+                    born = min((y for y, _, _ in e['b']), default=None)
+                    if born is None or born >= MODERN_BORN or (born >= OLD_BORN and not e['x']):
                         stats['old'] += 1
                         continue
                     pl = e['bp'] if it['kind'] == 'born' else e['dp']
@@ -256,11 +295,31 @@ def main():
                        'w': {lg: e['w'][lg] for lg in ('zh', 'en', 'ja') if lg in e['w']}}
                 if it['kind'] != 'ev':
                     row['t'] = it['kind']
+                    if born >= OLD_BORN:
+                        modern.setdefault(f'{m:02d}-{d:02d}', []).append(row)
+                        seen.add(e['id'])
+                        break
                 rows.append(row)
                 seen.add(e['id'])
                 break
         if rows:
-            out[f'{m:02d}-{d:02d}'] = sorted(rows, key=lambda r: r['y'])
+            out[f'{m:02d}-{d:02d}'] = rows
+    # 近代人物：日文维基浏览量够高的才算「知名」，每天只留几位，免得盖过古代
+    sl = sitelink_counts([r['q'] for v in modern.values() for r in v])
+    thin = {k for k, v in modern.items() if len(out.get(k, [])) < 3}  # 不足 3 条的日子：候选不粗筛，全部查浏览量
+    views = page_views([r['w']['ja'] for k, v in modern.items() for r in v if (k in thin or sl.get(r['q'], 0) >= PRE) and 'ja' in r['w']])
+    n_modern = 0
+    for key, rows in modern.items():
+        rows = sorted((r for r in rows if views.get(r['w'].get('ja'), 0) >= FILL), key=lambda r: -views[r['w']['ja']])
+        have, take = len(out.get(key, [])), []
+        for r in rows:
+            if len(take) < MODERN_CAP and views[r['w']['ja']] >= FAMOUS or have + len(take) < 3:
+                take.append(r)
+        if take:
+            out.setdefault(key, []).extend(take)
+        n_modern += len(take)
+    out = {k: sorted(v, key=lambda r: r['y']) for k, v in sorted(out.items())}
+    print('近代人物', n_modern, '（候选', sum(len(v) for v in modern.values()), '）')
     n = sum(len(v) for v in out.values())
     kinds = {k: sum(1 for v in out.values() for r in v if r.get('t', 'ev') == k) for k in ('ev', 'born', 'died')}
     print(f'收录 {n} 条（事件 {kinds["ev"]}、诞生 {kinds["born"]}、忌日 {kinds["died"]}），覆盖 {len(out)} / 366 天；'

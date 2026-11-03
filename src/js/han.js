@@ -7,6 +7,37 @@ import { wikiLink } from './sengoku.js';
 const nm = (o) => (lang === 'en' ? o.en || o.ja : lang === 'ja' ? o.ja : o.zh);
 const count = (h) => h.f.reduce((s, [, , rows]) => s + rows.length, 0);
 
+// 藩主 ⇄ 彼时今日：两边都按日文维基条目名对上。lordDays：条目名 → 这位藩主在彼时今日里的诞生 / 忌日（藩主名后面的日期小标签）
+let lordDays = new Map();
+export function setLordDays(all) {
+  lordDays = new Map();
+  for (const [key, list] of Object.entries(all || {})) {
+    for (const e of list) {
+      if (!e.t || !e.w?.ja) continue;
+      if (!lordDays.has(e.w.ja)) lordDays.set(e.w.ja, []);
+      lordDays.get(e.w.ja).push({ key, q: e.q, t: e.t });
+    }
+  }
+}
+const dayLinks = (title) => (lordDays.get(title) || []).map(({ key, q, t: k }) => {
+  const [m, d] = key.split('-').map(Number);
+  return `<button type="button" class="hn-kk kk-${k}" data-kako="${esc(q)}" data-key="${key}">${esc(`${t(`kk.t.${k}`)} ${t('kk.md', { m, d })}`)}</button>`;
+}).join('');
+
+// 彼时今日的一条若是某藩藩主 → 「某藩藩主」（同名多藩的取存续到废藩置县的）
+export function lordOfFn(data) {
+  const by = new Map();
+  for (const h of data?.han || []) {
+    for (const [, , rows] of h.f) {
+      for (const [title] of rows) if (!by.has(title) || (h.k && !by.get(title).k)) by.set(title, h);
+    }
+  }
+  return (e) => {
+    const h = e.w?.ja && by.get(e.w.ja);
+    return h ? t('hn.lord', { name: nm(h.n) }) : '';
+  };
+}
+
 // 各家的历代藩主
 export function lordsHTML(h) {
   return h.f.map(([ja, zh, rows]) => {
@@ -14,7 +45,7 @@ export function lordsHTML(h) {
     const enSur = rows.find((r) => r[3])?.[3].split(' ')[0];
     const fam = !ja ? '' : lang === 'zh' ? zh : lang === 'en' && enSur ? t('hn.fam', { name: enSur }) : ja;
     const lords = rows.map(([title, name, nameZh, en, note], i) => `<li><span class="hn-i">${i + 1}</span>
-      <a href="${wikiLink(title)}" target="_blank" rel="noopener">${esc(lang === 'en' ? en || name : lang === 'ja' ? name : nameZh)}</a>${note ? `<small>${esc(t('hn.again'))}</small>` : ''}</li>`).join('');
+      <a href="${wikiLink(title)}" target="_blank" rel="noopener">${esc(lang === 'en' ? en || name : lang === 'ja' ? name : nameZh)}</a>${note ? `<small>${esc(t('hn.again'))}</small>` : ''}${dayLinks(title)}</li>`).join('');
     return `<div class="hn-fam">${fam ? `<div class="hn-fam-h">${esc(fam)}</div>` : ''}<ol>${lords}</ol></div>`;
   }).join('');
 }

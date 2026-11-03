@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.7 · 2026-11-03
+
+- New "🎂 Birthday card": pick a date in On this day (your birthday, say) to see everyone born and who died that day and what happened, plus how eventful the day is among all 366, how long ago the earliest entry was, and which prefecture it's most tied to; add a name and save it as an image, or copy a link
+- Domain lords and On this day are linked: in Edo domains (prefecture card and ancestral register) a lord's name now carries birth / death dates that mark the birthplace or place of death on the map, and On this day entries that were lords say so
+
+## 3.6.3 · 2026-11-03
+
+- On this day now covers the whole year: six days used to be empty and many had only one or two entries — every one of the 366 now has at least three
+- Added well-known people born before 1950 who have since died (Osamu Tezuka, Akira Kurosawa, Yukio Mishima…), chosen by a year of Japanese Wikipedia page views, two or three a day so the older history still leads
+
 ## 3.6.2 · 2026-11-03
 
 - The "Lord, late Edo" row of the old family register now expands to that domain's line of lords

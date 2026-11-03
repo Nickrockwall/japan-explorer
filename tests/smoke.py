@@ -10,6 +10,7 @@
 """
 import functools
 import http.server
+import json
 import os
 import re
 import socketserver
@@ -886,6 +887,29 @@ class Case:
         page.wait_for_timeout(500)
         assert 'pref=' in page.evaluate('location.hash'), '点一条应选中所在县'
 
+    def bday(self, page):
+        # 生日帖：深链接 #bday=06-21 打开对话框，列出这一天全部条目与三格数字、不出屏、存图；换日期改地址栏；点一条关掉并选中县
+        page.wait_for_selector('#bday[open] .bd-fact', timeout=15000)
+        kako = json.load(open(os.path.join(ROOT, 'src', 'data', 'kako.json'), encoding='utf-8'))
+        assert page.locator('#bday .bd-fact').count() == 3, '应有三格数字'
+        assert page.locator('#bday .bd-item').count() == len(kako['06-21']), '应列出 6 月 21 日的全部条目'
+        assert '1582' in page.text_content('#bday'), '6 月 21 日应有 1582 年的条目'
+        box = page.locator('#bday').bounding_box()
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'生日帖超出屏幕：{box}'
+        assert page.evaluate('document.querySelector("#bday").scrollWidth <= document.querySelector("#bday").clientWidth + 1'), '生日帖不应横向溢出'
+        if not self.narrow:
+            with page.expect_download() as dl:
+                page.click('[data-act="bd-image"]')
+            assert dl.value.suggested_filename == 'birthday-06-21.png'
+        page.fill('[data-bd-date]', '2026-01-01')
+        page.wait_for_function("location.hash.includes('bday=01-01')", timeout=3000)
+        assert page.locator('#bday .bd-item').count() == len(kako['01-01']), '换日期后应列出 1 月 1 日的条目'
+        page.click('#bday .bd-item >> nth=0')
+        page.wait_for_selector('#bday', state='hidden')
+        page.wait_for_timeout(500)
+        assert 'pref=' in page.evaluate('location.hash'), '点一条应选中所在县'
+
     def han(self, page):
         # 江户诸藩：长野县详卡列出藩（≥5，含上田藩），点开上田藩有真田信之
         page.wait_for_selector('.hn-sec', timeout=15000)
@@ -897,6 +921,13 @@ class Case:
         han = page.locator('.hn-han', has_text=('上田' if self.lang != 'en' else 'Ueda'))
         han.locator('summary').click()
         assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'
+        # 藩主 ⇄ 彼时今日：高远藩的保科正之带 6/17 诞生的标签，点了选中出生地所在的县（东京）并标出图钉
+        takato = page.locator('.hn-han', has_text=('高遠' if self.lang == 'ja' else 'Takat' if self.lang == 'en' else '高远'))
+        takato.locator('summary').click()
+        tag = takato.locator('.hn-kk', has_text='6/17')
+        assert tag.count() == 1, '保科正之应带 6/17 诞生的标签'
+        tag.click()
+        page.wait_for_function("location.hash.includes('pref=13')", timeout=5000)
 
     def koseki(self, page):
         # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106，可展开历代藩主）；
@@ -984,7 +1015,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('kako', 'kako=06-21', ['kako']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

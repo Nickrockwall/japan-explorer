@@ -1554,3 +1554,31 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .kk-died { background: rgba(140,140,150,.25); color: #c9c4bb; }
 .kk-prefhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .kk-prefhead .kk-more { margin-left: 0; }
+
+/* 生日帖：沿用古代户籍的和纸卷轴 */
+.bd-date { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: #5a4a3e; }
+.bd-date input { border: 1px solid #c9a67a; background: transparent; color: #2b2420; border-radius: 6px; padding: 2px 6px; font-size: 12px; }
+.bd-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0 4px; }
+.bd-fact { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,.4); min-width: 0; }
+.bd-fact span { font-size: 11px; color: #8a3b33; }
+.bd-fact b { font: 700 15px/1.3 var(--serif); color: #2b2420; }
+.bd-fact small { font-size: 11px; color: #5a4a3e; line-height: 1.4; overflow-wrap: anywhere; }
+.bd-group h3 { margin: 14px 0 4px; padding-bottom: 4px; border-bottom: 2px solid #3a1f1c; font: 700 14px var(--serif); color: #8a3b33; }
+.bd-group ol { list-style: none; margin: 0; padding: 0; }
+.bd-item { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; width: 100%; padding: 6px 4px; border: 0; border-bottom: 1px solid #d8c6a6;
+  background: none; text-align: left; color: inherit; cursor: pointer; font: inherit; }
+.bd-item:hover { background: rgba(255,255,255,.35); }
+.bd-y { display: flex; flex-direction: column; font: 700 15px/1.15 var(--serif); color: #8a5a2b; font-variant-numeric: tabular-nums; }
+.bd-y small { font: 400 10.5px var(--sans); color: #8a7a68; margin-top: 2px; }
+.bd-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.bd-main b { font: 700 14.5px var(--serif); color: #2b2420; }
+.bd-main span { font-size: 12px; color: #5a4a3e; }
+.bday .kk-none { color: #5a4a3e; }
+@media (max-width: 560px) {
+  .bd-facts { grid-template-columns: minmax(0, 1fr); }
+  .bd-fact { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+}
+/* 藩主名后的诞生 / 忌日（配色同彼时今日的 .kk-born / .kk-died）：点了在地图上标出地点 */
+.hn-kk { border: 0; border-radius: 8px; padding: 0 5px; font-size: 10.5px; cursor: pointer; }
+.hn-kk:hover { filter: brightness(1.3); }
+.ks-han .hn-kk { background: rgba(138,59,51,.12); color: #8a3b33; }

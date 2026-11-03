@@ -141,7 +141,7 @@ export function kosekiHTML(ctx, data, name) {
 
 // ── 存成图片：竖版 1080 宽，和纸底、朱印，文字自动折行 ──
 // 按词折行：连续的字母数字（含 . , ' - 等）不拆开，汉字假名逐字
-function wrap(ctx, text, max) {
+export function wrap(ctx, text, max) {
   const out = [];
   let line = '';
   for (const tok of text.match(/[\w.,'’()\-–]+\s*|\s+|./gu) || []) {

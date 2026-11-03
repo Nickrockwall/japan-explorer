@@ -401,6 +401,23 @@ def check_han():
             err('han', f'{name} 应在县 {pid}，实为 {where.get(name)}')
 
 
+def check_kako():
+    """彼时今日：366 天都要有、每天至少 3 条（曾有 6 天一条都没有），字段齐全、同一天不重复"""
+    kako = load('src', 'data', 'kako.json')
+    days = [f'{m:02d}-{d:02d}' for m, n in enumerate([31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], 1) for d in range(1, n + 1)]
+    for key in days:
+        rows = kako.get(key, [])
+        if len(rows) < 3:
+            err('kako', f'{key} 只有 {len(rows)} 条')
+        if len({r['q'] for r in rows}) != len(rows):
+            err('kako', f'{key} 有重复条目')
+        for r in rows:
+            if not all(r['n'].get(lg) for lg in ('zh', 'en', 'ja')) or not 1 <= r['p'] <= 47 or len(r['c']) != 2 or r.get('t', 'ev') not in ('ev', 'born', 'died'):
+                err('kako', f'{key} {r["q"]} 字段不全')
+    if set(kako) - set(days):
+        err('kako', f'多出的日期：{sorted(set(kako) - set(days))}')
+
+
 def check_shell():
     sw = read('sw.js')
     shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
@@ -423,7 +440,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_kako, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')
