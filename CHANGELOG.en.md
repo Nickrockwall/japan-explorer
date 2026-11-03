@@ -4,6 +4,10 @@
 
 Newest first.
 
+## 3.9.1 · 2026-11-03
+
+- Fixed the map colours drifting away from the borders and names after dragging: when you picked a prefecture or a card opened, the map slid into place with an animation, and dragging during that slide left the colour fill stuck at the old position until the next redraw. The base map now moves instantly, on desktop and phone, and in the town and peninsula maps too
+
 ## 3.9 · 2026-11-03
 
 - The Sengoku map now reads like a map of rival domains: neighbouring provinces held by the same power merge into one block, and bright front lines run where two powers meet (in 1600, the line between East and West). Provinces held by local lords or shared between powers keep their borders

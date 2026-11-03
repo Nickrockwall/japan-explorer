@@ -780,6 +780,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
     },
     geo: {
+      // 底图的平移缩放不做过渡：叠加层（线、国名、图钉）都是立刻到位的；底图若用动画滑过去，
+      // 动画途中用户一拖，结束时又被拉回旧目标，填色就和线永久错开（3.9.1）
+      animationDurationUpdate: 0,
       map: 'japan',
       boundingCoords: bounds,
       roam: true,

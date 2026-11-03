@@ -104,6 +104,9 @@ export function createCountyView(root, { onClose, onSelect = () => {}, onKoseki 
         formatter: (x) => { const p = cur?.byCode.get(x.name); return p ? `<div class="muni-tip">${info(p)}</div>` : ''; },
       },
       geo: {
+        // 底图的平移缩放不做过渡：叠加层（线、国名、图钉）都是立刻到位的；底图若用动画滑过去，
+        // 动画途中用户一拖，结束时又被拉回旧目标，填色就和线永久错开（3.9.1）
+        animationDurationUpdate: 0,
         map: `kc-${cur.region.id}`, roam: true, boundingCoords: cur.bounds,
         layoutCenter: ['50%', '54%'], layoutSize: '88%', scaleLimit: { min: 0.5, max: 60 },
         itemStyle: { borderColor: '#151a19', borderWidth: 0.5 },

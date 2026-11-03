@@ -925,6 +925,32 @@ class Case:
         flags = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length")
         assert flags == 0, '1600 年按东西军，不插家纹旗'
 
+    def map_sync(self, page):
+        # 程序移动地图（选县后让出卡片、卡片弹出时改中心都走 setOption）后马上拖动：停下后底图填色要与叠加层对齐。
+        # 以前底图用 700ms 动画滑向目标，途中一拖、动画结束时又被拉回旧目标，填色与线永久错开几十像素
+        self.tab(page, 'map')
+        page.click('[data-filter="sengoku"]')
+        page.wait_for_selector('#sg-years button.on', timeout=15000)
+        r = page.evaluate("(() => { const r = document.getElementById('map').getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })()")
+        x0, y0 = r[0] + r[2] * 0.4, r[1] + r[3] * 0.6
+        page.evaluate("""() => { const c = echarts.getInstanceByDom(document.getElementById('map')); const g = c.getOption().geo[0];
+          c.setOption({ geo: { center: [g.center[0] + 1.5, g.center[1] - 1] } }); }""")
+        page.wait_for_timeout(60)
+        page.mouse.move(x0, y0)
+        page.mouse.down()
+        for i in range(1, 25):
+            page.mouse.move(x0 + i * 5, y0 - i * 3)
+            page.wait_for_timeout(16)
+        page.mouse.up()
+        page.wait_for_timeout(1200)
+        gap = page.evaluate("""() => {
+          const chart = echarts.getInstanceByDom(document.getElementById('map'));
+          const g = chart._componentsViews.find((v) => v._mapDraw)._mapDraw.group;
+          const want = chart.getModel().getComponent('geo').coordinateSystem.getTransformInfo().roam;
+          return Math.max(Math.abs(g.x - want.x), Math.abs(g.y - want.y), Math.abs(g.scaleX - want.scaleX) * 100);
+        }""")
+        assert gap < 1, f'拖动停下后底图与叠加层错开 {gap:.1f}px'
+
     def sengoku_link(self, page):
         # 深链接 #sg=1600&sgp=美濃国：打开战国势力 1600 年并弹出美浓卡片；换年份后地址栏跟着变，Esc 后去掉 sgp
         page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=20000)
@@ -1139,7 +1165,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

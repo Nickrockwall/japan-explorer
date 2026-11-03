@@ -222,6 +222,9 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         },
       },
       geo: {
+        // 底图的平移缩放不做过渡：叠加层（线、国名、图钉）都是立刻到位的；底图若用动画滑过去，
+        // 动画途中用户一拖，结束时又被拉回旧目标，填色就和线永久错开（3.9.1）
+        animationDurationUpdate: 0,
         map: `muni-${cur.pref.id}`, roam: true, boundingCoords: cur.bounds,
         layoutCenter: ['50%', '54%'], layoutSize: '88%', scaleLimit: { min: 0.5, max: 80 },
         itemStyle: { borderColor: '#18181c', borderWidth: 0.5 },
