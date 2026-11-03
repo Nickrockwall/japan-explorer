@@ -109,6 +109,22 @@ def survives(w):
     return y[1] == 1871 if y else '廃藩置県' in w
 
 
+# 条目没有藩主列表、藩主写在正文里的：人工列出，工具核对每个名字在条目里有链接
+# （明治初年才设的藩只有藩知事，与「藩知事不收」一致，不补；竹田藩条目的藩主一节是空的，朽木藩是否算藩有争议）
+LORDS = {
+    '八幡山藩': [['松平家', ['松平家清']]],
+    '大坂藩': [['松平家', ['松平忠明']]],
+    '味舌藩': [['織田家', ['織田長益']]],
+    '鶴田藩': [['松平家', ['松平武聰']]],
+    '吉永藩': [['加藤家', ['加藤明友']]],
+    '川之江藩': [['一柳家', ['一柳直家']]],
+    '土佐中村藩': [['山内家（第1期）', ['山内康豊', '山内政豊']], ['山内家（第2期）', ['山内忠直', '山内豊定', '山内豊明']]],
+}
+
+# 上面这些没有变迁框，年份取正文（大坂藩正文提到「廃藩置県まで独立の藩が置かれることはなかった」，不能按有无这个词判断）
+YEARS = {'八幡山藩': [1590, 1601], '大坂藩': [1615, 1619], '味舌藩': [1600, 1615], '吉永藩': [1643, 1682],
+         '川之江藩': [1636, 1642], '土佐中村藩': [1601, 1689]}
+
 # 名单里的国与正文「現在の」对不上的，人工核对后定下（名单会把同一个藩列在几个国下，正文可能写的是转封前后的地方）
 PREF = {
     '仁賀保藩': 5,      # 羽后由利郡（名单列在羽前国下）
@@ -214,7 +230,7 @@ def main():
             todo.append(f'{t}：条目不存在')
             continue
         real, w = got
-        y = years(w)
+        y = YEARS.get(real) or years(w)
         if y and y[1] < 1600:  # 江户以前就没了
             continue
         if any(h['t'] == real for h in out):  # 名单里写了两次（别名）
@@ -231,10 +247,15 @@ def main():
             hits = sorted(((w.count(name), i) for name, i in pref_id.items() if w.count(name)), reverse=True)
             pid = hits[0][1] if hits else None
         fams = lords(w)
+        if not fams and real in LORDS:
+            for _, names in LORDS[real]:
+                for x in names:
+                    assert f'[[{x}' in w, f'{real}：条目里没有 {x} 的链接'
+            fams = [[fam, [[x, x, ''] for x in names]] for fam, names in LORDS[real]]
         if pid is None or not fams:
             todo.append(f'{real}：{"找不到所在县" if pid is None else "没有解析出藩主"}')
             continue
-        out.append({'t': real, 'p': pid, 'y': y, 'k': 1 if survives(w) else 0, 'f': fams})
+        out.append({'t': real, 'p': pid, 'y': y, 'k': int(y[1] == 1871) if y else int(survives(w)), 'f': fams})
     names = en_labels([h['t'] for h in out] + [x[0] for h in out for f in h['f'] for x in f[1]])
     for h in out:
         ja = re.sub(r'\s*\(.*\)$', '', h['t'])

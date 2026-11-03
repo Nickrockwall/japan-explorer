@@ -6,7 +6,7 @@ Newest first.
 
 ## 3.6.1 · 2026-11-03
 
-- Edo domains completed: only domains that lasted until 1871 were listed, so Aizu, Hamamatsu, Kakegawa, Kōfu, Shirakawa and others that ended around the Boshin War or earlier were missing, and Yamanashi, Tokushima, Tokyo and Okinawa had none at all; Tokushima was dropped because of a wrong year in its article, and Bingo-Fukuyama was placed in Kanagawa. Now 491 domains and 4,246 lords: the 270 that lasted until 1871 first, the rest in a separate group, each with its years
+- Edo domains completed: only domains that lasted until 1871 were listed, so Aizu, Hamamatsu, Kakegawa, Kōfu, Shirakawa and others that ended around the Boshin War or earlier were missing, and Yamanashi, Tokushima, Tokyo and Okinawa had none at all; Tokushima was dropped because of a wrong year in its article, and Bingo-Fukuyama was placed in Kanagawa. Now 498 domains and 4,257 lords: the 271 that lasted until 1871 first, the rest in a separate group, each with its years. Seven small domains whose lords appear only in the article text (Ōsaka, Tosa-Nakamura and others) were added by hand, each name checked against the article
 
 ## 3.6 · 2026-11-03
 
