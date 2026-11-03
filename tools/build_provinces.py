@@ -16,10 +16,14 @@ import sys
 import shapely
 from shapely.geometry import MultiPolygon, Polygon, mapping, shape
 
+sys.path.insert(0, os.path.dirname(__file__))
+import ou_units  # noqa: E402  战国势力图上奥羽按郡细分、虾夷地分出和人地
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA = os.path.join(ROOT, 'src', 'data')
 OUT = os.path.join(DATA, 'provinces.json')
 OUT_ERAS = os.path.join(DATA, 'province_eras.json')  # 时间轴只在用到时才下载，单独成文件
+OUT_SG = os.path.join(DATA, 'sengoku_units.json')  # 战国势力图的奥羽分区与和人地，同样单独成文件
 OUTSIDE = '-'  # 奄美、小笠原等不属任何令制国，也不属虾夷地 / 琉球
 SIMPLIFY = 0.004  # 度；整片覆盖一起简化，相邻两国的公共边界保持一致
 
@@ -85,7 +89,7 @@ def fill_pinholes(geom, others, max_area=0.005):
 
 def main():
     names = {}       # 旧国（日文）→ {zh, ja, en}
-    pieces = {}      # (旧国, 明治国, 是否多褹, 县 id) → [市区町村多边形]
+    pieces = {}      # (旧国, 明治国, 是否多褹, 县 id, 战国分区) → [市区町村多边形]
     meiji = load(os.path.join(ROOT, 'tools', 'meiji_provinces.json'))
     for i in range(1, 48):
         d = load(os.path.join(DATA, 'municipalities', f'{i:02d}.json'))
@@ -94,7 +98,7 @@ def main():
             q = f['properties']
             if i <= 7 and q['code'] not in meiji:
                 sys.exit(f'{q["name"]}（{q["code"]}）没有明治国：请运行 tools/fetch_meiji.py')
-            key = (q.get('province') or OUTSIDE, meiji.get(q['code'], ''), i == 46 and q['name'] in TANE, i)
+            key = (q.get('province') or OUTSIDE, meiji.get(q['code'], ''), i == 46 and q['name'] in TANE, i, ou_units.unit_of(q, i) or '')
             pieces.setdefault(key, []).append(shape(f['geometry']).buffer(0))
 
     # 七道与读音取自各县数据（县数据里旧国名为中文）
@@ -150,7 +154,7 @@ def main():
     eras = {}
     for year, rule in ERAS.items():
         def keyfn(a, rule=rule):
-            classic, mj, tane, _ = a
+            classic, mj, tane = a[:3]
             k = '多褹島' if rule.get('tane') and tane else mj if rule.get('meiji') and mj else classic
             return rule['merge'].get(k, k)
         grouped = group(keyfn, era_props)
@@ -161,6 +165,20 @@ def main():
         }
         n = sum(1 for k in grouped if grouped[k][1]['properties']['circuit'] != '令制外')
         print(f'  {year} 年：{n} 国（与 824 年相比改动 {len(changed)} 国）')
+
+    # 战国势力图：陆奥、出羽换成按郡的分区，虾夷地分出和人地（其余仍叫虾夷地 = 阿伊努的土地）
+    def unit_props(k):
+        if k in ou_units.UNITS:
+            zh, ja, en, kana, prov, _, _ = ou_units.UNITS[k]
+            return {'key': k, 'zh': zh, 'ja': ja, 'en': en, 'kana': kana, 'circuit': base_props(prov)['circuit'] if prov != '蝦夷地' else '令制外', 'parent': prov}
+        return base_props(k)
+    grouped = group(lambda a: a[4] or a[0], unit_props)
+    changed = {k for k, (idxs, _) in grouped.items() if k not in base or base[k][0] != idxs}
+    missing = set(ou_units.UNITS) - set(grouped)
+    if missing:
+        sys.exit(f'这些分区没有任何市区町村：{sorted(missing)}')
+    sengoku = {'remove': sorted(k for k in base if k not in grouped or k in changed), 'add': [grouped[k][1] for k in sorted(changed)]}
+    print(f'  战国分区：去掉 {sengoku["remove"]}，换成 {len(changed)} 块')
 
     # 县界：只要陆上的县与县交界（去掉海岸线），供前端以虚线叠在旧国上
     by_pref = {}
@@ -175,6 +193,8 @@ def main():
     with open(OUT, 'w', encoding='utf-8', newline='\n') as f:
         json.dump({'type': 'FeatureCollection', 'features': features, 'pref_borders': borders},
                   f, ensure_ascii=False, separators=(',', ':'))
+    with open(OUT_SG, 'w', encoding='utf-8', newline='\n') as f:
+        json.dump(sengoku, f, ensure_ascii=False, separators=(',', ':'))
     with open(OUT_ERAS, 'w', encoding='utf-8', newline='\n') as f:
         json.dump(eras, f, ensure_ascii=False, separators=(',', ':'))
     print(f'{len(real)} 令制国 + {len(features) - len(real)} 令制外，县界 {len(borders)} 段'

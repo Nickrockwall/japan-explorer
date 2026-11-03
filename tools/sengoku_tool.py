@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import korea_battles_tool as wiki  # noqa: E402  复用维基条目抓取与缓存
 import zhconv  # noqa: E402
 import rulers_tool as rulers  # noqa: E402
+import ou_units  # noqa: E402  奥羽按郡的分区与和人地
 from rulers_tool import JA_ZH  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -96,6 +97,29 @@ CLANS = {
     'mogami': ('最上', 'Mogami', '最上', '#8f6a4a', '最上氏'),
     'maeda': ('前田', 'Maeda', '前田', '#b0507a', '前田氏'),
     'kobayakawa': ('小早川', 'Kobayakawa', '小早川', '#5fa58f', '小早川氏'),
+    # 奥羽（按郡）与虾夷地
+    'nanbu': ('南部', 'Nanbu', '南部', '#b5475a', '南部氏'),
+    'tsugaru': ('津轻', 'Tsugaru', '津軽', '#e0873f', '津軽氏'),
+    'ando': ('安东（秋田）', 'Andō (Akita)', '安東（秋田）', '#4fa3d1', '安東氏'),
+    'asari': ('浅利', 'Asari', '浅利', '#9aa35a', '浅利氏'),
+    'onodera': ('小野寺', 'Onodera', '小野寺', '#c08a5a', '小野寺氏'),
+    'tozawa': ('户泽', 'Tozawa', '戸沢', '#6fbf8f', '戸沢氏'),
+    'daihoji': ('大宝寺', 'Daihōji', '大宝寺', '#a37fd0', '大宝寺氏'),
+    'ashina': ('芦名', 'Ashina', '蘆名', '#d1b04f', '蘆名氏'),
+    'soma': ('相马', 'Sōma', '相馬', '#3f9f8f', '相馬氏'),
+    'iwaki': ('岩城', 'Iwaki', '岩城', '#7f8fd0', '岩城氏'),
+    'tamura': ('田村', 'Tamura', '田村', '#cf7fa8', '田村氏'),
+    'nikaido': ('二阶堂', 'Nikaidō', '二階堂', '#8fbf5a', '二階堂氏'),
+    'shirakawa': ('白河结城', 'Shirakawa Yūki', '白河結城', '#5fb0b0', '白河結城氏'),
+    'nihonmatsu': ('二本松（畠山）', 'Nihonmatsu (Hatakeyama)', '二本松（畠山）', '#a07a50', '二本松氏'),
+    'osaki': ('大崎', 'Ōsaki', '大崎', '#6a8fd0', '大崎氏'),
+    'kasai': ('葛西', 'Kasai', '葛西', '#d08f6a', '葛西氏'),
+    'oshu_shiba': ('斯波（高水寺）', 'Shiba (Kōsuiji)', '斯波（高水寺）', '#c9b36a', '高水寺斯波氏'),
+    'hienuki': ('稗贯', 'Hienuki', '稗貫', '#7aa0a0', '稗貫氏'),
+    'waga': ('和贺', 'Waga', '和賀', '#a05a7a', '和賀氏'),
+    'gamo': ('蒲生', 'Gamō', '蒲生', '#e0c04a', '蒲生氏'),
+    'kakizaki': ('蛎崎', 'Kakizaki', '蠣崎', '#5ab0d8', '蠣崎氏'),
+    'ainu': ('阿伊努的土地', 'Ainu lands', 'アイヌの地', '#6f8f8a', None),
     'outside': ('令制外', 'Outside the provinces', '令制外', '#33333a', None),
 }
 # 1600 年关原的站队
@@ -106,6 +130,7 @@ SIDES = {
     'split': ('东西分裂', 'Divided', '東西に分裂', '#8a7f8f'),
     'neutral': ('观望', 'Stayed out', '中立・不参加', '#7d7d6a'),
     'outside': ('令制外', 'Outside the provinces', '令制外', '#33333a'),
+    'ainu': ('阿伊努的土地', 'Ainu lands', 'アイヌの地', '#6f8f8a'),  # 虾夷地：不属任何大名，也不参与关原
 }
 
 # 国 → [1467, 1560, 1573, 1582, 1590, 1600]
@@ -266,6 +291,126 @@ SIDE_EV = {
 }
 
 
+# 奥羽按郡的分区（tools/ou_units.py）与虾夷地：分区 → [1467, 1560, 1573, 1582, 1590, 1600]
+# 1467 年按守护画，奥羽没有一般的守护（奥州探题 / 羽州探题），仍记总称「奥羽诸氏」。
+# 1590 年为奥州仕置之后：大崎、葛西旧领 13 郡给木村吉清（丰臣系小大名），伊达被收走会津四郡、岩濑、安积（给蒲生氏乡，
+# 连同改易的白河、石川），保留「陆奥出羽之内 13 郡」（田村、安达、黑川等，1591 年才转给蒲生）；庄内归上杉。
+# 1600 年：上杉（会津、仙道、伊达信夫、置赐、庄内）西军；小野寺附上杉；相马、岩城不出兵（OU_SIDE_EV）；
+# 刈田的白石城 7 月已被伊达攻下，记东军；和人地不在关原的站队里，记令制外。
+_K, _G = 'kasai', 'gunyu'
+OU = {
+    '津軽': ['ou', 'nanbu', 'nanbu', 'tsugaru', 'tsugaru', 'east'],
+    '糠部': ['ou', 'nanbu', 'nanbu', 'nanbu', 'nanbu', 'east'],
+    '鹿角': ['ou', 'nanbu', 'nanbu', 'nanbu', 'nanbu', 'east'],
+    '閉伊': ['ou', _G, _G, 'nanbu', 'nanbu', 'east'],
+    '岩手': ['ou', 'nanbu', 'nanbu', 'nanbu', 'nanbu', 'east'],
+    '紫波': ['ou', 'oshu_shiba', 'oshu_shiba', 'oshu_shiba', 'nanbu', 'east'],
+    '稗貫': ['ou', 'hienuki', 'hienuki', 'hienuki', 'toyo_small', 'east'],
+    '和賀': ['ou', 'waga', 'waga', 'waga', 'toyo_small', 'east'],
+    '胆沢・江刺': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '磐井': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '気仙': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '本吉': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '登米': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '桃生・牡鹿': ['ou', _K, _K, _K, 'toyo_small', 'east'],
+    '栗原': ['ou', 'osaki', 'osaki', 'osaki', 'toyo_small', 'east'],
+    '大崎': ['ou', 'osaki', 'osaki', 'osaki', 'toyo_small', 'east'],
+    '黒川': ['ou', _G, _G, _G, 'date', 'east'],  # 黑川晴氏改易，属伊达的 13 郡
+    '宮城': ['ou', _G, _G, _G, 'date', 'east'],
+    '名取': ['ou', _G, _G, _G, 'date', 'east'],
+    '柴田': ['ou', 'date', 'date', 'date', 'date', 'east'],
+    '刈田': ['ou', 'date', 'date', 'date', 'date', 'east'],
+    '伊具': ['ou', 'date', 'soma', 'soma', 'date', 'east'],
+    '亘理': ['ou', 'date', 'date', 'date', 'date', 'east'],
+    '相馬': ['ou', 'soma', 'soma', 'soma', 'soma', 'neutral'],
+    '岩城': ['ou', 'iwaki', 'iwaki', 'iwaki', 'iwaki', 'neutral'],
+    '田村': ['ou', 'tamura', 'tamura', 'tamura', 'date', 'west'],
+    '安達': ['ou', 'nihonmatsu', 'nihonmatsu', 'nihonmatsu', 'date', 'west'],
+    '安積': ['ou', _G, _G, _G, 'gamo', 'west'],
+    '岩瀬': ['ou', 'nikaido', 'nikaido', 'nikaido', 'gamo', 'west'],
+    '白河': ['ou', 'shirakawa', 'shirakawa', 'shirakawa', 'gamo', 'west'],
+    '石川': ['ou', _G, _G, _G, 'gamo', 'west'],
+    '伊達・信夫': ['ou', 'date', 'date', 'date', 'date', 'west'],
+    '会津': ['ou', 'ashina', 'ashina', 'ashina', 'gamo', 'west'],
+    '秋田': ['ou', 'ando', 'ando', 'ando', 'ando', 'east'],
+    '比内': ['ou', 'asari', 'asari', 'ando', 'ando', 'east'],
+    '仙北': ['ou', 'tozawa', 'tozawa', 'tozawa', 'tozawa', 'east'],
+    '平鹿': ['ou', 'onodera', 'onodera', 'onodera', 'onodera', 'west'],
+    '雄勝': ['ou', 'onodera', 'onodera', 'onodera', 'onodera', 'west'],
+    '由利': ['ou', _G, _G, _G, _G, 'east'],
+    '村山': ['ou', 'mogami', 'mogami', 'mogami', 'mogami', 'east'],
+    '最上': ['ou', _G, 'mogami', 'mogami', 'mogami', 'east'],
+    '置賜': ['ou', 'date', 'date', 'date', 'date', 'west'],
+    '庄内': ['ou', 'daihoji', 'daihoji', 'daihoji', 'uesugi', 'west'],
+    '和人地': ['kakizaki', 'kakizaki', 'kakizaki', 'kakizaki', 'kakizaki', 'outside'],
+    '蝦夷地': ['ainu', 'ainu', 'ainu', 'ainu', 'ainu', 'ainu'],
+}
+OU_SPLIT = {
+    ('津軽', '1573'): ['tsugaru'],
+}
+# 核对不过、人工确认过的：(分区, 家) → (日文维基条目, 原文)
+_KASAI13 = ('葛西大崎一揆', '葛西・大崎両氏の旧領13郡（胆沢・江刺・磐井・気仙・本吉・登米・桃生・牡鹿・栗原・遠田・志田・玉造・加美）')
+_GAMO = ('蒲生氏郷', '会津40万石、中通り20万石弱')
+OU_CHECKED = {
+    ('胆沢・江刺', 'kasai'): _KASAI13,
+    ('伊具', 'soma'): ('丸森城', '丸森城も相馬氏に接収され'),
+    **{(u, 'gamo'): _GAMO for u in ('会津', '岩瀬', '安積', '白河', '石川')},
+    ('田村', 'date'): ('伊達政宗', '陸奥出羽のうち13郡'),
+    ('安達', 'date'): ('伊達政宗', '陸奥出羽のうち13郡'),
+    ('黒川', 'date'): ('伊達政宗', '陸奥出羽のうち13郡'),
+}
+OU_SIDE_EV = {
+    '相馬': ('相馬義胤 (十六代当主)', '自らは所領の守りを固め'),
+    '岩城': ('岩城貞隆', '上杉景勝征伐に参加しなかった'),
+}
+
+
+def check_ou():
+    bad = []
+    if set(OU) != set(ou_units.UNITS) | {'蝦夷地'}:
+        bad.append(f'OU 与 ou_units.UNITS 不一致：{sorted(set(OU) ^ (set(ou_units.UNITS) | {"蝦夷地"}))}')
+    for unit, row in OU.items():
+        if len(row) != 6:
+            bad.append(f'{unit}：要 6 个年份')
+            continue
+        arts = ou_units.UNITS[unit][6] if unit in ou_units.UNITS else []
+        texts = [wiki.article('ja', a) for a in arts]
+        for a, tx in zip(arts, texts):
+            if not tx:
+                bad.append(f'{unit}：条目「{a}」不存在')
+        shorts = [x for x in unit.split('・')]
+        for y, k in zip(YEARS, row):
+            ks = [k] + OU_SPLIT.get((unit, y), [])
+            for k in ks:
+                if y == '1600':
+                    if k not in SIDES:
+                        bad.append(f'{unit} 1600：站队 {k} 不存在')
+                    elif k in ('turn', 'split', 'neutral'):
+                        ev = OU_SIDE_EV.get(unit)
+                        if not ev:
+                            bad.append(f'{unit} 1600：{k} 要在 OU_SIDE_EV 写依据')
+                        elif ev[1] not in wiki.article('ja', ev[0]):
+                            bad.append(f'{unit} 1600：依据「{ev[1]}」不在 {ev[0]} 条目里')
+                    continue
+                if k not in CLANS:
+                    bad.append(f'{unit} {y}：没有 {k}')
+                    continue
+                if CLANS[k][4] is None:
+                    continue
+                if (unit, k) in OU_CHECKED:
+                    art, quote = OU_CHECKED[(unit, k)]
+                    if quote not in wiki.article('ja', art):
+                        bad.append(f'{unit} {y}：OU_CHECKED 依据「{quote}」不在 {art} 条目里')
+                    continue
+                name = surname(k)
+                if any(name in tx for tx in texts):
+                    continue
+                if any(sh in wiki.article('ja', CLANS[k][4]) for sh in shorts):
+                    continue
+                bad.append(f'{unit} {y}：{"/".join(arts)} 没有「{name}」，{CLANS[k][4]} 也没提到「{"/".join(shorts)}」')
+    return bad
+
+
 def surname(k):
     ja = CLANS[k][2]
     return re.sub(r'（.*?）', '', ja).replace('若狭', '')
@@ -378,6 +523,23 @@ HEADS = {
              'shimazu': '島津義久', 'so': '宗義智'},
     '1600': {'east': '徳川家康', 'west': '石田三成'},
 }
+# 奥羽与虾夷地的代表人物
+for _y, _hs in {
+    '1560': {'nanbu': '南部晴政', 'ando': '安東愛季', 'onodera': '小野寺景道', 'tozawa': '戸沢道盛', 'daihoji': '大宝寺義増',
+             'ashina': '蘆名盛氏', 'soma': '相馬盛胤 (十五代当主)', 'nikaido': '二階堂盛義',
+             'shirakawa': '結城晴綱', 'osaki': '大崎義直', 'date': '伊達晴宗', 'kakizaki': '蠣崎季広'},
+    '1573': {'nanbu': '南部晴政', 'tsugaru': '津軽為信', 'ando': '安東愛季', 'onodera': '小野寺景道', 'tozawa': '戸沢道盛',
+             'daihoji': '大宝寺義氏', 'ashina': '蘆名盛氏', 'soma': '相馬盛胤 (十五代当主)', 'iwaki': '岩城親隆',
+             'nikaido': '二階堂盛義', 'osaki': '大崎義直', 'kasai': '葛西晴信', 'date': '伊達輝宗',
+             'mogami': '最上義光', 'asari': '浅利勝頼', 'kakizaki': '蠣崎季広'},
+    '1582': {'nanbu': '南部信直', 'tsugaru': '津軽為信', 'ando': '安東愛季', 'onodera': '小野寺義道', 'tozawa': '戸沢盛安',
+             'daihoji': '大宝寺義氏', 'ashina': '蘆名盛隆', 'soma': '相馬義胤 (十六代当主)', 'iwaki': '岩城常隆',
+             'osaki': '大崎義隆', 'kasai': '葛西晴信', 'date': '伊達輝宗',
+             'mogami': '最上義光', 'kakizaki': '蠣崎季広'},
+    '1590': {'nanbu': '南部信直', 'tsugaru': '津軽為信', 'ando': '秋田実季', 'onodera': '小野寺義道', 'tozawa': '戸沢光盛',
+             'soma': '相馬義胤 (十六代当主)', 'iwaki': '岩城常隆', 'gamo': '蒲生氏郷', 'kakizaki': '松前慶広'},
+}.items():
+    HEADS[_y].update(_hs)
 # 生卒不详、按条目原文确认那一年在位的：(年, 家) → (日文维基条目, 原文)
 HEAD_EV = {
     ('1467', 'isshiki'): ('伊勢国', '一色義直（1451年 - 1467年）'),
@@ -386,7 +548,7 @@ HEAD_EV = {
     ('1573', 'urakami'): ('浦上宗景', '天正3年（1575年）6月、毛利軍は三村元親を攻め滅ぼして'),
 }
 # Wikidata 没有英文名的（读音取日文条目首句）
-EN_PEOPLE = {'宗成職': 'Sō Shigemoto', '小山持政': 'Oyama Mochimasa', '菊池重朝': 'Kikuchi Shigetomo'}
+EN_PEOPLE = {'宗成職': 'Sō Shigemoto', '小山持政': 'Oyama Mochimasa', '菊池重朝': 'Kikuchi Shigetomo', '葛西晴信': 'Kasai Harunobu'}
 # 条目里核对的字（默认取家名）
 HEAD_SURNAME = {'ikko': '本願寺', 'anegakoji': '姉小路', 'toyotomi': '豊臣', 'toyo_small': '豊臣', 'ryuzoji': '龍造寺', 'east': '関ヶ原', 'west': '関ヶ原', 'horigoe': '堀越',
                 'miyoshi': '三好'}
@@ -426,6 +588,10 @@ def check_heads(bad):
         for y, k in zip(YEARS, row):
             used[y].add(k)
             used[y].update(SPLIT.get((prov, y), []))
+    for unit, row in OU.items():
+        for y, k in zip(YEARS, row):
+            used[y].add(k)
+            used[y].update(OU_SPLIT.get((unit, y), []))
     people = lifespans(sorted({t for hs in HEADS.values() for t in hs.values()}))
     for y, hs in HEADS.items():
         for k, title in hs.items():
@@ -498,16 +664,30 @@ def build(people):
     prov = {}
     for p, row in DATA.items():
         prov[p] = {y: ({'c': k, 'with': SPLIT[(p, y)]} if (p, y) in SPLIT else {'c': k}) for y, k in zip(YEARS, row)}
+    # 奥羽的郡与虾夷地（战国势力图用 sengoku_units.json 的分区边界）；陆奥、出羽、虾夷地整国的记录留给古代户籍等按国查的地方
+    units = {}
+    for u, row in OU.items():
+        units[u] = {y: ({'c': k, 'with': OU_SPLIT[(u, y)]} if (u, y) in OU_SPLIT else {'c': k}) for y, k in zip(YEARS, row)}
     persons = {}
     for t in sorted({t for hs in HEADS.values() for t in hs.values()}):
         ja = re.sub(r' \(.*\)$', '', t)
         persons[t] = {'ja': ja, 'zh': zh(ja), **{k: people[t][k] for k in ('en', 'born', 'died', 'qid')}}
         persons[t]['en'] = persons[t]['en'] or EN_PEOPLE[t]
-    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'heads': HEADS, 'people': persons, 'koku': koku1598()}
+    # 古代户籍按市区町村查分区：团体代码 → 分区（与 build_provinces.py 用同一套 ou_units.unit_of）
+    muni_units = {}
+    for i in range(1, 8):
+        with open(os.path.join(ROOT, 'src', 'data', 'municipalities', f'{i:02d}.json'), encoding='utf-8') as f:
+            for ft in json.load(f)['features']:
+                u = ou_units.unit_of(ft['properties'], i)
+                if u:
+                    muni_units[ft['properties']['code']] = u
+    return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'units': units, 'muni_units': muni_units,
+            'heads': HEADS, 'people': persons, 'koku': koku1598()}
 
 
 def main():
     bad, warn = check()
+    bad += check_ou()
     people = check_heads(bad)
     for w in warn:
         print('待核', w)

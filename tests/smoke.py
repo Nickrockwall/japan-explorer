@@ -835,13 +835,16 @@ class Case:
         page.click('[data-filter="sengoku"]')
         page.wait_for_selector('#sg-years button.on', timeout=15000)
         assert page.get_attribute('#sg-years button.on', 'data-y') == '1560', '默认应为 1560 年'
-        first = page.text_content('#legend-items > * >> nth=0')
-        assert '9' in first and any(x in first for x in ('三好', 'Miyoshi')), f'1560 年图例首位应是三好 9 国：{first}'
+        # 图例按块数排；总称（国人割据等）不是家族，排第一的大名家要是三好 9 国
+        first = page.text_content('#legend-items [data-clan] >> nth=0')
+        assert '9' in first and any(x in first for x in ('三好', 'Miyoshi')), f'1560 年图例首位的家应是三好 9 国：{first}'
         assert page.locator('#legend-items > *').count() <= 14, '1560 年图例应合并只占一国的家'
         page.click('#sg-years [data-y="1600"]')
         page.wait_for_timeout(300)
-        assert page.locator('#legend-items > *').count() == 6, '1600 年图例应为 6 类'
-        assert '27' in page.text_content('#legend-items > * >> nth=0'), '1600 年西军 27 国居首'
+        # 1600 年：6 类站队 + 虾夷地（阿伊努的土地）；奥羽按郡计，东军 53 块、西军 39 块
+        assert page.locator('#legend-items > *').count() == 7, '1600 年图例应为 7 类'
+        assert '39' in page.text_content('#legend-items [data-clan="west"]'), '1600 年西军应为 39 块'
+        assert '53' in page.text_content('#legend-items [data-clan="east"]'), '1600 年东军应为 53 块'
         self.inside(page, '#sg-years button.on')
         self._click_geo(page, [138.6, 35.65])
         page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=5000)
@@ -924,6 +927,35 @@ class Case:
         assert page.is_hidden('#sg-card') and 'sgc=' not in page.evaluate('location.hash'), '换到 1600 年后家族的总览应收起'
         flags = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length")
         assert flags == 0, '1600 年按东西军，不插家纹旗'
+
+    def sengoku_ou(self, page):
+        # 奥羽按郡、虾夷地分出和人地：深链接 1582 伊达总览 5 块（伊具在相马手里），石高「—」不排名、注明按郡；
+        # 点津轻看 6 个年份（1573 南部与津轻分治、1582 津轻）；1600 年刈田已归东军
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-stats', timeout=20000)
+        assert page.locator('#sg-card .sg-pv').count() == 5, '1582 年伊达应领有 5 块'
+        names = page.text_content('#sg-card .sg-pvs')
+        assert not any(x in names for x in ('伊具', 'Igu')), '1582 年伊具在相马手里'
+        assert page.text_content('#sg-card .sg-stats > div >> nth=1').strip().startswith('—'), '只在奥羽的家石高写「—」'
+        assert page.locator('#sg-card .sg-stats > div').count() == 3, '领有奥羽的家不排名'
+        assert any(x in page.text_content('#sg-card .kr-note') for x in ('奥羽按郡', 'split by district', '郡ごと')), '应注明奥羽按郡'
+        self.inside(page, '#sg-card')
+        units = page.evaluate("echarts.getInstanceByDom(document.getElementById('map')).getOption().geo[0].regions.map((r) => r.name)")
+        assert '津軽' in units and '和人地' in units and '陸奥国' not in units, '战国底图应把陆奥换成按郡的分区'
+        page.evaluate("() => { location.hash = 'pref=2&sg=1573&sgp=' + encodeURIComponent('津軽'); }")
+        page.reload()
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-rows li', timeout=20000)
+        row = page.text_content('#sg-card li[data-y="1573"]')
+        assert any(x in row for x in ('南部', 'Nanbu')) and any(x in row for x in ('津轻', 'Tsugaru', '津軽')), f'1573 年津轻应是南部与津轻分治：{row}'
+        assert any(x in page.text_content('#sg-card li[data-y="1582"]') for x in ('津轻', 'Tsugaru', '津軽')), '1582 年津轻应归津轻氏'
+
+    def koseki_ou(self, page):
+        # 东北的古代户籍：伊达市的「战国」一栏按郡（伊达·信夫）：1560 伊达、1600 西军（上杉领），精度印为郡
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        row = page.locator('#koseki .ks-row', has=page.locator('.ks-k', has_text=re.compile('战国|Sengoku|戦国'))).first
+        text = row.text_content()
+        assert any(x in text for x in ('1560 伊达', '1560 Date', '1560 伊達')), f'伊达市 1560 年应归伊达：{text}'
+        assert any(x in text for x in ('1600 西军', '1600 Western', '1600 西軍')), f'伊达市 1600 年应属西军（上杉领）：{text}'
+        assert any(x in row.locator('.ks-seal').text_content() for x in ('郡', 'Dist')), '精度印应为「郡」'
 
     def map_sync(self, page):
         # 程序移动地图（选县后让出卡片、卡片弹出时改中心都走 setOption）后马上拖动：停下后底图填色要与叠加层对齐。
@@ -1165,7 +1197,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

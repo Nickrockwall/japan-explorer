@@ -110,7 +110,7 @@ function sgAnswer(x, P) {
   if (x.clan) {
     if (!x.provs.length) return t('o.sgc.none', { self: P.self, clan: x.clan, year: x.year }) + `\n\n${P.tail}`;
     return [t('o.sgc.now', { self: P.self, clan: x.clan, year: x.year, head: x.head ? paren(x.head) : '', n: x.provs.length, list: x.provs.join(' · ') }),
-      t('o.sgc.koku', { koku: x.koku, rank: x.rank || '–' }),
+      x.koku ? t('o.sgc.koku', { koku: x.koku, rank: x.rank || '–' }) : t('o.sgc.ou'),
       x.near.length ? t('o.sgc.near', { list: x.near.join(' · ') }) : '', t('o.sgc.note')].filter(Boolean).join('\n\n') + `\n\n${P.tail}`;
   }
   const now = x.rows.find((r) => r.year === x.year);

@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.10 · 2026-11-03
+
+- Ōu is no longer one grey block of "Northern clans": Mutsu and Dewa are split into 43 districts, so the Nanbu, Tsugaru, Andō (Akita), Kasai, Ōsaki, Date, Ashina, Sōma, Iwaki, Mogami, Onodera, Tozawa, Daihōji and others each get their lands, banners and overviews. After the 1590 Ōu settlement the Kasai and Ōsaki lands go to Kimura Yoshikiyo, Aizu with Iwase, Asaka, Shirakawa and Ishikawa to Gamō, and the Date keep 13 districts; in 1600 the Uesugi lands are Western and the Sōma and Iwaki stay out. Every entry is checked against Japanese Wikipedia
+- Ezo is split in two: the Wajinchi at the southern tip of the Oshima Peninsula (the Kakizaki, later Matsumae) and the rest as Ainu lands, instead of one block marked "outside the provinces"
+- The ancient register now gives the Sengoku row for Tōhoku and Hokkaidō towns by district, with a "district" precision seal
+- District borders are pieced together from today's municipalities and approximate; there are no 1598 koku figures by district, so powers holding Ōu land show koku for their other lands only (marked "≥") and are not ranked
+- The legend lists at most 13 entries and folds the rest; zoomed out, banners appear by territory size, so Tōhoku is no longer crowded
+
 ## 3.9.1 · 2026-11-03
 
 - Fixed the map colours drifting away from the borders and names after dragging: when you picked a prefecture or a card opened, the map slid into place with an animation, and dragging during that slide left the colour fill stuck at the old position until the next redraw. The base map now moves instantly, on desktop and phone, and in the town and peninsula maps too

@@ -7,8 +7,9 @@ import { crestSVG } from './crests.js';
 
 const OUTSIDE = '#33333a';
 const DIM = [24, 24, 28]; // 聚光时压暗到底色 #18181c
-// 总称（国人割据、多方争夺、丰臣直辖与中小大名、奥羽诸氏；1600 年的倒戈 / 分裂 / 观望）不是一家：不合并国界、不出势力总览
-const LOOSE = new Set(['gunyu', 'contest', 'toyo_small', 'ou', 'outside', 'turn', 'split', 'neutral']);
+// 总称（国人割据、多方争夺、丰臣直辖与中小大名、奥羽诸氏；1600 年的倒戈 / 分裂 / 观望）与阿伊努的土地不是一家：
+// 不合并国界、不插家纹旗、不出势力总览
+const LOOSE = new Set(['gunyu', 'contest', 'toyo_small', 'ou', 'outside', 'turn', 'split', 'neutral', 'ainu']);
 const mix = (hex, f) => {
   const n = parseInt(hex.slice(1), 16);
   const ch = [n >> 16, (n >> 8) & 255, n & 255].map((v, i) => Math.round(v + (DIM[i] - v) * f));
@@ -37,7 +38,8 @@ function rulerIndex(rulers) {
 export function createSengoku(data, provinces, year = '1560', { rulers = null, bios = {} } = {}) {
   const rulerBy = rulerIndex(rulers);
   const props = new Map(provinces.features.map((f) => [f.properties.key, f.properties]));
-  const keys = Object.keys(data.provinces).filter((k) => props.has(k));
+  // 底图上的各块：68 国，奥羽换成按郡的分区（data.units，sengoku_units.json 有边界时），虾夷地分出和人地
+  const keys = [...new Set([...Object.keys(data.units || {}), ...Object.keys(data.provinces)])].filter((k) => props.has(k));
   const pick = (o) => o[lang] || o.zh;
   const provName = (k) => {
     const p = props.get(k);
@@ -49,7 +51,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
   let clan = null; // 势力总览：所选年份里的一家（CLANS / SIDES 的键）
   let near = new Map(); // 旧国 → 陆上相邻的旧国（map.js 由国界算出后 setAdjacency 传入）
 
-  const entry = (k, y = year) => data.provinces[k]?.[y];
+  const entry = (k, y = year) => (data.units?.[k] || data.provinces[k])?.[y];
   const group = (y, c) => (y === '1600' ? data.sides[c] : data.clans[c]);
   const isOutside = (k) => !props.get(k)?.zh;
   function baseColor(k) {
@@ -83,9 +85,9 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       const c = entry(k).c;
       counts.set(c, (counts.get(c) || 0) + 1);
     }
-    // 只占一国的家太多（1560 年有二十来家），图例里合成一项，地图提示里仍有各家的名字
+    // 只占一国的家太多（1560 年有二十来家，奥羽按郡后更多），图例最多列 13 项，其余合成一项；地图提示与旗上仍有各家的名字
     const sorted = [...counts].sort((a, b) => b[1] - a[1]);
-    const big = sorted.length > 12 ? sorted.filter(([, n]) => n > 1) : sorted;
+    const big = sorted.length > 12 ? sorted.filter(([, n]) => n > 1).slice(0, 13) : sorted;
     const rest = sorted.length - big.length;
     return {
       caption: t(`sg.cap.${year}`),
@@ -154,15 +156,18 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
   // ── 势力总览：一家在所选年份的领国、按 1598 年太阁检地国高折算的石高、名次、各年份的消长、接壤的势力 ──
   const KOKU = data.koku || {};
   const kokuOf = (k) => KOKU[k] ?? null;
-  const total = keys.reduce((a, k) => a + (isOutside(k) ? 0 : kokuOf(k) || 0), 0);
+  // 全国按 68 国的 1598 年国高合计（奥羽各郡没有分郡的数字，但陆奥、出羽整国的在里面）
+  const total = Object.values(KOKU).reduce((a, v) => a + (v || 0), 0);
+  // 奥羽的郡与虾夷地（data.units 的块）没有石高：领有这些块的家，石高只算其余部分，也不排名
   function clanStats(c, y = year) {
     const held = keys.map((k) => [k, share(k, c, y)]).filter(([, s]) => s > 0);
     const koku = held.reduce((a, [k, s]) => a + (kokuOf(k) || 0) * s, 0);
-    return { held, koku, n: held.filter(([, s]) => s === 1).length, part: held.filter(([, s]) => s < 1).length };
+    const ou = held.some(([k]) => data.units?.[k]);
+    return { held, koku, ou, n: held.filter(([, s]) => s === 1).length, part: held.filter(([, s]) => s < 1).length };
   }
   function rankOf(c) {
     const owners = new Set(keys.flatMap((k) => (isOutside(k) ? [] : [entry(k).c, ...(entry(k).with || [])])).filter((x) => !LOOSE.has(x)));
-    const list = [...owners].map((x) => [x, clanStats(x).koku]).sort((a, b) => b[1] - a[1]);
+    const list = [...owners].map((x) => [x, clanStats(x)]).filter(([, st]) => !st.ou).map(([x, st]) => [x, st.koku]).sort((a, b) => b[1] - a[1]);
     const i = list.findIndex(([x]) => x === c);
     return i < 0 ? null : { n: i + 1, of: list.length };
   }
@@ -186,9 +191,12 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const ys = data.years.filter((y) => y !== '1600');
     if (year === '1600') return '';
     const pts = ys.map((y) => ({ y, ...clanStats(c, y) }));
-    const max = Math.max(...pts.map((p) => p.koku), 1);
+    // 柱高按石高；只在奥羽、一年都没有石高的家按领有的块数
+    const byN = pts.every((p) => !p.koku);
+    const val = (p) => (byN ? p.n + p.part : p.koku);
+    const max = Math.max(...pts.map(val), 1);
     const bars = pts.map((p) => `<li class="${p.y === year ? 'on' : ''}" data-y="${p.y}" title="${esc(p.koku ? `${p.y} · ${man(p.koku)}` : p.y)}">
-      <span class="sg-bar"><b style="height:${Math.max(p.koku ? 3 : 0, Math.round((p.koku / max) * 40))}px;background:${group(year, c).color}"></b></span>
+      <span class="sg-bar"><b style="height:${Math.max(val(p) ? 3 : 0, Math.round((val(p) / max) * 40))}px;background:${group(year, c).color}"></b></span>
       <span class="sg-bn">${p.n + p.part || '–'}</span><small>${p.y}</small></li>`).join('');
     return `<div class="sg-sub">${esc(t('sg.c.trend'))}</div><ol class="sg-trend">${bars}</ol>`;
   }
@@ -204,21 +212,24 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       return `${back}${title}<div class="muni-meta">${esc(t('sg.c.sub', { y: year }))}</div>
         <div class="kr-body"><p class="sg-none">${esc(t('sg.c.none', { y: year }))}</p>${trend(c)}</div>`;
     }
-    const rk = rankOf(c);
+    const rk = st.ou ? null : rankOf(c);
     const pct = total ? (st.koku / total) * 100 : 0;
+    // 领有奥羽的块：石高只算其余部分（写「≥」），一块都没有石高的写「—」
+    const kokuText = st.ou ? (st.koku ? `≥${man(st.koku)}` : '—') : man(st.koku);
+    const pctText = st.ou ? (st.koku ? `≥${pct.toFixed(1)}%` : '—') : `${pct.toFixed(1)}%`;
     const provs = st.held.map(([k, s]) => `<button type="button" class="sg-pv${s < 1 ? ' part' : ''}" data-prov="${esc(k)}">${esc(provName(k))}${s < 1 ? `<small>${esc(t('sg.c.part'))}</small>` : ''}</button>`).join('');
     const nb = neighbours(c).map(([o, ks]) => `<li><i style="background:${group(year, o).color}"></i><button type="button" class="sg-clan" data-clan="${o}" data-cy="${year}">${esc(clanName(year, o))}</button>
       <span>${esc([...ks].map(provName).join(' · '))}</span></li>`).join('');
     const notes = [t('sg.c.note'),
-      st.held.some(([k]) => k === '出羽国' || k === '陸奥国') ? t('sg.c.dewa') : '',
-      st.held.some(([k]) => kokuOf(k) == null) ? t('sg.c.nokoku') : ''].filter(Boolean).join(' ');
+      st.ou ? t('sg.c.ou') : '',
+      st.held.some(([k]) => !data.units?.[k] && kokuOf(k) == null) ? t('sg.c.nokoku') : ''].filter(Boolean).join(' ');
     return `${back}${title}
       <div class="muni-meta">${esc(t('sg.c.sub', { y: year }))}${head ? ` · <button type="button" class="sg-who" data-person="${esc(head)}">${esc(personName(head))}</button>` : ''}</div>
       <div class="kr-body">
         <div class="sg-stats">
           <div><b>${st.n}${st.part ? `<small>+${st.part}</small>` : ''}</b><span>${esc(t('sg.c.provs'))}</span></div>
-          <div><b>${esc(man(st.koku))}</b><span>${esc(t('sg.c.koku'))}</span></div>
-          <div><b>${pct.toFixed(1)}%</b><span>${esc(t('sg.c.pct'))}</span></div>
+          <div><b>${esc(kokuText)}</b><span>${esc(t('sg.c.koku'))}</span></div>
+          <div><b>${esc(pctText)}</b><span>${esc(t('sg.c.pct'))}</span></div>
           ${rk ? `<div><b>${esc(t('sg.c.rank', { n: rk.n }))}</b><span>${esc(t('sg.c.of', { n: rk.of }))}</span></div>` : ''}
         </div>
         <div class="sg-pvs">${provs}</div>
@@ -347,7 +358,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       const head = headOf(year, clan);
       return { year, clan: clanName(year, clan), head: head ? personName(head) : '',
         provs: st.held.map(([k, s]) => provName(k) + (s < 1 ? `(${t('sg.c.part')})` : '')),
-        koku: st.held.length ? man(st.koku) : '', rank: rankOf(clan)?.n || null, near: neighbours(clan).map(([o]) => clanName(year, o)) };
+        koku: st.held.length && !st.ou ? man(st.koku) : '', rank: st.ou ? null : rankOf(clan)?.n || null, near: neighbours(clan).map(([o]) => clanName(year, o)) };
     },
     color, legend, tip, card, entry, showPerson, guideInfo, edgeKind,
     // 卡片里的点击；返回 true 表示需要重绘卡片

@@ -79,14 +79,16 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
   }
 
   const f = pref.map_filters;
-  // 战国：有 sengoku.json 时按旧国列出 6 个年份（主行 1560 → 1582 → 1600，副行其余三年）；没有时退回县的 1572
-  const sg = sengoku?.provinces?.[key];
+  // 战国：有 sengoku.json 时按旧国列出 6 个年份（主行 1560 → 1582 → 1600，副行其余三年）；没有时退回县的 1572。
+  // 奥羽按郡、虾夷地按和人地 / 阿伊努的土地（muni_units，与战国势力图的分区一致），精度印为「郡」
+  const unit = sengoku?.muni_units?.[props.code] || (sengoku?.units?.[key] ? key : null);
+  const sg = sengoku?.units?.[unit] || sengoku?.provinces?.[key];
   if (sg && props.province !== '-') {
     const at = (y) => {
       const g = (y === '1600' ? sengoku.sides : sengoku.clans)[sg[y].c];
       return `${y} ${g[lang] || g.zh}`;
     };
-    rows.push({ k: 'sengoku6', seal: 'prov', main: ['1560', '1582', '1600'].map(at).join(' → '), sub: ['1467', '1573', '1590'].map(at).join(' · ') });
+    rows.push({ k: 'sengoku6', seal: unit ? 'gun' : 'prov', main: ['1560', '1582', '1600'].map(at).join(' → '), sub: ['1467', '1573', '1590'].map(at).join(' · ') });
   } else {
     rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });
   }

@@ -20,6 +20,8 @@ export const loadProvinceEras = () => fetchJSON(`${MAP.data}/province_eras.json`
 export const loadHan = () => fetchJSON(`${MAP.data}/han.json`).catch(() => null);
 export const loadKako = () => fetchJSON(`${MAP.data}/kako.json`).catch(() => null);
 export const loadSengoku = () => fetchJSON(`${MAP.data}/sengoku.json`);
+// 战国势力图的底图改动：奥羽按郡的分区与和人地（读不到就仍按整国画）
+export const loadSengokuUnits = () => fetchJSON(`${MAP.data}/sengoku_units.json`).catch(() => null);
 // 天皇 · 将军 · 执权年表与人物详写（人物卡用；读不到时人物卡只有基本信息）
 export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);
 export const loadBios = () => fetchJSON(`${MAP.data}/people.json`).catch(() => ({}));

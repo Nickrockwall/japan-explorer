@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -953,17 +953,17 @@ async function main() {
   const sengokuData = () => (sgDataLoad ??= loadSengoku().catch(() => null)); // 户籍也用（读不到就退回县的 1572）
   function ensureSengoku() {
     ensureProvinces();
-    sengokuLoad ??= Promise.all([sengokuData(), provinces, loadRulers(), loadBios()])
-      .then(([d, g, rulers, bios]) => {
+    sengokuLoad ??= Promise.all([sengokuData(), provinces, loadRulers(), loadBios(), loadSengokuUnits()])
+      .then(([d, g, rulers, bios, units]) => {
         if (!g) return;
-        sg = createSengoku(d, g, uiPref.get('sgYear', '1560'), { rulers, bios });
+        sg = createSengoku(d, map.setSengokuUnits(units), uiPref.get('sgYear', '1560'), { rulers, bios });
         rl = rulers && { rulers, bios };
         sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('')
           + (rl ? `<button type="button" class="kr-open" data-act="rl-open">${esc(t('rl.open'))}</button>` : '');
         map.setSengoku(sg);
         updateLegend(map);
         syncArtCard();
-        if (sgWant?.prov && d.provinces[sgWant.prov]) focusSengoku(sgWant.prov);
+        if (sgWant?.prov && (d.provinces[sgWant.prov] || d.units?.[sgWant.prov])) focusSengoku(sgWant.prov);
         if (sgWant?.clan) openClan(sgWant.clan);
         sgWant = null;
         syncHash();
