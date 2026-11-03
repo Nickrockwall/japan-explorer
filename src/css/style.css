@@ -1576,6 +1576,7 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .bday .kk-none { color: #5a4a3e; }
 @media (max-width: 560px) {
   .bd-facts { grid-template-columns: minmax(0, 1fr); }
+  .bd-date { flex-direction: column; align-items: flex-start; gap: 4px; }
   .bd-fact { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
 }
 /* 藩主名后的诞生 / 忌日（配色同彼时今日的 .kk-born / .kk-died）：点了在地图上标出地点 */

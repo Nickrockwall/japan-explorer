@@ -1,8 +1,8 @@
-"""README 用的截图：每种语言一张电脑（古国国力榜）、一张手机（古代户籍）。
+"""README 用的截图：每种语言两张电脑（战国势力图、朝鲜半岛）、两张手机（生日帖、古代户籍）。
 
     python -X utf8 tools/make_screens.py
 
-输出 docs/screen-desktop-{zh,en,ja}.jpg 与 docs/screen-phone-{zh,en,ja}.jpg（docs/ 不随网站发布）。
+输出 docs/screen-{sengoku,korea,bday,koseki}-{zh,en,ja}.jpg（docs/ 不随网站发布）。
 """
 import functools
 import http.server
@@ -29,27 +29,46 @@ def main():
     base = f'http://127.0.0.1:{httpd.server_address[1]}/index.html'
     with sync_playwright() as p:
         browser = p.chromium.launch()
+        shot = lambda page, name, lang, q: page.screenshot(path=os.path.join(OUT, f'screen-{name}-{lang}.jpg'), type='jpeg', quality=q)  # noqa: E731
         for lang in ('zh', 'en', 'ja'):
-            # 电脑：选中长野，打开古国国力榜
-            ctx = browser.new_context(viewport={'width': 1280, 'height': 800}, service_workers='block')
+            desk = dict(viewport={'width': 1280, 'height': 800}, service_workers='block')
+            phone = dict(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2, service_workers='block')
+            # 电脑：1582 年的战国势力图，弹出山城国的卡片
+            ctx = browser.new_context(**desk)
             ctx.add_init_script(DONE)
             page = ctx.new_page()
-            page.goto(f'{base}#lang={lang}&pref=20')
-            page.wait_for_selector('#loading.hidden', state='attached')
-            page.click('[data-filter="power"]')
-            page.wait_for_selector('#power-card:not([hidden]) .kr-list li', timeout=20000)
+            page.goto(f'{base}#lang={lang}&pref=26&sg=1582&sgp=%E5%B1%B1%E5%9F%8E%E5%9B%BD')
+            page.wait_for_selector('#sg-card:not([hidden]) .muni-name', timeout=20000)
             page.wait_for_timeout(1500)
-            page.screenshot(path=os.path.join(OUT, f'screen-desktop-{lang}.jpg'), type='jpeg', quality=85)
+            shot(page, 'sengoku', lang, 85)
+            ctx.close()
+            # 电脑：朝鲜半岛的朝鲜八道图层，选中仁川
+            ctx = browser.new_context(**desk)
+            ctx.add_init_script(DONE + "try { localStorage.setItem('je.ui.tourKorea', 'true'); } catch (e) {}")
+            page = ctx.new_page()
+            page.goto(f'{base}#map=korea&lang={lang}&pref=4')
+            page.wait_for_selector('#kr-eras [data-era="joseon"]', timeout=20000)
+            page.click('#kr-eras [data-era="joseon"]')
+            page.wait_for_timeout(1800)
+            shot(page, 'korea', lang, 85)
+            ctx.close()
+            # 手机：6 月 21 日的生日帖（本能寺之变那天）
+            ctx = browser.new_context(**phone)
+            ctx.add_init_script(DONE)
+            page = ctx.new_page()
+            page.goto(f'{base}#bday=06-21&lang={lang}')
+            page.wait_for_selector('#bday[open] .bd-item', timeout=20000)
+            page.wait_for_timeout(1200)
+            shot(page, 'bday', lang, 82)
             ctx.close()
             # 手机：上田市的古代户籍
-            ctx = browser.new_context(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True,
-                                      device_scale_factor=2, service_workers='block')
+            ctx = browser.new_context(**phone)
             ctx.add_init_script(DONE)
             page = ctx.new_page()
             page.goto(f'{base}#lang={lang}&pref=20&muni=1&m=20203&koseki=1')
             page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
             page.wait_for_timeout(1200)
-            page.screenshot(path=os.path.join(OUT, f'screen-phone-{lang}.jpg'), type='jpeg', quality=82)
+            shot(page, 'koseki', lang, 82)
             ctx.close()
             print(lang, 'ok')
         browser.close()

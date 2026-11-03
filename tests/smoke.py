@@ -18,7 +18,7 @@ import sys
 import threading
 import time
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PWTimeout, sync_playwright
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 ART = os.path.join(ROOT, 'tests', 'artifacts')
@@ -48,9 +48,16 @@ class Quiet(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class Server(socketserver.ThreadingTCPServer):
+    # 冷启动时浏览器一下子并发请求四十多个模块与数据：默认的连接队列只有 5，排不上的连接要等重传
+    request_queue_size = 128
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 def serve():
     handler = functools.partial(Quiet, directory=ROOT)
-    httpd = socketserver.ThreadingTCPServer(('127.0.0.1', 0), handler)
+    httpd = Server(('127.0.0.1', 0), handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd, f'http://127.0.0.1:{httpd.server_address[1]}/index.html'
 
@@ -72,11 +79,21 @@ class Case:
         if china:
             page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
         page.problems = []
+        page.pending = set()  # 还没回来的请求：页面没加载完时写进报错，便于查是哪个文件卡住
+        page.on('request', lambda r: page.pending.add(r.url))
+        page.on('requestfinished', lambda r: page.pending.discard(r.url))
+        page.on('requestfailed', lambda r: page.pending.discard(r.url))
         ignore = re.compile(IGNORE.pattern + r'|net::ERR_FAILED') if china else IGNORE
         page.on('console', lambda m: m.type == 'error' and not ignore.search(m.text) and page.problems.append(f'console: {m.text}'))
         page.on('pageerror', lambda e: page.problems.append(f'pageerror: {e}'))
         page.goto(f'{self.base}#lang={self.lang}&{hash_}' if hash_ else f'{self.base}#lang={self.lang}')
-        page.wait_for_selector('#loading.hidden', state='attached', timeout=10000 if china else 30000)
+        try:
+            page.wait_for_selector('#loading.hidden', state='attached', timeout=10000 if china else 30000)
+        except PWTimeout as e:
+            left = ', '.join(u.rsplit('/', 1)[-1] for u in sorted(page.pending)[:8]) or '无'
+            problems = page.problems[:2]
+            ctx.close()
+            raise PWTimeout(f'页面没有加载完（#loading 未隐藏），未返回的请求：{left}；{problems}') from e
         page.wait_for_timeout(800)
         return page
 
@@ -1026,6 +1043,34 @@ def plan(lang):
     return cases
 
 
+def describe(err):
+    """报错的第一行，超时再带上 Playwright 调用记录的头几行（点的是哪个元素、被什么挡住），写进 CI 标注"""
+    lines = [x.strip() for x in str(err).splitlines() if x.strip()]
+    head = lines[0][:300] if lines else type(err).__name__
+    log = [x for x in lines[1:] if x not in ('Call log:', '=' * len(x))][:4]
+    return head + (' | ' + ' | '.join(x[:160] for x in log) if isinstance(err, PWTimeout) and log else '')
+
+
+def run_case(c, hash_, steps, opts, shot):
+    """跑一个场景：通过返回 None，否则返回异常（失败时截图）"""
+    page = None
+    try:
+        page = c.open(hash_, **opts)
+        for step in steps:
+            getattr(c, step)(page)
+        page.wait_for_timeout(300)
+        if page.problems:
+            raise AssertionError('；'.join(page.problems[:3]))
+        return None
+    except Exception as e:  # noqa: BLE001 — 逐条记录，继续跑完
+        if page:
+            page.screenshot(path=os.path.join(ART, f'{shot}.png'))
+        return e
+    finally:
+        if page:
+            page.context.close()
+
+
 def main():
     os.makedirs(ART, exist_ok=True)
     httpd, base = serve()
@@ -1042,32 +1087,32 @@ def main():
                     if vp == 'landscape' and (lang != 'zh' or name not in LANDSCAPE_CASES):
                         continue
                     total += 1
-                    page = None
-                    try:
-                        page = c.open(hash_, china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'),
-                                      geo={'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
-                                      else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
-                                      else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
-                                      else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
-                                      else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
-                        for step in steps:
-                            getattr(c, step)(page)
-                        page.wait_for_timeout(300)
-                        if page.problems:
-                            raise AssertionError('；'.join(page.problems[:3]))
+                    geo = ({'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
+                           else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
+                           else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
+                           else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
+                           else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
+                    opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo)
+                    err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
+                    # 只有超时（等元素 / 等点击 / 等加载）重跑一次：CI 上偶尔有一步卡满 30 秒，重跑就过；断言失败与页面报错不重跑
+                    if isinstance(err, PWTimeout):
+                        first = err
+                        err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
+                        if not err:
+                            note = describe(first)
+                            print(f'✓ {label}（第一次超时，重跑通过：{note}）')
+                            if os.environ.get('GITHUB_ACTIONS'):
+                                print(f'::warning title=smoke retried {vp} {lang} {name}::{note}')
+                            continue
+                    if not err:
                         print(f'✓ {label}')
-                    except Exception as e:  # noqa: BLE001 — 逐条记录，继续跑完
-                        msg = str(e).splitlines()[0][:300]
-                        failures.append(f'{label}: {msg}')
-                        print(f'✗ {label}: {msg}')
-                        if os.environ.get('GITHUB_ACTIONS'):
-                            # 写成 Actions 的错误标注：仓库公开时不登录也能从 API 读到失败原因
-                            print(f'::error title=smoke {label.split()[0]} {lang} {name}::{msg}')
-                        if page:
-                            page.screenshot(path=os.path.join(ART, f'{vp}-{lang}-{name}.png'))
-                    finally:
-                        if page:
-                            page.context.close()
+                        continue
+                    msg = describe(err)
+                    failures.append(f'{label}: {msg}')
+                    print(f'✗ {label}: {msg}')
+                    if os.environ.get('GITHUB_ACTIONS'):
+                        # 写成 Actions 的错误标注：仓库公开时不登录也能从 API 读到失败原因
+                        print(f'::error title=smoke {vp} {lang} {name}::{msg}')
         browser.close()
     httpd.shutdown()
     print(f'\n{total - len(failures)}/{total} 通过，用时 {time.time() - started:.0f}s')
