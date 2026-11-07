@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, loadRegionEras, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, loadRegionEras, loadKen, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -361,7 +361,8 @@ async function main() {
     toast(t('ks.saved'));
   }
   const ksDlg = $('koseki');
-  let regionLoad = null; // 冲绳、北海道的地区年表：打开这两地的户籍时才下载
+  let regionLoad = null; // 冲绳、北海道、奄美的地区年表：打开这几处的户籍时才下载
+  let kenLoad = null; // 废藩置县后各郡归哪个县：第一次打开户籍时才下载
   // 下钻里选中的市区町村的此地年表（给向导用，户籍对话框自己另算）
   async function townOf(pid, code) {
     try {
@@ -371,7 +372,7 @@ async function main() {
       return hometownItems({
         pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, sengoku: await sengokuData(), domains: data.domains,
         han: await ensureHan().then(() => han), prefLabel: prefLabel(pid), geometry: f.geometry, kako: await kakoLoad,
-        region: pid === 1 || pid === 47 ? await (regionLoad ??= loadRegionEras()) : null,
+        region: [1, 46, 47].includes(pid) ? await (regionLoad ??= loadRegionEras()) : null, ken: await (kenLoad ??= loadKen(lang)),
       }).items;
     } catch (err) {
       console.warn('此地年表计算失败', err);
@@ -397,8 +398,8 @@ async function main() {
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）
-    const region = pid === 1 || pid === 47 ? await (regionLoad ??= loadRegionEras()) : null;
-    ks.town = hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad, region });
+    const region = [1, 46, 47].includes(pid) ? await (regionLoad ??= loadRegionEras()) : null;
+    ks.town = hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad, region, ken: await (kenLoad ??= loadKen(lang)) });
     ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''), hometownHTML(ks.town));
     if (!ksDlg.open) ksDlg.showModal();
     ksDlg.scrollTop = 0;
@@ -624,6 +625,7 @@ async function main() {
     if (tab) rlTab = tab;
     rlDlg.innerHTML = rulersHTML(rl.rulers, data.events.timeline_eras, rl.bios, rlTab, rl.regimes);
     if (!rlDlg.open) rlDlg.showModal();
+    history.replaceState(null, '', `#rl=${rlTab}&lang=${lang}`); // 深链接：#rl=power 直接打开「实权」页
     const body = rlDlg.querySelector('.rl-body');
     body.scrollTop = 0;
     // 从「实权」点过来：滚到那一年所在的一组（按每组第一行的开始年）
@@ -634,6 +636,9 @@ async function main() {
     }
     audio.play('click');
   }
+  rlDlg.addEventListener('close', () => {
+    if (/(^|[#&])rl=/.test(location.hash)) history.replaceState(null, '', app.currentId ? stateHash(app.currentId) : location.pathname + location.search);
+  });
   rlDlg.addEventListener('click', async (e) => {
     if (e.target === rlDlg || e.target.closest('[data-act="rl-close"]')) { rlDlg.close(); return; }
     const tb = e.target.closest('[data-rl-tab]');
@@ -914,6 +919,8 @@ async function main() {
   // ── 时空穿越滑块 ──
   const range = $('tb-range');
   const playBtn = $('tb-play');
+  range.max = eras.length - 1; // 时代数变了（3.13.1 加了大正·昭和前期）也不用改 HTML 与样式
+  $('tb-ticks').style.gridTemplateColumns = `repeat(${eras.length}, 1fr)`;
   $('tb-ticks').innerHTML = eras.map((e, i) =>
     `<button type="button" data-i="${i}" title="${esc(e.name)}">${esc(label('eraTick', e.key))}</button>`).join('');
   let playTimer = null;
@@ -1357,6 +1364,9 @@ async function main() {
   const m = location.hash.match(/pref=(\d+)/);
   // 先读出来：onSelect 会改写地址栏
   const wantMuni = /(^|[#&])muni=1/.test(location.hash);
+  // 年表深链接 #rl=power / emperor / shogun / shikken
+  const wantRl = new URLSearchParams(location.hash.slice(1)).get('rl');
+  if (['power', 'emperor', 'shogun', 'shikken'].includes(wantRl)) openRulers(wantRl);
   const wantKoseki = /(^|[#&])koseki=1/.test(location.hash);
   const codes = (new URLSearchParams(location.hash.slice(1)).get('m') || '').split('.').filter((c) => /^\d{5}$/.test(c));
   if (m && prefs.has(+m[1])) {

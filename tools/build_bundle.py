@@ -108,12 +108,28 @@ def emblems():
 
 # 幕末各郡的领主（tools/fetch_domains.py → tools/domains.json）：按县 id → 明治旧郡名，取前 3 位 + 其余合计。
 # 幕府领 / 旗本领 / 寺社领 / 相给写成 @代号，由前端按语言显示；藩名中文按字形转换，英文取 Wikidata 标签（没有就用日文）
-def domains(lang):
+def domains(lang, chains=False):
     path = os.path.join(ROOT, 'tools', 'domains.json')
     if not os.path.exists(path):
         return {}
     d = load(path)
     lords, by_title = d['lords'], d['districts']
+    meiji, ken_en = d.get('meiji', {}), d.get('ken', {})
+    today = {x['kanji']: x['slug'].title() for x in load(os.path.join(DATA, 'index.json'))}
+
+    def ken(name):
+        """废藩置县后的县名按语言：中文按字形转换；英文：今天的县用县名表的罗马字，其余取以 Prefecture 结尾的 Wikidata 标签，再看同名的藩（上田藩 → Ueda Prefecture），都没有用日文"""
+        if lang == 'zh':
+            return ''.join(conv.get(c, c) for c in name)
+        if lang == 'en':
+            if name in today:  # 今天的县：县名表的罗马字（鹿児島藩的英文是 Satsuma Domain，不能拿来换）
+                return f'{today[name]} Prefecture'
+            en = ken_en.get(name, '')
+            if en.endswith(' Prefecture'):
+                return en
+            han = lords.get(name[:-1] + '藩', {}).get('en', '')
+            return han[:-len(' Domain')] + ' Prefecture' if han.endswith(' Domain') else name
+        return name
     conv = ja_to_zh_table() if lang == 'zh' else {}
     generic = {'bakufu', 'hatamoto', 'jisha', 'mixed'}
 
@@ -137,6 +153,11 @@ def domains(lang):
             # 正文只写「全域が○○領」的郡没有町村数（0）：照样收这一家，前端写「全域」
             top = [[label(k), n] for k, n in rows[:3] if n or total == 0]
             rest = total - sum(n for _, n in top)
+            if chains:
+                # 废藩置县后的县：[年, [县名（按语言）…], 1=废藩置县那一行]；前端按藩名挑县（上田藩 → 上田县，Ueda Domain → Ueda Prefecture）
+                if meiji.get(info['title']):
+                    out.setdefault(pref, {})[name] = [[y, [ken(n) for n in ns], int(h)] for y, ns, h in meiji[info['title']]]
+                continue
             out.setdefault(pref, {})[name] = {'t': total, 'r': top + ([['@other', rest]] if rest > 0 else [])}
     return out
 
@@ -184,6 +205,11 @@ def build(lang):
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))
 
 
+def build_ken(lang):
+    """废藩置县后各郡归哪个县（{县 id: {郡: 链}}）：只有古代户籍用，单独成文件 bundle/ken-<lang>.json，打开户籍时才下载"""
+    return json.dumps(domains(lang, chains=True), ensure_ascii=False, separators=(',', ':'))
+
+
 def main():
     out_dir = os.path.join(DATA, 'bundle')
     os.makedirs(out_dir, exist_ok=True)
@@ -192,6 +218,8 @@ def main():
         path = os.path.join(out_dir, f'{lang}.json')
         with open(path, 'w', encoding='utf-8') as f:
             f.write(text)
+        with open(os.path.join(out_dir, f'ken-{lang}.json'), 'w', encoding='utf-8') as f:
+            f.write(build_ken(lang))
         print(f'{lang}: {os.path.getsize(path) // 1024} KB, version {json.loads(text)["version"]}')
 
 

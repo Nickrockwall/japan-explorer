@@ -687,6 +687,10 @@ class Case:
         page.wait_for_function("document.querySelector('.era-banner .pw-line').textContent.length > 4", timeout=5000)
         line = page.text_content('.era-banner .pw-line')
         assert any(x in line for x in ('织田', 'Oda', '織田')) and any(x in line for x in ('丰臣', 'Toyotomi', '豊臣')), f'战国的实权一行：{line}'
+        # 大正·昭和前期（1912–1945）：滑块能拖到，实权有军部；滑块一共 10 个时代
+        assert page.evaluate("document.getElementById('tb-range').max") == '9', '滑块应有 10 个时代'
+        page.evaluate(js, 8)
+        page.wait_for_function("/军部|military|軍部/.test(document.querySelector('.era-banner .pw-line').textContent)", timeout=5000)
 
     def search_fits(self, page):
         page.fill('#search-input', '府')
@@ -1130,6 +1134,8 @@ class Case:
         for y in ('1560–1573', '1600–1622', '1622–1706', '1706–1871'):
             assert y in joined, f'此地年表应有 {y}：{joined}'
         assert page.locator('#koseki .ht-sg').count() == 5, f'战国应合并成 5 段：{joined}'
+        # 废藩置县之后：按上田藩挑出上田县（小县郡的那一行列了三个县），同年并入长野县
+        assert any(x in joined for x in ('上田县', 'Ueda Prefecture', '上田県')) and any(x in joined for x in ('长野县', 'Nagano Prefecture', '長野県')), f'废藩置县后应是上田县 → 长野县：{joined}'
         years = [int(x.split('–')[0]) for x in (t.split('\n')[0] for t in ht[1:-1]) if x[:4].isdigit()]
         assert years == sorted(years), f'此地年表应按年份排：{years}'
         assert page.locator('#koseki a[data-fix]').count() == 1, '户籍末尾应有「数据有误？」'
@@ -1159,6 +1165,23 @@ class Case:
         for y in ('1429', '1609', '1879', '1972'):
             assert y in joined, f'冲绳年表应有 {y}：{joined[:400]}'
         assert page.locator('#koseki .ht-sg').count() == 0, f'冲绳不应有战国行：{joined[:300]}'
+
+    def amami_town(self, page):
+        # 奄美（龙乡町）：地区年表有琉球统治、1609 萨摩、1953 归还；废藩置县后属鹿儿岛县
+        page.wait_for_selector('#koseki[open] .ht-list', timeout=20000)
+        joined = ' | '.join(page.locator('#koseki .ht-list li').all_inner_texts())
+        for y in ('1609', '1946', '1953'):
+            assert y in joined, f'奄美年表应有 {y}：{joined[:400]}'
+        assert any(x in joined for x in ('鹿儿岛县', 'Kagoshima Prefecture', '鹿児島県')), f'奄美废藩置县后应属鹿儿岛县：{joined[:400]}'
+
+    def rl_link(self, page):
+        # 深链接 #rl=power 直接打开年表的「实权」页；关掉后地址栏去掉 rl=
+        page.wait_for_selector('#rulers[open] .rl-pw', timeout=15000)
+        assert page.get_attribute('#rulers .book-tab.on', 'data-rl-tab') == 'power'
+        page.click('#rulers [data-rl-tab="shogun"]')
+        page.wait_for_function("location.hash.includes('rl=shogun')", timeout=3000)
+        page.click('#rulers [data-act="rl-close"]')
+        page.wait_for_function("!location.hash.includes('rl=')", timeout=3000)
 
     def koseki_whole(self, page):
         # 正文只写「全域が仙台藩領」的郡（名取郡）没有町村数：户籍照常打开（曾经报错），幕末领主写仙台藩、「名取郡全域」
@@ -1197,7 +1220,8 @@ class Case:
         names = [x.split('\n', 1)[-1] for x in kk]
         assert len(names) == len(set(names)), f'同一条不应重复：{names}'
         assert page.evaluate("document.querySelector('#koseki').scrollWidth <= document.querySelector('#koseki').clientWidth + 1"), '户籍不应横向溢出'
-        # 第一条是菅原道真的诞生（京都）：要标在出生地，不能跳到去世的太宰府（福冈）
+        # 出生地只写到「京都」的人（菅原道真等）不算进中京区；点一条要标在这里（京都府），不能跳到别处
+        assert not any(x in ' '.join(kk) for x in ('菅原道真', 'Sugawara', '菅原道眞')), f'只到「京都」的条目不应算进中京区：{kk[:5]}'
         page.click('#koseki .ht-kk >> nth=0')
         page.wait_for_selector('#koseki', state='hidden')
         page.wait_for_timeout(500)
@@ -1329,6 +1353,7 @@ def plan(lang):
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
+             ('amami_town', 'pref=46&muni=1&m=46527&koseki=1', ['amami_town']), ('rl_link', 'rl=power', ['rl_link']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

@@ -281,6 +281,32 @@
       ]
     },
     {
+      "name": "Taishō & early Shōwa (1912–1945)",
+      "short": "Taishō–Shōwa",
+      "capital": {
+        "name": "Tokyo (Imperial Palace)",
+        "description": "Power stayed in Tokyo, rebuilt as the imperial capital after the 1923 Great Kantō earthquake"
+      },
+      "banner": "Party politics, the Great Kantō earthquake, war and defeat",
+      "legend": [
+        {
+          "label": "Hit hardest by the 1923 Great Kantō earthquake (centred on Tokyo and Kanagawa)"
+        },
+        {
+          "label": "Home to the six great cities (Osaka, Nagoya, Kyoto, Kobe; Tokyo and Yokohama above)"
+        },
+        {
+          "label": "Atomic bombings (1945, Hiroshima and Nagasaki)"
+        },
+        {
+          "label": "Battle of Okinawa (1945)"
+        },
+        {
+          "label": "Other prefectures"
+        }
+      ]
+    },
+    {
       "name": "Present day (1945–)",
       "short": "Present day",
       "capital": {

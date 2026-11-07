@@ -12,6 +12,9 @@
 - 1896 年前后合并新设的郡（长生郡 = 长柄郡 + 上埴生郡）条目里没有表：按变迁框 s-bef 列出的前身郡（同县）把它们的表加起来，
   前身郡有一个没有表就不合（merged()）。
 - 都没有的郡不收（宁缺毋滥），户籍里该栏改为县一级的说明。
+- 废藩置县之后的县（meiji_chain()）：郡条目沿革里 1871–1890 年、写着粗体县名的行（管轄・改称・統合・編入，
+  不含大区小区），按顺序记 [年, [县名…], 是否废藩置县那一行]。废藩置县那一行常列出几个县（小県郡：上田県・小諸県・岩村田県），
+  前端按市町村的藩挑对应的县，挑不出就不写。输出 domains.json 的 meiji：{郡条目: [...]} 与 ken：{县名: 英文名}。
 输出 tools/domains.json（可人工修正，已提交），再由 build_bundle.py 拼进数据包。
 """
 import json
@@ -194,6 +197,30 @@ def wd_get(params):
     return d
 
 
+def meiji_chain(wt):
+    """郡条目沿革里废藩置县之后归哪个县：[(年, [县名…], 是否废藩置县那一行)]"""
+    out, started = [], False
+    for line in wt.split('\n'):
+        if not line.startswith('*') or '大区' in line:
+            continue
+        m = re.search(r'（(18\d\d)年', line) or re.match(r'\*+\s*(18\d\d)年', line) or re.search(r'明治\d+年（(18\d\d)年）', line)
+        names = re.findall(BOLD_KEN, line)
+        if not m or not names:
+            continue
+        y = int(m.group(1))
+        haihan = '廃藩置県' in line
+        started = started or haihan
+        if not started or not 1871 <= y <= 1890 or not re.search(r'管轄|改称|統合|編入|となる|移管|分置|分割|設置', line):
+            continue
+        if out and out[-1][1] == names:
+            continue
+        out.append((y, names, haihan))
+    return out
+
+
+BOLD_KEN = r"''" + r"'([^'\[\]]+?県)'" + r"''"
+
+
 def english(titles_by_key):
     """{key: [候选的 ja 条目名…]} → {key: Wikidata 英文标签}；消歧义页不用"""
     all_titles = sorted({t for ts in titles_by_key.values() for t in ts})
@@ -245,6 +272,9 @@ def main():
             missing.remove(title)
             merged += 1
     print(f'有表 {len(got)} / {len(titles)} 郡（其中按前身郡合并 {merged}）')
+    meiji = {t: meiji_chain(text_of(wts[t]) or '') for t in titles}
+    meiji = {t: c for t, c in meiji.items() if c}
+    print(f'废藩置县后的县：{len(meiji)} 郡')
     print('无表（前 40）：', missing[:40])
     lords = {}
     for rows in got.values():
@@ -279,7 +309,11 @@ def main():
     print(f'藩 {len(han)}，有英文名 {sum(1 for k in han if "en" in lords[k])}')
     print('无英文名的藩（前 20）：', [k for k in han if 'en' not in lords[k]][:20])
     print('other：', [k for k, v in lords.items() if v['kind'] == 'other'][:30])
-    json.dump({'_doc': __doc__.strip().split('\n')[0], 'lords': dict(sorted(lords.items())), 'districts': out},
+    kens = sorted({n for c in meiji.values() for _, ns, _ in c for n in ns})
+    ken = english({k: [k] for k in kens})
+    print(f'县名 {len(kens)}，有英文名 {len(ken)}')
+    json.dump({'_doc': __doc__.strip().split('\n')[0], 'lords': dict(sorted(lords.items())), 'districts': out,
+               'meiji': dict(sorted(meiji.items())), 'ken': dict(sorted(ken.items()))},
               open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 
 

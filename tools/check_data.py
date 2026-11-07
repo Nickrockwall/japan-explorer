@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from build_bundle import LANGS, build  # noqa: E402
+from build_bundle import LANGS, build, build_ken  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA = os.path.join(ROOT, 'src', 'data')
@@ -131,8 +131,8 @@ def check_i18n():
 def check_events():
     ev = load('src', 'data', 'historical_events.json')
     ids = {str(i) for i in range(1, 48)}
-    if len(ev['timeline_eras']) != 9:
-        err('historical_events', '时代必须是 9 个')
+    if len(ev['timeline_eras']) != 10:
+        err('historical_events', '时代必须是 10 个')
     for e in ev['timeline_eras']:
         if e['timeline_stage'] not in ERAS:
             err(f'era {e["key"]}', f'timeline_stage 非法：{e["timeline_stage"]}')
@@ -155,6 +155,9 @@ def check_bundles():
         path = os.path.join(DATA, 'bundle', f'{lang}.json')
         if not os.path.exists(path) or read('src', 'data', 'bundle', f'{lang}.json') != build(lang):
             err(f'bundle/{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
+        kp = os.path.join(DATA, 'bundle', f'ken-{lang}.json')
+        if not os.path.exists(kp) or read('src', 'data', 'bundle', f'ken-{lang}.json') != build_ken(lang):
+            err(f'bundle/ken-{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
 
 
 def check_municipalities():
@@ -430,9 +433,9 @@ def check_regimes():
 def check_region_eras():
     """冲绳、北海道的地区年表：三语齐全、按年份排、北海道的 scope 只有 all / wajin / ezo（tools/region_eras_tool.py 对日文维基核对）"""
     d = load('src', 'data', 'region_eras.json')
-    for k in ('okinawa', 'hokkaido'):
+    for k in ('okinawa', 'hokkaido', 'amami'):
         rows = d.get(k) or []
-        if len(rows) < 5:
+        if len(rows) < (3 if k == 'amami' else 5):
             err('region_eras', f'{k} 只有 {len(rows)} 条')
         if [r['y'] for r in rows] != sorted(r['y'] for r in rows):
             err('region_eras', f'{k} 没有按年份排')
@@ -446,6 +449,10 @@ def check_region_eras():
 
 def check_kako():
     """彼时今日：366 天都要有、每天至少 3 条（曾有 6 天一条都没有），字段齐全、同一天不重复"""
+    # 地点只写到「日本」的条目曾被钉在 (136, 35)（滋贺县）
+    bad = [e['n']['ja'] for v in load('src', 'data', 'kako.json').values() for e in v if e.get('c') == [136, 35]]
+    if bad:
+        err('kako', f'有条目钉在「日本」的坐标上：{bad[:5]}')
     kako = load('src', 'data', 'kako.json')
     days = [f'{m:02d}-{d:02d}' for m, n in enumerate([31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], 1) for d in range(1, n + 1)]
     for key in days:

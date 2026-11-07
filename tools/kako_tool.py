@@ -7,8 +7,11 @@
   年、月、日都与这一条完全一致（按 Wikidata 记录的历法：儒略历的日期按儒略历比，格里历按格里历比）；
 - 地点：该事件的 P625 坐标，没有就取 P276（地点）或 P131（所在行政区）的坐标，必须落在日本的某个都道府县里
   （japan.json；北方四岛、竹岛等争议岛不算）；
+  地点只写到「日本」（Q17）的不用——它的坐标 (136, 35) 落在滋贺县，曾把大友义镇、良宽等 37 条标到滋贺；换下一个地点，没有就不收；
+  地点是都道府县、旧国、政令市或江户 / 东京这类大范围的（`big_names()` / `BIG`，`pick_place()`），坐标只是那一片的代表点，记 g=1：
+  县与地图图钉照用，「此地年表」不把它算进代表点所在的那个区；
 - 三语名称取该事件的 Wikidata 标签（中文先简体），缺的语言不收；日文另存条目里的原句（去掉链接标记）。
-输出 src/data/kako.json：{ "MM-DD": [ {y, q, n:{zh,en,ja}, s(日文原句), p(县 id), k(旧国), c:[lon,lat], w:{zh,en,ja}(条目名)} ] }。
+输出 src/data/kako.json：{ "MM-DD": [ {y, q, n:{zh,en,ja}, s(日文原句), p(县 id), k(旧国), c:[lon,lat], g?(1 = 只到城市或更大), w:{zh,en,ja}(条目名)} ] }。
 需 shapely。
 """
 import hashlib
@@ -173,19 +176,48 @@ def entities_by_titles(titles):
 
 
 def place_coords(ids):
-    """地点 / 行政区 QID → 坐标（缓存在 places-compact.json）。"""
-    path = os.path.join(CACHE, 'places-compact.json')
+    """地点 / 行政区 QID → {c: 坐标, ja: 日文标签}（缓存在 places-info.json）。"""
+    path = os.path.join(CACHE, 'places-info.json')
     cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
     todo = sorted(set(ids) - set(cache))
     for i in range(0, len(todo), 50):
         part = todo[i:i + 50]
         d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
-            {'action': 'wbgetentities', 'ids': '|'.join(part), 'props': 'claims', 'format': 'json'}))
+            {'action': 'wbgetentities', 'ids': '|'.join(part), 'props': 'claims|labels', 'languages': 'ja', 'format': 'json'}))
         for q in part:
             e = d.get('entities', {}).get(q, {})
-            cache[q] = compact({'id': q, **e})['c'] if e.get('claims') else None
+            c = compact({'id': q, **e})['c'] if e.get('claims') else None
+            cache[q] = {'c': c, 'ja': e.get('labels', {}).get('ja', {}).get('value')} if c else None
     json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
     return cache
+
+
+COUNTRY = {'Q17'}  # 日本：坐标 (136, 35) 在滋贺县，不能当地点
+JAPAN_PT = [136, 35]
+# 坐标只是一大片地方的代表点：都道府县、旧国、政令市（由市区町村数据里「○○市○○区」的市名得出）与下面这些
+BIG = {'江戸', '東京', '東京市', '東京府', '大坂', '京', '京都', '平安京', '蝦夷地', '琉球王国', '琉球', '日本'}
+
+
+def big_names():
+    names = set(BIG)
+    names |= {x['kanji'] for x in json.load(open(os.path.join(ROOT, 'src', 'data', 'index.json'), encoding='utf-8'))}
+    names |= {f['properties']['key'] for f in json.load(open(os.path.join(ROOT, 'src', 'data', 'provinces.json'), encoding='utf-8'))['features']}
+    for i in range(1, 48):
+        for f in json.load(open(os.path.join(ROOT, 'src', 'data', 'municipalities', f'{i:02d}.json'), encoding='utf-8'))['features']:
+            m = re.match(r'(.+?市).+区$', f['properties']['name'])
+            if m:
+                names.add(m.group(1))
+    return names
+
+
+def pick_place(qids, places, big):
+    """按顺序取第一个有坐标、又不是「日本」的地点 → (坐标, 是否只是一大片的代表点)"""
+    for q in qids:
+        info = places.get(q)
+        if q in COUNTRY or not info:
+            continue
+        return info['c'], int((info['ja'] or '') in big)
+    return None, 0
 
 
 def sitelink_counts(qids):
@@ -222,10 +254,6 @@ def page_views(titles):
     return cache
 
 
-def coords_of(e, places):
-    return e['c'] or next((places[q] for q in e['loc'] if places.get(q)), None)
-
-
 def main():
     days = {}
     for m, d in DAYS:
@@ -236,6 +264,7 @@ def main():
     places = place_coords([q for e in ents.values() if e['yr'] and not e['c'] for q in e['loc']]
                           + [q for e in ents.values() if e['b'] or e['x'] for q in e['bp'] + e['dp']])
 
+    big = big_names()
     geo = json.load(open(os.path.join(ROOT, 'src', 'assets', 'geojson', 'japan.json'), encoding='utf-8'))
     prefs = [(f['properties']['id'], shape(f['geometry'])) for f in geo['features']]
     tree = STRtree([g for _, g in prefs])
@@ -270,7 +299,8 @@ def main():
                     if not exact and not (it['y'] in e['yr'] and not any(y == it['y'] for y, _, _ in e['d'])):
                         stats['date'] += 1 if e['yr'] else 0
                         continue
-                    c = coords_of(e, places)
+                    # 事件自己的坐标就是日本的中心点（「江户时代」「2019 年橄榄球世界杯」）也算只到「日本」
+                    c, g = (e['c'], 0) if e['c'] and e['c'] != JAPAN_PT else pick_place(e['loc'], places, big)
                 else:
                     # 生卒：Wikidata 的生日 / 忌日年月日都要对上；1880 年以前出生的历史人物，或 1950 年以前出生、已去世的近代人物；地点取出生地 / 去世地
                     ds = e['b'] if it['kind'] == 'born' else e['x']
@@ -282,7 +312,7 @@ def main():
                         stats['old'] += 1
                         continue
                     pl = e['bp'] if it['kind'] == 'born' else e['dp']
-                    c = next((places[q] for q in pl if places.get(q)), None)
+                    c, g = pick_place(pl, places, big)
                 pid, key = where(c) if c else (None, None)
                 if pid is None:
                     stats['place'] += 1
@@ -293,6 +323,8 @@ def main():
                     continue
                 row = {'y': it['y'], 'q': e['id'], 'n': n, 's': it['text'][:160], 'p': pid, 'k': key, 'c': c,
                        'w': {lg: e['w'][lg] for lg in ('zh', 'en', 'ja') if lg in e['w']}}
+                if g:
+                    row['g'] = 1
                 if it['kind'] != 'ev':
                     row['t'] = it['kind']
                     if born >= OLD_BORN:
@@ -328,6 +360,9 @@ def main():
     print('每天条数：最少', lens[0], '中位', lens[len(lens) // 2], '最多', lens[-1])
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
+    print('只到城市或更大的地点（g=1）', sum(1 for v in out.values() for r in v if r.get('g')))
+    shiga = [r['n']['ja'] for v in out.values() for r in v if r['c'] == [136, 35]]
+    assert not shiga, f'仍有标在「日本」坐标上的：{shiga[:5]}'
     print('写出', OUT, os.path.getsize(OUT) // 1024, 'KB')
 
 

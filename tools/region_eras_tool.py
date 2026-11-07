@@ -1,10 +1,10 @@
-"""冲绳与北海道的「此地年表」：这两地不在令制国、也没有一般的藩，户籍末尾的年表另按地区写。
+"""冲绳、北海道与奄美群岛的「此地年表」：这几处不在令制国（奄美另有萨摩直辖），户籍末尾的年表另按地区写。
     python -X utf8 tools/region_eras_tool.py
 
 - 文字三语自己写；每条的 `ev` 里的每个词都要出现在所列日文维基条目里（年份、人名、机构名），通不过就报错不写出。
 - `scope`（北海道）：all 全道；wajin 只有和人地（渡岛半岛南端，sengoku.json 的 muni_units 为「和人地」的市町村）；
   ezo 只有和人地以外（蝦夷地）。冲绳全县一条线。
-输出 src/data/region_eras.json：{ "okinawa": [{y, yl, main, sub, scope}], "hokkaido": [...] }，yl / main / sub 为 {zh, en, ja}。
+输出 src/data/region_eras.json：{ "okinawa": [{y, yl, main, sub, scope}], "hokkaido": [...], "amami": [...] }，yl / main / sub 为 {zh, en, ja}。
 缓存在 .cache/power/。
 """
 import json
@@ -47,6 +47,22 @@ OKINAWA = [
          sub=NONE, ev={'沖縄返還': ['1972', '5月15日']}),
 ]
 
+# 奄美群岛（鹿儿岛县里不属于令制国的市町村）：江户一段由幕末领主（鹿儿岛藩）给出，这里只写琉球时代与战后美军统治
+AMAMI = [
+    dict(y=1466, yl=L('15 世纪后半', 'late 15th c.', '15世紀後半'),
+         main=L('归琉球王国统治', 'Comes under the Ryūkyū Kingdom', '琉球王国の支配下に'),
+         sub=NONE, ev={'奄美群島の歴史': ['琉球王国', '15世紀']}),
+    dict(y=1609, yl=L('1609', '1609', '1609'),
+         main=L('萨摩岛津氏出兵琉球，奄美改归萨摩藩直辖', 'After the Shimazu invasion of Ryūkyū, Amami is ruled directly by Satsuma', '島津氏の琉球侵攻により、奄美は薩摩藩の直轄に'),
+         sub=L('砂糖由藩专卖，负担沉重', 'Sugar became a heavy domain monopoly', '砂糖は藩の専売となり、重い負担に'), ev={'奄美群島の歴史': ['1609', '薩摩藩', '砂糖'], '琉球侵攻': ['奄美']}),
+    dict(y=1946, yl=L('1946', '1946', '1946'),
+         main=L('与日本本土分离，由美军统治', 'Separated from mainland Japan under US military rule', '日本本土から分離され、アメリカ軍の統治下に'),
+         sub=NONE, ev={'奄美群島の歴史': ['1946', 'アメリカ']}),
+    dict(y=1953, yl=L('1953', '1953', '1953'),
+         main=L('归还日本（12 月 25 日）', 'Returned to Japan (25 December)', '日本に復帰（12月25日）'),
+         sub=NONE, ev={'奄美群島の歴史': ['1953', '12月25日', '復帰']}),
+]
+
 HOKKAIDO = [
     dict(y=1200, yl=L('13 世纪前后', 'c. 13th c.', '13世紀ごろ'), scope='all',
          main=L('阿伊努文化形成（此前为擦文文化）', 'Ainu culture takes shape (after the Satsumon culture)', 'アイヌ文化が成立（それ以前は擦文文化）'),
@@ -79,10 +95,10 @@ HOKKAIDO = [
 
 
 def main():
-    arts = sorted({a for x in OKINAWA + HOKKAIDO for a in x['ev']})
+    arts = sorted({a for x in OKINAWA + HOKKAIDO + AMAMI for a in x['ev']})
     texts = wikitexts(arts)
     bad = []
-    for x in OKINAWA + HOKKAIDO:
+    for x in OKINAWA + HOKKAIDO + AMAMI:
         for art, words in x['ev'].items():
             w = texts.get(art)
             if not w:
@@ -92,14 +108,14 @@ def main():
     if bad:
         print('\n'.join(bad))
         sys.exit(1)
-    for k, rows in (('okinawa', OKINAWA), ('hokkaido', HOKKAIDO)):
+    for k, rows in (('okinawa', OKINAWA), ('hokkaido', HOKKAIDO), ('amami', AMAMI)):
         assert [r['y'] for r in rows] == sorted(r['y'] for r in rows), k
     out = {k: [{'y': r['y'], 'yl': r['yl'], 'main': r['main'], 'sub': r['sub'] if any(r['sub'].values()) else None,
                 'scope': r.get('scope', 'all'), 'wiki': list(r['ev'])} for r in rows]
-           for k, rows in (('okinawa', OKINAWA), ('hokkaido', HOKKAIDO))}
+           for k, rows in (('okinawa', OKINAWA), ('hokkaido', HOKKAIDO), ('amami', AMAMI))}
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
-    print(f'冲绳 {len(OKINAWA)} 条、北海道 {len(HOKKAIDO)} 条，写出 {OUT}')
+    print(f'冲绳 {len(OKINAWA)} 条、北海道 {len(HOKKAIDO)} 条、奄美 {len(AMAMI)} 条，写出 {OUT}')
 
 
 if __name__ == '__main__':

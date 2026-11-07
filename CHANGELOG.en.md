@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.14 · 2026-11-08
+
+- Fixed: 37 On this day entries (Ōtomo Yoshishige, Ryōkan, Maeda Toshinaga…) were pinned in Shiga. Their place was recorded only as "Japan", whose Wikidata coordinates happen to fall in Shiga; such places are now skipped in favour of the next one, or the entry is left out
+- Fixed: people whose birthplace is recorded only as "Kyoto", "Tokyo", "Edo", a prefecture or a province were counted in whichever ward holds that place's marker (Sugawara no Michizane "born in Nakagyō", Chiyoda's timeline crowded with "born in Tokyo"). They still appear in On this day and on prefecture cards, but no longer in a single ward's "This place through time"
+- The Amami Islands get their own timeline: under Ryūkyū from the late 15th century, ruled directly by Satsuma from 1609 (with its sugar monopoly), US military rule from 1946, returned on 25 December 1953
+- The era slider gains "Taishō & early Shōwa (1912–1945)"; it used to jump from Meiji straight to after 1945. Colours: prefectures hit hardest by the 1923 Great Kantō earthquake (Tokyo, Kanagawa, Chiba, Ibaraki, Shizuoka, as the article lists), homes of the six great cities, the atomic bombings (Hiroshima, Nagasaki) and the Battle of Okinawa; the banner's real-power line reads oligarchs → party cabinets → the military
+- "This place through time" now goes past 1871: which prefecture the place first belonged to and how it merged into today's (Ueda: Ueda → Nagano; Takamatsu: Takamatsu → Kagawa → Myōdō → Kagawa → Ehime → Kagawa again in 1888). Taken from each district article; where a district lists several new prefectures, the one matching the local domain is picked, otherwise none. This data is a separate file loaded only when you open an ancestral register
+- The timelines have their own link: `#rl=power` opens the "Who ruled" page (the address follows the tab, ready to share)
+- On phones the era banner's real-power line wraps onto two lines instead of being cut off
+
 ## 3.13 · 2026-11-07
 
 - "This place through time" is no longer almost empty for Okinawa and Hokkaidō. Okinawa follows Ryūkyū history: the Three Kingdoms, Shō Hashi's unification (1429), the Second Shō dynasty (1470), the Satsuma invasion (1609), the Ryūkyū Domain (1872), Okinawa Prefecture (1879), the Battle of Okinawa and US rule, and the return (1972). Hokkaidō covers Ainu culture, Koshamain's War (1457), the Matsumae Domain (1604), Shakushain's War (1669), direct shogunate rule (1799, 1855), the Development Commission (1869) and the Hokkaidō Agency (1886), with the Japanese enclave at the tip of the Oshima Peninsula and the rest of Ezochi each getting their own entries. Every year is checked against Japanese Wikipedia, and the empty "outside the provinces" Sengoku lines are gone

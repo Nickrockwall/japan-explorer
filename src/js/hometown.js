@@ -1,7 +1,7 @@
 // 此地年表（古代户籍对话框末尾）：把一个市区町村在各时代的归属按年份串成一条线——
 // 古代的国 → 战国 6 个年份（相邻年份同一家的合并）→ 江户领有本郡的藩各家（在位年份来自 han.json）→ 废藩置县 → 今天，
 // 中间按年份插入彼时今日里坐标落在这个市区町村里的事件、诞生与去世。只用已核验的数据，不补写。
-// 冲绳与北海道不在令制国、也没有一般的藩：另按地区写（region_eras.json，tools/region_eras_tool.py），北海道分和人地与蝦夷地
+// 冲绳、北海道与奄美群岛不在令制国：另按地区写（region_eras.json，tools/region_eras_tool.py），北海道分和人地与蝦夷地
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { findHan } from './han.js';
@@ -25,11 +25,12 @@ export function inGeometry(pt, g) {
   return polys.some((poly) => inRing(pt, poly[0]));
 }
 
-// 彼时今日里落在这块地方的条目（每条带上日期键）；同一件事记在几个日子里的（承久之乱）只算一次
+// 彼时今日里落在这块地方的条目（每条带上日期键）；同一件事记在几个日子里的（承久之乱）只算一次。
+// 地点只写到县、政令市、江户这类大范围的（g）坐标只是代表点，不算进代表点所在的那个市区町村
 export function kakoIn(all, geometry) {
   const out = new Map();
   for (const [key, list] of Object.entries(all || {})) {
-    for (const e of list) if (e.c && !out.has(`${e.q}|${e.t}`) && inGeometry(e.c, geometry)) out.set(`${e.q}|${e.t}`, { ...e, key });
+    for (const e of list) if (e.c && !e.g && !out.has(`${e.q}|${e.t}`) && inGeometry(e.c, geometry)) out.set(`${e.q}|${e.t}`, { ...e, key });
   }
   return [...out.values()];
 }
@@ -44,8 +45,9 @@ function famSpan(rows) {
 }
 const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '…' : b}`;
 
-// ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）与 region（冲绳、北海道的地区年表），没有的为 null
-export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako, region }) {
+// ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）、region（冲绳、北海道、奄美的地区年表）
+// 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json），没有的为 null
+export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako, region, ken }) {
   const items = [];
   const key = props.province;
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
@@ -91,13 +93,28 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
       const sub = rows.length > 1 ? `${who(rows[0])} → ${who(rows[rows.length - 1])}` : who(rows[0]);
       items.push({ y, yl: span ? spanText(span) : '', main: t('ht.fam', { han: nm(h.n), fam, n: rows.length }), sub, kind: 'edo' });
     });
-    if (h.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
   } else if (top) {
     items.push({ y: 1700, yl: t('ht.edo'), main: top.startsWith('@') ? t(`ks.lord.${top.slice(1)}`) : top, kind: 'edo' });
   }
+  // 废藩置县之后：本郡（没有就取有记录的第一个郡）先后归哪个县。废藩置县那一行列了几个县时按藩名挑（上田藩 → 上田县），挑不出就不写
+  const chain = ken?.[pref.id]?.[gun] || gunList.map(([g]) => ken?.[pref.id]?.[g]).find(Boolean);
+  if (chain) {
+    const want = h && nm(h.n).replace(/藩$/, lang === 'ja' ? '県' : '县').replace(/ Domain$/, ' Prefecture');
+    let shown = false;
+    for (const [y, names, haihan] of chain) {
+      const name = names.length === 1 ? names[0] : names.find((n) => n === want);
+      if (!name) continue;
+      items.push({ y, yl: String(y), main: t(haihan ? 'ht.haihan.to' : 'ht.ken', { name }), kind: 'edo' });
+      shown ||= haihan;
+    }
+    if (!shown && h?.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
+  } else if (h?.k) {
+    items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
+  }
 
-  // 冲绳 / 北海道：地区年表（北海道按市町村在不在和人地挑 wajin / ezo 的条目）
-  const reg = pref.id === 47 ? region?.okinawa : pref.id === 1 ? region?.hokkaido : null;
+  // 冲绳 / 北海道 / 奄美群岛（鹿儿岛县里不属于令制国的市町村）：地区年表（北海道按市町村在不在和人地挑 wajin / ezo 的条目）
+  const amami = pref.id === 46 && (!key || key === '-');
+  const reg = pref.id === 47 ? region?.okinawa : pref.id === 1 ? region?.hokkaido : amami ? region?.amami : null;
   if (reg) {
     const wajin = sengoku?.muni_units?.[props.code] === '和人地';
     for (const r of reg) {
