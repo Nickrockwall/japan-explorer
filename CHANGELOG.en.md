@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.11 · 2026-11-07
+
+- New "Who held power": the timelines dialog opens on a "Who ruled" page that splits Japanese history from the 3rd-century Yamato kingship to today into 20 periods, each with the nominal head, the person or group that really held power (the Soga, the Fujiwara regents, the retired emperors, the Taira, the Hōjō regents, Oda, Toyotomi, Tokugawa, the Meiji oligarchs, party cabinets, the military, GHQ…) and the seat of power. Where two boundary dates are in common use (Kamakura from 1185 or 1192) both are shown; every year and name is checked against the matching Japanese Wikipedia article. It opens from the welcome card, and "Emperors" / "Shoguns" / "Regents" jump to that period's list
+- Edo domain lords now show their reign years (about 3,900 lords, nine in ten), taken from the succession box at the end of each lord's article; single years or ones that disagree with the domain article are left out. "Lord of …" tags in On this day and the birthday card show the years too
+- The ancestral register ends with "This place through time": the municipality's province, its Sengoku lords year by year, the domain and houses that ruled it in the Edo period (by reign), the abolition of the domains and today, with On this day events, births and deaths located here slotted in — tap one to mark it on the map
+- Sengoku map banners for the Miki (Anegakōji) and the Horigoe kubō: the Miki use the ken-bishi crest named in the infobox of Japanese Wikipedia's "Anegakōji clan" article; the Horigoe kubō were an Ashikaga branch and use the Ashikaga two-bar crest
+- Every card (prefecture and peninsula cards, Sengoku province / clan / person cards, the ancestral register, the birthday card, the timelines) ends with "Spot a mistake?", which opens a new GitHub issue already filled in with the card, the current link and the interface language (needs a GitHub login; the site itself collects nothing)
+- Fixed: when someone has both a birth and a death entry in On this day, tapping the birth could mark the place of death (Sugawara no Michizane landed in Dazaifu); entries are now matched by type
+- The UI tests run as four parallel shards, so updates go live sooner
+
 ## 3.10 · 2026-11-03
 
 - Ōu is no longer one grey block of "Northern clans": Mutsu and Dewa are split into 43 districts, so the Nanbu, Tsugaru, Andō (Akita), Kasai, Ōsaki, Date, Ashina, Sōma, Iwaki, Mogami, Onodera, Tozawa, Daihōji and others each get their lands, banners and overviews. After the 1590 Ōu settlement the Kasai and Ōsaki lands go to Kimura Yoshikiyo, Aizu with Iwase, Asaka, Shirakawa and Ishikawa to Gamō, and the Date keep 13 districts; in 1600 the Uesugi lands are Western and the Sōma and Iwaki stay out. Every entry is checked against Japanese Wikipedia

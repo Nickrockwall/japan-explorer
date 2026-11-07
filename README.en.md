@@ -45,7 +45,7 @@ Each of these is worked out from the app's own data, and you can open it to chec
 
 **History**
 - A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
-- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus an emperors and shoguns timeline and bios and portraits for 61 people
+- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people
 - Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals themselves
 - Edo domains: the lords of 498 domains by prefecture; a lord's birth and death dates sit next to the name and mark the place on the map
 - Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)
@@ -55,7 +55,7 @@ Each of these is worked out from the app's own data, and you can open it to chec
 - On this day: what happened in Japan on today's date centuries ago — events, and births and deaths of historical figures plus a few well-known modern people — with entries for every one of the 366 days, in a different order for everyone
 - Birthday card: pick a date (your birthday, say) to see everything on it, how eventful it is among all 366 days and which prefecture it's most tied to; add a name and save it as an image
 - Where am I?: find out which ancient province and district you're standing in
-- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the Sengoku-era holders, the late-Edo lords, your Boshin War side and a local greeting; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
+- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the Sengoku-era holders, the late-Edo lords, your Boshin War side and a local greeting, ending with "This place through time" — who held the place from antiquity to today, with events, births and deaths located there; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
 - Goshuin book: a stamp for every prefecture you visit; pay respects at each province's ichinomiya shrine online, and earn an "in person" stamp when you're actually there
 
 **Just for fun**

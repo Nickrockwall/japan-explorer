@@ -8,7 +8,11 @@
 - 所在县：名单里的国（明治分国后的国名）只对应一个县时就是它，否则看正文「現在の○○県」与分类「○○県の歴史」；
   两者不一致时打印出来；
 - 名字：日文取链接文字，中文按字形转简体，英文取 Wikidata 标签（没有就不写，前端用日文）。
-输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止]（不详的为 null）, k, f:[[家, [[条目, 名, 备注]...]]]}] }。缓存在 .cache/han/。
+- 在位年份：藩主条目末尾的「○○藩主」导航模板（{{上田藩主|藤井松平家|6代|1830年 - 1858年}}）里写成「起年 - 止年」的；
+  只写一个年份（是就任还是去世不明）、「? - 1626年」这类不收。藩条目的表格有「在任 / 在職期間」一栏时也读，
+  两边都有而相差超过 1 年的两边都不收；同一家里后一位的就任年早于前一位的也不收（打印出来）。
+输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止]（不详的为 null）, k,
+  f:[[家, 家（简）, [[条目, 名, 名（简）, 英文名, 备注, 在位?]...]]]}] }，在位 = [起, 止]（再任的 [起, 止, 起, 止]），不详的省略。缓存在 .cache/han/。
 需 zhconv。
 """
 import json
@@ -193,7 +197,7 @@ def lords(w):
     if not sec:
         return []
     fams = [['', []]]
-    in_table = row_done = False
+    in_table = row_done = tbl_years = False
     for line in sec.group(1).splitlines():
         h = re.match(r'===+\s*(.+?)\s*===+', line) or re.match(r';\s*(.+)', line)  # 「;溝口家」也是分家标题
         if h:
@@ -204,16 +208,22 @@ def lords(w):
         if cur is None:
             continue
         if line.startswith('{|'):
-            in_table = True
+            in_table, tbl_years = True, False
             continue
         if line.startswith('|}'):
             in_table = False
             continue
         if in_table:
+            if line.startswith('!') and re.search(r'在任|在職|在位', line):
+                tbl_years = True  # 这张表有在任期间一栏：这一行以后的西历年就是在位年份
             if line.startswith('|-'):
                 row_done = False
                 continue
-            if row_done or not line.startswith('|'):
+            if row_done:
+                if tbl_years and cur[1] and line.startswith('|'):
+                    cur[1][-1][3] += ' ' + line
+                continue
+            if not line.startswith('|'):
                 continue
             # 一行可能写成「| 1 || [[徳川義直|義直]] || …」：取第一个以链接开头的格子
             cells = re.split(r'\|\|', re.sub(r'^\|', '', line))
@@ -231,8 +241,73 @@ def lords(w):
         name = re.sub(r'\s*\(.*\)$', '', title)
         if NOT_LORD.search(name) or name in NOT_NAME or re.search(r'[:#の]', title) or len(name) > 8:
             continue
-        cur[1].append([title, name, '再任' if '再任' in line else ''])
+        rest = line[line.find(link.group(0)) + len(link.group(0)):] if in_table and tbl_years else ''
+        cur[1].append([title, name, '再任' if '再任' in line else '', rest])
     return [f for f in fams if f and f[1]]
+
+
+RANGE = re.compile(r'(1[5-8]\d\d)年?\s*[-–—〜~－]\s*(1[5-8]\d\d)年')
+
+
+def ranges(text):
+    """「1601年 - 1612年」「[[1601年]] - [[1612年]]」→ [(1601, 1612)]（起不晚于止，1560–1871）"""
+    text = re.sub(r'\[\[(?:[^\]|]*\|)?([^\]]*)\]\]', r'\1', text)
+    return [(int(a), int(b)) for a, b in RANGE.findall(text) if 1560 <= int(a) <= int(b) <= 1871]
+
+
+def navboxes(titles):
+    """藩主条目里的「○○藩主」导航模板（只缓存模板本身）：{请求的条目名: [模板...]}"""
+    path = os.path.join(CACHE, 'lord_navbox.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    tpl = re.compile(r'\{\{[^{}|\n]*藩主\s*\|(?:[^{}]|\{\{[^{}]*\}\})*\}\}')
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://ja.wikipedia.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'query', 'titles': '|'.join(part), 'prop': 'revisions', 'rvprop': 'content', 'rvslots': 'main',
+             'redirects': 1, 'format': 'json', 'formatversion': 2}))
+        q = d['query']
+        norm = {n['from']: n['to'] for n in q.get('normalized', [])}
+        redir = {r['from']: r['to'] for r in q.get('redirects', [])}
+        pages = {pg['title']: pg for pg in q['pages'] if not pg.get('missing')}
+        for t in part:
+            real = redir.get(norm.get(t, t), norm.get(t, t))
+            pg = pages.get(real)
+            cache[t] = [real, [m.group(0) for m in tpl.finditer(pg['revisions'][0]['slots']['main']['content'])]] if pg else None
+        json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return {t: v[1] for t, v in cache.items() if v}
+
+
+def reigns(h, nav, report):
+    """给一个藩的每位藩主配在位年份：把行的第 4 项（藩条目表格里那一行的文字）换成 [起, 止, …] 或 None"""
+    ja = re.sub(r'\s*\(.*\)$', '', h['t'])
+    m = re.search(r'\((\S+?)国\)$', h['t'])  # 「柏原藩 (丹波国)」的模板叫「丹波柏原藩主」
+    names = {ja + '主'} | ({m.group(1) + ja + '主'} if m else set())
+    times = {}
+    for _, rows in h['f']:
+        for row in rows:
+            times[row[0]] = times.get(row[0], 0) + 1
+    seen = {}
+    for _, rows in h['f']:
+        last = None
+        for row in rows:
+            title, article = row[0], ranges(row[3])
+            box = [r for tp in nav.get(title, []) if re.match(r'\{\{\s*([^|]+?)\s*\|', tp).group(1).strip() in names
+                   for r in ranges(tp)]
+            n = seen.get(title, 0)
+            seen[title] = n + 1
+            # 同一人在这个藩的名单里出现两次（再任）：第一次取第一段、第二次取第二段；只出现一次就全收（如 1614–1619、1622–1668）
+            pick = box[n:n + 1] if times[title] > 1 else box
+            yrs = pick or article[:1]
+            if pick and article and abs(pick[0][0] - article[0][0]) > 1:
+                report.append(f'{h["t"]} {title}：模板 {pick[0]} 与藩条目 {article[0]} 不一致，不收')
+                yrs = []
+            if yrs and last and yrs[0][0] < last - 1:
+                report.append(f'{h["t"]} {title}：就任 {yrs[0][0]} 早于前一位 {last}，不收')
+                yrs = []
+            if yrs:
+                last = yrs[0][0]
+            row[3] = [y for r in yrs for y in r] or None
 
 
 def main():
@@ -291,16 +366,21 @@ def main():
             for _, names in LORDS[real]:
                 for x in names:
                     assert f'[[{x}' in w, f'{real}：条目里没有 {x} 的链接'
-            fams = [[fam, [[x, x, ''] for x in names]] for fam, names in LORDS[real]]
+            fams = [[fam, [[x, x, '', ''] for x in names]] for fam, names in LORDS[real]]
         if pid is None or not fams:
             todo.append(f'{real}：{"找不到所在县" if pid is None else "没有解析出藩主"}')
             continue
         out.append({'t': real, 'p': pid, 'y': y, 'k': kept, 'f': fams})
     names = en_labels([h['t'] for h in out] + [x[0] for h in out for f in h['f'] for x in f[1]])
+    nav, report = navboxes(sorted({x[0] for h in out for f in h['f'] for x in f[1]})), []
     for h in out:
+        reigns(h, nav, report)
         ja = re.sub(r'\s*\(.*\)$', '', h['t'])
         h['n'] = {'ja': ja, 'zh': zh(ja), 'en': names.get(h['t']) or ''}
-        h['f'] = [[fam, zh(fam), [[x[0], x[1], zh(x[1]), names.get(x[0]) or '', x[2]] for x in rows]] for fam, rows in h['f']]
+        h['f'] = [[fam, zh(fam), [[x[0], x[1], zh(x[1]), names.get(x[0]) or '', x[2]] + ([x[3]] if x[3] else []) for x in rows]]
+                  for fam, rows in h['f']]
+    for x in report:
+        print('在位', x)
     out.sort(key=lambda h: (h['p'], -h['k'], h['n']['ja']))  # 县内先列存续到废藩置县的
     for x in todo:
         print('待查', x)
@@ -310,7 +390,12 @@ def main():
         assert got.get(name) == pid, f'{name} 应在县 {pid}，实为 {got.get(name)}'
     assert sum(h['k'] for h in out) >= 260, '存续到废藩置县的藩太少'
     n_lords = sum(len(rows) for h in out for _, _, rows in h['f'])
-    print(f'收录 {len(out)} 藩（存续到 1871 年 {sum(h["k"] for h in out)}）、{n_lords} 位藩主，待查 {len(todo)}')
+    n_years = sum(len(r) > 5 for h in out for _, _, rows in h['f'] for r in rows)
+    print(f'收录 {len(out)} 藩（存续到 1871 年 {sum(h["k"] for h in out)}）、{n_lords} 位藩主（有在位年份 {n_years}），待查 {len(todo)}')
+    # 锚点：上田藩松平忠固 1830–1858（藩主条目的模板），会津藩蒲生秀行 1601–1612（藩条目的表格也是这样写）
+    ry = {(h['t'], r[0]): r[5] for h in out for _, _, rows in h['f'] for r in rows if len(r) > 5}
+    assert ry.get(('上田藩', '松平忠固')) == [1830, 1858], ry.get(('上田藩', '松平忠固'))
+    assert ry.get(('会津藩', '蒲生秀行 (侍従)')) == [1601, 1612], ry.get(('会津藩', '蒲生秀行 (侍従)'))
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump({'han': out}, f, ensure_ascii=False, separators=(',', ':'))
     print('写出', OUT, os.path.getsize(OUT) // 1024, 'KB')

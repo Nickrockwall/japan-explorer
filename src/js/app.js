@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -11,6 +11,7 @@ import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
 import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
 import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
+import { hometownItems, hometownHTML } from './hometown.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
 import { rulersHTML } from './rulers.js';
@@ -170,8 +171,9 @@ async function main() {
     if (old) old.outerHTML = html;
     else box.querySelector('.tour-again')?.closest('p').insertAdjacentHTML('beforebegin', html);
   }
-  function showKako(q) {
-    const e = Object.values(kako.all || {}).flat().find((x) => x.q === q);
+  // 同一人在彼时今日里可能有诞生与忌日两条（地点不同）：按条目类型找（data-kt，事件为空）
+  function showKako(q, kt) {
+    const e = Object.values(kako.all || {}).flat().find((x) => x.q === q && (kt == null || (x.t || '') === kt));
     if (!e) return;
     if (app.battle) exitBattle();
     closeMuni();
@@ -182,10 +184,11 @@ async function main() {
   }
   detailEl.addEventListener('click', (e) => {
     const it = e.target.closest('[data-kako]');
-    if (it) { showKako(it.dataset.kako); return; }
+    if (it) { showKako(it.dataset.kako, it.dataset.kt); return; }
     if (e.target.closest('[data-act="kk-more"]')) { kako.page += 1; renderKako(); audio.play('click'); }
     if (e.target.closest('[data-act="kk-today"]')) { kako.key = dayKey(); kako.page = 0; renderKako(); }
     if (e.target.closest('[data-act="kk-bday"]')) openBday(kako.key);
+    if (e.target.closest('[data-act="pw-open"]')) openRulers('power');
     if (e.target.closest('[data-act="kk-home"]')) { renderWelcome(detailEl); renderKako(); detailEl.scrollTop = 0; } // 县详卡里回到全国的彼时今日
   });
   detailEl.addEventListener('change', (e) => {
@@ -193,7 +196,8 @@ async function main() {
     const m = inp?.value.match(/^\d+-(\d\d)-(\d\d)$/);
     if (m) { kako.key = `${m[1]}-${m[2]}`; kako.page = 0; renderKako(); }
   });
-  loadKako().then((d) => {
+  const kakoLoad = loadKako(); // 古代户籍的「此地年表」也要
+  kakoLoad.then((d) => {
     kako.all = d;
     setLordDays(d);
     renderKako();
@@ -234,7 +238,7 @@ async function main() {
   bdDlg.addEventListener('click', async (e) => {
     if (e.target === bdDlg || e.target.closest('[data-act="bd-close"]')) { bdDlg.close(); return; }
     const it = e.target.closest('[data-kako]');
-    if (it) { bdDlg.close(); showKako(it.dataset.kako); return; }
+    if (it) { bdDlg.close(); showKako(it.dataset.kako, it.dataset.kt); return; }
     const b = e.target.closest('[data-act]');
     if (!b || !bd) return;
     if (b.dataset.act === 'bd-link') {
@@ -375,7 +379,9 @@ async function main() {
       sengoku: await sengokuData(), han: await ensureHan().then(() => han),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
-    ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''));
+    // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图里不画）
+    const town = hometownHTML(hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad }));
+    ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''), town);
     if (!ksDlg.open) ksDlg.showModal();
     ksDlg.scrollTop = 0;
     history.replaceState(null, '', kosekiHash(pid, code));
@@ -390,7 +396,7 @@ async function main() {
   ksDlg.addEventListener('click', async (e) => {
     if (e.target === ksDlg || e.target.closest('[data-act="ks-close"]')) { ksDlg.close(); return; }
     const kk = e.target.closest('[data-kako]');
-    if (kk) { ksDlg.close(); showKako(kk.dataset.kako); return; }
+    if (kk) { ksDlg.close(); showKako(kk.dataset.kako, kk.dataset.kt); return; }
     const b = e.target.closest('[data-act]');
     if (!b || !ks) return;
     if (b.dataset.act === 'art') viewer.open(+b.dataset.no);
@@ -584,20 +590,33 @@ async function main() {
   });
 
   // ── 天皇 · 将军 · 执权年表：点一行在地图上打开人物卡 ──
-  let rl = null; // { rulers, bios }
-  let rlTab = 'emperor';
+  let rl = null; // { rulers, bios, regimes }
+  let rlTab = 'power';
+  let rlLoad = null;
   const rlDlg = $('rulers');
-  function openRulers() {
+  // 欢迎卡也能打开（不必先开战国势力图）：缺的数据这时才下载
+  const ensureRulers = () => (rlLoad ??= Promise.all([rl?.rulers || loadRulers(), rl?.bios || loadBios(), loadRegimes()])
+    .then(([rulers, bios, regimes]) => { if (rulers) rl = { rulers, bios, regimes }; }));
+  async function openRulers(tab, from) {
+    await ensureRulers();
     if (!rl) return;
-    rlDlg.innerHTML = rulersHTML(rl.rulers, data.events.timeline_eras, rl.bios, rlTab);
+    if (tab) rlTab = tab;
+    rlDlg.innerHTML = rulersHTML(rl.rulers, data.events.timeline_eras, rl.bios, rlTab, rl.regimes);
     if (!rlDlg.open) rlDlg.showModal();
-    rlDlg.querySelector('.rl-body').scrollTop = 0;
+    const body = rlDlg.querySelector('.rl-body');
+    body.scrollTop = 0;
+    // 从「实权」点过来：滚到那一年所在的一组（按每组第一行的开始年）
+    if (from != null) {
+      const groups = [...body.querySelectorAll('.rl-group')];
+      const g = groups.filter((x) => +(x.querySelector('.rl-y')?.textContent || '0').split('–')[0] <= from).pop();
+      if (g) body.scrollTop = g.offsetTop - body.offsetTop;
+    }
     audio.play('click');
   }
-  rlDlg.addEventListener('click', (e) => {
+  rlDlg.addEventListener('click', async (e) => {
     if (e.target === rlDlg || e.target.closest('[data-act="rl-close"]')) { rlDlg.close(); return; }
     const tb = e.target.closest('[data-rl-tab]');
-    if (tb) { rlTab = tb.dataset.rlTab; openRulers(); return; }
+    if (tb) { openRulers(tb.dataset.rlTab, tb.dataset.rlFrom != null ? +tb.dataset.rlFrom : null); return; }
     const jump = e.target.closest('[data-rl-jump]');
     if (jump) {
       const body = rlDlg.querySelector('.rl-body');
@@ -606,6 +625,12 @@ async function main() {
       return;
     }
     const li = e.target.closest('li[data-person]');
+    // 从欢迎卡打开的年表：人物卡在战国势力图上，先换到那张图（并等数据到）
+    if (li && !sg) {
+      if (app.layer !== 'history') applyLayer('history');
+      applyFilter('sengoku');
+      await sengokuLoad;
+    }
     if (li && sg?.showPerson(li.dataset.person)) {
       rlDlg.close();
       if (narrow()) tabs.set('map');
@@ -957,7 +982,7 @@ async function main() {
       .then(([d, g, rulers, bios, units]) => {
         if (!g) return;
         sg = createSengoku(d, map.setSengokuUnits(units), uiPref.get('sgYear', '1560'), { rulers, bios });
-        rl = rulers && { rulers, bios };
+        if (rulers && !rl) rl = { rulers, bios, regimes: null };
         sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('')
           + (rl ? `<button type="button" class="kr-open" data-act="rl-open">${esc(t('rl.open'))}</button>` : '');
         map.setSengoku(sg);

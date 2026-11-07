@@ -379,6 +379,12 @@ def check_han():
             err(where, f'县 {h["p"]} 或 k={h.get("k")} 非法')
         if not any(rows for _, _, rows in h['f']):
             err(where, '没有藩主')
+        # 在位年份（第 6 项）：成对的 [起, 止, …]，起不晚于止，都在 1560–1871
+        for _, _, rows in h['f']:
+            for r in rows:
+                if len(r) > 5 and not (r[5] and len(r[5]) % 2 == 0 and all(isinstance(v, int) and 1560 <= v <= 1871 for v in r[5])
+                                       and all(r[5][i] <= r[5][i + 1] for i in range(0, len(r[5]), 2))):
+                    err(where, f'{r[0]} 的在位年份 {r[5]} 不合理')
         y = h.get('y')
         if y and ((y[0] and y[1] and y[0] > y[1]) or any(v and not 1500 < v < 1900 for v in y)):
             err(where, f'年份 {y} 不合理')
@@ -399,6 +405,21 @@ def check_han():
     for name, pid in {'会津藩': 7, '浜松藩': 22, '甲府藩': 19, '徳島藩': 36, '備後福山藩': 34, '加賀藩': 17, '薩摩藩': 46}.items():
         if where.get(name, 0) != pid and not (name == '薩摩藩' and where.get('鹿児島藩') == pid):
             err('han', f'{name} 应在县 {pid}，实为 {where.get(name)}')
+
+
+def check_regimes():
+    """实权时间线：各段三语齐全、按开始年排、跳转的页存在（tools/regimes_tool.py 生成；分界年份由工具对日文维基核对）"""
+    rows = load('src', 'data', 'regimes.json')['periods']
+    if len(rows) < 15:
+        err('regimes', f'只有 {len(rows)} 段')
+    for p in rows:
+        for f in ('y', 'nominal', 'real', 'seat', 'note'):
+            if set(p[f]) != {'zh', 'en', 'ja'} or not all(p[f].values()):
+                err(f'regimes {p["key"]}', f'{f} 三语不全')
+        if p['tab'] not in (None, 'emperor', 'shogun', 'shikken') or not p.get('wiki'):
+            err(f'regimes {p["key"]}', 'tab 或出处不对')
+    if [p['from'] for p in rows] != sorted(p['from'] for p in rows):
+        err('regimes', '各段没有按开始年排')
 
 
 def check_kako():
@@ -440,7 +461,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_kako, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_kako, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

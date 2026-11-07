@@ -4,6 +4,7 @@
     python -X utf8 tests/smoke.py                            # 用 Playwright 自带的 Chromium
     PW_CHANNEL=chrome python -X utf8 tests/smoke.py          # 本地用已安装的 Chrome（免下载）
     SMOKE_ONLY='phone.*zh' python -X utf8 tests/smoke.py     # 只跑部分场景
+    SMOKE_JOBS=4 python -X utf8 tests/smoke.py               # 本机 4 路并行（CI 用 SMOKE_SHARD 分 4 片）
 
 中文在电脑 / 平板 / 手机三种尺寸下跑全部场景；英文、日文只跑与语言相关的场景。
 失败时截图存到 tests/artifacts/（已加入 .gitignore，CI 会作为附件上传）。
@@ -13,7 +14,9 @@ import http.server
 import json
 import os
 import re
+import queue
 import socketserver
+import subprocess
 import sys
 import threading
 import time
@@ -41,6 +44,8 @@ HTMLMediaElement.prototype.play = function () { return Promise.reject(new Error(
 AUDIO_DEBUG = "async () => (await import('./src/js/audio.js')).audio.debug()"
 # 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
 ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
+# 分片：SMOKE_SHARD=2/4 只跑第 2 片（CI 四路并行）；SMOKE_JOBS=4 在本机开 4 个子进程各跑一片
+SHARD = tuple(int(x) for x in os.environ['SMOKE_SHARD'].split('/')) if os.environ.get('SMOKE_SHARD') else None
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -868,9 +873,12 @@ class Case:
         page.click('#sg-card [data-act="sg-back"]')
         page.keyboard.press('Escape')
         assert page.is_hidden('#sg-card'), 'Esc 应收起卡片'
-        # 年表：天皇 126 行、将军 41 行；点足利义满打开人物卡（带简介），返回回到年表
+        # 年表：先是「实权」20 段，天皇 126 行、将军 41 行；点足利义满打开人物卡（带简介），返回回到年表
         page.click('#sg-years [data-act="rl-open"]')
-        page.wait_for_selector('#rulers[open] .rl-list li')
+        page.wait_for_selector('#rulers[open] .rl-pw')
+        assert page.locator('#rulers .rl-pw').count() == 20, '实权应有 20 段'
+        page.click('#rulers [data-rl-tab="emperor"]')
+        page.wait_for_selector('#rulers .rl-list li')
         assert page.locator('#rulers .rl-list li').count() == 126, '天皇应有 126 行'
         self.inside(page, '#rulers .book-inner')
         page.click('#rulers [data-rl-tab="shogun"]')
@@ -1054,6 +1062,7 @@ class Case:
         han = page.locator('.hn-han', has_text=('上田' if self.lang != 'en' else 'Ueda'))
         han.locator('summary').click()
         assert any(x in han.text_content() for x in ('真田信之', 'Sanada Nobuyuki')), '上田藩应列出真田信之'
+        assert '1830–1858' in han.text_content(), '上田藩松平忠固应写出在位 1830–1858'
         # 藩多的县先列 6 个，其余点「显示其余」展开
         assert page.locator('.hn-han:visible').count() == 6, f'应先列 6 个藩，实际 {page.locator(".hn-han:visible").count()}'
         page.click('[data-act="hn-more"]')
@@ -1078,6 +1087,15 @@ class Case:
         ks_han.locator('summary').click()
         assert any(x in ks_han.inner_text() for x in ('真田信之', 'Sanada Nobuyuki')), f'户籍里上田藩的藩主应有真田信之：{ks_han.inner_text()}'
         assert any('1560' in r and '1600' in r and '1467' in r for r in rows), f'战国一栏应按信浓国列出 6 个年份：{rows}'
+        # 此地年表：古代 → 战国（1560–1573 武田合成一段）→ 上田藩三家（真田 1600–1622、仙石 1622–1706、松平 1706–1871）→ 废藩置县 → 今天
+        ht = page.locator('#koseki .ht-list li').all_inner_texts()
+        joined = ' | '.join(ht)
+        for y in ('1560–1573', '1600–1622', '1622–1706', '1706–1871'):
+            assert y in joined, f'此地年表应有 {y}：{joined}'
+        assert page.locator('#koseki .ht-sg').count() == 5, f'战国应合并成 5 段：{joined}'
+        years = [int(x.split('–')[0]) for x in (t.split('\n')[0] for t in ht[1:-1]) if x[:4].isdigit()]
+        assert years == sorted(years), f'此地年表应按年份排：{years}'
+        assert page.locator('#koseki a[data-fix]').count() == 1, '户籍末尾应有「数据有误？」'
         box = page.locator('#koseki').bounding_box()
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         assert box['x'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'户籍卷轴超出屏幕：{box}'
@@ -1096,6 +1114,64 @@ class Case:
         page.wait_for_selector('#koseki', state='hidden')
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'guide', '乡音应切到向导页'
+
+    def regimes(self, page):
+        # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
+        self.tab(page, 'detail')
+        page.click('[data-act="pw-open"]')
+        page.wait_for_selector('#rulers[open] .rl-pw', timeout=15000)
+        assert page.locator('#rulers .rl-pw').count() == 20, '实权应有 20 段'
+        assert page.get_attribute('#rulers .book-tab.on', 'data-rl-tab') == 'power', '欢迎卡应打开「实权」页'
+        kama = page.text_content('#rulers [data-pw="kamakura"] h3')
+        assert '1185' in kama and '1192' in kama, f'镰仓幕府应写出 1185 与 1192 两说：{kama}'
+        self.inside(page, '#rulers .book-inner')
+        page.click('#rulers [data-pw="edo"] .pw-go')
+        page.wait_for_selector('#rulers .book-tab.on[data-rl-tab="shogun"]')
+        page.wait_for_timeout(300)
+        top = page.evaluate('''(() => { const b = document.querySelector('#rulers .rl-body');
+            return [...b.querySelectorAll('.rl-group')].find((g) => g.offsetTop - b.offsetTop >= b.scrollTop - 5)?.querySelector('h3').textContent; })()''')
+        assert top and any(x in top for x in ('江户', 'Edo', '江戸')), f'应滚到江户幕府：{top}'
+        assert page.locator('#rulers a[data-fix]').count() == 1, '年表末尾应有「数据有误？」'
+        # 没开过战国势力图也能点人：换到战国图并打开家康的人物卡
+        page.click('#rulers li[data-person="徳川家康"]')
+        page.wait_for_selector('#sg-card:not([hidden]) .muni-name', timeout=15000)
+        assert any(x in page.text_content('#sg-card .muni-name') for x in ('家康', 'Ieyasu')), page.text_content('#sg-card .muni-name')
+
+    def hometown(self, page):
+        # 此地年表：京都中京区有彼时今日的条目（本能寺之变 1582），同一件事只列一次；点一条关掉户籍并在地图上标出
+        page.wait_for_selector('#koseki[open] .ht-list', timeout=20000)
+        kk = page.locator('#koseki .ht-kk').all_inner_texts()
+        assert any('1582' in x for x in kk), f'中京区应有 1582 年的条目：{kk}'
+        names = [x.split('\n', 1)[-1] for x in kk]
+        assert len(names) == len(set(names)), f'同一条不应重复：{names}'
+        assert page.evaluate("document.querySelector('#koseki').scrollWidth <= document.querySelector('#koseki').clientWidth + 1"), '户籍不应横向溢出'
+        # 第一条是菅原道真的诞生（京都）：要标在出生地，不能跳到去世的太宰府（福冈）
+        page.click('#koseki .ht-kk >> nth=0')
+        page.wait_for_selector('#koseki', state='hidden')
+        page.wait_for_timeout(500)
+        assert 'pref=26' in page.evaluate('location.hash'), f'点诞生应标在京都：{page.evaluate("location.hash")}'
+
+    def fixlink(self, page):
+        # 数据纠错：详卡末尾的链接点的时候才拼好 issue 地址（标题有县名，正文有当前链接与语言）；战国卡片也有
+        a = page.locator('#detail a[data-fix]')
+        assert a.count() == 1, '详卡末尾应有「数据有误？」'
+        url = page.evaluate("import('./src/js/report.js').then((m) => m.issueURL(document.querySelector('#detail a[data-fix]').dataset.fix))")
+        from urllib.parse import parse_qs, urlparse
+        q = parse_qs(urlparse(url).query)
+        assert url.startswith('https://github.com/Nickrockwall/japan-explorer/issues/new?'), url
+        assert any(x in q['title'][0] for x in ('京都', 'Kyoto')), q['title']
+        assert 'pref=26' in q['body'][0] and f'{self.lang}' in q['body'][0], q['body']
+        # 点击时改写 href（不真的打开新页）
+        page.evaluate("document.querySelector('#detail a[data-fix]').addEventListener('click', (e) => e.preventDefault())")
+        page.click('#detail a[data-fix]')
+        assert 'title=' in page.get_attribute('#detail a[data-fix]', 'href'), '点击时应写好 issue 地址'
+
+    def crests_added(self, page):
+        # 三木（姊小路）与堀越公方补上了家纹
+        d = page.evaluate("fetch('src/data/sengoku.json').then((r) => r.json()).then((d) => [d.clans.anegakoji.mon?.name, d.clans.horigoe.mon?.name])")
+        assert d == ['剣菱', '足利二つ引'], d
+        ok = page.evaluate("Promise.all(['anegakoji', 'horigoe'].map((k) => fetch(`src/assets/crests/${k}.png`).then((r) => r.ok)))")
+        assert ok == [True, True], ok
 
     def tour(self, page):
         # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；设置里可再打开，Esc 关闭
@@ -1198,13 +1274,14 @@ def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
-             ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow'])]
+             ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
+             ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 
@@ -1236,55 +1313,108 @@ def run_case(c, hash_, steps, opts, shot):
             page.context.close()
 
 
-def main():
+def jobs():
+    """全部要跑的（尺寸, 语言, 场景, 链接, 步骤），顺序固定；分片按序号轮流分"""
+    out = []
+    for vp in VIEWPORTS:
+        for lang in ('zh', 'en', 'ja'):
+            for name, hash_, steps in plan(lang):
+                if ONLY and not ONLY.search(f'{vp:7} {lang} {name}'):
+                    continue
+                if vp == 'landscape' and (lang != 'zh' or name not in LANDSCAPE_CASES):
+                    continue
+                out.append((vp, lang, name, hash_, steps))
+    if SHARD:
+        k, n = SHARD
+        out = out[k - 1::n]
+    return out
+
+
+def run_all():
     os.makedirs(ART, exist_ok=True)
     httpd, base = serve()
-    failures, total, started = [], 0, time.time()
+    failures, todo, started = [], jobs(), time.time()
     with sync_playwright() as pw:
         browser = pw.chromium.launch(channel=os.environ.get('PW_CHANNEL') or None)
-        for vp in VIEWPORTS:
-            for lang in ('zh', 'en', 'ja'):
-                c = Case(browser, base, vp, lang)
-                for name, hash_, steps in plan(lang):
-                    label = f'{vp:7} {lang} {name}'
-                    if ONLY and not ONLY.search(label):
-                        continue
-                    if vp == 'landscape' and (lang != 'zh' or name not in LANDSCAPE_CASES):
-                        continue
-                    total += 1
-                    geo = ({'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
-                           else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
-                           else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
-                           else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
-                           else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
-                    opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo)
-                    err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
-                    # 只有超时（等元素 / 等点击 / 等加载）重跑一次：CI 上偶尔有一步卡满 30 秒，重跑就过；断言失败与页面报错不重跑
-                    if isinstance(err, PWTimeout):
-                        first = err
-                        err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
-                        if not err:
-                            note = describe(first)
-                            print(f'✓ {label}（第一次超时，重跑通过：{note}）')
-                            if os.environ.get('GITHUB_ACTIONS'):
-                                print(f'::warning title=smoke retried {vp} {lang} {name}::{note}')
-                            continue
-                    if not err:
-                        print(f'✓ {label}')
-                        continue
-                    msg = describe(err)
-                    failures.append(f'{label}: {msg}')
-                    print(f'✗ {label}: {msg}')
+        cases = {}
+        for vp, lang, name, hash_, steps in todo:
+            c = cases.setdefault((vp, lang), Case(browser, base, vp, lang))
+            label = f'{vp:7} {lang} {name}'
+            geo = ({'latitude': 35.0116, 'longitude': 135.7681} if name == 'locate'
+                   else {'latitude': 44.088, 'longitude': 145.814} if name == 'locate_kurils'
+                   else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
+                   else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
+                   else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
+            opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo)
+            err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
+            # 只有超时（等元素 / 等点击 / 等加载）重跑一次：CI 上偶尔有一步卡满 30 秒，重跑就过；断言失败与页面报错不重跑
+            if isinstance(err, PWTimeout):
+                first = err
+                err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
+                if not err:
+                    note = describe(first)
+                    print(f'✓ {label}（第一次超时，重跑通过：{note}）', flush=True)
                     if os.environ.get('GITHUB_ACTIONS'):
-                        # 写成 Actions 的错误标注：仓库公开时不登录也能从 API 读到失败原因
-                        print(f'::error title=smoke {vp} {lang} {name}::{msg}')
+                        print(f'::warning title=smoke retried {vp} {lang} {name}::{note}')
+                    continue
+            if not err:
+                print(f'✓ {label}', flush=True)
+                continue
+            msg = describe(err)
+            failures.append(f'{label}: {msg}')
+            print(f'✗ {label}: {msg}', flush=True)
+            if os.environ.get('GITHUB_ACTIONS'):
+                # 写成 Actions 的错误标注：仓库公开时不登录也能从 API 读到失败原因
+                print(f'::error title=smoke {vp} {lang} {name}::{msg}')
         browser.close()
     httpd.shutdown()
-    print(f'\n{total - len(failures)}/{total} 通过，用时 {time.time() - started:.0f}s')
+    part = f'（分片 {SHARD[0]}/{SHARD[1]}）' if SHARD else ''
+    print(f'\n{len(todo) - len(failures)}/{len(todo)} 通过{part}，用时 {time.time() - started:.0f}s')
     if failures:
         print('失败：\n' + '\n'.join(f'  - {f}' for f in failures))
         return 1
     return 0
+
+
+def run_parallel(n):
+    """本机并行：开 n 个子进程各跑一片（各自的服务器与浏览器），输出原样转出，最后汇总"""
+    started = time.time()
+    procs = [subprocess.Popen([sys.executable, '-X', 'utf8', __file__], env={**os.environ, 'SMOKE_SHARD': f'{k}/{n}', 'SMOKE_JOBS': ''},
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
+             for k in range(1, n + 1)]
+    lines = queue.Queue()
+
+    def pump(p):
+        for line in p.stdout:
+            lines.put(line)
+        lines.put(None)
+
+    for p in procs:
+        threading.Thread(target=pump, args=(p,), daemon=True).start()
+    done, passed, total, failed = 0, 0, 0, []
+    while done < n:
+        line = lines.get()
+        if line is None:
+            done += 1
+            continue
+        m = re.match(r'(\d+)/(\d+) 通过', line.strip())
+        if m:
+            passed, total = passed + int(m[1]), total + int(m[2])
+        elif line.startswith('  - '):
+            failed.append(line.rstrip())
+        elif line.strip() and not line.startswith('失败'):
+            print(line, end='', flush=True)
+    codes = [p.wait() for p in procs]
+    print(f'\n{passed}/{total} 通过（{n} 路并行），用时 {time.time() - started:.0f}s')
+    if failed or any(codes):
+        print('失败：\n' + '\n'.join(failed))
+        return 1
+    return 0
+
+
+def main():
+    jobs_n = int(os.environ.get('SMOKE_JOBS') or 0)
+    return run_parallel(jobs_n) if jobs_n > 1 and not SHARD else run_all()
 
 
 if __name__ == '__main__':

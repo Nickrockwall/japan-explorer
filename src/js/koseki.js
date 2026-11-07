@@ -6,6 +6,7 @@ import { esc } from './detail.js';
 import { distanceKm } from './koku.js';
 import { fmtPeople } from './kokuryoku.js';
 import { findHan, kosekiHanHTML } from './han.js';
+import { fixLink } from './report.js';
 
 const WALK_KM = 30; // 估算步行天数：一天约 30 公里
 const DIRS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
@@ -114,7 +115,7 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
   return { rows, short, print: prints?.[0] || null };
 }
 
-export function kosekiHTML(ctx, data, name) {
+export function kosekiHTML(ctx, data, name, extra = '') {
   const { rows, print } = data;
   const title = `${ctx.prefLabel} ${lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name}`;
   const body = rows.map((r) => `
@@ -135,10 +136,12 @@ export function kosekiHTML(ctx, data, name) {
     <div class="ks-rows">${body}</div>
     ${art}
     <p class="ks-note">${esc(t('ks.note'))}</p>
+    ${extra}
     <div class="ks-actions">
       <button type="button" class="btn" data-act="ks-image">${esc(t('ks.image'))}</button>
       <button type="button" class="btn btn-ghost" data-act="ks-link">${esc(t('ks.link'))}</button>
-    </div>`;
+    </div>
+    <p class="fix-row">${fixLink(t('fix.w.ks', { name: title }))}</p>`;
 }
 
 // ── 存成图片：竖版 1080 宽，和纸底、朱印，文字自动折行 ──

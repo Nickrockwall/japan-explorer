@@ -3,6 +3,7 @@ import { crestSVG } from './crests.js';
 import { t, label, lang, prefName, joinList } from './i18n.js';
 import { mapKey } from './country.js';
 import { sharedButtons } from './shared.js';
+import { fixLink } from './report.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -19,6 +20,8 @@ export function renderWelcome(el) {
       <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
       <div class="section-h">${t('sh.h')}</div>${sharedButtons()}
+      <div class="section-h">${t('pw.h')}</div>
+      <p class="pw-open-p"><button type="button" class="btn btn-ghost pw-open" data-act="pw-open">${t('pw.open')}</button></p>
       <p class="legal">${legalHTML()}</p>
     </div>`;
 }
@@ -287,5 +290,6 @@ export function renderDetail(el, p, { stampedAt, focus, extra = '', emblem } = {
         </div>`).join('')}
     </div>`;
   if (extra) el.insertAdjacentHTML('beforeend', extra); // 详卡底部的附加卡片（如圣地巡礼志）
+  el.insertAdjacentHTML('beforeend', `<p class="fix-row">${fixLink(t('fix.w.pref', { name: prefName(p) }))}</p>`);
   el.scrollTop = 0;
 }

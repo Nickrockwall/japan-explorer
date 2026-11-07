@@ -4,6 +4,7 @@
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { crestSVG } from './crests.js';
+import { fixLink } from './report.js';
 
 const OUTSIDE = '#33333a';
 const DIM = [24, 24, 28]; // 聚光时压暗到底色 #18181c
@@ -242,7 +243,9 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
   function card() {
     if (!person && !clan && !focus) return ''; // 没有可看的（如换到 1600 年后势力总览关掉了）
     const x = `<button class="muni-card-x" type="button" data-act="sg-close" aria-label="${esc(t('close'))}">×</button>`;
-    return x + (person ? personCard(person) : clan ? clanCard(clan) : provCard(focus));
+    const what = person ? t('fix.w.person', { name: personName(person) })
+      : clan ? t('fix.w.clan', { name: clanName(year, clan), y: year }) : t('fix.w.prov', { name: provName(focus) });
+    return x + (person ? personCard(person) : clan ? clanCard(clan) : provCard(focus)) + `<p class="fix-row">${fixLink(what)}</p>`;
   }
   // 两国交界怎么画：0 = 同一家的领国，不画（合成一片）；2 = 两家各自的领国，势力前线；1 = 其余（照常画国界）。
   // 总称（LOOSE）不是一家，不合并；分治的国也不合并

@@ -1,11 +1,13 @@
-// 天皇 · 将军 · 执权年表（dialog#rulers）：数据 src/data/rulers.json（tools/rulers_tool.py），
+// 年表（dialog#rulers）：第一页「实权」是各时期名义上的最高者与实际掌权者（src/data/regimes.json，tools/regimes_tool.py），
+// 点一段跳到对应的名单页。其余三页是天皇 · 将军 · 执权：数据 src/data/rulers.json（tools/rulers_tool.py），
 // 天皇按时代分组并写出天皇所在的都城（镰仓到江户仍是平安京，另注幕府所在地），将军与执权按幕府分组写出幕府所在地
 // （地名取 historical_events 的 timeline_eras 的 capital，那里写的是各时代的政权中枢）。
 // 有详写的人带小头像或圆点；点一行由 app.js 打开人物卡
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
+import { fixLink } from './report.js';
 
-export const RULER_TABS = ['emperor', 'shogun', 'shikken'];
+export const RULER_TABS = ['power', 'emperor', 'shogun', 'shikken'];
 const BAKUFU_ERA = { 鎌倉: 'kamakura', 室町: 'muromachi', 江戸: 'edo' };
 
 const pick = (r) => r[lang] || r.zh;
@@ -26,11 +28,29 @@ function row(r, bios, extra = '') {
     <span class="rl-name">${esc(pick(r))}${extra}</span><span class="rl-y">${yr(r.from)}–${yr(r.to)}</span><span class="rl-face">${face}</span></li>`;
 }
 
-export function rulersHTML(rulers, eras, bios, tab) {
-  const tabs = RULER_TABS.map((k) => `<button type="button" class="book-tab ${k === tab ? 'on' : ''}" data-rl-tab="${k}" aria-pressed="${k === tab}">${esc(t(`rl.tab.${k}`))}</button>`).join('');
+// 「实权」一页：每段一张小卡，名义 / 实权 / 中枢 / 说明，点「看名单」换到对应的页
+function powerHTML(regimes) {
+  const P = (o) => o[lang] || o.zh;
+  return regimes.periods.map((p, i) => `<section class="rl-group rl-pw" data-rl-g="${i}" data-pw="${p.key}">
+    <h3>${esc(P(p.y))}</h3>
+    <dl class="pw-dl"><dt>${esc(t('pw.real'))}</dt><dd class="pw-real">${esc(P(p.real))}</dd>
+      <dt>${esc(t('pw.nominal'))}</dt><dd>${esc(P(p.nominal))}</dd>
+      <dt>${esc(t('pw.seat'))}</dt><dd>${esc(P(p.seat))}</dd></dl>
+    <p class="pw-note">${esc(P(p.note))}${p.tab ? ` <button type="button" class="pw-go" data-rl-tab="${p.tab}" data-rl-from="${p.from}">${esc(t(`pw.go.${p.tab}`))} ›</button>` : ''}</p>
+  </section>`).join('');
+}
+// 「实权」各段在跳转行里的短名（按开始年）
+const powerJump = (regimes) => regimes.periods.map((p) => String(p.from < 300 ? t('pw.early') : p.from));
+
+export function rulersHTML(rulers, eras, bios, tab, regimes = null) {
+  if (tab === 'power' && !regimes) tab = 'emperor';
+  const tabs = RULER_TABS.filter((k) => k !== 'power' || regimes).map((k) => `<button type="button" class="book-tab ${k === tab ? 'on' : ''}" data-rl-tab="${k}" aria-pressed="${k === tab}">${esc(t(`rl.tab.${k}`))}</button>`).join('');
   let body = '';
   let jump = [];
-  if (tab === 'emperor') {
+  if (tab === 'power') {
+    body = powerHTML(regimes);
+    jump = powerJump(regimes);
+  } else if (tab === 'emperor') {
     const groups = [];
     for (const r of rulers.emperors) {
       const e = eraOf(eras, r.from);
@@ -63,5 +83,6 @@ export function rulersHTML(rulers, eras, bios, tab) {
       <button type="button" class="book-close" data-act="rl-close" aria-label="${esc(t('close'))}">×</button></header>
     <nav class="book-tabs">${tabs}</nav>
     <nav class="rl-jump" aria-label="${esc(t('rl.jump'))}">${jump.map((x, i) => `<button type="button" data-rl-jump="${i}">${esc(x)}</button>`).join('')}</nav>
-    <div class="rl-body">${body}<p class="rl-note">${esc(t('rl.note'))}</p></div></div>`;
+    <div class="rl-body">${body}<p class="rl-note">${esc(t(tab === 'power' ? 'pw.note' : 'rl.note'))}</p>
+      <p class="fix-row">${fixLink(t('fix.w.rl', { tab: t(`rl.tab.${tab}`) }))}</p></div></div>`;
 }

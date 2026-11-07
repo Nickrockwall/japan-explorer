@@ -40,7 +40,7 @@ export function kakoHTML({ key, list, page, prefName, provName, lordOf = () => '
   const rows = shown.map((e) => {
     const where = [prefName(e.p), e.k ? provName(e.k) : '', lordOf(e)].filter(Boolean).join(' · ');
     const sub = lang === 'ja' ? e.s : where;
-    return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}">
+    return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
       <span class="kk-y">${e.y}<small>${esc(t('kk.ago', { n: ago(e.y) }))}</small></span>
       <span class="kk-main"><b>${esc(pick(e.n))}${tag(e)}</b><span>${esc(sub)}</span>${lang === 'ja' ? `<span>${esc(where)}</span>` : ''}</span></button></li>`;
   }).join('');
@@ -73,7 +73,7 @@ export function kakoPrefHTML(all, pid, now = new Date()) {
   if (!mine.length) return `<div class="kk-prefhead"><div class="section-h">${esc(t('kk.pref'))}</div>${back}</div><p class="kk-none">${esc(t('kk.pref.none'))}</p>`;
   const rows = mine.map(({ key, e, n }) => {
     const [m, d] = key.split('-').map(Number);
-    return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-key="${key}">
+    return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}" data-key="${key}">
       <span class="kk-y">${esc(t('kk.md', { m, d }))}<small>${esc(n === 0 ? t('kk.today') : t('kk.in', { n }))}</small></span>
       <span class="kk-main"><b>${esc(pick(e.n))}${tag(e)}</b><span>${e.y}</span></span></button></li>`;
   }).join('');

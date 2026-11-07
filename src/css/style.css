@@ -951,9 +951,29 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .ks-actions .btn { color: #2b2420; border-color: #b89a74; }
 .ks-actions .btn:first-child { background: #8a3b33; border-color: #8a3b33; color: #f3ead9; }
 .muni-card .ks-open, .loc-actions .btn[data-act="loc-koseki"] { margin-top: 8px; }
+/* 此地年表：左边一条竖线串起年份，彼时今日的条目可点 */
+.ht { margin-top: 16px; padding-top: 10px; border-top: 2px solid #3a1f1c; }
+.ht-h { font: 900 18px var(--serif); letter-spacing: .15em; color: #2b2420; margin-bottom: 6px; }
+.ht-list { list-style: none; margin: 0; padding: 0 0 0 10px; border-left: 2px solid #c9a67a; }
+.ht-list li { position: relative; }
+.ht-list li::before { content: ''; position: absolute; left: -16px; top: 9px; width: 8px; height: 8px; border-radius: 50%; background: #c9a67a; }
+.ht-list .ht-edo::before, .ht-list .ht-sg::before { background: #8a3b33; }
+.ht-list .ht-kako::before { background: #f3ead9; border: 2px solid #8a5a2b; width: 6px; height: 6px; }
+.ht-r { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 8px; padding: 4px 0; }
+.ht-kk { width: 100%; border: 0; background: transparent; text-align: left; color: inherit; font: inherit; cursor: pointer; border-radius: 6px; }
+.ht-kk:hover { background: rgba(138,59,51,.08); }
+.ht-y { font: 700 13px var(--serif); color: #8a3b33; font-variant-numeric: tabular-nums; padding-top: 1px; }
+.ht-m b { display: block; font: 700 14.5px/1.45 var(--serif); color: #2b2420; }
+.ht-m span { display: block; font-size: 12px; line-height: 1.5; color: #5a4a3e; }
+.ht-kako .ht-m b { font-weight: 600; }
+.ht .kk-born { background: rgba(90,130,60,.18); color: #4d6b2f; }
+.ht .kk-died { background: rgba(90,80,70,.15); color: #5a4a3e; }
+.ht-more { margin: 6px 0 0; font-size: 12px; color: #5a4a3e; }
+.hn-y { font-variant-numeric: tabular-nums; }
 @media (max-width: 560px) {
   .koseki { padding: 16px 16px 14px; border-width: 7px; }
   .ks-row { grid-template-columns: 82px minmax(0, 1fr); gap: 8px; }
+  .ht-r { grid-template-columns: 72px minmax(0, 1fr); gap: 6px; }
   .ks-head h2 { font-size: 24px; }
 }
 
@@ -1543,6 +1563,22 @@ dialog.shared::backdrop { background: rgba(0,0,0,.6); }
 .rl-face img { width: 24px; height: 30px; object-fit: cover; object-position: top; border-radius: 3px; }
 .rl-dot { width: 7px; height: 7px; border-radius: 50%; background: #c23531; }
 .rl-note { margin: 14px 0 0; font-size: 11px; line-height: 1.6; color: #8a7a68; }
+/* 年表「实权」：每段一块，实权一行加粗 */
+.rl-pw { padding: 2px 0 10px; border-bottom: 1px solid #d8c6a6; }
+.rl-pw h3 { margin-top: 12px; font-variant-numeric: tabular-nums; }
+.pw-dl { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 3px 10px; margin: 0; font-size: 13px; line-height: 1.5; }
+.pw-dl dt { color: #8a3b33; font: 700 12px var(--serif); padding-top: 1px; }
+.pw-dl dd { margin: 0; color: #3a2a20; }
+.pw-dl .pw-real { font: 700 14px/1.5 var(--serif); color: #2b2420; }
+.pw-note { margin: 6px 0 0; font-size: 12px; line-height: 1.6; color: #5a4a3e; }
+.pw-go { border: 1px solid #c9a67a; background: transparent; color: #8a3b33; border-radius: 12px; padding: 1px 9px; font-size: 11.5px; cursor: pointer; white-space: nowrap; }
+.pw-go:hover { background: #3a1f1c; color: #f3ead9; }
+/* 「数据有误？」：各卡片末尾一行，不抢眼 */
+.fix-row { margin: 10px 0 2px; text-align: right; }
+.fix-link { font-size: 11px; color: var(--muted); text-decoration: none; border-bottom: 1px dotted currentColor; }
+.fix-link:hover { color: var(--kin); }
+.koseki .fix-link, .rl-body .fix-link { color: #8a7a68; }
+.koseki .fix-link:hover, .rl-body .fix-link:hover { color: #8a3b33; }
 
 /* 彼时今日 */
 .kako { margin: 14px 0 6px; padding: 10px 12px 8px; border: 1px solid rgba(212,163,115,.3); border-radius: 10px; background: rgba(212,163,115,.06); }

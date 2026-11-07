@@ -6,6 +6,8 @@ import { wikiLink } from './sengoku.js';
 
 const nm = (o) => (lang === 'en' ? o.en || o.ja : lang === 'ja' ? o.ja : o.zh);
 const count = (h) => h.f.reduce((s, [, , rows]) => s + rows.length, 0);
+// 在位年份（藩主行的第 6 项，[起, 止] 或再任的 [起, 止, 起, 止]；不详的没有这一项）→「1830–1858」
+export const reignText = (y) => (y ? y.reduce((out, v, i) => out + (i % 2 ? `–${v}` : `${i ? ', ' : ''}${v}`), '') : '');
 
 // 藩主 ⇄ 彼时今日：两边都按日文维基条目名对上。lordDays：条目名 → 这位藩主在彼时今日里的诞生 / 忌日（藩主名后面的日期小标签）
 let lordDays = new Map();
@@ -21,7 +23,7 @@ export function setLordDays(all) {
 }
 const dayLinks = (title) => (lordDays.get(title) || []).map(({ key, q, t: k }) => {
   const [m, d] = key.split('-').map(Number);
-  return `<button type="button" class="hn-kk kk-${k}" data-kako="${esc(q)}" data-key="${key}">${esc(`${t(`kk.t.${k}`)} ${t('kk.md', { m, d })}`)}</button>`;
+  return `<button type="button" class="hn-kk kk-${k}" data-kako="${esc(q)}" data-kt="${k}" data-key="${key}">${esc(`${t(`kk.t.${k}`)} ${t('kk.md', { m, d })}`)}</button>`;
 }).join('');
 
 // 彼时今日的一条若是某藩藩主 → 「某藩藩主」（同名多藩的取存续到废藩置县的）
@@ -29,12 +31,12 @@ export function lordOfFn(data) {
   const by = new Map();
   for (const h of data?.han || []) {
     for (const [, , rows] of h.f) {
-      for (const [title] of rows) if (!by.has(title) || (h.k && !by.get(title).k)) by.set(title, h);
+      for (const row of rows) if (!by.has(row[0]) || (h.k && !by.get(row[0]).h.k)) by.set(row[0], { h, y: row[5] });
     }
   }
   return (e) => {
-    const h = e.w?.ja && by.get(e.w.ja);
-    return h ? t('hn.lord', { name: nm(h.n) }) : '';
+    const x = e.w?.ja && by.get(e.w.ja);
+    return x ? `${t('hn.lord', { name: nm(x.h.n) })}${x.y ? ` ${reignText(x.y)}` : ''}` : '';
   };
 }
 
@@ -44,8 +46,8 @@ export function lordsHTML(h) {
     // 英文家名：取这一家第一位藩主英文名的姓（没有英文名就用日文）
     const enSur = rows.find((r) => r[3])?.[3].split(' ')[0];
     const fam = !ja ? '' : lang === 'zh' ? zh : lang === 'en' && enSur ? t('hn.fam', { name: enSur }) : ja;
-    const lords = rows.map(([title, name, nameZh, en, note], i) => `<li><span class="hn-i">${i + 1}</span>
-      <a href="${wikiLink(title)}" target="_blank" rel="noopener">${esc(lang === 'en' ? en || name : lang === 'ja' ? name : nameZh)}</a>${note ? `<small>${esc(t('hn.again'))}</small>` : ''}${dayLinks(title)}</li>`).join('');
+    const lords = rows.map(([title, name, nameZh, en, note, yrs], i) => `<li><span class="hn-i">${i + 1}</span>
+      <a href="${wikiLink(title)}" target="_blank" rel="noopener">${esc(lang === 'en' ? en || name : lang === 'ja' ? name : nameZh)}</a>${note ? `<small>${esc(t('hn.again'))}</small>` : ''}${yrs ? `<small class="hn-y">${reignText(yrs)}</small>` : ''}${dayLinks(title)}</li>`).join('');
     return `<div class="hn-fam">${fam ? `<div class="hn-fam-h">${esc(fam)}</div>` : ''}<ol>${lords}</ol></div>`;
   }).join('');
 }

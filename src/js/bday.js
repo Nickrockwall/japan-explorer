@@ -3,6 +3,7 @@
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { wrap } from './koseki.js';
+import { fixLink } from './report.js';
 
 const pick = (o) => o?.[lang] || o?.zh || '';
 
@@ -36,7 +37,7 @@ export function bdayHTML(d, { prefName, lordOf, name }) {
   const group = (g) => {
     const rows = d[g];
     if (!rows.length) return '';
-    const items = rows.map((e) => `<li><button type="button" class="bd-item" data-kako="${esc(e.q)}">
+    const items = rows.map((e) => `<li><button type="button" class="bd-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
       <span class="bd-y">${e.y}<small>${esc(t('kk.ago', { n: d.year - e.y }))}</small></span>
       <span class="bd-main"><b>${esc(pick(e.n))}</b><span>${esc(subOf(e, prefName, lordOf))}</span></span></button></li>`).join('');
     return `<section class="bd-group"><h3>${esc(t(`bd.g.${g}`, { n: rows.length }))}</h3><ol>${items}</ol></section>`;
@@ -55,7 +56,8 @@ export function bdayHTML(d, { prefName, lordOf, name }) {
     <div class="ks-actions">
       <button type="button" class="btn" data-act="bd-image">${esc(t('ks.image'))}</button>
       <button type="button" class="btn btn-ghost" data-act="bd-link">${esc(t('ks.link'))}</button>
-    </div>`;
+    </div>
+    <p class="fix-row">${fixLink(t('fix.w.bd', { m, d: day }))}</p>`;
 }
 
 // ── 存成图片：与古代户籍同一套和纸底，竖版 1080 宽；每组最多画 6 条，其余写「另有 N 条」 ──

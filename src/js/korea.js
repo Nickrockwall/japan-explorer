@@ -20,6 +20,7 @@ import { createKoreaPower } from './korea-power.js';
 import { createKoreaBattle } from './korea-battle.js';
 import { NARROW, setupTabs, setupBattleVoice, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch, setupMenu, setupLegendCaption, setupSheets, setupScrollHints, watchCards } from './shell.js';
 import { addToc } from './toc.js';
+import { fixLink } from './report.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -218,7 +219,8 @@ function renderRegion(el, p, c, translated = true, names = null, sul = null, x =
     ${contentHTML(c, sul)}
     ${ddHTML(p.id, x.dd)}
     ${hySection(x.hy || [], x.hyBook || {})}
-    <p class="legal">${t('kr.src.region')}</p>`;
+    <p class="legal">${t('kr.src.region')}</p>
+    <p class="fix-row">${fixLink(t('fix.w.kr', { name: nameOf(p) }))}</p>`;
   if (!translated) el.insertAdjacentHTML('afterbegin', `<div class="untranslated">🌐 ${t('untranslated')}</div>`);
   el.scrollTop = 0;
 }

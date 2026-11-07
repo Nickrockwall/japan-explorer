@@ -34,6 +34,10 @@ NOT_FAMILY = {'kofukuji', 'ikko', 'iga_ikki'}
 MANUAL = {
     # 条目开头的总信息框家纹为空，下面「加賀前田家」的信息框写的是加賀梅鉢
     'maeda': ('Japanese crest Kaga Umebachi.svg', '加賀梅鉢', '前田氏', '|家紋=Japanese crest Kaga Umebachi.svg'),
+    # 「三木氏」条目没有信息框；「姉小路氏」（即三木氏）的信息框家纹名为剣菱、图档缺，图用 Commons 上标明「剣菱」紋的公有领域图
+    'anegakoji': ('Ken Bishi inverted.png', '剣菱', '姉小路氏', '|家紋名称= [https://assets.st-note.com/img/1676440279084-LOs9LC11zM.png {{ruby|剣菱|けんびし}}]'),
+    # 堀越公方是足利政知一系（足利将军家的分家），条目没有家纹：用足利氏信息框里的足利二つ引
+    'horigoe': ('Ashikaga mon rev.svg', '足利二つ引', '足利氏', '{{ruby|[[引両紋|足利二つ引]]'),
 }
 # 自动判断底色反了的图：反过来取
 FLIP = set()
@@ -136,6 +140,7 @@ def main():
             if quote not in wikitext(src):
                 bad.append(f'{k}：依据原文不在「{src}」里')
                 continue
+            art = src
         if not f or not re.search(r'\.(svg|png|jpe?g|gif)$', f, re.I):
             print(f'无家纹 {k}（{art}）')
             continue
