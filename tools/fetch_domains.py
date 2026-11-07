@@ -6,7 +6,12 @@
 - 表的每一行是一种支配：幕府领 / 旗本领 / 某藩 / 寺社领……，以及几方共管的村（相给，如「旗本領・上田藩」）。
   按町村数计：「2町<br />9村」= 11。共管的行单独记为 mixed，不拆给各方。
 - 藩名去掉开头的旧国名（「信濃上田藩」→ 上田藩），三语名取 Wikidata 的标签（ja 条目「上田藩」），取不到时中文按字形转换、英文用罗马字缺省不显示。
-- 没有这张表的郡不收（宁缺毋滥），户籍里该栏改为县一级的说明。
+- 表有两种写法：老式每格一行（| 知行 || 町村数 || …），新式 hlist（! scope="row" 的表头格里用列表写知行，
+  村数格写成「* 1町 * 21村」，几方共管的表头格列出几项）；两种都读（hlist()）。
+- 没有表的：正文「全域が○○藩領であった」「全域を○○代官所が管轄」「幕府直轄地（天領）であった」也认（prose()）。
+- 1896 年前后合并新设的郡（长生郡 = 长柄郡 + 上埴生郡）条目里没有表：按变迁框 s-bef 列出的前身郡（同县）把它们的表加起来，
+  前身郡有一个没有表就不合（merged()）。
+- 都没有的郡不收（宁缺毋滥），户籍里该栏改为县一级的说明。
 输出 tools/domains.json（可人工修正，已提交），再由 build_bundle.py 拼进数据包。
 """
 import json
@@ -68,6 +73,59 @@ def table(wt):
             if lord and n:
                 rows.append((lord, n))
     return rows or None
+
+
+def hlist(wt):
+    """新式 hlist 表：每行的知行在最后一个「!」表头格（几项 = 相给），町村数在其后第一个「|」格 → [(知行, 町村数)]"""
+    i = wt.find('旧高旧領取調帳')
+    if i < 0:
+        return None
+    s = wt.find('{|', i)
+    if s < 0 or s - i > 1500:
+        return None
+    body = wt[s:wt.find('\n|}', s)]
+    if '知行' not in body[:600] or 'scope="row"' not in body:
+        return None
+    rows = []
+    for row in body.split('\n|-')[1:]:
+        cells, cur = [], None
+        for line in row.split('\n'):
+            if line.startswith(('!', '|')) and not line.startswith(('|}', '|+')):
+                cur = [line[0], line[1:].split('|', 1)[-1] if re.match(r'^[!|]\s*(?:scope|rowspan|colspan|style)', line) else line[1:]]
+                cells.append(cur)
+            elif cur is not None:
+                cur[1] += '\n' + line
+        heads = [c for k, c in cells if k == '!']
+        data = [c for k, c in cells if k == '|']
+        if not heads or not data:
+            continue
+        items = [clean(x) for x in re.findall(r'^\*\s*(.+)$', heads[-1], re.M)] or [clean(heads[-1])]
+        items = [x for x in items if x]
+        n = count(data[0])
+        if items and n:
+            rows.append(('・'.join(items), n))
+    return rows or None
+
+
+def prose(wt):
+    """没有表、正文写明全域归谁的：全域が○○領であった / 全域を○○代官所が管轄 / 幕府直轄地（天領）であった"""
+    got = whole(wt)
+    if got:
+        return got
+    m = re.search(r"全域を'*([^'。\n]{1,16}?代官所)'*が管轄", wt)
+    if m:
+        return [('幕府領（' + clean(m.group(1)) + '）', None)]
+    if re.search(r'幕府直轄地（天領）であった', wt):
+        return [('幕府領', None)]
+    return None
+
+
+def predecessors(wt):
+    """变迁框 s-bef 的前身郡（「長柄郡・上埴生郡」）"""
+    m = re.search(r'\{\{s-bef\|before=([^|}]+)', wt)
+    if not m:
+        return []
+    return [clean(x).strip() for x in re.split(r'[・、]', m.group(1)) if clean(x).strip().endswith('郡')]
 
 
 def whole(wt):
@@ -171,12 +229,22 @@ def main():
     wts = pages(list(titles), 'revisions', rvprop='content', rvslots='main')
     for title, prefs in sorted(titles.items()):
         wt = text_of(wts[title]) or ''
-        rows = table(wt) or whole(wt)
+        rows = table(wt) or hlist(wt) or prose(wt)
         if rows:
             got[title] = rows
         else:
             missing.append(title)
-    print(f'有表 {len(got)} / {len(titles)} 郡')
+    # 合并新设的郡：前身郡（同县的郡名 → 条目名）都有表才加起来
+    merged = 0
+    for title in list(missing):
+        prefs = titles[title]
+        before = predecessors(text_of(wts[title]) or '')
+        srcs = [next((districts[str(p)][b]['title'] for p in prefs if b in districts.get(str(p), {})), b) for b in before]
+        if before and all(x in got and all(n for _, n in got[x]) for x in srcs):
+            got[title] = [r for x in srcs for r in got[x]]
+            missing.remove(title)
+            merged += 1
+    print(f'有表 {len(got)} / {len(titles)} 郡（其中按前身郡合并 {merged}）')
     print('无表（前 40）：', missing[:40])
     lords = {}
     for rows in got.values():

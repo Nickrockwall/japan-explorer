@@ -9,7 +9,8 @@
   两者不一致时打印出来；
 - 名字：日文取链接文字，中文按字形转简体，英文取 Wikidata 标签（没有就不写，前端用日文）。
 - 在位年份：藩主条目末尾的「○○藩主」导航模板（{{上田藩主|藤井松平家|6代|1830年 - 1858年}}）里写成「起年 - 止年」的；
-  只写一个年份（是就任还是去世不明）、「? - 1626年」这类不收。藩条目的表格有「在任 / 在職期間」一栏时也读，
+  「? - 1626年」不收；只写一个年份的，只在前一位的退任年与后一位的就任年夹出任期、且这个年份正好是其中一头时收。
+  藩的起年（变迁框写的常是最后一次设立）早于最早的就任年时，改为最早的就任年。藩条目的表格有「在任 / 在職期間」一栏时也读，
   两边都有而相差超过 1 年的两边都不收；同一家里后一位的就任年早于前一位的也不收（打印出来）。
 输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止]（不详的为 null）, k,
   f:[[家, 家（简）, [[条目, 名, 名（简）, 英文名, 备注, 在位?]...]]]}] }，在位 = [起, 止]（再任的 [起, 止, 起, 止]），不详的省略。缓存在 .cache/han/。
@@ -243,7 +244,8 @@ def lords(w):
             continue
         rest = line[line.find(link.group(0)) + len(link.group(0)):] if in_table and tbl_years else ''
         cur[1].append([title, name, '再任' if '再任' in line else '', rest])
-    return [f for f in fams if f and f[1]]
+    # 家名里的读音括注去掉（「伊達（だて）家」→ 伊達家）
+    return [[re.sub(r'（[ぁ-んー]+）', '', f[0]), f[1]] for f in fams if f and f[1]]
 
 
 RANGE = re.compile(r'(1[5-8]\d\d)年?\s*[-–—〜~－]\s*(1[5-8]\d\d)年')
@@ -308,6 +310,19 @@ def reigns(h, nav, report):
             if yrs:
                 last = yrs[0][0]
             row[3] = [y for r in yrs for y in r] or None
+            # 导航框只写了一个年份的（多是在位不到一年）：先记下，下面拿前后两位核对
+            one = [int(y) for tp in nav.get(title, []) if re.match(r'\{\{\s*([^|]+?)\s*\|', tp).group(1).strip() in names
+                   for y in re.findall(r'(1[5-8]\d\d)年', tp)]
+            row.append(one[0] if not row[3] and len(one) == 1 else None)
+    # 前一位的退任年与后一位的就任年夹出这一位的任期，且这一位导航框里唯一的年份正好是其中一头，才收
+    for _, rows in h['f']:
+        for i, row in enumerate(rows):
+            one = row.pop()
+            prev = rows[i - 1][3][-1] if i and rows[i - 1][3] else None
+            nxt = rows[i + 1][3][0] if i + 1 < len(rows) and rows[i + 1][3] else None
+            if one and prev and nxt and prev <= nxt and one in (prev, nxt):
+                row[3] = [prev, nxt]
+                report.append(f'{h["t"]} {row[0]}：按前后两位补为 {prev}–{nxt}（导航框 {one}）')
 
 
 def main():
@@ -372,15 +387,25 @@ def main():
             continue
         out.append({'t': real, 'p': pid, 'y': y, 'k': kept, 'f': fams})
     names = en_labels([h['t'] for h in out] + [x[0] for h in out for f in h['f'] for x in f[1]])
+    fixed = []
     nav, report = navboxes(sorted({x[0] for h in out for f in h['f'] for x in f[1]})), []
     for h in out:
         reigns(h, nav, report)
+        # 藩的起年取变迁框，几度废立的藩框里写的是最后一次设立（下館藩 1702、弘前藩甚至写成 1871）：
+        # 藩主在位年份更早的，起年改为最早的就任年。止年不动——导航框的止年有时跨到改名、转封后的藩（請西藩），不可靠
+        rs = [y for _, rows in h['f'] for x in rows if x[3] for y in x[3]]
+        y0, y1 = h['y'] or [None, None]
+        if rs and h['t'] not in YEARS and (y0 is None or min(rs) < y0 - 1) and min(rs) <= (y1 or 1871):
+            fixed.append(f'{h["t"]} 起年 {y0} → {min(rs)}')
+            h['y'] = [min(rs), y1]
         ja = re.sub(r'\s*\(.*\)$', '', h['t'])
         h['n'] = {'ja': ja, 'zh': zh(ja), 'en': names.get(h['t']) or ''}
         h['f'] = [[fam, zh(fam), [[x[0], x[1], zh(x[1]), names.get(x[0]) or '', x[2]] + ([x[3]] if x[3] else []) for x in rows]]
                   for fam, rows in h['f']]
     for x in report:
         print('在位', x)
+    for x in fixed:
+        print('年份', x)
     out.sort(key=lambda h: (h['p'], -h['k'], h['n']['ja']))  # 县内先列存续到废藩置县的
     for x in todo:
         print('待查', x)
@@ -392,6 +417,7 @@ def main():
     n_lords = sum(len(rows) for h in out for _, _, rows in h['f'])
     n_years = sum(len(r) > 5 for h in out for _, _, rows in h['f'] for r in rows)
     print(f'收录 {len(out)} 藩（存续到 1871 年 {sum(h["k"] for h in out)}）、{n_lords} 位藩主（有在位年份 {n_years}），待查 {len(todo)}')
+    assert next(h['y'] for h in out if h['t'] == '弘前藩')[0] == 1590, '弘前藩起年应为 1590'
     # 锚点：上田藩松平忠固 1830–1858（藩主条目的模板），会津藩蒲生秀行 1601–1612（藩条目的表格也是这样写）
     ry = {(h['t'], r[0]): r[5] for h in out for _, _, rows in h['f'] for r in rows if len(r) > 5}
     assert ry.get(('上田藩', '松平忠固')) == [1830, 1858], ry.get(('上田藩', '松平忠固'))

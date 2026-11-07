@@ -606,6 +606,7 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .era-banner p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
 .era-banner p:last-child { min-height: 3em; } /* 副标题预留两行，一行两行切换时横幅不跳 */
 .era-banner p.cap { color: #ffd27a; font: 700 13px var(--serif); margin-bottom: 2px; }
+.era-banner p.pw-line { height: 1.5em; margin-bottom: 2px; color: #f3e2c0; font: 600 12.5px/1.5 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* 固定一行：换时代时横幅不跳 */
 @keyframes era-show {
   0% { opacity: 0; transform: translate(-50%, -44%); }
   15%, 75% { opacity: 1; transform: translate(-50%, -50%); }

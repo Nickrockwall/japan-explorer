@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.12 · 2026-11-07
+
+- Fixed the start year of 152 domains: it came from the succession box, which for domains abolished and re-created gives the last re-creation, so cards showed things like "Hirosaki 1871–1871". Start years are now corrected to the earliest lord's accession (Hirosaki 1590, Shimodate 1598)
+- Fixed: the ancestral register crashed for Natori, Sendai and a few other places. Their district articles only say "all of it was Sendai domain land" without a village count, which used to be read as an empty record; it now shows "all of Natori district"
+- Late-Edo lords are now read for 70 more districts: newer-style tables (Suntō, Kamo…), prose such as "all of it under the X magistrate's office" (Minamitsuru, Minamiaizu), and districts merged around 1896 whose articles have no table (Chōsei = Nagara + Kamihabu, adding up their predecessors). Municipalities with an Edo line in the register and its timeline rise from 87% to 94% (outside Hokkaidō and Okinawa)
+- Reign years for 32 more lords: where the succession box gives a single year, the reign is taken from the neighbouring lords' years only if that year matches one end (mostly reigns of under a year)
+- The saved ancestral-register image now includes "This place through time"
+- When you drag the era slider, the banner gains a "Real power" line listing who held power in that era (Heian: Emperor and Council of State → Fujiwara regents → Retired emperors → The Taira), from the same data as the "Who ruled" page
+- In "This place through time", a house whose first lord has no reign years now shows "…" for its start instead of the second lord's accession; reading glosses are dropped from house names
+
 ## 3.11 · 2026-11-07
 
 - New "Who held power": the timelines dialog opens on a "Who ruled" page that splits Japanese history from the 3rd-century Yamato kingship to today into 20 periods, each with the nominal head, the person or group that really held power (the Soga, the Fujiwara regents, the retired emperors, the Taira, the Hōjō regents, Oda, Toyotomi, Tokugawa, the Meiji oligarchs, party cabinets, the military, GHQ…) and the seat of power. Where two boundary dates are in common use (Kamakura from 1185 or 1192) both are shown; every year and name is checked against the matching Japanese Wikipedia article. It opens from the welcome card, and "Emperors" / "Shoguns" / "Regents" jump to that period's list

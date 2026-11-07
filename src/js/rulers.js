@@ -39,6 +39,14 @@ function powerHTML(regimes) {
     <p class="pw-note">${esc(P(p.note))}${p.tab ? ` <button type="button" class="pw-go" data-rl-tab="${p.tab}" data-rl-from="${p.from}">${esc(t(`pw.go.${p.tab}`))} ›</button>` : ''}</p>
   </section>`).join('');
 }
+// 一个时代（historical_events 的 timeline_eras，years 如「794–1185」「1945–」）里先后掌权的：各段的短名按顺序
+export function powerChain(regimes, era) {
+  if (!regimes || !era) return '';
+  const [s, e] = era.years.split('–').map((x) => (x ? parseInt(x, 10) : 9999));
+  const P = regimes.periods;
+  return P.filter((p, i) => p.from < e && (P[i + 1]?.from ?? 9999) > s).map((p) => p.short[lang] || p.short.zh).join(' → ');
+}
+
 // 「实权」各段在跳转行里的短名（按开始年）
 const powerJump = (regimes) => regimes.periods.map((p) => String(p.from < 300 ? t('pw.early') : p.from));
 

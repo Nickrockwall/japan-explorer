@@ -14,7 +14,7 @@ import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { hometownItems, hometownHTML } from './hometown.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
-import { rulersHTML } from './rulers.js';
+import { rulersHTML, powerChain } from './rulers.js';
 import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
 import { hanSection, setLordDays, lordOfFn } from './han.js';
 import { bdayData, bdayHTML, bdayImage } from './bday.js';
@@ -68,11 +68,11 @@ function setupPersonaSwitch(guide) {
   sync();
 }
 
-// 时代变迁报幕
-function showEraBanner(era) {
+// 时代变迁报幕；power：这个时代里先后实际掌权的（年表「实权」的短名），一行写不下就省略，全文在 title
+function showEraBanner(era, power = '') {
   const el = $('era-banner');
   el.innerHTML = `<small>${esc(era.years)}</small><h3>${esc(era.short)}</h3>
-    <p class="cap">${esc(t('capital', { name: era.capital.name }))}</p><p>${esc(era.banner)}</p>`;
+    <p class="cap">${esc(t('capital', { name: era.capital.name }))}</p><p class="pw-line" title="${esc(power)}">${power ? esc(t('pw.line', { list: power })) : ''}</p><p>${esc(era.banner)}</p>`;
   el.classList.remove('show');
   void el.offsetWidth;
   el.classList.add('show');
@@ -379,9 +379,9 @@ async function main() {
       sengoku: await sengokuData(), han: await ensureHan().then(() => han),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
-    // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图里不画）
-    const town = hometownHTML(hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad }));
-    ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''), town);
+    // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）
+    ks.town = hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad });
+    ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''), hometownHTML(ks.town));
     if (!ksDlg.open) ksDlg.showModal();
     ksDlg.scrollTop = 0;
     history.replaceState(null, '', kosekiHash(pid, code));
@@ -417,7 +417,7 @@ async function main() {
     if (b.dataset.act === 'ks-image') {
       b.disabled = true;
       try {
-        await saveImage(await kosekiImage(ks.ctx, ks.data, uiPref.get('kosekiName', '')), `koseki-${ks.code}.png`, t('ks.title'));
+        await saveImage(await kosekiImage(ks.ctx, ks.data, uiPref.get('kosekiName', ''), ks.town), `koseki-${ks.code}.png`, t('ks.title'));
       } catch (err) {
         console.warn('户籍图片生成失败', err);
         toast(t('ks.fail'));
@@ -590,13 +590,15 @@ async function main() {
   });
 
   // ── 天皇 · 将军 · 执权年表：点一行在地图上打开人物卡 ──
+  let regimes = null, regimesReq = null; // 年表「实权」与时代横幅共用
+  const regimesLoad = () => (regimesReq ??= loadRegimes().then((d) => { regimes = d; }));
   let rl = null; // { rulers, bios, regimes }
   let rlTab = 'power';
   let rlLoad = null;
   const rlDlg = $('rulers');
   // 欢迎卡也能打开（不必先开战国势力图）：缺的数据这时才下载
-  const ensureRulers = () => (rlLoad ??= Promise.all([rl?.rulers || loadRulers(), rl?.bios || loadBios(), loadRegimes()])
-    .then(([rulers, bios, regimes]) => { if (rulers) rl = { rulers, bios, regimes }; }));
+  const ensureRulers = () => (rlLoad ??= Promise.all([rl?.rulers || loadRulers(), rl?.bios || loadBios(), regimesLoad()])
+    .then(([rulers, bios]) => { if (rulers) rl = { rulers, bios, regimes }; }));
   async function openRulers(tab, from) {
     await ensureRulers();
     if (!rl) return;
@@ -904,7 +906,16 @@ async function main() {
       $('tb-era').textContent = era.name;
       $('tb-capital').textContent = t('capital', { name: era.capital.name });
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.toggle('on', +b.dataset.i === i));
-      if (banner) showEraBanner(era);
+      if (banner) showEraBanner(era, powerChain(regimes, era));
+      // 第一次进时空穿越才下载实权数据（约 10 KB），到了补进横幅
+      if (!regimes) {
+        regimesLoad().then(() => {
+          const line = $('era-banner').querySelector('.pw-line');
+          if (app.eraIdx !== i || !line || !regimes) return;
+          line.title = powerChain(regimes, era);
+          line.textContent = t('pw.line', { list: line.title });
+        });
+      }
     } else {
       $('tb-era').textContent = t('tb.idle');
       $('tb-capital').textContent = t('tb.idle.cap');

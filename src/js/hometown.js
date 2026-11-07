@@ -33,11 +33,15 @@ export function kakoIn(all, geometry) {
   return [...out.values()];
 }
 
-// 一个藩各家的起止：第一位有在位年份的就任 → 最后一位的退任（都不详时为 null）
+// 一个藩各家的起止：第一位有在位年份的就任 → 最后一位的退任（都不详时为 null）；
+// 头一位或末一位不详时那一头不写（open），免得把第二代的就任年当成这一家的开始
 function famSpan(rows) {
   const ys = rows.map((r) => r[5]).filter(Boolean);
-  return ys.length ? [ys[0][0], ys[ys.length - 1][ys[ys.length - 1].length - 1]] : null;
+  if (!ys.length) return null;
+  const last = ys[ys.length - 1];
+  return [ys[0][0], last[last.length - 1], !rows[0][5], !rows[rows.length - 1][5]];
 }
+const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '…' : b}`;
 
 // ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）与 kako（彼时今日全部数据，没有时为 null）
 export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako }) {
@@ -83,7 +87,7 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
       const fam = !ja ? nm(h.n) : lang === 'zh' ? zh : lang === 'en' && enSur ? t('hn.fam', { name: enSur }) : ja;
       const who = (r) => (lang === 'en' ? r[3] || r[1] : lang === 'ja' ? r[1] : r[2]);
       const sub = rows.length > 1 ? `${who(rows[0])} → ${who(rows[rows.length - 1])}` : who(rows[0]);
-      items.push({ y, yl: span ? `${span[0]}–${span[1]}` : '', main: t('ht.fam', { han: nm(h.n), fam, n: rows.length }), sub, kind: 'edo' });
+      items.push({ y, yl: span ? spanText(span) : '', main: t('ht.fam', { han: nm(h.n), fam, n: rows.length }), sub, kind: 'edo' });
     });
     if (h.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
   } else if (top) {

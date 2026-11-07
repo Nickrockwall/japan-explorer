@@ -134,7 +134,8 @@ def domains(lang):
             if not rows:
                 continue
             total = sum(n for _, n in rows)
-            top = [[label(k), n] for k, n in rows[:3] if n]
+            # 正文只写「全域が○○領」的郡没有町村数（0）：照样收这一家，前端写「全域」
+            top = [[label(k), n] for k, n in rows[:3] if n or total == 0]
             rest = total - sum(n for _, n in top)
             out.setdefault(pref, {})[name] = {'t': total, 'r': top + ([['@other', rest]] if rest > 0 else [])}
     return out

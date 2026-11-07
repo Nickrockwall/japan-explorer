@@ -650,6 +650,11 @@ class Case:
             boxes.append(page.evaluate('''() => ['.map-legend', '.era-banner'].map((s) => {
                 const b = document.querySelector(s).getBoundingClientRect(); return [s, Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)]; })'''))
         assert all(b == boxes[0] for b in boxes), f'换时代时排版在变：{boxes}'
+        # 横幅里「实权」一行（年表的短名）：战国时代是各地大名 → 织田 → 丰臣
+        page.evaluate(js, 5)
+        page.wait_for_function("document.querySelector('.era-banner .pw-line').textContent.length > 4", timeout=5000)
+        line = page.text_content('.era-banner .pw-line')
+        assert any(x in line for x in ('织田', 'Oda', '織田')) and any(x in line for x in ('丰臣', 'Toyotomi', '豊臣')), f'战国的实权一行：{line}'
 
     def search_fits(self, page):
         page.fill('#search-input', '府')
@@ -1115,6 +1120,13 @@ class Case:
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'guide', '乡音应切到向导页'
 
+    def koseki_whole(self, page):
+        # 正文只写「全域が仙台藩領」的郡（名取郡）没有町村数：户籍照常打开（曾经报错），幕末领主写仙台藩、「名取郡全域」
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        edo = page.locator('.ks-row').nth(4).inner_text()
+        assert any(x in edo for x in ('仙台', 'Sendai')), f'名取市的幕末领主应是仙台藩：{edo}'
+        assert page.locator('#koseki .ht-edo').count() >= 2, '此地年表应有仙台藩与废藩置县'
+
     def regimes(self, page):
         # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
         self.tab(page, 'detail')
@@ -1275,7 +1287,8 @@ def plan(lang):
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
-             ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink'])]
+             ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
+             ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),

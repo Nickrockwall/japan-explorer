@@ -401,6 +401,11 @@ def check_han():
     total = sum(kept.values())
     if not 255 <= total <= 280:
         err('han', f'存续到废藩置县的藩 {total} 个，通常约 260–270')
+    # 起年曾取变迁框里最后一次设立的年份（弘前藩写成 1871、下館藩 1702）：现在按最早的藩主就任年校正
+    for name, y0 in {'弘前藩': 1590, '下館藩': 1598}.items():
+        got = next((h['y'][0] for h in han if h['t'] == name and h.get('y')), None)
+        if got != y0:
+            err('han', f'{name} 起年应为 {y0}，实为 {got}')
     where = {h['t']: h['p'] for h in han}
     for name, pid in {'会津藩': 7, '浜松藩': 22, '甲府藩': 19, '徳島藩': 36, '備後福山藩': 34, '加賀藩': 17, '薩摩藩': 46}.items():
         if where.get(name, 0) != pid and not (name == '薩摩藩' and where.get('鹿児島藩') == pid):

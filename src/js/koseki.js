@@ -95,10 +95,12 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
   }
 
   const d = gun && domains?.[pref.id]?.[gun];
-  if (d) {
+  if (d?.r?.length) {
     const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
     const hans = d.r.map(([n]) => !n.startsWith('@') && findHan(han, n, pref.id)).filter(Boolean);  // 点开看历代藩主
-    rows.push({ k: 'edo', seal: 'gun', main: lord(d.r[0][0]), sub: t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }), hans });
+    // 没有町村数的郡（正文写「全域が仙台藩領」）：写「某郡全域」
+    const sub = d.t ? t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : t('ks.edo.all', { gun });
+    rows.push({ k: 'edo', seal: 'gun', main: lord(d.r[0][0]), sub, hans });
   } else {
     const list = pref.historical_lineage.edo_domains || [];
     rows.push({ k: 'edo', seal: 'pref', main: list.slice(0, 3).join(t('list.sep')) || '—', sub: list.length > 3 ? t('ks.more', { n: list.length - 3 }) : '' });
@@ -156,7 +158,8 @@ export function wrap(ctx, text, max) {
   return out;
 }
 
-export async function kosekiImage(ctxInfo, data, name) {
+// town：此地年表（hometownItems 的结果），画在各栏之后；彼时今日条目带诞生 / 忌日字样
+export async function kosekiImage(ctxInfo, data, name, town = null) {
   const W = 1080;
   const PAD = 80;
   const serif = getComputedStyle(document.documentElement).getPropertyValue('--serif') || 'serif';
@@ -176,12 +179,28 @@ export async function kosekiImage(ctxInfo, data, name) {
       y += h;
       return it;
     });
-    return { items, H: y + 170 };
+    const tl = [];
+    if (town?.items.length) {
+      y += 40;
+      const head = y;
+      y += 70;
+      for (const x of town.items) {
+        g.font = `700 30px ${serif}`;
+        const text = `${x.main}${x.tag ? ` · ${t(`kk.t.${x.tag}`)}` : ''}`;
+        const main = wrap(g, text, W - PAD * 2 - 200);
+        g.font = `400 24px ${sans}`;
+        const sub = x.sub ? wrap(g, x.sub, W - PAD * 2 - 200) : [];
+        tl.push({ x, main, sub, y });
+        y += main.length * 40 + sub.length * 32 + 14;
+      }
+      tl.head = head;
+    }
+    return { items, tl, H: y + 170 };
   };
-  let { items, H } = layout();
+  let { items, tl, H } = layout();
   c.width = W;
   c.height = H;
-  ({ items, H } = layout());
+  ({ items, tl, H } = layout());
   // 和纸底 + 深色边框
   const grad = g.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, '#f3ead9');
@@ -227,6 +246,31 @@ export async function kosekiImage(ctxInfo, data, name) {
     g.fillStyle = '#5a4a3e';
     g.font = `400 28px ${sans}`;
     sub.forEach((l, i) => g.fillText(l, PAD + 230, y + 26 + main.length * 52 + i * 40));
+  }
+  if (tl.length) {
+    g.fillStyle = '#3a1f1c';
+    g.fillRect(PAD, tl.head, W - PAD * 2, 3);
+    g.font = `900 40px ${serif}`;
+    g.fillStyle = '#2b2420';
+    g.fillText(t('ht.h'), PAD, tl.head + 18);
+    // 左边一条竖线串起年份
+    g.fillStyle = '#c9a67a';
+    g.fillRect(PAD + 6, tl[0].y + 6, 3, tl.at(-1).y - tl[0].y + 20);
+    for (const { x, main, sub, y } of tl) {
+      g.fillStyle = x.kind === 'kako' ? '#8a5a2b' : x.kind === 'anc' || x.kind === 'now' ? '#c9a67a' : '#8a3b33';
+      g.beginPath();
+      g.arc(PAD + 7.5, y + 16, 8, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = '#8a3b33';
+      g.font = `700 26px ${serif}`;
+      g.fillText(x.yl, PAD + 30, y + 2);
+      g.fillStyle = '#2b2420';
+      g.font = `${x.kind === 'kako' ? 600 : 700} 30px ${serif}`;
+      main.forEach((l, i) => g.fillText(l, PAD + 200, y + i * 40));
+      g.fillStyle = '#5a4a3e';
+      g.font = `400 24px ${sans}`;
+      sub.forEach((l, i) => g.fillText(l, PAD + 200, y + 4 + main.length * 40 + i * 32));
+    }
   }
   g.fillStyle = '#8a7a68';
   g.font = `400 24px ${sans}`;
