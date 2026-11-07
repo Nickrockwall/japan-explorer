@@ -46,8 +46,8 @@ function famSpan(rows) {
 const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '…' : b}`;
 
 // ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）、region（冲绳、北海道、奄美的地区年表）
-// 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json），没有的为 null
-export function hometownItems({ pref, props, provNames, sengoku, domains, mainGun, han, prefLabel, geometry, kako, region, ken }) {
+// 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json）、town（明治町村与地名来历，bundle/town-<lang>.json），没有的为 null
+export function hometownItems({ pref, props, provNames, sengoku, domains, mainGun, han, prefLabel, geometry, kako, region, ken, town }) {
   const items = [];
   const key = props.province;
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
@@ -114,6 +114,15 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
     if (!shown && h?.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
   } else if (h?.k) {
     items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
+  }
+
+  // 明治町村制：今属这里的町村（town.mura，郡条目里写明的），列前 8 个
+  const mura = town?.mura?.[props.code];
+  if (mura?.length) {
+    const ys = mura.map((x) => x[2]).sort((a, b) => a - b);
+    const y = ys[Math.floor(ys.length / 2)];
+    const names = mura.slice(0, 8).map(([n]) => n).join(t('list.sep'));
+    items.push({ y, yl: String(y), main: t('ht.mura', { n: mura.length }), sub: mura.length > 8 ? `${names} ${t('ks.mura.more', { n: mura.length })}` : names, kind: 'mura' });
   }
 
   // 冲绳 / 北海道 / 奄美群岛（鹿儿岛县里不属于令制国的市町村）：地区年表（北海道按市町村在不在和人地挑 wajin / ezo 的条目）

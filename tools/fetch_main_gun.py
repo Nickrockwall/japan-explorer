@@ -56,10 +56,11 @@ def main():
         rows = d and lords.get(d['title'])
         return rows[0][0] if rows else None
 
-    todo, cities = [], {}
+    todo, cities, names = [], {}, {}
     for pref in range(1, 48):
         mf = load('src', 'data', 'municipalities', f'{pref:02d}.json')
         cities[pref] = mf.get('cities', {})
+        names[pref] = {f['properties']['name'] for f in mf['features']}
         for f in mf['features']:
             p = f['properties']
             if p['code'] in TOWN:
@@ -88,7 +89,8 @@ def main():
             g = m.group(1)
             # 前面连着别的字（「香川県仲多度郡」）：从长到短取第一个本县的郡名；它没有领主记录就不用，不再往短里截（仲多度郡 ≠ 多度郡）
             name = next((g[k:] for k in range(len(g) - 1) if g[k:] in districts.get(str(pref), {})), None)
-            if name and top(pref, name):
+            # 匹配到的「府中町」正是本县另一个现存的市町村（府中市的条目提到安芸郡府中町）：说的是别处，不收
+            if name and top(pref, name) and (stem + m.group(2)) not in names[pref] - {p['name']}:
                 found.setdefault(name, re.sub(r"[\s*'|]+", ' ', m.group(0)[m.group(0).find(name):]))
         tops = {top(pref, g) for g in found}
         # 整市一级：至少两个有记录的郡、第一位领主都相同（横滨市只记了都筑、镰仓两郡，都筑郡又没有记录，不算）

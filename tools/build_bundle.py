@@ -220,6 +220,19 @@ def build_ken(lang):
     return json.dumps(domains(lang, chains=True), ensure_ascii=False, separators=(',', ':'))
 
 
+def build_town(lang):
+    """古代户籍才用的两份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）与地名的来历（tools/yurai_tool.py），
+    单独成文件 bundle/town-<lang>.json，打开户籍时才下载。町村名中文按字形转换，英文仍用日文（没有可靠的罗马字）"""
+    conv = ja_to_zh_table() if lang == 'zh' else {}
+    mp, yp = os.path.join(ROOT, 'tools', 'mura.json'), os.path.join(ROOT, 'tools', 'yurai.json')
+    mura = load(mp) if os.path.exists(mp) else {}
+    yurai = load(yp) if os.path.exists(yp) else {}
+    return json.dumps({
+        'mura': {code: [[''.join(conv.get(c, c) for c in n), int(part), y] for n, part, y in rows] for code, rows in mura.items()},
+        'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items()},
+    }, ensure_ascii=False, separators=(',', ':'))
+
+
 def main():
     out_dir = os.path.join(DATA, 'bundle')
     os.makedirs(out_dir, exist_ok=True)
@@ -230,6 +243,8 @@ def main():
             f.write(text)
         with open(os.path.join(out_dir, f'ken-{lang}.json'), 'w', encoding='utf-8') as f:
             f.write(build_ken(lang))
+        with open(os.path.join(out_dir, f'town-{lang}.json'), 'w', encoding='utf-8') as f:
+            f.write(build_town(lang))
         print(f'{lang}: {os.path.getsize(path) // 1024} KB, version {json.loads(text)["version"]}')
 
 

@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.17 · 2026-11-08
+
+- Old Family Register: a new "Meiji villages" line lists the towns and villages of the 1889 municipal system that are now part of this place (Ueda: Ueda-machi, Kamikawa-mura…). From the district articles on Japanese Wikipedia, only where they say which town each village now belongs to: 1,199 municipalities, about 10,000 villages. Where an article names only a big city and not the ward, the ward is left out, so some lists are incomplete. The hometown timeline gets the same line
+- New "The name": where city names come from, for 48 prefectural capitals, designated cities and cities over 300,000 whose articles explain it (Sapporo, Sendai, Takasaki, Shinjuku, Yokohama, Kōfu, Gifu, Hamamatsu, Kōbe, Himeji, Hiroshima, Kōchi, Naha…). Our own one- or two-line summaries in three languages, with every keyword and year checked against the article; competing theories are given as such. Cities whose articles don't say (Aomori, Akita, Matsuyama, Okayama…) are left out. Wards show their city's story under a "City" seal
+- The register's footnote now explains the "City" seal
+- The data tools' download cache never actually hit; a second run now downloads nothing. It also surfaced fixes to last time's "district of the town centre": 20-odd more towns (Tsuruoka, Maebashi, Takasaki, around Utsunomiya…), and Fuchū (Hiroshima) and Echizen (Fukui) are no longer mistaken for the other towns of the same name (Fuchū-chō, Echizen-chō)
+
 ## 3.16 · 2026-11-08
 
 - Old Family Register "Late-Edo lord" and the Edo part of the hometown timeline: now present for 96.7% of municipalities from Honshū to Kyūshū (was 90.7%; by population 86% → 96%)

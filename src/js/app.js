@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, loadRegionEras, loadKen, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, loadRegionEras, loadKen, loadTown, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -363,6 +363,7 @@ async function main() {
   const ksDlg = $('koseki');
   let regionLoad = null; // 冲绳、北海道、奄美的地区年表：打开这几处的户籍时才下载
   let kenLoad = null; // 废藩置县后各郡归哪个县：第一次打开户籍时才下载
+  let townLoad = null; // 明治町村与地名来历：同上
   // 下钻里选中的市区町村的此地年表（给向导用，户籍对话框自己另算）
   async function townOf(pid, code) {
     try {
@@ -372,7 +373,7 @@ async function main() {
       return hometownItems({
         pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, sengoku: await sengokuData(), domains: data.domains, mainGun: data.mainGun,
         han: await ensureHan().then(() => han), prefLabel: prefLabel(pid), geometry: f.geometry, kako: await kakoLoad,
-        region: [1, 46, 47].includes(pid) ? await (regionLoad ??= loadRegionEras()) : null, ken: await (kenLoad ??= loadKen(lang)),
+        region: [1, 46, 47].includes(pid) ? await (regionLoad ??= loadRegionEras()) : null, ken: await (kenLoad ??= loadKen(lang)), town: await (townLoad ??= loadTown(lang)),
       }).items;
     } catch (err) {
       console.warn('此地年表计算失败', err);
@@ -394,7 +395,7 @@ async function main() {
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
       sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
-      sengoku: await sengokuData(), han: await ensureHan().then(() => han),
+      sengoku: await sengokuData(), han: await ensureHan().then(() => han), town: await (townLoad ??= loadTown(lang)),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）

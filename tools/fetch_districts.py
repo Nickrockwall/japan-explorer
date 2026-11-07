@@ -12,6 +12,7 @@
 并用旧郡所属的令制国独立核对 tools/province_overrides.json。
 需先运行过 build_municipalities.py（要用它生成的市区町村名单做匹配）。
 """
+import hashlib
 import json
 import os
 import re
@@ -24,6 +25,11 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA = os.path.join(ROOT, 'src', 'data')
 API = 'https://ja.wikipedia.org/w/api.php'
 UA = 'japan-explorer-build/1.0 (https://github.com/Nickrockwall/japan-explorer)'
+
+
+def stable(text, digits):
+    """缓存文件名用的哈希：内置 hash() 每次运行加盐不同（缓存从来命中不了），改用 md5"""
+    return int(hashlib.md5(text.encode('utf-8')).hexdigest(), 16) % 10 ** digits
 
 
 def api(params, cache_dir, key):
@@ -52,7 +58,7 @@ def category_pages(cat, cache_dir):
     titles, cont = [], {}
     for i in range(10):
         d = api({'action': 'query', 'list': 'categorymembers', 'cmtitle': cat, 'cmnamespace': 0, 'cmlimit': 500, **cont},
-                cache_dir, f'cat_{abs(hash(cat)) % 10**10}_{i}.json')
+                cache_dir, f'cat_{stable(cat, 10)}_{i}.json')
         titles += [m['title'] for m in d.get('query', {}).get('categorymembers', [])]
         if 'continue' not in d:
             break
@@ -65,7 +71,7 @@ def contents(titles, cache_dir):
     for i in range(0, len(titles), 50):
         batch = titles[i:i + 50]
         d = api({'action': 'query', 'prop': 'revisions', 'rvprop': 'content', 'rvslots': 'main', 'redirects': 1,
-                 'titles': '|'.join(batch)}, cache_dir, f'pages_{abs(hash("|".join(batch))) % 10**10}.json')
+                 'titles': '|'.join(batch)}, cache_dir, f'pages_{stable("|".join(batch), 10)}.json')
         for p in d['query'].get('pages', []):
             if 'revisions' in p:
                 out[p['title']] = p['revisions'][0]['slots']['main']['content']

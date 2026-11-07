@@ -47,8 +47,8 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han }
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han }) {
+// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }（town：bundle/town-<lang>.json 的明治町村与地名来历，可能为 null）
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -113,6 +113,13 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
     rows.push({ k: 'edo', seal: 'pref', main: list.slice(0, 3).join(t('list.sep')) || '—', sub: list.length > 3 ? t('ks.more', { n: list.length - 3 }) : '' });
   }
   rows.push({ k: 'boshin', seal: 'pref', main: label('bk', f.bakumatsu), sub: '' });
+  // 明治町村（town.mura）：町村制时今属这里的町村（郡条目里写明的，可能不全），最多列 14 个
+  const mura = town?.mura?.[props.code];
+  if (mura?.length) {
+    const ys = mura.map((x) => x[2]).sort((a, b) => a - b);
+    const names = mura.slice(0, 14).map(([n, part]) => (part ? `${n}${t('ks.mura.part')}` : n)).join(t('list.sep'));
+    rows.push({ k: 'mura', seal: 'muni', main: t('ks.mura', { y: ys[Math.floor(ys.length / 2)], n: mura.length }), sub: mura.length > 14 ? `${names} ${t('ks.mura.more', { n: mura.length })}` : names });
+  }
 
   const P = power?.provinces?.[key];
   if (P) {
@@ -121,6 +128,11 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   }
   const ph = pref.dialect?.phrases?.[0];
   if (ph) rows.push({ k: 'voice', seal: 'pref', main: `「${ph.phrase}」`, sub: ph.meaning, voice: true });
+  // 地名来历（town.yurai）：政令市的区用市名的来历（印「全市」），其余按本市区町村
+  const yd = town?.yurai?.[pref.id];
+  const own = yd?.[props.name];
+  const yr = own || (props.city && yd?.[props.city]);
+  if (yr) rows.push({ k: 'yurai', seal: own ? 'muni' : 'city', main: own ? muniName : props.city, sub: yr });
   return { rows, short, print: prints?.[0] || null };
 }
 

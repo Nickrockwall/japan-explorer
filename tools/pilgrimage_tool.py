@@ -9,6 +9,7 @@
   evidence    证据关键词列表：作品条目里出现任意一个即视为「作品与该地有关」；
               或者地点条目里出现作品名（work_wiki 去掉括号消歧义部分）也算
 """
+import hashlib
 import json
 import os
 import re
@@ -24,10 +25,15 @@ API = 'https://ja.wikipedia.org/w/api.php'
 UA = 'japan-explorer-build/1.0 (https://github.com/Nickrockwall/japan-explorer)'
 
 
+def stable(text, digits):
+    """缓存文件名用的哈希：内置 hash() 每次运行加盐不同（缓存从来命中不了），改用 md5"""
+    return int(hashlib.md5(text.encode('utf-8')).hexdigest(), 16) % 10 ** digits
+
+
 def api(params):
     os.makedirs(CACHE, exist_ok=True)
     key = re.sub(r'[^\w]', '_', urllib.parse.urlencode(sorted(params.items())))[:150]
-    path = os.path.join(CACHE, f'{abs(hash(key)) % 10**12}.json')
+    path = os.path.join(CACHE, f'{stable(key, 12)}.json')
     if os.path.exists(path):
         with open(path, encoding='utf-8') as f:
             return json.load(f)
@@ -98,7 +104,7 @@ def wikidata_coords(title):
     """维基百科条目没写坐标时，退到它对应的 Wikidata 项目的 P625"""
     url = 'https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
         {'action': 'wbgetentities', 'sites': 'jawiki', 'titles': title, 'props': 'claims', 'normalize': 1, 'format': 'json'})
-    path = os.path.join(CACHE, f'wd_{abs(hash(title)) % 10**12}.json')
+    path = os.path.join(CACHE, f'wd_{stable(title, 12)}.json')
     if os.path.exists(path):
         d = json.load(open(path, encoding='utf-8'))
     else:

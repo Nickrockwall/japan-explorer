@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from build_bundle import LANGS, build, build_ken  # noqa: E402
+from build_bundle import LANGS, build, build_ken, build_town  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA = os.path.join(ROOT, 'src', 'data')
@@ -158,6 +158,9 @@ def check_bundles():
         kp = os.path.join(DATA, 'bundle', f'ken-{lang}.json')
         if not os.path.exists(kp) or read('src', 'data', 'bundle', f'ken-{lang}.json') != build_ken(lang):
             err(f'bundle/ken-{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
+        tp = os.path.join(DATA, 'bundle', f'town-{lang}.json')
+        if not os.path.exists(tp) or read('src', 'data', 'bundle', f'town-{lang}.json') != build_town(lang):
+            err(f'bundle/town-{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
 
 
 def check_municipalities():

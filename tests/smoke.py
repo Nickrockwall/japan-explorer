@@ -1122,7 +1122,8 @@ class Case:
         # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 8, f'应有 8 栏：{rows}'
+        assert len(rows) == 9, f'应有 9 栏（含明治町村）：{rows}'
+        assert any('上田町' in r and '1889' in r for r in rows), f'明治町村应写出 1889 年与上田町：{rows}'
         assert any('106' in r and '158' in r for r in rows), f'幕末领主应写出小县郡 158 町村中上田藩 106：{rows}'
         assert any('諏訪大社' in r for r in rows), '氏神应是诹访大社'
         ks_han = page.locator('#koseki .ks-han').first  # 幕末领主一栏能点开上田藩的历代藩主
@@ -1202,6 +1203,10 @@ class Case:
         assert any(x in edo for x in ('京都町奉行', 'Kyoto town magistrates')), f'上京区应写京都町奉行：{edo}'
         assert any(x in seal for x in ('市', 'Town')), f'精度印应为「市」：{seal}'
         assert any(x in page.locator('#koseki .ht-edo').first.inner_text() for x in ('幕府', 'Shogunate')), '此地年表江户一段应是幕府'
+        # 地名来历：区用京都市的来历（「京都」本是普通名词、平安京），精度印「全市」，放在最后一栏
+        last = page.locator('#koseki .ks-row').last
+        assert any(x in last.inner_text() for x in ('平安京', 'capital')), f'最后一栏应是京都的地名来历：{last.inner_text()}'
+        assert any(x in last.locator('.ks-seal').text_content() for x in ('全市', 'City')), '地名来历用市名时精度印应为「全市」'
 
     def koseki_city(self, page):
         # 名古屋市中区没有旧郡记录：按整个名古屋市的旧郡（排第一的都是名古屋藩）写，精度印「全市」，并能展开名古屋藩的藩主
@@ -1216,6 +1221,11 @@ class Case:
         assert any(x in edo for x in ('笠间藩', '笠間藩', 'Kasama')), f'笠间市的幕末领主应是笠间藩：{edo}'
         assert any(x in seal for x in ('郡', 'Dist')), f'精度印应为「郡」：{seal}'
         assert any(x in ' '.join(page.locator('#koseki .ht-edo').all_inner_texts()) for x in ('笠间', '笠間', 'Kasama')), '此地年表应有笠间藩'
+        # 明治町村：郡条目里写明今属笠间市的町村，有笠间町、宍户町；此地年表有町村制一行
+        rows = page.locator('#koseki .ks-row').all_inner_texts()
+        mura = next((r for r in rows if any(x in r for x in ('明治町村', 'Meiji villages', '明治の町村'))), '')
+        assert any(x in mura for x in ('笠间町', '笠間町')) and any(x in mura for x in ('宍户町', '宍戸町')), f'明治町村应有笠间町与宍户町：{mura}'
+        assert '1889' in page.locator('#koseki .ht-mura').inner_text(), '此地年表应有 1889 年町村制一行'
 
     def regimes(self, page):
         # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
