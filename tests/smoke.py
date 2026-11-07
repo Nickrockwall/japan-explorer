@@ -91,9 +91,10 @@ class Case:
         ignore = re.compile(IGNORE.pattern + r'|net::ERR_FAILED') if china else IGNORE
         page.on('console', lambda m: m.type == 'error' and not ignore.search(m.text) and page.problems.append(f'console: {m.text}'))
         page.on('pageerror', lambda e: page.problems.append(f'pageerror: {e}'))
-        page.goto(f'{self.base}#lang={self.lang}&{hash_}' if hash_ else f'{self.base}#lang={self.lang}')
+        # 本机 4 路并行时冷启动偶尔要 30 秒以上（CI 每片单独一台机器，不受影响）：打开与等加载都放宽到 60 秒
+        page.goto(f'{self.base}#lang={self.lang}&{hash_}' if hash_ else f'{self.base}#lang={self.lang}', timeout=60000)
         try:
-            page.wait_for_selector('#loading.hidden', state='attached', timeout=10000 if china else 30000)
+            page.wait_for_selector('#loading.hidden', state='attached', timeout=10000 if china else 60000)
         except PWTimeout as e:
             left = ', '.join(u.rsplit('/', 1)[-1] for u in sorted(page.pending)[:8]) or '无'
             problems = page.problems[:2]

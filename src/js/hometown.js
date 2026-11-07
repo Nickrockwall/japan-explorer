@@ -101,11 +101,13 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
   if (chain) {
     const want = h && nm(h.n).replace(/藩$/, lang === 'ja' ? '県' : '县').replace(/ Domain$/, ' Prefecture');
     let shown = false;
-    for (const [y, names, haihan] of chain) {
-      const name = names.length === 1 ? names[0] : names.find((n) => n === want);
-      if (!name) continue;
+    let cur = null; // 本地当前所属的县：「某县的辖区改归某县」这种行只在来源县就是它时才算
+    for (const [y, names, haihan, src] of chain) {
+      const name = names.length === 1 ? names[0] : haihan ? names.find((n) => n === want) : null;
+      if (!name || (src && src !== cur)) continue;
       items.push({ y, yl: String(y), main: t(haihan ? 'ht.haihan.to' : 'ht.ken', { name }), kind: 'edo' });
       shown ||= haihan;
+      cur = name;
     }
     if (!shown && h?.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
   } else if (h?.k) {

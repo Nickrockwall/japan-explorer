@@ -154,9 +154,10 @@ def domains(lang, chains=False):
             top = [[label(k), n] for k, n in rows[:3] if n or total == 0]
             rest = total - sum(n for _, n in top)
             if chains:
-                # 废藩置县后的县：[年, [县名（按语言）…], 1=废藩置县那一行]；前端按藩名挑县（上田藩 → 上田县，Ueda Domain → Ueda Prefecture）
+                # 废藩置县后的县：[年, [县名（按语言）…], 1=废藩置县那一行, 来源县?]；前端按藩名挑县（上田藩 → 上田县，Ueda Domain → Ueda Prefecture），
+                # 之后只顺着本地所属的县走（有来源县的行只在来源县是本地当前的县时才算）
                 if meiji.get(info['title']):
-                    out.setdefault(pref, {})[name] = [[y, [ken(n) for n in ns], int(h)] for y, ns, h in meiji[info['title']]]
+                    out.setdefault(pref, {})[name] = [[y, [ken(n) for n in ns], int(h)] + ([ken(src)] if src else []) for y, ns, h, src in meiji[info['title']]]
                 continue
             out.setdefault(pref, {})[name] = {'t': total, 'r': top + ([['@other', rest]] if rest > 0 else [])}
     return out

@@ -1,8 +1,8 @@
-"""README 用的截图：每种语言两张电脑（战国势力图、朝鲜半岛）、两张手机（生日帖、古代户籍）。
+"""README 用的截图：每种语言两张电脑（战国势力图、年表「实权」）、两张手机（生日帖、古代户籍）。
 
     python -X utf8 tools/make_screens.py
 
-输出 docs/screen-{sengoku,korea,bday,koseki}-{zh,en,ja}.jpg（docs/ 不随网站发布）。
+输出 docs/screen-{sengoku,power,bday,koseki}-{zh,en,ja}.jpg（docs/ 不随网站发布）。
 """
 import functools
 import http.server
@@ -43,15 +43,15 @@ def main():
             page.wait_for_timeout(1500)
             shot(page, 'sengoku', lang, 85)
             ctx.close()
-            # 电脑：朝鲜半岛的朝鲜八道图层，选中仁川
+            # 电脑：年表的「实权」页，滚到摄关政治一段（藤原摄关 → 院政 → 平氏 → 镰仓）
             ctx = browser.new_context(**desk)
-            ctx.add_init_script(DONE + "try { localStorage.setItem('je.ui.tourKorea', 'true'); } catch (e) {}")
+            ctx.add_init_script(DONE)
             page = ctx.new_page()
-            page.goto(f'{base}#map=korea&lang={lang}&pref=4')
-            page.wait_for_selector('#kr-eras [data-era="joseon"]', timeout=20000)
-            page.click('#kr-eras [data-era="joseon"]')
-            page.wait_for_timeout(1800)
-            shot(page, 'korea', lang, 85)
+            page.goto(f'{base}#rl=power&lang={lang}')
+            page.wait_for_selector('#rulers[open] .rl-pw', timeout=20000)
+            page.evaluate("(() => { const b = document.querySelector('#rulers .rl-body'); b.scrollTop = b.querySelector('[data-pw=sekkan]').offsetTop - b.offsetTop; })()")
+            page.wait_for_timeout(1200)
+            shot(page, 'power', lang, 85)
             ctx.close()
             # 手机：6 月 21 日的生日帖（本能寺之变那天）
             ctx = browser.new_context(**phone)

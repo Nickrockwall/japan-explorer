@@ -10,7 +10,7 @@
   村数格写成「* 1町 * 21村」，几方共管的表头格列出几项）；两种都读（hlist()）。
 - 没有表的：正文「全域が○○藩領であった」「全域を○○代官所が管轄」「幕府直轄地（天領）であった」也认（prose()）。
 - 1896 年前后合并新设的郡（长生郡 = 长柄郡 + 上埴生郡）条目里没有表：按变迁框 s-bef 列出的前身郡（同县）把它们的表加起来，
-  前身郡有一个没有表就不合（merged()）。
+  前身郡有一个没有表就不合；写「○○郡の一部」的（上新川郡）只在原郡第一位的领主占九成以上时沿用。
 - 都没有的郡不收（宁缺毋滥），户籍里该栏改为县一级的说明。
 - 废藩置县之后的县（meiji_chain()）：郡条目沿革里 1871–1890 年、写着粗体县名的行（管轄・改称・統合・編入，
   不含大区小区），按顺序记 [年, [县名…], 是否废藩置县那一行]。废藩置县那一行常列出几个县（小県郡：上田県・小諸県・岩村田県），
@@ -128,7 +128,8 @@ def predecessors(wt):
     m = re.search(r'\{\{s-bef\|before=([^|}]+)', wt)
     if not m:
         return []
-    return [clean(x).strip() for x in re.split(r'[・、]', m.group(1)) if clean(x).strip().endswith('郡')]
+    names = [re.sub(r'<[^>]+>', '', clean(x)).strip() for x in re.split(r'[・、]|および', m.group(1))]
+    return [n for n in names if n.endswith('郡') or n.endswith('郡の一部')]
 
 
 def whole(wt):
@@ -198,7 +199,9 @@ def wd_get(params):
 
 
 def meiji_chain(wt):
-    """郡条目沿革里废藩置县之后归哪个县：[(年, [县名…], 是否废藩置县那一行)]"""
+    """郡条目沿革里废藩置县之后归哪个县：[(年, [县名…], 是否废藩置县那一行, 来自哪个县或 None)]。
+    「福知山県の管轄地域が豊岡県の管轄となる」只适用于原属福知山县的地方，记下来源县，前端只顺着本地所属的县走；
+    主语是具体的岛、村、町（「直島・男木島…が丸亀県に移管」）而不是全郡、藩领的行不收"""
     out, started = [], False
     for line in wt.split('\n'):
         if not line.startswith('*') or '大区' in line:
@@ -212,9 +215,13 @@ def meiji_chain(wt):
         started = started or haihan
         if not started or not 1871 <= y <= 1890 or not re.search(r'管轄|改称|統合|編入|となる|移管|分置|分割|設置', line):
             continue
+        subject = re.split(r" - |－", line, maxsplit=1)[-1].split(BOLD_KEN[:3])[0]
+        if not haihan and '全域' not in subject and re.search(r'[島村町]', subject) and not re.search(r'管轄(地域|区域)', subject):
+            continue
+        src = re.search(r'([^\s、。（）]+?県)(?:（[^）]*）)?の管轄(?:地域|区域)', subject) or re.search(r'管轄が([^\s、。]+?県)から', subject)
         if out and out[-1][1] == names:
             continue
-        out.append((y, names, haihan))
+        out.append((y, names, haihan, src.group(1) if src else None))
     return out
 
 
@@ -266,11 +273,17 @@ def main():
     for title in list(missing):
         prefs = titles[title]
         before = predecessors(text_of(wts[title]) or '')
+        part = [b.endswith('の一部') for b in before]
+        before = [b.removesuffix('の一部') for b in before]
         srcs = [next((districts[str(p)][b]['title'] for p in prefs if b in districts.get(str(p), {})), b) for b in before]
-        if before and all(x in got and all(n for _, n in got[x]) for x in srcs):
-            got[title] = [r for x in srcs for r in got[x]]
-            missing.remove(title)
-            merged += 1
+        if not before or not all(x in got and all(n for _, n in got[x]) for x in srcs):
+            continue
+        # 从某郡分出一部分（上新川郡 = 新川郡の一部）：只在原郡第一位的领主占九成以上时沿用（新川郡几乎全是加贺藩）
+        if any(pt and max(n for _, n in got[x]) < 0.9 * sum(n for _, n in got[x]) for pt, x in zip(part, srcs)):
+            continue
+        got[title] = [r for x in srcs for r in got[x]]
+        missing.remove(title)
+        merged += 1
     print(f'有表 {len(got)} / {len(titles)} 郡（其中按前身郡合并 {merged}）')
     meiji = {t: meiji_chain(text_of(wts[t]) or '') for t in titles}
     meiji = {t: c for t, c in meiji.items() if c}
@@ -309,7 +322,7 @@ def main():
     print(f'藩 {len(han)}，有英文名 {sum(1 for k in han if "en" in lords[k])}')
     print('无英文名的藩（前 20）：', [k for k in han if 'en' not in lords[k]][:20])
     print('other：', [k for k, v in lords.items() if v['kind'] == 'other'][:30])
-    kens = sorted({n for c in meiji.values() for _, ns, _ in c for n in ns})
+    kens = sorted({n for c in meiji.values() for x in c for n in x[1] + ([x[3]] if x[3] else [])})
     ken = english({k: [k] for k in kens})
     print(f'县名 {len(kens)}，有英文名 {len(ken)}')
     json.dump({'_doc': __doc__.strip().split('\n')[0], 'lords': dict(sorted(lords.items())), 'districts': out,

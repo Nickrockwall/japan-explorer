@@ -35,10 +35,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install Playwright + Chromium
-        run: |
-          pip install playwright==1.64.1
-          python -m playwright install --with-deps chromium
+          cache: pip
+          cache-dependency-path: .github/workflows/checks.yml
+      - name: Install Playwright
+        run: pip install playwright==1.64.1
+      # 浏览器本体（约 150 MB）按 Playwright 版本缓存；系统依赖（apt）每次照装
+      - name: Cache Chromium
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-1.64.1-chromium-${{ runner.os }}
+      - name: Install Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: python -m playwright install chromium
+      - name: Install Chromium system dependencies
+        run: python -m playwright install-deps chromium
       - name: UI smoke tests (desktop / tablet / phone × zh / en / ja)
         run: python -X utf8 tests/smoke.py
         env:

@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.15 · 2026-11-08
+
+- Prefectures after 1871 in "This place through time" are more precise: changes that only affected part of a district ("the area under X prefecture went to Y") are shown only when the place was under X at the time (Takashima in Ōmi used to list Toyooka, Iruma and Nukata in a row), and transfers of a few islands (Naoshima in Kagawa district) no longer count for the whole district
+- Late-Edo lords for Minamikawachi and Futaba districts: merged districts whose predecessors were written with a line break or as "part of X district" were missed. Kaizu and Inaba districts had in fact counted only one predecessor, so their incomplete figures are dropped
+- Reign years for 6 more lords: years written right after the name in a domain article's list, ruled out when they match the lord's birth and death years on Wikidata; Shirakawa domain's "Shirakawa Prefecture" is no longer listed as a lord
+- 15 post-Meiji family heads are removed from the lord lists (some domain articles carry the list on to the present, e.g. Count Sakai Tadayoshi for Shōnai, Prince Hitachi for Hirosaki): anyone born in 1870 or later, by Wikidata, cannot have been a domain lord
+- New README screenshots (the "Who ruled" page replaces the peninsula), a "Who held power" link, ten eras, prefectures after 1871 and the "Spot a mistake?" link; the "did you know" figures are recomputed from current data
+- Tests: the browser used by the GitHub checks is cached (about 150 MB less to download each run); local parallel runs allow more time for page loads, so they no longer occasionally time out and retry
+
 ## 3.14 · 2026-11-08
 
 - Fixed: 37 On this day entries (Ōtomo Yoshishige, Ryōkan, Maeda Toshinaga…) were pinned in Shiga. Their place was recorded only as "Japan", whose Wikidata coordinates happen to fall in Shiga; such places are now skipped in favour of the next one, or the entry is left out

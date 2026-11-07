@@ -186,7 +186,7 @@ PREF = {
 LINK = r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]'
 # 行里第一个链接不一定是人（「外様大名」「伊豆国」「従五位下」……）：以这些字结尾的跳过
 NOT_NAME = {'外様', '譜代', '親藩', '家門', '元和', '寛永', '慶長', '天保', '嘉永', '安政', '文久', '元治', '慶応', '明治'}
-NOT_LORD = re.compile(r'(大名|石|国|郡|城|藩|家|守|大夫|位|官|年|月|日|時代|幕府)$')
+NOT_LORD = re.compile(r'(大名|石|国|郡|県|城|藩|家|守|大夫|位|官|年|月|日|時代|幕府)$')  # 県：白河藩的「白河県」曾被当成藩主
 
 
 def lords(w):
@@ -242,7 +242,11 @@ def lords(w):
         name = re.sub(r'\s*\(.*\)$', '', title)
         if NOT_LORD.search(name) or name in NOT_NAME or re.search(r'[:#の]', title) or len(name) > 8:
             continue
-        rest = line[line.find(link.group(0)) + len(link.group(0)):] if in_table and tbl_years else ''
+        rest = line[line.find(link.group(0)) + len(link.group(0)):]
+        if not (in_table and tbl_years):
+            # 列表行：只认紧跟在名字后面的「（1862 - 1868）」「 1602-1633」，前面加 L: 标记，reigns() 再用生卒年排除
+            m = re.match(r'\s*(?:（[^）]{0,12}）\s*)?[（(]?\s*(1[5-8]\d\d)年?\s*[-–—〜~－]\s*(1[5-8]\d\d)年?\s*[）)]?', rest)
+            rest = f'L:{m.group(1)}-{m.group(2)}' if m else ''
         cur[1].append([title, name, '再任' if '再任' in line else '', rest])
     # 家名里的读音括注去掉（「伊達（だて）家」→ 伊達家）
     return [[re.sub(r'（[ぁ-んー]+）', '', f[0]), f[1]] for f in fams if f and f[1]]
@@ -280,6 +284,34 @@ def navboxes(titles):
     return {t: v[1] for t, v in cache.items() if v}
 
 
+def lifespans(titles):
+    """藩主的生卒年（Wikidata P569 / P570），{条目: [生, 卒]}；列表行的年份若与它相同就是生卒年，不是在位"""
+    path = os.path.join(CACHE, 'life.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'sites': 'jawiki', 'titles': '|'.join(part), 'props': 'claims|sitelinks',
+             'sitefilter': 'jawiki', 'format': 'json'}))
+
+        def yr(e, p):
+            for c in e.get('claims', {}).get(p, []):
+                v = c['mainsnak'].get('datavalue', {}).get('value', {})
+                if isinstance(v, dict) and 'time' in v:
+                    return int(v['time'][1:5])
+            return None
+        got = {e['sitelinks']['jawiki']['title']: [yr(e, 'P569'), yr(e, 'P570')]
+               for k, e in d.get('entities', {}).items() if not k.startswith('-') and 'jawiki' in e.get('sitelinks', {})}
+        for t in part:
+            cache[t] = got.get(t, [None, None])
+        json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
+LIFE = {}
+
+
 def reigns(h, nav, report):
     """给一个藩的每位藩主配在位年份：把行的第 4 项（藩条目表格里那一行的文字）换成 [起, 止, …] 或 None"""
     ja = re.sub(r'\s*\(.*\)$', '', h['t'])
@@ -293,7 +325,16 @@ def reigns(h, nav, report):
     for _, rows in h['f']:
         last = None
         for row in rows:
-            title, article = row[0], ranges(row[3])
+            title = row[0]
+            if row[3].startswith('L:'):
+                # 列表行紧跟名字的年份：与生卒年（±1）相同就不收；在位必须在生卒之间
+                a, b = map(int, row[3][2:].split('-'))
+                born, died = LIFE.get(title, [None, None])
+                ok = (born and died and not (abs(a - born) <= 1 and abs(b - died) <= 1) and born + 5 <= a <= b <= died
+                      and 1560 <= a <= b <= 1871)
+                article = [(a, b)] if ok else []
+            else:
+                article = ranges(row[3])
             box = [r for tp in nav.get(title, []) if re.match(r'\{\{\s*([^|]+?)\s*\|', tp).group(1).strip() in names
                    for r in ranges(tp)]
             n = seen.get(title, 0)
@@ -388,6 +429,13 @@ def main():
         out.append({'t': real, 'p': pid, 'y': y, 'k': kept, 'f': fams})
     names = en_labels([h['t'] for h in out] + [x[0] for h in out for f in h['f'] for x in f[1]])
     fixed = []
+    LIFE.update(lifespans(sorted({x[0] for h in out for f in h['f'] for x in f[1]})))
+    # 「歴代」一节有的接着列明治以后的家主（庄内藩的酒井忠良伯爵、弘前藩的常陆宫正仁亲王……）：1870 年以后出生的不可能当过藩主
+    late = [(h['t'], x[0]) for h in out for f in h['f'] for x in f[1] if (LIFE.get(x[0]) or [None])[0] and LIFE[x[0]][0] >= 1870]
+    for h in out:
+        h['f'] = [[fam, [x for x in rows if not ((LIFE.get(x[0]) or [None])[0] and LIFE[x[0]][0] >= 1870)]] for fam, rows in h['f']]
+        h['f'] = [f for f in h['f'] if f[1]]
+    print('去掉明治以后出生的家主', len(late), late[:6])
     nav, report = navboxes(sorted({x[0] for h in out for f in h['f'] for x in f[1]})), []
     for h in out:
         reigns(h, nav, report)
