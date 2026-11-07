@@ -47,8 +47,8 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku, han }
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, prints, prefLabel, sengoku, han }) {
+// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han }
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -94,9 +94,16 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, power, 
     rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });
   }
 
-  const d = gun && domains?.[pref.id]?.[gun];
-  if (d?.r?.length) {
-    const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
+  // 主要郡（main_gun）：横跨几郡时按中心市街所在的郡；江户 / 京都的市街（优先于郡的记录）与整市一级的直接给出领主
+  const mg = mainGun?.[props.code];
+  const edoGun = mg?.g || gun;
+  const d = edoGun && domains?.[pref.id]?.[edoGun];
+  const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
+  if (mg?.town || (!d?.r?.length && mg?.lord)) {
+    const h = !mg.lord.startsWith('@') && findHan(han, mg.lord, pref.id);
+    rows.push({ k: 'edo', seal: mg.town ? 'muni' : 'city', main: lord(mg.lord), sub: mg.town ? t(`ks.edo.town.${mg.town}`) : t('ks.edo.city', { city: mg.city }), hans: h ? [h] : [] });
+  } else if (d?.r?.length) {
+    const gun = edoGun;
     const hans = d.r.map(([n]) => !n.startsWith('@') && findHan(han, n, pref.id)).filter(Boolean);  // 点开看历代藩主
     // 没有町村数的郡（正文写「全域が仙台藩領」）：写「某郡全域」
     const sub = d.t ? t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : t('ks.edo.all', { gun });

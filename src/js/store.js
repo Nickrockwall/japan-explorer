@@ -35,7 +35,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
   const geoP = fetchJSON(MAP.geo);
   try {
     const b = await fetchJSON(`${MAP.data}/bundle/${lang}.json`);
-    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null, emblems: b.emblems || {} };
+    return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null, mainGun: b.main_gun || null, emblems: b.emblems || {} };
   } catch {
     return loadFiles(lang, merge);
   }

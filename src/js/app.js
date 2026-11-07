@@ -370,7 +370,7 @@ async function main() {
       const f = geo.features.find((x) => x.properties.code === code);
       if (!f) return null;
       return hometownItems({
-        pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, sengoku: await sengokuData(), domains: data.domains,
+        pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, sengoku: await sengokuData(), domains: data.domains, mainGun: data.mainGun,
         han: await ensureHan().then(() => han), prefLabel: prefLabel(pid), geometry: f.geometry, kako: await kakoLoad,
         region: [1, 46, 47].includes(pid) ? await (regionLoad ??= loadRegionEras()) : null, ken: await (kenLoad ??= loadKen(lang)),
       }).items;
@@ -393,7 +393,7 @@ async function main() {
     if (pid !== app.currentId) map.onSelect(pid);
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
-      sites: kokuSites, domains: data.domains, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
+      sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
       sengoku: await sengokuData(), han: await ensureHan().then(() => han),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };

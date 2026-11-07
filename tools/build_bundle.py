@@ -9,6 +9,7 @@
 import hashlib
 import json
 import os
+import re
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -108,7 +109,7 @@ def emblems():
 
 # 幕末各郡的领主（tools/fetch_domains.py → tools/domains.json）：按县 id → 明治旧郡名，取前 3 位 + 其余合计。
 # 幕府领 / 旗本领 / 寺社领 / 相给写成 @代号，由前端按语言显示；藩名中文按字形转换，英文取 Wikidata 标签（没有就用日文）
-def domains(lang, chains=False):
+def domains(lang, chains=False, main=False):
     path = os.path.join(ROOT, 'tools', 'domains.json')
     if not os.path.exists(path):
         return {}
@@ -131,16 +132,24 @@ def domains(lang, chains=False):
             return han[:-len(' Domain')] + ' Prefecture' if han.endswith(' Domain') else name
         return name
     conv = ja_to_zh_table() if lang == 'zh' else {}
-    generic = {'bakufu', 'hatamoto', 'jisha', 'mixed'}
+    generic = {'bakufu', 'hatamoto', 'jisha', 'court', 'mixed'}
 
     def label(name):
         lord = lords.get(name, {'kind': 'other'})
         if lord['kind'] in generic:
             return '@' + lord['kind']
+        # 明治初年改名的藩用藩名单里的名字（名古屋藩 → 尾張藩），户籍才能按名字找到历代藩主
+        name = re.sub(r'\s*\(.*\)$', '', lord.get('han', name))
         if lang == 'en':
             return lord.get('en') or name
         return ''.join(conv.get(c, c) for c in name) if lang == 'zh' else name
 
+    if main:
+        # 主要郡（tools/fetch_main_gun.py）：{代码: {g: 郡} | {lord: 领主（按语言）, city: 市名} | {lord, town: edo|kyoto}}
+        path = os.path.join(ROOT, 'tools', 'main_gun.json')
+        got = load(path) if os.path.exists(path) else {}
+        return {code: {'g': v['g']} if 'g' in v else {'lord': label(v['lord']), **({'town': v['town']} if 'town' in v else {'city': v['city']})}
+                for code, v in got.items()}
     out = {}
     for pref, ds in load(os.path.join(ROOT, 'tools', 'districts.json')).items():
         if pref.startswith('_'):
@@ -200,7 +209,7 @@ def build(lang):
     ev = events
     if lang != 'zh' and manifest.get(lang, {}).get('events'):
         ev = deep_merge(events, load(os.path.join(DATA, 'i18n', lang, 'historical_events.json')))
-    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json')), 'domains': domains(lang), 'emblems': emblems()}
+    body = {'lang': lang, 'index': index, 'events': ev, 'prefs': prefs, 'pilgrimage': pilgrimage(lang), 'hiroshige': hiroshige(lang), 'province_names': province_names(lang), 'koku': koku(lang), 'kokuryoku': load(os.path.join(DATA, 'kokuryoku.json')), 'domains': domains(lang), 'main_gun': domains(lang, main=True), 'emblems': emblems()}
     text = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
     body['version'] = hashlib.sha1(text.encode('utf-8')).hexdigest()[:10]
     return json.dumps(body, ensure_ascii=False, separators=(',', ':'))

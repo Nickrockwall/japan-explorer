@@ -4,6 +4,19 @@
 
 Newest first.
 
+## 3.16 · 2026-11-08
+
+- Old Family Register "Late-Edo lord" and the Edo part of the hometown timeline: now present for 96.7% of municipalities from Honshū to Kyūshū (was 90.7%; by population 86% → 96%)
+  - The cities of Edo and Kyoto: Chiyoda, Chūō, Minato, Bunkyō and Taitō read "Shogunate land · the city of Edo, under the town magistrates"; Kamigyō, Nakagyō and Shimogyō read "under the Kyoto town magistrates" (sources: the Japanese Wikipedia articles on Tokyo's 15 wards and the Kyoto town magistrate). In Meiji these were wards, part of no district
+  - Wards of big cities with no district record use the districts of the whole city, only when every one is led by the same lord, marked "City" (Nagoya's wards → Owari, Hiroshima's Naka → Hiroshima, Saitama's wards → Shogunate)
+  - Towns spanning several districts led by different lords now follow the district of their town centre (the "X-gun Y-machi" written in the town's article) instead of the first listed; 43 towns corrected, e.g. Ōgaki → Ōgaki, Tsuyama → Tsuyama, Fukuchiyama → Fukuchiyama, Hamada → Hamada, Ōita → Funai
+  - 45 more district articles are now read: Kyoto's village-by-village tick tables (new category "court nobles"), column tables (Abe), articles that mention the register early and give the table later (Tsuzuki), "Sendai Domain (34 villages)" phrasing, and districts merged in Meiji (Naka-Kawachi, Kimitsu, Ibo, Inashiki, Kita-Katsuragi, Nakatado…)
+  - Futaba now adds up both Shineha and Naraha (Naraha was missed); village counts for Iga, Ago and others no longer pick up the 1889 figure
+  - Domains renamed in early Meiji (Nagoya, Kagoshima, Kōchi, Yamaguchi…) show their usual names (Owari, Satsuma, Tosa, Chōshū) so their lords can be expanded; only full-page redirects count, so branch domains such as Hisai and Kuroishi stay separate
+  - Tokyo's Chūō ward was wrongly matched to Tama district (same name as Sagamihara's Chūō ward); removed
+- About 70 more lords have reign years (92% → 94%), taken from the "Lord of X Domain" position on Wikidata where neither Wikipedia source has them; checked first against the 3,664 lords that already had years: 99% agree
+- Still without an Edo line (Izu Islands, Oki, Toyama's Niikawa districts, Hamamatsu's wards, Higashiōsaka…): the articles give no village-by-village holdings or counts, so nothing is written
+
 ## 3.15 · 2026-11-08
 
 - Prefectures after 1871 in "This place through time" are more precise: changes that only affected part of a district ("the area under X prefecture went to Y") are shown only when the place was under X at the time (Takashima in Ōmi used to list Toyooka, Iruma and Nukata in a row), and transfers of a few islands (Naoshima in Kagawa district) no longer count for the whole district

@@ -27,7 +27,7 @@ import urllib.parse
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
-from pilgrimage_tool import pages, text_of  # noqa: E402
+from pilgrimage_tool import api, pages, text_of  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'domains.json')
@@ -110,6 +110,115 @@ def hlist(wt):
     return rows or None
 
 
+def first_table(wt, near=1500):
+    """「旧高旧領取調帳」后面 near 字以内的第一张表的正文；没有返回 None"""
+    i = wt.find('旧高旧領取調帳')
+    s = wt.find('{|', i) if i >= 0 else -1
+    if s < 0 or s - i > near:
+        return None
+    return wt[s:wt.find('\n|}', s)]
+
+
+# 京都诸郡的勾选表：每村一行，各列是一种知行（皇室領、公家領、幕府領 1 / 2 …），打〇的就有；「その他」列写了字也算一方
+COURT = {'皇室領', '宮家領', '公家領', '女官領', '地下役人領', '北面衆領', '雑色領'}
+
+
+def matrix(wt):
+    """勾选表 → [(知行, 町村数)]：只有一方的村记给它，几方的记相给（「・」连起来，kind_of 判为 mixed）"""
+    body = first_table(wt)
+    if not body or '村名' not in body[:300]:
+        return None
+    heads = [re.sub(r'<br\s*/?>|\s', '', h.split('|')[-1]) for h in re.findall(r'^!(.*)$', body, re.M)]
+    if len(heads) < 4 or not all(h.endswith(('領', '役知', 'その他')) or re.match(r'.+領\d$', h) for h in heads[1:]):
+        return None
+    cols = [re.sub(r'\d$', '', h) for h in heads[1:]]
+    cols = ['公家領' if c in COURT else '寺社領' if c in ('門跡領', '社家領') else re.sub(r'藩領$', '藩', c) for c in cols]
+    agg = {}
+    for row in body.split('\n|-')[1:]:
+        line = next((x for x in row.split('\n') if x.startswith('|')), None)
+        if not line:
+            continue
+        cells = [c.strip() for c in line[1:].split('||')]
+        if len(cells) != len(heads):
+            continue
+        who = {c for c, v in zip(cols, cells[1:]) if v in ('〇', '○') or (c == 'その他' and v)}
+        if not who:
+            continue
+        k = next(iter(who)) if len(who) == 1 else '・'.join(sorted(who))
+        agg[k] = agg.get(k, 0) + 1
+    rows = sorted(agg.items(), key=lambda x: -x[1])
+    return rows or None
+
+
+def colist(wt):
+    """按列写的 hlist 表（安倍郡）：每行「知行」格是列表、其后「2町 96村」格是町村数 → [(知行, 町村数)]"""
+    body = first_table(wt)
+    if not body or '知行' not in body[:400] or '村数' not in body[:400]:
+        return None
+    rows = []
+    for row in body.split('\n|-')[1:]:
+        cells, cur = [], None
+        for line in row.split('\n'):
+            if line.startswith('|') and not line.startswith(('|}', '|+')):
+                cur = [line[1:].split('|', 1)[-1] if re.match(r'^\|\s*(?:rowspan|colspan|style)', line) else line[1:]]
+                cells.append(cur)
+            elif cur is not None:
+                cur[0] += '\n' + line
+        cells = [c[0] for c in cells]
+        at = next((i for i, c in enumerate(cells) if i and re.fullmatch(r'(?:\s*\*?\s*\d+\s*(?:町|村|宿|浦)\s*)+', c)), None)
+        if at is None:
+            continue
+        items = [clean(x) for x in re.findall(r'^\*\s*(.+)$', cells[at - 1], re.M)] or [clean(cells[at - 1])]
+        items = [x for x in items if x]
+        n = count(cells[at])
+        if items and n:
+            rows.append(('・'.join(items), n))
+    return rows or None
+
+
+def counted(wt):
+    """表里或正文里写明「仙台藩領<br />（34村）」「49村が仙台藩領、37村が一関藩領」的 → [(藩, 町村数)]"""
+    i = wt.find('旧高旧領取調帳')
+    if i < 0:
+        return None
+    seg = wt[i:i + 3000]
+    end = re.search(r'\n\* (?:明治|慶応|\d{4})', seg)
+    seg = seg[:end.start()] if end else seg
+    got = re.findall(r"([^\s|'>（、。]+?藩)領\s*<br\s*/?>\s*（(\d+)村）", seg) or \
+        [(lord, n) for n, lord in re.findall(r"(\d+)村が'*([^\s'、。（]+?藩)'*領", seg)]
+    rows = {}
+    for lord, n in got:
+        rows[lord] = rows.get(lord, 0) + int(n)
+    return sorted(rows.items(), key=lambda x: -x[1]) or None
+
+
+def bold_whole(wt):
+    """「旧高旧領取調帳」那一段写「全域が…'''仙台藩'''領であった」「幕末時点では…'''盛岡藩'''領であった」「全域が'''福井藩'''領とされている」
+    → [(藩, 町村数)]，町村数取这一段后面的「（1町85村）」"""
+    i = wt.find('旧高旧領取調帳')
+    if i < 0:
+        return None
+    para = wt[max(0, wt.rfind('\n', 0, i)):wt.find('\n', i) if wt.find('\n', i) > 0 else len(wt)]
+    m = re.search(r"(?:全域が|幕末時点では)[^。]*?'''([^'\[\]]+?藩)'''領(?:であった|とされて)", para)
+    if not m:
+        return None
+    nxt = re.search(r'\n\*', wt[i:])  # 町村数只在这一段里找（下一段常是 1889 年町村制的「（11村）」）
+    seg = wt[i:i + nxt.start()] if nxt else wt[i:i + 600]
+    k = re.search(r'（((?:\d+(?:町|村|宿|郷|浦))+)）', seg) or re.search(r'((?:\d+(?:町|村|宿|郷|浦))+)が存在', seg)
+    return [(m.group(1), count(k.group(1)) if k else None)]
+
+
+def subareas(wt):
+    """旧郡条目里「後の'''北群馬郡'''域（1町29村） - 上野前橋藩」：只列一方的，记给那个后来的郡 → {郡名: [(知行, 町村数)]}"""
+    out = {}
+    for name, n, lords in re.findall(r"\*\*\s*後の'''([^']+?郡)'''域（([^）]*)）\s*[-－]\s*([^\n]+)", wt):
+        lords = re.sub(r'（[^）]*）|\{\{[^}]*\}\}', '', lords).strip(' 。')
+        parts = [x for x in re.split(r'[、,]', lords) if x.strip()]
+        if len(parts) == 1 and count(n):
+            out[name] = [(clean(parts[0]), count(n))]
+    return out
+
+
 def prose(wt):
     """没有表、正文写明全域归谁的：全域が○○領であった / 全域を○○代官所が管轄 / 幕府直轄地（天領）であった"""
     got = whole(wt)
@@ -123,13 +232,47 @@ def prose(wt):
     return None
 
 
-def predecessors(wt):
-    """变迁框 s-bef 的前身郡（「長柄郡・上埴生郡」）"""
-    m = re.search(r'\{\{s-bef\|before=([^|}]+)', wt)
-    if not m:
-        return []
-    names = [re.sub(r'<[^>]+>', '', clean(x)).strip() for x in re.split(r'[・、]|および', m.group(1))]
-    return [n for n in names if n.endswith('郡') or n.endswith('郡の一部')]
+def boldlist(wt):
+    """「旧高旧領取調帳」后面按知行分项：「** '''幕府領'''（3村）」「** '''津山藩'''（6村）」（小豆郡）→ [(知行, 町村数)]"""
+    i = wt.find('旧高旧領取調帳')
+    if i < 0:
+        return None
+    nxt = re.search(r'\n\* ', wt[i:])
+    seg = wt[i:i + nxt.start()] if nxt else wt[i:i + 3000]
+    rows = [(clean(lord), count(n)) for lord, n in re.findall(r"\n\*\*\s*'''([^'\n]+?)'''（((?:\d+(?:町|村|宿|浦))+)）", seg)]
+    return [r for r in rows if r[1]] or None
+
+
+def parse(wt):
+    """各种写法依次试；「旧高旧領取調帳」出现几次（都筑郡开头先说石高，表在后面「近代以降の沿革」）时从每一处往后都试一遍"""
+    marks = [m.start() for m in re.finditer('旧高旧領取調帳', wt)]
+    for k, at in enumerate(marks or [0]):
+        part = wt if k == 0 else wt[at:]
+        rows = table(part) or hlist(part) or matrix(part) or colist(part) or boldlist(part) or bold_whole(part) or counted(part)
+        if rows:
+            return rows
+    return prose(wt)
+
+
+def predecessors(wt, name=None):
+    """变迁框 s-bef 的前身郡（「長柄郡・上埴生郡」「河内郡（小野川村を除く）<br />信太郡」）；条目里有几个框时取写了郡名的那个。
+    没有变迁框的看正文「那珂郡のうち…を除く区域と多度郡の区域をもって'''仲多度郡'''が発足」"""
+    for m in re.finditer(r'\{\{s-bef\s*\|\s*before\s*=\s*([^|}]+)', wt):
+        # 「楢葉郡の一部<br />（川前村を除く）」只除去点名的几村，按整郡算
+        raw = re.sub(r'の一部\s*(?:<br\s*/?>)?\s*（[^）]*を除く）', '', m.group(1))
+        raw = re.sub(r'<br\s*/?>', '・', raw)
+        raw = re.sub(r'（[^）]*除く）|\([^)]*除く\)', '', raw)
+        names = [re.sub(r'<[^>]+>', '', clean(x)).strip() for x in re.split(r'[・、]|および', raw)]
+        names = [n for n in names if n.endswith('郡') or n.endswith('郡の一部')]
+        if names:
+            return names
+    if name:
+        # 「…の区域をもって'''仲多度郡'''が発足」「大住郡・淘綾郡が合併して'''中郡'''が発足」「島上郡・島下郡の区域をもって発足」
+        m = re.search(r"([^。\n]*?)(?:の(?:区域|全域)をもって|が合併して)(?:'*" + re.escape(name) + r"'*が)?(?:発足|成立)", wt)
+        if m:
+            names = re.findall(r'([一-龥々ヶ]{1,5}郡)(?:のうち[^。、]*?を除く)?の?(?:区域|全域)?(?:と|・|、|$)', m.group(1))
+            return [n for n in names if n != name]
+    return []
 
 
 def whole(wt):
@@ -145,7 +288,7 @@ def whole(wt):
 
 
 def kind_of(name):
-    """规范化后的知行名 → 类别：bakufu 幕府领（含代官所、预地）/ hatamoto 旗本领 / han 藩 / jisha 寺社领 / mixed 相给 / pref 明治初设的府县 / other"""
+    """规范化后的知行名 → 类别：bakufu 幕府领（含代官所、预地）/ hatamoto 旗本领 / han 藩 / jisha 寺社领 / court 公家领（皇室、宫家、公家等，京都诸郡）/ mixed 相给 / pref 明治初设的府县 / other"""
     if '・' in name or '、' in name:
         return 'mixed'
     if re.search(r'幕府領|代官|郡代|奉行|預地|預所|預公領|公領|天領|役知', name):
@@ -154,6 +297,8 @@ def kind_of(name):
         return 'hatamoto'
     if re.search(r'寺社|[寺社山]領$|神社領|日光領', name):
         return 'jisha'
+    if name == '公家領':
+        return 'court'
     if name.endswith('藩') or name.endswith('家領'):
         return 'han'
     if re.search(r'[県府]$', name):
@@ -166,7 +311,7 @@ def norm(lord):
     lord = re.split(r'<br\s*/?\s*>|　', lord)[0]  # 有的表用全角空格代替换行
     lord = re.sub(r'（[^）]*）|\([^)]*\)', '', lord).strip(' ・■□○●▲△◎')
     k = kind_of(lord)
-    return {'bakufu': '幕府領', 'hatamoto': '旗本領', 'jisha': '寺社領', 'mixed': '相給'}.get(k, lord), k
+    return {'bakufu': '幕府領', 'hatamoto': '旗本領', 'jisha': '寺社領', 'court': '公家領', 'mixed': '相給'}.get(k, lord), k
 
 
 def strip_province(names, provs):
@@ -263,27 +408,57 @@ def main():
     wts = pages(list(titles), 'revisions', rvprop='content', rvslots='main')
     for title, prefs in sorted(titles.items()):
         wt = text_of(wts[title]) or ''
-        rows = table(wt) or hlist(wt) or prose(wt)
+        rows = parse(wt)
         if rows:
             got[title] = rows
         else:
             missing.append(title)
-    # 合并新设的郡：前身郡（同县的郡名 → 条目名）都有表才加起来
-    merged = 0
-    for title in list(missing):
-        prefs = titles[title]
-        before = predecessors(text_of(wts[title]) or '')
-        part = [b.endswith('の一部') for b in before]
-        before = [b.removesuffix('の一部') for b in before]
-        srcs = [next((districts[str(p)][b]['title'] for p in prefs if b in districts.get(str(p), {})), b) for b in before]
-        if not before or not all(x in got and all(n for _, n in got[x]) for x in srcs):
-            continue
-        # 从某郡分出一部分（上新川郡 = 新川郡の一部）：只在原郡第一位的领主占九成以上时沿用（新川郡几乎全是加贺藩）
-        if any(pt and max(n for _, n in got[x]) < 0.9 * sum(n for _, n in got[x]) for pt, x in zip(part, srcs)):
-            continue
-        got[title] = [r for x in srcs for r in got[x]]
-        missing.remove(title)
-        merged += 1
+    # 旧郡条目里只列一方的「後の○○郡域」：后来的郡自己没有表时用它
+    sub = 0
+    for title, prefs in sorted(titles.items()):
+        for name, rows in subareas(text_of(wts[title]) or '').items():
+            t = next((districts[str(p)][name]['title'] for p in prefs if name in districts.get(str(p), {})), None)
+            if t and t in missing:
+                got[t] = rows
+                missing.remove(t)
+                sub += 1
+    print(f'按旧郡的「後の○○郡域」补上 {sub} 郡')
+    # 合并新设的郡：前身郡（同县的郡名 → 条目名）都有表才加起来。前身郡不在 districts.json 里的（1896 年前已并掉、
+    # 今天没有市町村的高安郡）按郡名取条目；周准郡 / 周淮郡这类异体字两种都认。前身郡本身也是合并来的（中新川郡 = 上新川郡の一部）时多轮合并
+    def title_of(b, prefs):
+        for name in (b, b.replace('准', '淮'), b.replace('淮', '准')):
+            for p in prefs:
+                if name in districts.get(str(p), {}):
+                    return districts[str(p)][name]['title']
+        return b
+    plan = {}
+    for title in missing:
+        before = predecessors(text_of(wts[title]) or '', re.sub(r'\s*\(.*\)$', '', title))
+        plan[title] = [(b.endswith('の一部'), title_of(b.removesuffix('の一部'), titles[title])) for b in before]
+    extra = sorted({x for v in plan.values() for _, x in v if x not in titles})
+    if extra:
+        ewts = pages(extra, 'revisions', rvprop='content', rvslots='main')
+        for x in extra:
+            ew = text_of(ewts[x]) or ''
+            rows = parse(ew)
+            if rows:
+                got[x] = rows
+    merged, changed = 0, True
+    while changed:
+        changed = False
+        for title in list(missing):
+            srcs = plan[title]
+            if not srcs or not all(x in got and all(n for _, n in got[x]) for _, x in srcs):
+                continue
+            # 从某郡分出一部分（上新川郡 = 新川郡の一部）：只在原郡第一位的领主占九成以上时沿用（新川郡几乎全是加贺藩）
+            if any(pt and max(n for _, n in got[x]) < 0.9 * sum(n for _, n in got[x]) for pt, x in srcs):
+                continue
+            got[title] = [r for _, x in srcs for r in got[x]]
+            missing.remove(title)
+            merged += 1
+            changed = True
+    for x in extra:
+        got.pop(x, None)  # 只用来相加，本身不输出
     print(f'有表 {len(got)} / {len(titles)} 郡（其中按前身郡合并 {merged}）')
     meiji = {t: meiji_chain(text_of(wts[t]) or '') for t in titles}
     meiji = {t: c for t, c in meiji.items() if c}
@@ -313,6 +488,21 @@ def main():
                 lords.setdefault(name, {'kind': k, 'wiki': [name] if k in ('pref', 'other') else []})
             agg[name] = agg.get(name, 0) + (n or 0)
         out[title] = sorted(agg.items(), key=lambda x: -x[1])
+    # 明治初年改名的藩（名古屋藩 = 尾張藩、鹿児島藩 = 薩摩藩）：日文维基里整页重定向到藩名单（src/data/han.json）的某个藩，记下 han，
+    # 前端用名单里的名字，户籍才能展开历代藩主。支藩（久居藩、黒石藩）有自己的条目，不会被并掉
+    han_titles = {h['t'] for h in load('src', 'data', 'han.json')['han']}
+    wiki_han = {k: v['wiki'] for k, v in lords.items() if v['kind'] == 'han' and k not in han_titles}
+    # 重定向到本藩条目里某一节的（久居藩 → 津藩#久居藩）是支藩，不算
+    redir = {}
+    asked = sorted({t for ts in wiki_han.values() for t in ts})
+    for i in range(0, len(asked), 40):
+        q = api({'action': 'query', 'titles': '|'.join(asked[i:i + 40]), 'redirects': 1}).get('query', {})
+        redir.update({r['from']: r['to'] for r in q.get('redirects', []) if not r.get('tofragment')})
+    for k, ts in wiki_han.items():
+        to = next((redir[t] for t in ts if t in redir), None)
+        if to in han_titles:
+            lords[k]['han'] = to
+    print('改名的藩（重定向到藩名单）：', {k: v['han'] for k, v in lords.items() if 'han' in v})
     en = english({k: v['wiki'] for k, v in lords.items() if v['wiki']})
     for k, v in lords.items():
         v.pop('wiki')

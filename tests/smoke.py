@@ -1191,6 +1191,32 @@ class Case:
         assert any(x in edo for x in ('仙台', 'Sendai')), f'名取市的幕末领主应是仙台藩：{edo}'
         assert page.locator('#koseki .ht-edo').count() >= 2, '此地年表应有仙台藩与废藩置县'
 
+    def edo_row(self, page):
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        row = page.locator('.ks-row').nth(4)
+        return row.inner_text(), row.locator('.ks-seal').text_content()
+
+    def koseki_town(self, page):
+        # 京都上京区是明治的「区」，不属于任何郡：幕末领主写幕府直辖、京都市街（京都町奉行），精度印「市」；此地年表江户一段同样是幕府
+        edo, seal = self.edo_row(page)
+        assert any(x in edo for x in ('京都町奉行', 'Kyoto town magistrates')), f'上京区应写京都町奉行：{edo}'
+        assert any(x in seal for x in ('市', 'Town')), f'精度印应为「市」：{seal}'
+        assert any(x in page.locator('#koseki .ht-edo').first.inner_text() for x in ('幕府', 'Shogunate')), '此地年表江户一段应是幕府'
+
+    def koseki_city(self, page):
+        # 名古屋市中区没有旧郡记录：按整个名古屋市的旧郡（排第一的都是名古屋藩）写，精度印「全市」，并能展开名古屋藩的藩主
+        edo, seal = self.edo_row(page)
+        assert any(x in edo for x in ('名古屋', 'Nagoya')), f'名古屋市中区的幕末领主应是名古屋藩：{edo}'
+        assert any(x in seal for x in ('全市', 'City')), f'精度印应为「全市」：{seal}'
+        assert page.locator('#koseki .ks-row').nth(4).locator('details, button').count() >= 1, '应能展开名古屋藩的历代藩主'
+
+    def koseki_main(self, page):
+        # 笠间市横跨东茨城郡（水户藩）与西茨城郡（笠间藩）：按市街所在的西茨城郡（条目「西茨城郡笠間町」），幕末领主是笠间藩，此地年表列出笠间藩各家
+        edo, seal = self.edo_row(page)
+        assert any(x in edo for x in ('笠间藩', '笠間藩', 'Kasama')), f'笠间市的幕末领主应是笠间藩：{edo}'
+        assert any(x in seal for x in ('郡', 'Dist')), f'精度印应为「郡」：{seal}'
+        assert any(x in ' '.join(page.locator('#koseki .ht-edo').all_inner_texts()) for x in ('笠间', '笠間', 'Kasama')), '此地年表应有笠间藩'
+
     def regimes(self, page):
         # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
         self.tab(page, 'detail')
@@ -1355,6 +1381,8 @@ def plan(lang):
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
              ('amami_town', 'pref=46&muni=1&m=46527&koseki=1', ['amami_town']), ('rl_link', 'rl=power', ['rl_link']),
+             ('koseki_town', 'pref=26&muni=1&m=26102&koseki=1', ['koseki_town']), ('koseki_city', 'pref=23&muni=1&m=23106&koseki=1', ['koseki_city']),
+             ('koseki_main', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_main']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

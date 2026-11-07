@@ -309,7 +309,47 @@ def lifespans(titles):
     return cache
 
 
+def positions(titles):
+    """藩主在 Wikidata 上的「担任职务」（P39）及其起止年（P580 / P582）：{条目: [[职务的日文标签, 起, 止], ...]}。
+    职务是「仙台藩主」这类条目（2025 年起陆续建立），只认标签正好是「藩名 + 主」的"""
+    path = os.path.join(CACHE, 'lord_p39.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    raw = {}
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'sites': 'jawiki', 'titles': '|'.join(part), 'props': 'claims|sitelinks',
+             'sitefilter': 'jawiki', 'format': 'json'}))
+
+        def yr(q, p):
+            v = (q.get(p) or [{}])[0].get('datavalue', {}).get('value', {})
+            return int(v['time'][1:5]) if isinstance(v, dict) and v.get('time', '')[:1] == '+' else None
+        for k, e in d.get('entities', {}).items():
+            if k.startswith('-') or 'jawiki' not in e.get('sitelinks', {}):
+                continue
+            raw[e['sitelinks']['jawiki']['title']] = [
+                [c['mainsnak'].get('datavalue', {}).get('value', {}).get('id'), yr(c.get('qualifiers', {}), 'P580'), yr(c.get('qualifiers', {}), 'P582')]
+                for c in e.get('claims', {}).get('P39', []) if c['mainsnak'].get('datavalue')]
+        for t in part:
+            raw.setdefault(t, [])
+    ids = sorted({x[0] for v in raw.values() for x in v})
+    label = {}
+    for i in range(0, len(ids), 50):
+        d = get('https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'wbgetentities', 'ids': '|'.join(ids[i:i + 50]), 'props': 'labels', 'languages': 'ja', 'format': 'json'}))
+        for q, e in d.get('entities', {}).items():
+            label[q] = e.get('labels', {}).get('ja', {}).get('value', '')
+    for t, v in raw.items():
+        cache[t] = [[label.get(q, ''), a, b] for q, a, b in v]
+    if todo:
+        json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
 LIFE = {}
+POS = {}
+WD_USED = []
 
 
 def reigns(h, nav, report):
@@ -321,7 +361,7 @@ def reigns(h, nav, report):
     for _, rows in h['f']:
         for row in rows:
             times[row[0]] = times.get(row[0], 0) + 1
-    seen = {}
+    seen, used = {}, {}
     for _, rows in h['f']:
         last = None
         for row in rows:
@@ -345,12 +385,24 @@ def reigns(h, nav, report):
             if pick and article and abs(pick[0][0] - article[0][0]) > 1:
                 report.append(f'{h["t"]} {title}：模板 {pick[0]} 与藩条目 {article[0]} 不一致，不收')
                 yrs = []
+            elif not yrs:
+                # 维基两处都没写的：Wikidata「担任职务 = 本藩藩主」的起止年，两头都有、在生卒年之间才收
+                born, died = LIFE.get(title, [None, None])
+                wd = sorted((a, b) for lab, a, b in POS.get(title, []) if lab in names and a and b and 1560 <= a <= b <= 1871
+                      and (not born or born + 5 <= a) and (not died or b <= died + 1))
+                wd = wd[n:n + 1] if times[title] > 1 else wd
+                wd = [r for r in wd if list(r) != used.get(title)]  # 再任的第一段已用导航框的同一段（天童藩织田信敏）时不重复
+                if wd:
+                    yrs = wd
+                    WD_USED.append((h['t'], title, wd[0]))
             if yrs and last and yrs[0][0] < last - 1:
                 report.append(f'{h["t"]} {title}：就任 {yrs[0][0]} 早于前一位 {last}，不收')
                 yrs = []
             if yrs:
                 last = yrs[0][0]
             row[3] = [y for r in yrs for y in r] or None
+            if row[3]:
+                used.setdefault(title, row[3][:2])
             # 导航框只写了一个年份的（多是在位不到一年）：先记下，下面拿前后两位核对
             one = [int(y) for tp in nav.get(title, []) if re.match(r'\{\{\s*([^|]+?)\s*\|', tp).group(1).strip() in names
                    for y in re.findall(r'(1[5-8]\d\d)年', tp)]
@@ -437,6 +489,19 @@ def main():
         h['f'] = [f for f in h['f'] if f[1]]
     print('去掉明治以后出生的家主', len(late), late[:6])
     nav, report = navboxes(sorted({x[0] for h in out for f in h['f'] for x in f[1]})), []
+    POS.update(positions(sorted({x[0] for h in out for f in h['f'] for x in f[1]})))
+    # 核对 Wikidata 的可靠程度：导航框也有年份的藩主，两边就任年相差 ≤1 的比例
+    agree = total = 0
+    for h in out:
+        ja_ = re.sub(r'\s*\(.*\)$', '', h['t']) + '主'
+        for _, rows in h['f']:
+            for x in rows:
+                bx = [r for tp in nav.get(x[0], []) if re.match(r'\{\{\s*([^|]+?)\s*\|', tp).group(1).strip() == ja_ for r in ranges(tp)]
+                wd = [(a, b) for lab, a, b in POS.get(x[0], []) if lab == ja_ and a and b]
+                if bx and wd:
+                    total += 1
+                    agree += abs(bx[0][0] - wd[0][0]) <= 1 and abs(bx[0][1] - wd[0][1]) <= 1
+    print(f'Wikidata 与导航框都有年份的 {total} 位，起止都相差 ≤1 年的 {agree}（{agree / max(total, 1):.0%}）')
     for h in out:
         reigns(h, nav, report)
         # 藩的起年取变迁框，几度废立的藩框里写的是最后一次设立（下館藩 1702、弘前藩甚至写成 1871）：
@@ -452,6 +517,7 @@ def main():
                   for fam, rows in h['f']]
     for x in report:
         print('在位', x)
+    print(f'按 Wikidata 补上在位年份 {len(WD_USED)} 位', WD_USED[:8])
     for x in fixed:
         print('年份', x)
     out.sort(key=lambda h: (h['p'], -h['k'], h['n']['ja']))  # 县内先列存续到废藩置县的

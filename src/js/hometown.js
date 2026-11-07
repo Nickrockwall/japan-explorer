@@ -47,7 +47,7 @@ const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '�
 
 // ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）、region（冲绳、北海道、奄美的地区年表）
 // 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json），没有的为 null
-export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako, region, ken }) {
+export function hometownItems({ pref, props, provNames, sengoku, domains, mainGun, han, prefLabel, geometry, kako, region, ken }) {
   const items = [];
   const key = props.province;
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
@@ -79,7 +79,9 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
   const gun = (gunList.find(([, part]) => !part) || gunList[0])?.[0];
   const topOf = (g) => domains?.[pref.id]?.[g]?.r?.[0]?.[0];
   const others = [...new Set(gunList.map(([g]) => topOf(g)).filter(Boolean))];
-  const top = gun && topOf(gun) || (others.length === 1 ? others[0] : null);
+  // 主要郡（main_gun）：中心市街所在的郡优先；江户 / 京都的市街直接是幕府领；整市一级的只在别的办法都没有时用
+  const mg = mainGun?.[props.code];
+  const top = mg?.town ? mg.lord : (mg?.g && topOf(mg.g)) || gun && topOf(gun) || (others.length === 1 ? others[0] : null) || mg?.lord || null;
   const h = top && !top.startsWith('@') ? findHan(han, top, pref.id) : null;
   if (h) {
     let prev = h.y?.[0] ?? 1603;
@@ -97,7 +99,7 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
     items.push({ y: 1700, yl: t('ht.edo'), main: top.startsWith('@') ? t(`ks.lord.${top.slice(1)}`) : top, kind: 'edo' });
   }
   // 废藩置县之后：本郡（没有就取有记录的第一个郡）先后归哪个县。废藩置县那一行列了几个县时按藩名挑（上田藩 → 上田县），挑不出就不写
-  const chain = ken?.[pref.id]?.[gun] || gunList.map(([g]) => ken?.[pref.id]?.[g]).find(Boolean);
+  const chain = (mg?.g && ken?.[pref.id]?.[mg.g]) || ken?.[pref.id]?.[gun] || gunList.map(([g]) => ken?.[pref.id]?.[g]).find(Boolean);
   if (chain) {
     const want = h && nm(h.n).replace(/藩$/, lang === 'ja' ? '県' : '县').replace(/ Domain$/, ' Prefecture');
     let shown = false;
