@@ -1,6 +1,6 @@
 // 入口：加载数据并协调地图 / 详卡 / 向导 / 御朱印帐 / 时空滑块 / 风土图层 / 合战沙盘
 import { MAP, mapKey } from './country.js';
-import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
+import { loadAll, loadProvinces, loadProvinceEras, loadKako, loadHan, loadSengoku, loadSengokuUnits, loadRulers, loadBios, loadRegimes, loadRegionEras, ichinomiya, visited, apiConfig, goshuinBook, uiPref } from './store.js';
 import { createMap, FILTERS, LAYERS } from './map.js';
 import { renderDetail, renderWelcome, playStamp, highlightEra, esc, legalHTML } from './detail.js';
 import { createGuide } from './guide.js';
@@ -361,6 +361,23 @@ async function main() {
     toast(t('ks.saved'));
   }
   const ksDlg = $('koseki');
+  let regionLoad = null; // 冲绳、北海道的地区年表：打开这两地的户籍时才下载
+  // 下钻里选中的市区町村的此地年表（给向导用，户籍对话框自己另算）
+  async function townOf(pid, code) {
+    try {
+      const geo = await muniGeo(pid);
+      const f = geo.features.find((x) => x.properties.code === code);
+      if (!f) return null;
+      return hometownItems({
+        pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, sengoku: await sengokuData(), domains: data.domains,
+        han: await ensureHan().then(() => han), prefLabel: prefLabel(pid), geometry: f.geometry, kako: await kakoLoad,
+        region: pid === 1 || pid === 47 ? await (regionLoad ??= loadRegionEras()) : null,
+      }).items;
+    } catch (err) {
+      console.warn('此地年表计算失败', err);
+      return null;
+    }
+  }
   let ks = null; // { ctx, data }
   const kosekiHash = (pid, code) => `${stateHash(pid)}&muni=1&m=${code}&koseki=1`;
   async function openKoseki(pid, code, pt) {
@@ -380,7 +397,8 @@ async function main() {
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）
-    ks.town = hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad });
+    const region = pid === 1 || pid === 47 ? await (regionLoad ??= loadRegionEras()) : null;
+    ks.town = hometownItems({ ...ctx, geometry: f.geometry, kako: await kakoLoad, region });
     ksDlg.innerHTML = kosekiHTML(ctx, ks.data, uiPref.get('kosekiName', ''), hometownHTML(ks.town));
     if (!ksDlg.open) ksDlg.showModal();
     ksDlg.scrollTop = 0;
@@ -590,8 +608,9 @@ async function main() {
   });
 
   // ── 天皇 · 将军 · 执权年表：点一行在地图上打开人物卡 ──
-  let regimes = null, regimesReq = null; // 年表「实权」与时代横幅共用
-  const regimesLoad = () => (regimesReq ??= loadRegimes().then((d) => { regimes = d; }));
+  let regimes = null, regimesReq = null; // 年表「实权」、时代横幅与向导共用
+  const regimesLoad = () => (regimesReq ??= loadRegimes().then((d) => { regimes = d; guide.setRegimes(d, eras); }));
+  regimesLoad(); // 约 10 KB：向导离线能答「某时代谁掌权」
   let rl = null; // { rulers, bios, regimes }
   let rlTab = 'power';
   let rlLoad = null;
@@ -851,6 +870,11 @@ async function main() {
       if (!muni.open) return;
       history.replaceState(null, '', muniHash(app.currentId, codes));
       guide.setPlace(place); // 向导随之认得这个市区町村
+      // 再把此地年表交给向导（数据到了才给；这期间又换了地方就不给）
+      if (place && codes.length === 1) {
+        const pid = app.currentId;
+        townOf(pid, codes[0]).then((items) => { if (muni.open && app.currentId === pid && muni.selection?.join() === codes.join()) guide.setHometown(items); });
+      }
       if (place) { tabs.ping('guide'); audio.play('click'); }
     },
   });
@@ -921,6 +945,7 @@ async function main() {
       $('tb-capital').textContent = t('tb.idle.cap');
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.remove('on'));
     }
+    guide.setEra(era);
     syncFilterButtons();
     updateLegend(map);
     syncArtCard();

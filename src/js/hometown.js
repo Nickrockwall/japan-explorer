@@ -1,6 +1,7 @@
 // 此地年表（古代户籍对话框末尾）：把一个市区町村在各时代的归属按年份串成一条线——
 // 古代的国 → 战国 6 个年份（相邻年份同一家的合并）→ 江户领有本郡的藩各家（在位年份来自 han.json）→ 废藩置县 → 今天，
-// 中间按年份插入彼时今日里坐标落在这个市区町村里的事件、诞生与去世。只用已核验的数据，不补写
+// 中间按年份插入彼时今日里坐标落在这个市区町村里的事件、诞生与去世。只用已核验的数据，不补写。
+// 冲绳与北海道不在令制国、也没有一般的藩：另按地区写（region_eras.json，tools/region_eras_tool.py），北海道分和人地与蝦夷地
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { findHan } from './han.js';
@@ -43,8 +44,8 @@ function famSpan(rows) {
 }
 const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '…' : b}`;
 
-// ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）与 kako（彼时今日全部数据，没有时为 null）
-export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako }) {
+// ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）与 region（冲绳、北海道的地区年表），没有的为 null
+export function hometownItems({ pref, props, provNames, sengoku, domains, han, prefLabel, geometry, kako, region }) {
   const items = [];
   const key = props.province;
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
@@ -57,7 +58,8 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
     let run = null;
     for (const y of SG_YEARS) {
       const c = sg[y]?.c;
-      if (!c) continue;
+      // 令制外（冲绳、和人地以外的北海道在战国图上的总称）不写；关原之战与阿伊努的土地无关，1600 年也不写
+      if (!c || c === 'outside' || (y === '1600' && c === 'ainu')) continue;
       const g = (y === '1600' ? sengoku.sides : sengoku.clans)[c];
       const name = g?.[lang] || g?.zh || c;
       if (run && run.c === c && y !== '1600') { run.to = y; continue; }
@@ -92,6 +94,16 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, han, p
     if (h.k) items.push({ y: 1871, yl: '1871', main: t('ht.haihan'), kind: 'edo' });
   } else if (top) {
     items.push({ y: 1700, yl: t('ht.edo'), main: top.startsWith('@') ? t(`ks.lord.${top.slice(1)}`) : top, kind: 'edo' });
+  }
+
+  // 冲绳 / 北海道：地区年表（北海道按市町村在不在和人地挑 wajin / ezo 的条目）
+  const reg = pref.id === 47 ? region?.okinawa : pref.id === 1 ? region?.hokkaido : null;
+  if (reg) {
+    const wajin = sengoku?.muni_units?.[props.code] === '和人地';
+    for (const r of reg) {
+      if (r.scope === (wajin ? 'ezo' : 'wajin')) continue;
+      items.push({ y: r.y, yl: pick(r.yl), main: pick(r.main), sub: r.sub ? pick(r.sub) : '', kind: 'reg' });
+    }
   }
 
   // 彼时今日：落在这里的事件 / 诞生 / 去世

@@ -25,6 +25,7 @@ export const loadSengokuUnits = () => fetchJSON(`${MAP.data}/sengoku_units.json`
 // 天皇 · 将军 · 执权年表与人物详写（人物卡用；读不到时人物卡只有基本信息）
 export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);
 export const loadBios = () => fetchJSON(`${MAP.data}/people.json`).catch(() => ({}));
+export const loadRegionEras = () => fetchJSON(`${MAP.data}/region_eras.json`).catch(() => null);
 export const loadRegimes = () => fetchJSON(`${MAP.data}/regimes.json`).catch(() => null);
 
 // 优先读取 tools/build_bundle.py 生成的单文件包（每种语言 1 个请求）；

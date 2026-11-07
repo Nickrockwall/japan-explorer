@@ -640,6 +640,38 @@ class Case:
         text = page.locator('#chat .msg.ai').last.text_content()
         assert len(text) > 20, f'离线解答太短：{text!r}'
 
+    def _ask_last(self, page, click=None, text=None):
+        before = page.locator('#chat .msg.ai').count()
+        if click:
+            page.click(click)
+        else:
+            page.fill('#chat-input', text)
+            page.press('#chat-input', 'Enter')
+        page.wait_for_function(f"document.querySelectorAll('#chat .msg.ai').length > {before}")
+        page.wait_for_timeout(300)
+        page.wait_for_function("!document.getElementById('btn-send').disabled", timeout=30000)  # 打字机打完才能再问
+        return page.locator('#chat .msg.ai').last.text_content()
+
+    def guide_power(self, page):
+        # 向导与「实权」：时代滑块到平安时代，快捷提问多一个「平安时代谁在掌权？」，离线答出藤原摄关与上皇；自由提问「江户时代谁掌权」答出德川
+        page.evaluate('''() => { const r = document.getElementById('tb-range'); r.value = 2; r.dispatchEvent(new Event('input', { bubbles: true })); }''')
+        page.wait_for_timeout(800)
+        self.tab(page, 'guide')
+        first = page.text_content('#quick button >> nth=0')
+        assert any(x in first for x in ('平安', 'Heian')), f'第一个快捷提问应问平安时代谁掌权：{first}'
+        ans = self._ask_last(page, click='#quick button >> nth=0')
+        assert any(x in ans for x in ('藤原', 'Fujiwara')) and any(x in ans for x in ('上皇', 'Retired')), f'平安时代的离线解答：{ans[:200]}'
+        q = {'zh': '江户时代谁掌权？', 'en': 'Who held real power in the Edo period?', 'ja': '江戸時代の実権は誰？'}[self.lang]
+        ans = self._ask_last(page, text=q)
+        assert any(x in ans for x in ('德川', 'Tokugawa', '徳川')), f'江户时代的离线解答：{ans[:200]}'
+
+    def guide_town(self, page):
+        # 向导与此地年表：下钻选中上田市，「上田市古时候属于哪里？」的离线解答接上此地年表（仙石家）
+        page.wait_for_timeout(2500)  # 此地年表要等藩、战国、彼时今日数据
+        self.tab(page, 'guide')
+        ans = self._ask_last(page, click='#quick button >> nth=0')
+        assert any(x in ans for x in ('仙石', 'Sengoku')) and '1871' in ans, f'上田市的离线解答应接上此地年表：{ans[:300]}'
+
     def era_stable(self, page):
         # 势力数量差别最大的几个时代之间切换，图例与报幕横幅的尺寸、位置都不能变
         js = '''(i) => { const r = document.getElementById('tb-range'); r.value = i; r.dispatchEvent(new Event('input', { bubbles: true })); }'''
@@ -1120,6 +1152,14 @@ class Case:
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'guide', '乡音应切到向导页'
 
+    def okinawa_town(self, page):
+        # 冲绳的此地年表：按地区年表写琉球王国、1609 萨摩、1879 冲绳县、1972 归还，不出现「令制外」那样的战国行
+        page.wait_for_selector('#koseki[open] .ht-list', timeout=20000)
+        joined = ' | '.join(page.locator('#koseki .ht-list li').all_inner_texts())
+        for y in ('1429', '1609', '1879', '1972'):
+            assert y in joined, f'冲绳年表应有 {y}：{joined[:400]}'
+        assert page.locator('#koseki .ht-sg').count() == 0, f'冲绳不应有战国行：{joined[:300]}'
+
     def koseki_whole(self, page):
         # 正文只写「全域が仙台藩領」的郡（名取郡）没有町村数：户籍照常打开（曾经报错），幕末领主写仙台藩、「名取郡全域」
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
@@ -1288,7 +1328,8 @@ def plan(lang):
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
-             ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole'])]
+             ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
+             ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),

@@ -427,6 +427,23 @@ def check_regimes():
         err('regimes', '各段没有按开始年排')
 
 
+def check_region_eras():
+    """冲绳、北海道的地区年表：三语齐全、按年份排、北海道的 scope 只有 all / wajin / ezo（tools/region_eras_tool.py 对日文维基核对）"""
+    d = load('src', 'data', 'region_eras.json')
+    for k in ('okinawa', 'hokkaido'):
+        rows = d.get(k) or []
+        if len(rows) < 5:
+            err('region_eras', f'{k} 只有 {len(rows)} 条')
+        if [r['y'] for r in rows] != sorted(r['y'] for r in rows):
+            err('region_eras', f'{k} 没有按年份排')
+        for r in rows:
+            for f in ('yl', 'main') + (('sub',) if r.get('sub') else ()):
+                if set(r[f]) != {'zh', 'en', 'ja'} or not all(r[f].values()):
+                    err(f'region_eras {k} {r["y"]}', f'{f} 三语不全')
+            if r['scope'] not in ('all', 'wajin', 'ezo') or not r.get('wiki'):
+                err(f'region_eras {k} {r["y"]}', 'scope 或出处不对')
+
+
 def check_kako():
     """彼时今日：366 天都要有、每天至少 3 条（曾有 6 天一条都没有），字段齐全、同一天不重复"""
     kako = load('src', 'data', 'kako.json')
@@ -466,7 +483,7 @@ def check_repo():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_kako, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

@@ -958,7 +958,7 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .ht-list { list-style: none; margin: 0; padding: 0 0 0 10px; border-left: 2px solid #c9a67a; }
 .ht-list li { position: relative; }
 .ht-list li::before { content: ''; position: absolute; left: -16px; top: 9px; width: 8px; height: 8px; border-radius: 50%; background: #c9a67a; }
-.ht-list .ht-edo::before, .ht-list .ht-sg::before { background: #8a3b33; }
+.ht-list .ht-edo::before, .ht-list .ht-sg::before, .ht-list .ht-reg::before { background: #8a3b33; }
 .ht-list .ht-kako::before { background: #f3ead9; border: 2px solid #8a5a2b; width: 6px; height: 6px; }
 .ht-r { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 8px; padding: 4px 0; }
 .ht-kk { width: 100%; border: 0; background: transparent; text-align: left; color: inherit; font: inherit; cursor: pointer; border-radius: 6px; }

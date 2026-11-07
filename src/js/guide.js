@@ -75,6 +75,40 @@ const ROLE = {
 const R = ROLE[lang];
 const RULES = PROMPT_RULES[lang];
 
+// 年表「实权」（regimes.json）与时代列表：setRegimes 后离线能答「某时代谁掌权」，在线写进 System Prompt
+let REG = null;
+const pk = (o) => o?.[lang] || o?.zh || '';
+// 一个时代（timeline_eras）里先后掌权的各段
+function regimesOf(era) {
+  const [s, e] = era.years.split('–').map((x) => (x ? parseInt(x, 10) : 9999));
+  const P = REG.regimes.periods;
+  return P.filter((p, i) => p.from < e && (P[i + 1]?.from ?? 9999) > s);
+}
+// 问句里提到的时代：「平安」「Heian」「江戸」……（时代名去掉「时代 / 時代 / period」）
+function eraIn(text) {
+  return REG.eras.find((e) => {
+    const short = e.short.replace(/\s*(时代|時代|period|era)$/i, '');
+    return text.includes(short) || new RegExp(`\\b${e.key}\\b`, 'i').test(text);
+  }) || null;
+}
+function powerAnswer(text, P) {
+  const era = eraIn(text);
+  const line = (p) => t('o.pw.line', { y: pk(p.y), real: pk(p.real), nominal: pk(p.nominal) });
+  if (era) return [t('o.pw.era', { self: P.self, era: era.short, years: era.years }), regimesOf(era).map(line).join('\n'), t('o.pw.note')].join('\n\n') + `\n\n${P.tail}`;
+  return [t('o.pw.all', { self: P.self }), REG.regimes.periods.map((p) => t('o.pw.short', { y: pk(p.y), real: pk(p.real) })).join('\n'), t('o.pw.note')].join('\n\n') + `\n\n${P.tail}`;
+}
+
+const PW_RULE = {
+  zh: '下面是本站整理的日本各时期名义上的最高者与实际掌权者（年份对日文维基核对过；分界有两说的两种都写）。问到「某时代谁掌权 / 谁说了算」时据此回答，不要改动年份。',
+  en: "Below is this site's list of the nominal head and the real holder of power in each period of Japanese history (years checked against Japanese Wikipedia; where two boundary dates are in use, both are given). Use it for questions about who held power when, and do not alter the years.",
+  ja: '以下は本サイトがまとめた、日本の各時期の名目上の最高位と実際に権力を握った者です（年代は日本語版ウィキペディアで確認、区切りに二説あるものは両方を記載）。「ある時代に誰が実権を握っていたか」にはこれに基づいて答え、年代を変えないでください。',
+};
+const HT_RULE = {
+  zh: '下面是本站为这个市区町村整理的「此地年表」：各时代归谁管（古代与战国按旧国或郡，江户按幕末领有本郡最多町村的藩及其各家，年份为藩主在位），以及发生在这里的事、生在这里或死在这里的人。问到这里的历史时据此回答，不要补写年表里没有的归属。',
+  en: "Below is this site's timeline for the municipality: who held it in each period (antiquity and the Sengoku period by province or district; for the Edo period, the domain holding most of the district's villages at its end and the houses that ruled it, with reign years), plus events, births and deaths located here. Answer questions about this place's history from it and do not add holders that are not listed.",
+  ja: '以下は本サイトがこの市区町村についてまとめた「この地の年表」です。各時代の支配者（古代と戦国は旧国または郡、江戸は幕末にこの郡の町村をもっとも多く領した藩とその家、年代は藩主の在任期間）と、ここで起きた出来事・生まれた人・亡くなった人。この地の歴史にはこれに基づいて答え、年表にない支配者を書き足さないでください。',
+};
+
 const SG_RULE = {
   zh: '用户正在看「战国势力」地图并点开了一个国。下面是本站整理的这一国在六个年份的主要控制者与代表人物（每国只取一个主要控制者，几家分占的另列），问到战国势力时据此回答，不要编造这里没有的年份归属；分治与「国人割据」「多方争夺」要照实说明。',
   en: 'The user is viewing the "Sengoku powers" map and has opened a province. Below is this site\'s record of who mainly held it in six years and who led them (one main holder per province, with sharers listed separately). Answer questions about Sengoku powers from it; do not invent holders for other years, and be clear about shared, local-lords or contested entries.',
@@ -93,7 +127,9 @@ const PIL_RULE = {
   ja: 'ユーザーは「聖地巡礼」レイヤーを見ています。以下は本県のアニメ聖地と大河ドラマゆかりの地です。巡礼について聞かれたら、アニメは熱血アニメファンの口調、大河ドラマはドラマ評論家の口調で紹介してください。リストにない撮影地を作らず、重要なネタバレは避け、地元のマナーにも触れてください。',
 };
 
-export function buildSystemPrompt(p, P, place = null, pil = null, sg = null) {
+export function buildSystemPrompt(p, P, place = null, pil = null, sg = null, town = null) {
+  const pw = REG ? `\n${PW_RULE[lang]}\n<regimes>\n${REG.regimes.periods.map((x) => `${pk(x.y)}: ${pk(x.real)} / ${pk(x.nominal)}`).join('\n')}\n</regimes>\n` : '';
+  const ht = place && town?.length ? `\n${HT_RULE[lang]}\n<hometown>\n${town.map((x) => `${x.yl} ${x.main}${x.tag ? ` (${x.tag})` : ''}${x.sub ? ` — ${x.sub}` : ''}`).join('\n')}\n</hometown>\n` : '';
   const { guide, hero_persona, _translated, ...data } = p;
   return `${P.hero ? R.hero(P) : R.guide(P)}
 
@@ -101,7 +137,7 @@ ${R.ctx(p)}
 <prefecture>
 ${JSON.stringify(data, null, 1)}
 </prefecture>
-${place ? `\n${R.place(place)}\n` : ''}${sg?.rows ? `\n${SG_RULE[lang]}\n<sengoku province="${sg.prov}" year="${sg.year}">\n${JSON.stringify(sg.rows, null, 1)}\n</sengoku>\n` : ''}${sg?.clan ? `\n${SG_CLAN_RULE[lang]}\n<sengoku-power year="${sg.year}">\n${JSON.stringify(sg, null, 1)}\n</sengoku-power>\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
+${place ? `\n${R.place(place)}\n` : ''}${ht}${pw}${sg?.rows ? `\n${SG_RULE[lang]}\n<sengoku province="${sg.prov}" year="${sg.year}">\n${JSON.stringify(sg.rows, null, 1)}\n</sengoku>\n` : ''}${sg?.clan ? `\n${SG_CLAN_RULE[lang]}\n<sengoku-power year="${sg.year}">\n${JSON.stringify(sg, null, 1)}\n</sengoku-power>\n` : ''}${pil?.length ? `\n${PIL_RULE[lang]}\n<pilgrimage>\n${JSON.stringify(pil.map(({ type, work, year, place: at, scene, tips }) => ({ type, work, year, place: at, scene, tips })), null, 1)}\n</pilgrimage>\n` : ''}
 ${RULES.reply}. ${RULES.rules}`;
 }
 
@@ -132,7 +168,7 @@ function pilAnswer(spots, p, P) {
 }
 
 // 市区町村（下钻地图里的选中项）：借县史料里对该令制国的说明，拼出离线解答
-function placeAnswer(x, p, P) {
+function placeAnswer(x, p, P, town = null) {
   const { name } = x;
   const more = `\n\n${t('o.place.more', { self: P.self })}\n\n${P.tail}`;
   if (!x.provinces.length) return t('o.place.outside', { self: P.self, name }) + more;
@@ -147,6 +183,8 @@ function placeAnswer(x, p, P) {
   if (x.district) lines.push(t('o.place.district', { district: x.district }));
   if (x.old?.length) lines.push(t('o.place.old', { list: joinList(x.old.slice(0, 5)) }));
   if (x.pop) lines.push(t('o.place.pop', { pop: x.pop, year: x.pop_year }));
+  const rows = (town || []).filter((r) => r.kind !== 'kako' && r.kind !== 'anc' && r.kind !== 'now').slice(0, 10);
+  if (rows.length) return `${lines.join('')}\n\n${t('o.place.ht')}\n${rows.map((r) => `· **${r.yl}**${t('o.eq')}${r.main}${r.sub ? paren(r.sub) : ''}`).join('\n')}${more}`;
   return lines.join('') + more;
 }
 
@@ -184,6 +222,7 @@ const kw = (key) => new RegExp(t(key), 'i');
 
 // 自由输入时，离线模式按关键词挑一个最接近的预置解答
 function offlineFreeText(text, p, P) {
+  if (REG && kw('kw.power').test(text)) return powerAnswer(text, P);
   if (kw('kw.daimyo').test(text)) return offlineAnswer('daimyo', p, P);
   if (kw('kw.dialect').test(text)) return offlineAnswer('dialect', p, P);
   if (kw('kw.border').test(text)) return offlineAnswer('border', p, P);
@@ -374,6 +413,8 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
   let place = null; // 下钻地图里选中的市区町村
   let pil = null; // 圣地巡礼图层下本县的巡礼点
   let sg = null; // 战国势力图上点开的国 { prov, year, rows }
+  let town = null; // 下钻里选中的市区町村的此地年表（hometownItems().items）
+  let era = null; // 时代滑块当前的时代（timeline_eras 的一项）
   let P = null;
   let history = [];
   let busy = false;
@@ -440,7 +481,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const myCtrl = (ctrl = new AbortController());
     let out = '';
     try {
-      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place, pil, sg);
+      const system = battle ? buildBattlePrompt(battle.b, battle.field, P) : buildSystemPrompt(pref, P, place, pil, sg, town);
       for await (const chunk of streamChat(cfg, system, history, myCtrl.signal)) {
         out += chunk;
         div.innerHTML = fmt(out);
@@ -464,7 +505,8 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     if (online()) { askLLM(text); return; }
     const ans = battle
       ? (key ? battleAnswer(key, battle.b, P) : battleFreeText(text, battle.b, P))
-      : key === 'place' && place ? placeAnswer(place, pref, P)
+      : key === 'place' && place ? placeAnswer(place, pref, P, town)
+        : key === 'pw' && era && REG ? powerAnswer(era.short, P)
         : key === 'pil' && pil?.length ? pilAnswer(pil, pref, P)
         : key === 'sg' && sg ? sgAnswer(sg, P)
         : (key ? offlineAnswer(key, pref, P) : offlineFreeText(text, pref, P));
@@ -515,6 +557,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
     if (pil?.length && !battle) qs.unshift({ key: 'pil', text: t('q.pil') });
     if (sg && !battle) qs.unshift({ key: 'sg', text: sg.clan ? t('q.sgc', { clan: sg.clan, year: sg.year }) : t('q.sg', { prov: sg.prov, year: sg.year }) });
+    if (era && REG && !battle) qs.unshift({ key: 'pw', text: t('q.pw', { era: era.short }) });
     for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';
@@ -562,9 +605,20 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       sg = x;
       if (pref && !battle && P && changed) renderQuick();
     },
+    // 年表「实权」数据与时代列表（全局一次）
+    setRegimes(regimes, eras) { REG = regimes ? { regimes, eras } : null; if (pref && !battle && P && era) renderQuick(); },
+    // 时代滑块的当前时代（null = 不在时空穿越）：快捷提问多一个「某时代谁在掌权？」
+    setEra(x) {
+      const changed = (x?.key || null) !== (era?.key || null);
+      era = x;
+      if (pref && !battle && P && changed && REG) renderQuick();
+    },
+    // 下钻里选中的市区町村的此地年表（null 表示没有）：离线解答接在后面，在线写进 System Prompt
+    setHometown(items) { town = items; },
     setPlace(x) {
       const changed = (x?.ja || null) !== (place?.ja || null);
       place = x;
+      if (!x) town = null;
       if (!pref || battle || !P || !changed) return;
       renderQuick();
       if (x) addMsg('sys', esc(t('g.place.sys', { name: x.name })));

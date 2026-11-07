@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 3.13 · 2026-11-07
+
+- "This place through time" is no longer almost empty for Okinawa and Hokkaidō. Okinawa follows Ryūkyū history: the Three Kingdoms, Shō Hashi's unification (1429), the Second Shō dynasty (1470), the Satsuma invasion (1609), the Ryūkyū Domain (1872), Okinawa Prefecture (1879), the Battle of Okinawa and US rule, and the return (1972). Hokkaidō covers Ainu culture, Koshamain's War (1457), the Matsumae Domain (1604), Shakushain's War (1669), direct shogunate rule (1799, 1855), the Development Commission (1869) and the Hokkaidō Agency (1886), with the Japanese enclave at the tip of the Oshima Peninsula and the rest of Ezochi each getting their own entries. Every year is checked against Japanese Wikipedia, and the empty "outside the provinces" Sengoku lines are gone
+- The guide now knows "Who ruled": on the era slider a new quick question asks who held power in that era, answered even without an API key (the real holders and nominal heads of each period); asking "who held real power in the Edo period" works too. With an API key the whole list goes into the guide's reference material
+- The guide also knows "This place through time": pick a place on the municipal map and ask what it was in the old days, and the answer goes on to who held it over time (Ueda: Sanada → Sengoku → Matsudaira → domains abolished 1871). With an API key the whole timeline goes into its references, with an instruction not to add holders that are not listed
+
 ## 3.12 · 2026-11-07
 
 - Fixed the start year of 152 domains: it came from the succession box, which for domains abolished and re-created gives the last re-creation, so cards showed things like "Hirosaki 1871–1871". Start years are now corrected to the earliest lord's accession (Hirosaki 1590, Shimodate 1598)
