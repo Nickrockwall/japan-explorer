@@ -72,12 +72,8 @@ button, input, select { font: inherit; color: inherit; }
 .brand { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 260px; }
 .brand > div { min-width: 0; } /* 让副标题的省略号生效 */
 .brand-seal {
-  width: 38px; height: 38px; flex: none;
-  display: grid; place-items: center;
-  background: var(--shu); color: #fff;
-  font: 900 20px/1 var(--serif);
-  border-radius: var(--r-sm);
-  box-shadow: inset 0 0 0 2px rgba(42,37,32,.16);
+  /* 标志：朱印里的列岛剪影（tools/make_icons.py 生成 src/assets/icons/seal.svg） */
+  width: 38px; height: 38px; flex: none; display: block;
   transform: rotate(-3deg);
 }
 .brand h1 { margin: 0; font: 700 19px/1.2 var(--serif); letter-spacing: .04em; }
@@ -579,7 +575,7 @@ body.resizing { cursor: row-resize; user-select: none; }
 body:not([data-layer="history"]) .filters,
 body:not([data-layer="history"]) .timebar,
 body:not([data-layer="history"]) .era-banner { display: none; }
-body.time-travel .filters button.on { background: transparent; color: var(--text-2); }
+body.time-travel .filters button[data-filter].on:not([data-filter="sengoku"]) { background: transparent; color: var(--text-2); } /* 滑块在战国时「战国势力」仍亮着：两者是同一张图 */
 body.in-battle .map-toolbar, body.in-battle .timebar, body.in-battle .era-banner { display: none; }
 
 /* 图例抬高，给时空滑块让位 */
@@ -633,6 +629,7 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .era-banner.show { animation: era-show 2.8s ease forwards; }
 .era-banner small { font: 500 12px var(--serif); color: var(--kin); letter-spacing: .3em; }
 .era-banner h3 { margin: 2px 0 4px; font: 900 32px/1.25 var(--serif); letter-spacing: .3em; color: var(--ink); white-space: nowrap; }
+:root[lang="en"] .era-banner h3 { letter-spacing: .04em; } /* 拉丁字母拉开 .3em 在手机上会撑出横幅（「Sengoku period」） */
 .era-banner p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
 .era-banner p:last-child { min-height: 3em; } /* 副标题预留两行，一行两行切换时横幅不跳 */
 .era-banner p.cap { color: var(--kin); font: 700 13px var(--serif); margin-bottom: 2px; }

@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 3.26 · 2026-11-08
+
+- New logo: the top-left mark and the home-screen icon are now one vermilion seal with the Japanese archipelago (they used to be 古 and an old dark 旅 icon); browser tabs get a matching small icon
+- The time slider's Sengoku era and the Sengoku power map are now one view: sliding to Sengoku shows the per-province map with its six years from 1467 to 1600; the Sengoku power button moves the slider there; leaving Sengoku returns to your previous filter
+- The first "Start here" button shows a scroll instead of a lantern (the previous release meant to change it but didn't)
+
 ## 3.25 · 2026-11-08
 
 - The welcome page has a new "Start here" section with three ways in: what your hometown was called back then, how the Sengoku warlords split Japan, and which old province you are standing in

@@ -557,8 +557,9 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     const qs = battle ? battleQuestions() : quickQuestions(pref);
     if (place && !battle) qs.unshift({ key: 'place', text: t('q.place', { name: place.name }) });
     if (pil?.length && !battle) qs.unshift({ key: 'pil', text: t('q.pil') });
-    if (sg && !battle) qs.unshift({ key: 'sg', text: sg.clan ? t('q.sgc', { clan: sg.clan, year: sg.year }) : t('q.sg', { prov: sg.prov, year: sg.year }) });
     if (era && REG && !battle) qs.unshift({ key: 'pw', text: t('q.pw', { era: era.short }) });
+    // 战国势力图上点开的国 / 家比时代更具体，排第一（滑块在战国时两者同时存在）
+    if (sg && !battle) qs.unshift({ key: 'sg', text: sg.clan ? t('q.sgc', { clan: sg.clan, year: sg.year }) : t('q.sg', { prov: sg.prov, year: sg.year }) });
     for (const q of qs) {
       const b = document.createElement('button');
       b.type = 'button';

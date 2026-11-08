@@ -930,12 +930,24 @@ async function main() {
   $('tb-ticks').innerHTML = eras.map((e, i) =>
     `<button type="button" data-i="${i}" title="${esc(e.name)}">${esc(label('eraTick', e.key))}</button>`).join('');
   let playTimer = null;
+  // 滑块的「战国」就是战国势力图（3.26 起合并）：到战国时换成战国势力滤镜，离开时回到原来的滤镜
+  const SG_ERA = eras.findIndex((e) => e.key === 'sengoku');
+  let sgPrevFilter = null;
 
   function setEra(i, { banner = true } = {}) {
     if (i != null && i !== app.eraIdx) audio.play('click'); // 拖动滑块时只在跨到另一个时代时响
     app.eraIdx = i;
     const era = i == null ? null : eras[i];
-    map.setEra(era);
+    const sgEra = i != null && i === SG_ERA;
+    if (sgEra && sgPrevFilter == null) {
+      sgPrevFilter = map.state.filter === 'sengoku' ? 'explore' : map.state.filter;
+      uiPref.set('filter', map.setMode('sengoku'));
+      ensureSengoku();
+    } else if (!sgEra && sgPrevFilter != null) {
+      uiPref.set('filter', map.setMode(sgPrevFilter));
+      sgPrevFilter = null;
+    }
+    map.setEra(sgEra ? null : era); // 战国时由战国势力图着色，不用时代的按县着色
     document.body.classList.toggle('time-travel', !!era);
     $('tb-exit').hidden = !era;
     if (era) {
@@ -1045,8 +1057,8 @@ async function main() {
       .catch((err) => console.warn('战国势力数据加载失败，改按县着色', err));
   }
   function applyFilter(m) {
+    if (m === 'sengoku') { stopPlay(); setEra(SG_ERA); return; } // 战国势力 = 把滑块拖到战国
     if (m === 'circuit' || m === 'power') ensureProvinces();
-    if (m === 'sengoku') ensureSengoku();
     queueMicrotask(syncArtCard);
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
     uiPref.set('filter', map.setMode(m));
@@ -1323,7 +1335,7 @@ async function main() {
   map.setKokuStamps(ichinomiya.get());
   const mode0 = map.setMode(uiPref.get('filter', 'explore'));
   if (['circuit', 'power'].includes(mode0)) ensureProvinces();
-  if (mode0 === 'sengoku') ensureSengoku();
+  if (mode0 === 'sengoku') { map.setMode('explore'); setEra(SG_ERA, { banner: false }); } // 上次停在战国：滑块也回到战国
   applyLayer(uiPref.get('layer', 'history'));
   const kakoHash = new URLSearchParams(location.hash.slice(1)).get('kako');
   if (/^\d\d-\d\d$/.test(kakoHash || '')) kako.key = kakoHash; // #kako=11-02 打开某一天
@@ -1372,7 +1384,7 @@ async function main() {
   if (/^(1467|1560|1573|1582|1590|1600)$/.test(hp.get('sg') || '')) {
     uiPref.set('sgYear', hp.get('sg'));
     sgWant = { prov: hp.get('sgp'), clan: hp.get('sgc') };
-    if (map.state.filter !== 'sengoku') applyFilter('sengoku'); else ensureSengoku();
+    if (app.eraIdx !== SG_ERA) applyFilter('sengoku'); else ensureSengoku();
   }
   const sgLink = !!sgWant;
   // 深链接：#pref=26 直接打开京都

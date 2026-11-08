@@ -7,7 +7,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIXED = ['./', 'index.html', 'manifest.webmanifest', 'src/css/style.css']
-TAIL = ['src/vendor/echarts.min.js', 'src/fonts/sc.css', 'src/fonts/jp.css', 'src/assets/geojson/japan.json', 'src/assets/icons/icon-192.png']
+TAIL = ['src/vendor/echarts.min.js', 'src/fonts/sc.css', 'src/fonts/jp.css', 'src/assets/geojson/japan.json', 'src/assets/icons/icon-192.png', 'src/assets/icons/seal.svg', 'src/assets/icons/favicon.svg']
 FIRST = ['app.js', 'country.js', 'shell.js']  # 入口与最先用到的放前面（顺序不影响功能，只为好读）
 
 

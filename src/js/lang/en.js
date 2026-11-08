@@ -161,7 +161,7 @@ export default {
   'prov.era.757': `757 (Tenpyō-hōji 1): Izumi and Noto now exist; Awa has been folded back into Kazusa and Kaga is still part of Echizen; Tane Island remains`,
   'prov.era.1869': `1869 (Meiji 2): Mutsu splits into Mutsu, Rikuchū, Rikuzen, Iwaki and Iwashiro, Dewa into Uzen and Ugo, and Ezo becomes Hokkaido's eleven provinces — 84 in all`,
   'prov.cap': `The 68 ancient provinces, colored by circuit (pieced together from today's municipalities; a municipality spanning two provinces counts toward the main one, so borders are approximate)`, 'prov.now': `Today: {list}`, 'prov.outside': `Outside the provincial system (Amami, Ogasawara, etc.)`,
-  'st.h': `Start here`, 'st.home': `🏮 What was my hometown called back then?`, 'st.home.tip': `Type your town or city, pick it, then tap “📜 Ancestral register” on its card`, 'st.sg': `⚔ How the Sengoku warlords split Japan`, 'st.loc': `📍 Which old province am I standing in?`,
+  'st.h': `Start here`, 'st.home': `📜 What was my hometown called back then?`, 'st.home.tip': `Type your town or city, pick it, then tap “📜 Ancestral register” on its card`, 'st.sg': `⚔ How the Sengoku warlords split Japan`, 'st.loc': `📍 Which old province am I standing in?`,
   'tour.again': `Quick tour`, 'tour.start': `Start`, 'tour.next': `Next`, 'tour.prev': `Back`, 'tour.done': `Start exploring`, 'tour.skip': `Skip tour`,
   'tour.hi.h': `Welcome to Japan Explorer`, 'tour.hi.b': `A one-minute tour of this map of Japan then and now: which ancient provinces became today's 47 prefectures?`,
   'tour.map.h': `Tap a prefecture`, 'tour.map.b': `Tap any prefecture to select it — it's also marked as explored. Pinch (or scroll) to zoom, drag to pan.`,

@@ -662,6 +662,25 @@ class Case:
         page.click('#hud-exit')
         page.wait_for_selector('#battle-hud', state='hidden')
 
+    def sengoku_era(self, page):
+        # 时空滑块的「战国」就是战国势力图：拖到战国 → 战国势力图（年份行、按钮亮）；拖走 / 退出 → 回到原来的滤镜；点「战国势力」→ 滑块到战国
+        sg = page.evaluate("[...document.querySelectorAll('#tb-ticks button')].findIndex((b) => b.title.includes('战国') || b.title.includes('戦国') || /Sengoku/i.test(b.title))")
+        assert sg >= 0, '时代刻度里找不到战国'
+        slide = "(i) => { const r = document.getElementById('tb-range'); r.value = i; r.dispatchEvent(new Event('input', { bubbles: true })); }"
+        page.evaluate(f'({slide})({sg})')
+        page.wait_for_function("document.body.classList.contains('sg-mode')", timeout=30000)
+        assert page.evaluate("document.body.classList.contains('time-travel')"), '应仍在时空穿越'
+        assert page.evaluate("document.querySelector('[data-filter=\"sengoku\"]').classList.contains('on')"), '战国势力按钮应亮'
+        page.evaluate(f'({slide})({sg + 1})')
+        page.wait_for_timeout(300)
+        assert not page.evaluate("document.body.classList.contains('sg-mode')"), '离开战国后不应再是战国势力图'
+        page.click('#tb-exit')
+        page.wait_for_timeout(300)
+        assert page.evaluate("document.querySelector('[data-filter=\"explore\"]').classList.contains('on')"), '退出时空穿越应回到原来的滤镜'
+        page.click('[data-filter="sengoku"]')
+        page.wait_for_function("document.body.classList.contains('sg-mode')", timeout=30000)
+        assert page.evaluate("+document.getElementById('tb-range').value") == sg, '点战国势力应把滑块拖到战国'
+
     def era(self, page):
         page.evaluate("(() => { const r = document.getElementById('tb-range'); r.value = 6; r.dispatchEvent(new Event('input', { bubbles: true })); })()")
         page.wait_for_timeout(500)
@@ -1461,7 +1480,7 @@ def plan(lang):
              ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
-        cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),
+        cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),

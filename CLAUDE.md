@@ -11,7 +11,7 @@
 - **当前地图**（`src/js/country.js`）：`MAPS` 登记各地图的 GeoJSON、数据目录、单元数与存储键前缀（日本 = `src/data`、`je.`，与改造前完全相同）。页面加载时由 `pickMap(hash, 上次的地图)` 定下：链接里 `map=` 是已登记的键 → 用它；否则链接带 `pref=`（老链接都是日本）→ 日本；否则上次看的地图（`je.ui.map`）；都没有 → 日本。日本以外的地图在 `stateHash` 里写 `map=`，日本链接不带。切换地图走整页重载（与切换语言相同）。数据路径一律写成 `${MAP.data}/…`，不要再写死 `src/data/`。
 - 日文 → 简体：`build_bundle.ja_to_zh_table()` 把 search.js 的对照表反过来用，只收 GB 2312 里有的字（对照表也有异体字，反用曾把崎写成﨑、富写成冨），另把 zhconv 的「㭴」改回「樫」；han_tool / sengoku_tool / rulers_tool 的 `JA_ZH` 都从它来，`check_han` 核对藩名与藩主中文名里没有这几个字。
 - **数据打包（改数据后必做）**：`python tools/build_bundle.py` 把每种语言的 47 县 + 合战/时代数据合并成 `src/data/bundle/{zh,en,ja}.json`（每种语言 1 个请求）。前端优先读 bundle，读不到才回退为逐个文件加载——所以**改了 JSON 却忘记重新打包，线上会继续显示旧内容**。
-- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。`SHELL` 由 `python -X utf8 tools/build_sw.py` 生成（src/js 下全部模块含 `lang/`，加上 index、css、ECharts、字体 CSS、japan.json、图标），列表变化时自动把 `VERSION` 加一；新增 / 删除 / 改名模块后跑它，`check_data.check_shell` 核对。图标在 `src/assets/icons/`，分享卡片封面 `src/assets/og-cover.png`（1200×630）。
+- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。`SHELL` 由 `python -X utf8 tools/build_sw.py` 生成（src/js 下全部模块含 `lang/`，加上 index、css、ECharts、字体 CSS、japan.json、图标），列表变化时自动把 `VERSION` 加一；新增 / 删除 / 改名模块后跑它，`check_data.check_shell` 核对。图标在 `src/assets/icons/`：标志是朱印里的列岛剪影（3.26 起，替换以前的「古」与「旅」），`python -X utf8 tools/make_icons.py` 从 japan.json 生成 `seal.svg`（顶栏左上角 `.brand-seal`）、`favicon.svg`（剪影加粗、去掉内框，16px 也认得）与各尺寸 PNG（主屏幕图标是纸色底；maskable 版印缩在中间 60%）。分享卡片封面 `src/assets/og-cover.png`（1200×630）。
 - 必须通过 HTTP 服务器访问（`fetch` 读取 JSON），不能直接双击 `file://` 打开：
   - `python3 -m http.server 8000`（Windows 用 `python`）或 `npx serve .`
 - 浏览器本地存储（`localStorage`）：
@@ -392,6 +392,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 ## 地图状态与互斥（map.js `state` + app.js `app`）
 
 着色优先级：**合战沙盘 > 风土图层（拉面/地酒）> 时代滑块 > 时空滤镜**。
+- 时空滑块的「战国」与「战国势力」滤镜是同一张图（3.26 合并）：`setEra` 到 `SG_ERA` 时记下原来的滤镜（`sgPrevFilter`），换成 `sengoku` 滤镜、`map.setEra(null)`（由战国势力图着色，时代的按县 1572 着色不再用），横幅、刻度、实权照常；离开战国或退出时空穿越时换回原来的滤镜。点「战国势力」按钮 = 把滑块拖到战国（`applyFilter('sengoku')` → `setEra(SG_ERA)`）；上次停在战国势力的，打开页面时滑块也在战国。时空穿越时其余滤镜按钮变暗，「战国势力」仍亮。向导的快捷提问里战国国 / 家（`q.sg`）排在时代的「谁在掌权」前面。smoke `sengoku_era`。
 
 - 风土图层：`history | ramen | sake`。非历史图层时隐藏滤镜与时代滑块，详卡顶部换成拉面解构图 / 酒标卡；切回历史图层时滤镜与时代原样恢复。
 - 时代滑块：拖动/点刻度/播放即进入「时空穿越」（`body.time-travel`），按时代 `prefecture_colors` 着色并在 `capital.coords` 放脉冲点；报幕横幅多一行「实权」（`.pw-line`，固定一行高、放不下省略、全文在 title；手机上固定两行高）：`powerChain(regimes, era)` 取 `regimes.json` 里与这个时代的年份（`years` 的「起–止」）重叠的各段短名（`short`），第一次进时空穿越才下载 regimes，到了补进横幅；点任一滤镜或 × 退出。选中县时高亮对应 `timeline_stage`。
