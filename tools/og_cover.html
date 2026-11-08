@@ -6,32 +6,33 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+SC:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=block" rel="stylesheet">
 <style>
-  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #18181c; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #e7dec6; }
   body {
-    position: relative; color: #ece6dc; font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif;
-    background: radial-gradient(ellipse at 78% 45%, #26232a 0%, #18181c 62%);
+    position: relative; color: #2a2520; font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+    background: #e7dec6;
   }
   :lang(ja) body, body.ja { font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; }
-  #map { position: absolute; right: 0; top: 0; width: 640px; height: 630px; }
+  #map { position: absolute; right: 0; top: 0; width: 640px; height: 630px; border-left: 2px solid #2a2520;
+    background: radial-gradient(ellipse 80% 70% at 62% 45%, #a3bcc5 0%, #8ba7b3 80%); }  /* 群青淡刷的海 */
   .text { position: absolute; left: 72px; top: 64px; width: 600px; }
-  .kicker { font: 500 22px 'Noto Sans SC', sans-serif; letter-spacing: .32em; color: #d4a373; }
+  .kicker { font: 500 22px 'Noto Sans SC', sans-serif; letter-spacing: .08em; color: #7a5719; }
   h1 { margin: 14px 0 0; font: 900 84px/1.08 'Noto Serif SC', 'Noto Serif JP', serif; letter-spacing: .02em; }
   body.ja h1 { font-family: 'Noto Serif JP', 'Noto Serif SC', serif; }
   body.en h1 { font-size: 66px; line-height: 1.12; letter-spacing: 0; }
-  h1 em { font-style: normal; color: #d0453f; }
-  .sub { margin-top: 14px; font: 700 30px 'Noto Serif SC', 'Noto Serif JP', serif; color: #e8dcc6; }
+  h1 em { font-style: normal; color: #b3302a; }
+  .sub { margin-top: 14px; font: 700 30px 'Noto Serif SC', 'Noto Serif JP', serif; color: #4f473d; }
   body.en .sub { font-size: 27px; }
   .tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 26px; width: 560px; }
-  .tags span { padding: 6px 14px; border-radius: 20px; border: 1px solid #4a4a52; font-size: 18px; color: #ddd3c2; }
-  .tags span.hot { border-color: rgba(212,163,115,.6); }
-  .langs { position: absolute; left: 72px; bottom: 40px; width: 500px; padding-top: 18px; border-top: 1px solid #3a3a42;
-    font-size: 21px; letter-spacing: .06em; color: #9a9188; }
+  .tags span { padding: 6px 14px; border-radius: 3px; border: 1px solid #c4b89c; background: #f4efe2; font-size: 18px; color: #2a2520; }
+  .tags span.hot { border-color: #2a2520; }
+  .langs { position: absolute; left: 72px; bottom: 40px; width: 460px; padding-top: 18px; border-top: 1px solid #2a2520;
+    font-size: 21px; letter-spacing: .06em; color: #6b6155; }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="text">
-  <div class="kicker">JAPAN EXPLORER</div>
+  <div class="kicker">Japan Explorer</div>
   <h1 id="title"></h1>
   <div class="sub" id="sub"></div>
   <div class="tags" id="tags"></div>
@@ -48,7 +49,7 @@
       tags: [['68の令制国'], ['戦国勢力図'], ['合戦沙盤'], ['今日は何の日', 1], ['古代の戸籍', 1], ['江戸の諸藩'], ['朝鮮半島']] },
   };
   // 五畿七道配色（与 src/js/map.js 的 FILTERS.circuit 一致）
-  const CIRCUIT = { 畿内: '#c23531', 东海道: '#d4a373', 东山道: '#7a9a6a', 北陆道: '#6f9fb8', 山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 令制外: '#4a4a53' };
+  const CIRCUIT = { 畿内: '#d46e64', 东海道: '#d2a171', 东山道: '#89aa79', 北陆道: '#79aac3', 山阴道: '#9d92c9', 山阳道: '#d9875e', 南海道: '#60ada5', 西海道: '#ce7ea2', 北海道: '#b7c4cc', 令制外: '#d6ccb6' };
   const lang = new URLSearchParams(location.search).get('lang') || 'zh';
   const L = T[lang];
   document.body.classList.add(lang);
@@ -67,12 +68,12 @@
         animation: false,
         geo: {
           map: 'prov', center: [136.6, 38.2], zoom: 1.4, layoutCenter: ['46%', '50%'], layoutSize: '100%', silent: true,
-          itemStyle: { borderColor: '#18181c', borderWidth: 0.7 },
-          regions: prov.features.map((f) => ({ name: f.properties.key, itemStyle: { areaColor: CIRCUIT[f.properties.circuit] || '#4a4a53' } })),
+          itemStyle: { borderColor: '#5a5046', borderWidth: 0.7 },
+          regions: prov.features.map((f) => ({ name: f.properties.key, itemStyle: { areaColor: CIRCUIT[f.properties.circuit] || '#d6ccb6' } })),
         },
         series: [{
           type: 'scatter', coordinateSystem: 'geo', symbolSize: 6, silent: true,
-          itemStyle: { color: '#ffe3a8', borderColor: '#18181c', borderWidth: 1, shadowBlur: 6, shadowColor: 'rgba(255,210,122,.7)' },
+          itemStyle: { color: '#b3302a', borderColor: '#f4efe2', borderWidth: 1 },
           data: ichi.map((s) => s.coords),
         }],
       });

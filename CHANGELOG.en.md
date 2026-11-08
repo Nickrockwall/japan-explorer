@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.23 · 2026-11-08
+
+- New light look based on Edo-period *kuniezu* (official province maps): mulberry-paper background, white land, a pale indigo sea and ink borders. Vermilion is now reserved for "seals" — the logo stamp, the stamp button, primary buttons and the selected place; selected filter buttons are ink
+- The selected place's name sits on a paper slip on the map (vertical in Chinese and Japanese); legend swatches are the oval *koban* marks from kuniezu legends; map labels are ink with a paper outline
+- Every data palette retuned to mid-tone mineral pigments under one rule: regions, circuits, Sengoku clans (about 80), Bakumatsu, ramen, sake, municipalities, province power (pale ochre → umber → deep vermilion), population change (indigo ↔ vermilion); Sengoku crest banners are now ink
+- New palette check run on every push: text contrast on paper, each category colour against ink, against the land and against the rest of its group — it caught 6 pairs that were too close (Oda/Ryūzōji, Uesugi/Shimazu …), now fixed
+- Consistent corner radii by hierarchy, no more glow shadows; guide avatars are paper with ink, ringed in each guide's colour; share cover and README screenshots redone
+- Wide screens: sound, settings and language move into a "More" menu; the guide panel shrinks to one line until a place is picked; the map fits the four main islands to the window. Phones: map tooltips appear above the finger
+- Korean Peninsula mode keeps its dark dancheong skin
+
 ## 3.22 · 2026-11-08
 
 - Late-Edo lords: 26 of the 29 domain names that didn't match the domain list now do, so their lords open in the register — spelling variants (一ノ宮 / 一宮, 上ノ山 / 上山, 竜ヶ崎 / 龍ヶ崎), names from early-Meiji renamings or new seats (Takashima = Suwa, Tate = Matsumae, Matsumine = Dewa-Matsuyama, Mineoka = Minegoyama, Yoshimi = Mikami, Hanbara = Okabe, Tanoguchi = Okutono) and enclaves in other provinces (Yoshida in Tōtōmi, Kameyama and Fukuyama in Bitchū, "Kanazawa" in Ōmi = Kaga), each checked against the domain's article; Isesaki had been cut to "崎藩" by stripping a province name
