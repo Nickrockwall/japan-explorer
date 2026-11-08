@@ -575,7 +575,6 @@ body.resizing { cursor: row-resize; user-select: none; }
 body:not([data-layer="history"]) .filters,
 body:not([data-layer="history"]) .timebar,
 body:not([data-layer="history"]) .era-banner { display: none; }
-body.time-travel .filters button[data-filter].on:not([data-filter="sengoku"]) { background: transparent; color: var(--text-2); } /* 滑块在战国时「战国势力」仍亮着：两者是同一张图 */
 body.in-battle .map-toolbar, body.in-battle .timebar, body.in-battle .era-banner { display: none; }
 
 /* 图例抬高，给时空滑块让位 */

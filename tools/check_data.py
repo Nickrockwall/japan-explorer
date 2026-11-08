@@ -155,6 +155,10 @@ def check_events():
     for e in ev['timeline_eras']:
         if e['timeline_stage'] not in ERAS:
             err(f'era {e["key"]}', f'timeline_stage 非法：{e["timeline_stage"]}')
+        if 'filter' in e:  # 与滤镜同一张图的时代（战国 / 奈良 / 现代）由滤镜着色，不带按县着色
+            if e['filter'] not in VALID or any(k in e for k in ('legend', 'prefecture_keys', 'prefecture_colors')):
+                err(f'era {e["key"]}', f'filter 非法或仍带按县着色：{e["filter"]}')
+            continue
         keys = {x['key'] for x in e['legend']}
         if set(e['prefecture_keys']) != ids or set(e['prefecture_colors']) != ids:
             err(f'era {e["key"]}', 'prefecture_keys / prefecture_colors 必须覆盖 47 县')
@@ -506,6 +510,14 @@ def check_shell():
         err('sw.js', f'SHELL 与应用外壳不一致（缺 {sorted(set(want) - set(have))}，多 {sorted(set(have) - set(want))}）：跑 python -X utf8 tools/build_sw.py')
 
 
+def check_packs():
+    import pack_geo
+    for src in pack_geo.sources():
+        path = os.path.join(ROOT, pack_geo.pack_path(src))
+        if not os.path.exists(path) or open(path, encoding='utf-8').read() != pack_geo.packed_text(src):
+            err(src, '.pack.json 不是最新的：跑 python -X utf8 tools/pack_geo.py')
+
+
 def check_fonts():
     import build_fonts
     for key, chars in build_fonts.missing().items():
@@ -589,7 +601,7 @@ def check_palette():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_ui_strings, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_fonts, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_ui_strings, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_packs, check_fonts, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

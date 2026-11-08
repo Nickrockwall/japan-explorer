@@ -10,10 +10,33 @@ async function fetchJSON(url) {
   return res.json();
 }
 
+// tools/pack_geo.py 压过的 GeoJSON（.pack.json）：{_d: [x0, y0, dx, dy, …]}（坐标 ×1000 的差分）还原成 [[经, 纬], …]；
+// 普通 JSON 原样返回（半岛的地图文件没压）
+export function unpack(o) {
+  if (Array.isArray(o)) return o.map(unpack);
+  if (o && typeof o === 'object') {
+    const d = o._d;
+    if (d) {
+      const out = new Array(d.length / 2);
+      let x = 0;
+      let y = 0;
+      for (let i = 0; i < d.length; i += 2) {
+        x += d[i];
+        y += d[i + 1];
+        out[i / 2] = [x / 1000, y / 1000];
+      }
+      return out;
+    }
+    for (const k in o) o[k] = unpack(o[k]);
+  }
+  return o;
+}
+export const fetchGeo = (url) => fetchJSON(url).then(unpack);
+
 // 令制国真实边界（五畿七道滤镜用到时才下载）
-export const loadProvinces = () => fetchJSON(`${MAP.data}/provinces.json`);
+export const loadProvinces = () => fetchGeo(`${MAP.data}/provinces.pack.json`);
 // 古国演变时间轴（用到时才下载）
-export const loadProvinceEras = () => fetchJSON(`${MAP.data}/province_eras.json`);
+export const loadProvinceEras = () => fetchGeo(`${MAP.data}/province_eras.pack.json`);
 // 战国势力图（68 国 × 6 个年份，用到时才下载）
 // 彼时今日（几百年前的今天；读不到就不显示这一节）
 // 江户诸藩的历代藩主（详卡用，用到时才下载）
@@ -21,7 +44,7 @@ export const loadHan = () => fetchJSON(`${MAP.data}/han.json`).catch(() => null)
 export const loadKako = () => fetchJSON(`${MAP.data}/kako.json`).catch(() => null);
 export const loadSengoku = () => fetchJSON(`${MAP.data}/sengoku.json`);
 // 战国势力图的底图改动：奥羽按郡的分区与和人地（读不到就仍按整国画）
-export const loadSengokuUnits = () => fetchJSON(`${MAP.data}/sengoku_units.json`).catch(() => null);
+export const loadSengokuUnits = () => fetchGeo(`${MAP.data}/sengoku_units.pack.json`).catch(() => null);
 // 天皇 · 将军 · 执权年表与人物详写（人物卡用；读不到时人物卡只有基本信息）
 export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);
 export const loadBios = () => fetchJSON(`${MAP.data}/people.json`).catch(() => ({}));
@@ -34,7 +57,7 @@ export const loadRegimes = () => fetchJSON(`${MAP.data}/regimes.json`).catch(() 
 // 优先读取 tools/build_bundle.py 生成的单文件包（每种语言 1 个请求）；
 // 包不存在时回退为逐个文件加载
 export async function loadAll(lang = 'zh', merge = (b) => b) {
-  const geoP = fetchJSON(MAP.geo);
+  const geoP = fetchGeo(MAP.geo);
   try {
     const b = await fetchJSON(`${MAP.data}/bundle/${lang}.json`);
     return { index: b.index, geo: await geoP, events: b.events, prefs: new Map(b.prefs.map((p) => [p.id, p])), pilgrimage: b.pilgrimage, hiroshige: b.hiroshige || [], provinceNames: b.province_names || [], koku: b.koku || [], kokuryoku: b.kokuryoku || null, domains: b.domains || null, mainGun: b.main_gun || null, emblems: b.emblems || {} };
@@ -48,7 +71,7 @@ export async function loadAll(lang = 'zh', merge = (b) => b) {
 async function loadFiles(lang, merge) {
   const [index, geo, events, manifest] = await Promise.all([
     fetchJSON(`${MAP.data}/index.json`),
-    fetchJSON(MAP.geo),
+    fetchGeo(MAP.geo),
     fetchJSON(`${MAP.data}/historical_events.json`),
     lang === 'zh' ? null : fetchJSON(`${MAP.data}/i18n/manifest.json`),
   ]);

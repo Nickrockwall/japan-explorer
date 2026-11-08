@@ -680,6 +680,24 @@ class Case:
         page.click('[data-filter="sengoku"]')
         page.wait_for_function("document.body.classList.contains('sg-mode')", timeout=30000)
         assert page.evaluate("+document.getElementById('tb-range').value") == sg, '点战国势力应把滑块拖到战国'
+        # 奈良 = 五畿七道（真实旧国底图）、现代 = 现代区划（3.27 合并）；点这两个滤镜按钮同样把滑块拖到对应时代
+        nara, modern = 1, 9
+        page.evaluate(f'({slide})({nara})')
+        page.wait_for_function("document.body.classList.contains('prov-mode')", timeout=30000)
+        assert page.evaluate("document.querySelector('[data-filter=\"circuit\"]').classList.contains('on')"), '奈良时代五畿七道按钮应亮'
+        assert page.evaluate("document.querySelectorAll('#legend-items .sw').length") >= 8, '奈良时代应显示五畿七道图例'
+        page.evaluate(f'({slide})({modern})')
+        page.wait_for_function("document.querySelector('[data-filter=\"region\"]').classList.contains('on')", timeout=5000)
+        assert not page.evaluate("document.body.classList.contains('prov-mode')"), '现代应回到县底图'
+        page.evaluate(f'({slide})({nara + 1})')
+        page.wait_for_timeout(300)
+        assert not page.evaluate("[...document.querySelectorAll('[data-filter]')].some((b) => b.classList.contains('on'))"), '平安时代不应有滤镜按钮亮着'
+        page.click('#tb-exit')
+        page.wait_for_timeout(300)
+        page.click('[data-filter="circuit"]')
+        page.wait_for_function("document.body.classList.contains('prov-mode')", timeout=30000)
+        assert page.evaluate("+document.getElementById('tb-range').value") == nara, '点五畿七道应把滑块拖到奈良'
+        assert page.evaluate("document.body.classList.contains('time-travel')"), '点五畿七道应进入时空穿越'
 
     def era(self, page):
         page.evaluate("(() => { const r = document.getElementById('tb-range'); r.value = 6; r.dispatchEvent(new Event('input', { bubbles: true })); })()")

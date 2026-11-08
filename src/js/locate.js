@@ -1,6 +1,7 @@
 // 「我在哪」：用浏览器定位，告诉你此刻身在哪个令制国、今天的哪个县与市区町村、明治的哪个郡。
 // 位置只在本机计算（县界 japan.json + 该县的市区町村边界），不发往任何服务器。
 import { MAP } from './country.js';
+import { fetchGeo } from './store.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 
@@ -38,8 +39,7 @@ const cache = new Map();
 // 某县的市区町村 GeoJSON（缓存）
 export function muniGeo(pid) {
   if (!cache.has(pid)) {
-    cache.set(pid, fetch(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.json`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
+    cache.set(pid, fetchGeo(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.pack.json`)
       .catch((err) => { cache.delete(pid); throw err; }));
   }
   return cache.get(pid);

@@ -1,6 +1,7 @@
 // 市区町村下钻地图：在地图区上层叠一张独立的 ECharts 地图，全国地图留在下面不动。
 // 数据由 tools/build_municipalities.py 生成，每县一个文件，进入时才加载。
 import { MAP } from './country.js';
+import { fetchGeo } from './store.js';
 import { t, lang, serifFont } from './i18n.js';
 import { esc } from './detail.js';
 import { splitDisputed, disputeCard, disputeLabel } from './disputed.js';
@@ -78,10 +79,8 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
 
   async function load(pid) {
     if (cache.has(pid)) return cache.get(pid);
-    const res = await fetch(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.json`);
-    if (!res.ok) throw new Error(`${res.status}`);
     // 竹岛、齿舞群岛从所属市町村里拆出，另成一块（不是市町村：不计数、不出户籍）；北方四岛的六村整体标为有争议
-    const { geo, parts } = splitDisputed(await res.json());
+    const { geo, parts } = splitDisputed(await fetchGeo(`${MAP.data}/municipalities/${String(pid).padStart(2, '0')}.pack.json`));
     for (const [k, polys] of Object.entries(parts)) {
       geo.features.push({ type: 'Feature', geometry: { type: 'MultiPolygon', coordinates: polys },
         properties: { code: `dsp-${k}`, name: disputeLabel(k), disputed: k, pseudo: true, partial: [], remote: true } });

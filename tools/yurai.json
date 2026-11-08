@@ -29,6 +29,41 @@
    "zh": "取帯广川的阿伊努语名「オペレペレケプ」（河口分成好几股）的前半音，再加上象征十胜平原辽阔的「广」。",
    "ja": "帯広川のアイヌ語名「オペㇾペㇾケㇷ゚」（川尻が幾重にも裂けているもの）の上部の音を採り、十勝平野の広大さにちなむ「広」をつけたとされる。",
    "en": "From the start of the Obihiro River's Ainu name, \"o-pere-perke-p\" (the river whose mouth splits many ways), plus \"hiro\" for the breadth of the Tokachi plain."
+  },
+  "北見市": {
+   "zh": "1942 年成市时由旧称「野付牛」改名：位于北见国中央、是工商业中心。「野付牛」来自阿伊努语「ヌㇷ゚ケㇱ」（原野的尽头）。",
+   "ja": "1942年の市制施行で旧称「野付牛」から改称。北見国の中央に位置し商工業の中心であることによる。「野付牛」はアイヌ語「ヌㇷ゚ケㇱ」（野の末端）に字を当てたもの。",
+   "en": "Renamed from Nokkeushi when it became a city in 1942, as the commercial centre of Kitami Province. Nokkeushi rendered the Ainu \"nup-kes\", \"end of the plain\"."
+  },
+  "小樽市": {
+   "zh": "来自阿伊努语「オタ・オㇽ・ナイ」（沙滩中的河），原指今札幌市界上星置川下游；松前藩的「小樽内场所」嫌冬季风大，迁到今市中心的「クッタㇽウㇱ」，名字也一起搬了过来。",
+   "ja": "アイヌ語「オタ・オㇽ・ナイ」（砂浜の中の川）に由来するが、もとは札幌市との境の星置川下流を指した。松前藩のオタルナイ場所が冬の季節風を避けて今の中心部クッタㇽウㇱへ移り、名も移った。",
+   "en": "From the Ainu \"ota-or-nay\", river in the sand — originally the lower Hoshioki River on today's Sapporo border. The Matsumae domain's Otarunai trading post moved to sheltered Kuttar-ush, today's city centre, and took the name with it."
+  },
+  "千歳市": {
+   "zh": "千岁川阿伊努语叫「シコッペッ」（大洼地之河），一带称「シコツ」。1805 年嫌「シコツ」音同「死骨」不吉，箱馆奉行羽太正养因此地多丹顶鹤，取「鹤寿千年」之意改为「千岁川」。",
+   "ja": "千歳川はアイヌ語で「シコッペッ」（大きな窪みの川）、一帯は「シコツ」と呼ばれた。1805年、「死骨」に通じて縁起が悪いとして、箱館奉行の羽太正養がタンチョウの多さから「鶴は千年」にちなみ「千歳川」と改めた。",
+   "en": "The Ainu called the river \"shikot-pet\" and the area Shikotsu. In 1805 officials thought it sounded like \"dead bones\" (shikotsu); Hakodate magistrate Habuto Masayasu, noting the many red-crowned cranes, renamed it Chitose — \"a thousand years\", from the saying that cranes live a thousand years."
+  },
+  "室蘭市": {
+   "zh": "今市区原叫「トッカリモイ」；1871 年港口从「モルラン」（今崎守町一带）迁来，地名也随之迁来。写作「室兰」后明治中期前读「もろらん」，后来被汉字读音带成「むろらん」。「モルラン」一说是阿伊努语「小坡道」。",
+   "ja": "今の市街付近は「トッカリモイ」と呼ばれたが、1871年に港が「モルラン」（今の崎守町付近）から移り、地名も移った。「室蘭」の字が当てられ、明治中期ごろまで「もろらん」と読んだが、漢字の音に引かれて「むろらん」となった。「モルラン」は一説に「小さな坂道」の意のアイヌ語。",
+   "en": "Today's centre was called Tokkarimoi; when the port moved here from Moruran (now Sakimori) in 1871, the name came too. Written 室蘭, it was read \"Mororan\" until mid-Meiji, then drifted to \"Muroran\" after the kanji. Moruran may be Ainu for \"little slope\"."
+  },
+  "岩見沢市": {
+   "zh": "修建札幌—幌内道路的人们在几春别川边的休息处洗浴（ゆあみ）解乏，这里称「浴泽」，转为「岩见泽」。在北海道是少见的和语来源的市名。",
+   "ja": "札幌〜幌内間の道路建設に従事する人々が幾春別川沿いの休泊所で浴（ゆあみ）をして疲れを癒したことから「浴澤」と呼ばれ、「岩見澤」に転じた。北海道では珍しい和名由来の自治体名。",
+   "en": "Road builders on the Sapporo–Horonai route bathed (yuami) at a rest house on the Ikushunbetsu River, so it was called \"Yuamizawa\", which became Iwamizawa — a rare Hokkaido city name from Japanese rather than Ainu."
+  },
+  "石狩市": {
+   "zh": "来自阿伊努语，多认为是形容蜿蜒的石狩川。永田方正《北海道虾夷语地名解》记有「回流的河」「美丽地造成」等几种解释。",
+   "ja": "アイヌ語に由来し、蛇行する石狩川を表すとする考えが大勢。永田方正『北海道蝦夷語地名解』に「回流する川」「美しく作る」など諸説がある。",
+   "en": "Ainu, most likely describing the winding Ishikari River. Nagata Hōsei's glossary records several readings, from \"meandering river\" to \"beautifully made\"."
+  },
+  "北広島市": {
+   "zh": "1884 年广岛县 25 户移民入植。本想以领队和田郁次郎之名叫「和田」，他坚辞，于是用故乡名叫「广岛开垦」，1894 年分立为广岛村。车站为区别广岛站叫「北广岛」，市名后来也这样定了。",
+   "ja": "1884年に広島県から25戸が入植。リーダーの和田郁次郎の名から「和田」と呼ぼうとしたが本人が固辞し、出身地から「広島開墾」と呼び、1894年に広島村となった。駅は広島駅と区別して北広島駅と名付けられ、市名もこれにならった。",
+   "en": "Settled in 1884 by 25 families from Hiroshima. They wanted to name it after their leader Wada Ikujirō, who refused, so it became \"Hiroshima clearing\" and in 1894 Hiroshima Village. The station was called Kita-Hiroshima to tell it apart, and the city followed."
   }
  },
  "4": {
@@ -36,6 +71,21 @@
    "zh": "通行说法：国分氏把城叫「千代城」（城址有千体佛），伊达政宗改写为「仙臺」，取自唐诗里的典故；另有来自阿伊努语等几种说法。",
    "ja": "一般的な説では、国分氏が城を「千代城」（千体仏があった）と名付け、伊達政宗が唐詩の故事から「仙臺」と改めた。アイヌ語起源など諸説もある。",
    "en": "The usual account: the Kokubun clan called their castle Sendai \"千代\" (a thousand Buddha images stood there) and Date Masamune rewrote it as 仙臺 after a Tang poem. Ainu origins are also proposed."
+  },
+  "石巻市": {
+   "zh": "诸说并存：《日本书纪》「伊寺水门」说（1839 年村冈良弼提出）；住吉社边河水绕巨石打旋的「卷石」说；市区东部牧山古称「石卷山」说；还有阿伊努语说。",
+   "ja": "諸説ある。『日本書紀』の「伊寺水門」説（村岡良弼が1839年に提唱）、住吉社のほとりで川が渦巻いていた巨石「巻石」説、市街東部の牧山の古称「石巻山」説、アイヌ語説など。",
+   "en": "Several theories: the \"Iji harbour\" of the Nihon Shoki (proposed by Muraoka Ryōsuke in 1839); the \"rolled stone\" by Sumiyoshi Shrine where the river swirled; Mount Maki, once called Ishimaki-yama; and an Ainu origin."
+  },
+  "気仙沼市": {
+   "zh": "最有力的说法是阿伊努语「ケセ・モイ」（尽头的海湾），即虾夷势力所及的最远处；朝廷势力到来后写作万叶假名「计仙麻」，后成「气仙沼」。",
+   "ja": "アイヌ語「ケセ・モイ」（終端の湾）説が最も有力とされ、アイヌ勢力の及ぶ最果ての地を意味したという。朝廷勢力が及ぶと万葉仮名で「計仙麻」と書かれ、のちに気仙沼となった。",
+   "en": "The leading theory is Ainu \"kese-moi\", the bay at the end — the far edge of Emishi territory. Under court rule it was written 計仙麻 in man'yōgana, later 気仙沼."
+  },
+  "塩竈市": {
+   "zh": "这里也叫过「国府津」（国府的港口），随着盐竈神社成为陆奥国总镇守，「盐竈」之名固定下来。最早见于平安初的《弘仁式主税帐》。",
+   "ja": "国府津（国府の港）とも呼ばれたが、塩竈神社が陸奥国の総鎮守として信仰を集めて「塩竈」が定着した。初出は平安時代初期の『弘仁式主税帳』。",
+   "en": "Once also called Kōzu, \"port of the provincial capital\", but as Shiogama Shrine became Mutsu's chief shrine its name prevailed. It first appears in an early Heian tax register."
   }
  },
  "6": {
@@ -43,6 +93,11 @@
    "zh": "蔵王连峰脚下的地方，古称「山方」，由此而来。",
    "ja": "蔵王連峰の麓にあったことから「山方」と呼ばれたことに由来する。",
    "en": "From \"Yamakata\" — the place at the foot of the Zaō range."
+  },
+  "鶴岡市": {
+   "zh": "1603 年最上氏治下，酒田海岸冲上一只大龟，酒田的东禅寺城改名「龟崎城」；为成「鹤龟」之对，大宝寺城改名「鹤之冈城」。后来「之（ヶ）」字脱落，成为「鹤冈」。",
+   "ja": "1603年、最上氏の時代に酒田の海岸に大亀が打ち上げられたのを祝って東禅寺城を「亀ヶ崎城」と改め、鶴と亀の対として大宝寺城を「鶴ヶ岡城」と改称。のちに「ヶ」が落ちて「鶴岡」となった。",
+   "en": "In 1603, under the Mogami, a giant turtle washed ashore at Sakata, so Tōzen-ji Castle there became \"Kamegasaki\" (turtle); as its crane-and-turtle pair, Daihō-ji Castle became \"Tsurugaoka\" (crane hill). The \"ga\" later dropped out."
   }
  },
  "7": {
@@ -55,6 +110,11 @@
    "zh": "近世初，蒲生氏乡的客将木村吉清把城和町的功能从大森城迁到杉目城，并把杉目城改名为「福岛城」，「福岛」这个地名由此开始。",
    "ja": "蒲生氏郷の客将木村吉清が大森城から杉目城へ城と町の機能を移し、杉目城を福島城と改名したことから、「福島」の地名が始まったとされる。",
    "en": "Kimura Yoshikiyo, a retainer under Gamō Ujisato, moved the castle and town from Ōmori to Sugime Castle and renamed it Fukushima Castle — the start of the name."
+  },
+  "伊達市": {
+   "zh": "取自郡名伊达郡。旧伊达町原叫长冈村，1924 年车站为避开新潟的长冈站改名「伊达站」，1940 年成町时又用了站名。江户前期以前「伊达」读「いだて」或「いだち」。",
+   "ja": "郡名の伊達郡に由来する。旧伊達町はもと長岡村で、1924年に信越本線長岡駅との重複を避けて駅名を伊達駅とし、1940年の町制でその名を町名にした。江戸前期以前は「いだて」「いだち」と読んだ。",
+   "en": "From Date District. Old Date town was Nagaoka Village; its station was renamed Date in 1924 to avoid confusion with Nagaoka in Niigata, and the town took the station's name in 1940. Before the Edo period it was read \"Idate\" or \"Idachi\"."
   }
  },
  "9": {
@@ -67,6 +127,11 @@
    "zh": "说法不一：开拓时中心有棵栃树；或神明宫社殿上 10 根千木，称「十千木（とちぎ）」。江户时代写作「杤木」，明治后依太政官颁发的县印改为「栃木」。",
    "ja": "開拓時に中心にあった栃の木に由来する説、神明宮の社殿の10本の千木から「十千木」と称した説などがある。江戸時代までは「杤木」と書いたが、明治に太政官から下付された県印に依って改められた。",
    "en": "Either a horse-chestnut tree (tochi) at the heart of the settlement, or the ten (to) roof finials (chigi) of the local shrine. Written 杤木 until Meiji, when it followed the prefectural seal issued by the government."
+  },
+  "那須塩原市": {
+   "zh": "新干线站名「那须盐原」用了多年，又合起名气大的「那须」「盐原」好认。邻近的那须町要求别用「那须」，合并协议会回答「那须这个地名不只属于那须町」，投票定名。",
+   "ja": "新幹線の駅名として長く使われ、観光地として著名な「那須」と「塩原」で場所がイメージしやすいことから選ばれた。隣の那須町は「那須」を使わないよう求めたが、協議会は「那須の地名は那須町だけのものではない」として投票で決めた。",
+   "en": "The Shinkansen station had long been called Nasushiobara, and pairing two famous resort names made the place easy to picture. Neighbouring Nasu Town objected; the merger council replied that \"Nasu\" does not belong to Nasu alone, and put it to a vote."
   }
  },
  "10": {
@@ -84,6 +149,11 @@
    "zh": "1561 年由良成繁攻下赤石城，把赤石乡的一部分献给伊势神宫，奉伊势宫为守护神，此地遂称「伊势之前（いせのさき）」，后转为「伊势崎」。",
    "ja": "1561年に由良成繁が赤石城を攻め落とし、赤石郷の一部を伊勢神宮に寄進して伊勢宮を守護神とした。以来「伊勢の前」と呼ばれ、「伊勢崎」となったとされる。",
    "en": "In 1561 Yura Narishige took Akaishi Castle and gave part of the land to Ise Shrine; the place became \"Ise no saki\" (before Ise) and then Isesaki."
+  },
+  "桐生市": {
+   "zh": "「桐树多」或「多雾（雾生）」两说，都没有定论。当时的「桐生」大约只指今梅田町一丁目到天神町三丁目一带。",
+   "ja": "「桐が多く自生する土地」とも「霧が多く発生する土地（霧生）」とも言われるが決め手はない。当時の「桐生」は今の梅田町一丁目から天神町三丁目あたりを指したと考えられる。",
+   "en": "Either \"where paulownia (kiri) grows\" or \"where mist (kiri) rises\" — neither is settled. The original Kiryū covered only today's Umeda-chō 1-chōme to Tenjin-chō 3-chōme."
   }
  },
  "11": {
@@ -116,6 +186,71 @@
    "zh": "与邻近的志木市一样，来自旧郡名新座郡。",
    "ja": "隣の志木市と同じく、新座郡に由来する。",
    "en": "Like neighbouring Shiki, named after the old Niiza District."
+  },
+  "狭山市": {
+   "zh": "取自狭山丘陵与特产「狭山茶」——不过狭山丘陵其实不在市域之内。",
+   "ja": "狭山丘陵と特産の「狭山茶」にちなむ。ただし市域に狭山丘陵は含まれていない。",
+   "en": "Named after the Sayama Hills and the local Sayama tea — though the hills themselves lie outside the city."
+  },
+  "入間市": {
+   "zh": "取自律令以来的郡名「入间郡」。1966 年成市时公开征名，「入间」只排第三，前两名是「东丰冈市」「武藏市」。",
+   "ja": "律令制以来の郡名「入間郡」に由来する。1966年の市制施行時の公募で「入間」は3位で、1位は「東豊岡市」、2位は「武蔵市」だった。",
+   "en": "From Iruma District, a name dating to the ritsuryō era. In the 1966 public naming contest Iruma came only third, behind \"Higashi-Toyooka\" and \"Musashi\"."
+  },
+  "朝霞市": {
+   "zh": "旧名「膝折」（传说有武士的马在此折了腿）。1932 年东京高尔夫俱乐部迁来，取其名誉总裁朝香宫鸠彦王的宫号；直用宫号不敬，于是改一字为「朝霞」。",
+   "ja": "旧名は「膝折」（武士の馬が足を折ったとの言い伝え）。1932年に移ってきた東京ゴルフ倶楽部の名誉総裁・朝香宮鳩彦王にちなみ、宮号そのままは畏れ多いとして一字変えて「朝霞」とした。",
+   "en": "Formerly Hizaori (\"broken knee\", after a samurai's horse said to have broken its leg here). When the Tokyo Golf Club moved in in 1932, the town took the title of its patron Prince Asaka — changing one character out of deference."
+  },
+  "三郷市": {
+   "zh": "东和、彦成、早稻田三村合并取「三」，这一带自古称「二郷半领」，取「郷」。",
+   "ja": "東和・彦成・早稲田の3村が合併したことから「三」、昔からの「二郷半領」から「郷」をとった。",
+   "en": "\"Three\" for the three merged villages (Tōwa, Hikonari, Waseda), and \"gō\" from the area's old name, Nigōhan-ryō."
+  },
+  "鴻巣市": {
+   "zh": "古老地名，来历不明，有几种假说：台地上的砂地「高之洲（こうのす）」；武藏国造笠原直使主时国府曾设于此，「国府之洲」转音；或在鸿神社神木上筑巢、为民除灾的鹳鸟传说。",
+   "ja": "古い地名で由来は不明だが、台地の砂地「コウ（高）のス（洲）」説、笠原直使主が武蔵国造となり一時国府が置かれた「国府の州」説、鴻神社の神木に巣を作って災いを防いだコウノトリの伝説などがある。",
+   "en": "An old name of uncertain origin. Ideas include \"kō-no-su\", a sandbar on high ground; \"kō-no-su\" as a provincial-capital site from the time of Kasahara no Atai Omi; and a stork (kōnotori) that nested in the sacred tree of Kō Shrine and averted disaster."
+  },
+  "加須市": {
+   "zh": "一说原读「加增（かそ）」，新田使石高增加，元禄时改写「加须」；另有利根川「河洲」转音、光明寺开基者加津内藏丞长高之姓等说。",
+   "ja": "新田で石高が加増されたことにちなむ「加増（かそ）」が元禄時代に「加須」となった説、利根川の「河洲」の転訛説、光明寺開基の加津内蔵丞長高の姓による説がある。",
+   "en": "Perhaps \"kaso\", for the rice yield added (kazō) by new fields, rewritten 加須 in the Genroku era; or \"kasu\", a sandbar of the Tone River; or the surname of Katsu Kuranojō Nagataka, founder of Kōmyō-ji."
+  },
+  "和光市": {
+   "zh": "成町时为町名争执不下，取「以大和合一」之意叫「大和町」。成市时神奈川已有大和市，于是公开征名，「大和町」的「和」加上荣光的「光」，成为应征最多的「和光市」。",
+   "ja": "町制時に町名でもめ、「大いなる和」で一つになる意で「大和町」とした。市制時には神奈川県に大和市があったため公募し、大和の「和」と栄光の「光」を合わせた「和光市」が最多だった。",
+   "en": "At town status, after a quarrel over names, it became Yamato — \"great harmony\". Kanagawa already had a Yamato City, so at city status a contest chose the most popular entry: the \"wa\" of Yamato plus \"kō\", glory."
+  },
+  "志木市": {
+   "zh": "来自古代新座郡的「志木乡」。1874 年引又宿与馆本村合并时，为新村名用经济强的「引又」还是历史久的「馆」闹得不可开交，县里提议取《和名抄》的「新座郡志木乡」，定为「志木宿」。",
+   "ja": "古代の新座郡「志木郷」に由来する。1874年に引又宿と舘本村が合併する際、経済力の引又か歴史ある舘かで大もめとなり、県が『和名抄』の「新座郡志木郷」から志木を提案した。",
+   "en": "From Shiki township of ancient Niiza District. When Hikimata and Tatemoto merged in 1874 they could not agree whose name to keep, so the prefecture proposed \"Shiki\" from the Wamyōshō."
+  },
+  "蕨市": {
+   "zh": "没有文献记载，有两种主要说法：源义经（或在原业平）见烧稻草的烟而称「藁火」；或取自慈镇和尚咏「蕨」的和歌，与附近青木、笹目等植物地名同类。",
+   "ja": "由来は文献に残っていないが、源義経（または在原業平）が藁をたく煙を見て「藁火」と名付けた説と、慈鎮和尚の蕨の歌や近隣の植物名の地名にならって「蕨」とした説が有力とされる。",
+   "en": "No record survives. The leading ideas: Minamoto no Yoshitsune (or Ariwara no Narihira) named it \"warabi\" after the smoke of burning straw; or it is the plant warabi (bracken), as in a poem by the monk Jichin and like other plant names nearby."
+  },
+  "桶川市": {
+   "zh": "最早见于 1352 年足利尊氏给家臣的文书「桶皮乡菅谷村」。来历不明，有两说：广阔田地方向的「冲侧（おきがわ）」转音；或芝川等河的水源处——河流「起始」的「起き川」。",
+   "ja": "1352年の足利尊氏の下文の「桶皮郷菅谷村」が最古。由来ははっきりしないが、広々とした田畑の方向「沖側」の転訛説と、芝川などの水源があり川が起こる所「起き川」説がある。",
+   "en": "First written in 1352, in a grant by Ashikaga Takauji (\"Okegawa township\"). Two guesses: \"oki-gawa\", the open-fields side; or \"okigawa\", where rivers such as the Shiba rise."
+  },
+  "北本市": {
+   "zh": "1602 年中山道鸿巢宿迁走，原地称「本（元）鸿巢村」，转为「本宿村」；明治时同郡另有本宿村，改为「北本宿村」。1943 年合并成村时用了车站名「北本宿」，1959 年成町时去掉「宿」字。",
+   "ja": "1602年に鴻巣宿が移転し、元の地は本（元）鴻巣村、転じて本宿村と呼ばれた。明治に同郡にもう一つ本宿村があったため北本宿村に改め、1943年の合併で駅名から北本宿村が成立、1959年の町制で「宿」を除いた。",
+   "en": "When the Kōnosu post station moved away in 1602 the old site became \"Motojuku\"; to avoid a namesake in the same district it became Kitamotojuku, a name later taken by the station and in 1943 the village. The \"juku\" was dropped at town status in 1959."
+  },
+  "羽生市": {
+   "zh": "市内神社的悬佛上有 1590 年「太田埴生庄」的铭文，「埴（赤土）」「生（多）」——赤土多的地方；另有「埴轮」转音之说。1478 年长尾景春在「羽生之峰」布阵已有记载，埴生、羽生、羽丹生三种写法并用过。",
+   "ja": "市内の神社の懸仏に1590年の「太田埴生庄」の銘があり、埴（赤土）が生（多い）の意とされる。埴輪の訛りとの説もある。1478年に長尾景春が羽生の峰に陣取った記録があり、埴生・羽生・羽丹生の三種が用いられた。",
+   "en": "A shrine plaque of 1590 reads \"Ōta Hanyū estate\" — hani (red clay) plus u (plentiful). Some say it comes from haniwa. Nagao Kageharu camped on \"the ridge of Hanyū\" in 1478; three spellings were used."
+  },
+  "白岡市": {
+   "zh": "1954 年三村合并时取车站名「白冈」。地名本身诸说：正福院贝冢的贝壳在阳光下发亮的岗；849 年慈觉大师在白冈八幡宫见三只白鸽飞舞，称「白鸽所住的白岗」；或古代海浪的白沫覆满山丘。",
+   "ja": "1954年の3村合併で白岡駅にちなみ「白岡町」とした。地名自体は、正福院貝塚の貝殻が光り輝いて見える岡説、849年に慈覚大師が白岡八幡宮で三羽の白鳩を見て「白鳩の住める白い岡」と名付けた説、波しぶきの泡が丘を白く覆った説などがある。",
+   "en": "The merged town of 1954 took its name from Shiraoka Station. The place name itself may come from shell-midden shells glinting on the hill, from three white doves the monk Ennin saw at the shrine in 849, or from sea foam whitening the hill in ancient times."
   }
  },
  "12": {
@@ -143,6 +278,56 @@
    "zh": "有力说法是武将野田右马助在此筑馆；但也有反过来说他是取地名自称野田的，说不准。",
    "ja": "武将野田右馬助が館を構えたことに由来するという説が有力だが、野田の地名を取って名乗ったとする説もあり定かではない。",
    "en": "The leading theory credits the warrior Noda Umanosuke, who built a residence here — though he may instead have taken his name from the place."
+  },
+  "木更津市": {
+   "zh": "通说来自倭建命传说里的「君不去（きみさらず）」；另有「如月之津」等说。最早的写法是 1353 年文献里的「木佐良津」。",
+   "ja": "通説はヤマトタケル伝承の「君不去（きみさらず）」。「如月の津」説などもある。最古の表記は1353年の文献の「木佐良津」。",
+   "en": "The accepted story is Yamato Takeru's \"kimi sarazu\" — \"my lord, do not leave\". The earliest written form is 木佐良津, in a document of 1353."
+  },
+  "成田市": {
+   "zh": "诸说：雷多的「鸣田」，稻好的「熟田（なりた）」，近来的研究说是开垦谋生的「业田」。",
+   "ja": "雷がよく鳴る「鳴田」、稲がよく実る「熟田」、最近の研究では開墾してなりわいとした「業田」などの説がある。",
+   "en": "Proposed sources: \"naru-ta\", paddies where thunder rolls; \"nari-ta\", ripe paddies; or, in recent research, \"livelihood paddies\" cleared by settlers."
+  },
+  "四街道市": {
+   "zh": "车站西边的「四街道十字路」立着刻有成田山道、千叶町道、东金道、东京船桥道的道标，道路伸向四方，「四角」→「四之街道」→「四街道」。1881 年这里开私设邮局，首任局长福岛和吉向县里请求以「四街道」为局名，从此定名。",
+   "ja": "四街道駅の西の「四街道十字路」に成田山道・千葉町道・東金道・東京船橋道を刻んだ道標があり、街道が四方に延びることから「四つ角」→「四ツ街道」→「四街道」となった。1881年に四つ角に開いた私設郵便局の初代局長福島和吉が局名を「四街道」とするよう県に願い出たのが始まりとされる。",
+   "en": "A signpost at the crossroads west of the station points four ways — Narita, Chiba, Tōgane, Tokyo — hence \"four roads\". In 1881 Fukushima Wakichi, first head of a private post office at the crossing, asked the prefecture to name it Yotsukaidō, and the name stuck."
+  },
+  "茂原市": {
+   "zh": "774 年赴任的贵族藤原黑麻吕在此开垦庄园「藻原庄」。湿地多，故称「藻原」，江户时改写成「茂原」。",
+   "ja": "774年に赴任した藤原黒麻呂が拓いた荘園「藻原荘」に由来する。湿地が多く「藻原」と書いたが、江戸時代に「茂原」と改まったという。",
+   "en": "From the Mobara estate (藻原荘, \"waterweed plain\") opened by the noble Fujiwara no Kuromaro, posted here in 774. The marshy name was rewritten 茂原 in the Edo period."
+  },
+  "香取市": {
+   "zh": "「かとり」的语源有「梶取（舵手）」「神鸟」「鹿取」等说。「香取」二字最早见于《万叶集》卷十一的「香取海」。",
+   "ja": "「かとり」の語源は「梶取」「神鳥」「鹿取」など諸説ある。「香取」の表記は『万葉集』巻11の「香取の海」が最古。",
+   "en": "Proposed origins of \"katori\" include a helmsman (kajitori), a sacred bird and \"deer-catching\". The spelling 香取 first appears as \"the sea of Katori\" in Book 11 of the Man'yōshū."
+  },
+  "八街市": {
+   "zh": "明治初年开垦幕府牧场小金牧、佐仓牧，按开垦顺序给新村编号命名：初富、二和、三咲、丰四季、五香、六实、七荣，第八个就是「八街」。",
+   "ja": "明治初期、幕府の放牧地だった小金牧・佐倉牧の開墾で、着手の順に初富・二和・三咲・豊四季・五香・六実・七栄と命名され、8番目が「八街」だった。",
+   "en": "When the shogunate's Kogane and Sakura horse pastures were cleared in early Meiji, the new settlements were numbered in order — Hatsutomi, Futawa, Misaki … — and the eighth was Yachimata."
+  },
+  "袖ケ浦市": {
+   "zh": "《古事记》载，日本武尊渡走水时遇风暴，妃子弟橘媛投海平息海神之怒；她的衣袖漂到东京湾千叶一侧的海岸，于是这一带有了「袖之浦」的雅称。",
+   "ja": "『古事記』によれば、日本武尊が走水を渡る際に大時化に遭い、妃の弟橘媛が海に身を投じて鎮めた。その袖が流れ着いたという伝説から、東京湾の千葉県側の海岸が「袖ヶ浦」と呼ばれた。",
+   "en": "In the Kojiki, Yamato Takeru's crossing of the bay was saved when his consort Oto-Tachibana-hime threw herself into the storm; her sleeve (sode) washed up on the Chiba shore, which became known poetically as Sodegaura."
+  },
+  "旭市": {
+   "zh": "一说取自 1844 年木曾义昌 250 回忌上京都国学者野野口隆正的追悼歌「信浓出旭……」——「旭将军」木曾义仲的后裔义昌死在此地。",
+   "ja": "1844年の「木曾義昌公250回忌」で京都の国学者野々口隆正が詠んだ追悼歌「信濃より いつる旭をしたひきて」から採ったとされる。木曾義昌は「旭将軍」木曾義仲の末裔とされ、この地で没した。",
+   "en": "Said to come from a memorial poem by the Kyoto scholar Nonoguchi Takamasa at the 250th anniversary rites for Kiso Yoshimasa in 1844 — \"following the rising sun (asahi) out of Shinano\". Yoshimasa, descendant of the \"Rising-Sun General\" Kiso Yoshinaka, died here."
+  },
+  "東金市": {
+   "zh": "来自「鸨之根」：最福寺境内山岭像朱鹮（とき）的头，称「鸨之峰」，转音为「とうがね」。",
+   "ja": "最福寺境内の山嶺が鴇（とき）の頭に似ていることから「鴇ヶ峯」と称され、トウガネに転訛したと伝えられる。",
+   "en": "From \"tokigane\": the ridge at Saifuku-ji looked like the head of a crested ibis (toki), and \"Toki-ga-mine\" became \"Tōgane\"."
+  },
+  "銚子市": {
+   "zh": "利根川河口宽阔的河面在入海处骤然变窄，像带嘴的酒器「铫子」往外倒酒，地名由此而来。古代这里叫「三前乡」。",
+   "ja": "利根川は川幅に比べて河口付近が非常に狭く、狭い河口から水が外洋へ注ぐ様が酒器の銚子から酒を注ぐ様子に似ていることから。古代は「三前郷」と呼ばれた。",
+   "en": "The wide Tone River narrows sharply at its mouth, pouring into the ocean like sake from a spouted chōshi flask. In ancient times the area was Misaki township."
   }
  },
  "13": {
@@ -275,6 +460,41 @@
    "zh": "这里是武藏七党之一村山党的根据地「武藏国村山」（狭山丘陵南麓）的最东端，所以冠以「东」字。「村山」来自把狭山丘陵称作「群山（むれやま）」。",
    "ja": "武蔵七党の村山党の由来でもある武蔵国村山（狭山丘陵南麓）の最東端にあたるため「東」を冠した。村山は狭山丘陵を「群山」と呼んだことによる。",
    "en": "The eastern end of Murayama in Musashi — home of the Murayama warrior band, at the southern foot of the Sayama hills, which were called \"mureyama\" (massed hills)."
+  },
+  "青梅市": {
+   "zh": "诸说中最有名的是「将门誓梅」：平将门到金刚寺，把当马鞭的梅枝插地起誓，梅枝生根结果，果实却过了夏天仍青而不落。",
+   "ja": "諸説あるが、平将門が金剛寺で馬の鞭の梅枝を地に挿して願をかけると根付いて実を結び、夏を過ぎても実が青いまま落ちなかったという「将門誓いの梅」の伝説が広く知られる。",
+   "en": "Best known is the legend of Masakado's vow: Taira no Masakado planted his plum-branch riding whip at Kongō-ji; it took root and bore fruit that stayed green (ao) and never fell, even past summer."
+  },
+  "小金井市": {
+   "zh": "两说：崖线（はけ）南侧叫「金井原」，读成「こがねいはら」；或崖下涌泉丰沛、价比黄金，称「黄金之井」。",
+   "ja": "「はけ」の南側の金井原を「こがねいはら」と読んだ説と、はけに沿って黄金に値する湧水があり「黄金の井」と称した説がある。",
+   "en": "Either Kanai-hara, the land south of the \"hake\" escarpment, read as \"Koganei-hara\"; or the springs along the escarpment, worth their weight in gold — \"the golden well\"."
+  },
+  "東久留米市": {
+   "zh": "一般认为来自流经市北的黑目川旧称「久留米川」。成市时福冈县已有久留米市，为免混淆，又因车站名「东久留米」已为人熟悉，定为「东久留米市」。",
+   "ja": "市の北部を流れる黒目川の旧称「久留米川」に由来するとされる。市制時にはすでに福岡県久留米市があり、混同を避けるとともに駅名で親しまれていた「東久留米市」とした。",
+   "en": "From Kurume River, the old name of the Kurome River in the north of the city. Since Kurume in Fukuoka already existed, the new city took the familiar station name, Higashi-Kurume (\"East Kurume\")."
+  },
+  "狛江市": {
+   "zh": "来自古地名「狛江乡」（来历有几种说法）。成市时问卷 73.5% 的人主张保留「狛江」，也有人建议改成平假名的「こまえ市」。",
+   "ja": "かつての「狛江郷」による（郷名の由来には諸説ある）。市制施行時のアンケートでは73.5%が狛江の継続を望み、ひらがなの「こまえ市」にする案もあった。",
+   "en": "From the old township of Komae (its own origin is debated). At city status 73.5% of residents voted to keep the name; some wanted it in hiragana."
+  },
+  "あきる野市": {
+   "zh": "古来有「秋留」「阿伎留」的地名，旧五日市町又有阿伎留神社，于是取其音、写成平假名。秋川市想用「あきる野」或「阿伎留」，五日市町主张「秋川五日市市」，1995 年最后五日市町让步。",
+   "ja": "古来「秋留」「阿伎留」の地名があり、旧五日市町に阿伎留神社があることによる。秋川市側は「あきる野」か「阿伎留」、五日市町側は「秋川五日市市」を推したが、1995年の協議会で五日市町が譲歩した。",
+   "en": "From the old names 秋留 and 阿伎留 (Akiru), and Akiru Shrine in old Itsukaichi, written in hiragana. Akigawa proposed \"Akiruno\"; Itsukaichi wanted \"Akigawa-Itsukaichi\", but gave way in 1995."
+  },
+  "清瀬市": {
+   "zh": "诸说：从市内地名「清户」与柳濑川各取一字（「清户」传说是日本武尊在树下休息时称赞「清净之土」）；或取柳濑川「清澈的浅滩」之意。",
+   "ja": "市内の地名「清戸」と柳瀬川から一字ずつ取った説（「清戸」は日本武尊が木の下で休み「清き土なり」と言ったことからという）と、柳瀬川の「清らかなせせらぎ」から名付けた説がある。",
+   "en": "One character each from the local place Kiyoto (where Yamato Takeru, resting under a tree, is said to have praised the \"clean earth\") and the Yanase River — or simply the river's \"clear shallows\"."
+  },
+  "国立市": {
+   "zh": "中央线国分寺站与立川站之间新开的车站与这一带，各取两站一字，叫「国立（くにたち）」。常被误读成「こくりつ（国立）」，所以有时写平假名。",
+   "ja": "中央線の国分寺駅と立川駅の中間にできる新駅とこの地区に、両駅から1字ずつ取って「国立」と名付けた。「こくりつ」と誤読されやすいため、仮名書きされることもある。",
+   "en": "A new station between Kokubunji and Tachikawa on the Chūō Line took one character from each: Kunitachi. Because it reads like kokuritsu (\"national\"), it is sometimes written in hiragana."
   }
  },
  "14": {
@@ -287,6 +507,21 @@
    "zh": "《和名抄》有「波多野乡」，古时读「はたの」；1889 年合并时多数町村改读「はだの」。说来自秦氏，但没有直接的文献或考古证据。",
    "ja": "『和名抄』に「波多野郷」とあり、古くは「はたの」だった。1889年の合併で多くの町村が「はだの」と読むようになった。秦氏由来説もあるが、直接の文献・考古資料はない。",
    "en": "The Wamyōshō lists \"Hatano\" township, read with a clear \"ta\"; most villages adopted \"Hadano\" at the 1889 mergers. A link to the immigrant Hata clan is often claimed, without direct evidence."
+  },
+  "海老名市": {
+   "zh": "诸说：这里还是海时住着大虾；田里的小虾叫「海老田」；或统治此地的海老名氏。",
+   "ja": "海だった頃に大きな海老が棲んでいた伝説、田の小エビ「海老田」が転じた説、この地を治めた海老名氏に由来する説などがある。",
+   "en": "Theories: a giant shrimp (ebi) from when the area was sea; \"ebi-ta\", rice paddies full of little shrimp; or the Ebina clan who ruled here."
+  },
+  "綾瀬市": {
+   "zh": "「绫濑」这个地名 1889 年才出现。三说：蓼川等支流交织如绫；养蚕兴盛、绢织的「绫织」；蓼川旧称「绫濑川」。",
+   "ja": "「綾瀬」は1889年に初めて登場した地名。蓼川などの支流が綾のような地形をなす説、養蚕が盛んで綾織にちなむ説、蓼川がかつて「綾瀬川」と呼ばれた説がある。",
+   "en": "The name first appeared in 1889. Three theories: tributary streams woven like twill (aya); the silk twill of a sericulture district; or the Tade River's old name, Ayase River."
+  },
+  "逗子市": {
+   "zh": "原是逗子站南边旧逗子村的名字，被用作横须贺线站名，又成町名。来历不明：延命寺安放地藏的「厨子」、役人「图师」的住处、交通要冲「辻」转音等。「逗子」二字从江户时代才用。按罗马字排序，逗子是日本最后一个市町村。",
+   "ja": "もとは逗子駅南側の旧逗子村の名で、横須賀線の駅名、さらに町名に採用された。延命寺の地蔵を安置する「厨子」、役人「図師」の住まい、交通の要衝「辻」の転訛など諸説あり不明。「逗子」の字は江戸時代から。アルファベット順で日本の市町村の最後。",
+   "en": "Originally the name of old Zushi Village south of the station, adopted for the railway and then the town. Ideas include the shrine cabinet (zushi) of Enmei-ji's Jizō, an official's (zushi) residence, or \"tsuji\", a crossroads. Alphabetically, Zushi is Japan's last municipality."
   }
  },
  "15": {
@@ -299,6 +534,11 @@
    "zh": "直江津市与高田市合并时两边都不肯用对方的名字，折中取「上越地方中心」之意的「上越市」（越后国从靠近上方的南部起分为上越、中越、下越）。事前问卷「上越市」第一，「春日山市」第二。",
    "ja": "直江津市と高田市の合併でどちらも譲れず、折衷案として「上越地方の中心地」の意の「上越市」とした（越後を上方に近い南から上越・中越・下越に分ける）。事前アンケートは1位「上越市」、2位「春日山市」。",
    "en": "Neither Naoetsu nor Takada would yield at their merger, so they settled on \"centre of the Jōetsu region\" — the southern third of Echigo, nearest the capital. A survey had Jōetsu first and Kasugayama second."
+  },
+  "新発田市": {
+   "zh": "诸说：开垦出来的「新开发田」转音；临潟湖的「州端（すばた）」；阿伊努语「シビタ」（捕鲑处）；诹访神社的社田「诹访田」。写作「新发田」最早见于 1454 年的《中条房资记录》。",
+   "ja": "開墾した新田「新開発田」の転訛説、潟湖に接する「州端（すばた）」説、アイヌ語「シビタ」（鮭が取れる所）説、諏訪神社の社田「諏訪田」説がある。「新発田」の地名は1454年の『中条房資記録』に見える。",
+   "en": "Theories: a corruption of \"shin-kaihatsu-den\" (newly opened paddies); \"subata\", the edge of a lagoon; Ainu \"shibita\", where salmon are caught; or \"suwata\", fields of Suwa Shrine. The name appears in the Nakajō Fusasuke record of 1454."
   }
  },
  "16": {
@@ -337,6 +577,11 @@
    "zh": "通行说法：被武田氏赶走的信浓守护小笠原长时之子小笠原贞庆，1582 年夺回旧领时感叹「等了很久，终于遂了本怀」（待つ…本懐），由此改名「松本」。另有说法，但时代对不上。",
    "ja": "通説では、武田氏に追われた信濃守護小笠原長時の子小笠原貞慶が1582年に旧領を回復した際、「待つ事久しくして本懐を遂ぐ」と述懐して改名したとされる。他の説は時代が合わない。",
    "en": "The usual story: Ogasawara Sadayoshi, son of the Shinano governor driven out by the Takeda, regained the land in 1582 and said he had \"waited long (matsu) to fulfil his wish (honkai)\" — hence Matsumoto."
+  },
+  "塩尻市": {
+   "zh": "信州无海不产盐，从日本海来的盐贩走到这一带正好卖完，所以叫「盐尻（盐的尽头）」；或两边海岸运来的盐在此会合。市方面认为没有定说，列举上杉送盐传说、食盐、地形三种说法。旧写「鹽尻」。",
+   "ja": "海のない信州へ日本海から来た塩売りが、ちょうどこの辺りで売り切れたことから「塩尻」とも、日本海側と太平洋側の塩がここで合流したからともいう。市は定説はないとして、上杉氏の義塩伝説・食塩・地質地形の三説を挙げる。旧字は「鹽尻」。",
+   "en": "Landlocked Shinano had no salt; peddlers from the Japan Sea sold out about here — \"salt's end\" (shio-jiri). Or it is where salt from both coasts met. The city lists three ideas without endorsing one, including the legend of Uesugi sending salt to his enemy Takeda."
   }
  },
  "21": {
@@ -344,6 +589,11 @@
    "zh": "定说是织田信长攻下美浓后，把稻叶山城下的「井之口」改名为岐阜。",
    "ja": "織田信長が美濃を攻略した際、稲葉山の城下の井ノ口を岐阜と改めたとするのが定説。",
    "en": "Oda Nobunaga renamed the castle town of Inokuchi \"Gifu\" after taking Mino."
+  },
+  "可児市": {
+   "zh": "来历不明。地名学者谷川彰英认为最可信的是负责宫中扫除的「扫部（かにもり）」；另有愿兴寺蟹药师、可儿氏等说。",
+   "ja": "由来は定かでないが、日本地名研究所の谷川彰英は宮中の掃除を担った「掃部（かにもり）」説が最も信憑性が高いとする。願興寺の蟹薬師説、可兒氏説などもある。",
+   "en": "Uncertain. Place-name scholar Tanikawa Akihide finds most credible \"kanimori\", the palace cleaning office; others point to the Crab (kani) Yakushi of Gankō-ji or the Kani clan."
   }
  },
  "22": {
@@ -366,6 +616,36 @@
    "zh": "1942 年见付与中泉合并后，取郡名「磐田」为名。",
    "ja": "1942年に見付と中泉が合併して以降、郡名に由来する「磐田」の名で呼ばれる。",
    "en": "Since Mitsuke and Nakaizumi merged in 1942, the town has used the district name, Iwata."
+  },
+  "藤枝市": {
+   "zh": "一说后三年之役时源义家途经若一王子神社，见老松上缠满盛开的藤花，咏歌中有「藤枝」；一说宿场町像藤枝一样细长。",
+   "ja": "後三年の役の折、源義家が若一王子神社で老松に絡んで咲く藤を見て「藤枝」を詠み込んだ歌を詠んだという社伝と、藤の枝のように細長い宿場町だからという説がある。",
+   "en": "Shrine lore says Minamoto no Yoshiie, passing Nyakuichi-ōji Shrine during the Later Three Years' War, saw wisteria (fuji) blooming over an old pine and wrote a poem on \"wisteria branches\" (fujieda); or the post town was long and thin like a wisteria branch."
+  },
+  "焼津市": {
+   "zh": "神话里日本武尊东征途中被贼众围困，用草薙剑割倒芦苇、放火脱险，烈火之地因此称「烧津」。",
+   "ja": "日本武尊が東征の途中で賊に襲われ、草薙剣で葦を薙ぎ火を放って難を逃れた――その燃え盛る様から「焼津」となったという伝承による。",
+   "en": "In myth, Yamato Takeru, ambushed on his eastern campaign, cut the reeds with the Kusanagi sword and set them alight to escape; the blaze gave the place its name, \"burning harbour\"."
+  },
+  "富士宮市": {
+   "zh": "来自富士山本宫浅间大社的「富士之宫」，《今昔物语集》已有「骏河国富士之宫」。浅间大社在旧大宫町的 1 丁目 1 番地，今天地址仍是「宫町 1-1」。",
+   "ja": "浅間大社の「富士の宮」に由来し、『今昔物語集』に「駿河ノ国ノ富士ノ宮」と見える。大社は旧大宮町の1丁目1番地にあり、今も住所は「宮町1-1」。",
+   "en": "From \"Fuji no Miya\", the Fuji Sengen Grand Shrine, already so named in the Konjaku Monogatari. The shrine was lot 1-1 of old Ōmiya town, and its address is still Miyachō 1-1."
+  },
+  "掛川市": {
+   "zh": "流经中心的逆川两岸像断崖，称「缺けた川」，简化为「悬川」，后改「挂川」。",
+   "ja": "中心部を流れる逆川が切り立った崖のように見えたことから「缺けた川」と呼ばれ、略されて「懸川」、のちに「掛川」となった。",
+   "en": "The Sakagawa through the town centre runs between cliff-like banks — a \"broken-off river\" (kaketa kawa), shortened to 懸川 and later written 掛川."
+  },
+  "三島市": {
+   "zh": "三说：三岛大明神（三岛大社）迁座于此；大明神是三洲（安志我良、珠流河、贺茂）之神，「洲」后改「岛」；或清流夹着的土地像三个岛。",
+   "ja": "三嶋大明神（三嶋大社）の遷座から生まれた説、三嶋大明神が3つの洲（安志我良・珠流河・賀茂）の神で洲が嶋に改められた説、清流に挟まれた土地が3つの島に見えた説がある。",
+   "en": "Three theories: the arrival of the Mishima deity (Mishima Taisha); the deity's rule over three \"isles\" — Ashigara, Suruga, Kamo; or land between clear streams that looked like three islands."
+  },
+  "御殿場市": {
+   "zh": "1616 年德川家康死后，遗体从久能山东照宫移往日光东照宫，途中在此建临时御殿安放，于是有了「御殿场」。明治合并时顾及别村，先用了古名「御厨町」。",
+   "ja": "1616年に亡くなった徳川家康の遺体を久能山東照宮から日光東照宮へ移す際、仮の御殿を建てて安置したことから「御殿場」の地名が生まれた。明治の合併では他村に配慮して古来の「御厨町」が採用された。",
+   "en": "When Tokugawa Ieyasu's body was moved from Kunōzan Tōshō-gū to Nikkō after his death in 1616, a temporary palace (goten) was built here to rest it. At the Meiji mergers the town first took the older name Mikuriya, out of deference to the other villages."
   }
  },
  "23": {
@@ -398,6 +678,56 @@
    "zh": "1409 年的《熊野檀那职让状写》里有「借屋乡」，是最早的记载；战国时多写作「苅屋」「かり屋」，后来才定为「刈谷」。",
    "ja": "1409年の『熊野檀那職譲状写』の「借屋郷」が初見。戦国期の史料では「苅屋」「かり屋」と書かれ、のちに「刈谷」となった。",
    "en": "First recorded as \"Kariya township\" (借屋郷) in 1409; Sengoku-era sources write 苅屋 or かり屋, and the 刈谷 spelling came later."
+  },
+  "小牧市": {
+   "zh": "来自合并前的小牧町。「小牧」一说古时海水到小牧山下，船人望山落帆，称「帆卷山」；一说中世这里马市兴盛，「驹来」转为「小牧」。",
+   "ja": "合併前の小牧町に由来する。「小牧」は、かつて海が小牧山の辺りまであり、船人が山を見て帆を巻いたことから「帆巻山」と呼んだ説と、中世に馬市が盛んで「駒来」が転じた説がある。",
+   "en": "From the pre-merger town of Komaki. One story: the sea once reached Mount Komaki, and sailors furled their sails (ho-maki) on sighting it; another: a medieval horse market — \"koma-ki\", horses coming."
+  },
+  "瀬戸市": {
+   "zh": "「濑户」原指「狭窄急流处豁然开朗的地方」，这里指山间溪流忽然开阔之处；另有由「陶处（すえと，陶器产地）」转来的说法。",
+   "ja": "「瀬戸」はもとは「狭く流れの急な所から開けた所に出る場所」の意で、山あいの川が急に開ける地勢による。「陶処（すえと）」が転じたとする説もある。",
+   "en": "\"Seto\" originally meant the spot where a narrow, fast stream opens out — as the valley does here. Another theory derives it from \"sueto\", a pottery place."
+  },
+  "あま市": {
+   "zh": "三町原属海部郡，把郡名「海部（あま）」改写成平假名。候选还有「西名古屋市」「名西市」「海东市」等，最后合并协议会定为「あま市」。",
+   "ja": "3町が属していた郡名「海部」をひらがなにしたもの。候補には「西名古屋市」「名西市」「海東市」などもあったが、合併協議会が「あま市」に決めた。",
+   "en": "The three towns belonged to Ama (海部) District, and the city took that name in hiragana. \"Nishi-Nagoya\", \"Meisei\" and \"Kaitō\" were also on the list before the merger council chose \"Ama\"."
+  },
+  "犬山市": {
+   "zh": "三说：适合带犬狩猎；平安时丹羽郡小野乡在山间，「小野山」转音；或从大县神社看此地在戌亥（西北）方向，「戌亥山」转为「犬山」。最早写作「犬山」的有 1336 年的《南山巡狩录》。",
+   "ja": "犬を使った狩りに適していた説、丹羽郡小野郷の「小野山」が転じた説、大縣神社から見て戌亥の方角にあたり「いぬいやま」が転じた説がある。「犬山」表記の最古期の文献に1336年の『南山巡狩録』などがある。",
+   "en": "Three theories: good hunting with dogs (inu); a corruption of \"Ono-yama\" from Ono township; or \"inui-yama\", the hill to the northwest (inui) of Ōagata Shrine. 犬山 appears as early as the Nanzan junshu-roku of 1336."
+  },
+  "知立市": {
+   "zh": "7 世纪后半的木简已写「知利布（ちりふ）」，8 世纪木简作「知立」。江户时代东海道宿场写作「池鲤鲋」，因知立神社的御手洗池里鲤鱼、鲫鱼多。另有来自神社祭神伊知理生命之说。",
+   "ja": "7世紀後半の木簡に「知利布」、8世紀の木簡に「知立」とある。江戸時代は東海道の宿場「池鯉鮒」として栄えた（知立神社の御手洗池にコイやフナが多かったため）。伊知理生命にちなむ説もある。",
+   "en": "Wooden tags of the late 7th century write \"Chirifu\" (知利布), those of the 8th \"知立\". As a Tōkaidō post town it was written 池鯉鮒 — \"pond of carp and crucian\" — after the fish in the shrine pond."
+  },
+  "清須市": {
+   "zh": "古地名。14 世纪中叶的《神凤钞》有「清须御厨」。「清须」「清洲」两种写法并存：《三河物语》写「清须」，《信长公记》写「清洲」；越早的文献越多写「清须」。",
+   "ja": "古くからの地名で、14世紀中頃の『神鳳鈔』に「清須御厨」とある。「清須」「清洲」が混在し、『三河物語』は「清須」、『信長公記』は「清洲」と書く。古い文献ほど「清須」が多い。",
+   "en": "An old name: the 14th-century Jinpōshō lists the \"Kiyosu estate\". Two spellings coexist — 清須 in the Mikawa Monogatari, 清洲 in the Shinchō Kōki — with older texts favouring 清須."
+  },
+  "豊明市": {
+   "zh": "一说取自 1800 年代初在今前后站附近开业的酿酒屋号「丰仓」与年号「明治」；《丰明町志》则说取自宫中的「丰明节会」，用两个吉字「丰」「明」。",
+   "ja": "1800年代初期から前後駅付近にあった酒造の屋号「豊倉」と元号「明治」から採ったとも伝わる。『豊明町誌』によれば宮中の「豊明節会」から嘉字の「豊」「明」を採ったという。",
+   "en": "Said to combine Toyokura, a sake brewery near today's Zengo Station from the early 1800s, with \"Meiji\"; the town history instead cites the palace harvest banquet Toyo-no-akari no sechie."
+  },
+  "みよし市": {
+   "zh": "传说来自僧人行观的家乡、三河国凤来寺附近的「三吉」，宽文年间（1661–1673）改写「三好」。",
+   "ja": "僧行観の出身地、三河国鳳来寺付近の「三吉」にちなむと言われ、寛文年間（1661〜1673）に「三好」と改められたという。",
+   "en": "Said to be named after Miyoshi near Hōrai-ji, home of the monk Gyōkan; the spelling 三好 dates from the Kanbun era (1661–1673)."
+  },
+  "愛西市": {
+   "zh": "位于「爱」知县「西」部。10 个候选都没过半数，最后「爱西市」与「海西市」决选投票定名。",
+   "ja": "「愛」知県の「西」部にあることから。10の候補で過半数を得たものがなく、「愛西市」と「海西市」の決選投票で決まった。",
+   "en": "In the west (sai) of Aichi (ai). None of ten candidates won a majority, so Aisai beat Kaisei in a run-off."
+  },
+  "田原市": {
+   "zh": "平安中期熊野修验者来此，用纪伊国的地名给村落起名；原地在今和歌山县串本町，附近的藏王山也是这样来的。",
+   "ja": "平安時代中期に熊野の修験者が流入し、紀伊国の地名にちなんで集落名をつけたという。故地は和歌山県串本町で、近くの蔵王山も同じ由来。",
+   "en": "Kumano mountain ascetics who arrived in the mid-Heian period named the settlement after a place in Kii — today's Kushimoto, Wakayama. Nearby Mount Zaō has the same origin."
   }
  },
  "26": {
@@ -405,6 +735,26 @@
    "zh": "「京都」原是泛指首都的普通名词；平安京长期是都城，才成了专指这里的地名。",
    "ja": "「京都」は本来「首府」の意の普通名詞で、平安京が長く都であったため固有名詞となった。",
    "en": "\"Kyōto\" was simply a word for \"capital\"; centuries as the seat of the court made it this city's name."
+  },
+  "舞鶴市": {
+   "zh": "原称「田边」，明治时为避开山城、纪伊的同名地，取田边城的雅称「舞鹤城」。城形南北长，从东边白鸟岭望去像鹤在起舞。",
+   "ja": "もとは「田辺」だったが、明治に山城・紀伊の同名地との重複を避け、田辺城の雅称「舞鶴城」から取った。南北に長い城形が東の白鳥峠から見ると鶴が舞うように見えたからという。",
+   "en": "Formerly Tanabe; in Meiji, to avoid confusion with the Tanabes of Yamashiro and Kii, it took the poetic name of Tanabe Castle, \"Maizuru\" — from Shiratori Pass to the east, the long castle looked like a dancing crane."
+  },
+  "木津川市": {
+   "zh": "取自流经市中央的木津川。合并协商时还有「山城市」「南京都市」「恭仁京市」等方案。",
+   "ja": "市の中央部を流れる木津川に由来する。合併協議では「山城市」「南京都市」「恭仁京市」などの案も出た。",
+   "en": "Named after the Kizu River through the middle of the city. \"Yamashiro\", \"Minami-Kyoto\" and \"Kunikyō\" were also proposed."
+  },
+  "福知山市": {
+   "zh": "一般认为是明智光秀平定丹波、开城下町时命名，最早见于《宗及茶汤日记》1581 年的记事。来自和泉式部和歌等说都没有根据。",
+   "ja": "明智光秀が丹波平定後に城と城下町を開いた際に命名したと考えられ、最古の確認は『宗及茶湯日記』の1581年の記事。和泉式部の歌から取ったなどの説はいずれも根拠がない。",
+   "en": "Probably named by Akechi Mitsuhide when he founded the castle town after taking Tanba; the earliest record is in Tsuda Sōgyū's tea diary for 1581. Theories tying it to a poem by Izumi Shikibu have no basis."
+  },
+  "京丹後市": {
+   "zh": "来自丹后国。京都府内为避重名多冠「京」，此市并无重名，但因合并的町里有个「丹后町」，可能出于对其他町的顾虑也冠了「京」——旧国名反倒成了被冠的一方。",
+   "ja": "丹後国に由来する。府内では重複回避で「京」を冠する所が多いが、当市は重複がないのに、合併した中に「丹後町」があったため他町への配慮からか「京」を冠した。旧国名が冠される側になった珍しい例。",
+   "en": "From Tango Province. Kyoto towns often add \"Kyō\" to avoid duplicate names; here there was no duplicate, but one merging town was already called Tango, so — perhaps out of tact — \"Kyō\" went on the front."
   }
  },
  "27": {
@@ -442,6 +792,16 @@
    "zh": "新市位于古代和泉国的中心，于是取国名为市名——合并申请书里写明的理由。",
    "ja": "市域が古代以来の和泉国の中心に位置することから、和泉国にちなんで名付けられた（合併申請書の選定理由）。",
    "en": "The merger application says it plainly: the new city lay at the heart of ancient Izumi Province, so it took the province's name."
+  },
+  "守口市": {
+   "zh": "说是丰臣秀吉筑大坂城时的「守口」（守卫之口）属于俗说。据市史，室町时已有「森口」「守口」两种写法，原是通往生驹山原始林的「森之口」，后因石山本愿寺、大坂城的关系变成带军事意味的「守口」。",
+   "ja": "大坂城築城に伴う「まもり口」説は俗説。市史によれば室町期にはすでに「森口」「守口」の両表記があり、生駒山地へ続く原生林の入口「森口」が、石山本願寺・大坂城との関係で軍事的な「守口」に変わったとする。",
+   "en": "The tale that it was Hideyoshi's \"guard gate\" for Osaka Castle is folklore. The city history finds both 森口 (\"forest mouth\", the way into woods running toward Mount Ikoma) and 守口 in Muromachi times; the military spelling won out with Ishiyama Hongan-ji and Osaka Castle."
+  },
+  "貝塚市": {
+   "zh": "原写作「海塚」，16 世纪后半一向宗建寺内町时已写「贝塚」；寺内町以外的旧村今天仍叫「海塚（うみづか）」。市内没发现带贝冢的遗址，与贝冢遗迹的关系无从证明。",
+   "ja": "もとは「海塚」の字が使われたが、16世紀後半に一向宗の寺内町がつくられた時には「貝塚」となっていた。寺内町以外の旧村は今も「海塚（うみづか）」。市域では貝塚を伴う遺跡は見つかっておらず、貝塚遺跡との関係は証明できない。",
+   "en": "Once written 海塚 (\"sea mound\"); by the time the Ikkō sect built its temple town in the late 16th century it was 貝塚 (\"shell mound\"). The surrounding old village is still Umizuka. No actual shell middens have been found here."
   }
  },
  "28": {
@@ -469,6 +829,16 @@
    "zh": "语源有几说：古代「丝海」入江的地形；位于段丘南北的「板」上；河边容易崩塌的地方。",
    "ja": "語源は諸説あり、太古の絲海（いとうみ）の入り江の地形による説、段丘の南北の板上に位置することによる説、川沿いの崩れやすい場所を意味する説などがある。",
    "en": "Several theories: the inlet of the ancient \"Itoumi\" sea, a site on the flat \"board\" of a river terrace, or a word for crumbling riverbanks."
+  },
+  "三田市": {
+   "zh": "旧市史说来自金心寺弥勒像体内所记恩田、悲田、敬田「三福田」，但新版市史调查时没能确认，现作为地方传说。已知最早的「三田村」见于 1477 年古文书。",
+   "ja": "金心寺の弥勒菩薩坐像の胎内に記された「三福田」（恩田・悲田・敬田）に由来するとされてきたが、新版『三田市史』の調査では確認できず、現在は伝承扱い。「三田村」の最古の記録は1477年の古文書。",
+   "en": "Long said to come from the \"three fields of merit\" written inside the Maitreya statue of Konshin-ji, but the new city history could not confirm it, and it is now treated as legend. \"Sanda Village\" first appears in a document of 1477."
+  },
+  "三木市": {
+   "zh": "传说神功皇后在君之峰休息时，当地人用壶献酒：「御酒（みき）」成了「三木」，「美壶（みつぼ）」成了郡名「美囊」。",
+   "ja": "神功皇后が君が峰で休んだ時、地元から壷に入れた酒を献上したため、御酒（みき）→三木、美壷（みつぼ）→美嚢となったと伝えられる。",
+   "en": "Legend says that when Empress Jingū rested here, locals offered sake (miki) in a fine jar (mitsubo) — giving Miki, and the district name Minō."
   }
  },
  "29": {
@@ -476,6 +846,11 @@
    "zh": "有力说法是这里地势平坦，像被「均（なら）」过一样；古时也写作「那罗」「宁乐」「平城」。",
    "ja": "平坦で均（なら）したような地形が由来とする説が有力。「那羅」「寧楽」「平城」とも書いた。",
    "en": "Most likely from the flat, \"levelled\" (nara-su) land; also written 那羅, 寧楽 and 平城."
+  },
+  "天理市": {
+   "zh": "来自天理教——教团本部在市中心的丹波市町，成市时教义也已普及一带。是 21 世纪日本唯一以宗教名为市名的市。",
+   "ja": "天理教に由来する。本部が市中心部の丹波市町にあり、市制時に一帯に普及していたことによる。21世紀の日本で市名に宗教名が冠されている唯一の市。",
+   "en": "Named after the Tenrikyō religion, whose headquarters stood in central Tanbaichi. It is the only city in Japan today named after a religion."
   }
  },
  "30": {
@@ -507,6 +882,16 @@
    "zh": "有几种说法：环绕吴的群山叫「九岭」，音讹为「くれ」（市章就是 9 个片假名「レ」组成的星形）；灰峰出产的板材「榑（くれ）」出名；或来自古代来自朝鲜半岛的「くれ人」。",
    "ja": "呉を囲む連峰「九嶺」がなまったという説（市章は「レ」9つで星形をかたどる）、灰ヶ峰から伐り出した板材「榑（くれ）」が名産だったという説、古代朝鮮半島から来た「くれ人」に由来する説がある。",
    "en": "Theories: the ring of hills called kyūrei (\"nine peaks\") was slurred into \"Kure\" (the city emblem is nine katakana レ forming a star); timber boards (kure) from Mount Hai; or the \"kure people\" who came from the Korean peninsula in ancient times."
+  },
+  "廿日市市": {
+   "zh": "来自中世以来在此开的「二十日之市」。镰仓时代严岛神社烧毁重建，铸物师等迁到对岸，物资在此集散；神社一年四次祭礼的最后一天都是二十日，于是每月二十日开市。",
+   "ja": "中世以来開かれた「廿日（はつか）の市」に由来する。鎌倉時代に焼失した厳島神社の再建で対岸に鋳物師らが移り住んで物資が集まり、年4回の祭礼の最終日がいずれも20日だったことから毎月20日に市が立った。",
+   "en": "From a market held on the 20th of each month since medieval times. After Itsukushima Shrine burned in the Kamakura period, metal-casters and goods gathered on the opposite shore for the rebuilding — and all four of the shrine's yearly festivals ended on the 20th."
+  },
+  "三次市": {
+   "zh": "古来的郡名，诸说：《和名抄》三次郡的上次、播次、下次三乡合称；河流汇集的「水寄（みよせ）」转音；「水」加古朝鲜语「村（すき）」的「水村」。",
+   "ja": "古代からの郡名で、『和名抄』三次郡の「上次・播次・下次」三郷を合わせたとする説、河川の集まる「水寄（みよせ）」の訛り説、「水」と古い朝鮮語の「すき（村）」による説がある。",
+   "en": "An ancient district name. Theories: the three townships Kamisuki, Hasuki and Shimosuki listed in the Wamyōshō; \"miyose\", where rivers gather; or \"mi\" (water) plus old Korean \"suki\" (village)."
   }
  },
  "37": {
@@ -533,6 +918,11 @@
    "zh": "室町时代已见「久留目」；语源有祭祀「玖留目神」、来自渡来的织工集团「呉部」等说法。",
    "ja": "室町時代から「久留目」とも書かれた。「玖留目神」を祀ったことから、渡来の機織り集団「呉部」から、など諸説。",
    "en": "Written 久留目 by the Muromachi period; explanations include the god Kurume and immigrant weavers (kurebe)."
+  },
+  "宗像市": {
+   "zh": "宗像三女神降临镇座时奉祀其形代（神体的替身），称「身之形」「身之像」，由此而来。",
+   "ja": "宗像三女神の降臨・鎮座に際してその形代を奉斎したことから「身の形」「身の像」と称したことによる。",
+   "en": "When the three Munakata goddesses descended and were enshrined, their stand-in images were worshipped as \"mi no kata\" — \"the form of the body\"."
   }
  },
  "3": {
@@ -619,6 +1009,41 @@
    "zh": "位于旧国「常陆」中心，又曾属那珂郡，故名。胜田市与那珂凑市合并时还有「常陆那珂市」「胜田凑市」等方案，最后定为县内第二个平假名市名。",
    "ja": "旧国名「常陸」の中心に位置し、那珂郡に属していたことにちなむ。勝田市と那珂湊市の合併では「常陸那珂市」「勝田湊市」なども候補に挙がったが、県内2番目のひらがな市名に落ち着いた。",
    "en": "At the centre of old Hitachi Province and once part of Naka District. Katsuta and Nakaminato also considered \"Hitachinaka\" in kanji or \"Katsutaminato\", but chose Ibaraki's second hiragana city name."
+  },
+  "土浦市": {
+   "zh": "说法不一：借用土浦村（今属美浦村）的名字；土屋藩的「土」加「浦」；或由「津津浦浦」转来。",
+   "ja": "土浦村（現在の美浦村）の名を借りた説、土屋藩の「土」と「浦」の合成説、「津々浦々」の転訛説などがある。",
+   "en": "Theories vary: borrowed from Tsuchiura Village (now part of Miho), the \"Tsuchi\" of the Tsuchiya domain plus \"ura\" (shore), or a corruption of tsutsu-uraura, \"every port and shore\"."
+  },
+  "筑西市": {
+   "zh": "意为「筑波山之西」。最后的候选还有「北筑波市」，取四个旧市町头一个音拼成的「しあわせ市（幸福市）」也一度呼声很高。",
+   "ja": "「筑波山の西」の意。最終候補には「北つくば市」もあり、4市町の頭文字を並べた「しあわせ市」も有力候補だった。",
+   "en": "\"West of Mount Tsukuba.\" Finalists included \"Kita-Tsukuba\", and a strong contender was \"Shiawase\" (happiness), spelled from the first syllables of the four merging towns."
+  },
+  "牛久市": {
+   "zh": "诸说，多半来自古语。龙崎市金龙寺的故事——懒小僧变成牛跳进沼里，「牛食沼」成了「牛久沼」——流传得像定说。另有「潮来（うしおく）」「鹈宿」等说。",
+   "ja": "諸説あるが古語に由来すると考えられる。龍ケ崎市の金龍寺に伝わる、怠け者の小僧が牛になって沼に身を投げ「牛食う沼」が「牛久沼」になったという昔話が真説のように流布している。「潮来（うしおく）」説、「鵜宿」説などもある。",
+   "en": "Probably from an old word, though no one is sure. A tale from Kinryū-ji — a lazy acolyte turned into a cow and drowned in the marsh, the \"cow-eating marsh\" — circulates almost as fact. \"Ushioku\" (tidal inlet) is another proposal."
+  },
+  "龍ケ崎市": {
+   "zh": "一般认为来自地头下河边政义：他因是源义经的姻亲被没收领地后改姓「龙崎」。另有龙卷风多、龙从天降之地的前端等说。",
+   "ja": "地頭の下河辺政義が源義経の姻戚であったことから所領を没収され、のちに龍崎と称したことに由来するとされる。竜巻が多かった説、龍が降ってきた地の先だった説などもある。",
+   "en": "Usually traced to the land steward Shimokōbe Masayoshi, who lost his lands as an in-law of Minamoto no Yoshitsune and took the name Ryūzaki. Other tales involve frequent tornadoes or a dragon falling from the sky."
+  },
+  "守谷市": {
+   "zh": "三说都不确定：日本武尊见森林惊叹「森なる哉」；平将门筑城时说这里是「易守之谷」（但守谷城其实是后来的相马氏所筑）；或郡衙、屯仓所在，「守护者」转音。",
+   "ja": "日本武尊が森を見て「森なる哉」と言った説、平将門が築城の際「守るに易き谷」と評した説（守谷城は後世の相馬氏の築城とみられる）、郡衙・屯倉があり「まもりびと」から転じた説の3つがあるが、正確には分からない。",
+   "en": "Three unproven stories: Yamato Takeru marvelling at the forest (\"mori naru kana\"); Taira no Masakado calling it \"a valley easy to defend\" (though the castle was built later by the Sōma); or guards (mori) of a district office."
+  },
+  "坂東市": {
+   "zh": "「坂东」本是关东全境的古称：以足柄岭、碓冰岭为「坂」，以东诸国为「坂之东」。市位于关东中央，2003 年选定；也取自利根川的爱称「坂东太郎」。",
+   "ja": "「坂東」は本来、関東全体の古名で、足柄峠や碓氷峠を「坂」とし、その東の諸国を「坂の東」とした。関東のほぼ中央に位置することから2003年に選定。利根川の愛称「坂東太郎」にも由来する。",
+   "en": "\"Bandō\" was the old name for the whole Kantō — the lands east of the \"slopes\" of the Ashigara and Usui passes. Chosen in 2003 for a city near the region's centre, it also echoes \"Bandō Tarō\", the Tone River's nickname."
+  },
+  "つくばみらい市": {
+   "zh": "全境原属筑波郡，加上筑波快线的站名「みらい平（未来平）」。用与地名方位无关的「未来」作市名前所未有，也是日本字数最多（6 字）的市名之一。",
+   "ja": "市内全域が筑波郡だったことと、つくばエクスプレスの駅名「みらい平」による。地名や方角と関係のない「みらい」を市名に用いたのは前例がなく、日本一文字数の多い（6文字）市名の一つ。",
+   "en": "The whole area was Tsukuba District, and \"Mirai-daira\" is its Tsukuba Express station. A city name containing \"future\" (mirai) was unprecedented — and at six kana it is among Japan's longest."
   }
  },
  "25": {
@@ -626,6 +1051,31 @@
    "zh": "近江大津宫废弃后，这里只被叫作「古津（旧都的港）」；794 年迁都平安京，大津成了京城的外港，「大津」之名随之恢复。",
    "ja": "近江大津宮が廃された後は「古津」（旧首都の港）と呼ばれたが、794年の平安京遷都に伴いその外港「大津」として復活した。",
    "en": "After the Ōmi-Ōtsu palace was abandoned the place was called Furutsu, 'the old capital's harbour'; with the move to Heian-kyō in 794 it revived as Ōtsu, the new capital's port."
+  },
+  "長浜市": {
+   "zh": "原称「今滨」，约 1575 年羽柴秀吉改名「长滨」。有说「长」取自其主君织田信长，但无从证实。",
+   "ja": "もとは「今浜」で、1575年頃に羽柴秀吉が「長浜」と改称したとされる。「長」は主君織田信長から取ったという説もあるが、因果関係は不明。",
+   "en": "Originally Imahama; Hashiba (Toyotomi) Hideyoshi renamed it Nagahama around 1575. Some say the \"naga\" honours his lord Oda Nobunaga, but there is no proof."
+  },
+  "彦根市": {
+   "zh": "天照大神之子活津彦根命被奉祀在彦根山（后来筑彦根城的湖畔山），地名由此而来。",
+   "ja": "天照大御神の御子・活津彦根命が彦根山（のちに彦根城が築かれた湖岸の山）に祀られたことに由来するとされる。",
+   "en": "Ikutsuhikone, a child of the sun goddess Amaterasu, was enshrined on Mount Hikone — the lakeside hill where Hikone Castle was later built."
+  },
+  "甲賀市": {
+   "zh": "「こうか」的读法来自古代统治此地的百济系豪族鹿深（かふか）氏。车站等公共设施读「こうか」，但姓氏和民间名称里读「こうが」的也不少。",
+   "ja": "「こうか」の読みは、古代に甲賀地域を治めた百済系豪族の鹿深（かふか）氏に由来するとされる。公共施設は「こうか」だが、名字や民間では「こうが」と読む例も少なくない。",
+   "en": "The reading \"Kōka\" is traced to the Kafuka (鹿深) clan of Baekje descent who ruled here in ancient times. Public facilities say \"Kōka\", but surnames and businesses often say \"Kōga\"."
+  },
+  "守山市": {
+   "zh": "一说来自守护琵琶湖对岸比叡山的寺院东门院；一说来自附近都贺山的「山守」。",
+   "ja": "琵琶湖の対岸の比叡山を守る寺であった東門院に由来する説と、近辺の都賀山の山守に由来する説がある。",
+   "en": "Either Tōmon-in, a temple that \"guarded\" (mori) Mount Hiei across Lake Biwa, or the keepers (yamamori) of nearby Mount Tsuga."
+  },
+  "近江八幡市": {
+   "zh": "地名来自日牟礼八幡宫。1954 年成市时福冈县已有八幡市，于是冠上旧国名「近江」；后来福冈的八幡市并入北九州市，1977 年京都府的八幡市成立时就不必回避了——先成市的反而带了冠称。",
+   "ja": "地名のもとは日牟禮八幡宮。1954年の市制時に福岡県八幡市があったため旧国名「近江」を冠した。その後福岡の八幡市は北九州市に合併して消え、1977年に京都府八幡市ができた時は同名回避が行われず、先に市制を敷いた側が冠称を付けるねじれが生じた。",
+   "en": "Named after Himure Hachiman Shrine. Fukuoka already had a Yahata City in 1954, so the new city added the province name Ōmi. Fukuoka's Yahata later merged into Kitakyūshū, and when Kyoto's Yawata became a city in 1977 no prefix was needed — so the older city carries one and the newer does not."
   }
  },
  "32": {
@@ -647,6 +1097,16 @@
    "zh": "古时「鹿儿岛」指的是樱岛。名字来历诸说：野生的小鹿很多；来自指火山的词「カグ」；住着许多水手（かこ）等。",
    "ja": "古くは桜島を鹿児島と呼んでいたという。名の由来は、野生の鹿の子が多かった、火山を意味する「カグ」から、水夫（かこ）が多く住んでいたからなど諸説ある。",
    "en": "The name once referred to Sakurajima. Explanations include many fawns (kago), a word kagu meaning volcano, and the many sailors (kako) who lived here."
+  },
+  "鹿屋市": {
+   "zh": "据《鹿屋市史》有几说：《古事记》《日本书纪》里熊袭首领「鹿文（かや）」之名；周边多生的茅草；或鹿多。平安初已有「かのや」之称。",
+   "ja": "『鹿屋市史』によれば、記紀に登場する熊襲の首長「鹿文（かや）」の名による説、茅の転訛説、鹿が多かった説がある。平安時代初期には「かのや」と呼ばれていた。",
+   "en": "The city history gives several: the Kumaso chieftain Kaya (鹿文) of the ancient chronicles; the thatch grass (kaya) that grew around; or plentiful deer. The name \"Kanoya\" was in use by the early Heian period."
+  },
+  "姶良市": {
+   "zh": "来自姶良郡。古代大隅国的「姶罗郡」其实在今鹿屋一带，这里本属桑原郡；江户时起桑原郡西部被叫成「始罗郡」，与古「姶罗郡」混同，明治初正式定为姶良郡。",
+   "ja": "姶良郡に由来する。古代大隅国の姶羅郡は今の鹿屋市周辺で、この辺りは桑原郡だったが、江戸時代頃から桑原郡西部を「始羅郡」と呼ぶようになり、古い姶羅郡と混同されて明治初期に姶良郡が正式名となった。",
+   "en": "From Aira District — by a mix-up. Ancient Aira was around Kanoya; this area was Kuwabara District, whose west came to be called \"Shira\" in the Edo period. Confused with old Aira, it became officially Aira in early Meiji."
   }
  },
  "18": {
@@ -661,6 +1121,11 @@
    "zh": "1585 年蜂须贺家政筑城时，把城周围叫「渭津」的地方改名「德岛」，谁起的名、为什么这样叫，史料没有交代。之后一度改回渭津，1678 年第 5 代藩主纲矩再改为德岛，沿用至今。",
    "ja": "天正13年（1585）、蜂須賀家政が築城した際、城の周囲の「渭津」を「徳島」と改めた。命名者や理由は史料からは分からない。その後いったん渭津に戻され、延宝6年（1678）に5代藩主綱矩が再び徳島と改めて定着した。",
    "en": "In 1585, when Hachisuka Iemasa built his castle, the area called Inotsu was renamed Tokushima; who chose the name, and why, is not recorded. It later reverted to Inotsu until the fifth lord, Tsunanori, restored Tokushima in 1678."
+  },
+  "鳴門市": {
+   "zh": "「鸣门」是漩涡轰鸣的海峡。合并时中心的抚养町和观潮的鸣门町争执不下，妥协定为「鸣南市」，市民不满，仅两个月就改为「鸣门市」。",
+   "ja": "「鳴門」は渦潮の轟音が鳴る瀬戸の意。合併時、中心市街の撫養町と観光の鳴門町の調整が難航し「鳴南市」で妥協したが、市民に不評で2ヶ月で鳴門市に改称した。",
+   "en": "\"Naruto\" is the strait where the whirlpools roar. At the merger, Muya and Naruto towns compromised on \"Meinan\" — so unpopular that it was changed to Naruto after just two months."
   }
  },
  "38": {
@@ -668,6 +1133,16 @@
    "zh": "1603 年加藤嘉明筑城，城地取名「松山」。为什么用「松」有两说：城山上种着许多松树；或取德川一门松平家的「松」字（江户时代《予阳郡乡俚谚集》）。",
    "ja": "慶長8年（1603年）、加藤嘉明が築いた城地にちなんで名付けられた。「松」の由来には、城山に松が多く植えられていたという説と、徳川一門の松平家の「松」を取ったという説（『予陽郡郷俚諺集』）がある。",
    "en": "Named in 1603 after the castle site built by Katō Yoshiaki. Two explanations for the \"pine\": the castle hill was planted with many pines, or the character came from the Tokugawa-related Matsudaira family (per the Edo-period Yoyō gungō rigenshū)."
+  },
+  "新居浜市": {
+   "zh": "奈良末期神野郡的郡家移到今新居浜市中村一带；平安初神野郡改称新居郡，靠海的北部后来叫「新居滨」。",
+   "ja": "奈良時代末に神野郡の郡家が今の新居浜市中村付近に移り、平安初めに神野郡が新居郡となって、海に近い北部が「新居浜」と呼ばれるようになった。",
+   "en": "The office of Kanno District moved to today's Nakamura area late in the Nara period; early in the Heian period the district was renamed Nii, and its northern shore became \"Nii-hama\" (Nii beach)."
+  },
+  "西条市": {
+   "zh": "镰仓时代的庄园名里已有「西条」，后为西条藩所承袭；《予章记》记河野通信因军功受赐「新居西条之乡」。2003 年合并公开征名，「西条市」占有效件数 65%，胜过「石鎚市」等候选。",
+   "ja": "鎌倉時代の荘園名に見え、西条藩にも受け継がれた。『予章記』には河野通信が軍功で「新居西条の郷」を賜ったとある。2003年の合併の公募では「西条市」が有効件数の65%を占め、「石鎚市」などを退けた。",
+   "en": "A medieval estate name later taken by the Saijō domain; the Yoshōki records Kōno Michinobu receiving \"the Saijō township of Nii\" for war service. In the 2003 merger contest Saijō won 65% of valid entries, beating Ishizuchi and others."
   }
  },
  "42": {
@@ -696,6 +1171,16 @@
    "zh": "来自表示渔场的「魚場（なは）」，是伊波普猷的说法，那霸市官网也介绍。",
    "ja": "漁場を表す「魚場（なは）」から。伊波普猷の唱えた説で、那覇市のサイトでも紹介されている。",
    "en": "From naha, \"fishing ground\" — Iha Fuyū's explanation, also given by the city."
+  },
+  "沖縄市": {
+   "zh": "科扎市与美里村合并时公开征名，从 161 种方案中选出「冲绳市」，合并申请书说要建设冲绳的中枢都市。应征名里还有后来成了别的市名的「うるま」。",
+   "ja": "コザ市と美里村の合併で公募し、161種の案から「沖縄市」を選んだ。合併申請書は「沖縄の中枢都市建設」を理由に挙げる。応募には後に別の市名となる「うるま市」もあった。",
+   "en": "When Koza City and Misato Village merged, a public contest of 161 names chose \"Okinawa City\", meant to become the island's central city. \"Uruma\", later another city's name, was among the entries."
+  },
+  "うるま市": {
+   "zh": "冲绳古语「珊瑚之岛」（ウル＝珊瑚，マ＝岛），是与「琉球」并称的冲绳雅名，汉字写作「宇流麻」。直接拿方言作市名很少见。",
+   "ja": "沖縄の古い言葉で「サンゴの島」（ウル＝サンゴ、マ＝島）。「琉球」と並ぶ沖縄の雅名で、漢字では「宇流麻」と書く。方言をそのまま市名にした珍しい例。",
+   "en": "Old Okinawan for \"coral island\" (uru = coral, ma = island), a poetic name for Okinawa alongside \"Ryūkyū\", written 宇流麻 in kanji — a rare city named straight from the local language."
   }
  },
  "45": {
@@ -703,6 +1188,13 @@
    "zh": "1375 年北乡义久在都岛筑城居住，称「都岛之城（都之城）」，市名由此而来。",
    "ja": "1375年に北郷義久が都島に居城として整備した「都島の城（都之城）」に由来する。",
    "en": "From Miyako-no-jō, the castle Hongō Yoshihisa built at Miyakoshima in 1375."
+  }
+ },
+ "5": {
+  "横手市": {
+   "zh": "最早见于 1353 年箟峯寺观音像体内经文的「山北平贺横手」。江户时代来访的菅江真澄推测来自防洪的「横土堤（よこどて）」；另有只是「横向方向的村落」之说。",
+   "ja": "初見は1353年の箟峯寺十一面観音像の胎内経の「山北平賀横手」。江戸時代に訪れた菅江真澄は、洪水を防ぐ「横土手（よこどて）」が転じたのではと書き残した。単に「横の方向にある集落」とする説もある。",
+   "en": "First recorded in 1353, in a sutra inside a Kannon statue at Nonodake-ji. The Edo traveller Sugae Masumi guessed at \"yokodote\", a cross-levee against floods; others read it simply as \"the settlement off to the side\"."
   }
  }
 }

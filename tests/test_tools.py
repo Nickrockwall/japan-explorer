@@ -17,6 +17,7 @@ import build_bundle  # noqa: E402
 import build_fonts  # noqa: E402
 import build_sw  # noqa: E402
 import fetch_domains  # noqa: E402
+import pack_geo  # noqa: E402
 
 
 class FetchDomains(unittest.TestCase):
@@ -89,6 +90,25 @@ class ServiceWorker(unittest.TestCase):
     def test_render_roundtrip(self):
         paths = build_sw.shell()
         self.assertEqual(re.findall(r"'([^']+)'", build_sw.render(paths)), paths)
+
+
+class PackGeo(unittest.TestCase):
+    def test_roundtrip(self):
+        g = {'type': 'Feature', 'properties': {'coords': [135.5, 34.7], 'old_districts': [['乙訓郡', False], ['葛野郡', True]]},
+             'geometry': {'type': 'Polygon', 'coordinates': [[[135.001, 34.999], [135.002, 35.0], [-0.001, 0.0], [135.001, 34.999]]]}}
+        p = pack_geo.pack(g)
+        self.assertEqual(p['properties'], g['properties'])  # 单点与 [名字, 布尔] 不是坐标串
+        self.assertEqual(p['geometry']['coordinates'][0], {'_d': [135001, 34999, 1, 1, -135003, -35000, 135002, 34999]})
+        self.assertEqual(pack_geo.unpack(p), g)
+
+    def test_rejects_more_decimals(self):
+        with self.assertRaises(ValueError):
+            pack_geo.pack([[135.0001, 35.0], [135.0, 35.0]])
+
+    def test_packs_up_to_date(self):
+        for src in pack_geo.sources()[:2]:
+            with open(os.path.join(ROOT, pack_geo.pack_path(src)), encoding='utf-8') as f:
+                self.assertEqual(f.read(), pack_geo.packed_text(src), '跑 python -X utf8 tools/pack_geo.py')
 
 
 class Yurai(unittest.TestCase):

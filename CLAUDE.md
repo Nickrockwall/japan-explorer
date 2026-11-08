@@ -11,7 +11,7 @@
 - **当前地图**（`src/js/country.js`）：`MAPS` 登记各地图的 GeoJSON、数据目录、单元数与存储键前缀（日本 = `src/data`、`je.`，与改造前完全相同）。页面加载时由 `pickMap(hash, 上次的地图)` 定下：链接里 `map=` 是已登记的键 → 用它；否则链接带 `pref=`（老链接都是日本）→ 日本；否则上次看的地图（`je.ui.map`）；都没有 → 日本。日本以外的地图在 `stateHash` 里写 `map=`，日本链接不带。切换地图走整页重载（与切换语言相同）。数据路径一律写成 `${MAP.data}/…`，不要再写死 `src/data/`。
 - 日文 → 简体：`build_bundle.ja_to_zh_table()` 把 search.js 的对照表反过来用，只收 GB 2312 里有的字（对照表也有异体字，反用曾把崎写成﨑、富写成冨），另把 zhconv 的「㭴」改回「樫」；han_tool / sengoku_tool / rulers_tool 的 `JA_ZH` 都从它来，`check_han` 核对藩名与藩主中文名里没有这几个字。
 - **数据打包（改数据后必做）**：`python tools/build_bundle.py` 把每种语言的 47 县 + 合战/时代数据合并成 `src/data/bundle/{zh,en,ja}.json`（每种语言 1 个请求）。前端优先读 bundle，读不到才回退为逐个文件加载——所以**改了 JSON 却忘记重新打包，线上会继续显示旧内容**。
-- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。`SHELL` 由 `python -X utf8 tools/build_sw.py` 生成（src/js 下全部模块含 `lang/`，加上 index、css、ECharts、字体 CSS、japan.json、图标），列表变化时自动把 `VERSION` 加一；新增 / 删除 / 改名模块后跑它，`check_data.check_shell` 核对。图标在 `src/assets/icons/`：标志是朱印里的列岛剪影（3.26 起，替换以前的「古」与「旅」），`python -X utf8 tools/make_icons.py` 从 japan.json 生成 `seal.svg`（顶栏左上角 `.brand-seal`）、`favicon.svg`（剪影加粗、去掉内框，16px 也认得）与各尺寸 PNG（主屏幕图标是纸色底；maskable 版印缩在中间 60%）。分享卡片封面 `src/assets/og-cover.png`（1200×630）。
+- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。`SHELL` 由 `python -X utf8 tools/build_sw.py` 生成（src/js 下全部模块含 `lang/`，加上 index、css、ECharts、字体 CSS、japan.pack.json、图标），列表变化时自动把 `VERSION` 加一；新增 / 删除 / 改名模块后跑它，`check_data.check_shell` 核对。图标在 `src/assets/icons/`：标志是朱印里的列岛剪影（3.26 起，替换以前的「古」与「旅」），`python -X utf8 tools/make_icons.py` 从 japan.json 生成 `seal.svg`（顶栏左上角 `.brand-seal`）、`favicon.svg`（剪影加粗、去掉内框，16px 也认得）与各尺寸 PNG（主屏幕图标是纸色底；maskable 版印缩在中间 60%）。分享卡片封面 `src/assets/og-cover.png`（1200×630）。
 - 必须通过 HTTP 服务器访问（`fetch` 读取 JSON），不能直接双击 `file://` 打开：
   - `python3 -m http.server 8000`（Windows 用 `python`）或 `npx serve .`
 - 浏览器本地存储（`localStorage`）：
@@ -44,7 +44,7 @@ src/js/guide.js                右下：AI 案内人（史官/名将双模式、
 src/js/goshuin.js              御朱印帐弹窗（47 格、按地方筛选）
 src/js/crests.js               家纹/神纹 SVG 印纹库（crestSVG(code)）
 src/js/audio.js                和风音频单例：Web Audio 合成音效与背景音乐（可选 mp3 见 src/assets/audio/）
-src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, nam, nam_ja；name = 规范汉字全称如「京都府」，须与县数据 name.kanji 及 ECharts series.data.name 严格一致）
+src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, nam, nam_ja；name = 规范汉字全称如「京都府」，须与县数据 name.kanji 及 ECharts series.data.name 严格一致）；网站下载的是 japan.pack.json（见下「地图文件压缩」）
 src/data/index.json            47 县清单（id, slug, file, kanji, zh, region）
 src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3.14 加了大正·昭和前期 1912–1945）+ historic_battles（5 场合战）
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
@@ -84,7 +84,7 @@ tools/main_gun.json            户籍江户一段的主要郡 / 整市 / 江户�
 tools/mura.json                1889 年町村制时今属各市区町村的町村（tools/fetch_mura.py）
 tools/seats.json               城下町：存续藩的藩厅落在哪个市区町村（tools/fetch_seats.py，build_bundle 并进 main_gun 的 seat）
 tools/wiki_revisions.json      各数据工具读过的维基条目版本号（pilgrimage_tool.record_revisions）
-tools/yurai.json               地名的来历 124 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
+tools/yurai.json               地名的来历 222 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
 tools/kyudaka.json             今天各市区町村里幕末各村的领主与石高合计（tools/fetch_kyudaka.py，歴博《旧高旧領取調帳データベース》）
 tools/wamyo.json               《和名类聚抄》各郡的郷与读音、市区町村 → 古郡（tools/fetch_wamyo.py，奈文研「古代地名検索システム」）
 tools/codh.py                  CODH 数据的共用读法：TopoJSON → shapely、按面积对到今天的市区町村、按坐标定位、nrct 村坐标
@@ -331,7 +331,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 明治町村补全（3.20）：fetch_mura 末尾 `codh_villages(index)` 读 CODH 1920 年各县 TopoJSON（`.cache/codh/1920_NN.topojson`），成立日在 1888–1908 年的町村按面积记给今天的市区町村（≥90% 算整个，其余 ≥15% 的各记一份标「一部」），只补维基没收的市区町村，并打印两边都有时的吻合率（约 78%，对不上的多是 1920 年前已并掉的）。维基分错的也拿它改：同县、同郡、同名、町村制时成立的町村在 1920 年里恰好一个且整个落在另一个市区町村、维基分给的市区町村里没有同名町村时，挪过去并打印（3.21 改了 10 处）。CODH nrct 数据的「都道府県コード」是《大系》卷号（京都以后错开），`nrct_points()` 只按名字取，调用方按坐标核对。
 - 古代乡名（3.20）：`python -X utf8 tools/fetch_wamyo.py` 按旧国检索奈文研系统（POST 检索词后同一会话 GET 结果页，缓存 `.cache/wamyo/`；三河在系统里写参河），只收《和名类聚抄》本身的郷（不收标 ＊△☆ 的、驿名）。市区町村 → 古郡：主要郡或第一个整体属于的明治旧郡（只部分属于几个郡的不写），异体字 `canon()`、去方位字、`RENAME`（足柄上 → 足上、春日井 → 春部…）。户籍在律令之后加 `wamyo` 一栏（印「郡」，中日文附假名、英文附罗马字——build_bundle 的 `romaji()`），此地年表古代一行带郡与乡数。
 - 藩主年份的英文维基来源（3.20）：han_tool 的 `en_tables` 取日文藩条目语言链接到的英文条目，读藩主表里 `{{nihongo|…|汉字名}}` 那一行的「起–止」，只给前面各来源都没有年份的藩主用，检查与 Wikidata 一样（缓存 `.cache/han/en_tables.json`）。
-- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf 逐页取、出错的页跳过；装了 truststore 就用系统证书库，大分市官网证书链不完整要靠它）。3.25 加了人口 15 万以上、日文维基条目里写了来历一节的 50 个市区（东京特别区的条目名带「 (東京都)」，第三项写条目名），共 124 条。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
+- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf 逐页取、出错的页跳过；装了 truststore 就用系统证书库，大分市官网证书链不完整要靠它）。3.25 加了人口 15 万以上、日文维基条目里写了来历一节的 50 个市区（东京特别区的条目名带「 (東京都)」，第三项写条目名）；3.27 再加人口 5〜15 万、条目里有「市名の由来」一类小节且写清楚了的 98 个市，共 222 条（候选按人口列出后人工挑：只有町名列表、读音说明的小节不收）。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
 - 幕末领主一栏下面按郡里出现的藩（`findHan`：按当前语言名字匹配，去掉旧国名的也认，本县与存续藩优先）列出可展开的历代藩主（`kosekiHanHTML`，存图里不画）。
 - 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
 
@@ -392,7 +392,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 ## 地图状态与互斥（map.js `state` + app.js `app`）
 
 着色优先级：**合战沙盘 > 风土图层（拉面/地酒）> 时代滑块 > 时空滤镜**。
-- 时空滑块的「战国」与「战国势力」滤镜是同一张图（3.26 合并）：`setEra` 到 `SG_ERA` 时记下原来的滤镜（`sgPrevFilter`），换成 `sengoku` 滤镜、`map.setEra(null)`（由战国势力图着色，时代的按县 1572 着色不再用），横幅、刻度、实权照常；离开战国或退出时空穿越时换回原来的滤镜。点「战国势力」按钮 = 把滑块拖到战国（`applyFilter('sengoku')` → `setEra(SG_ERA)`）；上次停在战国势力的，打开页面时滑块也在战国。时空穿越时其余滤镜按钮变暗，「战国势力」仍亮。向导的快捷提问里战国国 / 家（`q.sg`）排在时代的「谁在掌权」前面。smoke `sengoku_era`。
+- 时代与滤镜是同一张图的有三处：战国 = 战国势力（3.26）、奈良 = 五畿七道（真实旧国底图）、现代 = 现代区划（3.27），写在时代数据的 `filter` 字段（这三个时代没有 `legend` / `prefecture_keys` / `prefecture_colors`，`check_events` 核对）。`setEra` 到这些时代时记下原来的滤镜（`eraPrevFilter`），换成对应滤镜、`map.setEra(null)`（由滤镜着色），横幅、刻度、实权照常；离开或退出时空穿越时换回原来的滤镜。点这三个滤镜按钮 = 把滑块拖到对应时代（`applyFilter` → `setEra(eraOfFilter(m))`）；上次停在这几个滤镜的，打开页面时滑块也在对应时代。时空穿越时只有对应滤镜的按钮亮。战国时代写 1467–1600（地图到关原为止；各县时间轴的战国一段仍是 1467–1590）。`map_filters.sengoku_1572` 仍保留：战国数据下载失败时按县着色、户籍的退路。向导的快捷提问里战国国 / 家（`q.sg`）排在时代的「谁在掌权」前面。smoke `sengoku_era`。
 
 - 风土图层：`history | ramen | sake`。非历史图层时隐藏滤镜与时代滑块，详卡顶部换成拉面解构图 / 酒标卡；切回历史图层时滤镜与时代原样恢复。
 - 时代滑块：拖动/点刻度/播放即进入「时空穿越」（`body.time-travel`），按时代 `prefecture_colors` 着色并在 `capital.coords` 放脉冲点；报幕横幅多一行「实权」（`.pw-line`，固定一行高、放不下省略、全文在 title；手机上固定两行高）：`powerChain(regimes, era)` 取 `regimes.json` 里与这个时代的年份（`years` 的「起–止」）重叠的各段短名（`short`），第一次进时空穿越才下载 regimes，到了补进横幅；点任一滤镜或 × 退出。选中县时高亮对应 `timeline_stage`。
@@ -401,6 +401,10 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 飞线 `effect.trailLength` 必须为 0：拖尾会开启 zlevel 运动模糊，缩放时留残影。
 - 各地图的 `geo` 必须设 `animationDurationUpdate: 0`：ECharts 在 setOption（改中心 / 缩放、重设着色）时会用全局的 update 动画把底图 group 滑向新位置，而拖动只直接改 group；动画途中一拖，动画结束时把底图拉回旧目标，填色就与 `animation: false` 的叠加层（线、国名、图钉、旗）永久错开。smoke `map_sync` 核对。
 - 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线（系统字体）用于正文。
+
+## 地图文件压缩（pack_geo.py，3.27）
+
+网站下载的 GeoJSON 都是 `.pack.json`：japan、provinces、province_eras、sengoku_units 与 municipalities/NN。`python -X utf8 tools/pack_geo.py` 把每串坐标（环 / 折线）改写成 `{_d: [x0, y0, dx, dy, …]}`（3 位小数 ×1000 的差分整数），无损，前端 `store.js` 的 `unpack` / `fetchGeo` 还原（muni.js、locate.js 也用）；日本全图 gzip 后 292 → 115 KB，51 个文件 6.8 → 2.7 MB。源文件不动，各工具照旧读源文件；**改了源 GeoJSON（build_provinces / build_municipalities）后重跑 pack_geo**，`check_data.check_packs` 与单元测试核对。半岛模式的文件没压（`unpack` 对普通 JSON 原样返回）。
 
 ## 市区町村下钻（muni.js）
 
@@ -526,6 +530,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `sengoku` 的年表先是实权 20 段再换天皇页
   - `sengoku`（默认 1560 年居首的家是三好 9 国、图例最多 13 项加「其余」、1600 年 7 类（含阿伊努的土地）西军 39 块东军 53 块、甲斐 6 个年份 1573 胜赖、人物简卡与详写（信玄肖像 / 三方原 / 相关人物谦信）、年表天皇 126 行将军 41 届、点义满开人物卡并返回年表、Esc、离开后隐藏；三语与横屏都跑）
   - `sengoku_clan`（深链接 1573 武田总览：3 国 + 2 分治、5 根柱、接壤首位北条、注明 1598
+  - `sengoku_era`（滑块到战国 = 战国势力、离开换回；奈良 = 五畿七道旧国底图且图例 ≥8 项、现代 = 现代区划、平安时没有滤镜亮着；点五畿七道按钮滑块到奈良）
   - `sengoku_link`（深链接 1600 美浓弹卡、换年份改地址栏、Esc 去掉 sgp、宽屏向导首个快捷提问问 1600 年）
   - `sengoku_ou`（深链接 1582 伊达总览 5 块不含伊具、石高「—」不排名、注明按郡、底图有津轻与和人地而无陆奥；津轻 1573 南部与津轻分治、1582 津轻）
   - `sgedges` 有内容、家纹旗含武田织田、标题家纹与许可；点柱子换 1560、点接壤的家换人、图例点织田 1582 居首、换 1600 后收起且无旗；三语三种尺寸）

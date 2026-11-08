@@ -33,39 +33,7 @@
         "name": "Heijō-kyō, Yamato",
         "description": "The capital moved to Heijō-kyō in 710 and the Great Buddha of Tōdai-ji was consecrated — the high point of the ritsuryō state"
       },
-      "banner": "The Five Home Provinces and Seven Circuits take shape, each province with its own capital",
-      "legend": [
-        {
-          "label": "Kinai"
-        },
-        {
-          "label": "Tōkaidō"
-        },
-        {
-          "label": "Tōsandō"
-        },
-        {
-          "label": "Hokurikudō"
-        },
-        {
-          "label": "San'indō"
-        },
-        {
-          "label": "San'yōdō"
-        },
-        {
-          "label": "Nankaidō"
-        },
-        {
-          "label": "Saikaidō"
-        },
-        {
-          "label": "Fortified frontier (Emishi lands)"
-        },
-        {
-          "label": "Beyond the realm"
-        }
-      ]
+      "banner": "The Five Home Provinces and Seven Circuits take shape, each province with its own capital"
     },
     {
       "name": "Heian period (794–1185)",
@@ -161,66 +129,13 @@
       ]
     },
     {
-      "name": "Sengoku period (1467–1590)",
+      "name": "Sengoku period (1467–1600)",
       "short": "Sengoku period",
       "capital": {
         "name": "Kyoto (Nijō Palace)",
         "description": "Kyoto remained the nominal center, but real power lay with Oda Nobunaga and the other warlords"
       },
-      "banner": "Warring lords — pick one of six moments from 1467 to 1600 above, and tap a province to see who held it",
-      "legend": [
-        {
-          "label": "Oda–Tokugawa alliance"
-        },
-        {
-          "label": "Takeda"
-        },
-        {
-          "label": "Uesugi"
-        },
-        {
-          "label": "Later Hōjō"
-        },
-        {
-          "label": "Date"
-        },
-        {
-          "label": "Satake & northern Kantō lords"
-        },
-        {
-          "label": "Lords of Ōu"
-        },
-        {
-          "label": "Asakura"
-        },
-        {
-          "label": "Ikkō sect (Hongan-ji)"
-        },
-        {
-          "label": "Miyoshi & Matsunaga"
-        },
-        {
-          "label": "Mōri"
-        },
-        {
-          "label": "Chōsokabe"
-        },
-        {
-          "label": "Ōtomo"
-        },
-        {
-          "label": "Ryūzōji"
-        },
-        {
-          "label": "Shimazu"
-        },
-        {
-          "label": "Fragmented local powers"
-        },
-        {
-          "label": "Ezo · Ryukyu"
-        }
-      ]
+      "banner": "Warring lords — pick one of six moments from 1467 to 1600 above, and tap a province to see who held it"
     },
     {
       "name": "Edo period (1603–1868)",
@@ -313,33 +228,7 @@
         "name": "Tokyo (Nagatachō)",
         "description": "Nagatachō, home of the National Diet — the political heart of modern Japan"
       },
-      "banner": "Postwar Japan: eight regions and 47 prefectures",
-      "legend": [
-        {
-          "label": "Hokkaidō"
-        },
-        {
-          "label": "Tōhoku"
-        },
-        {
-          "label": "Kantō"
-        },
-        {
-          "label": "Chūbu"
-        },
-        {
-          "label": "Kinki"
-        },
-        {
-          "label": "Chūgoku"
-        },
-        {
-          "label": "Shikoku"
-        },
-        {
-          "label": "Kyūshū & Okinawa"
-        }
-      ]
+      "banner": "Postwar Japan: eight regions and 47 prefectures"
     }
   ],
   "historic_battles": [

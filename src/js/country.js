@@ -4,7 +4,7 @@
 // 不 import store.js（store.js 要用这里的配置），本地存储直接读写。
 
 export const MAPS = {
-  japan: { key: 'japan', geo: 'src/assets/geojson/japan.json', data: 'src/data', units: 47, store: 'je.' },
+  japan: { key: 'japan', geo: 'src/assets/geojson/japan.pack.json', data: 'src/data', units: 47, store: 'je.' },
   korea: { key: 'korea', geo: 'src/data/korea/regions.json', data: 'src/data/korea', units: 29, store: 'je.korea.' },
 };
 

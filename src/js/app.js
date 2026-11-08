@@ -930,24 +930,27 @@ async function main() {
   $('tb-ticks').innerHTML = eras.map((e, i) =>
     `<button type="button" data-i="${i}" title="${esc(e.name)}">${esc(label('eraTick', e.key))}</button>`).join('');
   let playTimer = null;
-  // 滑块的「战国」就是战国势力图（3.26 起合并）：到战国时换成战国势力滤镜，离开时回到原来的滤镜
-  const SG_ERA = eras.findIndex((e) => e.key === 'sengoku');
-  let sgPrevFilter = null;
+  // 有几个时代与滤镜是同一张图（时代数据的 `filter`：战国 = 战国势力 3.26、奈良 = 五畿七道、现代 = 现代区划 3.27）：
+  // 滑到这些时代时换成对应滤镜，离开时回到原来的滤镜
+  const SG_ERA = eras.findIndex((e) => e.filter === 'sengoku');
+  const eraOfFilter = (m) => eras.findIndex((e) => e.filter === m);
+  let eraPrevFilter = null;
 
   function setEra(i, { banner = true } = {}) {
     if (i != null && i !== app.eraIdx) audio.play('click'); // 拖动滑块时只在跨到另一个时代时响
     app.eraIdx = i;
     const era = i == null ? null : eras[i];
-    const sgEra = i != null && i === SG_ERA;
-    if (sgEra && sgPrevFilter == null) {
-      sgPrevFilter = map.state.filter === 'sengoku' ? 'explore' : map.state.filter;
-      uiPref.set('filter', map.setMode('sengoku'));
-      ensureSengoku();
-    } else if (!sgEra && sgPrevFilter != null) {
-      uiPref.set('filter', map.setMode(sgPrevFilter));
-      sgPrevFilter = null;
+    const ef = era?.filter;
+    if (ef) {
+      if (eraPrevFilter == null) eraPrevFilter = eras.some((e) => e.filter === map.state.filter) ? 'explore' : map.state.filter;
+      uiPref.set('filter', map.setMode(ef));
+      if (ef === 'sengoku') ensureSengoku();
+      if (ef === 'circuit') ensureProvinces();
+    } else if (eraPrevFilter != null) {
+      uiPref.set('filter', map.setMode(eraPrevFilter));
+      eraPrevFilter = null;
     }
-    map.setEra(sgEra ? null : era); // 战国时由战国势力图着色，不用时代的按县着色
+    map.setEra(ef ? null : era); // 这几个时代由对应滤镜着色（时代数据里没有按县着色）
     document.body.classList.toggle('time-travel', !!era);
     $('tb-exit').hidden = !era;
     if (era) {
@@ -1057,7 +1060,8 @@ async function main() {
       .catch((err) => console.warn('战国势力数据加载失败，改按县着色', err));
   }
   function applyFilter(m) {
-    if (m === 'sengoku') { stopPlay(); setEra(SG_ERA); return; } // 战国势力 = 把滑块拖到战国
+    const ei = eraOfFilter(m);
+    if (ei >= 0) { stopPlay(); setEra(ei); return; } // 战国势力 / 五畿七道 / 现代区划 = 把滑块拖到对应时代
     if (m === 'circuit' || m === 'power') ensureProvinces();
     queueMicrotask(syncArtCard);
     if (app.eraIdx != null) { stopPlay(); setEra(null, { banner: false }); }
@@ -1335,7 +1339,7 @@ async function main() {
   map.setKokuStamps(ichinomiya.get());
   const mode0 = map.setMode(uiPref.get('filter', 'explore'));
   if (['circuit', 'power'].includes(mode0)) ensureProvinces();
-  if (mode0 === 'sengoku') { map.setMode('explore'); setEra(SG_ERA, { banner: false }); } // 上次停在战国：滑块也回到战国
+  if (eraOfFilter(mode0) >= 0) { map.setMode('explore'); setEra(eraOfFilter(mode0), { banner: false }); } // 上次停在这几个滤镜：滑块也回到对应时代
   applyLayer(uiPref.get('layer', 'history'));
   const kakoHash = new URLSearchParams(location.hash.slice(1)).get('kako');
   if (/^\d\d-\d\d$/.test(kakoHash || '')) kako.key = kakoHash; // #kako=11-02 打开某一天

@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.27 · 2026-11-08
+
+- Two more slider eras merged with filters: the Nara period now shows the Five Home Provinces and Seven Circuits on real province borders, and the Present day shows the eight modern regions. Tapping either filter moves the slider to its era. The filters left are the truly separate ones: exploration, Bakumatsu sides and province power
+- The Sengoku era on the slider now reads 1467–1600, matching the six years of the Sengoku map (through Sekigahara)
+- Map files use a lossless compact format: the first-screen map of Japan drops from about 290 KB to about 115 KB over the network, and the province and municipality maps shrink by more than half — they draw exactly as before
+- Place-name origins in the family register grow from 124 to 222: 98 cities of 50,000–150,000 people whose Japanese Wikipedia article explains the name, such as Asaka (after Prince Asaka), Chitose (renamed because the old name sounded like "dead bones"), Kunitachi (one character each from Kokubunji and Tachikawa) and Naruto (whose first name lasted two months). Every entry is checked against its article for key words and years
+- Removed per-prefecture era colouring that the merged eras no longer use
+
 ## 3.26 · 2026-11-08
 
 - New logo: the top-left mark and the home-screen icon are now one vermilion seal with the Japanese archipelago (they used to be 古 and an old dark 旅 icon); browser tabs get a matching small icon
