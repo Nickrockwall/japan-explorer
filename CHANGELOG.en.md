@@ -4,6 +4,10 @@
 
 Newest first.
 
+## 3.20.1 · 2026-11-08
+
+- Name origins for Morioka, Kumamoto and Ōita (57 in all): Morioka from the Iwate prefectural site (Kozukata → Morigaoka → 森岡 → 盛岡), Kumamoto from the city's castle documents (隈本 became 熊本 in 1607), Ōita from the city site (the Bungo Fudoki's "great fields", 碩田)
+
 ## 3.20 · 2026-11-08
 
 - Late-Edo lords down to the municipality: the family register now uses the National Museum of Japanese History's Kyūdaka Kyūryō Torishirabechō database (about 65,000 villages, 97,000 records), adding up the lords and rice yields of every village inside today's municipality — "111 villages here, 57,112 koku — Ueda Domain 79%, Shogunate 8%…", sealed "Town". It used to be inferred from the Meiji district or the whole city; villages shared by several lords are now split by each lord's yield instead of being lumped as "shared". 1,607 municipalities have it, including the wards of Saitama and Nagoya (villages in old municipalities that straddle today's borders are placed by their coordinates in CODH's Nihon Rekishi Chimei Taikei data set)

@@ -3,7 +3,8 @@
     python -X utf8 tools/yurai_tool.py
 
 - 每条的 ev 是必须出现在出处里的词（人名、旧名、古书名），有一个不在就报错、不写出。出处默认是该市日文维基条目；
-  第三项写网址的，出处是市（县）政府的官方网页（维基条目没写来历的大城市），页面文字缓存在 .cache/yurai/，PDF 用 pypdf 取文字。
+  第三项写网址的，出处是市（县）政府的官方网页（维基条目没写来历的大城市），页面文字缓存在 .cache/yurai/，PDF 用 pypdf 逐页取文字
+  （解析出错的页跳过）。有的官网证书链不完整（大分市），装了 truststore 时改用系统证书库校验（会补全中间证书）。
 - 有几种说法的写「一说」「诸说」，不替维基挑定论；条目里没写来历的（青森、秋田、松山、冈山……）不收。
 - 政令市的各区共用市名的来历（键是市名）；东京特别区按区。
 输出 {县 id: {市区名: {zh, ja, en}}}，build_bundle 拼进 bundle/town-<lang>.json。
@@ -20,6 +21,12 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(__file__))
 from pilgrimage_tool import pages, record_revisions, text_of  # noqa: E402
 
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'yurai.json')
 CACHE = os.path.join(ROOT, '.cache', 'yurai')
@@ -35,13 +42,20 @@ def page_text(url):
     b = urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60).read()
     if b[:4] == b'%PDF':
         from pypdf import PdfReader
-        t = ''.join(p.extract_text() or '' for p in PdfReader(io.BytesIO(b)).pages)
+        t = ''.join(_page(p) for p in PdfReader(io.BytesIO(b)).pages)
     else:
         t = next(b.decode(e) for e in ('utf-8', 'cp932', 'euc_jp') if _ok(b, e))
         t = re.sub(r'<script.*?</script>|<style.*?</style>', '', t, flags=re.S)
         t = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', t)))
     open(path, 'w', encoding='utf-8').write(t)
     return t
+
+
+def _page(p):
+    try:
+        return p.extract_text() or ''
+    except Exception:  # 个别页的内容流超出 pypdf 的上限（熊本市的保存计划）
+        return ''
 
 
 def _ok(b, enc):
@@ -242,6 +256,10 @@ Y = [
      '室町時代から「久留目」とも書かれた。「玖留目神」を祀ったことから、渡来の機織り集団「呉部」から、など諸説。',
      'Written 久留目 by the Muromachi period; explanations include the god Kurume and immigrant weavers (kurebe).'),
     # 以下出处是官方网页（日文维基条目没写来历）
+    (3, '盛岡市', 'http://www.bunka.pref.iwate.jp/archive/p1498', ['不来方', '森ヶ岡', '盛り上がり、栄える岡', '杜の多い岡'],
+     '古称「不来方」「古志方」，起初叫「森之冈（森ヶ岡）」，后来叫「森冈」；藩主南部氏取「兴盛繁荣之冈」的意思写成「盛冈」。另一说是从「树林多的冈」转来。',
+     '古くは「不来方」「古志方」、はじめは「森ヶ岡」、のちに「森岡」と呼ばれ、藩主南部氏が「盛り上がり、栄える岡」の意味を込めて「盛岡」と名付けた。杜の多い岡から転じたとする説もある。',
+     'Anciently Kozukata; first Morigaoka, then 森岡, "wooded hill", until the Nanbu lords wrote it 盛岡, "a hill that rises and prospers". Another view derives it simply from the wooded hill.'),
     (10, '前橋市', 'https://www.city.maebashi.gunma.jp/soshiki/seisaku/kohobrand/gyomu/3/2/3777.html', ['厩橋', '駅家', '車川', '酒井忠清'],
      '古称「厩桥（まやはし）」：相传这里的车川上有座「驿家（うまや）之桥」，久而久之成了地名；1648–1652 年间藩主酒井忠清时改称「前桥」。',
      '古くは「厩橋（まやはし）」と称した。車川に架かる橋を「駅家（うまや）の橋」と呼んだことから地名になったと伝えられ、1648〜1652年ごろ、藩主酒井忠清の時代に「前橋」と改められたといわれる。',
@@ -266,6 +284,14 @@ Y = [
      '说法有几种，市政资料采用的是：这里是一片细长的岬角地形，所以叫「长崎（长长的岬）」。',
      '諸説あるが、この地が長い岬状の地形をしていたことから起こったといわれる。',
      "Several explanations exist; the city's own account is that the land was a long cape — naga-saki."),
+    (43, '熊本市', 'https://www.city.kumamoto.jp/kiji00319443/5_19443_138023_up_QGYVNCOB.pdf', ['隈本', '加藤清正', '茶臼山'],
+     '原名「隈本」。加藤清正把茶臼山一带扩建成新城，1607 年新城完工时把「隈本」改为「熊本」。',
+     'もとは「隈本」。加藤清正が茶臼山一帯を取り込んで城を拡張し、慶長12年（1607）の新城完成に合わせて「隈本」を「熊本」に改めたとされる。',
+     'Originally 隈本. Katō Kiyomasa enlarged the castle over Chausuyama hill and, when the new castle was finished in 1607, is said to have rewritten the name as 熊本.'),
+    (44, '大分市', 'https://www.city.oita.oita.jp/o029/shisejoho/annai/1269431035754.html', ['豊後国風土記', '碩田', '美田'],
+     '一般说法：《丰后国风土记》里，这片广阔的良田被称为「碩田」，后来写成「大分」。',
+     '『豊後国風土記』で、広々とした美田にちなみ「碩田」と名付けられ、のちに「大分」と書かれるようになったのが始まりともされる。',
+     'The Bungo Fudoki is said to have named these broad, fine fields 碩田 ("great fields"), later written 大分.'),
     (47, '那覇市', None, ['魚場', '伊波普猷'],
      '来自表示渔场的「魚場（なは）」，是伊波普猷的说法，那霸市官网也介绍。',
      '漁場を表す「魚場（なは）」から。伊波普猷の唱えた説で、那覇市のサイトでも紹介されている。',

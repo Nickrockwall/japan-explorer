@@ -83,7 +83,7 @@ tools/main_gun.json            户籍江户一段的主要郡 / 整市 / 江户�
 tools/mura.json                1889 年町村制时今属各市区町村的町村（tools/fetch_mura.py）
 tools/seats.json               城下町：存续藩的藩厅落在哪个市区町村（tools/fetch_seats.py，build_bundle 并进 main_gun 的 seat）
 tools/wiki_revisions.json      各数据工具读过的维基条目版本号（pilgrimage_tool.record_revisions）
-tools/yurai.json               地名的来历 54 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
+tools/yurai.json               地名的来历 57 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
 tools/kyudaka.json             今天各市区町村里幕末各村的领主与石高合计（tools/fetch_kyudaka.py，歴博《旧高旧領取調帳データベース》）
 tools/wamyo.json               《和名类聚抄》各郡的郷与读音、市区町村 → 古郡（tools/fetch_wamyo.py，奈文研「古代地名検索システム」）
 tools/codh.py                  CODH 数据的共用读法：TopoJSON → shapely、按面积对到今天的市区町村、按坐标定位、nrct 村坐标
@@ -325,7 +325,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 明治町村补全（3.20）：fetch_mura 末尾 `codh_villages()` 读 CODH 1920 年各县 TopoJSON（`.cache/codh/1920_NN.topojson`），成立日在 1888–1908 年的町村按面积记给今天的市区町村（≥90% 算整个，其余 ≥15% 的各记一份标「一部」），只补维基没收的市区町村，并打印两边都有时的吻合率（约 78%，对不上的多是 1920 年前已并掉的）。
 - 古代乡名（3.20）：`python -X utf8 tools/fetch_wamyo.py` 按旧国检索奈文研系统（POST 检索词后同一会话 GET 结果页，缓存 `.cache/wamyo/`；三河在系统里写参河），只收《和名类聚抄》本身的郷（不收标 ＊△☆ 的、驿名）。市区町村 → 古郡：主要郡或第一个整体属于的明治旧郡（只部分属于几个郡的不写），异体字 `canon()`、去方位字、`RENAME`（足柄上 → 足上、春日井 → 春部…）。户籍在律令之后加 `wamyo` 一栏（印「郡」，中日文附假名、英文附罗马字——build_bundle 的 `romaji()`），此地年表古代一行带郡与乡数。
 - 藩主年份的英文维基来源（3.20）：han_tool 的 `en_tables` 取日文藩条目语言链接到的英文条目，读藩主表里 `{{nihongo|…|汉字名}}` 那一行的「起–止」，只给前面各来源都没有年份的藩主用，检查与 Wikidata 一样（缓存 `.cache/han/en_tables.json`）。
-- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf）。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
+- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf 逐页取、出错的页跳过；装了 truststore 就用系统证书库，大分市官网证书链不完整要靠它）。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
 - 幕末领主一栏下面按郡里出现的藩（`findHan`：按当前语言名字匹配，去掉旧国名的也认，本县与存续藩优先）列出可展开的历代藩主（`kosekiHanHTML`，存图里不画）。
 - 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
 

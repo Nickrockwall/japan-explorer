@@ -300,6 +300,13 @@
    "en": "Written 久留目 by the Muromachi period; explanations include the god Kurume and immigrant weavers (kurebe)."
   }
  },
+ "3": {
+  "盛岡市": {
+   "zh": "古称「不来方」「古志方」，起初叫「森之冈（森ヶ岡）」，后来叫「森冈」；藩主南部氏取「兴盛繁荣之冈」的意思写成「盛冈」。另一说是从「树林多的冈」转来。",
+   "ja": "古くは「不来方」「古志方」、はじめは「森ヶ岡」、のちに「森岡」と呼ばれ、藩主南部氏が「盛り上がり、栄える岡」の意味を込めて「盛岡」と名付けた。杜の多い岡から転じたとする説もある。",
+   "en": "Anciently Kozukata; first Morigaoka, then 森岡, \"wooded hill\", until the Nanbu lords wrote it 盛岡, \"a hill that rises and prospers\". Another view derives it simply from the wooded hill."
+  }
+ },
  "18": {
   "福井市": {
    "zh": "室町时代这里叫「北庄」，柴田胜家在此筑城、建起城下町。第 3 代藩主忠昌时由北庄改为「福居」，后来又改写为「福井」。",
@@ -326,6 +333,20 @@
    "zh": "说法有几种，市政资料采用的是：这里是一片细长的岬角地形，所以叫「长崎（长长的岬）」。",
    "ja": "諸説あるが、この地が長い岬状の地形をしていたことから起こったといわれる。",
    "en": "Several explanations exist; the city's own account is that the land was a long cape — naga-saki."
+  }
+ },
+ "43": {
+  "熊本市": {
+   "zh": "原名「隈本」。加藤清正把茶臼山一带扩建成新城，1607 年新城完工时把「隈本」改为「熊本」。",
+   "ja": "もとは「隈本」。加藤清正が茶臼山一帯を取り込んで城を拡張し、慶長12年（1607）の新城完成に合わせて「隈本」を「熊本」に改めたとされる。",
+   "en": "Originally 隈本. Katō Kiyomasa enlarged the castle over Chausuyama hill and, when the new castle was finished in 1607, is said to have rewritten the name as 熊本."
+  }
+ },
+ "44": {
+  "大分市": {
+   "zh": "一般说法：《丰后国风土记》里，这片广阔的良田被称为「碩田」，后来写成「大分」。",
+   "ja": "『豊後国風土記』で、広々とした美田にちなみ「碩田」と名付けられ、のちに「大分」と書かれるようになったのが始まりともされる。",
+   "en": "The Bungo Fudoki is said to have named these broad, fine fields 碩田 (\"great fields\"), later written 大分."
   }
  },
  "47": {
