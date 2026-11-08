@@ -214,8 +214,8 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
       backgroundColor: 'transparent',
       animationDurationUpdate: 500,
       tooltip: {
-        trigger: 'item', backgroundColor: 'rgba(30,30,35,0.95)', borderColor: '#3a3a42',
-        textStyle: { color: '#ece6dc', fontSize: 12 }, extraCssText: 'max-width:260px;white-space:normal',
+        trigger: 'item', backgroundColor: '#f4efe2', borderColor: '#2a2520',
+        textStyle: { color: '#2a2520', fontSize: 12 }, extraCssText: 'max-width:260px;white-space:normal',
         formatter: (x) => {
           const p = cur?.byCode.get(x.name);
           return p ? `<div class="muni-tip">${info(p)}</div>` : '';
@@ -228,7 +228,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         map: `muni-${cur.pref.id}`, roam: true, boundingCoords: cur.bounds,
         layoutCenter: ['50%', '54%'], layoutSize: '88%', scaleLimit: { min: 0.5, max: 80 },
         itemStyle: { borderColor: '#18181c', borderWidth: 0.5 },
-        label: { color: '#fff', fontSize: 11, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 3,
+        label: { color: '#2a2520', fontSize: 11, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3,
           formatter: (x) => { const p = cur?.byCode.get(x.name); return p ? dn(p) : ''; } },
         emphasis: { label: { show: true } },
         select: { disabled: true },
@@ -237,8 +237,8 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         { id: 'muni', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
         {
           id: 'names', type: 'scatter', coordinateSystem: 'geo', symbolSize: 0, silent: true, data: [],
-          label: { show: true, formatter: '{b}', color: '#f3ede2', fontSize: 11, fontFamily: serifFont(),
-            textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5 },
+          label: { show: true, formatter: '{b}', color: '#2a2520', fontSize: 11, fontFamily: serifFont(),
+            textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 2.5 },
           labelLayout: { hideOverlap: true },
         },
       ],

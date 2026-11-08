@@ -3,14 +3,22 @@
 // 首都脉冲、进军飞线、战场爆点、酒樽徽记都叠加在同一个 geo 坐标系里。
 import { t, label, prefName, lang, serifFont } from './i18n.js';
 import { DISPUTED, disputeLabel } from './disputed.js';
+// 国絵図：胡粉的陆地、墨线县界，海面（.map-pane 的底色）是群青淡刷；已探索刷黄土，当前选中是朱
 const COLOR = {
-  base: '#2e2e36',
-  visited: 'rgba(212,163,115,0.55)',
-  active: '#c23531',
-  border: '#18181c',
-  hover: '#8e3a35',
-  muted: '#26262c',
+  base: '#f1eada',
+  visited: '#dcc48a',
+  active: '#b3302a',
+  border: '#5a5046',
+  hover: '#e6d3a8',
+  muted: '#e4dccb',
 };
+
+// 选中地区的名字写在短册（国絵図的白签）里：中文、日文竖排，英文横排
+const SLIP = {
+  backgroundColor: '#f4efe2', borderColor: '#2a2520', borderWidth: 1, borderRadius: 1, padding: [5, 4, 4, 4],
+  color: '#2a2520', fontSize: 13, lineHeight: 15, fontWeight: 700, textBorderWidth: 0,
+};
+const slipText = (s) => (lang === 'en' ? s : [...s].join('\n'));
 
 export const DEFAULT_VIEW = { center: [135, 34.6], zoom: 1.26 };
 // 手机竖屏：地图区窄而高，放大并把中心移向本州中部
@@ -18,7 +26,8 @@ const MOBILE_VIEW = { center: [137.1, 37.9], zoom: 1.8 };
 // 横屏手机：地图区矮而宽，控件压在上下各一行，取景缩小一点让本州完整露出
 const SHORT = '(max-height: 520px) and (orientation: landscape)';
 const LANDSCAPE_VIEW = { center: [137.6, 37.4], zoom: 1.1 };
-const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : matchMedia(SHORT).matches ? LANDSCAPE_VIEW : DEFAULT_VIEW);
+// 宽屏：按窗口比例算缩放，把本土四岛（含五岛、对马，到北海道东端）放满工具条与图例 / 时空滑块之间（fitView）
+const MAINLAND = [[128.6, 30.9], [145.9, 45.6]];
 
 // 分类配色；显示名由 i18n 的 label() 按当前语言给出
 const cats = (group, colors) => Object.fromEntries(Object.entries(colors).map(([k, c]) => [k, [label(group, k), c]]));
@@ -206,7 +215,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       {
         id: 'disputed-names', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, cursor: 'pointer', symbol: 'circle',
         itemStyle: { color: 'rgba(0,0,0,0)', borderColor: '#b9b4a8', borderWidth: 2 },
-        label: { show: true, position: 'bottom', color: '#cdc8bc', fontSize: 11, textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 2,
+        label: { show: true, position: 'bottom', color: '#2a2520', fontSize: 11, textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 2,
           formatter: (x) => disputeLabel(dspKeys[x.dataIndex]) },
         data: on ? dspKeys.map((k) => ({ value: DISPUTED[k].label, symbolSize: DISPUTED[k].point ? 9 : 0 })) : [],
       },
@@ -220,8 +229,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       rippleEffect: { scale: 3.5, brushType: 'stroke', period: 2.8 },
       symbol: 'pin', symbolSize: 26, symbolOffset: [0, '-40%'],
       itemStyle: { color: '#e2573a', borderColor: '#fff3d6', borderWidth: 1.5, shadowBlur: 10, shadowColor: '#e2573a' },
-      label: { show: true, position: 'right', color: '#ffe3c8', fontSize: 12.5, fontWeight: 700, fontFamily: serifFont(),
-        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: () => kako?.label || '' },
+      label: { show: true, position: 'right', color: '#2a2520', fontSize: 12.5, fontWeight: 700, fontFamily: serifFont(),
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: () => kako?.label || '' },
       data: kako && !state.battle ? [{ value: kako.c }] : [],
     };
   }
@@ -232,8 +241,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
       symbolSize: 13,
       itemStyle: { color: '#5ab0ff', borderColor: '#fff', borderWidth: 2, shadowBlur: 12, shadowColor: '#5ab0ff' },
-      label: { show: true, position: 'right', color: '#cfe7ff', fontSize: 12, fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: () => t('loc.you') },
+      label: { show: true, position: 'right', color: '#2a2520', fontSize: 12, fontWeight: 700,
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: () => t('loc.you') },
       data: you && !state.battle ? [{ value: you }] : [],
     };
   }
@@ -350,7 +359,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 当前着色方案：{ label, cat(id) → [label, color] | null }
   function scheme() {
-    if (LAYERS[state.layer]?.dim) return { label: LAYERS[state.layer].label, cat: () => ['', '#202026'] };
+    if (LAYERS[state.layer]?.dim) return { label: LAYERS[state.layer].label, cat: () => ['', '#2b2926'] };
     if (state.layer !== 'history') {
       const L = LAYERS[state.layer];
       return { label: L.label, cat: (id) => L.cats[L.key(prefs.get(id))] };
@@ -383,19 +392,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       return {
         name,
         itemStyle: { areaColor: active ? COLOR.active : visitedSet.has(id) ? COLOR.visited : COLOR.base, borderColor: COLOR.border, borderWidth: 0.8, shadowBlur: 0 },
-        emphasis: { itemStyle: { areaColor: COLOR.hover, borderColor: '#d4a373', borderWidth: 1.2 } },
-        label: { show: active, formatter: () => names.get(id) },
+        emphasis: { itemStyle: { areaColor: COLOR.hover, borderColor: '#2a2520', borderWidth: 1.2 } },
+        label: { show: active, ...SLIP, fontFamily: serifFont(), formatter: () => slipText(names.get(id)) },
       };
     }
     const c = sc.cat(id)?.[1] || COLOR.base;
     return {
       name,
       itemStyle: active
-        ? { areaColor: c, borderColor: '#fff', borderWidth: 2.2, shadowColor: 'rgba(255,255,255,.55)', shadowBlur: 10 }
+        ? { areaColor: c, borderColor: '#2a2520', borderWidth: 2.2, shadowBlur: 0 }
         : { areaColor: c, borderColor: COLOR.border, borderWidth: 0.8, shadowBlur: 0 },
       // 悬停时提亮本色，避免盖住分类色
-      emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.6 } },
-      label: { show: active, formatter: () => names.get(id) },
+      emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#2a2520', borderWidth: 1.6 } },
+      label: { show: active, ...SLIP, fontFamily: serifFont(), formatter: () => slipText(names.get(id)) },
     };
   }
 
@@ -407,8 +416,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       rippleEffect: { scale: 5, brushType: 'stroke', period: 3 },
       symbolSize: 14,
       itemStyle: { color: '#ffd27a', shadowBlur: 16, shadowColor: '#ffb648' },
-      label: { show: true, position: 'right', color: '#ffe3a8', fontSize: 12, fontFamily: serifFont(), fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.7)', textBorderWidth: 3, formatter: (x) => t('capital.label', { name: x.name }) },
+      label: { show: true, position: 'right', color: '#2a2520', fontSize: 12, fontFamily: serifFont(), fontWeight: 700,
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: (x) => t('capital.label', { name: x.name }) },
       data: e ? [{ name: e.capital.name, value: e.capital.coords, desc: e.capital.description }] : [],
     };
   }
@@ -423,8 +432,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'barrels', type: 'scatter', coordinateSystem: 'geo', zlevel: 2, symbol: BARREL, symbolSize: [13, 15],
       labelLayout: { hideOverlap: true },
       itemStyle: { color: '#8a5a2b', borderColor: '#f3d9a4', borderWidth: 1.2, shadowBlur: 6, shadowColor: 'rgba(0,0,0,.6)' },
-      label: { show: true, position: 'top', distance: 2, color: '#f3e3c3', fontSize: 11, fontFamily: serifFont(), fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 3, formatter: '{b}' },
+      label: { show: true, position: 'top', distance: 2, color: '#2a2520', fontSize: 11, fontFamily: serifFont(), fontWeight: 700,
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
       data,
     };
   }
@@ -439,8 +448,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   function kokuSeries() {
     return {
       id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, animation: false,
-      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+      label: { show: false, position: 'top', color: '#2a2520', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
       labelLayout: { hideOverlap: true },
       emphasis: { scale: 1.4, label: { show: true } },
       data: drawnKoku().map((s) => {
@@ -470,8 +479,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'spots', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
       rippleEffect: { scale: 3.2, brushType: 'stroke', period: 3.2 },
       showEffectOn: 'render',
-      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
-        textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+      label: { show: false, position: 'top', color: '#2a2520', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
+        textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
       emphasis: { scale: 1.5, label: { show: true } },
       data: shownSpots().map((s) => ({
         name: s.work, value: s.coords, id: s.id,
@@ -507,16 +516,16 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
       {
         id: 'origins', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'diamond', symbolSize: 10,
-        label: { show: true, position: 'top', color: '#fff', fontSize: 11, fontFamily: serifFont(),
-          textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: '{b}' },
+        label: { show: true, position: 'top', color: '#2a2520', fontSize: 11, fontFamily: serifFont(),
+          textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: origins,
       },
       {
         id: 'markers', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'pin', symbolSize: 22,
         itemStyle: { color: '#d4a373', borderColor: '#18181c', borderWidth: 1 },
-        label: { show: true, position: 'right', color: '#ffe9c4', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
-          textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
+        label: { show: true, position: 'right', color: '#2a2520', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
+          textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: markers,
       },
@@ -525,8 +534,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         rippleEffect: { scale: 6, brushType: 'fill', period: 1.6, number: 3 },
         symbolSize: 20,
         itemStyle: { color: '#ffb648', shadowBlur: 24, shadowColor: '#ff6a3d' },
-        label: { show: true, position: 'bottom', distance: 10, color: '#ffe3a8', fontSize: 13, fontFamily: serifFont(), fontWeight: 900,
-          textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '⚔ {b}' },
+        label: { show: true, position: 'bottom', distance: 10, color: '#2a2520', fontSize: 13, fontFamily: serifFont(), fontWeight: 900,
+          textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '⚔ {b}' },
         data: clash ? [{ name: b.battlefield.name, value: b.battlefield.coords }] : [],
       },
     ];
@@ -559,9 +568,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const line = sgMode() ? { borderColor: 'rgba(0,0,0,.28)', borderWidth: 0.5 } : { borderColor: COLOR.border, borderWidth: 0.9 };
     return {
       name: f.properties.key,
-      itemStyle: on ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.55)', shadowBlur: 8 }
+      itemStyle: on ? { areaColor: c, borderColor: '#2a2520', borderWidth: 2, shadowBlur: 0 }
         : { areaColor: c, ...line, shadowBlur: 0 },
-      emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#fff', borderWidth: 1.4 }, label: { show: false } },
+      emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.22), borderColor: '#2a2520', borderWidth: 1.4 }, label: { show: false } },
       label: { show: false },
     };
   }
@@ -637,8 +646,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
       {
         id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0, animation: false,
-        label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
-          textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2.5, formatter: '{b}' },
+        label: { show: true, color: '#2a2520', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
+          textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 2.5, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: on ? prov.labels : [],
       },
@@ -694,7 +703,11 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       const bottom = Math.min(...['.timebar', '.map-legend'].map((s) => pad(s)?.top || pane.bottom)) - pane.top;
       return [x, Math.round((top + bottom) / 2)];
     }
-    if (innerWidth > 560) return [x, inset.bottom ? Math.round((pane.height - inset.bottom) / 2) : '50%'];
+    if (innerWidth > 560) {
+      if (inset.bottom) return [x, Math.round((pane.height - inset.bottom) / 2)];
+      const [top, bottom] = wideArea();
+      return [x, Math.round((top + bottom) / 2)];
+    }
     const [top, bottom] = openArea();
     return [x, Math.round((top + bottom) / 2)];
   }
@@ -710,6 +723,32 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (inset.bottom) bottom = Math.min(bottom, pane.height - inset.bottom - 10);
     return [top, bottom];
   }
+  // 宽屏上地图露出来的那一段：工具条以下、图例与时空滑块以上（九州在左下，正好在图例上面）
+  function wideArea() {
+    const pane = el.getBoundingClientRect();
+    const box = (sel) => {
+      const r = el.parentElement.querySelector(sel)?.getBoundingClientRect();
+      return r && r.height ? r : null;
+    };
+    const top = (box('.map-toolbar')?.bottom ?? pane.top) - pane.top;
+    const bottom = Math.min(pane.bottom, ...['.map-legend', '.timebar'].map((sel) => box(sel)?.top ?? pane.bottom)) - pane.top;
+    return bottom - top > 200 ? [top, bottom] : [0, pane.height];
+  }
+  function fitView() {
+    const center = [(MAINLAND[0][0] + MAINLAND[1][0]) / 2, (MAINLAND[0][1] + MAINLAND[1][1]) / 2];
+    try {
+      const z = chart.getOption().geo[0].zoom;
+      const a = chart.convertToPixel({ geoIndex: 0 }, MAINLAND[0]);
+      const b = chart.convertToPixel({ geoIndex: 0 }, MAINLAND[1]);
+      const [top, bottom] = wideArea();
+      const w = el.getBoundingClientRect().width - inset.left - inset.right;
+      const k = Math.min((w - 24) / Math.abs(b[0] - a[0]), (bottom - top - 16) / Math.abs(b[1] - a[1]));
+      return k > 0 && isFinite(k) ? { center, zoom: +(z * k).toFixed(3) } : DEFAULT_VIEW;
+    } catch {
+      return DEFAULT_VIEW;
+    }
+  }
+  const homeView = () => (innerWidth <= 560 ? MOBILE_VIEW : matchMedia(SHORT).matches ? LANDSCAPE_VIEW : fitView());
   // 刚点过的地方（卡片弹出后把它挪进露出来的那块）
   let lastTap = null;
 
@@ -725,21 +764,21 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (!f) return '';
     const p = f.properties;
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
-    if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
+    if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#7a5719">${now}</span>`;
     if (sgMode()) {
       return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}</div>
-        <div style="color:#d4a373;margin-top:2px">${now}</div>${sg.tip(p.key)}`;
+        <div style="color:#7a5719;margin-top:2px">${now}</div>${sg.tip(p.key)}`;
     }
     if (powerMode()) {
       return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}</div>
-        <div style="color:#d4a373;margin-top:2px">${now}</div><div style="margin-top:4px;line-height:1.6">${power.tip(p.key)}</div>`;
+        <div style="color:#7a5719;margin-top:2px">${now}</div><div style="margin-top:4px;line-height:1.6">${power.tip(p.key)}</div>`;
     }
     const [lb, color] = FILTERS.circuit.cats[p.circuit];
     const extra = provTipExtra(p.key);
-    const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#b4ada3">${p.kana}</span>` : '';
+    const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#6b6155">${p.kana}</span>` : '';
     return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}${kana}</div>
       <div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color};margin-right:6px"></span>${lb}</div>
-      <div style="color:#d4a373;margin-top:3px">${now}</div>${extra ? `<div style="color:#b4ada3;margin-top:3px">${extra}</div>` : ''}`;
+      <div style="color:#7a5719;margin-top:3px">${now}</div>${extra ? `<div style="color:#6b6155;margin-top:3px">${extra}</div>` : ''}`;
   }
 
   chart.setOption({
@@ -748,44 +787,55 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     animationEasingUpdate: 'cubicInOut',
     tooltip: {
       trigger: 'item',
-      backgroundColor: 'rgba(30,30,35,0.95)',
-      borderColor: '#3a3a42',
-      textStyle: { color: '#ece6dc', fontSize: 12 },
+      // 手机：放在手指上方（放不下才放下方），不盖住刚点的县和它的名字；宽屏照常跟在鼠标右下
+      position: (pt, _p, _d, _r, size) => {
+        const [w, h] = size.contentSize, [W, H] = size.viewSize;
+        if (innerWidth > 560) {
+          const x = pt[0] + 20 + w > W ? pt[0] - w - 20 : pt[0] + 20;
+          const y = pt[1] + 20 + h > H ? pt[1] - h - 20 : pt[1] + 20;
+          return [Math.max(4, x), Math.max(4, y)];
+        }
+        const up = pt[1] - h - 44;
+        return [Math.max(4, Math.min(pt[0] - w / 2, W - w - 4)), up >= 4 ? up : Math.min(pt[1] + 36, H - h - 4)];
+      },
+      backgroundColor: '#f4efe2',
+      borderColor: '#2a2520',
+      textStyle: { color: '#2a2520', fontSize: 12 },
       formatter: (params) => {
         if (params.seriesId === 'disputed-names') return `<b>${disputeLabel(dspKeys[params.dataIndex])}</b>`;
         if (params.seriesId === 'sgflags') return `<b>${params.name}</b> · ${t('sg.c.flag', { n: params.data.n })}`;
-        if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#b4ada3">${params.data.desc}</span>`;
-        if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#b4ada3">${params.name}</span>`;
+        if (params.seriesId === 'capital') return `<b>${t('capital', { name: params.name })}</b><br><span style="color:#6b6155">${params.data.desc}</span>`;
+        if (params.seriesId === 'routes') return `<b>${t('tip.depart', { from: params.data.from })}</b><br><span style="color:#6b6155">${params.name}</span>`;
         if (params.seriesId === 'spots') {
           const s = spots.find((x) => x.id === params.data.id);
-          return `<b style="color:${SPOT_COLOR[s.type]}">${s.type === 'anime' ? '✦' : '◆'} ${s.work}</b><br><span style="color:#b4ada3">${s.place}</span>`;
+          return `<b style="color:${SPOT_COLOR[s.type]}">${s.type === 'anime' ? '✦' : '◆'} ${s.work}</b><br><span style="color:#6b6155">${s.place}</span>`;
         }
         if (params.seriesId === 'barrels') {
           const p = prefs.get(params.data.pid);
-          return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#b4ada3">${p.sake.brewery}</span>`;
+          return `<b>🍶 ${p.sake.brand}</b> · ${names.get(p.id)}<br><span style="color:#6b6155">${p.sake.brewery}</span>`;
         }
         if (['origins', 'impact', 'markers'].includes(params.seriesId)) return `<b>${params.name}</b>`;
         if (params.seriesId === 'koku') {
           const s = koku.find((x) => x.id === params.data.id);
           const where = [prefs.get(s.pref) ? names.get(s.pref) : '', s.muniLabel].filter(Boolean).join(' ');
-          return `<b style="color:${KOKU_COLOR[s.kind]}">${t(`koku.icon.${s.kind}`)} ${params.name}</b><br><span style="color:#b4ada3">${s.provLabel} · ${where}</span>`;
+          return `<b style="color:${KOKU_COLOR[s.kind]}">${t(`koku.icon.${s.kind}`)} ${params.name}</b><br><span style="color:#6b6155">${s.provLabel} · ${where}</span>`;
         }
         if (provBaseOn() && params.seriesId === 'prefs') return provTip(curProv().byKey.get(params.name));
         const p = prefs.get(params.value);
         if (!p) return '';
         const provs = p.historical_lineage.ritsuryo_provinces.map((x) => x.name).join(' · ');
         const sub = p.name.kanji === names.get(p.id) ? p.name.romaji : p.name.kanji;
-        const seen = visitedSet.has(p.id) ? `<span style="color:#d4a373">${t('tip.visited')}</span>` : '';
+        const seen = visitedSet.has(p.id) ? `<span style="color:#7a5719">${t('tip.visited')}</span>` : '';
         const sc = state.battle ? null : scheme();
         const cat = sc?.cat(p.id);
         let extra = cat
           ? `<div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${cat[1]};margin-right:6px"></span>${sc.label}：${cat[0]}</div>`
           : '';
-        if (state.layer === 'ramen' && !state.battle) extra += `<div style="color:#d4a373">🍜 ${p.ramen.style_name}</div>`;
-        if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#d4a373">🍶 ${p.sake.brand} · ${p.sake.brewery}</div>`;
+        if (state.layer === 'ramen' && !state.battle) extra += `<div style="color:#7a5719">🍜 ${p.ramen.style_name}</div>`;
+        if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#7a5719">🍶 ${p.sake.brand} · ${p.sake.brewery}</div>`;
         return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${emblemTip(p.id)}${names.get(p.id)} ${seen}</div>
-          <div style="color:#b4ada3">${label('region', p.region)} · ${sub}</div>
-          <div style="color:#d4a373;margin-top:3px">${t('tip.ancient', { list: provs })}</div>${extra}`;
+          <div style="color:#6b6155">${label('region', p.region)} · ${sub}</div>
+          <div style="color:#7a5719;margin-top:3px">${t('tip.ancient', { list: provs })}</div>${extra}`;
       },
     },
     geo: {
@@ -802,9 +852,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       layoutCenter: layoutCenter(),
       layoutSize: '100%',
       itemStyle: { areaColor: COLOR.base, borderColor: COLOR.border, borderWidth: 0.8 },
-      label: { color: '#fff', fontSize: 12, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2,
+      label: { color: '#2a2520', fontSize: 12, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 2,
         formatter: (x) => names.get(idByName.get(x.name)) || x.name },
-      emphasis: { label: { show: true, color: '#fff', fontSize: 12 } },
+      emphasis: { label: { show: true, color: '#2a2520', fontSize: 12 } },
       select: { disabled: true },
     },
     series: [
@@ -879,6 +929,19 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     }
   };
   window.addEventListener('resize', resize);
+  // 宽屏：工具条、时空滑块由 app 稍后填好，尺寸定下来后再按露出的那块取景；用户拖过或缩放过就不再动
+  let roamed = false;
+  chart.on('georoam', () => { roamed = true; });
+  const refit = () => {
+    if (roamed || state.battle || formOf() !== 'wide' || !el.getBoundingClientRect().height) return;
+    chart.setOption({ geo: { layoutCenter: layoutCenter() } });
+    setView(fitView());
+  };
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(refit);
+    ['.map-toolbar', '.timebar', '.map-legend'].forEach((sel) => { const n = el.parentElement.querySelector(sel); if (n) ro.observe(n); });
+    ro.observe(el);
+  }
 
   const getView = () => {
     const g = chart.getOption().geo[0];

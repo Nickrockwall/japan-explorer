@@ -6,8 +6,8 @@ import { esc } from './detail.js';
 import { crestSVG } from './crests.js';
 import { fixLink } from './report.js';
 
-const OUTSIDE = '#33333a';
-const DIM = [24, 24, 28]; // 聚光时压暗到底色 #18181c
+const OUTSIDE = '#e4dccb';
+const DIM = [241, 234, 218]; // 聚光时褪向胡粉的陆地 #f1eada
 // 总称（国人割据、多方争夺、丰臣直辖与中小大名、奥羽诸氏；1600 年的倒戈 / 分裂 / 观望）与阿伊努的土地不是一家：
 // 不合并国界、不插家纹旗、不出势力总览
 const LOOSE = new Set(['gunyu', 'contest', 'toyo_small', 'ou', 'outside', 'turn', 'split', 'neutral', 'ainu']);
@@ -101,7 +101,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const e = entry(k);
     if (!e || isOutside(k)) return '';
     const head = headOf(year, e.c);
-    const withs = e.with?.length ? `<div style="color:#b4ada3;margin-top:2px">${esc(t('sg.split', { list: e.with.map((c) => clanName(year, c)).join(' · ') }))}</div>` : '';
+    const withs = e.with?.length ? `<div style="color:#6b6155;margin-top:2px">${esc(t('sg.split', { list: e.with.map((c) => clanName(year, c)).join(' · ') }))}</div>` : '';
     return `<div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color(k)};margin-right:6px"></span>${esc(t('sg.y', { y: year }))} · <b>${esc(clanName(year, e.c))}</b>${head ? ` · ${esc(personName(head))}` : ''}</div>${withs}`;
   }
 

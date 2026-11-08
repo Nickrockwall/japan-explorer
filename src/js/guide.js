@@ -547,6 +547,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     addMsg('sys', banner);
     renderQuick();
     input.disabled = false;
+    document.body.classList.remove('guide-idle');
     typeOut(P.opening);
   }
 
@@ -584,6 +585,7 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
     send.disabled = true;
     chat.innerHTML = '';
     addMsg('ai', fmt(t('g.intro')));
+    document.body.classList.add('guide-idle'); // 宽屏上还没选地区时向导只留一行，详卡占满右栏
   }
 
   return {
