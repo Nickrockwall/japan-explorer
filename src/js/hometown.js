@@ -46,7 +46,7 @@ function famSpan(rows) {
 const spanText = ([a, b, openA, openB]) => `${openA ? '…' : a}–${openB ? '…' : b}`;
 
 // ctx 与古代户籍相同，再加 geometry（这个市区町村的边界）、kako（彼时今日全部数据）、region（冲绳、北海道、奄美的地区年表）
-// 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json）、town（明治町村与地名来历，bundle/town-<lang>.json），没有的为 null
+// 与 ken（废藩置县后各郡归哪个县，bundle/ken-<lang>.json）、town（明治町村与地名来历，bundle/town/<lang>/NN.json），没有的为 null
 export function hometownItems({ pref, props, provNames, sengoku, domains, mainGun, han, prefLabel, geometry, kako, region, ken, town }) {
   const items = [];
   const key = props.province;

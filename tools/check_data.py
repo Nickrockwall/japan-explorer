@@ -158,9 +158,10 @@ def check_bundles():
         kp = os.path.join(DATA, 'bundle', f'ken-{lang}.json')
         if not os.path.exists(kp) or read('src', 'data', 'bundle', f'ken-{lang}.json') != build_ken(lang):
             err(f'bundle/ken-{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
-        tp = os.path.join(DATA, 'bundle', f'town-{lang}.json')
-        if not os.path.exists(tp) or read('src', 'data', 'bundle', f'town-{lang}.json') != build_town(lang):
-            err(f'bundle/town-{lang}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
+        for pid, text in build_town(lang).items():
+            tp = os.path.join(DATA, 'bundle', 'town', lang, f'{pid:02d}.json')
+            if not os.path.exists(tp) or read('src', 'data', 'bundle', 'town', lang, f'{pid:02d}.json') != text:
+                err(f'bundle/town/{lang}/{pid:02d}.json', '已过期：改过数据后要运行 python tools/build_bundle.py')
 
 
 def check_municipalities():

@@ -16,7 +16,7 @@
   按坐标定到今天的市区町村（`.cache/codh/nrct.csv`）；其余按面积最大的一方记、标「一部」。
 - 藩名对上藩名单（han.json）：名单里有的直接用，明治初年改名的看 domains.json 已查过的重定向或查日文维基重定向（`lords[名].han`）。
 输出 {"lords": {领主: {kind, han?}}, "munis": {团体代码: {"t": 村数, "k": 总石高, "r": [[领主, 石高], ...], "p": 是否含「一部」}}}，
-build_bundle 拼进 bundle/town-<lang>.json 的 kyu。
+build_bundle 拼进 bundle/town/<lang>/NN.json 的 kyu。
 """
 import http.cookiejar
 import json
@@ -230,11 +230,22 @@ def main():
         if key in vloc or not r['c1'] or r['c1'] not in cmap or not cmap[r['c1']][1]:
             continue
         g = old.get(r['c1'])
-        hits = [p for p in pts.get((r['c1'][:2], r['mura']), []) if g.buffer(0.005).covers(Point(*p))]
+        hits = [p for p in pts.get(r['mura'], []) if g.buffer(0.005).covers(Point(*p))]
         code = locate(*hits[0]) if len(hits) == 1 else None
         vloc[key] = (code, False) if code else None
         by_pt += bool(code)
     print(f'跨今界的旧市町村里按坐标定位的村 {by_pt}')
+    # 只登记到政令市整市一级的（大阪市 27100、仙台市 04100…，代码末三位是 100）：没有旧边界可对，
+    # 同县同名的村里坐标落在这个市的某个区（团体代码前三位相同）且只有一个的，按坐标定到那个区
+    city_pt = 0
+    for r in rows:
+        key = (r['prov'], r['gun'], r['mura'], r['kana'], r['c1'])
+        if key in vloc or not (len(r['c1']) == 5 and r['c1'].endswith('100')) or r['c1'] in cmap:
+            continue
+        codes = {c for c in (locate(*p) for p in pts.get(r['mura'], [])) if c and c[:3] == r['c1'][:3]}
+        vloc[key] = (codes.pop(), False) if len(codes) == 1 else None
+        city_pt += bool(vloc[key])
+    print(f'只登记到政令市一级、按坐标定到区的村 {city_pt}')
     # 按今天的市区町村：村数（同一村几行算一个）与各领主的石高（每行是这个村里这一方的石高，直接相加；几方共管的村不再笼统记作相給）
     out, lost, seen = {}, {}, set()
     for r in rows:

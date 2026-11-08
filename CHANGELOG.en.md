@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.21 · 2026-11-08
+
+- The family register's data is split by prefecture: opening a register downloads only that prefecture (tens of KB) instead of the whole country (about 0.5 MB), so it opens faster on phones
+- Ten Meiji villages that Wikipedia filed under the wrong municipality are corrected by checking CODH's 1920 boundaries (same prefecture, district and name, lying wholly in another municipality) — Yomogita is no longer counted in Aomori, Ina goes to Komagane, Kōzu and Sonoda (swapped on Wikipedia) go to Itami and Amagasaki, Kamigamo to Kita ward
+- Late-Edo lords: villages recorded only against a whole city such as Osaka or Sendai are placed in wards by their coordinates; villages placed by coordinates in old municipalities that straddle today's borders rose from 635 to 1,146 (the dataset's "prefecture code" is really a volume number, which had hidden every prefecture after Kyoto), unmatched rows fell from 198 to 55, and 1,622 municipalities now have the row
+- Name origins 57 → 74: the Iwate prefectural site covers every city in the prefecture, adding ten (Miyako, Hanamaki, Kitakami, Tōno, Ichinoseki, Kamaishi, Ninohe…); city and prefectural sites add Aomori, Fukushima, Mito, Ōtsu, Matsue, Saga and Kagoshima
+
 ## 3.20.1 · 2026-11-08
 
 - Name origins for Morioka, Kumamoto and Ōita (57 in all): Morioka from the Iwate prefectural site (Kozukata → Morigaoka → 森岡 → 盛岡), Kumamoto from the city's castle documents (隈本 became 熊本 in 1607), Ōita from the city site (the Bungo Fudoki's "great fields", 碩田)

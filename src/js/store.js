@@ -26,7 +26,8 @@ export const loadSengokuUnits = () => fetchJSON(`${MAP.data}/sengoku_units.json`
 export const loadRulers = () => fetchJSON(`${MAP.data}/rulers.json`).catch(() => null);
 export const loadBios = () => fetchJSON(`${MAP.data}/people.json`).catch(() => ({}));
 export const loadKen = (lang) => fetchJSON(`${MAP.data}/bundle/ken-${lang}.json`).catch(() => null);
-export const loadTown = (lang) => fetchJSON(`${MAP.data}/bundle/town-${lang}.json`).catch(() => null);
+// 户籍才用的明治町村、地名来历、幕末各村领主与和名抄：按县一份（bundle/town/<lang>/NN.json）
+export const loadTown = (lang, pid) => fetchJSON(`${MAP.data}/bundle/town/${lang}/${String(pid).padStart(2, '0')}.json`).catch(() => null);
 export const loadRegionEras = () => fetchJSON(`${MAP.data}/region_eras.json`).catch(() => null);
 export const loadRegimes = () => fetchJSON(`${MAP.data}/regimes.json`).catch(() => null);
 

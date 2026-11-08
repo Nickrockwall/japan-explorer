@@ -296,7 +296,8 @@ def kyudaka(lang):
 
 def build_town(lang):
     """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、地名的来历（tools/yurai_tool.py）、
-    幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py），单独成文件 bundle/town-<lang>.json，打开户籍时才下载。
+    幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py）。按县拆成 bundle/town/<lang>/NN.json
+    （{县 id: 文本}），打开某县的户籍时才下载那一份（合在一起约 0.5 MB，每县十几到几十 KB）。
     町村名、郷名中文按字形转换，英文仍用日文（没有可靠的罗马字；郷名附读音）"""
     conv = ja_to_zh_table() if lang == 'zh' else {}
     zh = lambda n: ''.join(conv.get(c, c) for c in n)
@@ -304,15 +305,26 @@ def build_town(lang):
     mura = load(mp) if os.path.exists(mp) else {}
     yurai = load(yp) if os.path.exists(yp) else {}
     wamyo = load(wp) if os.path.exists(wp) else {'prov': {}, 'muni': {}}
-    return json.dumps({
-        'mura': {code: [[zh(n), int(part), y] for n, part, y in rows] for code, rows in mura.items()},
-        'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items()},
-        'kyu': kyudaka(lang),
-        # 和名抄：{古郡（今天的市区町村代码 → [旧国, 郡]）, 郷（旧国 → 郡 → [[郷, 读音]]）}，只放有市区町村用得上的郡
-        'wamyo': {'muni': wamyo['muni'],
-                  'gou': {prov: {g: [[zh(n), (romaji(k) or k) if lang == 'en' else k] for n, k in v] for g, v in gs.items() if g in set(wamyo['muni'].values())}
-                          for prov, gs in wamyo['prov'].items()}},
-    }, ensure_ascii=False, separators=(',', ':'))
+    kyu = kyudaka(lang)
+    out = {}
+    for pid in range(1, 48):
+        pre = f'{pid:02d}'
+        prov_of = {f['properties']['code']: f['properties'].get('province')
+                   for f in load(os.path.join(DATA, 'municipalities', f'{pre}.json'))['features'] if f['properties'].get('code')}
+        wm = {c: g for c, g in wamyo['muni'].items() if c.startswith(pre)}
+        # 和名抄：{古郡（今天的市区町村代码 → 郡）, 郷（旧国 → 郡 → [[郷, 读音]]）}，只放本县的市区町村用得上的郡
+        gou = {}
+        for c, g in wm.items():
+            prov = prov_of.get(c)
+            if prov in wamyo['prov'] and g in wamyo['prov'][prov]:
+                gou.setdefault(prov, {})[g] = [[zh(n), (romaji(k) or k) if lang == 'en' else k] for n, k in wamyo['prov'][prov][g]]
+        out[pid] = json.dumps({
+            'mura': {code: [[zh(n), int(part), y] for n, part, y in rows] for code, rows in mura.items() if code.startswith(pre)},
+            'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items() if pref == str(pid)},
+            'kyu': {c: v for c, v in kyu.items() if c.startswith(pre)},
+            'wamyo': {'muni': wm, 'gou': gou},
+        }, ensure_ascii=False, separators=(',', ':'))
+    return out
 
 
 def main():
@@ -325,8 +337,10 @@ def main():
             f.write(text)
         with open(os.path.join(out_dir, f'ken-{lang}.json'), 'w', encoding='utf-8') as f:
             f.write(build_ken(lang))
-        with open(os.path.join(out_dir, f'town-{lang}.json'), 'w', encoding='utf-8') as f:
-            f.write(build_town(lang))
+        os.makedirs(os.path.join(out_dir, 'town', lang), exist_ok=True)
+        for pid, text_t in build_town(lang).items():
+            with open(os.path.join(out_dir, 'town', lang, f'{pid:02d}.json'), 'w', encoding='utf-8') as f:
+                f.write(text_t)
         print(f'{lang}: {os.path.getsize(path) // 1024} KB, version {json.loads(text)["version"]}')
 
 

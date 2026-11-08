@@ -13,7 +13,7 @@
   国土数値情報 N03 1920 年版加工）补：取成立日（N03_005）在 1888–1908 年的町村（即町村制时成立、到 1920 年仍在的），
   按面积重叠记给今天的市区町村（≥90% 落在一个里算整个，其余占 ≥15% 的各记一份、标「一部」）。1889–1920 年间已并掉的町村这里没有。
   北海道、冲绳的一级 / 二级町村制、岛屿町村制（1897–1908）也在这个范围里，一并收。
-输出 {团体代码: [[町村名, 是否只一部分, 施行年], ...]}（按条目里的顺序，同名去重），build_bundle 拼进 bundle/town-<lang>.json。
+输出 {团体代码: [[町村名, 是否只一部分, 施行年], ...]}（按条目里的顺序，同名去重），build_bundle 拼进 bundle/town/<lang>/NN.json。
 """
 import json
 import os
@@ -83,8 +83,8 @@ def resolve(name, pref, munis):
     return best
 
 
-def codh_villages():
-    """CODH 1920 年的町村 → {团体代码: [[町村名, 一部, 成立年]]}"""
+def codh_villages(index=None):
+    """CODH 1920 年的町村 → {团体代码: [[町村名, 一部, 成立年]]}；index 给了 dict 时顺带记下 {(县, 郡, 町村名): [(最大的一方, 是否整个)]}"""
     from shapely.strtree import STRtree
     cur = today()
     tree = STRtree([g for _, _, g in cur])
@@ -109,6 +109,8 @@ def codh_villages():
             best = max(hits, key=hits.get)
             share = {c: a / tot for c, a in hits.items()}
             whole = share[best] >= 0.9
+            if index is not None:
+                index.setdefault((pid, p.get('N03_003') or '', name), []).append((best, whole))
             for c, f in share.items():
                 if c == best or (not whole and f >= 0.15):
                     lst = out.setdefault(c, [])
@@ -129,6 +131,7 @@ def main():
              for p in range(2, 47)}
     wts = pages(sorted(titles), 'revisions', rvprop='content', rvslots='main')
     out, used, skipped = {}, 0, 0
+    src = {}  # (代码, 町村名) → (县, 郡, 一部)：下面拿 CODH 核对用
     for title, prefs in sorted(titles.items()):
         wt = text_of(wts[title]) or ''
         head, rows, year = section(wt)
@@ -158,8 +161,25 @@ def main():
                         for n in ns:
                             if all(n != x[0] for x in lst):
                                 lst.append([n, part, year])
+                                src[(munis[pref][c], n)] = (pref, re.sub(r'\s*\(.*\)$', '', title), part)
     print(f'有町村制一段的郡条目 {used} / {len(titles)}，市区町村 {len(out)}，町村 {sum(len(v) for v in out.values())}，不收 {skipped}')
-    codh = codh_villages()
+    index = {}
+    codh = codh_villages(index)
+    # 维基分错的：同县、同郡、同名、町村制时成立的町村在 CODH 1920 年里恰好一个、整个落在另一个市区町村，而维基分给的这里一点都不沾 → 改过去
+    moved = []
+    for (code, n), (pref, gun, part) in sorted(src.items()):
+        hit = index.get((pref, gun, n), [])
+        if part or len(hit) != 1 or not hit[0][1] or hit[0][0] == code or any(x[0] == n for x in codh.get(code, [])):
+            continue
+        to = hit[0][0]
+        row = next(x for x in out[code] if x[0] == n)
+        out[code].remove(row)
+        lst = out.setdefault(to, [])
+        if all(n != x[0] for x in lst):
+            lst.append(row)
+        moved.append(f'{n}（{gun}）{code} → {to}')
+    out = {c: v for c, v in out.items() if v}
+    print(f'按 CODH 改正维基分错的町村 {len(moved)}：', moved[:40])
     # 两边都有的市区町村：维基列出的町村有几成也在 CODH 的 1920 年里（1889–1920 年间并掉的会对不上）
     both = [c for c in out if c in codh]
     agree = sum(sum(1 for x in out[c] if any(x[0] == y[0] for y in codh[c])) for c in both)

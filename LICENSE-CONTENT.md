@@ -63,7 +63,7 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `tools/mura.json` 中维基没有写到的町村、`tools/kyudaka.json` 的旧市町村对应 | ROIS-DS 人文学开放数据共同利用中心（CODH）[《歴史的行政区域データセットβ版》](https://geoshape.ex.nii.ac.jp/city/)（1920、1985、1995 年市区町村边界，国土数値情報「行政区域データ」加工）与[《日本歴史地名大系』地名項目データセット》](https://geoshape.ex.nii.ac.jp/nrct/)（村的坐标） | **CC BY 4.0**：『歴史的行政区域データセットβ版』（CODH作成）、『日本歴史地名大系』地名項目データセット（CODH作成） doi:10.20676/00000448 |
 | `tools/wamyo.json` 及户籍数据包中的 `wamyo`（各郡的古代郷名与读音） | 《和名類聚抄》（10 世纪），据奈良文化财研究所[「古代地名検索システム」](https://chimei.nabunken.go.jp/)只取《和名类聚抄》本身所载的郷名与读音 | 典籍内容为公有领域（事实）；注明检索系统出处 |
 | `src/data/han.json` 中部分藩主的在位年份 | 日文维基与 Wikidata 都没有的，取[English Wikipedia](https://en.wikipedia.org/)各藩条目的藩主表（按汉字名对上） | 事实数据 |
-| `tools/yurai.json` 中 9 条地名来历的出处 | 盛冈（岩手县「いわての文化情報大事典」）、前桥、福井、静冈（县）、德岛、松山、长崎、熊本、大分市（县）政府官方网页 | 说明为本项目自行撰写，只核对关键词与年份 |
+| `tools/yurai.json` 中 26 条地名来历的出处 | 岩手县「いわての文化情報大事典」（盛冈等县内 11 市）；青森（市民图书馆）、福岛、水户、前桥、福井、静冈（县）、大津、松江、德岛、松山、佐贺（县）、长崎、熊本、大分、鹿儿岛（县）等市（县）政府官方网页 | 说明为本项目自行撰写，只核对关键词与年份 |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 
 作品名、人物名、商标（动画、大河剧、酒造、拉面店等）归各自权利人所有，本项目仅作介绍性引用。

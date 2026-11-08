@@ -47,7 +47,7 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }（town：bundle/town-<lang>.json 的明治町村与地名来历，可能为 null）
+// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }（town：bundle/town/<lang>/NN.json 的明治町村与地名来历，可能为 null）
 export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
