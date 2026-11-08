@@ -4,7 +4,7 @@
 
 1. 从日文维基百科「六十余州名所図会」的表格取 69 幅的编号、令制国、题名与 Commons 文件名；
 2. 在 Wikimedia Commons 核对每个文件的许可，**只接受公有领域**，否则中止；
-3. 下载后用 Pillow 缩到宽 560px、重新压缩，存 src/assets/hiroshige/NN.jpg（国内连不上 Commons，图片随站点发布）；
+3. 下载后用 Pillow 缩到宽 560px、重新压缩，存 src/assets/hiroshige/NN.webp（WebP q75，比 JPEG q80 小约四成；国内连不上 Commons，图片随站点发布）；
 4. 画题里第一个有坐标的链接条目即画中地点（无坐标退到 Wikidata P625），
    再用市区町村边界算出它今天在哪个县、哪个市区町村。画题没有链接的：
    该国今天只有一个市町村就取它；MANUAL 里人工确认过的取人工值；其余只记县，界面注明「具体地点不详」；
@@ -183,7 +183,7 @@ def shrink(src, dst):
     im = Image.open(src).convert('RGB')
     if im.width > WIDTH:
         im = im.resize((WIDTH, round(im.height * WIDTH / im.width)), Image.LANCZOS)
-    im.save(dst, 'JPEG', quality=80, optimize=True, progressive=True)
+    im.save(dst, 'WEBP', quality=75, method=6)
 
 
 def main():
@@ -255,13 +255,13 @@ def main():
             os.makedirs(CACHE, exist_ok=True)
             with urllib.request.urlopen(urllib.request.Request(meta['thumb'], headers={'User-Agent': UA}), timeout=120) as resp:
                 open(raw, 'wb').write(resp.read())
-        shrink(raw, os.path.join(IMG, f'{r["no"]:02d}.jpg'))
+        shrink(raw, os.path.join(IMG, f'{r["no"]:02d}.webp'))
         out.append({
             'no': r['no'], 'province': prov, 'title': plain(r['title_wt']),
             'title_zh': TITLES.get(r['no'], {}).get('zh', ''), 'title_en': TITLES.get(r['no'], {}).get('en', ''),
             'place_wiki': place.removeprefix(':ja:') if place else None, 'coords': [round(pt[0], 4), round(pt[1], 4)] if pt else None,
             'pref': pid, 'muni': code,
-            'img': f'src/assets/hiroshige/{r["no"]:02d}.jpg', 'source': meta.get('page'), 'license': lic,
+            'img': f'src/assets/hiroshige/{r["no"]:02d}.webp', 'source': meta.get('page'), 'license': lic,
         })
 
     if problems:

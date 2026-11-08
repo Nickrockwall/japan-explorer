@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.24 · 2026-11-08
+
+- The serif font for titles and place names now ships with the site instead of coming from Google Fonts, which is blocked in mainland China (the whole site fell back to system fonts there). Only the ~4,500 characters the site uses are included, cut into small slices by frequency, so a page downloads just the slices it needs (about 0.6 MB on first load, was about 1.3 MB)
+- The ECharts map engine is now a custom build with only the parts the site uses: 1 MB → 0.55 MB (326 KB → 186 KB compressed)
+- Hiroshige's 69 *Famous Places in the Sixty-odd Provinces* prints are now WebP: 7.2 MB → 5.0 MB with no visible difference
+- The AI guide's provider list adds DeepSeek and Qwen (both reachable from mainland China; picking one fills in the address and model); the OpenAI default model is now gpt-4.1-mini
+
 ## 3.23 · 2026-11-08
 
 - New light look based on Edo-period *kuniezu* (official province maps): mulberry-paper background, white land, a pale indigo sea and ink borders. Vermilion is now reserved for "seals" — the logo stamp, the stamp button, primary buttons and the selected place; selected filter buttons are ink

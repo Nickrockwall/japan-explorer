@@ -5,8 +5,8 @@
 ## 技术架构
 
 - 原生 HTML5 + CSS3 + 原生 ES Modules，无构建工具、无 npm 依赖，纯静态运行。
-- 地图：Apache ECharts 5.5.1，**随站点发布在 `src/vendor/echarts.min.js`**（附 LICENSE/NOTICE），不走 CDN——jsdelivr 在国内常挂起，同步脚本会让整页卡住（smoke 测试的 china 场景会屏蔽外部 CDN 检查这一点）。用 `echarts.registerMap` 注册本地 GeoJSON。
-- 字体：正文（`--sans`）一律用系统字体；网络只取当前语言的一种衬线字体（中文 Noto Serif SC，日文 / 英文 Noto Serif JP），由 index.html 头部的内联脚本按与 `i18n.js` `detect()` 相同的规则判定语言、设好 `<html lang>` 后插入，`display=optional` 非阻塞（没能马上就绪就整页用系统字体）。CJK 网络字体按字切片，原来 4 种字体 × 3 字重首屏要一两百个字体请求、3–6 MB。canvas 上的地图标签用 `serifFont()`（i18n.js，读 CSS 的 `--serif`），不要写死字体名。
+- 地图：Apache ECharts 5.5.1，**随站点发布在 `src/vendor/echarts.min.js`**（附 LICENSE/NOTICE），是只含本站所用部件的按需打包（map / scatter / effectScatter / lines / custom + geo / tooltip + canvas，`tools/echarts/entry.js`，`sh tools/echarts/build.sh` 重建，需 Node；完整版 1 MB → 0.55 MB）。用到新的图表类型或组件（visualMap、legend、markPoint…）时先在 entry.js 登记再重建，否则 ECharts 只在控制台警告、不画出来。不走 CDN——jsdelivr 在国内常挂起，同步脚本会让整页卡住（smoke 测试的 china 场景会屏蔽外部 CDN 检查这一点）。用 `echarts.registerMap` 注册本地 GeoJSON。
+- 字体：正文（`--sans`）一律用系统字体；只取当前语言的一种衬线字体（中文 Noto Serif SC，日文 / 英文 Noto Serif JP），由 index.html 头部的内联脚本按与 `i18n.js` `detect()` 相同的规则判定语言、设好 `<html lang>` 后插入 `src/fonts/{sc,jp}.css`，`display: optional` 非阻塞（没能马上就绪就整页用系统字体）。字体随站点发布（3.24 起不再用 Google Fonts，国内打不开）：`python -X utf8 tools/build_fonts.py`（需 fonttools、brotli）只收网站文字里出现的字（index.html、src/js、src/data 全部 JSON，界面文字加权），按字频每 160 字切一片、字重 500 / 700（写 900 的取 700），文件名带内容哈希，`sw.js` 对 `src/fonts/*.woff2` 缓存优先（`je-fonts`，不随版本清空）。**数据或界面里出现新字后重跑**，`check_data.check_fonts` 核对没有漏字（字体本身没有的字记在 `tools/fonts_lacking.json`）。首屏约 15 片、0.6 MB。许可 SIL OFL（`src/fonts/OFL.txt`）。canvas 上的地图标签用 `serifFont()`（i18n.js，读 CSS 的 `--serif`），不要写死字体名。
 - 深链接：`index.html#pref=26&lang=ja` 直接打开对应地区并指定语言；`&muni=1&m=23211` 打开市区町村地图并选中（政令市整市为各区代码以 `.` 连接）（`lang` 可省略；链接里的语言优先于本地设置并会被记住）。选中地区时地址栏自动写成这种形式，详卡「分享」按钮复制/分享的就是它。
 - **当前地图**（`src/js/country.js`）：`MAPS` 登记各地图的 GeoJSON、数据目录、单元数与存储键前缀（日本 = `src/data`、`je.`，与改造前完全相同）。页面加载时由 `pickMap(hash, 上次的地图)` 定下：链接里 `map=` 是已登记的键 → 用它；否则链接带 `pref=`（老链接都是日本）→ 日本；否则上次看的地图（`je.ui.map`）；都没有 → 日本。日本以外的地图在 `stateHash` 里写 `map=`，日本链接不带。切换地图走整页重载（与切换语言相同）。数据路径一律写成 `${MAP.data}/…`，不要再写死 `src/data/`。
 - 日文 → 简体：`build_bundle.ja_to_zh_table()` 把 search.js 的对照表反过来用，只收 GB 2312 里有的字（对照表也有异体字，反用曾把崎写成﨑、富写成冨），另把 zhconv 的「㭴」改回「樫」；han_tool / sengoku_tool / rulers_tool 的 `JA_ZH` 都从它来，`check_han` 核对藩名与藩主中文名里没有这几个字。
@@ -50,7 +50,7 @@ src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
 src/data/province_eras.json    古国演变时间轴：712 / 757 / 1869 年与 824 年的差异（remove + add）
-src/data/hiroshige.json        广重《六十余州名所图会》69 幅（tools/fetch_hiroshige.py 生成；图片在 src/assets/hiroshige/NN.jpg）
+src/data/hiroshige.json        广重《六十余州名所图会》69 幅（tools/fetch_hiroshige.py 生成；图片在 src/assets/hiroshige/NN.webp）
 src/js/hiroshige.js            古国地图上的作品卡、详卡「广重笔下」、大图浏览
 src/data/province_names.json   「国名今犹在」：旧国 → 今天仍带国名的东西（tools/province_names_tool.py 核验）
 src/js/provnames.js            国名标签：古国悬停提示、古国卡片、详卡
@@ -235,6 +235,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **快捷提问**：每县 3 个（战国时这里战况如何？/ 用当地方言和我打声招呼 / 古今界线）。
 - **无 API Key**：快捷提问与关键词匹配的自由提问（含“地缘梗”）由本地数据以当前角色第一人称拼出，打字机效果输出，并提示可接入 API 解锁自由对话。
 - **有 API Key**：流式调用 —
+  - 接口类型下拉里的 DeepSeek（`api.deepseek.com/v1`）与通义千问（`dashscope.aliyuncs.com/compatible-mode/v1`）只是预填了地址与模型的 OpenAI 兼容接口（`DEFAULT_API`，store.js；两家都允许浏览器跨域调用），走下面同一条路。
   - OpenAI 兼容：`POST {baseUrl}/chat/completions`，`stream: true`，解析 SSE `choices[0].delta.content`。
   - Claude：`POST https://api.anthropic.com/v1/messages`，带 `anthropic-dangerous-direct-browser-access: true`，解析 `content_block_delta`。
   - Gemini 原生：`POST {baseUrl}/models/{model}:streamGenerateContent?alt=sse`，Key 放 `x-goog-api-key`（支持新式「AQ.」Key；OpenAI 兼容端点强制要 `Authorization`，AQ Key 在那里会报 ACCESS_TOKEN_TYPE_UNSUPPORTED），解析 `candidates[0].content.parts[].text`，跳过 `thought` 部分。
@@ -339,7 +340,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 
 ### 广重《六十余州名所图会》（hiroshige.js）
 
-- `python -X utf8 tools/fetch_hiroshige.py`（需 `pip install pillow`）：解析日文维基百科「六十余州名所図会」的表格（69 幅，第 70 幅目录页跳过）→ 在 Commons 核对许可，**只收公有领域** → 原图缓存到 `.cache/hiroshige/`，缩到宽 560px 存 `src/assets/hiroshige/NN.jpg`（Commons 在国内打不开，图片随站点发布）。
+- `python -X utf8 tools/fetch_hiroshige.py`（需 `pip install pillow`）：解析日文维基百科「六十余州名所図会」的表格（69 幅，第 70 幅目录页跳过）→ 在 Commons 核对许可，**只收公有领域** → 原图缓存到 `.cache/hiroshige/`，缩到宽 560px 存 `src/assets/hiroshige/NN.webp`（WebP q75，比原来的 JPEG 小约三成；Commons 在国内打不开，图片随站点发布）。
 - 画中地点：画题里第一个有坐标的链接条目（`PLACE` 可指定别的条目、或写 None 表示不用链接），落到市区町村边界里；**定位结果的旧国（`province` 或 `partial`）必须与作品的国一致**，否则列为待处理。画题无链接的：该国只有一个市町村就取它；`MANUAL` 里人工确认的取人工值（市区町村名为 None = 只确定到县）；其余只记县、界面写「具体地点不详」。不要为了填满而猜地点。
 - 题名译文在工具的 `TITLES`（中 / 英；日文界面显示原题）。`build_bundle.py` 按语言拼好 `title_t`、旧国名 `prov`、市区町村名 `place` 放进数据包的 `hiroshige`（逐个文件回退加载时不显示浮世绘）。
 - 「国名今犹在」（provnames.js）：`province_names.json` 为 `{ 旧国: [{ja, zh, en, type, wiki, evidence?, evidence_note?}] }`，type ∈ place / nature / food / craft / transit / culture。新增后必须跑 `python -X utf8 tools/province_names_tool.py verify`（需 shapely）：① 名字里含国名简称或 `ALIASES` 别称；② place / transit / nature 的条目坐标在该国内（自然地物容许 60 公里），food / craft / culture 的条目正文提到该国或今属县名。通不过就不收，确需例外写 `evidence` 并在 `evidence_note` 说明（如信浓川：河口在越后）。数据包 `province_names` 每国带 `prov` 显示名与 `prefs`；`map` 的 `provTipExtra` 往古国提示里加一行，古国卡片 `namesBlock`，详卡 `namesSection`（按县涉及的旧国）。

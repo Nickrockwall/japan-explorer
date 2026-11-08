@@ -109,7 +109,7 @@
 
 ## 開発
 
-静的サイト：素の HTML / CSS / ES Modules。地図は [Apache ECharts](https://echarts.apache.org/) を同梱（中国本土のネットワークでも開けます）。ビルド工程はありません。
+静的サイト：素の HTML / CSS / ES Modules。地図は [Apache ECharts](https://echarts.apache.org/) を必要な部品だけでビルドして同梱、明朝体も同梱（中国本土のネットワークでも開けます）。ビルド工程はありません。
 
 ```bash
 python -m http.server 8000          # ローカルで動かして http://localhost:8000 を開く（index.html をダブルクリックでは動きません）

@@ -163,7 +163,10 @@ export const uiPref = {
 
 export const DEFAULT_API = {
   claude: { baseUrl: 'https://api.anthropic.com/v1', model: 'claude-sonnet-5-5' },
-  openai: { baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
+  openai: { baseUrl: 'https://api.openai.com/v1', model: 'gpt-4.1-mini' },
+  // 国内直连的两家，都是 OpenAI 兼容接口（允许浏览器跨域调用）
+  deepseek: { baseUrl: 'https://api.deepseek.com/v1', model: 'deepseek-chat' },
+  qwen: { baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus' },
   gemini: { baseUrl: 'https://generativelanguage.googleapis.com/v1beta', model: 'gemini-flash-lite-latest' },
 };
 

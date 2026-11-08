@@ -12,7 +12,7 @@
   ],
   "pref": 26,
   "muni": "26111",
-  "img": "src/assets/hiroshige/01.jpg",
+  "img": "src/assets/hiroshige/01.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Yamashiro_Arashiyama.jpg",
   "license": "Public domain"
  },
@@ -29,7 +29,7 @@
   ],
   "pref": 29,
   "muni": "29344",
-  "img": "src/assets/hiroshige/02.jpg",
+  "img": "src/assets/hiroshige/02.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_02_Yamato.jpg",
   "license": "Public domain"
  },
@@ -46,7 +46,7 @@
   ],
   "pref": 27,
   "muni": "27210",
-  "img": "src/assets/hiroshige/03.jpg",
+  "img": "src/assets/hiroshige/03.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Kawachi_Hirakata.jpg",
   "license": "Public domain"
  },
@@ -63,7 +63,7 @@
   ],
   "pref": 27,
   "muni": "27225",
-  "img": "src/assets/hiroshige/04.jpg",
+  "img": "src/assets/hiroshige/04.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Izumi_Province,_Takashi_Beach.jpg",
   "license": "Public domain"
  },
@@ -80,7 +80,7 @@
   ],
   "pref": 27,
   "muni": "27120",
-  "img": "src/assets/hiroshige/05.jpg",
+  "img": "src/assets/hiroshige/05.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Settsu_Province,_Sumiyoshi,_Idemi_Beach.jpg",
   "license": "Public domain"
  },
@@ -97,7 +97,7 @@
   ],
   "pref": 24,
   "muni": "24216",
-  "img": "src/assets/hiroshige/06.jpg",
+  "img": "src/assets/hiroshige/06.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_06_Iga.jpg",
   "license": "Public domain"
  },
@@ -114,7 +114,7 @@
   ],
   "pref": 24,
   "muni": "24203",
-  "img": "src/assets/hiroshige/07.jpg",
+  "img": "src/assets/hiroshige/07.webp",
   "source": "https://commons.wikimedia.org/wiki/File:07_Ise.jpg",
   "license": "Public domain"
  },
@@ -131,7 +131,7 @@
   ],
   "pref": 24,
   "muni": "24211",
-  "img": "src/assets/hiroshige/08.jpg",
+  "img": "src/assets/hiroshige/08.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_08_Shima.jpg",
   "license": "Public domain"
  },
@@ -148,7 +148,7 @@
   ],
   "pref": 23,
   "muni": "23208",
-  "img": "src/assets/hiroshige/09.jpg",
+  "img": "src/assets/hiroshige/09.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Tsushima_Tenn%C5%8D-matsuri.jpg",
   "license": "Public domain"
  },
@@ -165,7 +165,7 @@
   ],
   "pref": 23,
   "muni": "23221",
-  "img": "src/assets/hiroshige/10.jpg",
+  "img": "src/assets/hiroshige/10.webp",
   "source": "https://commons.wikimedia.org/wiki/File:10_Mikawa.jpg",
   "license": "Public domain"
  },
@@ -182,7 +182,7 @@
   ],
   "pref": 22,
   "muni": "22133",
-  "img": "src/assets/hiroshige/11.jpg",
+  "img": "src/assets/hiroshige/11.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_T%C5%8Dt%C5%8Dmi_Kanzanji.jpg",
   "license": "Public domain"
  },
@@ -199,7 +199,7 @@
   ],
   "pref": 22,
   "muni": "22103",
-  "img": "src/assets/hiroshige/12.jpg",
+  "img": "src/assets/hiroshige/12.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_12_Suruga.jpg",
   "license": "Public domain"
  },
@@ -216,7 +216,7 @@
   ],
   "pref": 19,
   "muni": "19206",
-  "img": "src/assets/hiroshige/13.jpg",
+  "img": "src/assets/hiroshige/13.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Kai_Saruhashi.jpg",
   "license": "Public domain"
  },
@@ -233,7 +233,7 @@
   ],
   "pref": 22,
   "muni": "22222",
-  "img": "src/assets/hiroshige/14.jpg",
+  "img": "src/assets/hiroshige/14.webp",
   "source": "https://commons.wikimedia.org/wiki/File:14_Izu_n.jpg",
   "license": "Public domain"
  },
@@ -250,7 +250,7 @@
   ],
   "pref": 14,
   "muni": "14205",
-  "img": "src/assets/hiroshige/15.jpg",
+  "img": "src/assets/hiroshige/15.webp",
   "source": "https://commons.wikimedia.org/wiki/File:15_Sagami_n.jpg",
   "license": "Public domain"
  },
@@ -267,7 +267,7 @@
   ],
   "pref": 13,
   "muni": "13106",
-  "img": "src/assets/hiroshige/16.jpg",
+  "img": "src/assets/hiroshige/16.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_16_Musashi.jpg",
   "license": "Public domain"
  },
@@ -284,7 +284,7 @@
   ],
   "pref": 13,
   "muni": "13106",
-  "img": "src/assets/hiroshige/17.jpg",
+  "img": "src/assets/hiroshige/17.webp",
   "source": "https://commons.wikimedia.org/wiki/File:17_Edo.jpg",
   "license": "Public domain"
  },
@@ -301,7 +301,7 @@
   ],
   "pref": 12,
   "muni": "12223",
-  "img": "src/assets/hiroshige/18.jpg",
+  "img": "src/assets/hiroshige/18.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_18_Awa_Province,_Kominato,_Uchiura.jpg",
   "license": "Public domain"
  },
@@ -318,7 +318,7 @@
   ],
   "pref": 12,
   "muni": "12403",
-  "img": "src/assets/hiroshige/19.jpg",
+  "img": "src/assets/hiroshige/19.webp",
   "source": "https://commons.wikimedia.org/wiki/File:19_Kazusa.jpg",
   "license": "Public domain"
  },
@@ -335,7 +335,7 @@
   ],
   "pref": 12,
   "muni": "12202",
-  "img": "src/assets/hiroshige/20.jpg",
+  "img": "src/assets/hiroshige/20.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_20_Shimosa.jpg",
   "license": "Public domain"
  },
@@ -352,7 +352,7 @@
   ],
   "pref": 8,
   "muni": "08222",
-  "img": "src/assets/hiroshige/21.jpg",
+  "img": "src/assets/hiroshige/21.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_21_Hitachi.jpg",
   "license": "Public domain"
  },
@@ -369,7 +369,7 @@
   ],
   "pref": 25,
   "muni": "25201",
-  "img": "src/assets/hiroshige/22.jpg",
+  "img": "src/assets/hiroshige/22.webp",
   "source": "https://commons.wikimedia.org/wiki/File:22_Omi.jpg",
   "license": "Public domain"
  },
@@ -386,7 +386,7 @@
   ],
   "pref": 21,
   "muni": "21341",
-  "img": "src/assets/hiroshige/23.jpg",
+  "img": "src/assets/hiroshige/23.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_23_Mino.jpg",
   "license": "Public domain"
  },
@@ -400,7 +400,7 @@
   "coords": null,
   "pref": 21,
   "muni": null,
-  "img": "src/assets/hiroshige/24.jpg",
+  "img": "src/assets/hiroshige/24.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Hida.jpg",
   "license": "Public domain"
  },
@@ -414,7 +414,7 @@
   "coords": null,
   "pref": 20,
   "muni": "20218",
-  "img": "src/assets/hiroshige/25.jpg",
+  "img": "src/assets/hiroshige/25.webp",
   "source": "https://commons.wikimedia.org/wiki/File:25_Shinano.jpg",
   "license": "Public domain"
  },
@@ -431,7 +431,7 @@
   ],
   "pref": 10,
   "muni": "10202",
-  "img": "src/assets/hiroshige/26.jpg",
+  "img": "src/assets/hiroshige/26.webp",
   "source": "https://commons.wikimedia.org/wiki/File:26_Kozuke.jpg",
   "license": "Public domain"
  },
@@ -448,7 +448,7 @@
   ],
   "pref": 9,
   "muni": "09206",
-  "img": "src/assets/hiroshige/27.jpg",
+  "img": "src/assets/hiroshige/27.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_27_Shimotsuke.jpg",
   "license": "Public domain"
  },
@@ -465,7 +465,7 @@
   ],
   "pref": 4,
   "muni": "04401",
-  "img": "src/assets/hiroshige/28.jpg",
+  "img": "src/assets/hiroshige/28.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Mutsu_Province,_View_of_Matsushima,_Sight_Map_from_Mount_Tomi.jpg",
   "license": "Public domain"
  },
@@ -482,7 +482,7 @@
   ],
   "pref": 6,
   "muni": null,
-  "img": "src/assets/hiroshige/29.jpg",
+  "img": "src/assets/hiroshige/29.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Mogamigawa-gassan-enbou-Hirosige.jpg",
   "license": "Public domain"
  },
@@ -496,7 +496,7 @@
   "coords": null,
   "pref": 18,
   "muni": null,
-  "img": "src/assets/hiroshige/30.jpg",
+  "img": "src/assets/hiroshige/30.webp",
   "source": "https://commons.wikimedia.org/wiki/File:30_Wakasa.jpg",
   "license": "Public domain"
  },
@@ -513,7 +513,7 @@
   ],
   "pref": 18,
   "muni": "18202",
-  "img": "src/assets/hiroshige/31.jpg",
+  "img": "src/assets/hiroshige/31.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_31_Echizen.jpg",
   "license": "Public domain"
  },
@@ -530,7 +530,7 @@
   ],
   "pref": 17,
   "muni": "17201",
-  "img": "src/assets/hiroshige/32.jpg",
+  "img": "src/assets/hiroshige/32.webp",
   "source": "https://commons.wikimedia.org/wiki/File:32_Kaga.jpg",
   "license": "Public domain"
  },
@@ -544,7 +544,7 @@
   "coords": null,
   "pref": 17,
   "muni": null,
-  "img": "src/assets/hiroshige/33.jpg",
+  "img": "src/assets/hiroshige/33.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Noto_Takinoura.jpg",
   "license": "Public domain"
  },
@@ -561,7 +561,7 @@
   ],
   "pref": 16,
   "muni": "16201",
-  "img": "src/assets/hiroshige/34.jpg",
+  "img": "src/assets/hiroshige/34.webp",
   "source": "https://commons.wikimedia.org/wiki/File:34_Etchu.jpg",
   "license": "Public domain"
  },
@@ -578,7 +578,7 @@
   ],
   "pref": 15,
   "muni": "15216",
-  "img": "src/assets/hiroshige/35.jpg",
+  "img": "src/assets/hiroshige/35.webp",
   "source": "https://commons.wikimedia.org/wiki/File:35_Echigo.jpg",
   "license": "Public domain"
  },
@@ -595,7 +595,7 @@
   ],
   "pref": 15,
   "muni": "15224",
-  "img": "src/assets/hiroshige/36.jpg",
+  "img": "src/assets/hiroshige/36.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige,_Gold_mine_in_Sado_province,_1853.jpg",
   "license": "Public domain"
  },
@@ -609,7 +609,7 @@
   "coords": null,
   "pref": 28,
   "muni": null,
-  "img": "src/assets/hiroshige/37.jpg",
+  "img": "src/assets/hiroshige/37.webp",
   "source": "https://commons.wikimedia.org/wiki/File:37_Tamba_n.jpg",
   "license": "Public domain"
  },
@@ -626,7 +626,7 @@
   ],
   "pref": 26,
   "muni": "26205",
-  "img": "src/assets/hiroshige/38.jpg",
+  "img": "src/assets/hiroshige/38.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_38_Tango.jpg",
   "license": "Public domain"
  },
@@ -640,7 +640,7 @@
   "coords": null,
   "pref": 28,
   "muni": null,
-  "img": "src/assets/hiroshige/39.jpg",
+  "img": "src/assets/hiroshige/39.webp",
   "source": "https://commons.wikimedia.org/wiki/File:39_Tajiima.jpg",
   "license": "Public domain"
  },
@@ -657,7 +657,7 @@
   ],
   "pref": 31,
   "muni": "31201",
-  "img": "src/assets/hiroshige/40.jpg",
+  "img": "src/assets/hiroshige/40.webp",
   "source": "https://commons.wikimedia.org/wiki/File:40_Inaba.jpg",
   "license": "Public domain"
  },
@@ -674,7 +674,7 @@
   ],
   "pref": 31,
   "muni": "31386",
-  "img": "src/assets/hiroshige/41.jpg",
+  "img": "src/assets/hiroshige/41.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_41_Hoki.jpg",
   "license": "Public domain"
  },
@@ -691,7 +691,7 @@
   ],
   "pref": 32,
   "muni": "32203",
-  "img": "src/assets/hiroshige/42.jpg",
+  "img": "src/assets/hiroshige/42.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_42_Izumo.jpg",
   "license": "Public domain"
  },
@@ -708,7 +708,7 @@
   ],
   "pref": 32,
   "muni": "32204",
-  "img": "src/assets/hiroshige/43.jpg",
+  "img": "src/assets/hiroshige/43.webp",
   "source": "https://commons.wikimedia.org/wiki/File:43_Iwami.jpg",
   "license": "Public domain"
  },
@@ -725,7 +725,7 @@
   ],
   "pref": 32,
   "muni": "32526",
-  "img": "src/assets/hiroshige/44.jpg",
+  "img": "src/assets/hiroshige/44.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Oki_Takuhinoyashiro.jpg",
   "license": "Public domain"
  },
@@ -742,7 +742,7 @@
   ],
   "pref": 28,
   "muni": "28108",
-  "img": "src/assets/hiroshige/45.jpg",
+  "img": "src/assets/hiroshige/45.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_45_Harima.jpg",
   "license": "Public domain"
  },
@@ -756,7 +756,7 @@
   "coords": null,
   "pref": 33,
   "muni": null,
-  "img": "src/assets/hiroshige/46.jpg",
+  "img": "src/assets/hiroshige/46.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Mimasaka_Yamabushidani.jpg",
   "license": "Public domain"
  },
@@ -773,7 +773,7 @@
   ],
   "pref": 33,
   "muni": "33202",
-  "img": "src/assets/hiroshige/47.jpg",
+  "img": "src/assets/hiroshige/47.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Bizen_Tanokuchi.jpg",
   "license": "Public domain"
  },
@@ -790,7 +790,7 @@
   ],
   "pref": 33,
   "muni": "33681",
-  "img": "src/assets/hiroshige/48.jpg",
+  "img": "src/assets/hiroshige/48.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_48_Bitchu.jpg",
   "license": "Public domain"
  },
@@ -807,7 +807,7 @@
   ],
   "pref": 34,
   "muni": "34207",
-  "img": "src/assets/hiroshige/49.jpg",
+  "img": "src/assets/hiroshige/49.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_49_Bingo.jpg",
   "license": "Public domain"
  },
@@ -824,7 +824,7 @@
   ],
   "pref": 34,
   "muni": "34213",
-  "img": "src/assets/hiroshige/50.jpg",
+  "img": "src/assets/hiroshige/50.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_50_Aki.jpg",
   "license": "Public domain"
  },
@@ -841,7 +841,7 @@
   ],
   "pref": 35,
   "muni": "35208",
-  "img": "src/assets/hiroshige/51.jpg",
+  "img": "src/assets/hiroshige/51.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_51_Suo.jpg",
   "license": "Public domain"
  },
@@ -858,7 +858,7 @@
   ],
   "pref": 35,
   "muni": "35201",
-  "img": "src/assets/hiroshige/52.jpg",
+  "img": "src/assets/hiroshige/52.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_52_Nagato.jpg",
   "license": "Public domain"
  },
@@ -875,7 +875,7 @@
   ],
   "pref": 30,
   "muni": "30201",
-  "img": "src/assets/hiroshige/53.jpg",
+  "img": "src/assets/hiroshige/53.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_53_Kii.jpg",
   "license": "Public domain"
  },
@@ -892,7 +892,7 @@
   ],
   "pref": 28,
   "muni": "28205",
-  "img": "src/assets/hiroshige/54.jpg",
+  "img": "src/assets/hiroshige/54.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_54_Awaji.jpg",
   "license": "Public domain"
  },
@@ -909,7 +909,7 @@
   ],
   "pref": 36,
   "muni": "36202",
-  "img": "src/assets/hiroshige/55.jpg",
+  "img": "src/assets/hiroshige/55.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_55_Awa.jpg",
   "license": "Public domain"
  },
@@ -926,7 +926,7 @@
   ],
   "pref": 37,
   "muni": "37208",
-  "img": "src/assets/hiroshige/56.jpg",
+  "img": "src/assets/hiroshige/56.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_56_Sanuki.jpg",
   "license": "Public domain"
  },
@@ -943,7 +943,7 @@
   ],
   "pref": 38,
   "muni": "38206",
-  "img": "src/assets/hiroshige/57.jpg",
+  "img": "src/assets/hiroshige/57.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_57_Iyo.jpg",
   "license": "Public domain"
  },
@@ -957,7 +957,7 @@
   "coords": null,
   "pref": 39,
   "muni": null,
-  "img": "src/assets/hiroshige/58.jpg",
+  "img": "src/assets/hiroshige/58.webp",
   "source": "https://commons.wikimedia.org/wiki/File:58_Tosa.jpg",
   "license": "Public domain"
  },
@@ -974,7 +974,7 @@
   ],
   "pref": 40,
   "muni": "40131",
-  "img": "src/assets/hiroshige/59.jpg",
+  "img": "src/assets/hiroshige/59.webp",
   "source": "https://commons.wikimedia.org/wiki/File:59_Chikuzen.jpg",
   "license": "Public domain"
  },
@@ -991,7 +991,7 @@
   ],
   "pref": 40,
   "muni": null,
-  "img": "src/assets/hiroshige/60.jpg",
+  "img": "src/assets/hiroshige/60.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_60_Chikugo.jpg",
   "license": "Public domain"
  },
@@ -1008,7 +1008,7 @@
   ],
   "pref": 44,
   "muni": "44203",
-  "img": "src/assets/hiroshige/61.jpg",
+  "img": "src/assets/hiroshige/61.webp",
   "source": "https://commons.wikimedia.org/wiki/File:Hiroshige_Buzen_Rakanji.jpg",
   "license": "Public domain"
  },
@@ -1022,7 +1022,7 @@
   "coords": null,
   "pref": 44,
   "muni": null,
-  "img": "src/assets/hiroshige/62.jpg",
+  "img": "src/assets/hiroshige/62.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_62_Bungo.jpg",
   "license": "Public domain"
  },
@@ -1039,7 +1039,7 @@
   ],
   "pref": 42,
   "muni": "42201",
-  "img": "src/assets/hiroshige/63.jpg",
+  "img": "src/assets/hiroshige/63.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_63_Hizen.jpg",
   "license": "Public domain"
  },
@@ -1053,7 +1053,7 @@
   "coords": null,
   "pref": 43,
   "muni": "43202",
-  "img": "src/assets/hiroshige/64.jpg",
+  "img": "src/assets/hiroshige/64.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_64_Higo.jpg",
   "license": "Public domain"
  },
@@ -1070,7 +1070,7 @@
   ],
   "pref": 45,
   "muni": "45204",
-  "img": "src/assets/hiroshige/65.jpg",
+  "img": "src/assets/hiroshige/65.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_65_Hyuga.jpg",
   "license": "Public domain"
  },
@@ -1087,7 +1087,7 @@
   ],
   "pref": 46,
   "muni": "46201",
-  "img": "src/assets/hiroshige/66.jpg",
+  "img": "src/assets/hiroshige/66.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_66_Osumi.jpg",
   "license": "Public domain"
  },
@@ -1104,7 +1104,7 @@
   ],
   "pref": 46,
   "muni": "46220",
-  "img": "src/assets/hiroshige/67.jpg",
+  "img": "src/assets/hiroshige/67.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_67_Satsuma.jpg",
   "license": "Public domain"
  },
@@ -1118,7 +1118,7 @@
   "coords": null,
   "pref": 42,
   "muni": "42210",
-  "img": "src/assets/hiroshige/68.jpg",
+  "img": "src/assets/hiroshige/68.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_68_Iki.jpg",
   "license": "Public domain"
  },
@@ -1132,7 +1132,7 @@
   "coords": null,
   "pref": 42,
   "muni": "42209",
-  "img": "src/assets/hiroshige/69.jpg",
+  "img": "src/assets/hiroshige/69.webp",
   "source": "https://commons.wikimedia.org/wiki/File:The_Famous_Scenes_of_the_Sixty_States_69_Tsushima.jpg",
   "license": "Public domain"
  }

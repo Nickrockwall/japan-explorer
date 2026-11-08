@@ -132,13 +132,18 @@ class Case:
             assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
 
     def fonts(self, page):
-        # 网络只取当前语言的一种衬线字体、不取无衬线；<html lang> 在头部就定好；canvas 标签用同一个字体栈
-        want = 'Noto+Serif+SC' if self.lang == 'zh' else 'Noto+Serif+JP'
-        hrefs = page.evaluate("[...document.querySelectorAll('link[href*=\"fonts.googleapis.com/css\"]')].map((l) => l.href)")
-        assert len(hrefs) == 1 and want in hrefs[0] and 'Sans' not in hrefs[0], f'字体请求 {hrefs}'
+        # 只取当前语言的一种衬线字体（随站点发布的切片，不走 Google Fonts）；<html lang> 在头部就定好；canvas 标签用同一个字体栈
+        key, want = ('sc', 'Noto Serif SC') if self.lang == 'zh' else ('jp', 'Noto Serif JP')
+        hrefs = page.evaluate("[...document.querySelectorAll('link[href*=\"fonts\"]')].map((l) => l.getAttribute('href'))")
+        assert hrefs == [f'src/fonts/{key}.css'], f'字体请求 {hrefs}'
         assert page.evaluate('document.documentElement.lang') == {'zh': 'zh-CN', 'en': 'en', 'ja': 'ja'}[self.lang]
         first = page.evaluate("import('./src/js/i18n.js').then((m) => m.serifFont())").split(',')[0].strip('"\' ')
-        assert first == want.replace('+', ' '), f'serifFont() 首选 {first}'
+        assert first == want, f'serifFont() 首选 {first}'
+        # 切片真的能加载，且只下载用到的几片
+        n = page.evaluate(f"document.fonts.load('700 20px \"{want}\"', '京都古今').then((f) => f.length)")
+        assert n >= 1, f'{want} 切片没有加载'
+        got = page.evaluate("performance.getEntriesByType('resource').map((e) => e.name).filter((u) => u.includes('/src/fonts/') && u.endsWith('.woff2'))")
+        assert 0 < len(got) < 24, f'下载了 {len(got)} 片字体'
 
     def country(self, page):
         # #map=nope 退回日本，并且日本模式的链接里不出现 map=

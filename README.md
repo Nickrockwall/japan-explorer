@@ -109,7 +109,7 @@
 
 ## 开发
 
-纯静态网站：原生 HTML / CSS / ES Modules，地图用 [Apache ECharts](https://echarts.apache.org/)（随站点发布，国内网络也能打开），没有构建步骤。
+纯静态网站：原生 HTML / CSS / ES Modules，地图用 [Apache ECharts](https://echarts.apache.org/)（只打包用到的部分，与衬线字体一起随站点发布，国内网络也能打开），没有构建步骤。
 
 ```bash
 python -m http.server 8000          # 本地运行，打开 http://localhost:8000（不能直接双击 index.html）

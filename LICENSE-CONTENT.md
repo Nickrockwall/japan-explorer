@@ -37,6 +37,7 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | 文件 / File | 来源 / Source | 条款 / Terms |
 |---|---|---|
 | `src/vendor/echarts*` | [Apache ECharts](https://echarts.apache.org/) | Apache-2.0（见 `src/vendor/echarts-LICENSE`、`echarts-NOTICE`） |
+| `src/fonts/` | [Noto Serif SC / JP](https://github.com/notofonts/noto-cjk)（按网站用到的字切片） | SIL Open Font License 1.1（见 `src/fonts/OFL.txt`） |
 | `src/assets/geojson/japan.json` | 地球地図日本（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换 | 须注明「出典：地球地図日本」；商用须向国土地理院报告 |
 | `src/data/municipalities/` 的边界，及由其合并而成的 `src/data/provinces.json` | 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成，经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化 | 国土数値情報の利用規約 |
 | `src/data/municipalities/` 的读音、人口、英文名 | [Wikidata](https://www.wikidata.org/) | CC0 |

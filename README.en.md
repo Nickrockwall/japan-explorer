@@ -109,7 +109,7 @@ What changed in each version: [CHANGELOG.en.md](CHANGELOG.en.md).
 
 ## Development
 
-A static site: plain HTML / CSS / ES modules, with [Apache ECharts](https://echarts.apache.org/) bundled for the map (so it loads in mainland China too). No build step.
+A static site: plain HTML / CSS / ES modules, with [Apache ECharts](https://echarts.apache.org/) custom-built and bundled for the map, and the serif font bundled too (so it all loads in mainland China). No build step.
 
 ```bash
 python -m http.server 8000          # run locally, then open http://localhost:8000 (double-clicking index.html won't work)

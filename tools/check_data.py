@@ -487,6 +487,16 @@ def check_shell():
             err('sw.js', f'src/js/{js} 没有列进 SHELL（离线时会缺模块）')
 
 
+def check_fonts():
+    import build_fonts
+    for key, chars in build_fonts.missing().items():
+        if chars:
+            err(f'src/fonts/{key}.css', f'{len(chars)} 个字没有切进字体（{"".join(chars[:20])}…）：重跑 tools/build_fonts.py')
+    css = read('index.html')
+    if 'fonts.googleapis.com' in css:
+        err('index.html', '不要再从 Google Fonts 取字体（国内打不开），用 src/fonts/')
+
+
 def check_repo():
     try:
         files = subprocess.run(['git', 'ls-files'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines()
@@ -560,7 +570,7 @@ def check_palette():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_fonts, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

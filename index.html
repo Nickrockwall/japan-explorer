@@ -27,12 +27,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Japan Explorer">
 
-  <!-- 字体不阻塞首屏；display=optional：字体若没能马上就绪，本次就整页用系统字体，不会中途替换导致排版跳动
-       （Google Fonts 在国内常连不上，此时始终用系统字体）。
-       正文用系统无衬线字体，网络只取当前语言的一种衬线字体（中文 SC，日文/英文 JP）：CJK 字体按字切片，
-       多一种字体或字重就多几十个请求。语言判定与 i18n.js 的 detect() 一致（切换语言会重新载入页面） -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- 字体不阻塞首屏；display=optional：字体若没能马上就绪，本次就整页用系统字体，不会中途替换导致排版跳动。
+       正文用系统无衬线字体，衬线字体只取当前语言的一种（中文 SC，日文/英文 JP），随站点发布在 src/fonts/
+       （tools/build_fonts.py 按网站用到的字切片，浏览器只下载这一页用到的几片；不走 Google Fonts，国内也能用）。
+       语言判定与 i18n.js 的 detect() 一致（切换语言会重新载入页面） -->
   <script>
     (function () {
       var ok = { zh: 'zh-CN', en: 'en', ja: 'ja' }, l = null;
@@ -54,7 +52,7 @@
       f.rel = 'stylesheet';
       f.media = 'print';
       f.onload = function () { f.media = 'all'; };
-      f.href = 'https://fonts.googleapis.com/css2?family=' + (l === 'zh' ? 'Noto+Serif+SC' : 'Noto+Serif+JP') + ':wght@500;700;900&display=optional';
+      f.href = 'src/fonts/' + (l === 'zh' ? 'sc' : 'jp') + '.css';
       document.head.appendChild(f);
     })();
   </script>
@@ -290,6 +288,8 @@
           <option value="claude" data-i18n="set.opt.claude">Claude API（Anthropic）</option>
           <option value="openai" data-i18n="set.opt.openai">OpenAI 兼容接口</option>
           <option value="gemini" data-i18n="set.opt.gemini">Gemini 原生（Google AI Studio）</option>
+          <option value="deepseek" data-i18n="set.opt.deepseek">DeepSeek</option>
+          <option value="qwen" data-i18n="set.opt.qwen">通义千问（阿里云百炼）</option>
         </select>
       </label>
       <label>Base URL
