@@ -79,9 +79,9 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
   const gun = (gunList.find(([, part]) => !part) || gunList[0])?.[0];
   const topOf = (g) => domains?.[pref.id]?.[g]?.r?.[0]?.[0];
   const others = [...new Set(gunList.map(([g]) => topOf(g)).filter(Boolean))];
-  // 主要郡（main_gun）：中心市街所在的郡优先；江户 / 京都的市街直接是幕府领；整市一级的只在别的办法都没有时用
+  // 主要郡（main_gun）：城下町（藩厅所在）直接是那个藩，江户 / 京都的市街直接是幕府领；其次中心市街所在的郡；整市一级的只在别的办法都没有时用
   const mg = mainGun?.[props.code];
-  const top = mg?.town ? mg.lord : (mg?.g && topOf(mg.g)) || gun && topOf(gun) || (others.length === 1 ? others[0] : null) || mg?.lord || null;
+  const top = mg?.seat || mg?.town ? mg.lord : (mg?.g && topOf(mg.g)) || gun && topOf(gun) || (others.length === 1 ? others[0] : null) || mg?.lord || null;
   const h = top && !top.startsWith('@') ? findHan(han, top, pref.id) : null;
   if (h) {
     let prev = h.y?.[0] ?? 1603;

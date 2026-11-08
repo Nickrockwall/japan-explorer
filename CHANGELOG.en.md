@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.18 · 2026-11-08
+
+- Castle towns now name their own domain: 122 municipalities that held a domain's seat (castle or jin'ya) show that domain as the late-Edo lord, still followed by the district's village counts. About 35 towns change, where counting villages across the whole district had picked a neighbour or bannermen: Matsuyama (Ōzu → Iyo-Matsuyama), Tsu (Kishū → Tsu), Yamagata (Kaminoyama → Yamagata), Uwajima, Akashi, Tsuchiura, Hachinohe, Amagasaki…; Toyama, empty before, now reads Toyama Domain. The seat is placed by the castle's coordinates and counted only when the domain or castle name is in the town's name, so small domains in merged-in outskirts (Yoita in Nagaoka, Matsushiro in Nagano, Yagyū in Nara) don't stand for the whole city
+- The Home line now names the same district as the Edo line (Kasama: Nishi-Ibaraki, not the pre-1878 Ibaraki)
+- Oda Nobutoshi of Tendō shows both terms (1868, 1869–1871) instead of one with years and one without
+- Data tools: when Wikipedia returned more than one response holds, some articles used to be silently skipped; the tools now fetch the rest and stop with an error if anything is still missing. Each tool records the revision of every article it read, and domain-name matching no longer varies from run to run (Yamaguchi came and went)
+
 ## 3.17 · 2026-11-08
 
 - Old Family Register: a new "Meiji villages" line lists the towns and villages of the 1889 municipal system that are now part of this place (Ueda: Ueda-machi, Kamikawa-mura…). From the district articles on Japanese Wikipedia, only where they say which town each village now belongs to: 1,199 municipalities, about 10,000 villages. Where an article names only a big city and not the ward, the ward is left out, so some lists are incomplete. The hometown timeline gets the same line

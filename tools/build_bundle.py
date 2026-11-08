@@ -148,8 +148,17 @@ def domains(lang, chains=False, main=False):
         # 主要郡（tools/fetch_main_gun.py）：{代码: {g: 郡} | {lord: 领主（按语言）, city: 市名} | {lord, town: edo|kyoto}}
         path = os.path.join(ROOT, 'tools', 'main_gun.json')
         got = load(path) if os.path.exists(path) else {}
-        return {code: {'g': v['g']} if 'g' in v else {'lord': label(v['lord']), **({'town': v['town']} if 'town' in v else {'city': v['city']})}
-                for code, v in got.items()}
+        out = {code: {'g': v['g']} if 'g' in v else {'lord': label(v['lord']), **({'town': v['town']} if 'town' in v else {'city': v['city']})}
+               for code, v in got.items()}
+        # 城下町（tools/fetch_seats.py）：藩厅所在的市区町村直接写这个藩，优先于郡的推断（郡名留着给废藩置县后的县链用）
+        sp = os.path.join(ROOT, 'tools', 'seats.json')
+        names = {h['t']: h['n'] for h in load(os.path.join(DATA, 'han.json'))['han']}
+        for code, (han_t, seat) in (load(sp) if os.path.exists(sp) else {}).items():
+            n = names[han_t]
+            castle = re.sub(r'\s*\(.*\)$', '', seat or '')
+            out[code] = {**{k: v for k, v in out.get(code, {}).items() if k == 'g'}, 'lord': n.get(lang) or n['ja'],
+                         'seat': ''.join(conv.get(c, c) for c in castle) if lang == 'zh' else castle}
+        return out
     out = {}
     for pref, ds in load(os.path.join(ROOT, 'tools', 'districts.json')).items():
         if pref.startswith('_'):

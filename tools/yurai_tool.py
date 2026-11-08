@@ -13,7 +13,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from pilgrimage_tool import pages, text_of  # noqa: E402
+from pilgrimage_tool import pages, record_revisions, text_of  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'yurai.json')
@@ -236,3 +236,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    record_revisions('yurai_tool')

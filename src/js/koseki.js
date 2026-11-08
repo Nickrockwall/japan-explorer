@@ -56,11 +56,12 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const circuit = mine[0]?.circuit;
   const gunList = props.old_districts || [];
   const gun = (gunList.find(([, part]) => !part) || gunList[0])?.[0];
+  const homeGun = mainGun?.[props.code]?.g || gun; // 本贯也用中心市街所在的郡（笠间市：西茨城郡，而不是 1878 年前的茨城郡）
   const muniName = lang === 'en' && props.en ? props.en : props.name;
   const rows = [];
 
   // 本贯：道 · 国 · 郡；今属
-  const home = [circuit ? label('circuit', circuit) : null, key ? pn(key) : t('muni.outside'), gun].filter(Boolean).join(' · ');
+  const home = [circuit ? label('circuit', circuit) : null, key ? pn(key) : t('muni.outside'), homeGun].filter(Boolean).join(' · ');
   const partial = props.partial?.length ? t('muni.partial', { list: props.partial.map(pn).join(' · ') }) : '';
   rows.push({ k: 'home', seal: 'muni', main: home, sub: [t('ks.now', { place: `${prefLabel} ${muniName}` }), partial].filter(Boolean).join(' · ') });
 
@@ -99,7 +100,12 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const edoGun = mg?.g || gun;
   const d = edoGun && domains?.[pref.id]?.[edoGun];
   const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
-  if (mg?.town || (!d?.r?.length && mg?.lord)) {
+  if (mg?.seat) {
+    // 城下町：藩厅所在，直接写这个藩；郡的町村统计接在后面
+    const h = findHan(han, mg.lord, pref.id);
+    const of = d?.r?.length && d.t ? t('ks.edo.of', { gun: edoGun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : '';
+    rows.push({ k: 'edo', seal: 'muni', main: mg.lord, sub: [t('ks.edo.seat', { han: mg.lord, seat: mg.seat }), of].filter(Boolean).join(' · '), hans: h ? [h] : [] });
+  } else if (mg?.town || (!d?.r?.length && mg?.lord)) {
     const h = !mg.lord.startsWith('@') && findHan(han, mg.lord, pref.id);
     rows.push({ k: 'edo', seal: mg.town ? 'muni' : 'city', main: lord(mg.lord), sub: mg.town ? t(`ks.edo.town.${mg.town}`) : t('ks.edo.city', { city: mg.city }), hans: h ? [h] : [] });
   } else if (d?.r?.length) {
@@ -140,7 +146,7 @@ export function kosekiHTML(ctx, data, name, extra = '') {
   const { rows, print } = data;
   const title = `${ctx.prefLabel} ${lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name}`;
   const body = rows.map((r) => `
-    <div class="ks-row">
+    <div class="ks-row" data-k="${r.k}">
       <div class="ks-k">${esc(t(`ks.r.${r.k}`))}<i class="ks-seal" title="${esc(t(`ks.p.${r.seal}.t`))}">${esc(t(`ks.p.${r.seal}`))}</i></div>
       <div class="ks-v"><b>${esc(r.main)}</b>${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
         ${r.voice ? `<button type="button" class="ks-voice" data-act="ks-voice">${esc(t('ks.voice'))}</button>` : ''}</div>

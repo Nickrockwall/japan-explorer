@@ -42,6 +42,8 @@ def api(params):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA}), timeout=60) as r:
                 data = json.load(r)
+            if 'error' in data:  # 限流、维护中等：不写进缓存，等一下重试，最后一次就报错
+                raise RuntimeError(f"维基 API 出错：{data['error'].get('code')} {data['error'].get('info', '')[:120]}")
             break
         except Exception as e:
             if attempt == 3:
@@ -53,21 +55,54 @@ def api(params):
     return data
 
 
+REVISIONS = {}  # 本次运行读过的条目 → 版本号
+
+
+def record_revisions(tool, titles=None):
+    """把这个工具读过的维基条目版本号写进 tools/wiki_revisions.json（{工具: {条目: 版本号}}）：
+    重跑时结果变了，能对出是哪个条目被改过（https://ja.wikipedia.org/w/index.php?oldid=版本号 可看当时的原文）"""
+    path = os.path.join(ROOT, 'tools', 'wiki_revisions.json')
+    data = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    keep = REVISIONS if titles is None else {t: r for t, r in REVISIONS.items() if t in titles}
+    data[tool] = dict(sorted(keep.items()))
+    json.dump(dict(sorted(data.items())), open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+
+
 def pages(titles, prop, **extra):
-    """批量取条目（自动跟随重定向），返回 {请求的标题: page}"""
+    """批量取条目（自动跟随重定向），返回 {请求的标题: page}。
+    一批条目的全文超过 API 的回应上限时，只给一部分并附 continue：跟着取完；取完还有条目（不是「不存在」）没有内容就报错，
+    以前不跟 continue，缺的条目被当成没有内容悄悄跳过（主要郡第一次跑少了二十多个市）"""
     out = {}
     titles = list(dict.fromkeys(titles))
+    if prop == 'revisions' and extra.get('rvprop') == 'content':
+        extra = {**extra, 'rvprop': 'content|ids'}  # 顺带取版本号，record_revisions 记下来
     for i in range(0, len(titles), 40):
         batch = titles[i:i + 40]
-        d = api({'action': 'query', 'prop': prop, 'redirects': 1, 'titles': '|'.join(batch), **extra})
-        q = d.get('query', {})
-        alias = {x['from']: x['to'] for x in q.get('normalized', []) + q.get('redirects', [])}
-        by = {p['title']: p for p in q.get('pages', [])}
+        base = {'action': 'query', 'prop': prop, 'redirects': 1, 'titles': '|'.join(batch), **extra}
+        alias, by, cont = {}, {}, {}
+        for _ in range(50):
+            d = api({**base, **cont})
+            q = d.get('query', {})
+            alias.update({x['from']: x['to'] for x in q.get('normalized', []) + q.get('redirects', [])})
+            for p in q.get('pages', []):
+                old = by.get(p['title'])
+                by[p['title']] = p if not old or (p.get('revisions') and not old.get('revisions')) or (p.get('coordinates') and not old.get('coordinates')) else old
+            if 'continue' not in d:
+                break
+            cont = {k: v for k, v in d['continue'].items()}
         for t in batch:
             tt = t
             for _ in range(3):
                 tt = alias.get(tt, tt)
             out[t] = by.get(tt, {'missing': True})
+        if prop == 'revisions':
+            for t in batch:
+                rev = (out[t].get('revisions') or [{}])[0].get('revid')
+                if rev:
+                    REVISIONS[out[t]['title']] = rev
+            lost = [t for t in batch if not out[t].get('missing') and not out[t].get('invalid') and not out[t].get('revisions')]
+            if lost:
+                raise RuntimeError(f'这些条目取不到内容：{lost[:10]}')
     return out
 
 

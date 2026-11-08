@@ -381,6 +381,10 @@ def reigns(h, nav, report):
             seen[title] = n + 1
             # 同一人在这个藩的名单里出现两次（再任）：第一次取第一段、第二次取第二段；只出现一次就全收（如 1614–1619、1622–1668）
             pick = box[n:n + 1] if times[title] > 1 else box
+            # 导航框的段数不够、Wikidata 本藩藩主的段数够时，几次都按 Wikidata 的先后取（天童藩织田信敏 1868、1869–1871）
+            wd_all = sorted((a, b) for lab, a, b in POS.get(title, []) if lab in names and a and b and 1560 <= a <= b <= 1871)
+            if times[title] > 1 and len(box) < times[title] <= len(wd_all):
+                pick = wd_all[n:n + 1]
             yrs = pick or article[:1]
             if pick and article and abs(pick[0][0] - article[0][0]) > 1:
                 report.append(f'{h["t"]} {title}：模板 {pick[0]} 与藩条目 {article[0]} 不一致，不收')

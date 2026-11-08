@@ -27,7 +27,7 @@ import urllib.parse
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
-from pilgrimage_tool import api, pages, text_of  # noqa: E402
+from pilgrimage_tool import api, pages, record_revisions, text_of  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'domains.json')
@@ -472,8 +472,12 @@ def main():
     # 规范化、按郡合计（同名合并），藩名去掉旧国名，取英文名
     provs = [f['properties']['key'][:-1] for f in load('src', 'data', 'provinces.json')['features'] if f['properties']['key'].endswith('国')]
     hans = {norm(lord)[0] for rows in got.values() for lord, _ in rows if norm(lord)[1] == 'han' and norm(lord)[0]}
-    short = strip_province(hans, provs)
-    full_of = {sh: full for full, sh in short.items()}
+    short = strip_province(sorted(hans), provs)
+    # 同一个短名对应几个全名（周防山口藩 / 山口藩）：固定取最长的那个（以前按集合的顺序，每次运行结果可能不同）
+    full_of = {}
+    for full, sh in sorted(short.items()):
+        if len(full) > len(full_of.get(sh, '')):
+            full_of[sh] = full
     lords, out = {}, {}
     for title, rows in got.items():
         agg = {}
@@ -522,3 +526,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    record_revisions('fetch_domains')
