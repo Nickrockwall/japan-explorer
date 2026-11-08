@@ -4,7 +4,7 @@
   `1920_NN.topojson`（1920 年各县）、`nrct.csv`（地名项目数据集 2025-07-19 版）。
 - `load_topo(path)`：TopoJSON → {代码: shapely 几何}（同一代码几块合在一起）；`props=True` 时同时返回各代码的属性。
 - `locate(x, y)`：坐标落在今天哪个市区町村（团体代码，落空为 None）。
-- `nrct_points()`：CODH《日本歴史地名大系》地名項目データセット（CC BY 4.0，`.cache/codh/nrct.csv`）→ {地名: [(经度, 纬度)…]}。
+- `nrct_points()`：CODH《日本歴史地名大系》地名項目データセット（CC BY 4.0，`.cache/codh/nrct.csv`）→ {地名: [(经度, 纬度, 读音, 上位地名)…]}（读音带「むら」等后缀；上位地名是大系出版时的市区町村，如「大阪市 生野区」）。
   数据里的「都道府県コード」是《大系》的卷号，京都以后与团体代码错开（大阪的村在 28），所以不按它分县，由调用方按坐标核对。
 - `overlap_map(old)`：{旧代码: 几何} → {旧代码: (今天的团体代码, 是否只有一部分)}：按与今天市区町村（src/data/municipalities）
   的面积重叠，≥90% 落在一个里算整个，否则取最大的一方并标一部分。今天的边界是简化过的，海岸线附近有误差，所以按比例算。
@@ -161,5 +161,5 @@ def nrct_points():
     out = {}
     for r in csv.DictReader(open(fetch(os.path.join(ROOT, '.cache', 'codh', 'nrct.csv')), encoding='utf-8')):
         if r['緯度'] and r['経度'] and r['推定手法'] not in ('uncertain_location', 'notfound'):
-            out.setdefault(r['名称'], []).append((float(r['経度']), float(r['緯度'])))
+            out.setdefault(r['名称'], []).append((float(r['経度']), float(r['緯度']), r['読み'], r['上位地名']))
     return out

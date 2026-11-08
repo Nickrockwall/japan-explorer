@@ -14,7 +14,9 @@
   一个今天的市区町村里就整个记给它；分属几个的按最大的一方记、标「一部」（村的位置不细分）。代码两年都找不到的不收。
 - 旧代码跨今天几个市区町村时，村名在 CODH《日本歴史地名大系》地名項目データセット（CC BY 4.0）里有坐标、坐标又落在该旧市町村里的，
   按坐标定到今天的市区町村（`.cache/codh/nrct.csv`）；其余按面积最大的一方记、标「一部」。
-- 藩名对上藩名单（han.json）：名单里有的直接用，明治初年改名的看 domains.json 已查过的重定向或查日文维基重定向（`lords[名].han`）。
+- 藩名对上藩名单（han.json）：名单里有的直接用，明治初年改名的看 domains.json 已查过的重定向或查日文维基重定向（`lords[名].han`），
+  再看 ALIAS（核对目标藩条目里有写明的词）、本县带旧国名的同名藩、全国唯一的同写法藩。
+- 只登记到政令市整市一级的村：大系条目的上位地名 → 坐标 → 读音、明治旧郡挑同名的；区里没有的看数据库第二个代码。
 输出 {"lords": {领主: {kind, han?}}, "munis": {团体代码: {"t": 村数, "k": 总石高, "r": [[领主, 石高], ...], "p": 是否含「一部」}}}，
 build_bundle 拼进 bundle/town/<lang>/NN.json 的 kyu。
 """
@@ -120,9 +122,30 @@ def fetch_all():
 BAKUFU = re.compile(r'支配|代官|奉行|預所|預処|預り|預地|御料|御除料|幕府|幕領|郡代|陣屋|取締|役収|与力給知')
 JISHA = re.compile(r'寺|社|院|宮|除地|山領|神領|堂領|霊屋|楽人|神司|[薬観]音?師?領$|阿弥陀|不動|地蔵|毘沙門')
 HOUSE = {'田安': '田安家領', '一橋': '一橋家領', '清水': '清水家領'}
-# 藩名单里叫法不同的（(数据库的藩名, 县 id 或 0 = 不分县)）：明治初年的改称、异称
-ALIAS = {('若松藩', 0): '会津藩', ('岩城平藩', 0): '磐城平藩', ('白川藩', 0): '白河藩', ('福山藩', 1): '松前藩',
-         ('金沢藩', 17): '加賀藩', ('金沢藩', 16): '加賀藩', ('鶴ヶ岡藩', 0): '庄内藩'}
+# 藩名单里叫法不同的（(数据库的藩名, 县 id 或 0 = 不分县)）：明治初年的改称、异称、飞地。
+# 值 = (名单里的藩, [藩条目里必须出现的词])，main() 用 han_tool 的条目缓存核对
+ALIAS = {('若松藩', 0): ('会津藩', ['若松']), ('岩城平藩', 0): ('磐城平藩', ['岩城']), ('白川藩', 0): ('白河藩', ['白川']),
+         ('福山藩', 1): ('松前藩', []), ('金沢藩', 17): ('加賀藩', []), ('金沢藩', 16): ('加賀藩', []),
+         ('鶴ヶ岡藩', 0): ('庄内藩', ['鶴ヶ岡']),
+         ('金沢藩', 25): ('加賀藩', ['高島郡']),           # 近江高岛郡今津、海津一带的飞地
+         ('高島藩', 20): ('諏訪藩', ['高島藩']),           # 信浓高岛藩即诹访藩（名单「諏訪藩（高島藩）」）
+         ('館藩', 0): ('松前藩', ['館藩']),                # 1868 年移居館城，明治初年称館藩（数据库「館藩（松前藩）領分」）
+         ('三ヶ月藩', 0): ('三日月藩', ['森', '対馬守']),  # 「森対馬守（三ヶ月藩）領分」
+         ('田ノ口藩', 0): ('奥殿藩', ['田野口']),          # 幕末藩厅从三河奥殿移到信浓田野口（龙冈城）
+         ('田之口藩', 0): ('奥殿藩', ['田野口']),
+         ('半原藩', 0): ('岡部藩', ['半原']),              # 1868 年藩厅移到三河半原
+         ('吉見藩', 0): ('三上藩', ['吉見']),              # 1870 年三上藩移到和泉吉见改称
+         ('峯岡藩', 0): ('三根山藩', ['峰岡']),            # 三根山藩所在的三根山即后来的峰冈（条目开头），数据库按此称呼
+         ('松嶺藩', 0): ('出羽松山藩', ['松嶺']),          # 1869 年出羽松山藩改称松岭藩
+         ('松峯藩', 0): ('出羽松山藩', ['松嶺']),
+         ('松山県藩', 38): ('伊予松山藩', ['松山県']),
+         ('吉田藩', 22): ('三河吉田藩', ['遠江']),         # 远江的飞地
+         ('亀山藩', 33): ('伊勢亀山藩', ['備中']),         # 备中的飞地
+         ('福山藩', 33): ('備後福山藩', ['備中']),
+         ('新宮藩', 24): ('紀伊新宮藩', ['牟婁']),         # 今三重县南部原属纪伊牟娄郡
+         ('麻布藩', 8): ('麻生藩', ['行方郡'])}            # 常陆行方郡大生村一行，「麻生」误作「麻布」（麻生藩阵屋就在行方郡）
+# 只有人名、却写成「何某藩領分」的代官（同一人在数据库里另有一百多行「安藤伝蔵支配」）
+DAIKAN = {'安藤伝蔵'}
 
 
 def norm_lord(lord, hans=()):
@@ -138,7 +161,7 @@ def norm_lord(lord, hans=()):
             return v, 'han'
     paren = re.findall(r'[（(]([^）)]*)[）)]', s)
     bare = re.sub(r'[（(〔][^）)〕]*[）)〕]', '', s).strip(' 　')
-    if BAKUFU.search(bare):
+    if BAKUFU.search(bare) or any(bare.startswith(d) for d in DAIKAN):
         return '幕府領', 'bakufu'
     # 括号里的藩名（领分、提封才是大名领；「竜野藩預所」已在上面算作幕府领）
     han = next((x for x in paren if x.endswith('藩')), None)
@@ -193,6 +216,21 @@ def resolve_han(names):
     return out
 
 
+SMALL = str.maketrans('ぁぃぅぇぉっゃゅょゎ', 'あいうえおつやゆよわ')
+
+
+def reads(p, kana):
+    """nrct 的读音带「むら」等后缀、小写假名写成大写（はんにやじむら），数据库的不带（はんにゃじ）"""
+    return p[2].translate(SMALL).startswith(kana.translate(SMALL))
+
+
+def same_reading(hits, kana):
+    """同名的村有几处时，只留读音对得上的；一处也对不上就原样返回"""
+    if len(hits) < 2 or not kana:
+        return hits
+    return [p for p in hits if reads(p, kana)] or hits
+
+
 def main():
     rows = fetch_all()
     print(f'原始记录 {len(rows)}')
@@ -210,10 +248,11 @@ def main():
     provs = [f['properties']['key'][:-1] for f in json.load(open(os.path.join(ROOT, 'src', 'data', 'provinces.json'), encoding='utf-8'))['features']
              if f['properties']['key'].endswith('国')]
     provs += ['陸前', '陸中', '磐城', '岩代', '羽前', '羽後']
-    short = strip_province(sorted({r['name'] for r in rows if r['kind'] == 'han'}), provs)
+    # 名单里本来就有的不去（伊勢崎藩去掉「伊勢」成了「崎藩」）
+    short = strip_province(sorted({r['name'] for r in rows if r['kind'] == 'han' and r['name'] not in hans}), provs)
     for r in rows:
         if r['kind'] == 'han':
-            r['name'] = short[r['name']]
+            r['name'] = short.get(r['name'], r['name'])
     # 1990 年前后的代码 → 今天的市区町村
     old = {}
     for snap in ('19851001', '19951001'):
@@ -221,7 +260,7 @@ def main():
             old.setdefault(code, geom)
     cmap = overlap_map(old)
     # 旧代码只部分落在今天某个市区町村里（平成合并时拆开的浦和市 → さいたま市几个区）：村名在 CODH《日本歴史地名大系》地名数据里
-    # 有坐标、且坐标落在这个旧市町村范围里的，按坐标定今天的市区町村（同县同名的村不少，只认落在旧市町村里的那个）
+    # 有坐标、且坐标落在这个旧市町村范围里的，按坐标定今天的市区町村（同县同名的村不少，只认落在旧市町村里的那个；还有几个时按读音挑）
     pts = nrct_points()
     from shapely.geometry import Point
     vloc, by_pt = {}, 0
@@ -230,22 +269,52 @@ def main():
         if key in vloc or not r['c1'] or r['c1'] not in cmap or not cmap[r['c1']][1]:
             continue
         g = old.get(r['c1'])
-        hits = [p for p in pts.get(r['mura'], []) if g.buffer(0.005).covers(Point(*p))]
-        code = locate(*hits[0]) if len(hits) == 1 else None
+        hits = [p for p in pts.get(r['mura'], []) if g.buffer(0.005).covers(Point(p[0], p[1]))]
+        hits = same_reading(hits, r['kana'])
+        code = locate(hits[0][0], hits[0][1]) if len(hits) == 1 else None
         vloc[key] = (code, False) if code else None
         by_pt += bool(code)
     print(f'跨今界的旧市町村里按坐标定位的村 {by_pt}')
     # 只登记到政令市整市一级的（大阪市 27100、仙台市 04100…，代码末三位是 100）：没有旧边界可对，
-    # 同县同名的村里坐标落在这个市的某个区（团体代码前三位相同）且只有一个的，按坐标定到那个区
-    city_pt = 0
+    # 同县同名的村里坐标落在这个市的某个区（团体代码前三位相同）且只有一个的（几个时按读音挑），按坐标定到那个区
+    # 大系的坐标在市界附近常偏（腹見村写在生野区、坐标却落进东大阪市），先看条目的上位地名（「大阪市 生野区」）是不是今天的
+    # 市区町村，不是（东区、南区这类已合并的旧区）才按坐标。大系里没有「加島村新田」「難波村新田」这类「某村新田」的，用本村的。
+    # 区里一处也没有、而数据库还写了第二个代码（市町村コード２）、读音对得上的同名村正落在那里的，记给它：大阪市 27100 下的
+    # 渋川郡岸田堂村、東足代村第二个代码是东大阪市 27227，大系也写在东大阪市（今天的地名岸田堂、足代也在东大阪）
+    by_name = {(e[0], e[1]): e[4][0] for e in json.load(open(os.path.join(ROOT, 'src', 'data', 'municipalities', 'index.json'),
+                                                           encoding='utf-8')) if len(e[4]) == 1}
+    # 同一市里同名的村有几处（东成郡、西成郡都有「野田村」）：只留明治旧郡（old_districts）里有这个郡的区
+    gun_of = {}
+    for f in os.listdir(os.path.join(ROOT, 'src', 'data', 'municipalities')):
+        if re.fullmatch(r'\d\d\.json', f):
+            for ft in json.load(open(os.path.join(ROOT, 'src', 'data', 'municipalities', f), encoding='utf-8'))['features']:
+                gun_of[ft['properties']['code']] = {g for g, _ in ft['properties'].get('old_districts') or []}
+    city_pt, nearby = 0, []
     for r in rows:
         key = (r['prov'], r['gun'], r['mura'], r['kana'], r['c1'])
         if key in vloc or not (len(r['c1']) == 5 and r['c1'].endswith('100')) or r['c1'] in cmap:
             continue
-        codes = {c for c in (locate(*p) for p in pts.get(r['mura'], [])) if c and c[:3] == r['c1'][:3]}
+        name = r['mura'] if r['mura'] in pts else re.sub(r'(?<=村)新田$', '', r['mura'])
+        pid = int(r['c1'][:2])
+        allhits = [(p, by_name.get((pid, p[3].replace(' ', ''))) or locate(p[0], p[1])) for p in pts.get(name, [])]
+        for within in (r['c1'][:3], r['c2']):
+            if not within:
+                break
+            hits = [(p, c) for p, c in allhits if c and c.startswith(within)]
+            if within == r['c2']:
+                hits = [(p, c) for p, c in hits if reads(p, r['kana'])]
+            elif len({c for _, c in hits}) > 1:
+                hits = [(p, c) for p, c in hits if p in same_reading([p for p, _ in hits], r['kana'])]
+            if len({c for _, c in hits}) > 1:
+                hits = [(p, c) for p, c in hits if r['gun'] in gun_of.get(c, ())] or hits
+            if hits:
+                break
+        codes = {c for _, c in hits}
         vloc[key] = (codes.pop(), False) if len(codes) == 1 else None
         city_pt += bool(vloc[key])
-    print(f'只登记到政令市一级、按坐标定到区的村 {city_pt}')
+        if vloc[key] and within == r['c2']:
+            nearby.append(f'{r["mura"]} → {vloc[key][0]}')
+    print(f'只登记到政令市一级、按坐标定到区的村 {city_pt}，其中在邻近市町村的 {len(nearby)}：', nearby)
     # 按今天的市区町村：村数（同一村几行算一个）与各领主的石高（每行是这个村里这一方的石高，直接相加；几方共管的村不再笼统记作相給）
     out, lost, seen = {}, {}, set()
     for r in rows:
@@ -276,16 +345,25 @@ def main():
     han = resolve_han([n for n in names if kind[n] == 'han'])
     # 全国查不出的按所在县再找一次：藩名单里同名的藩带旧国名（伊勢亀山藩 / 丹波亀山藩），写法不同的统一后比较（尼ヶ崎 / 尼崎、舘林 / 館林）
     hl = json.load(open(os.path.join(ROOT, 'src', 'data', 'han.json'), encoding='utf-8'))['han']
-    canon = lambda x: re.sub(r'[ノヶケ之]', '', re.sub(r'\s*\(.*\)$', '', x)).replace('舘', '館')
+    texts = json.load(open(os.path.join(ROOT, '.cache', 'han', 'wikitext.json'), encoding='utf-8'))  # han_tool 的条目缓存
+    for (n, _), (to, words) in ALIAS.items():
+        assert any(h['t'] == to for h in hl), f'{n} → {to}：藩名单里没有'
+        miss = [w for w in words if w not in (texts.get(to) or [None, ''])[1]]
+        assert not miss, f'{n} → {to}：条目里没有 {miss}'
+    # 写法不同：ノ・ヶ・之 有无（一ノ宮 / 一宮、上ノ山 / 上山），舘 / 館、冨 / 富、竜 / 龍、峯 / 峰
+    canon = lambda x: re.sub(r'[ノヶケ之]', '', re.sub(r'\s*\(.*\)$', '', x)).translate(str.maketrans('舘冨竜峯', '館富龍峰'))
     renamed = {}
     for code, o in out.items():
         pid = int(code[:2])
         rows2 = {}
         for n, v in o['r']:
             if kind.get(n) == 'han' and n not in han:
-                n2 = ALIAS.get((n, pid)) or ALIAS.get((n, 0))
+                n2 = (ALIAS.get((n, pid)) or ALIAS.get((n, 0)) or [None])[0]
                 if not n2:
                     cand = [h['t'] for h in hl if h['p'] == pid and canon(h['t']).endswith(canon(n))]
+                    n2 = cand[0] if len(cand) == 1 else None
+                if not n2:  # 飞地不在本县：全国只有一个写法相同的藩（一ノ宮藩在伊势的领地 → 上总一宫藩）
+                    cand = [h['t'] for h in hl if canon(h['t']) == canon(n)]
                     n2 = cand[0] if len(cand) == 1 else None
                 if n2:
                     renamed[n] = renamed.get(n, set()) | {n2}
@@ -295,10 +373,18 @@ def main():
     print('按县对上藩名单的：', {k: sorted(v) for k, v in renamed.items()})
     names = sorted({n for o in out.values() for n, _ in o['r'] if n})
     lords = {n: {'kind': kind[n], **({'han': han[n]} if n in han else {})} for n in names}
-    print('藩名对不上藩名单的：', [n for n in names if kind[n] == 'han' and n not in han][:40])
-    # 锚点：上田市以上田藩为首；隐岐的岛后（松江藩预所）是幕府领；大垣市以大垣藩、姬路市以姬路藩、高知市以高知藩为首
-    for code, want in {'20203': '上田藩', '32528': '幕府領', '21202': '大垣藩', '28201': '姫路藩', '39201': '高知藩'}.items():
+    # 御三卿（田安、一橋、清水家领）不是藩，没有藩主名单
+    left = [n for n in names if kind[n] == 'han' and n not in han and n not in HOUSE.values()]
+    print('藩名对不上藩名单的：', left)
+    # 锚点：上田市以上田藩为首；隐岐的岛后（松江藩预所）是幕府领；大垣市以大垣藩、姬路市以姬路藩、高知市以高知藩为首；
+    # 伊势崎市以伊势崎藩为首（曾被去国名成「崎藩」）；诹访市的高岛藩（= 诹访藩）、黑石市有黑石藩、东大阪市的岸田堂村
+    for code, want in {'20203': '上田藩', '32528': '幕府領', '21202': '大垣藩', '28201': '姫路藩', '39201': '高知藩',
+                       '10204': '伊勢崎藩', '20206': '諏訪藩'}.items():
         assert out[code]['r'][0][0] == want, (code, out[code]['r'][:3])
+    assert '黒石藩' in dict(out['02204']['r']), out['02204']['r'][:3]
+    for n in ('久居藩', '黒石藩', '岩崎藩', '出羽松山藩', '一宮藩', '三日月藩'):
+        assert lords.get(n, {}).get('han') == n, (n, lords.get(n))
+    assert vloc.get(('河内国', '渋川郡', '岸田堂村', 'きしだどう', '27100'), [None])[0] == '27227'
     json.dump({'_doc': __doc__.strip().split('\n')[0], 'lords': lords, 'munis': dict(sorted(out.items()))},
               open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 

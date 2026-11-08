@@ -1234,6 +1234,16 @@ class Case:
         assert any(x in edo for x in ('臼杵藩', 'Usuki')) and any(x in edo for x in ('府内藩', 'Funai')), f'大分市应列出臼杵藩与府内藩：{edo}'
         assert any(x in seal for x in ('市', 'Town')), f'精度印应为「市」：{seal}'
 
+    def koseki_branch(self, page):
+        # 黑石市：黑石藩是弘前藩的支藩，日文维基没有自己的条目（重定向到弘前藩#黒石藩），藩名单从那一节取藩主后户籍才能展开
+        edo, seal = self.edo_row(page)
+        assert any(x in edo for x in ('黑石藩', '黒石藩', 'Kuroishi')), f'黑石市的幕末领主应列出黑石藩：{edo}'
+        han = page.locator('.ks-row[data-k="edo"] details.ks-han').filter(has_text=re.compile('黑石|黒石|Kuroishi'))
+        assert han.count() == 1, '应能展开黑石藩的历代藩主'
+        han.locator('summary').click()
+        lords = han.inner_text()
+        assert any(x in lords for x in ('津轻承叙', '津軽承叙', 'Tsugaru')), f'黑石藩藩主应有津轻承叙：{lords}'
+
     def koseki_seat(self, page):
         # 笠间市是笠间藩藩厅（笠间城）所在的城下町：直接写笠间藩、精度印「市」、后面仍附西茨城郡的町村统计，此地年表列出笠间藩各家
         edo, seal = self.edo_row(page)
@@ -1411,7 +1421,8 @@ def plan(lang):
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
              ('amami_town', 'pref=46&muni=1&m=46527&koseki=1', ['amami_town']), ('rl_link', 'rl=power', ['rl_link']),
              ('koseki_town', 'pref=26&muni=1&m=26102&koseki=1', ['koseki_town']), ('koseki_city', 'pref=23&muni=1&m=23103&koseki=1', ['koseki_city']),
-             ('koseki_main', 'pref=44&muni=1&m=44201&koseki=1', ['koseki_main']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
+             ('koseki_main', 'pref=44&muni=1&m=44201&koseki=1', ['koseki_main']),
+             ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('stamp', 'pref=13', ['stamp']),

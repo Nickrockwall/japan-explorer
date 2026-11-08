@@ -49,8 +49,11 @@ def main():
     for h in han:
         if not h['k']:
             continue
-        wt = (texts.get(h['t']) or [None, ''])[1] or ''
-        s = seat_of(wt)
+        real, wt = texts.get(h['t']) or [None, '']
+        if real != h['t']:  # 没有自己条目的支藩（出羽松山藩）：缓存里是本藩的条目，藩厅也会读成本藩的城
+            noseat.append(h['t'])
+            continue
+        s = seat_of(wt or '')
         if s:
             seats[h['t']] = s
         else:

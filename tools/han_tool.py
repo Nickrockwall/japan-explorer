@@ -3,6 +3,9 @@
 
 - 藩名单：日文维基「藩の一覧」里的全部藩条目，江户时代中途废绝、转封、改名的也收（「行政区の変遷」框止于 1600
   年以前的不收）；存续年份取那个框（y），存续到 1871 年废藩置县的记 k=1（框止于 1871，没有框的看正文「廃藩置県」）；
+  没有自己条目、重定向到本藩条目某一节的支藩（久居藩、黒石藩、岩崎藩、出羽松山藩），那一节能解析出藩主就单独收：
+  起年取那一节信息框的立藩年、没有框取名单「（1669年 - ）」，那一节写到废藩置县的记 k=1、止年 1871；
+  立藩以前的「歴代…領主」不算藩主（branch()）；
 - 历代藩主：各藩条目「歴代藩主」一节，按家（=== ○○家 ===）分组，取每行开头的人物链接；「藩知事」一节不收；
   每个藩至少要有一位藩主，否则列出待查；
 - 所在县：名单里的国（明治分国后的国名）只对应一个县时就是它，否则看正文「現在の○○県」与分类「○○県の歴史」；
@@ -183,6 +186,8 @@ PREF = {
     '対馬府中藩': 42,
     '琉球藩': 47,
     '深谷藩': 11,       # 武藏榛泽郡
+    '岩崎藩': 5,        # 羽后雄胜郡岩崎（今汤泽市），久保田藩的支藩
+    '久保田新田藩': 5,  # 只有藏米、没有领地的久保田藩支藩
 }
 
 LINK = r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]'
@@ -252,6 +257,28 @@ def lords(w):
         cur[1].append([title, name, '再任' if '再任' in line else '', rest])
     # 家名里的读音括注去掉（「伊達（だて）家」→ 伊達家）
     return [[re.sub(r'（[ぁ-んー]+）', '', f[0]), f[1]] for f in fams if f and f[1]]
+
+
+def branch(t, real, w):
+    """名单里的支藩重定向到本藩条目的一节（久居藩 → 津藩#久居藩、黒石藩 → 弘前藩#黒石藩）：返回那一节，
+    能解析出藩主才算（只是改名、藩主与本藩相同的半原藩 → 岡部藩那一节没有藩主列表，仍按本藩处理）。
+    一节里没有「歴代」小标题、只写「歴代藩主は以下の通り」再列 # 行的（久保田藩#岩崎藩），从那句往后读。"""
+    if real == t:
+        return None
+    h = re.search(r'^(=+)\s*' + re.escape(t) + r'\s*=+\s*$', w, re.M)
+    if not h:
+        return None
+    rest = w[h.end():]
+    end = re.search(r'^={1,%d}[^=].*$' % len(h.group(1)), rest, re.M)
+    sec = rest[:end.start() if end else None]
+    # 立藩以前的「歴代黒石領主」（交代寄合）不算藩主：去掉到下一个小标题为止
+    sec = re.sub(r'^(=+)\s*歴代[^=\n]*領主\s*=+\s*\n.*?(?=^=)', '', sec, flags=re.M | re.S)
+    if lords(sec):
+        return sec
+    i = sec.find('歴代藩主は以下の通り')
+    if i >= 0 and lords('== 歴代藩主 ==\n' + sec[i:]):
+        return sec[:i] + '== 歴代藩主 ==\n' + sec[i:]
+    return None
 
 
 RANGE = re.compile(r'(1[5-8]\d\d)年?\s*[-–—〜~－]\s*(1[5-8]\d\d)年')
@@ -475,7 +502,7 @@ def reigns(h, nav, report):
 
 def main():
     lst = wikitexts(['藩の一覧'])['藩の一覧'][1]
-    titles, prov_of, prov = [], {}, None
+    titles, prov_of, start_of, prov = [], {}, {}, None
     for line in lst.splitlines():
         h = re.match(r'===\s*(\S+国)\s*===', line)
         if h:
@@ -484,6 +511,8 @@ def main():
         if m and m.group(1).endswith('藩') and m.group(1) not in titles:
             titles.append(m.group(1))
             prov_of[m.group(1)] = prov
+            y0 = re.search(r'（(1[5-8]\d\d)年 - ）', line)
+            start_of[m.group(1)] = y0 and int(y0.group(1))
     # 名单里东北按明治分国后的国排（陸前国、磐城国……）：国 → 县，68 国（provinces.json）加上明治国（只有东北与北海道），只对应一个县的才用
     provs = json.load(open(os.path.join(ROOT, 'src', 'data', 'provinces.json'), encoding='utf-8'))['features']
     prov_prefs = {f['properties']['key']: set(f['properties']['prefs']) for f in provs}
@@ -508,7 +537,17 @@ def main():
         real, w = got
         if not re.search(r'藩( \(.*\))?$', real):  # 重定向到「松平義行領」之类不是藩的条目
             continue
-        y, kept = span(real, w, wd.get(real, [None, None]))
+        sec = branch(t, real, w)
+        if sec:  # 没有自己条目的支藩：本藩条目里的那一节
+            real, w = t, sec
+            kept = int('廃藩置県' in sec)
+            y0 = re.search(r'立藩年\s*=\s*\[*(1[5-8]\d\d)', sec)  # 那一节有信息框就取立藩年（黒石藩 1809，名单写分知的 1656）
+            y = [int(y0.group(1)) if y0 else start_of.get(t), 1871 if kept else None]
+            y = y if y[0] or y[1] else None
+            if y0:  # 立藩年是确切的，不再按藩主就任年往前改（津軽親足在立藩前就是黒石领主）
+                YEARS[t] = y
+        else:
+            y, kept = span(real, w, wd.get(real, [None, None]))
         if y and y[1] and y[1] < 1600:  # 江户以前就没了
             continue
         if any(h['t'] == real for h in out):  # 名单里写了两次（别名）

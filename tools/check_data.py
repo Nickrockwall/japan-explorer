@@ -397,6 +397,10 @@ def check_han():
             err(where, f'年份 {y} 不合理')
         if y and y[1] and h.get('k') != int(y[1] >= 1871 and (y[0] or 0) <= 1871):
             err(where, f'k 与年份 {y} 不符')
+        # 中文名不能是异体字或扩展区的字（对照表反用曾把崎写成﨑、富写成冨，zhconv 把樫写成㭴）
+        zh_all = h['n']['zh'] + ''.join(f[1] + ''.join(r[2] for r in f[2]) for f in h['f'])
+        if re.search('[﨑冨㭴]', zh_all):
+            err(where, f'中文名有异体字：{re.findall("[﨑冨㭴]", zh_all)}')
         by_pref[h['p']] = by_pref.get(h['p'], 0) + 1
         kept[h['p']] = kept.get(h['p'], 0) + (h.get('k') or 0)
     # 东京（江户周边是幕府领）、山梨（甲府后为天领）、冲绳（琉球藩 1872 年才设）没有存续到废藩置县的藩，其余各县都有

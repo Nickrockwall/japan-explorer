@@ -95,9 +95,11 @@ def ja_to_zh_table():
     pairs = [body[i:i + 2] for i in range(0, len(body) - 1, 2)]
     table = {}
     for zh, ja in pairs:
-        if zh != ja and ja not in table:
+        # 对照表也收了异体字（﨑 → 崎、冨 → 富），反过来会把崎、富写成异体：只收简体常用字（GB 2312 里有的）
+        if zh != ja and ja not in table and zh.encode('gb2312', 'ignore'):
             table[ja] = zh
-    table.update({'濃': '浓', '會': '会', '姫': '姬', '條': '条', '舘': '馆', '﨑': '崎', '嶋': '岛', '澤': '泽', '濱': '滨'})
+    # zhconv 把「樫」简化成扩展 A 的「㭴」，中文写富樫氏都用「樫」
+    table.update({'㭴': '樫', '濃': '浓', '會': '会', '姫': '姬', '條': '条', '舘': '馆', '﨑': '崎', '嶋': '岛', '澤': '泽', '濱': '滨'})
     return table
 
 

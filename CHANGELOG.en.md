@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.22 · 2026-11-08
+
+- Late-Edo lords: 26 of the 29 domain names that didn't match the domain list now do, so their lords open in the register — spelling variants (一ノ宮 / 一宮, 上ノ山 / 上山, 竜ヶ崎 / 龍ヶ崎), names from early-Meiji renamings or new seats (Takashima = Suwa, Tate = Matsumae, Matsumine = Dewa-Matsuyama, Mineoka = Minegoyama, Yoshimi = Mikami, Hanbara = Okabe, Tanoguchi = Okutono) and enclaves in other provinces (Yoshida in Tōtōmi, Kameyama and Fukuyama in Bitchū, "Kanazawa" in Ōmi = Kaga), each checked against the domain's article; Isesaki had been cut to "崎藩" by stripping a province name
+- Seven branch domains without their own Wikipedia article are added, reading their lords from the section of the parent domain's article: Kuroishi (a domain from 1809), Hisai, Iwasaki and Dewa-Matsuyama, which lasted until 1871, plus Ōyama, Aterazawa and Kubota-Shinden
+- Villages recorded only against Osaka city are placed in the ward named by the Nihon Rekishi Chimei Taikei (its coordinates often drift near city borders), with same-named villages told apart by reading and Meiji district; Kishidadō, Higashi-Ajiro and Arakawa go to Higashiōsaka, the database's second code. Unplaced rows fell from 23 to 11 (villages missing from the Taikei, and Tennōji, which spans two wards)
+- Chinese names: 崎, 富 and 樫 had been written as the variants 﨑, 冨 and 㭴 (高﨑藩 → 高崎藩, 千叶胤冨 → 千叶胤富, 冨㭴政亲 → 富樫政亲)
+
 ## 3.21 · 2026-11-08
 
 - The family register's data is split by prefecture: opening a register downloads only that prefecture (tens of KB) instead of the whole country (about 0.5 MB), so it opens faster on phones
