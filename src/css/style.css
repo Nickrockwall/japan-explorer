@@ -14,9 +14,10 @@
   --kin: #d4a373;          /* 青金 */
   --kin-soft: rgba(212, 163, 115, .14);
   --ai: #5d8aa8;           /* 藍，辅助 */
-  /* Google 字体不可用时依次退到各系统的中文衬线 / 无衬线字体 */
+  /* 衬线：网络只取当前语言的一种 Noto Serif（index.html），不可用时退到各系统的衬线字体。
+     无衬线（正文）一律用系统字体：网络 CJK 字体按字切片，正文用字多，曾占首屏下载的大半 */
   --serif: "Noto Serif SC", "Noto Serif JP", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
-  --sans: "Noto Sans SC", "Noto Sans JP", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", system-ui, sans-serif;
+  --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
   --r: 10px;
   --r-sm: 6px;
   --gap: 14px;
@@ -774,8 +775,13 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 /* ── 多语言 ───────────────────────────── */
 /* 日语界面优先用日文字形（戦・沢・県），中文界面保持简体字形 */
 :root[lang="ja"] {
-  --serif: "Noto Serif JP", "Noto Serif SC", "Yu Mincho", serif;
-  --sans: "Noto Sans JP", "Noto Sans SC", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  --serif: "Noto Serif JP", "Noto Serif SC", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans CJK JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+}
+/* 英文界面里的汉字是日本的地名人名，也用日文字形 */
+:root[lang="en"] {
+  --serif: "Noto Serif JP", "Noto Serif SC", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 :root[lang="en"] .subtitle, :root[lang="en"] .brand h1 { letter-spacing: .01em; }
 /* 英文时代名较长，刻度字号收小以免相连 */

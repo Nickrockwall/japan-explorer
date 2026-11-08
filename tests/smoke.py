@@ -4,7 +4,7 @@
     python -X utf8 tests/smoke.py                            # 用 Playwright 自带的 Chromium
     PW_CHANNEL=chrome python -X utf8 tests/smoke.py          # 本地用已安装的 Chrome（免下载）
     SMOKE_ONLY='phone.*zh' python -X utf8 tests/smoke.py     # 只跑部分场景
-    SMOKE_JOBS=4 python -X utf8 tests/smoke.py               # 本机 4 路并行（CI 用 SMOKE_SHARD 分 4 片）
+    SMOKE_JOBS=4 python -X utf8 tests/smoke.py               # 本机 4 路并行（CI 用 SMOKE_SHARD 分 8 片）
 
 中文在电脑 / 平板 / 手机三种尺寸下跑全部场景；英文、日文只跑与语言相关的场景。
 失败时截图存到 tests/artifacts/（已加入 .gitignore，CI 会作为附件上传）。
@@ -44,7 +44,7 @@ HTMLMediaElement.prototype.play = function () { return Promise.reject(new Error(
 AUDIO_DEBUG = "async () => (await import('./src/js/audio.js')).audio.debug()"
 # 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
 ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
-# 分片：SMOKE_SHARD=2/4 只跑第 2 片（CI 四路并行）；SMOKE_JOBS=4 在本机开 4 个子进程各跑一片
+# 分片：SMOKE_SHARD=2/8 只跑第 2 片（CI 八路并行）；SMOKE_JOBS=4 在本机开 4 个子进程各跑一片
 SHARD = tuple(int(x) for x in os.environ['SMOKE_SHARD'].split('/')) if os.environ.get('SMOKE_SHARD') else None
 
 
@@ -130,6 +130,15 @@ class Case:
         assert ok, '京都府章图片加载失败'
         if self.narrow:
             assert page.evaluate('document.body.dataset.tab') == 'detail', '窄屏县链接应打开详情页'
+
+    def fonts(self, page):
+        # 网络只取当前语言的一种衬线字体、不取无衬线；<html lang> 在头部就定好；canvas 标签用同一个字体栈
+        want = 'Noto+Serif+SC' if self.lang == 'zh' else 'Noto+Serif+JP'
+        hrefs = page.evaluate("[...document.querySelectorAll('link[href*=\"fonts.googleapis.com/css\"]')].map((l) => l.href)")
+        assert len(hrefs) == 1 and want in hrefs[0] and 'Sans' not in hrefs[0], f'字体请求 {hrefs}'
+        assert page.evaluate('document.documentElement.lang') == {'zh': 'zh-CN', 'en': 'en', 'ja': 'ja'}[self.lang]
+        first = page.evaluate("import('./src/js/i18n.js').then((m) => m.serifFont())").split(',')[0].strip('"\' ')
+        assert first == want.replace('+', ' '), f'serifFont() 首选 {first}'
 
     def country(self, page):
         # #map=nope 退回日本，并且日本模式的链接里不出现 map=
@@ -1391,7 +1400,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),

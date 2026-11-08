@@ -1,4 +1,4 @@
-# 每次推送 / PR：先跑数据检查（几秒），通过后再用真实浏览器跑界面冒烟测试（分 4 片并行，各约 6 分钟）。
+# 每次推送 / PR：先跑数据检查（几秒），通过后再用真实浏览器跑界面冒烟测试（分 8 片并行，各约 4 分钟；4 片时整轮约 9 分钟）。
 # 推送到 main 且两项都通过时才发布到 GitHub Pages；任何一项失败，网站保持上一版。
 # （仓库 Settings → Pages → Source 须设为「GitHub Actions」）
 name: Checks
@@ -28,8 +28,8 @@ jobs:
     strategy:
       fail-fast: false # 一片失败时其余照跑完，一次看到全部失败
       matrix:
-        shard: [1, 2, 3, 4]
-    name: ui (${{ matrix.shard }}/4)
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    name: ui (${{ matrix.shard }}/8)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,7 +54,7 @@ jobs:
       - name: UI smoke tests (desktop / tablet / phone × zh / en / ja)
         run: python -X utf8 tests/smoke.py
         env:
-          SMOKE_SHARD: ${{ matrix.shard }}/4
+          SMOKE_SHARD: ${{ matrix.shard }}/8
       - name: Upload failure screenshots
         if: failure()
         uses: actions/upload-artifact@v4

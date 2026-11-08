@@ -6,7 +6,7 @@
 
 - 原生 HTML5 + CSS3 + 原生 ES Modules，无构建工具、无 npm 依赖，纯静态运行。
 - 地图：Apache ECharts 5.5.1，**随站点发布在 `src/vendor/echarts.min.js`**（附 LICENSE/NOTICE），不走 CDN——jsdelivr 在国内常挂起，同步脚本会让整页卡住（smoke 测试的 china 场景会屏蔽外部 CDN 检查这一点）。用 `echarts.registerMap` 注册本地 GeoJSON。
-- 字体：Google Fonts 以 `display=optional` 非阻塞加载（没能马上就绪就整页用系统字体，不中途替换导致排版跳动）；`--serif` / `--sans` 带各系统中文字体回退。
+- 字体：正文（`--sans`）一律用系统字体；网络只取当前语言的一种衬线字体（中文 Noto Serif SC，日文 / 英文 Noto Serif JP），由 index.html 头部的内联脚本按与 `i18n.js` `detect()` 相同的规则判定语言、设好 `<html lang>` 后插入，`display=optional` 非阻塞（没能马上就绪就整页用系统字体）。CJK 网络字体按字切片，原来 4 种字体 × 3 字重首屏要一两百个字体请求、3–6 MB。canvas 上的地图标签用 `serifFont()`（i18n.js，读 CSS 的 `--serif`），不要写死字体名。
 - 深链接：`index.html#pref=26&lang=ja` 直接打开对应地区并指定语言；`&muni=1&m=23211` 打开市区町村地图并选中（政令市整市为各区代码以 `.` 连接）（`lang` 可省略；链接里的语言优先于本地设置并会被记住）。选中地区时地址栏自动写成这种形式，详卡「分享」按钮复制/分享的就是它。
 - **当前地图**（`src/js/country.js`）：`MAPS` 登记各地图的 GeoJSON、数据目录、单元数与存储键前缀（日本 = `src/data`、`je.`，与改造前完全相同）。页面加载时由 `pickMap(hash, 上次的地图)` 定下：链接里 `map=` 是已登记的键 → 用它；否则链接带 `pref=`（老链接都是日本）→ 日本；否则上次看的地图（`je.ui.map`）；都没有 → 日本。日本以外的地图在 `stateHash` 里写 `map=`，日本链接不带。切换地图走整页重载（与切换语言相同）。数据路径一律写成 `${MAP.data}/…`，不要再写死 `src/data/`。
 - **数据打包（改数据后必做）**：`python tools/build_bundle.py` 把每种语言的 47 县 + 合战/时代数据合并成 `src/data/bundle/{zh,en,ja}.json`（每种语言 1 个请求）。前端优先读 bundle，读不到才回退为逐个文件加载——所以**改了 JSON 却忘记重新打包，线上会继续显示旧内容**。
@@ -243,7 +243,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 数据翻译是**覆盖层**：`src/data/i18n/{en,ja}/prefectures/NN_slug.json` 与 `historical_events.json` 只含文字字段，按 `deepMerge` 叠加到中文底本（对象逐键、对象数组按下标、字符串数组整体替换）。
 - `src/data/i18n/manifest.json` 记录各语言已翻译的县 id 与 events；未列入的县显示中文并带“翻译中”提示（不发请求，避免 404）。
 - 向导：史官人设的译文在 `PERSONA_TEXT`；System Prompt 的角色段与回答规则按语言生成（`ROLE` / `PROMPT_RULES`），离线解答模板与关键词正则也在词典里。
-- 日语界面通过 `:root[lang="ja"]` 切换到 Noto Sans/Serif JP 以显示日文字形。
+- 日语与英语界面通过 `:root[lang="ja"]` / `:root[lang="en"]` 改用 Noto Serif JP 与日文系统字体，显示日文字形。
 
 ## 设计规范
 
@@ -317,7 +317,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 城下町认藩（3.18）：`python -X utf8 tools/fetch_seats.py`（需先有 han.json 与 `.cache/han/wikitext.json`）。存续到 1871 的藩，藩厅取信息框「居城」或开头写着 藩庁 / 居城 / 政庁 那一句的第一个城、阵屋链接（江户城等在勤的城不算），坐标取条目 coordinates（退 Wikidata P625），没有坐标的用那一句的「現在の○○市」（本县）；落进的市区町村只在藩名或城名就在市名里时才算（大垣藩 → 大垣市、金沢城 → 金沢市；长冈市的与板藩、长野市的松代藩、奈良市的柳生藩这类合并进来的旧町不算，上越、丰田这类改了名的城下町也因此不收），同市几藩取市名以藩名结尾的。户籍「幕末领主」写「某藩的藩厅（某城）所在的城下町」+ 郡的町村统计，印「市」；此地年表江户一段同样用它。工具断言大垣 / 津山 / 彦根 / 上田 / 加贺。
 - 取维基条目（pilgrimage_tool.pages）：跟随 API 的 `continue`（一批全文超过回应上限时只给一部分，以前不跟，缺的条目被悄悄当成没有内容）；取完仍有条目（不是「不存在」）没有内容就报错；带 `error` 的回应不进缓存。取全文时顺带取版本号，fetch_domains / fetch_main_gun / fetch_mura / yurai_tool 结束时写进 `tools/wiki_revisions.json`。fetch_domains 里藩名去国名的对应改为排序后固定取最长的全名（以前按集合顺序，结果随运行变化）。
 - 户籍每一栏有 `data-k`（home / edo / mura / yurai…），测试按它取栏，不按位置。本贯的郡也优先用主要郡（笠间市写西茨城郡）。
-- 明治町村（3.17）：`python -X utf8 tools/fetch_mura.py` 读各郡条目「町村制の施行により…発足」那一段（段首可缩进、年份在上一行，1888–1908 年；条目比段首低一级，北足立郡的「:*」也算），每行的新町村只认这一行写明的「現・○○」，没写的用段首「特記以外は現・○○ / 全域が現・○○」，都没有不收；一行写了几个「現・」的各算一份、标「一部」；外县的、只写到政令市一级的（「現・さいたま市」）不收，所以政令市的区可能不全。输出 `{代码: [[町村, 一部, 施行年]]}`，工具断言上田 / 笠间 / 向日的锚点。户籍在戊辰之后加「明治町村」一栏（`ks.mura`，年份取中位数，最多列 14 个），此地年表加一行（`kind: 'mura'`，`ht.mura`，列 8 个）。英文界面町村名仍用日文。
+- 明治町村（3.17）：`python -X utf8 tools/fetch_mura.py` 读各郡条目「町村制の施行により…発足」那一段（段首可缩进、年份在上一行或上面最近的高一级日期行，1888–1908 年；段首与条目之间的 `<!-- -->` 跳过；条目比段首低一级，北足立郡的「:*」也算），每行的新町村只认这一行写明的「現・○○」（「（現○○）」「（現：○○）」「（現在の○○）」也认，「現」要紧跟括号或句号——行方市有「現原村」；「（現存）」只对应同名的市町村），没写的用段首「特記以外は現・○○ / 全域が現・○○」，都没有不收；一行写了几个「現・」的各算一份、标「一部」；外县的、只写到政令市一级的（「現・さいたま市」）不收，所以政令市的区可能不全。输出 `{代码: [[町村, 一部, 施行年]]}`，工具断言上田 / 笠间 / 向日的锚点。户籍在戊辰之后加「明治町村」一栏（`ks.mura`，年份取中位数，最多列 14 个），此地年表加一行（`kind: 'mura'`，`ht.mura`，列 8 个）。英文界面町村名仍用日文。
 - 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
 - 幕末领主一栏下面按郡里出现的藩（`findHan`：按当前语言名字匹配，去掉旧国名的也认，本县与存续藩优先）列出可展开的历代藩主（`kosekiHanHTML`，存图里不画）。
 - 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
@@ -386,7 +386,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 窄屏合战：`setupBattleVoice` 用 MutationObserver 把向导最新一条 AI 发言（打字机与 LLM 流式输出都会同步）镜像到地图底部的 `#battle-voice` 浮窗，「提问」切到向导页。
 - 飞线 `effect.trailLength` 必须为 0：拖尾会开启 zlevel 运动模糊，缩放时留残影。
 - 各地图的 `geo` 必须设 `animationDurationUpdate: 0`：ECharts 在 setOption（改中心 / 缩放、重设着色）时会用全局的 update 动画把底图 group 滑向新位置，而拖动只直接改 group；动画途中一拖，动画结束时把底图拉回旧目标，填色就与 `animation: false` 的叠加层（线、国名、图钉、旗）永久错开。smoke `map_sync` 核对。
-- 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线用于正文。
+- 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线（系统字体）用于正文。
 
 ## 市区町村下钻（muni.js）
 
@@ -439,8 +439,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否覆盖全部 `src/js`、仓库里有无 `__pycache__` / 测试页等杂物。
-- `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分；`SMOKE_JOBS=4` 本机开 4 个子进程各跑一片再汇总，完整一遍约 6–7 分钟；`SMOKE_SHARD=2/4` 只跑第 2 片，按场景顺序轮流分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
-- GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试（`ui` 是 4 片的 matrix，`fail-fast: false`，失败截图按片上传 `smoke-screenshots-N`；`~/.cache/ms-playwright` 按 Playwright 版本缓存，命中时只装系统依赖；升级 Playwright 时一并改 cache key）→ （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 3 分钟才上线（原来约 40 秒）。
+- `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分；`SMOKE_JOBS=4` 本机开 4 个子进程各跑一片再汇总，完整一遍约 6–7 分钟；`SMOKE_SHARD=2/8` 只跑第 2 片，按场景顺序轮流分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
+- GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试（`ui` 是 8 片的 matrix，`fail-fast: false`，失败截图按片上传 `smoke-screenshots-N`；`~/.cache/ms-playwright` 按 Playwright 版本缓存，命中时只装系统依赖；升级 Playwright 时一并改 cache key）→ （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 5–6 分钟才上线（测试 8 片并行）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
 - 重跑：场景因 Playwright 超时（等元素 / 点击 / 页面加载）失败时自动重跑一次，重跑通过算通过，但打印并在 CI 写一条 `::warning`（含调用记录头几行：卡在哪个元素）；断言失败与控制台报错不重跑。页面没加载完时报错列出未返回的请求。测试服务器的连接队列加大到 128（冷启动时并发请求四十多个文件）。
 - 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景（按场景名排序）：
@@ -450,6 +450,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）
   - `country`（`#map=nope` 退回日本、日本链接不带 `map=`
   - `crests_added`（三木剑菱、堀越公方足利二つ引的数据与图）
+  - `deeplink` 另查字体（只请求当前语言的一种 Noto Serif、不请求无衬线，`<html lang>` 与 `serifFont()` 一致；三语）
   - `disputed_jp`（日本地图点竹岛圆点 / 国后岛弹卡、不选中北海道）
   - `disputed_muni`（北海道下钻里齿舞与色丹同为灰、标题数量不含争议块、点齿舞弹卡）
   - `disputed_split`（拆分不误伤根室、争议岛不再属于县、不改入参）

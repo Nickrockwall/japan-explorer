@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.19 · 2026-11-08
+
+- Faster first load: body text now uses system fonts, and only one serif web font is downloaded for the current language (Noto Serif SC for Chinese, Noto Serif JP for Japanese and English). Fonts on a first visit dropped from one or two hundred requests and 3–5 MB to a dozen or so requests and about 0.5–1.2 MB (about 0.5 MB on phones)
+- In the English interface, kanji place and personal names now use Japanese glyph shapes (they used simplified-Chinese shapes before); map labels follow the language's serif font too
+- Meiji villages now cover about 200 more municipalities (about 71% → 83%): rows written as "(現横須賀市)", "(現：上越市)" or "(現存)" are now understood. This also fixes about 60 wrongly placed villages that used to fall back to the district's default town — Nadachi was listed under Itoigawa (it is in Jōetsu), Nishimeya under Hirosaki, Azuma under Ashikaga (it is in Sano)
+- Automated tests now run in 8 parallel parts, so changes go live a few minutes sooner
+
 ## 3.18 · 2026-11-08
 
 - Castle towns now name their own domain: 122 municipalities that held a domain's seat (castle or jin'ya) show that domain as the late-Edo lord, still followed by the district's village counts. About 35 towns change, where counting villages across the whole district had picked a neighbour or bannermen: Matsuyama (Ōzu → Iyo-Matsuyama), Tsu (Kishū → Tsu), Yamagata (Kaminoyama → Yamagata), Uwajima, Akashi, Tsuchiura, Hachinohe, Amagasaki…; Toyama, empty before, now reads Toyama Domain. The seat is placed by the castle's coordinates and counted only when the domain or castle name is in the town's name, so small domains in merged-in outskirts (Yoita in Nagaoka, Matsushiro in Nagano, Yagyū in Nara) don't stand for the whole city

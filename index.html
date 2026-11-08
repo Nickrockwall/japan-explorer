@@ -28,10 +28,36 @@
   <meta name="apple-mobile-web-app-title" content="Japan Explorer">
 
   <!-- 字体不阻塞首屏；display=optional：字体若没能马上就绪，本次就整页用系统字体，不会中途替换导致排版跳动
-       （Google Fonts 在国内常连不上，此时始终用系统字体） -->
+       （Google Fonts 在国内常连不上，此时始终用系统字体）。
+       正文用系统无衬线字体，网络只取当前语言的一种衬线字体（中文 SC，日文/英文 JP）：CJK 字体按字切片，
+       多一种字体或字重就多几十个请求。语言判定与 i18n.js 的 detect() 一致（切换语言会重新载入页面） -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=optional" rel="stylesheet" media="print" onload="this.media='all'">
+  <script>
+    (function () {
+      var ok = { zh: 'zh-CN', en: 'en', ja: 'ja' }, l = null;
+      try {
+        l = new URLSearchParams(location.hash.slice(1)).get('lang');
+        if (!ok[l]) l = new URLSearchParams(location.search).get('lang');
+        if (!ok[l]) l = JSON.parse(localStorage.getItem('je.ui.lang'));
+      } catch (e) { l = null; }
+      if (!ok[l]) {
+        l = 'zh';
+        var nl = navigator.languages || [navigator.language || ''];
+        for (var i = 0; i < nl.length; i++) {
+          var s = String(nl[i]).toLowerCase();
+          if (/^(ja|zh|en)/.test(s)) { l = s.slice(0, 2); break; }
+        }
+      }
+      document.documentElement.lang = ok[l];
+      var f = document.createElement('link');
+      f.rel = 'stylesheet';
+      f.media = 'print';
+      f.onload = function () { f.media = 'all'; };
+      f.href = 'https://fonts.googleapis.com/css2?family=' + (l === 'zh' ? 'Noto+Serif+SC' : 'Noto+Serif+JP') + ':wght@500;700;900&display=optional';
+      document.head.appendChild(f);
+    })();
+  </script>
   <link rel="stylesheet" href="src/css/style.css">
   <!-- ECharts 随站点一起发布（Apache-2.0，见 src/vendor/echarts-LICENSE）：不依赖外部 CDN，
        国内访问时 jsdelivr 挂起也不会让整页卡住 -->

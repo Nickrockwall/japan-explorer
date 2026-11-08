@@ -1,7 +1,7 @@
 // 市区町村下钻地图：在地图区上层叠一张独立的 ECharts 地图，全国地图留在下面不动。
 // 数据由 tools/build_municipalities.py 生成，每县一个文件，进入时才加载。
 import { MAP } from './country.js';
-import { t, lang } from './i18n.js';
+import { t, lang, serifFont } from './i18n.js';
 import { esc } from './detail.js';
 import { splitDisputed, disputeCard, disputeLabel } from './disputed.js';
 
@@ -228,7 +228,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         map: `muni-${cur.pref.id}`, roam: true, boundingCoords: cur.bounds,
         layoutCenter: ['50%', '54%'], layoutSize: '88%', scaleLimit: { min: 0.5, max: 80 },
         itemStyle: { borderColor: '#18181c', borderWidth: 0.5 },
-        label: { color: '#fff', fontSize: 11, fontFamily: 'Noto Serif SC', fontWeight: 700, textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 3,
+        label: { color: '#fff', fontSize: 11, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 3,
           formatter: (x) => { const p = cur?.byCode.get(x.name); return p ? dn(p) : ''; } },
         emphasis: { label: { show: true } },
         select: { disabled: true },
@@ -237,7 +237,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         { id: 'muni', type: 'map', geoIndex: 0, selectedMode: false, data: [] },
         {
           id: 'names', type: 'scatter', coordinateSystem: 'geo', symbolSize: 0, silent: true, data: [],
-          label: { show: true, formatter: '{b}', color: '#f3ede2', fontSize: 11, fontFamily: 'Noto Serif SC',
+          label: { show: true, formatter: '{b}', color: '#f3ede2', fontSize: 11, fontFamily: serifFont(),
             textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 2.5 },
           labelLayout: { hideOverlap: true },
         },

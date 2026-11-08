@@ -36,6 +36,9 @@ function detect() {
 
 export const lang = detect();
 
+// 衬线字体栈（CSS 的 --serif，按 <html lang> 取日文或中文字形），给画在 canvas 上的地图标签用
+export const serifFont = () => getComputedStyle(document.documentElement).getPropertyValue('--serif').trim() || 'serif';
+
 export function setLang(l) {
   if (!LANGS[l] || l === lang) return;
   uiPref.set('lang', l);

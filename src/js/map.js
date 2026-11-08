@@ -1,7 +1,7 @@
 // ECharts 日本全图：geo 坐标系 + 时空滤镜 / 时代滑块 / 风土图层 / 合战沙盘
 // 底图用 geo 组件渲染（regions 着色），map 系列挂在 geo 上（geoIndex）负责点击与悬停；
 // 首都脉冲、进军飞线、战场爆点、酒樽徽记都叠加在同一个 geo 坐标系里。
-import { t, label, prefName, lang } from './i18n.js';
+import { t, label, prefName, lang, serifFont } from './i18n.js';
 import { DISPUTED, disputeLabel } from './disputed.js';
 const COLOR = {
   base: '#2e2e36',
@@ -220,7 +220,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       rippleEffect: { scale: 3.5, brushType: 'stroke', period: 2.8 },
       symbol: 'pin', symbolSize: 26, symbolOffset: [0, '-40%'],
       itemStyle: { color: '#e2573a', borderColor: '#fff3d6', borderWidth: 1.5, shadowBlur: 10, shadowColor: '#e2573a' },
-      label: { show: true, position: 'right', color: '#ffe3c8', fontSize: 12.5, fontWeight: 700, fontFamily: 'Noto Serif SC',
+      label: { show: true, position: 'right', color: '#ffe3c8', fontSize: 12.5, fontWeight: 700, fontFamily: serifFont(),
         textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: () => kako?.label || '' },
       data: kako && !state.battle ? [{ value: kako.c }] : [],
     };
@@ -407,7 +407,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       rippleEffect: { scale: 5, brushType: 'stroke', period: 3 },
       symbolSize: 14,
       itemStyle: { color: '#ffd27a', shadowBlur: 16, shadowColor: '#ffb648' },
-      label: { show: true, position: 'right', color: '#ffe3a8', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700,
+      label: { show: true, position: 'right', color: '#ffe3a8', fontSize: 12, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(0,0,0,.7)', textBorderWidth: 3, formatter: (x) => t('capital.label', { name: x.name }) },
       data: e ? [{ name: e.capital.name, value: e.capital.coords, desc: e.capital.description }] : [],
     };
@@ -423,7 +423,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'barrels', type: 'scatter', coordinateSystem: 'geo', zlevel: 2, symbol: BARREL, symbolSize: [13, 15],
       labelLayout: { hideOverlap: true },
       itemStyle: { color: '#8a5a2b', borderColor: '#f3d9a4', borderWidth: 1.2, shadowBlur: 6, shadowColor: 'rgba(0,0,0,.6)' },
-      label: { show: true, position: 'top', distance: 2, color: '#f3e3c3', fontSize: 11, fontFamily: 'Noto Serif SC', fontWeight: 700,
+      label: { show: true, position: 'top', distance: 2, color: '#f3e3c3', fontSize: 11, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(0,0,0,.75)', textBorderWidth: 3, formatter: '{b}' },
       data,
     };
@@ -439,7 +439,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   function kokuSeries() {
     return {
       id: 'koku', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, animation: false,
-      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
       labelLayout: { hideOverlap: true },
       emphasis: { scale: 1.4, label: { show: true } },
@@ -470,7 +470,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'spots', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
       rippleEffect: { scale: 3.2, brushType: 'stroke', period: 3.2 },
       showEffectOn: 'render',
-      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+      label: { show: false, position: 'top', color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
       emphasis: { scale: 1.5, label: { show: true } },
       data: shownSpots().map((s) => ({
@@ -507,7 +507,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
       {
         id: 'origins', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'diamond', symbolSize: 10,
-        label: { show: true, position: 'top', color: '#fff', fontSize: 11, fontFamily: 'Noto Serif SC',
+        label: { show: true, position: 'top', color: '#fff', fontSize: 11, fontFamily: serifFont(),
           textBorderColor: 'rgba(0,0,0,.8)', textBorderWidth: 3, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: origins,
@@ -515,7 +515,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       {
         id: 'markers', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'pin', symbolSize: 22,
         itemStyle: { color: '#d4a373', borderColor: '#18181c', borderWidth: 1 },
-        label: { show: true, position: 'right', color: '#ffe9c4', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+        label: { show: true, position: 'right', color: '#ffe9c4', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
           textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: markers,
@@ -525,7 +525,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         rippleEffect: { scale: 6, brushType: 'fill', period: 1.6, number: 3 },
         symbolSize: 20,
         itemStyle: { color: '#ffb648', shadowBlur: 24, shadowColor: '#ff6a3d' },
-        label: { show: true, position: 'bottom', distance: 10, color: '#ffe3a8', fontSize: 13, fontFamily: 'Noto Serif SC', fontWeight: 900,
+        label: { show: true, position: 'bottom', distance: 10, color: '#ffe3a8', fontSize: 13, fontFamily: serifFont(), fontWeight: 900,
           textBorderColor: 'rgba(0,0,0,.85)', textBorderWidth: 3, formatter: '⚔ {b}' },
         data: clash ? [{ name: b.battlefield.name, value: b.battlefield.coords }] : [],
       },
@@ -637,7 +637,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
       {
         id: 'provnames', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, silent: true, symbolSize: 0, animation: false,
-        label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: 'Noto Serif SC', fontWeight: 700,
+        label: { show: true, color: '#fff', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
           textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2.5, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
         data: on ? prov.labels : [],
@@ -727,17 +727,17 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
     if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#d4a373">${now}</span>`;
     if (sgMode()) {
-      return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}</div>
+      return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}</div>
         <div style="color:#d4a373;margin-top:2px">${now}</div>${sg.tip(p.key)}`;
     }
     if (powerMode()) {
-      return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}</div>
+      return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}</div>
         <div style="color:#d4a373;margin-top:2px">${now}</div><div style="margin-top:4px;line-height:1.6">${power.tip(p.key)}</div>`;
     }
     const [lb, color] = FILTERS.circuit.cats[p.circuit];
     const extra = provTipExtra(p.key);
     const kana = p.kana && lang !== 'en' ? ` <span style="font-weight:400;font-size:12px;color:#b4ada3">${p.kana}</span>` : '';
-    return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${provFull(p)}${kana}</div>
+    return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}${kana}</div>
       <div style="margin-top:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color};margin-right:6px"></span>${lb}</div>
       <div style="color:#d4a373;margin-top:3px">${now}</div>${extra ? `<div style="color:#b4ada3;margin-top:3px">${extra}</div>` : ''}`;
   }
@@ -783,7 +783,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           : '';
         if (state.layer === 'ramen' && !state.battle) extra += `<div style="color:#d4a373">🍜 ${p.ramen.style_name}</div>`;
         if (state.layer === 'sake' && !state.battle) extra += `<div style="color:#d4a373">🍶 ${p.sake.brand} · ${p.sake.brewery}</div>`;
-        return `<div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700">${emblemTip(p.id)}${names.get(p.id)} ${seen}</div>
+        return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${emblemTip(p.id)}${names.get(p.id)} ${seen}</div>
           <div style="color:#b4ada3">${label('region', p.region)} · ${sub}</div>
           <div style="color:#d4a373;margin-top:3px">${t('tip.ancient', { list: provs })}</div>${extra}`;
       },
@@ -802,7 +802,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       layoutCenter: layoutCenter(),
       layoutSize: '100%',
       itemStyle: { areaColor: COLOR.base, borderColor: COLOR.border, borderWidth: 0.8 },
-      label: { color: '#fff', fontSize: 12, fontFamily: 'Noto Serif SC', fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2,
+      label: { color: '#fff', fontSize: 12, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(0,0,0,.6)', textBorderWidth: 2,
         formatter: (x) => names.get(idByName.get(x.name)) || x.name },
       emphasis: { label: { show: true, color: '#fff', fontSize: 12 } },
       select: { disabled: true },

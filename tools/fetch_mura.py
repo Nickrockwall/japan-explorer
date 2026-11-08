@@ -3,7 +3,8 @@
     python -X utf8 tools/fetch_mura.py
 
 - 郡条目取自 tools/districts.json（与 fetch_domains 相同）。一段里每行一个（或几个）新町村：「** '''神川村''' ← 大屋村、岩下村…（現・上田市）」。
-- 今天属于哪个市区町村：只认这一行写明的「現・○○」，没写的用段首「特記以外は現・○○」；两者都没有就不收（宁缺毋滥）。
+- 今天属于哪个市区町村：只认这一行写明的「現・○○」（也认「（現○○）」「（現：○○）」「（現在の○○・○○）」），「（現存）」= 今天同名的市町村，
+  没写的用段首「特記以外は現・○○」；两者都没有就不收（宁缺毋滥）。以前不认「現」后面不带「・」的写法，这些村被段首默认值算进了别的市。
   一行里写了几个「現・」（象郷村：上櫛梨村（現・琴平町）、下櫛梨村（現・善通寺市））→ 各算一份，标「一部」。
 - 「現・」后面的名字按本县市区町村名匹配（去掉开头的县名、郡名，取最长的前缀：「現・上田市平井」→ 上田市）；
   外县的、只写到政令市一级（「現・さいたま市」）的不收——不硬分到哪个区。
@@ -25,6 +26,9 @@ PREFS = [None, '北海道', '青森県', '岩手県', '宮城県', '秋田県', 
          '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県',
          '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県']
 NEW = re.compile(r"'''([^'\n]+?(?:町|村|宿|浦|島|郷))'''")
+# 「（現・上田市）」「（現横須賀市）」「（現：上越市）」「（現在の鹿沼市・日光市）」；「（現存）」另算
+#（「現」要紧跟括号或句号，或写成「現・」：行方市一带有个「現原村」）
+CUR = re.compile(r'(?:(?<=[（(。])現(?:在の)?[・：:]?|現・)(?!存)([^）、。\n]+)')
 
 
 def load(*p):
@@ -39,14 +43,17 @@ def section(wt):
         if not m or '町村制' not in line or '発足' not in line:
             continue
         depth = len(m.group(1))
-        ys = [int(y) for x in [line] + lines[max(0, i - 4):i][::-1] for y in re.findall(r'(18[89]\d|190\d)年', x)]
+        above = lines[max(0, i - 4):i][::-1]
+        if depth > 1:  # 北豊島郡：「* 1889年5月1日」之后先列了东京市各区，年份在更上面那行高一级的日期行
+            above += [x for x in lines[max(0, i - 30):i][::-1] if re.match(r'^:?\*{1,%d}(?!\*)' % (depth - 1), x)][:1]
+        ys = [int(y) for x in [line] + above for y in re.findall(r'(18[89]\d|190\d)年', x)]
         year = ys[0] if ys else None
         if not year or not 1888 <= year <= 1908:
             continue
         out = []
         for x in lines[i + 1:]:
             x = x.strip()
-            if x.startswith(('{{hidden', '|title', '|titlestyle', '}}')) or not x:
+            if x.startswith(('{{hidden', '|title', '|titlestyle', '}}', '<!--')) or not x:
                 continue
             k = re.match(r'^:?(\*+)', x)
             # 条目比段首低一级；北足立郡的条目写成「:* '''浦和町'''」（与段首同级，前面多个冒号）也算
@@ -90,27 +97,28 @@ def main():
             continue
         used += 1
         for pref in sorted(prefs):
-            m = re.search(r'(?:特記以外は|全域が)現・([^。）\n]+)', head)
+            m = re.search(r'(?:特記以外は|全域が)現(?:在の)?・?([^。）\n]+)', head)
             default = resolve(m.group(1), pref, munis[pref]) if m else None
             for row in rows:
                 names = NEW.findall(row.split('←')[0])
-                cur = [resolve(x, pref, munis[pref]) for x in re.findall(r'現・([^）、。\n]+)', row)]
-                if re.search(r'現・', row):
-                    cur = [c for c in cur if c]
-                    if not cur:  # 写了「現・」但是外县或只到政令市：不用默认值
-                        skipped += len(names)
-                        continue
+                if CUR.search(row):
+                    cur = [c for x in CUR.findall(row) for y in x.split('・') if y for c in [resolve(y, pref, munis[pref])] if c]
+                    groups = [(names, cur)]  # 写了「現」但是外县或只到政令市：cur 为空，不用默认值
+                elif '現存' in row:
+                    # 「'''垂井町'''（'''現存'''）」：今天仍是同名的市町村，每个名字只对应它自己，不同名的不收
+                    groups = [([n], [n] if n in munis[pref] else []) for n in names]
                 else:
-                    cur = [default] if default else []
-                if not cur:
-                    skipped += len(names)
-                    continue
-                part = len(set(cur)) > 1
-                for c in dict.fromkeys(cur):
-                    lst = out.setdefault(munis[pref][c], [])
-                    for n in names:
-                        if all(n != x[0] for x in lst):
-                            lst.append([n, part, year])
+                    groups = [(names, [default] if default else [])]
+                for ns, cur in groups:
+                    if not cur:
+                        skipped += len(ns)
+                        continue
+                    part = len(set(cur)) > 1
+                    for c in dict.fromkeys(cur):
+                        lst = out.setdefault(munis[pref][c], [])
+                        for n in ns:
+                            if all(n != x[0] for x in lst):
+                                lst.append([n, part, year])
     print(f'有町村制一段的郡条目 {used} / {len(titles)}，市区町村 {len(out)}，町村 {sum(len(v) for v in out.values())}，不收 {skipped}')
     # 锚点：上田市有上田町、神川村；笠间市有笠间町、宍戸町；向日市有向日町
     for code, want in {'20203': ['上田町', '神川村'], '08216': ['笠間町', '宍戸町'], '26208': ['向日町']}.items():
