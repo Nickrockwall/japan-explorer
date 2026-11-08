@@ -165,7 +165,16 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
       render();
     }
   });
+  // 空搜索框按 ↓：按编号列出 47 都道府县（不用鼠标、不知道名字也能选）
+  const allPrefs = () => base.filter((e) => e.type === 'pref').sort((a, b) => a.id - b.id);
   input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' && !input.value.trim() && !results.length) {
+      e.preventDefault();
+      results = allPrefs();
+      active = 0;
+      render();
+      return;
+    }
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (!results.length) return;
       e.preventDefault();
@@ -178,6 +187,14 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
     }
   });
   input.addEventListener('blur', () => setTimeout(close, 150));
+  // 「/」跳到搜索框（正在输入文字时不抢）
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target.closest?.('input, textarea, select, [contenteditable="true"]') || document.querySelector('dialog[open]')) return;
+    if (!input.offsetParent) return; // 手机上搜索框不在当前页
+    e.preventDefault();
+    input.focus();
+  });
   // pointerdown 先于 blur，避免点选前列表已关闭
   pop.addEventListener('pointerdown', (e) => {
     const li = e.target.closest('li[data-i]');

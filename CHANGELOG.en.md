@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.25 · 2026-11-08
+
+- The welcome page has a new "Start here" section with three ways in: what your hometown was called back then, how the Sengoku warlords split Japan, and which old province you are standing in
+- Usable without a mouse: the first Tab stop is "Skip to search", "/" jumps to the search box, and ↓ on an empty box lists all 47 prefectures; the map has a description for screen readers
+- Place-name origins in the ancestral register grow from 74 to 124: 50 more cities and wards, including Tokyo's Kita, Minato, Taitō and Sumida, Hakodate, Asahikawa, Matsumoto, Takaoka, Takarazuka and Urayasu, each checked for key terms and years against its Japanese Wikipedia article; year mismatches between languages in the Ōta and Kitakyūshū entries are fixed
+- Interface text is split by language, so only the current language downloads (about 120 KB less); On This Day data now loads once the page is idle, so the map comes first
+- New unit tests for the data tools and a consistency check across the three languages' interface text run on every push; the offline cache list is now generated automatically
+- The licence notes now cover the sources for place-name origins, Meiji villages and castle towns
+
 ## 3.24 · 2026-11-08
 
 - The serif font for titles and place names now ships with the site instead of coming from Google Fonts, which is blocked in mainland China (the whole site fell back to system fonts there). Only the ~4,500 characters the site uses are included, cut into small slices by frequency, so a page downloads just the slices it needs (about 0.6 MB on first load, was about 1.3 MB)

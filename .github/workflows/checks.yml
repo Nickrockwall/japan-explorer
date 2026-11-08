@@ -21,6 +21,8 @@ jobs:
           python-version: '3.12'
       - name: Data & repo consistency
         run: python -X utf8 tools/check_data.py
+      - name: Tool unit tests
+        run: python -X utf8 -m unittest discover -s tests -p "test_*.py"
 
   ui:
     runs-on: ubuntu-latest

@@ -196,7 +196,12 @@ async function main() {
     const m = inp?.value.match(/^\d+-(\d\d)-(\d\d)$/);
     if (m) { kako.key = `${m[1]}-${m[2]}`; kako.page = 0; renderKako(); }
   });
-  const kakoLoad = loadKako(); // 古代户籍的「此地年表」也要
+  // 古代户籍的「此地年表」也要。首屏先让地图与数据包下载，空闲时再取（约 160 KB）；#kako= / #bday= 链接立即取
+  const kakoNow = /(^|&)(kako|bday)=/.test(location.hash.slice(1));
+  const kakoLoad = kakoNow ? loadKako() : new Promise((resolve) => {
+    const go = () => resolve(loadKako());
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
+  });
   kakoLoad.then((d) => {
     kako.all = d;
     setLordDays(d);
@@ -1348,6 +1353,15 @@ async function main() {
     const more = e.target.closest('[data-act="hn-more"]');
     if (more) { more.closest('.hn-list').classList.add('all'); more.remove(); return; }
     if (e.target.closest('[data-act="tour"]')) startTour();
+    // 欢迎卡「从这里开始」：三个最有意思的入口，都只是替用户按下已有的按钮
+    if (e.target.closest('[data-act="st-home"]')) {
+      onMap();
+      const inp = $('search-input');
+      inp.focus();
+      toast(t('st.home.tip'));
+    }
+    if (e.target.closest('[data-act="st-sg"]')) { onMap(); applyFilter('sengoku'); }
+    if (e.target.closest('[data-act="st-loc"]')) { onMap(); $('btn-locate').click(); }
     const sh = e.target.closest('[data-act="shared"]');
     if (sh) openShared(sh.dataset.key);
   });

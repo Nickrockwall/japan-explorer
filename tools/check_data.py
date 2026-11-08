@@ -128,6 +128,25 @@ def check_i18n():
                        f'i18n/{lang}/historical_events.json')
 
 
+UI_ALT_VARS = {'sg.c.man': {'k'}}  # 调用处同时给了几种写法的变量（万石 v / 英文 k）
+
+
+def check_ui_strings():
+    """src/js/lang/{zh,en,ja}.js：三种语言的键一致、译文不出现中文没有的 {占位符}（i18n.js 不再回退到中文）"""
+    keys = {}
+    for lg in ('zh', 'en', 'ja'):
+        txt = read(os.path.join('src', 'js', 'lang', f'{lg}.js'))
+        keys[lg] = {k: set(re.findall(r'\{(\w+)\}', v)) for k, v in re.findall(r"'([^'\n]+)':\s*`([^`]*)`", txt)}
+    for lg in ('en', 'ja'):
+        for k in keys['zh'].keys() - keys[lg].keys():
+            err(f'lang/{lg}.js', f'缺少 {k}')
+        for k in keys[lg].keys() - keys['zh'].keys():
+            err(f'lang/{lg}.js', f'中文没有的键 {k}')
+        for k in keys['zh'].keys() & keys[lg].keys():
+            if keys[lg][k] - keys['zh'][k] - UI_ALT_VARS.get(k, set()):  # 译文可以不用某个占位符（中文的自称 {self} 英文不需要），但不能多出中文没有的
+                err(f'lang/{lg}.js', f'{k} 用了中文没有的占位符 {sorted(keys[lg][k] - keys["zh"][k])}')
+
+
 def check_events():
     ev = load('src', 'data', 'historical_events.json')
     ids = {str(i) for i in range(1, 48)}
@@ -477,14 +496,14 @@ def check_kako():
 
 
 def check_shell():
+    import build_sw
     sw = read('sw.js')
-    shell = re.search(r'const SHELL = \[(.*?)\];', sw, flags=re.S).group(1)
-    for path in re.findall(r"'([^']+)'", shell):
+    have, want = build_sw.current(sw), build_sw.shell()
+    for path in have:
         if path != './' and not os.path.exists(os.path.join(ROOT, path)):
             err('sw.js', f'SHELL 里的文件不存在：{path}')
-    for js in sorted(os.listdir(os.path.join(ROOT, 'src', 'js'))):
-        if f'src/js/{js}' not in shell:
-            err('sw.js', f'src/js/{js} 没有列进 SHELL（离线时会缺模块）')
+    if have != want:
+        err('sw.js', f'SHELL 与应用外壳不一致（缺 {sorted(set(want) - set(have))}，多 {sorted(set(have) - set(want))}）：跑 python -X utf8 tools/build_sw.py')
 
 
 def check_fonts():
@@ -570,7 +589,7 @@ def check_palette():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_fonts, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_ui_strings, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_fonts, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

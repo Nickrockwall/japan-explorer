@@ -619,6 +619,37 @@ class Case:
         assert '豊田' in text or 'Toyota' in text, f'搜索后详情卡：{text[:60]!r}'
         assert 'm=23211' in page.evaluate('location.hash'), '地址栏应带上选中的市町村'
 
+    def keyboard(self, page):
+        # 不用鼠标：Tab 先到「跳到搜索」，「/」聚焦搜索框，空搜索框按 ↓ 列出 47 都道府县，Enter 打开
+        page.keyboard.press('Tab')
+        assert page.evaluate("document.activeElement.classList.contains('skip-link')"), '第一个 Tab 应到跳到搜索的链接'
+        page.evaluate('document.activeElement.blur()')
+        assert page.get_attribute('#map', 'aria-label'), '地图容器应有说明'
+        if self.narrow:
+            return  # 手机上搜索框在地图页工具条里，键盘场景只在宽屏测
+        page.keyboard.press('/')
+        assert page.evaluate("document.activeElement.id") == 'search-input', '「/」应聚焦搜索框'
+        page.keyboard.press('ArrowDown')
+        page.wait_for_selector('#search-pop li')
+        assert page.locator('#search-pop li').count() == 47, '空搜索框按 ↓ 应列出 47 都道府县'
+        for _ in range(25):
+            page.keyboard.press('ArrowDown')
+        page.keyboard.press('Enter')
+        page.wait_for_function("location.hash.includes('pref=26')", timeout=15000)
+
+    def starts(self, page):
+        # 欢迎卡「从这里开始」：查家乡 → 聚焦搜索框（窄屏切到地图页）；战国 → 战国势力滤镜
+        if self.narrow:
+            self.tab(page, 'detail')
+        page.click('[data-act="st-home"]')
+        page.wait_for_timeout(200)
+        assert page.evaluate('document.activeElement.id') == 'search-input', '「查家乡」应聚焦搜索框'
+        if self.narrow:
+            assert page.evaluate('document.body.dataset.tab') == 'map'
+            self.tab(page, 'detail')
+        page.click('[data-act="st-sg"]')
+        page.wait_for_function("document.querySelector('[data-filter=\"sengoku\"]')?.classList.contains('on')", timeout=15000)
+
     def battle(self, page):
         self.top(page, '#btn-battle')
         page.click('#battles .battle-card >> nth=0')
@@ -1420,7 +1451,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),

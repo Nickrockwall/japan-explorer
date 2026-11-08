@@ -33,13 +33,13 @@ FONTS = {  # 目录名: (CSS 字体名, google/fonts 里的路径)
 }
 WEIGHTS = (500, 700)
 SLICE = 160  # 每片字数；第一片另含全部 ASCII
-BOOST = {'index.html': 20, 'i18n.js': 20}  # 界面文字排在前面
-BOOST_DIR = {'bundle': 4}
+BOOST = {'index.html': 20}  # 界面文字排在前面
+BOOST_DIR = {'lang': 20, 'bundle': 4}
 
 
 def site_files():
     yield ROOT / 'index.html'
-    yield from sorted((ROOT / 'src' / 'js').glob('*.js'))
+    yield from sorted((ROOT / 'src' / 'js').rglob('*.js'))
     yield from sorted((ROOT / 'src' / 'data').rglob('*.json'))
 
 

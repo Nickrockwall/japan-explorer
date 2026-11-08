@@ -11,7 +11,7 @@
 - **当前地图**（`src/js/country.js`）：`MAPS` 登记各地图的 GeoJSON、数据目录、单元数与存储键前缀（日本 = `src/data`、`je.`，与改造前完全相同）。页面加载时由 `pickMap(hash, 上次的地图)` 定下：链接里 `map=` 是已登记的键 → 用它；否则链接带 `pref=`（老链接都是日本）→ 日本；否则上次看的地图（`je.ui.map`）；都没有 → 日本。日本以外的地图在 `stateHash` 里写 `map=`，日本链接不带。切换地图走整页重载（与切换语言相同）。数据路径一律写成 `${MAP.data}/…`，不要再写死 `src/data/`。
 - 日文 → 简体：`build_bundle.ja_to_zh_table()` 把 search.js 的对照表反过来用，只收 GB 2312 里有的字（对照表也有异体字，反用曾把崎写成﨑、富写成冨），另把 zhconv 的「㭴」改回「樫」；han_tool / sengoku_tool / rulers_tool 的 `JA_ZH` 都从它来，`check_han` 核对藩名与藩主中文名里没有这几个字。
 - **数据打包（改数据后必做）**：`python tools/build_bundle.py` 把每种语言的 47 县 + 合战/时代数据合并成 `src/data/bundle/{zh,en,ja}.json`（每种语言 1 个请求）。前端优先读 bundle，读不到才回退为逐个文件加载——所以**改了 JSON 却忘记重新打包，线上会继续显示旧内容**。
-- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。改动应用外壳文件列表（`SHELL`）时把 `VERSION` 加一。图标在 `src/assets/icons/`，分享卡片封面 `src/assets/og-cover.png`（1200×630）。
+- PWA：`manifest.webmanifest` + `sw.js`（本站文件网络优先、CDN 库与字体缓存优先，只缓存 GET）。`SHELL` 由 `python -X utf8 tools/build_sw.py` 生成（src/js 下全部模块含 `lang/`，加上 index、css、ECharts、字体 CSS、japan.json、图标），列表变化时自动把 `VERSION` 加一；新增 / 删除 / 改名模块后跑它，`check_data.check_shell` 核对。图标在 `src/assets/icons/`，分享卡片封面 `src/assets/og-cover.png`（1200×630）。
 - 必须通过 HTTP 服务器访问（`fetch` 读取 JSON），不能直接双击 `file://` 打开：
   - `python3 -m http.server 8000`（Windows 用 `python`）或 `npx serve .`
 - 浏览器本地存储（`localStorage`）：
@@ -84,7 +84,7 @@ tools/main_gun.json            户籍江户一段的主要郡 / 整市 / 江户�
 tools/mura.json                1889 年町村制时今属各市区町村的町村（tools/fetch_mura.py）
 tools/seats.json               城下町：存续藩的藩厅落在哪个市区町村（tools/fetch_seats.py，build_bundle 并进 main_gun 的 seat）
 tools/wiki_revisions.json      各数据工具读过的维基条目版本号（pilgrimage_tool.record_revisions）
-tools/yurai.json               地名的来历 74 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
+tools/yurai.json               地名的来历 124 条（tools/yurai_tool.py，三语自写、关键词对条目或官网核对）
 tools/kyudaka.json             今天各市区町村里幕末各村的领主与石高合计（tools/fetch_kyudaka.py，歴博《旧高旧領取調帳データベース》）
 tools/wamyo.json               《和名类聚抄》各郡的郷与读音、市区町村 → 古郡（tools/fetch_wamyo.py，奈文研「古代地名検索システム」）
 tools/codh.py                  CODH 数据的共用读法：TopoJSON → shapely、按面积对到今天的市区町村、按坐标定位、nrct 村坐标
@@ -242,6 +242,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 
 ## 多语言（中文 / English / 日本語）
 
+- 界面词典在 `src/js/lang/{zh,en,ja}.js`（各 `export default {键: 文}`），`i18n.js` 用顶层 `await import()` 只载入当前语言的那一份（以前三语都在 i18n.js 里，183 KB）。三种语言的键必须一致，`t()` 不再回退到中文；`check_data.check_ui_strings` 核对键与 `{占位符}`（译文可以不用中文里的某个占位符，如自称 `{self}`，但不能多出中文没有的；调用处同时给几种写法的列在 `UI_ALT_VARS`）。
 - `src/js/i18n.js`：语言在页面加载时确定（`je.ui.lang` > 浏览器语言：ja→日语、en→英语、其余中文），切换语言会重新载入页面（保留 `#pref`）。
 - 界面文字：`t(key, vars)` 查词典 `D`；静态 HTML 用 `data-i18n` / `data-i18n-ph` / `data-i18n-title` / `data-i18n-aria`，由 `applyStatic()` 填充。
 - **分类键不翻译**：`region`、`circuit`、`history_timeline[].era`、`ramen.category`、`sake.quadrant`、`map_filters.*` 等是逻辑键，显示时用 `label(group, key)` 转换。
@@ -260,6 +261,9 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 详卡目录（toc.js `addToc`，日本与半岛详卡渲染后调用）：扫 `.section-h` / `.art-section-h` / 地域修罗场与圣地巡礼的 summary，在统计格下放一行吸顶按钮，点了展开折叠并滚过去，滚动时标出当前一节。江户诸藩超过 8 个时先列 6 个（`.hn-x` + 「显示其余」`data-act="hn-more"`）。年表 `.rl-jump` 按时代分组跳转。
 - **横屏手机**（高 ≤520px 的横屏，`SHORT`）：地图页工具条一行（图层左半、滤镜右半，子行换到第二行左侧），底部一行（图例左半、去掉说明；时空滑块右半、只留播放键 + 滑轨 + 时代名）；各种卡片（`.muni-card`，含国力榜、古国 / 巡礼 / 我在哪卡）改放右侧；`layoutCenter` 把地图中心放在上下两行之间，取景用 `LANDSCAPE_VIEW`；合战时 `setInset({ left })` 让地图避开左上的合战面板。转屏（竖屏手机 / 横屏手机 / 宽屏三种形态之间）时 `resize` 回到该形态的默认取景。smoke 有 `landscape`（844×390）视口，只跑 `LANDSCAPE_CASES`。
 - 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过；窄屏的「详情」「向导」步骤指向底部标签按钮。首次访问且地址栏不带 `pref=` 时自动开始，设置弹窗与欢迎卡可再打开；走完或跳过都记 `tourDone`。
+- 欢迎卡「从这里开始」（3.25）：三个按钮只是替用户按下已有的控件——`st-home` 切到地图页、聚焦搜索框并提示「选中后点古代户籍」，`st-sg` 打开战国势力滤镜，`st-loc` 点「我在哪」。不要往这里加新功能入口，入口多了就失去意义。
+- 键盘与读屏（3.25）：页面第一个可聚焦元素是「跳到搜索」链接（`.skip-link`，平时在屏幕外），`#map` 有 `aria-label` 说明用搜索框；「/」聚焦搜索框（正在输入或有对话框时不抢）；空搜索框按 ↓ 按编号列出 47 都道府县（`allPrefs`），Enter 打开。地图本身是 canvas，键盘用户一律走搜索框。
+- 彼时今日数据（kako.json，约 160 KB）在浏览器空闲时才下载（`requestIdleCallback`，最多等 1.5 秒），让首屏先拿地图与数据包；`#kako=` / `#bday=` 链接立即下载。
 - 刘海屏安全区域：页面用 `viewport-fit=cover`，四周边距统一走 `--safe-t/r/b/l` 变量（取自 `env(safe-area-inset-*)`），弹窗高度用 `--vh`（支持时为 `100dvh`）。新增贴边或 `position: fixed` 的元素时要加上对应的安全区域边距。测试时可在页面里覆盖这些变量模拟 iPhone（竖屏 上 47 / 下 34，横屏 左右 47 / 下 21）。横屏手机（高 ≤520px）同样走上下堆叠布局。
 
 ## 时空滤镜
@@ -327,7 +331,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 明治町村补全（3.20）：fetch_mura 末尾 `codh_villages(index)` 读 CODH 1920 年各县 TopoJSON（`.cache/codh/1920_NN.topojson`），成立日在 1888–1908 年的町村按面积记给今天的市区町村（≥90% 算整个，其余 ≥15% 的各记一份标「一部」），只补维基没收的市区町村，并打印两边都有时的吻合率（约 78%，对不上的多是 1920 年前已并掉的）。维基分错的也拿它改：同县、同郡、同名、町村制时成立的町村在 1920 年里恰好一个且整个落在另一个市区町村、维基分给的市区町村里没有同名町村时，挪过去并打印（3.21 改了 10 处）。CODH nrct 数据的「都道府県コード」是《大系》卷号（京都以后错开），`nrct_points()` 只按名字取，调用方按坐标核对。
 - 古代乡名（3.20）：`python -X utf8 tools/fetch_wamyo.py` 按旧国检索奈文研系统（POST 检索词后同一会话 GET 结果页，缓存 `.cache/wamyo/`；三河在系统里写参河），只收《和名类聚抄》本身的郷（不收标 ＊△☆ 的、驿名）。市区町村 → 古郡：主要郡或第一个整体属于的明治旧郡（只部分属于几个郡的不写），异体字 `canon()`、去方位字、`RENAME`（足柄上 → 足上、春日井 → 春部…）。户籍在律令之后加 `wamyo` 一栏（印「郡」，中日文附假名、英文附罗马字——build_bundle 的 `romaji()`），此地年表古代一行带郡与乡数。
 - 藩主年份的英文维基来源（3.20）：han_tool 的 `en_tables` 取日文藩条目语言链接到的英文条目，读藩主表里 `{{nihongo|…|汉字名}}` 那一行的「起–止」，只给前面各来源都没有年份的藩主用，检查与 Wikidata 一样（缓存 `.cache/han/en_tables.json`）。
-- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf 逐页取、出错的页跳过；装了 truststore 就用系统证书库，大分市官网证书链不完整要靠它）。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
+- 地名来历（3.17）：`python -X utf8 tools/yurai_tool.py` 的 `Y` 是县厅所在地、政令市与人口 30 万以上的市里条目写了来历的 48 个（青森、秋田、松山、冈山等条目没写的不收），三语自写一两句，`ev` 词与说明里的西历年都要出现在条目里（先去掉粗体标记）；条目没写来历的城市，第三项写市 / 县官网的网址，改对官网页面核对（`page_text`，缓存 `.cache/yurai/`，PDF 用 pypdf 逐页取、出错的页跳过；装了 truststore 就用系统证书库，大分市官网证书链不完整要靠它）。3.25 加了人口 15 万以上、日文维基条目里写了来历一节的 50 个市区（东京特别区的条目名带「 (東京都)」，第三项写条目名），共 124 条。户籍最后一栏 `yurai`：本市区町村有就用（印「市」），政令市的区用市名的来历（印「全市」）。
 - 幕末领主一栏下面按郡里出现的藩（`findHan`：按当前语言名字匹配，去掉旧国名的也认，本县与存续藩优先）列出可展开的历代藩主（`kosekiHanHTML`，存图里不画）。
 - 存图：`kosekiImage` 在 canvas 上画 1080 宽的竖版图；手机（`pointer: coarse` 且支持文件分享）走系统分享，否则直接下载。
 
@@ -447,7 +451,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 
 ## 检查与测试（改完提交前先跑）
 
-- `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否覆盖全部 `src/js`、仓库里有无 `__pycache__` / 测试页等杂物。
+- `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否与 build_sw 算出的一致、界面词典三语的键与占位符、字体切片有无漏字、仓库里有无 `__pycache__` / 测试页等杂物。
+- `python -X utf8 -m unittest discover -s tests -p "test_*.py"`（`tests/test_tools.py`，只用标准库、不联网，CI 的 data 任务也跑）：fetch_domains 的 whole / count / norm / kind_of / strip_province，build_bundle 的 deep_merge / romaji / ja_to_zh_table，字体切片没有漏字，sw.js SHELL 是最新，地名来历三语年份一致、yurai.json 与工具同步。改抓取脚本的正则后先跑；以前出过错的写法加进这里。
 - `python -X utf8 tests/smoke.py`（本地可加 `PW_CHANNEL=chrome` 用已装的 Chrome；`SMOKE_ONLY='phone.*zh'` 只跑部分；`SMOKE_JOBS=4` 本机开 4 个子进程各跑一片再汇总，完整一遍约 6–7 分钟；`SMOKE_SHARD=2/8` 只跑第 2 片，按场景顺序轮流分）：Playwright 在 电脑 1280×800 / 平板 820×1180 / 手机 390×844 下跑深链接、横向溢出、下钻、搜索、合战、时代滑块、盖印位置、离线向导、标签页；中文全跑，英日只跑语言相关场景。任何控制台报错或页面异常即失败，截图存 `tests/artifacts/`。
 - GitHub Actions（`.github/workflows/checks.yml`）每次推送：数据检查 → 冒烟测试（`ui` 是 8 片的 matrix，`fail-fast: false`，失败截图按片上传 `smoke-screenshots-N`；`~/.cache/ms-playwright` 按 Playwright 版本缓存，命中时只装系统依赖；升级 Playwright 时一并改 cache key）→ （仅 main 且两项都通过）发布到 GitHub Pages。Pages 的 Source 设为「GitHub Actions」，检查失败网站保持上一版。发布只打包 `index.html`、`manifest.webmanifest`、`sw.js`、`src/`——**新增网站需要的根目录文件时要加进 deploy 步骤的 cp 列表**。推送后约 5–6 分钟才上线（测试 8 片并行）。
 - CSS 有全局 `[hidden] { display: none !important; }`，组件里写 `display` 不会再盖掉 hidden 属性。
@@ -475,6 +480,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `hiroshige`（古国地图点武藏出两幅、大图加载与翻页、详卡列出）
   - `hometown` 另查只到「京都」的菅原道真不算进中京区
   - `hometown`（京都中京区此地年表有 1582、不重复、不横向溢出、点第一条菅原道真诞生标在京都）
+  - `keyboard`（第一个 Tab 到「跳到搜索」、地图容器有 aria-label；宽屏「/」聚焦搜索框、空框按 ↓ 列出 47 都道府县、Enter 打开第 26 个）
   - `kako`（深链接 6 月 21 日每页 3 条、刷新顺序不变、翻页能见到 1582、点一条选中县）
   - `koku`（古国巡礼图层、出云大社卡片、参拜、模拟定位实地打卡得亲临印、御朱印帐一宫篇）
   - `korea`（三语首尔详卡与韩文名、分母 29、日本按钮隐藏、只有首尔着色
@@ -515,6 +521,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `regimes`（欢迎卡打开实权页 20 段、镰仓写两说、不出屏、点江户的「看将军名单」换页并滚到江户幕府、末尾有纠错链接）
   - `rl_link`（`#rl=power` 打开实权页、换页改地址栏、关掉去掉 rl=）
   - `search_fits`（搜索下拉完整落在屏幕内）
+  - `starts`（欢迎卡「从这里开始」：查家乡聚焦搜索框、窄屏切到地图页；战国按钮打开战国势力滤镜）
   - `sengoku` 的年表先是实权 20 段再换天皇页
   - `sengoku`（默认 1560 年居首的家是三好 9 国、图例最多 13 项加「其余」、1600 年 7 类（含阿伊努的土地）西军 39 块东军 53 块、甲斐 6 个年份 1573 胜赖、人物简卡与详写（信玄肖像 / 三方原 / 相关人物谦信）、年表天皇 126 行将军 41 届、点义满开人物卡并返回年表、Esc、离开后隐藏；三语与横屏都跑）
   - `sengoku_clan`（深链接 1573 武田总览：3 国 + 2 分治、5 根柱、接壤首位北条、注明 1598

@@ -1,0 +1,116 @@
+"""数据工具里纯解析函数的单元测试（只用标准库，不联网）。
+
+    python -X utf8 -m unittest discover -s tests -p "test_*.py"
+
+抓取脚本改了正则后先跑这个：这些例子都是以前真出过错的写法（见 CLAUDE.md 与各工具的注释）。
+"""
+import json
+import os
+import re
+import sys
+import unittest
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+
+import build_bundle  # noqa: E402
+import build_fonts  # noqa: E402
+import build_sw  # noqa: E402
+import fetch_domains  # noqa: E402
+
+
+class FetchDomains(unittest.TestCase):
+    def test_whole_district(self):
+        # 正文「全域が○○領であった。（2町199村）」
+        self.assertEqual(fetch_domains.whole('全域が[[肥後熊本藩]]領であった。（2町199村）'), [('肥後熊本藩', 201)])
+        self.assertIsNone(fetch_domains.whole('一部が幕府領であった。'))
+
+    def test_count(self):
+        self.assertEqual(fetch_domains.count('2町<br />9村'), 11)
+        self.assertEqual(fetch_domains.count('1宿'), 1)
+
+    def test_norm(self):
+        self.assertEqual(fetch_domains.norm('幕府領（出雲崎代官所）'), ('幕府領', 'bakufu'))
+        self.assertEqual(fetch_domains.norm('陸奥下手渡藩<br />→三池藩'), ('陸奥下手渡藩', 'han'))
+        self.assertEqual(fetch_domains.norm('旗本領　ほか')[1], 'hatamoto')  # 全角空格当换行
+
+    def test_kind_of(self):
+        k = fetch_domains.kind_of
+        self.assertEqual(k('飯島代官'), 'bakufu')
+        self.assertEqual(k('日光領'), 'jisha')
+        self.assertEqual(k('公家領'), 'court')
+        self.assertEqual(k('幕府領・旗本領'), 'mixed')
+        self.assertEqual(k('品川県'), 'pref')
+
+    def test_strip_province(self):
+        # 同一藩带不带国名算一个；去掉国名后撞名（対馬府中 / 甲斐府中）的保留全名
+        got = fetch_domains.strip_province(['信濃上田藩', '上田藩', '対馬府中藩', '甲斐府中藩'], ['信濃', '対馬', '甲斐'])
+        self.assertEqual(got, {'信濃上田藩': '上田藩', '上田藩': '上田藩', '対馬府中藩': '対馬府中藩', '甲斐府中藩': '甲斐府中藩'})
+
+
+class BuildBundle(unittest.TestCase):
+    def test_deep_merge(self):
+        # 对象数组按下标叠加，其余数组整体替换（与 i18n.js deepMerge 一致）
+        got = build_bundle.deep_merge({'a': [{'x': 1, 'y': 2}], 'b': [1, 2]}, {'a': [{'y': 3}], 'b': [9]})
+        self.assertEqual(got, {'a': [{'x': 1, 'y': 3}], 'b': [9]})
+        self.assertEqual(build_bundle.deep_merge({'a': 1}, None), {'a': 1})
+
+    def test_romaji(self):
+        r = build_bundle.romaji
+        self.assertEqual(r('ほっかいどう'), 'Hokkaidō')
+        self.assertEqual(r('きょうと'), 'Kyōto')
+        self.assertEqual(r('かんい'), "Kan'i")
+        self.assertIsNone(r('とうきょうＸ'))
+
+    def test_ja_to_zh_table(self):
+        # 反用对照表曾把崎写成﨑、富写成冨；只收 GB 2312 里有的字（「樫」是特意留下的，zhconv 会写成㭴）
+        table = build_bundle.ja_to_zh_table()
+        self.assertNotIn('﨑', table.values())
+        self.assertNotIn('冨', table.values())
+        for v in table.values():
+            if v != '樫':
+                v.encode('gb2312')
+
+
+class Fonts(unittest.TestCase):
+    def test_ranges(self):
+        self.assertEqual(build_fonts.ranges([0x41, 0x42, 0x43, 0x45]), 'U+41-43, U+45')
+        self.assertEqual(build_fonts.ranges([0x4E00]), 'U+4E00')
+
+    def test_no_missing_chars(self):
+        self.assertEqual({k: v for k, v in build_fonts.missing().items() if v}, {})
+
+
+class ServiceWorker(unittest.TestCase):
+    def test_shell_up_to_date(self):
+        sw = open(os.path.join(ROOT, 'sw.js'), encoding='utf-8').read()
+        self.assertEqual(build_sw.current(sw), build_sw.shell(), '跑 python -X utf8 tools/build_sw.py')
+
+    def test_render_roundtrip(self):
+        paths = build_sw.shell()
+        self.assertEqual(re.findall(r"'([^']+)'", build_sw.render(paths)), paths)
+
+
+class Yurai(unittest.TestCase):
+    def test_entries(self):
+        sys.modules.pop('yurai_tool', None)
+        import yurai_tool
+        seen = set()
+        for pref, name, src, ev, zh, ja, en in yurai_tool.Y:
+            self.assertTrue(1 <= pref <= 47, name)
+            self.assertNotIn((pref, name), seen, f'{name} 重复')
+            seen.add((pref, name))
+            self.assertTrue(ev and zh and ja and en, name)
+            # 三语里写的西历年一致
+            years = [set(re.findall(r'1[0-9]{3}', s)) for s in (zh, ja, en)]
+            self.assertEqual(years[0], years[1], f'{name} 中日年份不同')
+            self.assertEqual(years[0], years[2], f'{name} 中英年份不同')
+
+    def test_json_matches_tool(self):
+        import yurai_tool
+        out = json.load(open(os.path.join(ROOT, 'tools', 'yurai.json'), encoding='utf-8'))
+        self.assertEqual(sum(len(v) for v in out.values()), len(yurai_tool.Y), '改了 yurai_tool 后要重跑它')
+
+
+if __name__ == '__main__':
+    unittest.main()
