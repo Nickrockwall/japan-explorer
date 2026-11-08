@@ -59,6 +59,11 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/data/korea/power.json`（1432 年各区的户、口、垦田） | 《世宗实录·地理志》原文（15 世纪，公有领域），取自国史编纂委员会[「조선왕조실록」网站](https://sillok.history.go.kr/)，只用数字；郡县今地按 `tools/sejong_locate.py` 用[한국어 위키백과](https://ko.wikipedia.org/)核对 | 公有领域（只取原文数字） |
 | `src/data/korea/eras/silla.json`、`samguk.json` 的州 / 国归属 | 整理自[한국어 위키백과](https://ko.wikipedia.org/)「신라의 행정 구역」九州表格；高丽各道据《高丽史·地理志》（[维基文库](https://zh.wikisource.org/)，公有领域） | **CC BY-SA 4.0**（新罗九州部分，不适用 NC） |
 | `src/data/korea/battles.json`（半岛古战场） | 自写，内容据[한국어](https://ko.wikipedia.org/)、[English](https://en.wikipedia.org/)、[日本語](https://ja.wikipedia.org/)维基百科各战役条目核对 | CC BY-NC 4.0（本项目） |
+| `tools/kyudaka.json` 及户籍数据包中的 `kyu`（今天各市区町村里幕末各村的领主与石高合计） | 国立历史民俗博物馆[「旧高旧領取調帳データベース」](https://www.rekihaku.ac.jp/doc/gaiyou/kyuudaka.html)（データベースれきはく，木村礎校订《旧高旧領取調帳》为底本）；村的位置用下面两项 CODH 数据 | 按[国立歴史民俗博物館データベース利用規程](https://www.rekihaku.ac.jp/doc/db_kitei.pdf)非营利使用、注明出处；网站只放按市区町村汇总的结果，不转载原始记录 |
+| `tools/mura.json` 中维基没有写到的町村、`tools/kyudaka.json` 的旧市町村对应 | ROIS-DS 人文学开放数据共同利用中心（CODH）[《歴史的行政区域データセットβ版》](https://geoshape.ex.nii.ac.jp/city/)（1920、1985、1995 年市区町村边界，国土数値情報「行政区域データ」加工）与[《日本歴史地名大系』地名項目データセット》](https://geoshape.ex.nii.ac.jp/nrct/)（村的坐标） | **CC BY 4.0**：『歴史的行政区域データセットβ版』（CODH作成）、『日本歴史地名大系』地名項目データセット（CODH作成） doi:10.20676/00000448 |
+| `tools/wamyo.json` 及户籍数据包中的 `wamyo`（各郡的古代郷名与读音） | 《和名類聚抄》（10 世纪），据奈良文化财研究所[「古代地名検索システム」](https://chimei.nabunken.go.jp/)只取《和名类聚抄》本身所载的郷名与读音 | 典籍内容为公有领域（事实）；注明检索系统出处 |
+| `src/data/han.json` 中部分藩主的在位年份 | 日文维基与 Wikidata 都没有的，取[English Wikipedia](https://en.wikipedia.org/)各藩条目的藩主表（按汉字名对上） | 事实数据 |
+| `tools/yurai.json` 中 6 条地名来历的出处 | 前桥、福井、静冈（县）、德岛、松山、长崎市（县）政府官方网页 | 说明为本项目自行撰写，只核对关键词与年份 |
 | `tools/districts.json` 及市区町村数据中的旧郡（`old_districts`） | [日本語版ウィキペディア](https://ja.wikipedia.org/) 各郡条目 | **CC BY-SA 4.0**（这部分不适用 NC，按 CC BY-SA 4.0 继承） |
 
 作品名、人物名、商标（动画、大河剧、酒造、拉面店等）归各自权利人所有，本项目仅作介绍性引用。

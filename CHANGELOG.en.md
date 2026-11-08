@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.20 · 2026-11-08
+
+- Late-Edo lords down to the municipality: the family register now uses the National Museum of Japanese History's Kyūdaka Kyūryō Torishirabechō database (about 65,000 villages, 97,000 records), adding up the lords and rice yields of every village inside today's municipality — "111 villages here, 57,112 koku — Ueda Domain 79%, Shogunate 8%…", sealed "Town". It used to be inferred from the Meiji district or the whole city; villages shared by several lords are now split by each lord's yield instead of being lumped as "shared". 1,607 municipalities have it, including the wards of Saitama and Nagoya (villages in old municipalities that straddle today's borders are placed by their coordinates in CODH's Nihon Rekishi Chimei Taikei data set)
+- Places split among several domains, like Ōita, now lead with the largest yield (Usuki 35%, Funai 24%…) rather than the district of the town centre
+- New row in the family register, "Ancient townships": the townships (gō) of the district in the 10th-century Wamyō Ruijushō, with readings (via the Nara National Research Institute for Cultural Properties). About 980 municipalities match an ancient district; districts split or renamed later are traced back (Ashigarakami → Ashi-no-kami, Kasugai → Kasugabe…), and districts made from several ancient ones are left out. The hometown timeline's ancient line shows the district too
+- Meiji villages for about 370 more municipalities (1,399 → 1,772), filled in from the 1920 municipal boundaries of CODH's Historical Administrative Area Data Set where Wikipedia is silent (only villages founded under the 1889 system and still there in 1920)
+- Reign years: lords missing from both Japanese Wikipedia and Wikidata are looked up in the daimyo tables of English Wikipedia's domain articles (matched by kanji name) — 18 more
+- Name origins for six more cities — Maebashi, Fukui, Shizuoka, Tokushima, Matsuyama and Nagasaki — checked against the city or prefecture's own website, since Wikipedia doesn't say (54 in all)
+
 ## 3.19 · 2026-11-08
 
 - Faster first load: body text now uses system fonts, and only one serif web font is downloaded for the current language (Noto Serif SC for Chinese, Noto Serif JP for Japanese and English). Fonts on a first visit dropped from one or two hundred requests and 3–5 MB to a dozen or so requests and about 0.5–1.2 MB (about 0.5 MB on phones)

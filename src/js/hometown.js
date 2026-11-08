@@ -51,7 +51,10 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
   const items = [];
   const key = props.province;
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
-  if (key && key !== '-') items.push({ y: -1, yl: t('ht.anc'), main: t('ht.prov', { prov: pn(key) }), kind: 'anc' });
+  // 古代：本国；和名抄对得上古郡的写上郡与郷数
+  const wg = town?.wamyo?.muni?.[props.code];
+  const gous = wg && town.wamyo.gou?.[key]?.[wg];
+  if (key && key !== '-') items.push({ y: -1, yl: t('ht.anc'), main: t('ht.prov', { prov: pn(key) }), sub: gous?.length ? t('ht.wamyo', { gun: wg, n: gous.length }) : '', kind: 'anc' });
 
   // 战国：相邻年份同一家的并成一段（1600 年是东西两军，单列）
   const unit = sengoku?.muni_units?.[props.code] || (sengoku?.units?.[key] ? key : null);
@@ -79,9 +82,11 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
   const gun = (gunList.find(([, part]) => !part) || gunList[0])?.[0];
   const topOf = (g) => domains?.[pref.id]?.[g]?.r?.[0]?.[0];
   const others = [...new Set(gunList.map(([g]) => topOf(g)).filter(Boolean))];
-  // 主要郡（main_gun）：城下町（藩厅所在）直接是那个藩，江户 / 京都的市街直接是幕府领；其次中心市街所在的郡；整市一级的只在别的办法都没有时用
+  // 主要郡（main_gun）：城下町（藩厅所在）直接是那个藩，江户 / 京都的市街直接是幕府领；其次旧高旧领数据库里本市区町村石高最多的一方（town.kyu）；
+  // 再次中心市街所在的郡；整市一级的只在别的办法都没有时用
   const mg = mainGun?.[props.code];
-  const top = mg?.seat || mg?.town ? mg.lord : (mg?.g && topOf(mg.g)) || gun && topOf(gun) || (others.length === 1 ? others[0] : null) || mg?.lord || null;
+  const kyuTop = town?.kyu?.[props.code]?.r?.[0]?.[0];
+  const top = mg?.seat || mg?.town ? mg.lord : kyuTop || (mg?.g && topOf(mg.g)) || gun && topOf(gun) || (others.length === 1 ? others[0] : null) || mg?.lord || null;
   const h = top && !top.startsWith('@') ? findHan(han, top, pref.id) : null;
   if (h) {
     let prev = h.y?.[0] ?? 1603;

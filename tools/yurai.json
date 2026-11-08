@@ -39,6 +39,11 @@
    "zh": "原名「和田」。相传井伊直政筑城后想改名「松崎」，龙门寺住持白庵劝他取「成功高大」之意，于是定名「高崎」。",
    "ja": "もとは「和田」。井伊直政が「松ヶ崎」と改めようとしたところ、龍門寺の白庵が「成功高大」の意で「高崎」を勧めたと伝わる。",
    "en": "Once called Wada. Legend says Ii Naomasa wanted \"Matsugasaki\", but the priest Hakuan suggested Takasaki, \"lofty success\"."
+  },
+  "前橋市": {
+   "zh": "古称「厩桥（まやはし）」：相传这里的车川上有座「驿家（うまや）之桥」，久而久之成了地名；1648–1652 年间藩主酒井忠清时改称「前桥」。",
+   "ja": "古くは「厩橋（まやはし）」と称した。車川に架かる橋を「駅家（うまや）の橋」と呼んだことから地名になったと伝えられ、1648〜1652年ごろ、藩主酒井忠清の時代に「前橋」と改められたといわれる。",
+   "en": "Originally Mayabashi: a bridge over the Kuruma River was called the bridge of the post station (umaya), and the name stuck. It became Maebashi between 1648 and 1652, under the lord Sakai Tadakiyo."
   }
  },
  "11": {
@@ -186,6 +191,11 @@
    "zh": "伊场遗址出土的木简写作「滨津乡」，古称「はまつ」（「津」是港口），平安后期到镰仓之间变成「滨松」。",
    "ja": "伊場遺跡の木簡に「濱津郷」とあり、古くは「はまつ」（津＝港）。平安後期から鎌倉までに「浜松」となった。",
    "en": "Wooden tags from the Iba site read \"Hamatsu\" (tsu = harbour); it became Hamamatsu between the late Heian and Kamakura periods."
+  },
+  "静岡市": {
+   "zh": "江户时代叫「府中」（骏府）。明治初年新政府要求改掉这个容易混淆的名字，藩里拟了「静」「静城」「静冈」三个，选定「静冈」；「静（シズ）」一般认为来自贱机山。",
+   "ja": "江戸時代は「府中」と呼ばれた。明治2年、新政府からまぎらわしい名称の変更を命じられた藩は「静」「静城」「静岡」を考案し、「静岡」が採用された。「シズ」は賤機山に由来するといわれる。",
+   "en": "Long called Fuchū. In the early Meiji years the new government ordered the confusing name changed; the domain proposed Shizu, Shizuki and Shizuoka, and Shizuoka was chosen. \"Shizu\" is said to come from Mount Shizuhata."
   }
  },
  "23": {
@@ -288,6 +298,34 @@
    "zh": "室町时代已见「久留目」；语源有祭祀「玖留目神」、来自渡来的织工集团「呉部」等说法。",
    "ja": "室町時代から「久留目」とも書かれた。「玖留目神」を祀ったことから、渡来の機織り集団「呉部」から、など諸説。",
    "en": "Written 久留目 by the Muromachi period; explanations include the god Kurume and immigrant weavers (kurebe)."
+  }
+ },
+ "18": {
+  "福井市": {
+   "zh": "室町时代这里叫「北庄」，柴田胜家在此筑城、建起城下町。第 3 代藩主忠昌时由北庄改为「福居」，后来又改写为「福井」。",
+   "ja": "室町時代には北庄と呼ばれ、柴田勝家の築城でまちづくりが始まった。3代藩主忠昌のとき北庄から福居となり、のちに福井と改められた。",
+   "en": "Known as Kitanoshō in the Muromachi period, when Shibata Katsuie built his castle town here. Under the third lord, Tadamasa, it became 福居 (Fukui), later written 福井."
+  }
+ },
+ "36": {
+  "徳島市": {
+   "zh": "1585 年蜂须贺家政筑城时，把城周围叫「渭津」的地方改名「德岛」，谁起的名、为什么这样叫，史料没有交代。之后一度改回渭津，1678 年第 5 代藩主纲矩再改为德岛，沿用至今。",
+   "ja": "天正13年（1585）、蜂須賀家政が築城した際、城の周囲の「渭津」を「徳島」と改めた。命名者や理由は史料からは分からない。その後いったん渭津に戻され、延宝6年（1678）に5代藩主綱矩が再び徳島と改めて定着した。",
+   "en": "In 1585, when Hachisuka Iemasa built his castle, the area called Inotsu was renamed Tokushima; who chose the name, and why, is not recorded. It later reverted to Inotsu until the fifth lord, Tsunanori, restored Tokushima in 1678."
+  }
+ },
+ "38": {
+  "松山市": {
+   "zh": "1603 年加藤嘉明筑城，城地取名「松山」。为什么用「松」有两说：城山上种着许多松树；或取德川一门松平家的「松」字（江户时代《予阳郡乡俚谚集》）。",
+   "ja": "慶長8年（1603年）、加藤嘉明が築いた城地にちなんで名付けられた。「松」の由来には、城山に松が多く植えられていたという説と、徳川一門の松平家の「松」を取ったという説（『予陽郡郷俚諺集』）がある。",
+   "en": "Named in 1603 after the castle site built by Katō Yoshiaki. Two explanations for the \"pine\": the castle hill was planted with many pines, or the character came from the Tokugawa-related Matsudaira family (per the Edo-period Yoyō gungō rigenshū)."
+  }
+ },
+ "42": {
+  "長崎市": {
+   "zh": "说法有几种，市政资料采用的是：这里是一片细长的岬角地形，所以叫「长崎（长长的岬）」。",
+   "ja": "諸説あるが、この地が長い岬状の地形をしていたことから起こったといわれる。",
+   "en": "Several explanations exist; the city's own account is that the land was a long cape — naga-saki."
   }
  },
  "47": {

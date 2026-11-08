@@ -2,21 +2,54 @@
 
     python -X utf8 tools/yurai_tool.py
 
-- 每条的 ev 是必须出现在该市日文维基条目里的词（人名、旧名、古书名），有一个不在就报错、不写出。
+- 每条的 ev 是必须出现在出处里的词（人名、旧名、古书名），有一个不在就报错、不写出。出处默认是该市日文维基条目；
+  第三项写网址的，出处是市（县）政府的官方网页（维基条目没写来历的大城市），页面文字缓存在 .cache/yurai/，PDF 用 pypdf 取文字。
 - 有几种说法的写「一说」「诸说」，不替维基挑定论；条目里没写来历的（青森、秋田、松山、冈山……）不收。
 - 政令市的各区共用市名的来历（键是市名）；东京特别区按区。
 输出 {县 id: {市区名: {zh, ja, en}}}，build_bundle 拼进 bundle/town-<lang>.json。
 """
+import hashlib
+import html
+import io
 import json
 import os
 import re
 import sys
+import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
 from pilgrimage_tool import pages, record_revisions, text_of  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'yurai.json')
+CACHE = os.path.join(ROOT, '.cache', 'yurai')
+UA = {'User-Agent': 'japan-explorer-data-tool/1.0 (https://github.com/Nickrockwall/japan-explorer)'}
+
+
+def page_text(url):
+    """官方网页（或 PDF）的纯文字，缓存在 .cache/yurai/"""
+    os.makedirs(CACHE, exist_ok=True)
+    path = os.path.join(CACHE, hashlib.md5(url.encode()).hexdigest() + '.txt')
+    if os.path.exists(path):
+        return open(path, encoding='utf-8').read()
+    b = urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60).read()
+    if b[:4] == b'%PDF':
+        from pypdf import PdfReader
+        t = ''.join(p.extract_text() or '' for p in PdfReader(io.BytesIO(b)).pages)
+    else:
+        t = next(b.decode(e) for e in ('utf-8', 'cp932', 'euc_jp') if _ok(b, e))
+        t = re.sub(r'<script.*?</script>|<style.*?</style>', '', t, flags=re.S)
+        t = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', t)))
+    open(path, 'w', encoding='utf-8').write(t)
+    return t
+
+
+def _ok(b, enc):
+    try:
+        b.decode(enc)
+        return True
+    except UnicodeDecodeError:
+        return False
 
 # (县 id, 市区名, 条目名或 None, [条目里必须出现的词], zh, ja, en)
 Y = [
@@ -208,6 +241,31 @@ Y = [
      '室町时代已见「久留目」；语源有祭祀「玖留目神」、来自渡来的织工集团「呉部」等说法。',
      '室町時代から「久留目」とも書かれた。「玖留目神」を祀ったことから、渡来の機織り集団「呉部」から、など諸説。',
      'Written 久留目 by the Muromachi period; explanations include the god Kurume and immigrant weavers (kurebe).'),
+    # 以下出处是官方网页（日文维基条目没写来历）
+    (10, '前橋市', 'https://www.city.maebashi.gunma.jp/soshiki/seisaku/kohobrand/gyomu/3/2/3777.html', ['厩橋', '駅家', '車川', '酒井忠清'],
+     '古称「厩桥（まやはし）」：相传这里的车川上有座「驿家（うまや）之桥」，久而久之成了地名；1648–1652 年间藩主酒井忠清时改称「前桥」。',
+     '古くは「厩橋（まやはし）」と称した。車川に架かる橋を「駅家（うまや）の橋」と呼んだことから地名になったと伝えられ、1648〜1652年ごろ、藩主酒井忠清の時代に「前橋」と改められたといわれる。',
+     'Originally Mayabashi: a bridge over the Kuruma River was called the bridge of the post station (umaya), and the name stuck. It became Maebashi between 1648 and 1652, under the lord Sakai Tadakiyo.'),
+    (18, '福井市', 'https://www.city.fukui.lg.jp/sisei/fukuisi/sinoitijinkoutoenkaku/growth_location.html', ['北庄', '福居', '忠昌', '柴田勝家'],
+     '室町时代这里叫「北庄」，柴田胜家在此筑城、建起城下町。第 3 代藩主忠昌时由北庄改为「福居」，后来又改写为「福井」。',
+     '室町時代には北庄と呼ばれ、柴田勝家の築城でまちづくりが始まった。3代藩主忠昌のとき北庄から福居となり、のちに福井と改められた。',
+     'Known as Kitanoshō in the Muromachi period, when Shibata Katsuie built his castle town here. Under the third lord, Tadamasa, it became 福居 (Fukui), later written 福井.'),
+    (22, '静岡市', 'https://www.pref.shizuoka.jp/kensei/information/kengaiyo/1007355.html', ['府中', '静城', '賤機山'],
+     '江户时代叫「府中」（骏府）。明治初年新政府要求改掉这个容易混淆的名字，藩里拟了「静」「静城」「静冈」三个，选定「静冈」；「静（シズ）」一般认为来自贱机山。',
+     '江戸時代は「府中」と呼ばれた。明治2年、新政府からまぎらわしい名称の変更を命じられた藩は「静」「静城」「静岡」を考案し、「静岡」が採用された。「シズ」は賤機山に由来するといわれる。',
+     'Long called Fuchū. In the early Meiji years the new government ordered the confusing name changed; the domain proposed Shizu, Shizuki and Shizuoka, and Shizuoka was chosen. "Shizu" is said to come from Mount Shizuhata.'),
+    (36, '徳島市', 'https://www.city.tokushima.tokushima.jp/smph/johaku/meihin/page02-00/tokushimahistory05.html', ['渭津', '蜂須賀家政', '綱矩'],
+     '1585 年蜂须贺家政筑城时，把城周围叫「渭津」的地方改名「德岛」，谁起的名、为什么这样叫，史料没有交代。之后一度改回渭津，1678 年第 5 代藩主纲矩再改为德岛，沿用至今。',
+     '天正13年（1585）、蜂須賀家政が築城した際、城の周囲の「渭津」を「徳島」と改めた。命名者や理由は史料からは分からない。その後いったん渭津に戻され、延宝6年（1678）に5代藩主綱矩が再び徳島と改めて定着した。',
+     'In 1585, when Hachisuka Iemasa built his castle, the area called Inotsu was renamed Tokushima; who chose the name, and why, is not recorded. It later reverted to Inotsu until the fifth lord, Tsunanori, restored Tokushima in 1678.'),
+    (38, '松山市', 'https://www.city.matsuyama.ehime.jp/shisei/matsuyama/matsuyamariyu.html', ['加藤嘉明', '松平', '予陽郡郷俚諺集'],
+     '1603 年加藤嘉明筑城，城地取名「松山」。为什么用「松」有两说：城山上种着许多松树；或取德川一门松平家的「松」字（江户时代《予阳郡乡俚谚集》）。',
+     '慶長8年（1603年）、加藤嘉明が築いた城地にちなんで名付けられた。「松」の由来には、城山に松が多く植えられていたという説と、徳川一門の松平家の「松」を取ったという説（『予陽郡郷俚諺集』）がある。',
+     'Named in 1603 after the castle site built by Katō Yoshiaki. Two explanations for the "pine": the castle hill was planted with many pines, or the character came from the Tokugawa-related Matsudaira family (per the Edo-period Yoyō gungō rigenshū).'),
+    (42, '長崎市', 'https://www.city.nagasaki.lg.jp/uploaded/attachment/23342.pdf', ['いくつかの説', '長い岬'],
+     '说法有几种，市政资料采用的是：这里是一片细长的岬角地形，所以叫「长崎（长长的岬）」。',
+     '諸説あるが、この地が長い岬状の地形をしていたことから起こったといわれる。',
+     "Several explanations exist; the city's own account is that the land was a long cape — naga-saki."),
     (47, '那覇市', None, ['魚場', '伊波普猷'],
      '来自表示渔场的「魚場（なは）」，是伊波普猷的说法，那霸市官网也介绍。',
      '漁場を表す「魚場（なは）」から。伊波普猷の唱えた説で、那覇市のサイトでも紹介されている。',
@@ -216,11 +274,14 @@ Y = [
 
 
 def main():
-    titles = sorted({t or name for _, name, t, *_ in Y})
+    titles = sorted({t or name for _, name, t, *_ in Y if not (t or '').startswith('http')})
     wts = pages(titles, 'revisions', rvprop='content', rvslots='main')
     bad, out = [], {}
     for pref, name, t, ev, zh, ja, en in Y:
-        wt = (text_of(wts[t or name]) or '').replace("'''", '')  # 「'''河中'''山城」
+        if (t or '').startswith('http'):
+            wt = page_text(t)
+        else:
+            wt = (text_of(wts[t or name]) or '').replace("'''", '')  # 「'''河中'''山城」
         miss = [w for w in ev if w not in wt]
         if miss:
             bad.append(f'{name}：条目里没有 {miss}')

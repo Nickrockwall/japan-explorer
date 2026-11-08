@@ -79,6 +79,13 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   } else if (!mine.length) {
     rows.push({ k: 'ritsuryo', seal: 'pref', main: t('ks.outside'), sub: '' });
   }
+  // 古代郷名（town.wamyo）：《和名类聚抄》所载本郡的郷；今天的市区町村经明治旧郡对应到古郡（只整体属于一郡的才有），郷的位置不细分
+  const wg = town?.wamyo?.muni?.[props.code];
+  const gous = wg && town.wamyo.gou?.[key]?.[wg];
+  if (gous?.length) {
+    const names = gous.slice(0, 14).map(([n, k]) => (!k || k === '-' ? n : lang === 'en' ? `${n} (${k})` : `${n}（${k}）`)).join(t('list.sep'));
+    rows.push({ k: 'wamyo', seal: 'gun', main: t('ks.wamyo', { gun: wg, n: gous.length }), sub: gous.length > 14 ? `${names} ${t('ks.mura.more', { n: gous.length })}` : names });
+  }
 
   const f = pref.map_filters;
   // 战国：有 sengoku.json 时按旧国列出 6 个年份（主行 1560 → 1582 → 1600，副行其余三年）；没有时退回县的 1572。
@@ -100,17 +107,24 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const edoGun = mg?.g || gun;
   const d = edoGun && domains?.[pref.id]?.[edoGun];
   const lord = (name) => (name.startsWith('@') ? t(`ks.lord.${name.slice(1)}`) : name);
+  // 旧高旧领数据库（town.kyu）：今天这个市区町村里各村的领主按石高合计，前 4 位 + 其余，写百分比
+  const kyu = town?.kyu?.[props.code];
+  const pct = (v) => { const x = (v / kyu.k) * 100; return x < 1 ? '<1%' : `${Math.round(x)}%`; };
+  const kyuSub = kyu ? t('ks.edo.kyu', { n: kyu.t, koku: Math.round(kyu.k).toLocaleString(lang), list: kyu.r.map(([n, v]) => `${lord(n)} ${pct(v)}`).join(t('list.sep')) }) + (kyu.p ? t('ks.edo.kyu.part') : '') : '';
+  const hansOf = (names) => names.map((n) => !n.startsWith('@') && findHan(han, n, pref.id)).filter(Boolean);
   if (mg?.seat) {
-    // 城下町：藩厅所在，直接写这个藩；郡的町村统计接在后面
+    // 城下町：藩厅所在，直接写这个藩；本市（没有就本郡）的统计接在后面
     const h = findHan(han, mg.lord, pref.id);
-    const of = d?.r?.length && d.t ? t('ks.edo.of', { gun: edoGun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : '';
+    const of = kyuSub || (d?.r?.length && d.t ? t('ks.edo.of', { gun: edoGun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : '');
     rows.push({ k: 'edo', seal: 'muni', main: mg.lord, sub: [t('ks.edo.seat', { han: mg.lord, seat: mg.seat }), of].filter(Boolean).join(' · '), hans: h ? [h] : [] });
+  } else if (!mg?.town && kyu?.r?.length) {
+    rows.push({ k: 'edo', seal: 'muni', main: lord(kyu.r[0][0]), sub: kyuSub, hans: hansOf(kyu.r.map(([n]) => n)) });
   } else if (mg?.town || (!d?.r?.length && mg?.lord)) {
     const h = !mg.lord.startsWith('@') && findHan(han, mg.lord, pref.id);
     rows.push({ k: 'edo', seal: mg.town ? 'muni' : 'city', main: lord(mg.lord), sub: mg.town ? t(`ks.edo.town.${mg.town}`) : t('ks.edo.city', { city: mg.city }), hans: h ? [h] : [] });
   } else if (d?.r?.length) {
     const gun = edoGun;
-    const hans = d.r.map(([n]) => !n.startsWith('@') && findHan(han, n, pref.id)).filter(Boolean);  // 点开看历代藩主
+    const hans = hansOf(d.r.map(([n]) => n));  // 点开看历代藩主
     // 没有町村数的郡（正文写「全域が仙台藩領」）：写「某郡全域」
     const sub = d.t ? t('ks.edo.of', { gun, n: d.t, list: d.r.map(([n, c]) => `${lord(n)} ${c}`).join(t('list.sep')) }) : t('ks.edo.all', { gun });
     rows.push({ k: 'edo', seal: 'gun', main: lord(d.r[0][0]), sub, hans });

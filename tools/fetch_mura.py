@@ -9,6 +9,10 @@
 - 「現・」后面的名字按本县市区町村名匹配（去掉开头的县名、郡名，取最长的前缀：「現・上田市平井」→ 上田市）；
   外县的、只写到政令市一级（「現・さいたま市」）的不收——不硬分到哪个区。
 - 北海道、冲绳的町村制另有一套（1900 年代的一级 / 二级町村制、岛屿町村制），不处理。
+- 维基没有收到的市区町村，用 CODH《歴史的行政区域データセットβ版》1920 年的町村边界（CC BY 4.0，`.cache/codh/1920_NN.topojson`，
+  国土数値情報 N03 1920 年版加工）补：取成立日（N03_005）在 1888–1908 年的町村（即町村制时成立、到 1920 年仍在的），
+  按面积重叠记给今天的市区町村（≥90% 落在一个里算整个，其余占 ≥15% 的各记一份、标「一部」）。1889–1920 年间已并掉的町村这里没有。
+  北海道、冲绳的一级 / 二级町村制、岛屿町村制（1897–1908）也在这个范围里，一并收。
 输出 {团体代码: [[町村名, 是否只一部分, 施行年], ...]}（按条目里的顺序，同名去重），build_bundle 拼进 bundle/town-<lang>.json。
 """
 import json
@@ -18,6 +22,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from pilgrimage_tool import pages, record_revisions, text_of  # noqa: E402
+from codh import load_topo, today  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'mura.json')
@@ -78,6 +83,40 @@ def resolve(name, pref, munis):
     return best
 
 
+def codh_villages():
+    """CODH 1920 年的町村 → {团体代码: [[町村名, 一部, 成立年]]}"""
+    from shapely.strtree import STRtree
+    cur = today()
+    tree = STRtree([g for _, _, g in cur])
+    out = {}
+    for pid in range(1, 48):
+        geoms, attrs = load_topo(os.path.join(ROOT, '.cache', 'codh', f'1920_{pid:02d}.topojson'), props=True)
+        for gid, g in geoms.items():
+            p = attrs[gid]
+            name, born = p.get('N03_004') or '', p.get('N03_005') or ''
+            if not re.fullmatch(r'[^他]+[町村]', name) or not re.match(r'(18(8[89]|9\d)|190[0-8])-', born) or g.area == 0:
+                continue
+            hits = {}
+            for i in tree.query(g):
+                c, cp, cg = cur[i]
+                if cp == pid:
+                    a = g.intersection(cg).area
+                    if a > 0:
+                        hits[c] = hits.get(c, 0) + a
+            tot = sum(hits.values())
+            if not tot:
+                continue
+            best = max(hits, key=hits.get)
+            share = {c: a / tot for c, a in hits.items()}
+            whole = share[best] >= 0.9
+            for c, f in share.items():
+                if c == best or (not whole and f >= 0.15):
+                    lst = out.setdefault(c, [])
+                    if all(name != x[0] for x in lst):
+                        lst.append([name, not whole, int(born[:4])])
+    return out
+
+
 def main():
     districts = load('tools', 'districts.json')
     titles = {}
@@ -120,6 +159,14 @@ def main():
                             if all(n != x[0] for x in lst):
                                 lst.append([n, part, year])
     print(f'有町村制一段的郡条目 {used} / {len(titles)}，市区町村 {len(out)}，町村 {sum(len(v) for v in out.values())}，不收 {skipped}')
+    codh = codh_villages()
+    # 两边都有的市区町村：维基列出的町村有几成也在 CODH 的 1920 年里（1889–1920 年间并掉的会对不上）
+    both = [c for c in out if c in codh]
+    agree = sum(sum(1 for x in out[c] if any(x[0] == y[0] for y in codh[c])) for c in both)
+    print(f'CODH 1920：市区町村 {len(codh)}；与维基都有的 {len(both)} 个里维基的町村 {agree} / {sum(len(out[c]) for c in both)} 也在 CODH')
+    added = {c: v for c, v in codh.items() if c not in out}
+    out.update(added)
+    print(f'CODH 补上 {len(added)} 个市区町村、{sum(len(v) for v in added.values())} 个町村 → 共 {len(out)}')
     # 锚点：上田市有上田町、神川村；笠间市有笠间町、宍戸町；向日市有向日町
     for code, want in {'20203': ['上田町', '神川村'], '08216': ['笠間町', '宍戸町'], '26208': ['向日町']}.items():
         got = [x[0] for x in out.get(code, [])]

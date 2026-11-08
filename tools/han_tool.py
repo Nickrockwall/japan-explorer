@@ -12,6 +12,8 @@
   「? - 1626年」不收；只写一个年份的，只在前一位的退任年与后一位的就任年夹出任期、且这个年份正好是其中一头时收。
   藩的起年（变迁框写的常是最后一次设立）早于最早的就任年时，改为最早的就任年。藩条目的表格有「在任 / 在職期間」一栏时也读，
   两边都有而相差超过 1 年的两边都不收；同一家里后一位的就任年早于前一位的也不收（打印出来）。
+  这些都没有的，取 Wikidata「担任职务 = 本藩藩主」的起止年；再没有的，取英文维基该藩条目（日文条目的语言链接）藩主表里
+  「{{nihongo|…|汉字名}}」那一行的「起–止」（en_tables，按汉字名对上；同样要在生卒年之间）。
 输出 src/data/han.json：{ "han": [{t, n:{ja,zh,en}, p, y:[起, 止]（不详的为 null）, k,
   f:[[家, 家（简）, [[条目, 名, 名（简）, 英文名, 备注, 在位?]...]]]}] }，在位 = [起, 止]（再任的 [起, 止, 起, 止]），不详的省略。缓存在 .cache/han/。
 需 zhconv。
@@ -347,9 +349,50 @@ def positions(titles):
     return cache
 
 
+def en_tables(titles):
+    """英文维基各藩条目的藩主表：{日文藩条目: {汉字名: [[起, 止], …]}}（日文条目 → 语言链接 → 英文条目；缓存 en_tables.json）"""
+    path = os.path.join(CACHE, 'en_tables.json')
+    cache = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    todo = [t for t in titles if t not in cache]
+    links = {}
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = get('https://ja.wikipedia.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'query', 'titles': '|'.join(part), 'prop': 'langlinks', 'lllang': 'en', 'lllimit': 'max', 'format': 'json', 'formatversion': 2}))
+        for pg in d['query']['pages']:
+            if pg.get('langlinks'):
+                links[pg['title']] = pg['langlinks'][0]['title']
+    en = sorted(set(links.values()))
+    texts = {}
+    for i in range(0, len(en), 50):
+        part = en[i:i + 50]
+        d = get('https://en.wikipedia.org/w/api.php?' + urllib.parse.urlencode(
+            {'action': 'query', 'titles': '|'.join(part), 'prop': 'revisions', 'rvprop': 'content', 'rvslots': 'main',
+             'redirects': 1, 'format': 'json', 'formatversion': 2}))
+        q = d['query']
+        redir = {r['from']: r['to'] for r in q.get('redirects', [])}
+        pages = {pg['title']: pg['revisions'][0]['slots']['main']['content'] for pg in q['pages'] if pg.get('revisions')}
+        for t in part:
+            texts[t] = pages.get(redir.get(t, t), '')
+    for t in todo:
+        got = {}
+        for row in re.split(r'\n\|-', texts.get(links.get(t), '')):
+            m = re.search(r'\{\{\s*nihongo\s*\|[^|}]*\|\s*([^|}\s]+)', row)
+            cells = [c.strip() for c in re.split(r'\|\||\n\|', row)]
+            yr = next((c for c in cells if re.fullmatch(r'(1[5-8]\d\d)\s*[-–—]\s*(1[5-8]\d\d)', c)), None)
+            if m and yr:
+                a, b = map(int, re.findall(r'1[5-8]\d\d', yr))
+                got.setdefault(m.group(1), []).append([a, b])
+        cache[t] = got
+    json.dump(cache, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+    return cache
+
+
 LIFE = {}
 POS = {}
+EN = {}
 WD_USED = []
+EN_USED = []
 
 
 def reigns(h, nav, report):
@@ -399,6 +442,14 @@ def reigns(h, nav, report):
                 if wd:
                     yrs = wd
                     WD_USED.append((h['t'], title, wd[0]))
+                else:
+                    # 英文维基的藩主表（按汉字名；同一人出现几次按先后取），同样要在生卒年之间
+                    en = [tuple(r) for r in EN.get(h['t'], {}).get(row[1], []) if 1560 <= r[0] <= r[1] <= 1871
+                          and (not born or born + 5 <= r[0]) and (not died or r[1] <= died + 1)]
+                    en = en[n:n + 1] if times[title] > 1 else en[:1]
+                    if en:
+                        yrs = en
+                        EN_USED.append((h['t'], title, en[0]))
             if yrs and last and yrs[0][0] < last - 1:
                 report.append(f'{h["t"]} {title}：就任 {yrs[0][0]} 早于前一位 {last}，不收')
                 yrs = []
@@ -494,6 +545,7 @@ def main():
     print('去掉明治以后出生的家主', len(late), late[:6])
     nav, report = navboxes(sorted({x[0] for h in out for f in h['f'] for x in f[1]})), []
     POS.update(positions(sorted({x[0] for h in out for f in h['f'] for x in f[1]})))
+    EN.update(en_tables([h['t'] for h in out]))
     # 核对 Wikidata 的可靠程度：导航框也有年份的藩主，两边就任年相差 ≤1 的比例
     agree = total = 0
     for h in out:
@@ -522,6 +574,7 @@ def main():
     for x in report:
         print('在位', x)
     print(f'按 Wikidata 补上在位年份 {len(WD_USED)} 位', WD_USED[:8])
+    print(f'按英文维基的藩主表补上 {len(EN_USED)} 位', EN_USED[:12])
     for x in fixed:
         print('年份', x)
     out.sort(key=lambda h: (h['p'], -h['k'], h['n']['ja']))  # 县内先列存续到废藩置县的

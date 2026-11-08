@@ -229,16 +229,89 @@ def build_ken(lang):
     return json.dumps(domains(lang, chains=True), ensure_ascii=False, separators=(',', ':'))
 
 
-def build_town(lang):
-    """古代户籍才用的两份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）与地名的来历（tools/yurai_tool.py），
-    单独成文件 bundle/town-<lang>.json，打开户籍时才下载。町村名中文按字形转换，英文仍用日文（没有可靠的罗马字）"""
+KANA = dict(zip('あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ',
+                ['a', 'i', 'u', 'e', 'o', 'ka', 'ki', 'ku', 'ke', 'ko', 'sa', 'shi', 'su', 'se', 'so', 'ta', 'chi', 'tsu', 'te', 'to',
+                 'na', 'ni', 'nu', 'ne', 'no', 'ha', 'hi', 'fu', 'he', 'ho', 'ma', 'mi', 'mu', 'me', 'mo', 'ya', 'yu', 'yo',
+                 'ra', 'ri', 'ru', 're', 'ro', 'wa', 'i', 'e', 'o', 'ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo',
+                 'da', 'ji', 'zu', 'de', 'do', 'ba', 'bi', 'bu', 'be', 'bo', 'pa', 'pi', 'pu', 'pe', 'po']))
+
+
+def romaji(kana):
+    """平假名读音 → 修正平文式罗马字（长音 ō / ū，促音双写，拗音），首字母大写；有不认识的字就返回 None"""
+    out, i = '', 0
+    while i < len(kana):
+        c, nx = kana[i], kana[i + 1] if i + 1 < len(kana) else ''
+        if c == 'っ':
+            out += '_'
+        elif c == 'ん':
+            out += "n'" if nx and nx in 'あいうえおやゆよ' else 'n'
+        elif nx and nx in 'ゃゅょ' and c in KANA and c not in 'あいうえお':
+            base = KANA[c][:-1]
+            v = {'ゃ': 'a', 'ゅ': 'u', 'ょ': 'o'}[nx]
+            out += (base if base.endswith(('sh', 'ch', 'j')) else base + 'y') + v
+            i += 1
+        elif c in KANA:
+            out += KANA[c]
+        else:
+            return None
+        i += 1
+    out = re.sub(r'_(.)', lambda m: ('t' if m.group(1) == 'c' else m.group(1)) + m.group(1), out)
+    out = re.sub(r'ou|oo', 'ō', out)
+    out = re.sub(r'uu', 'ū', out)
+    return out[:1].upper() + out[1:] if '_' not in out else None
+
+
+def kyudaka(lang):
+    """幕末各村的领主（tools/fetch_kyudaka.py，歴博《旧高旧領取調帳データベース》）：{代码: {t: 村数, k: 总石高, r: [[领主, 石高]…前 4 位 + @other], p?}}。
+    领主名：幕府领等写 @代号；藩名单里的藩用名单的名字（按语言），其余同 domains 的规矩"""
+    path = os.path.join(ROOT, 'tools', 'kyudaka.json')
+    if not os.path.exists(path):
+        return {}
+    d = load(path)
     conv = ja_to_zh_table() if lang == 'zh' else {}
-    mp, yp = os.path.join(ROOT, 'tools', 'mura.json'), os.path.join(ROOT, 'tools', 'yurai.json')
+    names = {h['t']: h['n'] for h in load(os.path.join(DATA, 'han.json'))['han']}
+    known = load(os.path.join(ROOT, 'tools', 'domains.json'))['lords']
+
+    def label(name):
+        lord = d['lords'].get(name, {'kind': 'other'})
+        if lord['kind'] in ('bakufu', 'hatamoto', 'jisha', 'court', 'mixed'):
+            return '@' + lord['kind']
+        if lord.get('han') in names:
+            n = names[lord['han']]
+            return n.get(lang) or n['ja']
+        if lang == 'en' and known.get(name, {}).get('en'):
+            return known[name]['en']
+        return ''.join(conv.get(c, c) for c in name) if lang == 'zh' else name
+    out = {}
+    for code, o in d['munis'].items():
+        rows = {}
+        for n, v in o['r']:  # 改名后同名的（相給、几种幕府领）合在一起
+            k = label(n)
+            rows[k] = rows.get(k, 0) + v
+        top = sorted(rows.items(), key=lambda x: -x[1])[:4]
+        rest = o['k'] - sum(v for _, v in top)
+        out[code] = {'t': o['t'], 'k': o['k'], 'r': [[n, v] for n, v in top] + ([['@other', rest]] if rest > 0 else []), **({'p': 1} if o['p'] else {})}
+    return out
+
+
+def build_town(lang):
+    """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、地名的来历（tools/yurai_tool.py）、
+    幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py），单独成文件 bundle/town-<lang>.json，打开户籍时才下载。
+    町村名、郷名中文按字形转换，英文仍用日文（没有可靠的罗马字；郷名附读音）"""
+    conv = ja_to_zh_table() if lang == 'zh' else {}
+    zh = lambda n: ''.join(conv.get(c, c) for c in n)
+    mp, yp, wp = (os.path.join(ROOT, 'tools', f) for f in ('mura.json', 'yurai.json', 'wamyo.json'))
     mura = load(mp) if os.path.exists(mp) else {}
     yurai = load(yp) if os.path.exists(yp) else {}
+    wamyo = load(wp) if os.path.exists(wp) else {'prov': {}, 'muni': {}}
     return json.dumps({
-        'mura': {code: [[''.join(conv.get(c, c) for c in n), int(part), y] for n, part, y in rows] for code, rows in mura.items()},
+        'mura': {code: [[zh(n), int(part), y] for n, part, y in rows] for code, rows in mura.items()},
         'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items()},
+        'kyu': kyudaka(lang),
+        # 和名抄：{古郡（今天的市区町村代码 → [旧国, 郡]）, 郷（旧国 → 郡 → [[郷, 读音]]）}，只放有市区町村用得上的郡
+        'wamyo': {'muni': wamyo['muni'],
+                  'gou': {prov: {g: [[zh(n), (romaji(k) or k) if lang == 'en' else k] for n, k in v] for g, v in gs.items() if g in set(wamyo['muni'].values())}
+                          for prov, gs in wamyo['prov'].items()}},
     }, ensure_ascii=False, separators=(',', ':'))
 
 

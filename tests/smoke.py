@@ -1127,13 +1127,17 @@ class Case:
         page.wait_for_function("location.hash.includes('pref=13')", timeout=5000)
 
     def koseki(self, page):
-        # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主精确到郡（小县郡 158 町村，上田藩 106，可展开历代藩主）；
-        # 一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
+        # 古代户籍：深链接打开上田市的《古今人别帐》；幕末领主按旧高旧领数据库精确到市（今辖境 111 村、上田藩占约八成，可展开历代藩主）；
+        # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 9, f'应有 9 栏（含明治町村）：{rows}'
+        assert len(rows) == 10, f'应有 10 栏（含古代郷名与明治町村）：{rows}'
         assert any('上田町' in r and '1889' in r for r in rows), f'明治町村应写出 1889 年与上田町：{rows}'
-        assert any('106' in r and '158' in r for r in rows), f'幕末领主应写出小县郡 158 町村中上田藩 106：{rows}'
+        edo = page.locator('.ks-row[data-k="edo"]').inner_text()
+        assert '111' in edo and '79%' in edo and any(x in edo for x in ('上田藩', 'Ueda')), f'幕末领主应写出今辖境 111 村、上田藩 79%：{edo}'
+        assert any(x in page.locator('.ks-row[data-k="edo"] .ks-seal').text_content() for x in ('市', 'Town')), '旧高旧领按市区町村，精度印应为「市」'
+        wamyo = page.locator('.ks-row[data-k="wamyo"]').inner_text()
+        assert '童女' in wamyo and '8' in wamyo and any(x in wamyo for x in ('おうな', 'Ōna')), f'古代郷名应是小县郡 8 郷、有童女：{wamyo}'
         assert any('諏訪大社' in r for r in rows), '氏神应是诹访大社'
         ks_han = page.locator('#koseki .ks-han').first  # 幕末领主一栏能点开上田藩的历代藩主
         ks_han.locator('summary').click()
@@ -1218,17 +1222,17 @@ class Case:
         assert any(x in last.locator('.ks-seal').text_content() for x in ('全市', 'City')), '地名来历用市名时精度印应为「全市」'
 
     def koseki_city(self, page):
-        # 名古屋市北区没有旧郡记录：按整个名古屋市的旧郡（排第一的都是名古屋藩 = 尾张藩）写，精度印「全市」，并能展开尾张藩的藩主
+        # 名古屋市东区没有旧郡记录：旧高旧领数据库里今辖境的村是名古屋藩（藩名单里叫尾张藩）领，精度印「市」，并能展开尾张藩的藩主
         edo, seal = self.edo_row(page)
-        assert any(x in edo for x in ('尾张藩', '尾張藩', 'Owari')), f'名古屋市北区的幕末领主应是尾张藩：{edo}'
-        assert any(x in seal for x in ('全市', 'City')), f'精度印应为「全市」：{seal}'
+        assert any(x in edo for x in ('尾张藩', '尾張藩', 'Owari')), f'名古屋市东区的幕末领主应是尾张藩：{edo}'
+        assert any(x in seal for x in ('市', 'Town')), f'精度印应为「市」：{seal}'
         assert page.locator('#koseki .ks-row[data-k="edo"]').locator('details, button').count() >= 1, '应能展开名古屋藩的历代藩主'
 
     def koseki_main(self, page):
-        # 大分市横跨几郡、第一位领主不同：按市街所在的大分郡（条目「大分郡大分町」）写府内藩，精度印「郡」
+        # 大分市横跨几郡、几个藩：按今辖境各村的石高，臼杵藩第一、府内藩第二（不再只看市街所在的大分郡），精度印「市」
         edo, seal = self.edo_row(page)
-        assert any(x in edo for x in ('府内藩', 'Funai')), f'大分市的幕末领主应是府内藩：{edo}'
-        assert any(x in seal for x in ('郡', 'Dist')), f'精度印应为「郡」：{seal}'
+        assert any(x in edo for x in ('臼杵藩', 'Usuki')) and any(x in edo for x in ('府内藩', 'Funai')), f'大分市应列出臼杵藩与府内藩：{edo}'
+        assert any(x in seal for x in ('市', 'Town')), f'精度印应为「市」：{seal}'
 
     def koseki_seat(self, page):
         # 笠间市是笠间藩藩厅（笠间城）所在的城下町：直接写笠间藩、精度印「市」、后面仍附西茨城郡的町村统计，此地年表列出笠间藩各家
