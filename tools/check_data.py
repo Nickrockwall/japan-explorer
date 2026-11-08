@@ -497,8 +497,70 @@ def check_repo():
             err('git', f'不应提交的文件：{f}')
 
 
+# ── 配色（国絵図浅色主题，docs/superpowers/specs/2026-11-08-kuniezu-redesign.md）──
+def _lin(c):
+    c /= 255
+    return c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4
+
+
+def _rgb(h):
+    h = h.lstrip('#')
+    return [_lin(int(h[i:i + 2], 16)) for i in (0, 2, 4)]
+
+
+def contrast(x, y):
+    a, b = (.2126 * r + .7152 * g + .0722 * b for r, g, b in (_rgb(x), _rgb(y)))
+    return (max(a, b) + .05) / (min(a, b) + .05)
+
+
+def oklab_dist(x, y):
+    def lab(h):
+        r, g, b = _rgb(h)
+        lms = [(.4122214708 * r + .5363325363 * g + .0514459929 * b) ** (1 / 3),
+               (.2119034982 * r + .6806995451 * g + .1073969566 * b) ** (1 / 3),
+               (.0883024619 * r + .2817188376 * g + .6299787005 * b) ** (1 / 3)]
+        l, m, s = lms
+        return (.2104542553 * l + .7936177850 * m - .0040720468 * s, 1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+                .0259040371 * l + .7827717662 * m - .8086757660 * s)
+    return sum((a - b) ** 2 for a, b in zip(lab(x), lab(y))) ** .5
+
+
+def check_palette():
+    css = read('src', 'css', 'style.css')
+    root = re.search(r':root \{(.*?)\n\}', css, flags=re.S).group(1)
+    tok = dict(re.findall(r'--([\w-]+): (#[0-9a-f]{6})', root))
+    # 文字：三种纸色上都要 ≥4.5
+    for fg in ('text', 'text-2', 'muted', 'shu', 'kin', 'ai'):
+        for bg in ('bg', 'panel', 'card-bg'):
+            if contrast(tok[fg], tok[bg]) < 4.5:
+                err('style.css', f'--{fg} 在 --{bg} 上对比度 {contrast(tok[fg], tok[bg]):.2f} < 4.5')
+    ink, land = tok['ink'], re.search(r"base: '(#[0-9a-f]{6})'", MAP_JS).group(1)
+    # 中性（化外之地、国人割据、观望等）本来就该接近纸色，不查与陆地的差别
+    neutral = {'outside', '令制外', 'gunyu', 'contest', 'neutral', 'split', 'ainu', 'toyo_small', 'ou'}
+    groups = {}
+    for g in ('region', 'circuit', 'sg', 'bk', 'rm', 'sk'):
+        body = re.search(r"cats\('" + g + r"', \{(.*?)\}\)", MAP_JS, flags=re.S).group(1)
+        groups[f'map.js {g}'] = [(k.strip("'"), c) for k, c in re.findall(r"([\w一-鿿·]+|'[^']+')\s*:\s*'(#[0-9a-f]{6})'", body)]
+    muni = read('src', 'js', 'muni.js')
+    groups['muni.js PALETTE'] = [(str(i), c) for i, c in enumerate(re.findall(r"'(#[0-9a-f]{6})'", re.search(r'const PALETTE = \[(.*?)\]', muni).group(1)))]
+    sg = load('src', 'data', 'sengoku.json')
+    groups['sengoku.json'] = [(k, v['color']) for part in ('clans', 'sides') for k, v in sg[part].items()]
+    for name, items in groups.items():
+        for k, c in items:
+            # 墨字（带纸色描边）与墨线要看得见
+            if contrast(c, ink) < 3:
+                err(name, f'{k} {c} 与墨的对比度 {contrast(c, ink):.2f} < 3（太暗）')
+            if k not in neutral and oklab_dist(c, land) < .08:
+                err(name, f'{k} {c} 与胡粉陆地太接近（ΔE {oklab_dist(c, land):.3f}）')
+        if name != 'sengoku.json':  # 各家颜色有意重复（同一年不会相邻），只查小的分类组
+            for i, (k1, c1) in enumerate(items):
+                for k2, c2 in items[i + 1:]:
+                    if not {k1, k2} <= neutral and oklab_dist(c1, c2) < .05:
+                        err(name, f'{k1} {c1} 与 {k2} {c2} 太像（ΔE {oklab_dist(c1, c2):.3f}）')
+
+
 def main():
-    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

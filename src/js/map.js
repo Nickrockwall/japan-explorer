@@ -39,31 +39,31 @@ export const FILTERS = {
     label: label('filter', 'region'), caption: label('filterCap', 'region'),
     key: (p) => p.region,
     cats: cats('region', {
-      北海道: '#6f9fb8', 东北: '#7a9a6a', 关东: '#c9925c', 中部: '#9a86b8',
-      近畿: '#c25a56', 中国: '#b8a04f', 四国: '#4f9c94', '九州·冲绳': '#b86a8e',
+      北海道: '#79aac3', 东北: '#89aa79', 关东: '#d09862', 中部: '#a894c7',
+      近畿: '#dc746f', 中国: '#bda554', 四国: '#60ada5', '九州·冲绳': '#ce7ea2',
     }),
   },
   circuit: {
     label: label('filter', 'circuit'), caption: label('filterCap', 'circuit'),
     key: (p) => p.historical_lineage.ritsuryo_provinces[0].circuit,
     cats: cats('circuit', {
-      畿内: '#c23531', 东海道: '#d4a373', 东山道: '#7a9a6a', 北陆道: '#6f9fb8',
-      山阴道: '#8a7fb5', 山阳道: '#c9784f', 南海道: '#4f9c94', 西海道: '#b86a8e', 北海道: '#9fb6d6', 令制外: '#4a4a53',
+      畿内: '#d46e64', 东海道: '#d2a171', 东山道: '#89aa79', 北陆道: '#79aac3',
+      山阴道: '#9d92c9', 山阳道: '#d9875e', 南海道: '#60ada5', 西海道: '#ce7ea2', 北海道: '#b7c4cc', 令制外: '#d6ccb6',
     }),
   },
   sengoku: {
     label: label('filter', 'sengoku'), caption: label('filterCap', 'sengoku'),
     key: (p) => p.map_filters.sengoku_1572,
     cats: cats('sg', {
-      oda: '#c23531', takeda: '#e0843c', uesugi: '#4f86b8', hojo: '#7aa05a', date: '#8a6fc2', satake: '#5aa3a0',
-      ou: '#7d8796', asakura: '#c9a94f', ikko: '#9c6a48', miyoshi: '#c46f9e', mori: '#3b8f6a', chosokabe: '#d4b483',
-      otomo: '#6a7fd0', ryuzoji: '#a8505c', shimazu: '#2f7f9f', gunyu: '#4a4a53', outside: '#33333a',
+      oda: '#d46e64', takeda: '#e38e4e', uesugi: '#669dd1', hojo: '#87ae67', date: '#a186db', satake: '#67b0ac',
+      ou: '#919bab', asakura: '#c8a84e', ikko: '#bb8664', miyoshi: '#d57ead', mori: '#57a983', chosokabe: '#e3a888',
+      otomo: '#7e94e7', ryuzoji: '#b0607c', shimazu: '#3f9a8c', gunyu: '#d6ccb6', outside: '#ddd4c1',
     }),
   },
   bakumatsu: {
     label: label('filter', 'bakumatsu'), caption: label('filterCap', 'bakumatsu'),
     key: (p) => p.map_filters.bakumatsu,
-    cats: cats('bk', { satcho: '#c23531', shinseifu: '#d98b6a', sabaku: '#4f6fa8', tenryo: '#d4a373', outside: '#3a3a42' }),
+    cats: cats('bk', { satcho: '#d46e64', shinseifu: '#df906f', sabaku: '#6f90cc', tenryo: '#cdb763', outside: '#ddd4c1' }),
   },
   // 古国国力：68 国按人口等指标着色，配色与图例由 kokuryoku.js 提供（setPower）；旧国边界未载入时按探索进度显示
   power: { label: label('filter', 'power'), caption: label('filterCap', 'power') },
@@ -75,7 +75,7 @@ export const LAYERS = {
   ramen: {
     label: label('layer', 'ramen'), caption: label('layerCap', 'ramen'),
     key: (p) => p.ramen.category,
-    cats: cats('rm', { tonkotsu: '#ece3d0', shoyu: '#a8433a', miso: '#d9a441', shio: '#9fd0cc', other: '#7d6fa8' }),
+    cats: cats('rm', { tonkotsu: '#c6bdaa', shoyu: '#d06b60', miso: '#d7a23e', shio: '#90c1bd', other: '#988ac5' }),
   },
   // 圣地巡礼：底图整体调暗，只看图钉（动漫粉 / 大河古金），见 spotSeries
   pilgrimage: { label: label('layer', 'pilgrimage'), caption: label('layerCap', 'pilgrimage'), dim: true },
@@ -85,15 +85,15 @@ export const LAYERS = {
     label: label('layer', 'sake'), caption: label('layerCap', 'sake'),
     key: (p) => p.sake.quadrant,
     cats: cats('sk', {
-      nojun_karakuchi: '#b5734a', tanrei_karakuchi: '#6f9fb8', nojun_amakuchi: '#c9a94f', tanrei_amakuchi: '#9cc28a', shochu: '#8a6fc2',
+      nojun_karakuchi: '#cc885e', tanrei_karakuchi: '#79aac3', nojun_amakuchi: '#c8a84e', tanrei_amakuchi: '#96bc84', shochu: '#a186db',
     }),
   },
 };
 
 // 圣地巡礼图钉配色
-export const SPOT_COLOR = { anime: '#ff7eb6', taiga: '#e0b04c' };
+export const SPOT_COLOR = { anime: '#c04a81', taiga: '#a67300' };
 // 古国巡礼：一宫 ⛩ 朱红、国府 ◆ 金、国分寺 卍 紫；只定位到市区町村的画成空心
-export const KOKU_COLOR = { ichi: '#e0503c', fu: '#e0b04c', ji: '#b49be0' };
+export const KOKU_COLOR = { ichi: '#ba4030', fu: '#a67300', ji: '#8469b1' };
 const KOKU_SYMBOL = { ichi: 'pin', fu: 'diamond', ji: 'roundRect' };
 
 // 酒樽徽记
@@ -208,13 +208,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
               d += 'Z';
             }
           }
-          return { type: 'path', shape: { pathData: d }, style: { fill: 'rgba(150,146,138,.32)', stroke: 'rgba(205,200,190,.85)', lineWidth: 0.8, lineDash: [3, 2] } };
+          return { type: 'path', shape: { pathData: d }, style: { fill: 'rgba(90,80,70,.14)', stroke: 'rgba(42,37,32,.6)', lineWidth: 0.8, lineDash: [3, 2] } };
         },
         data: on ? dspKeys.map(() => 0) : [],
       },
       {
         id: 'disputed-names', type: 'scatter', coordinateSystem: 'geo', zlevel: 1, cursor: 'pointer', symbol: 'circle',
-        itemStyle: { color: 'rgba(0,0,0,0)', borderColor: '#b9b4a8', borderWidth: 2 },
+        itemStyle: { color: 'rgba(0,0,0,0)', borderColor: '#6b6155', borderWidth: 2 },
         label: { show: true, position: 'bottom', color: '#2a2520', fontSize: 11, textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 2,
           formatter: (x) => disputeLabel(dspKeys[x.dataIndex]) },
         data: on ? dspKeys.map((k) => ({ value: DISPUTED[k].label, symbolSize: DISPUTED[k].point ? 9 : 0 })) : [],
@@ -228,7 +228,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'kako', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, animation: false,
       rippleEffect: { scale: 3.5, brushType: 'stroke', period: 2.8 },
       symbol: 'pin', symbolSize: 26, symbolOffset: [0, '-40%'],
-      itemStyle: { color: '#e2573a', borderColor: '#fff3d6', borderWidth: 1.5, shadowBlur: 10, shadowColor: '#e2573a' },
+      itemStyle: { color: '#b3302a', borderColor: '#f4efe2', borderWidth: 1.5 },
       label: { show: true, position: 'right', color: '#2a2520', fontSize: 12.5, fontWeight: 700, fontFamily: serifFont(),
         textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: () => kako?.label || '' },
       data: kako && !state.battle ? [{ value: kako.c }] : [],
@@ -240,7 +240,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'you', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4, silent: true, animation: false,
       rippleEffect: { scale: 4, brushType: 'stroke', period: 2.4 },
       symbolSize: 13,
-      itemStyle: { color: '#5ab0ff', borderColor: '#fff', borderWidth: 2, shadowBlur: 12, shadowColor: '#5ab0ff' },
+      itemStyle: { color: '#2f5a73', borderColor: '#f4efe2', borderWidth: 2 },
       label: { show: true, position: 'right', color: '#2a2520', fontSize: 12, fontWeight: 700,
         textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: () => t('loc.you') },
       data: you && !state.battle ? [{ value: you }] : [],
@@ -359,7 +359,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
 
   // 当前着色方案：{ label, cat(id) → [label, color] | null }
   function scheme() {
-    if (LAYERS[state.layer]?.dim) return { label: LAYERS[state.layer].label, cat: () => ['', '#2b2926'] };
+    if (LAYERS[state.layer]?.dim) return { label: LAYERS[state.layer].label, cat: () => ['', '#e4dccb'] };
     if (state.layer !== 'history') {
       const L = LAYERS[state.layer];
       return { label: L.label, cat: (id) => L.cats[L.key(prefs.get(id))] };
@@ -383,8 +383,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       const field = id === state.battle.battlefield.prefecture_id;
       return {
         name,
-        itemStyle: { areaColor: field ? '#5a2422' : COLOR.muted, borderColor: field ? '#e0443c' : '#34343c', borderWidth: field ? 1.6 : 0.6, shadowBlur: 0 },
-        emphasis: { itemStyle: { areaColor: field ? '#6e2c29' : '#30303a' } },
+        itemStyle: { areaColor: field ? '#dfa592' : COLOR.muted, borderColor: field ? '#b3302a' : '#c4b89c', borderWidth: field ? 1.6 : 0.6, shadowBlur: 0 },
+        emphasis: { itemStyle: { areaColor: field ? '#d48f7a' : '#ddd3bf' } },
         label: { show: field, formatter: () => names.get(id) },
       };
     }
@@ -415,7 +415,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       id: 'capital', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 2,
       rippleEffect: { scale: 5, brushType: 'stroke', period: 3 },
       symbolSize: 14,
-      itemStyle: { color: '#ffd27a', shadowBlur: 16, shadowColor: '#ffb648' },
+      itemStyle: { color: '#7a5719' },
       label: { show: true, position: 'right', color: '#2a2520', fontSize: 12, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: (x) => t('capital.label', { name: x.name }) },
       data: e ? [{ name: e.capital.name, value: e.capital.coords, desc: e.capital.description }] : [],
@@ -431,7 +431,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     return {
       id: 'barrels', type: 'scatter', coordinateSystem: 'geo', zlevel: 2, symbol: BARREL, symbolSize: [13, 15],
       labelLayout: { hideOverlap: true },
-      itemStyle: { color: '#8a5a2b', borderColor: '#f3d9a4', borderWidth: 1.2, shadowBlur: 6, shadowColor: 'rgba(0,0,0,.6)' },
+      itemStyle: { color: '#8a5a2b', borderColor: '#f4efe2', borderWidth: 1.2 },
       label: { show: true, position: 'top', distance: 2, color: '#2a2520', fontSize: 11, fontFamily: serifFont(), fontWeight: 700,
         textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
       data,
@@ -462,9 +462,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           symbol: KOKU_SYMBOL[s.kind],
           symbolSize: (s.kind === 'ichi' ? 14 : 10) * (on ? 1.4 : 1),
           itemStyle: s.precise
-            ? { color: c, borderColor: got ? '#ffd27a' : 'rgba(0,0,0,.55)', borderWidth: got ? 2 : 0.8,
-              shadowBlur: real ? 14 : 0, shadowColor: '#ffd27a' }
-            : { color: 'rgba(24,24,28,.6)', borderColor: c, borderWidth: 1.6 },
+            ? { color: c, borderColor: got ? '#2a2520' : 'rgba(42,37,32,.55)', borderWidth: got ? 2 : 0.8 }
+            : { color: 'rgba(244,239,226,.85)', borderColor: c, borderWidth: 1.6 },
           label: { show: on },
         };
       }),
@@ -485,7 +484,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       data: shownSpots().map((s) => ({
         name: s.work, value: s.coords, id: s.id,
         symbolSize: s.id === state.spotId ? 17 : 10,
-        itemStyle: { color: SPOT_COLOR[s.type], shadowBlur: 12, shadowColor: SPOT_COLOR[s.type], borderColor: '#fff', borderWidth: s.id === state.spotId ? 2 : 0 },
+        itemStyle: { color: SPOT_COLOR[s.type], borderColor: '#2a2520', borderWidth: s.id === state.spotId ? 2 : 0 },
         label: { show: s.id === state.spotId },
       })),
     };
@@ -505,7 +504,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const origins = shown.map((r) => ({ name: r.from.name, value: r.from.coords, itemStyle: { color: r.color } }));
     const clash = !!b && (!phase || phase.impact);
     const markers = phase ? phase.markers.map((m) => ({ name: m.name, value: m.coords })) : [];
-    if (b && !clash) markers.push({ name: b.battlefield.name, value: b.battlefield.coords, itemStyle: { color: '#ffb648' } });
+    if (b && !clash) markers.push({ name: b.battlefield.name, value: b.battlefield.coords, itemStyle: { color: '#b3302a' } });
     return [
       {
         id: 'routes', type: 'lines', coordinateSystem: 'geo', zlevel: 3, polyline: true,
@@ -523,7 +522,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       },
       {
         id: 'markers', type: 'scatter', coordinateSystem: 'geo', zlevel: 3, symbol: 'pin', symbolSize: 22,
-        itemStyle: { color: '#d4a373', borderColor: '#18181c', borderWidth: 1 },
+        itemStyle: { color: '#7a5719', borderColor: '#f4efe2', borderWidth: 1 },
         label: { show: true, position: 'right', color: '#2a2520', fontSize: 11.5, fontFamily: serifFont(), fontWeight: 700,
           textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '{b}' },
         labelLayout: { hideOverlap: true },
@@ -533,7 +532,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         id: 'impact', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4,
         rippleEffect: { scale: 6, brushType: 'fill', period: 1.6, number: 3 },
         symbolSize: 20,
-        itemStyle: { color: '#ffb648', shadowBlur: 24, shadowColor: '#ff6a3d' },
+        itemStyle: { color: '#b3302a' },
         label: { show: true, position: 'bottom', distance: 10, color: '#2a2520', fontSize: 13, fontFamily: serifFont(), fontWeight: 900,
           textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3, formatter: '⚔ {b}' },
         data: clash ? [{ name: b.battlefield.name, value: b.battlefield.coords }] : [],
@@ -556,8 +555,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (state.layer === 'koku') {
       return {
         name: f.properties.key,
-        itemStyle: { areaColor: '#25252c', borderColor: '#4a4a55', borderWidth: 0.9, shadowBlur: 0 },
-        emphasis: { itemStyle: { areaColor: '#30303a', borderColor: '#8a7a68', borderWidth: 1.2 }, label: { show: false } },
+        itemStyle: { areaColor: '#e4dccb', borderColor: '#a89b82', borderWidth: 0.9, shadowBlur: 0 },
+        emphasis: { itemStyle: { areaColor: '#ddd3bf', borderColor: '#2a2520', borderWidth: 1.2 }, label: { show: false } },
         label: { show: false },
       };
     }
@@ -565,7 +564,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
     const on = (powerMode() && f.properties.key === power.focus) || (sgMode() && f.properties.key === sg.focus);
     // 战国势力图的国界由 sgedges 按归属重画，这里只留一道很淡的旧国纹理
-    const line = sgMode() ? { borderColor: 'rgba(0,0,0,.28)', borderWidth: 0.5 } : { borderColor: COLOR.border, borderWidth: 0.9 };
+    const line = sgMode() ? { borderColor: 'rgba(42,37,32,.28)', borderWidth: 0.5 } : { borderColor: COLOR.border, borderWidth: 0.9 };
     return {
       name: f.properties.key,
       itemStyle: on ? { areaColor: c, borderColor: '#2a2520', borderWidth: 2, shadowBlur: 0 }
@@ -638,8 +637,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
           const front = pathOf(api, kinds[2]);
           return { type: 'group', children: [
             { type: 'path', shape: { pathData: plain }, style: { fill: null, stroke: COLOR.border, lineWidth: 0.9 } },
-            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: 'rgba(0,0,0,.55)', lineWidth: 3.4, lineJoin: 'round' } },
-            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: '#f3e2c0', lineWidth: 1.5, lineJoin: 'round' } },
+            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: 'rgba(244,239,226,.9)', lineWidth: 3.4, lineJoin: 'round' } },
+            { type: 'path', shape: { pathData: front }, style: { fill: null, stroke: '#2a2520', lineWidth: 1.5, lineJoin: 'round' } },
           ] };
         },
         data: sgOn ? [0] : [],
@@ -657,13 +656,13 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         renderItem: (params, api) => {
           const d = pathOf(api, prov.borders.map((b) => b.coords));
           // 战国势力图上县界再淡一些，不打断合成一片的领国
-          return { type: 'path', shape: { pathData: d }, style: { fill: null, stroke: sgOn ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.5)', lineWidth: 0.8, lineDash: [3, 3] } };
+          return { type: 'path', shape: { pathData: d }, style: { fill: null, stroke: sgOn ? 'rgba(42,37,32,.25)' : 'rgba(42,37,32,.5)', lineWidth: 0.8, lineDash: [3, 3] } };
         },
         data: on ? [0] : [],
       },
       {
         id: 'prefactive', type: 'lines', coordinateSystem: 'geo', zlevel: 1, polyline: true, silent: true, animation: false,
-        lineStyle: { color: '#fff', width: 2, opacity: 1, shadowColor: 'rgba(255,255,255,.6)', shadowBlur: 8 },
+        lineStyle: { color: '#2a2520', width: 2, opacity: 1 },
         data: active ? active.polys.map((q) => ({ coords: q[0] })) : [],
       },
     ];
@@ -757,7 +756,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     const file = emblems[id];
     if (!file) return '';
     const m = `url('${file}') center / contain no-repeat`;
-    return `<span style="display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-2px;background:#d4a373;-webkit-mask:${m};mask:${m}"></span>`;
+    return `<span style="display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-2px;background:#7a5719;-webkit-mask:${m};mask:${m}"></span>`;
   };
 
   function provTip(f) {

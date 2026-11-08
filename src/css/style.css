@@ -19,6 +19,8 @@
   --kin-fill: #d9b96e;     /* 黄土（填色） */
   --ai: #2f5a73;           /* 藍，辅助 */
   --on-shu: #f7f1e3;       /* 朱、墨底上的字 */
+  /* 衬线：网络只取当前语言的一种 Noto Serif（index.html），不可用时退到各系统的衬线字体。
+     无衬线（正文）一律用系统字体：网络 CJK 字体按字切片，正文用字多，曾占首屏下载的大半 */
   --serif: "Noto Serif SC", "Noto Serif JP", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
   --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
   --r: 4px;
@@ -1475,6 +1477,12 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   --kin-soft: rgba(226, 189, 87, .14);
   --ai: #3f8f7f;           /* 青绿 */
   --card-bg: #1a2120;
+  /* 半岛仍是深色的丹青皮肤：墨与纸反过来 */
+  --ink: #eee8da;
+  --on-shu: #151b1a;
+  --kin-fill: #e2bd57;
+  --float: 0 2px 0 rgba(0, 0, 0, .35);
+  --lift: 0 12px 32px rgba(0, 0, 0, .55);
 }
 :root[data-map="korea"] body {
   /* 韩纸：两层极淡的斜向纤维 */

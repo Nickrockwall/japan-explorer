@@ -5,10 +5,10 @@ import { t, lang, serifFont } from './i18n.js';
 import { esc } from './detail.js';
 import { splitDisputed, disputeCard, disputeLabel } from './disputed.js';
 
-const PALETTE = ['#c25a56', '#d4a373', '#6f9fb8', '#7a9a6a', '#9a86b8', '#4f9c94', '#c9784f', '#b86a8e'];
-const OUTSIDE = '#4a4a53';
-const DISPUTED = '#77736b'; // 有争议的岛：中性灰（disputed.js）
-export const POP_STOPS = ['#2f3440', '#6f7f96', '#d4a373', '#c23531']; // 人口：少 → 多（对数刻度）
+const PALETTE = ['#dc746f', '#d2a171', '#79aac3', '#89aa79', '#a894c7', '#60ada5', '#d9875e', '#ce7ea2'];
+const OUTSIDE = '#d6ccb6';
+const DISPUTED = '#b0a898'; // 有争议的岛：中性灰（disputed.js）
+export const POP_STOPS = ['#ece2c8', '#d6b77a', '#b8743f', '#8a2f26']; // 人口：少 → 多（对数刻度）
 const CREDIT = '「国土数値情報（行政区域データ）」（国土交通省）を加工して作成 · Wikidata';
 
 // 地名标签的位置：最大一块多边形外环的面积加权中心
@@ -188,8 +188,8 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
           return {
             name: p.code,
             itemStyle: on
-              ? { areaColor: c, borderColor: '#fff', borderWidth: 2, shadowColor: 'rgba(255,255,255,.5)', shadowBlur: 10 }
-              : { areaColor: c, borderColor: '#18181c', borderWidth: 0.5, shadowBlur: 0 },
+              ? { areaColor: c, borderColor: '#2a2520', borderWidth: 2, shadowBlur: 0 }
+              : { areaColor: c, borderColor: '#5a5046', borderWidth: 0.5, shadowBlur: 0 },
             emphasis: { itemStyle: { areaColor: echarts.color.lift(c, 0.25), borderColor: '#fff', borderWidth: 1.2 } },
             label: { show: on && selected.length === 1 },
           };
@@ -227,7 +227,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
         animationDurationUpdate: 0,
         map: `muni-${cur.pref.id}`, roam: true, boundingCoords: cur.bounds,
         layoutCenter: ['50%', '54%'], layoutSize: '88%', scaleLimit: { min: 0.5, max: 80 },
-        itemStyle: { borderColor: '#18181c', borderWidth: 0.5 },
+        itemStyle: { borderColor: '#5a5046', borderWidth: 0.5 },
         label: { color: '#2a2520', fontSize: 11, fontFamily: serifFont(), fontWeight: 700, textBorderColor: 'rgba(244,239,226,.92)', textBorderWidth: 3,
           formatter: (x) => { const p = cur?.byCode.get(x.name); return p ? dn(p) : ''; } },
         emphasis: { label: { show: true } },

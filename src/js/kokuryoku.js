@@ -4,9 +4,9 @@ import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 
 export const METRICS = ['pop', 'pop1721', 'density', 'koku', 'rise'];
-// 五档：少 → 多（暗青 → 金 → 朱）；逆袭：大跌 → 大涨（蓝 → 灰 → 朱）
-const RAMP = ['#2c3b4c', '#3f6478', '#8f8a62', '#d4a373', '#e2573a'];
-const RISE = [[10, '#e2573a'], [3, '#d99a6c'], [-2, '#56565f'], [-9, '#6f8fb8'], [-Infinity, '#3f63b0']];
+// 五档：少 → 多（淡黄土 → 赭 → 深朱）；逆袭：大跌 → 大涨（藍 → 纸色 → 朱）
+const RAMP = ['#ece2c8', '#dcc48a', '#c9975a', '#b3664a', '#94402f'];
+const RISE = [[10, '#a8392e'], [3, '#d99a7a'], [-2, '#e4dccb'], [-9, '#8fb0c4'], [-Infinity, '#3e6a8a']];
 const DOME = 43500; // 东京巨蛋棒球赛时约 43,500 席（日文维基「東京ドーム」）
 // 宿敌 PK：一方可以是几个国合起来（长州 = 周防 + 长门），也可以是一个郡（按市区町村的明治旧郡汇总）
 export const PK = [
@@ -88,7 +88,7 @@ export function createPower(data, provinces) {
   function tip(k) {
     const v = P[k];
     if (!v) return '';
-    const row = (m, val) => `${t(`kr.m.${m}`)}：${show(m, val)}${rankOf[m]?.get(k) ? ` <span style="color:#8a847a">${t('kr.rank', { n: rankOf[m].get(k) })}</span>` : ''}`;
+    const row = (m, val) => `${t(`kr.m.${m}`)}：${show(m, val)}${rankOf[m]?.get(k) ? ` <span style="color:#6b6155">${t('kr.rank', { n: rankOf[m].get(k) })}</span>` : ''}`;
     const r = rise(k);
     return [row('pop', v.pop), row('pop1721', value('pop1721', k)), row('koku', value('koku', k)),
       `${t('kr.area')}：${fmt(v.area)} km² · ${row('density', value('density', k))}`,

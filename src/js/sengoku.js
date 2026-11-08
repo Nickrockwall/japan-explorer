@@ -278,7 +278,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const g = cv.getContext('2d');
     g.beginPath();
     if (g.roundRect) g.roundRect(7, 7, S - 14, S - 14, 20); else g.rect(7, 7, S - 14, S - 14); // 旧版 Safari 没有 roundRect
-    g.fillStyle = 'rgba(20,20,24,.94)';
+    g.fillStyle = '#2a2520'; // 墨底的旗
     g.fill();
     g.lineWidth = 9;
     g.strokeStyle = data.clans[c].color;
@@ -290,14 +290,14 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       const h = t2.getContext('2d');
       h.drawImage(img, 0, 0, n, n);
       h.globalCompositeOperation = 'source-in';
-      h.fillStyle = '#f2dcae';
+      h.fillStyle = '#f4efe2';
       h.fillRect(0, 0, n, n);
       g.drawImage(t2, (S - n) / 2, (S - n) / 2);
     } else {
       // 「姉小路（三木）」取括号里的；其余取前两个字
       const name = data.clans[c].ja.match(/（(.+)）/)?.[1] || data.clans[c].ja;
       const text = [...name].slice(0, 2).join('');
-      g.fillStyle = '#f2dcae';
+      g.fillStyle = '#f4efe2';
       g.font = `700 ${text.length > 1 ? 44 : 60}px "Noto Serif JP", "Noto Serif SC", serif`;
       g.textAlign = 'center';
       g.textBaseline = 'middle';
