@@ -248,6 +248,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 界面文字：`t(key, vars)` 查词典 `D`；静态 HTML 用 `data-i18n` / `data-i18n-ph` / `data-i18n-title` / `data-i18n-aria`，由 `applyStatic()` 填充。
 - **分类键不翻译**：`region`、`circuit`、`history_timeline[].era`、`ramen.category`、`sake.quadrant`、`map_filters.*` 等是逻辑键，显示时用 `label(group, key)` 转换。
 - 数据翻译是**覆盖层**：`src/data/i18n/{en,ja}/prefectures/NN_slug.json` 与 `historical_events.json` 只含文字字段，按 `deepMerge` 叠加到中文底本（对象逐键、对象数组按下标、字符串数组整体替换）。
+- 各县详卡的原始内容（时间轴、名胜、特产、方言、梗、人物、拉面、地酒）在 3.29 逐条核对过：年份、排名、「唯一 / 第一」一类说法对照日文维基，找不到出处的删掉或改成不下断语的说法。以后加这类内容照同样标准，改中文时英日译文同一处一起改（译文按字段覆盖，数字要一致）。
 - `src/data/i18n/manifest.json` 记录各语言已翻译的县 id 与 events；未列入的县显示中文并带“翻译中”提示（不发请求，避免 404）。
 - 向导：史官人设的译文在 `PERSONA_TEXT`；System Prompt 的角色段与回答规则按语言生成（`ROLE` / `PROMPT_RULES`），离线解答模板与关键词正则也在词典里。
 - 日语与英语界面通过 `:root[lang="ja"]` / `:root[lang="en"]` 改用 Noto Serif JP 与日文系统字体，显示日文字形。

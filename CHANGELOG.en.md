@@ -4,7 +4,14 @@
 
 Newest first.
 
-## 3.28 · 2026-11-09
+## 3.29 · 2026-11-09
+
+- Went through every prefecture card's original text (timeline, sights, specialties, dialect, local jokes, characters, ramen, sake) and fixed 18 items against Japanese Wikipedia, in all three languages:
+  - Tokyo Prefecture dates from 1868, not 1871; Kōfu Prefecture from 1869, becoming Yamanashi in 1871; Takeda Nobumitsu died in 1417; Oda Prefecture joined Okayama in 1875; the Shimoge and Usa districts went to Fukuoka with Kokura Prefecture in 1876 and on to Ōita the same year
+  - The gyōza rivalry now includes Miyazaki (winner 2021–2022, Hamamatsu since 2023); Shizuoka tea is now neck and neck with Kagoshima; Ise lobster is a Shima specialty; sakura shrimp are fished in Japan only in Suruga Bay; Japan's most hot-spring sources and greatest flow belong to Ōita as a whole (Beppu first, Yufuin next)
+  - What makes Hyōgo unique is spanning five provinces, not facing two seas; Hearn wrote 'Kwaidan' after leaving Matsue; soft-water brewing began in Akitsu, not Saijō; Nitta Yoshisada ended the Kamakura shogunate, not "150 years of Hōjō rule"; Saitō Dōsan's one-lifetime rise is now flagged as the traditional story
+  - Removed or reworded claims with no source: the 500-bowl wanko soba record, Senkin's "wooden-vat brewing", the title of a Shimane self-mocking manga
+
 
 - New "Before mergers" row in the family register: which municipalities this place was made of in 1995 and when it took today's form (Ueda: Ueda, Maruko, Sanada and Takeshi, merged in 2006), with a matching line in the local timeline. Worked out from the 1995 boundaries and municipal dates of CODH's Historical Administrative Area Data Set; 652 municipalities have one
 - New "Namesakes" row: when this place's name — today, in 1995 or in the Meiji era — contains Fuchū, Kokufu, Kokubu, Ichinomiya or Sōja, the register explains where such names come from, how far this province's capital (or Kokubun-ji, or ichinomiya) is from here, and lists where the other places of that name are today
