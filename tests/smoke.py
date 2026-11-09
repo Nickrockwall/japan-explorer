@@ -686,6 +686,8 @@ class Case:
         page.wait_for_function("document.body.classList.contains('prov-mode')", timeout=30000)
         assert page.evaluate("document.querySelector('[data-filter=\"circuit\"]').classList.contains('on')"), '奈良时代五畿七道按钮应亮'
         assert page.evaluate("document.querySelectorAll('#legend-items .sw').length") >= 8, '奈良时代应显示五畿七道图例'
+        # 奈良时代默认 757 年的国界（3.28）
+        page.wait_for_function("document.querySelector('#prov-eras [data-y=\"757\"]').classList.contains('on')", timeout=15000)
         page.evaluate(f'({slide})({modern})')
         page.wait_for_function("document.querySelector('[data-filter=\"region\"]').classList.contains('on')", timeout=5000)
         assert not page.evaluate("document.body.classList.contains('prov-mode')"), '现代应回到县底图'
@@ -840,16 +842,18 @@ class Case:
         assert not page.evaluate(AUDIO_DEBUG)['ready']
 
     def provinces(self, page):
-        # 五畿七道：底图换成 68 令制国真实边界；点武藏国里的一点仍选中埼玉；换滤镜后换回县
+        # 五畿七道（= 滑块奈良）：底图换成真实旧国边界，默认 757 年（安房已再置、加贺未立）；点武藏国里的一点仍选中埼玉；换滤镜后换回县
         self.tab(page, 'map')
         page.click('[data-filter="circuit"]')
-        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('68')", timeout=15000)
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('757')", timeout=15000)
         page.wait_for_timeout(800)
         js = '''() => { const c = echarts.getInstanceByDom(document.getElementById('map'));
             const g = c.getOption().geo[0]; const r = document.getElementById('map').getBoundingClientRect();
             const [x, y] = c.convertToPixel({ geoIndex: 0 }, [139.35, 36.0]); return [g.map, x + r.left, y + r.top]; }'''
         shown, x, y = page.evaluate(js)
-        assert shown == 'provinces-824', f'底图应为 824 年的旧国，实际 {shown}'
+        assert shown == 'provinces-757', f'底图应为 757 年的旧国，实际 {shown}'
+        keys = page.evaluate("echarts.getMap('provinces-757').geoJSON.features.map((f) => f.properties.key)")
+        assert '安房国' in keys and '加賀国' not in keys, '757 年应有安房、没有加贺'
         if self.narrow:
             page.tap('#map', position={'x': x - page.locator('#map').bounding_box()['x'], 'y': y - page.locator('#map').bounding_box()['y']})
         else:
@@ -882,7 +886,7 @@ class Case:
         # 古国地图上点武藏国：弹出广重两幅（武藏、江户）；看大图、翻页；详卡有「广重笔下」
         self.tab(page, 'map')
         page.click('[data-filter="circuit"]')
-        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('68')", timeout=15000)
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('757')", timeout=15000)
         page.wait_for_timeout(800)
         x, y = page.evaluate('''() => { const c = echarts.getInstanceByDom(document.getElementById('map'));
             const r = document.getElementById('map').getBoundingClientRect();
@@ -1204,8 +1208,12 @@ class Case:
         # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 10, f'应有 10 栏（含古代郷名与明治町村）：{rows}'
+        assert len(rows) == 11, f'应有 11 栏（含古代郷名、明治町村与平成合并前）：{rows}'
         assert any('上田町' in r and '1889' in r for r in rows), f'明治町村应写出 1889 年与上田町：{rows}'
+        # 平成合并前（3.28，CODH 1995 年边界 + 存续期间）：上田市·丸子町·真田町·武石村，2006 年起为今天的上田市；此地年表也有 2006 一行
+        hs = page.locator('.ks-row[data-k="heisei"]').inner_text()
+        assert all(x in hs for x in ('1995', '丸子町', '真田町', '武石村', '2006')), f'平成合并前应列出丸子町等与 2006：{hs}'
+        assert '2006' in page.locator('#koseki .ht-heisei').inner_text(), '此地年表应有 2006 年平成合并一行'
         edo = page.locator('.ks-row[data-k="edo"]').inner_text()
         assert '111' in edo and '79%' in edo and any(x in edo for x in ('上田藩', 'Ueda')), f'幕末领主应写出今辖境 111 村、上田藩 79%：{edo}'
         assert any(x in page.locator('.ks-row[data-k="edo"] .ks-seal').text_content() for x in ('市', 'Town')), '旧高旧领按市区町村，精度印应为「市」'
@@ -1328,6 +1336,20 @@ class Case:
         mura = next((r for r in rows if any(x in r for x in ('明治町村', 'Meiji villages', '明治の町村'))), '')
         assert any(x in mura for x in ('笠间町', '笠間町')) and any(x in mura for x in ('宍户町', '宍戸町')), f'明治町村应有笠间町与宍户町：{mura}'
         assert '1889' in page.locator('#koseki .ht-mura').inner_text(), '此地年表应有 1889 年町村制一行'
+
+    def koseki_dou(self, page):
+        # 同名地名（3.28）：丰川市 1995 年有一宫町、明治有国府村 → 两栏；国府那一栏写本国（三河）国府的距离、列出别县的国府村，
+        # 一宫那一栏列出一宫市；平成合并前有一宫町、音羽町等，2006–2010
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        dou = page.locator('.ks-row[data-k="dou"]').all_inner_texts()
+        assert len(dou) == 2, f'丰川市应有两栏同名地名（一宫、国府）：{dou}'
+        kofu = next((r for r in dou if '国府村' in r), '')
+        assert kofu and any(x in kofu for x in ('km', '公里')) and '1889' in kofu, f'国府一栏应有到本国国府的距离与 1889：{kofu}'
+        assert any(x in kofu for x in ('栃木', 'Tochigi')), f'国府一栏应列出别县的国府村：{kofu}'
+        ichi = next((r for r in dou if r is not kofu), '')
+        assert any(x in ichi for x in ('一宫市', '一宮市')), f'一宫一栏应列出一宫市：{ichi}'
+        hs = page.locator('.ks-row[data-k="heisei"]').inner_text()
+        assert any(x in hs for x in ('一宫町', '一宮町')) and '2006' in hs, f'平成合并前应有一宫町与 2006：{hs}'
 
     def regimes(self, page):
         # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
@@ -1496,6 +1518,7 @@ def plan(lang):
              ('koseki_town', 'pref=26&muni=1&m=26102&koseki=1', ['koseki_town']), ('koseki_city', 'pref=23&muni=1&m=23103&koseki=1', ['koseki_city']),
              ('koseki_main', 'pref=44&muni=1&m=44201&koseki=1', ['koseki_main']),
              ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
+             ('koseki_dou', 'pref=23&muni=1&m=23207&koseki=1', ['koseki_dou']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),

@@ -5,6 +5,7 @@
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { findHan } from './han.js';
+import { heiseiOf } from './koseki.js';
 
 const SG_YEARS = ['1467', '1560', '1573', '1582', '1590', '1600'];
 const MAX_KAKO = 20; // 大城市的区能有几十条：事件优先，其余按年份取前面的
@@ -129,6 +130,10 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
     const names = mura.slice(0, 8).map(([n]) => n).join(t('list.sep'));
     items.push({ y, yl: String(y), main: t('ht.mura', { n: mura.length }), sub: mura.length > 8 ? `${names} ${t('ks.mura.more', { n: mura.length })}` : names, kind: 'mura' });
   }
+
+  // 平成大合并：1995 年的市町村成为今天的样子
+  const hs = heiseiOf(town, props.code, 8);
+  if (hs) items.push({ y: hs.y, yl: hs.yl, main: t('ht.heisei', { place: lang === 'en' && props.en ? props.en : props.name }), sub: hs.list, kind: 'heisei' });
 
   // 冲绳 / 北海道 / 奄美群岛（鹿儿岛县里不属于令制国的市町村）：地区年表（北海道按市町村在不在和人地挑 wajin / ezo 的条目）
   const amami = pref.id === 46 && (!key || key === '-');

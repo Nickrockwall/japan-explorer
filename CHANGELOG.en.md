@@ -4,7 +4,14 @@
 
 Newest first.
 
-## 3.27 · 2026-11-08
+## 3.28 · 2026-11-09
+
+- New "Before mergers" row in the family register: which municipalities this place was made of in 1995 and when it took today's form (Ueda: Ueda, Maruko, Sanada and Takeshi, merged in 2006), with a matching line in the local timeline. Worked out from the 1995 boundaries and municipal dates of CODH's Historical Administrative Area Data Set; 652 municipalities have one
+- New "Namesakes" row: when this place's name — today, in 1995 or in the Meiji era — contains Fuchū, Kokufu, Kokubu, Ichinomiya or Sōja, the register explains where such names come from, how far this province's capital (or Kokubun-ji, or ichinomiya) is from here, and lists where the other places of that name are today
+- Sliding to the Nara period now shows the province borders of 757 (Tenpyō-hōji 1) by default, instead of 824, which is after the Nara period
+- Fixed the 757 borders: Awa was restored as a province in the same month as Noto that year, but was drawn as still part of Kazusa
+- The Sengoku stretch of each prefecture's timeline now also reads 1467–1600, matching the time slider
+
 
 - Two more slider eras merged with filters: the Nara period now shows the Five Home Provinces and Seven Circuits on real province borders, and the Present day shows the eight modern regions. Tapping either filter moves the slider to its era. The filters left are the truly separate ones: exploration, Bakumatsu sides and province power
 - The Sengoku era on the slider now reads 1467–1600, matching the six years of the Sengoku map (through Sekigahara)

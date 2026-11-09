@@ -399,7 +399,7 @@ async function main() {
     if (pid !== app.currentId) map.onSelect(pid);
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
-      sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid),
+      sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid), prefOf: prefLabel,
       sengoku: await sengokuData(), han: await ensureHan().then(() => han), town: await (townLoad[pid] ??= loadTown(lang, pid)),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
@@ -693,10 +693,9 @@ async function main() {
       b.setAttribute('aria-selected', String(on));
     });
   }
-  eraBox.addEventListener('click', async (e) => {
-    const b = e.target.closest('[data-y]');
-    if (!b || b.dataset.y === map.provEra) return;
-    if (b.dataset.y !== '824') {
+  async function pickProvEra(y, { sound = true } = {}) {
+    if (y === map.provEra) return;
+    if (y !== '824') {
       erasLoad ??= loadProvinceEras().then((d) => map.setProvEras(d));
       try { await erasLoad; } catch (err) {
         console.warn('古国时间轴加载失败', err);
@@ -706,10 +705,14 @@ async function main() {
       }
     }
     closeArtCard();
-    map.setProvEra(b.dataset.y);
-    audio.play('click');
+    map.setProvEra(y);
+    if (sound) audio.play('click');
     updateLegend(map);
     syncProvEras();
+  }
+  eraBox.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-y]');
+    if (b) pickProvEra(b.dataset.y);
   });
   for (const el of [artCard, detailEl]) {
     el.addEventListener('click', (e) => {
@@ -937,7 +940,8 @@ async function main() {
   let eraPrevFilter = null;
 
   function setEra(i, { banner = true } = {}) {
-    if (i != null && i !== app.eraIdx) audio.play('click'); // 拖动滑块时只在跨到另一个时代时响
+    const entering = i !== app.eraIdx;
+    if (i != null && entering) audio.play('click'); // 拖动滑块时只在跨到另一个时代时响
     app.eraIdx = i;
     const era = i == null ? null : eras[i];
     const ef = era?.filter;
@@ -945,7 +949,11 @@ async function main() {
       if (eraPrevFilter == null) eraPrevFilter = eras.some((e) => e.filter === map.state.filter) ? 'explore' : map.state.filter;
       uiPref.set('filter', map.setMode(ef));
       if (ef === 'sengoku') ensureSengoku();
-      if (ef === 'circuit') ensureProvinces();
+      // 奈良时代（710–794）默认看 757 年（天平宝字元年）的国界；左上角仍可换别的年份
+      if (ef === 'circuit') {
+        ensureProvinces();
+        if (entering) provinces.then((g) => { if (g && app.eraIdx === i) pickProvEra('757', { sound: false }); });
+      }
     } else if (eraPrevFilter != null) {
       uiPref.set('filter', map.setMode(eraPrevFilter));
       eraPrevFilter = null;

@@ -132,5 +132,34 @@ class Yurai(unittest.TestCase):
         self.assertEqual(sum(len(v) for v in out.values()), len(yurai_tool.Y), '改了 yurai_tool 后要重跑它')
 
 
+class Heisei(unittest.TestCase):
+    def test_codh_periods(self):
+        import codh
+        html = ('<tr class="r0">\n<td><a href="20341A1968.html">20341A1968</a></td>\n<td>長野県小県郡丸子町</td>\n<td>1912-10-30 〜 2006-03-06</td>\n'
+                '<td><a href="20203A1968.html">20203A1968</a></td>\n<td>長野県上田市</td>\n<td>1919-05-01 〜 </td>\n')
+        got = codh.parse_periods(html)
+        self.assertEqual(got['20341A1968'], ('1912-10-30', '2006-03-06', '長野県小県郡丸子町'))
+        self.assertEqual(got['20203A1968'], ('1919-05-01', '', '長野県上田市'))
+
+    def test_real_end_same_name_successor(self):
+        # 北海道 2010 年支厅改振兴局：同一代码在止日接上、同名的新 ID 不算不在；改名的算
+        import fetch_heisei
+        per = {'01472A1968': ('1900-01-01', '2010-04-01', '北海道雨竜郡幌加内町'), '01472A2010': ('2010-04-01', '', '北海道雨竜郡幌加内町'),
+               '20341A1968': ('1912-10-30', '2006-03-06', '長野県小県郡丸子町')}
+        by = {}
+        for k in per:
+            by.setdefault(k[:5], []).append(k)
+        self.assertEqual(fetch_heisei.real_end('01472A1968', per, by), 0)
+        self.assertEqual(fetch_heisei.real_end('20341A1968', per, by), 2006)
+
+    def test_dou_names(self):
+        mura = {'23207': [['国府村', False, 1889]], '23203': [['一宮町', False, 1889]]}
+        out = build_bundle.dou_names(mura, {'23207': [['一宮町', '宝飯郡', 0, 2006]]})
+        mine = {(k, code): (n, y) for k, n, _, y, code, _ in out}
+        self.assertEqual(mine[('ichi', '23203')], ('一宮市', 0), '今天的名字优先，同一处不重复')
+        self.assertEqual(mine[('ichi', '23207')], ('一宮町', 1995))
+        self.assertEqual(mine[('kofu', '23207')], ('国府村', 1889))
+
+
 if __name__ == '__main__':
     unittest.main()

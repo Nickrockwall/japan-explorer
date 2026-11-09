@@ -47,8 +47,11 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
-// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }（town：bundle/town/<lang>/NN.json 的明治町村与地名来历，可能为 null）
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, sengoku, han, town }) {
+// 同名地名的键 → 对应的古代设施（量这里到本国那一处的距离）
+const DOU_SITE = { fuchu: 'fu', kofu: 'fu', soja: 'fu', kokubu: 'ji', ichi: 'ichi' };
+
+// ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, prefOf, sengoku, han, town }（prefOf：县 id → 县名）（town：bundle/town/<lang>/NN.json 的明治町村与地名来历，可能为 null）
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, prefOf, sengoku, han, town }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -140,6 +143,9 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
     const names = mura.slice(0, 14).map(([n, part]) => (part ? `${n}${t('ks.mura.part')}` : n)).join(t('list.sep'));
     rows.push({ k: 'mura', seal: 'muni', main: t('ks.mura', { y: ys[Math.floor(ys.length / 2)], n: mura.length }), sub: mura.length > 14 ? `${names} ${t('ks.mura.more', { n: mura.length })}` : names });
   }
+  // 平成大合并前（town.heisei）：1995 年时今属这里的市町村与哪一年起成为今天的样子（只有 1995 年以后变过的才有）
+  const hs = heiseiOf(town, props.code);
+  if (hs) rows.push({ k: 'heisei', seal: 'muni', main: t('ks.heisei', { list: hs.list }), sub: t(hs.yl.includes('–') ? 'ks.heisei.to2' : 'ks.heisei.to', { y: hs.yl, place: muniName }) });
 
   const P = power?.provinces?.[key];
   if (P) {
@@ -153,7 +159,33 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const own = yd?.[props.name];
   const yr = own || (props.city && yd?.[props.city]);
   if (yr) rows.push({ k: 'yurai', seal: own ? 'muni' : 'city', main: own ? muniName : props.city, sub: yr });
+  // 同名地名（town.dou）：这里今天、1995 年或明治町村制时的名字带「府中」「国府」「国分」「一宫」「总社」的，
+  // 写这类名字的由来、本国那一处设施离这里多远，并列出全国其他同名的地方（取最近的那个名字，一个键一栏）
+  const dou = town?.dou || [];
+  for (const k of [...new Set(dou.filter((x) => x[4] === props.code).map((x) => x[0]))]) {
+    const mineK = dou.find((x) => x[0] === k && x[4] === props.code);
+    const others = dou.filter((x) => x[0] === k && x[4] !== props.code);
+    if (!others.length) continue;
+    const site = mine.length && pt ? nearest(mine.filter((s) => s.kind === DOU_SITE[k]), pt) : null;
+    // 其他地方写今天的市区町村，以前的名字写在括号里（兵库县有两个 1995 年的一宫町，今天分属宍粟市与淡路市）
+    const list = others.slice(0, 10).map(([, name, pid, y, , cur]) => {
+      const pref = prefOf ? prefOf(pid) : '';
+      return y ? t('ks.dou.old', { pref, now: cur, name, y }) : t('ks.dou.item', { pref, name });
+    }).join(t('list.sep'));
+    const sub = [t(`ks.dou.why.${k}`), site ? t('ks.dou.far', { site: t(`ks.dou.s.${DOU_SITE[k]}`), km: km(site.km) }) : '',
+      t('ks.dou.list', { list: others.length > 10 ? `${list} ${t('ks.mura.more', { n: others.length })}` : list })].filter(Boolean).join(t('ks.dou.sep'));
+    rows.push({ k: 'dou', seal: 'muni', main: t('ks.dou', { name: mineK[1], y: mineK[3] ? t('ks.dou.y0', { y: mineK[3] }) : '', kw: t(`ks.dou.kw.${k}`), n: others.length }), sub });
+  }
   return { rows, short, print: prints?.[0] || null };
+}
+
+// 1995 年的市町村（一部的加注）与变动年份（几年的写成「2004–2006」）；max 个以后写「等 n 个」
+export function heiseiOf(town, code, max = 14) {
+  const hs = town?.heisei?.[code];
+  if (!hs?.length) return null;
+  const ys = [...new Set(hs.map((x) => x[2]).filter(Boolean))].sort((a, b) => a - b);
+  const names = hs.slice(0, max).map(([n, part]) => (part ? `${n}${t('ks.mura.part')}` : n)).join(t('list.sep'));
+  return { y: ys[0], yl: ys.length > 1 ? `${ys[0]}–${ys.at(-1)}` : String(ys[0]), list: hs.length > max ? `${names} ${t('ks.mura.more', { n: hs.length })}` : names };
 }
 
 export function kosekiHTML(ctx, data, name, extra = '') {

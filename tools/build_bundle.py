@@ -296,18 +296,51 @@ def kyudaka(lang):
     return out
 
 
+# 同名地名：名字里带这些字的，多因古代的国府、国分寺、一宫、总社而得名（户籍「同名地名」一栏）
+DOU = {'fuchu': r'府中', 'kofu': r'国府|國府', 'kokubu': r'国分|國分', 'ichi': r'一宮|一之宮|一ノ宮|一の宮', 'soja': r'総社|惣社'}
+
+
+def dou_names(mura, heisei):
+    """全国今天的市区町村、1995 年的市町村、明治町村制的町村里名字带 DOU 的：[[键, 名字, 县 id, 年（今天为 0）, 今天的代码, 今天的名字]…]；
+    同一个键、同一个今天的市区町村只留最近的那个名字"""
+    out = []
+    seen = set()
+    now = {}
+    for pid in range(1, 48):
+        for f in load(os.path.join(DATA, 'municipalities', f'{pid:02d}.json'))['features']:
+            p = f['properties']
+            if p.get('code') and not p.get('pseudo'):
+                now[p['code']] = p['name']
+    def add(name, code, y):
+        for k, rx in DOU.items():
+            if re.search(rx, name) and (k, code) not in seen:
+                seen.add((k, code))
+                out.append([k, name, int(code[:2]), y, code, now.get(code, '')])
+    for code, name in now.items():
+        add(name, code, 0)
+    for code, rows in sorted(heisei.items()):
+        for n, _, _, _ in rows:
+            add(n, code, 1995)
+    for code, rows in sorted(mura.items()):
+        for n, _, y in rows:
+            add(n, code, y)
+    return out
+
+
 def build_town(lang):
-    """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、地名的来历（tools/yurai_tool.py）、
+    """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、平成大合并前的市町村（tools/fetch_heisei.py）、地名的来历（tools/yurai_tool.py）、
     幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py）。按县拆成 bundle/town/<lang>/NN.json
     （{县 id: 文本}），打开某县的户籍时才下载那一份（合在一起约 0.5 MB，每县十几到几十 KB）。
     町村名、郷名中文按字形转换，英文仍用日文（没有可靠的罗马字；郷名附读音）"""
     conv = ja_to_zh_table() if lang == 'zh' else {}
     zh = lambda n: ''.join(conv.get(c, c) for c in n)
-    mp, yp, wp = (os.path.join(ROOT, 'tools', f) for f in ('mura.json', 'yurai.json', 'wamyo.json'))
+    mp, yp, wp, hp = (os.path.join(ROOT, 'tools', f) for f in ('mura.json', 'yurai.json', 'wamyo.json', 'heisei.json'))
     mura = load(mp) if os.path.exists(mp) else {}
+    heisei = load(hp) if os.path.exists(hp) else {}
     yurai = load(yp) if os.path.exists(yp) else {}
     wamyo = load(wp) if os.path.exists(wp) else {'prov': {}, 'muni': {}}
     kyu = kyudaka(lang)
+    dou = [[k, zh(n), pid, y, code, zh(cur)] for k, n, pid, y, code, cur in dou_names(mura, heisei)]
     out = {}
     for pid in range(1, 48):
         pre = f'{pid:02d}'
@@ -322,9 +355,13 @@ def build_town(lang):
                 gou.setdefault(prov, {})[g] = [[zh(n), (romaji(k) or k) if lang == 'en' else k] for n, k in wamyo['prov'][prov][g]]
         out[pid] = json.dumps({
             'mura': {code: [[zh(n), int(part), y] for n, part, y in rows] for code, rows in mura.items() if code.startswith(pre)},
+            # 平成合并前：[[1995 年的名字, 一部 0/1, 止年（还在的为 0）]…]
+            'heisei': {code: [[zh(n), part, y] for n, _, part, y in rows] for code, rows in heisei.items() if code.startswith(pre)},
             'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items() if pref == str(pid)},
             'kyu': {c: v for c, v in kyu.items() if c.startswith(pre)},
             'wamyo': {'muni': wm, 'gou': gou},
+            # 同名地名：本县有带这些字的地名时，放全国同一个键的全部（其他县的要列出来）
+            'dou': [x for x in dou if any(y[0] == x[0] and y[2] == pid for y in dou)],
         }, ensure_ascii=False, separators=(',', ':'))
     return out
 

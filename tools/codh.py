@@ -1,7 +1,7 @@
 """CODH《歴史的行政区域データセットβ版》（CC BY 4.0，https://geoshape.ex.nii.ac.jp/city/）的共用读法。
 
 - 文件缓存在 `.cache/codh/`，缺了自动下载（`fetch`）：`19851001.topojson` / `19951001.topojson`（全国，i 精度）、
-  `1920_NN.topojson`（1920 年各县）、`nrct.csv`（地名项目数据集 2025-07-19 版）。
+  `1920_NN.topojson`（1920 年各县）、`nrct.csv`（地名项目数据集 2025-07-19 版）、`resource.html`（市区町村 ID 一览：每个 ID 的有效期间）。
 - `load_topo(path)`：TopoJSON → {代码: shapely 几何}（同一代码几块合在一起）；`props=True` 时同时返回各代码的属性。
 - `locate(x, y)`：坐标落在今天哪个市区町村（团体代码，落空为 None）。
 - `nrct_points()`：CODH《日本歴史地名大系》地名項目データセット（CC BY 4.0，`.cache/codh/nrct.csv`）→ {地名: [(经度, 纬度, 读音, 上位地名)…]}（读音带「むら」等后缀；上位地名是大系出版时的市区町村，如「大阪市 生野区」）。
@@ -14,9 +14,7 @@ import os
 import re
 import urllib.request
 
-from shapely.geometry import shape
-from shapely.ops import unary_union
-from shapely.strtree import STRtree
+# shapely 在用到的函数里才导入：单元测试（CI 不装 shapely）只用 parse_periods
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 BASE = 'https://geoshape.ex.nii.ac.jp/'
@@ -32,6 +30,8 @@ def fetch(path):
         url = f'{BASE}city/topojson/19200101/{m.group(1)}/{m.group(1)}_city.i.topojson'
     elif re.fullmatch(r'\d{8}\.topojson', name):
         url = f'{BASE}city/topojson/{name[:8]}/jp_city.i.topojson'
+    elif name == 'resource.html':
+        url = f'{BASE}city/resource/'
     elif name == 'nrct.csv':
         url = f'{BASE}nrct/dataset/nrct-20250719.csv'
     else:
@@ -67,6 +67,8 @@ def _ring(arcs, idx):
 
 
 def load_topo(path, props=False):
+    from shapely.geometry import shape
+    from shapely.ops import unary_union
     topo = json.load(open(fetch(path), encoding='utf-8'))
     arcs = _arcs(topo)
     geoms, attrs = {}, {}
@@ -105,6 +107,7 @@ _today = None
 def today():
     """今天的市区町村 [(团体代码, 县 id, 几何)]（伪要素与没有代码的不算）"""
     global _today
+    from shapely.geometry import shape
     if _today is None:
         _today = []
         for pid in range(1, 48):
@@ -118,6 +121,7 @@ def today():
 
 
 def overlap_map(old, whole=0.9):
+    from shapely.strtree import STRtree
     cur = today()
     tree = STRtree([g for _, _, g in cur])
     out = {}
@@ -142,6 +146,7 @@ def overlap_map(old, whole=0.9):
 
 def locate(x, y):
     from shapely.geometry import Point
+    from shapely.strtree import STRtree
     global _tree
     cur = today()
     if '_tree' not in globals() or _tree is None:
@@ -154,6 +159,18 @@ def locate(x, y):
 
 
 _tree = None
+
+
+def periods():
+    """市区町村 ID 一览 → {ID: (起, 止, 住所)}（'YYYY-MM-DD'，没有的为 ''；止日是下一个 ID 生效那天；住所如「長野県小県郡丸子町」）"""
+    return parse_periods(open(fetch(os.path.join(ROOT, '.cache', 'codh', 'resource.html')), encoding='utf-8').read())
+
+
+def parse_periods(html):
+    out = {}
+    for gid, addr, a, b in re.findall(r'<td><a href="(\w+)\.html">\w+</a></td>\s*<td>([^<]*)</td>\s*<td>([\d-]*) 〜 ([\d-]*)\s*</td>', html):
+        out[gid] = (a, b, addr)
+    return out
 
 
 def nrct_points():
