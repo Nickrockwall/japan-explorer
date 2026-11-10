@@ -135,7 +135,8 @@ class Case:
           const r = document.querySelector('#scene').getBoundingClientRect();
           return [(v.x + 1) / 2 * r.width + r.left, (1 - v.y) / 2 * r.height + r.top]; }''', [138.55, 35.65])
         page.mouse.click(x, y)
-        page.wait_for_selector('#card:not([hidden])', timeout=10000)
+        # CI 没有显卡、走软件渲染，屏风风格下一帧要好几秒，点击要等这一帧画完才处理
+        page.wait_for_selector('#card:not([hidden])', timeout=40000)
         text = page.inner_text('#card')
         assert '甲斐' in text and '武田胜赖' in text and '1600' in text, f'甲斐国卡片：{text[:120]!r}'
         page.keyboard.press('Escape')
