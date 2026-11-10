@@ -90,3 +90,5 @@ jobs:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000 # 等 Pages 发布最多 30 分钟（默认 10 分钟；3.30 加了 11 MB 地形后第一次超时）
