@@ -107,7 +107,8 @@ function stripes(colors) {
 }
 
 // style: {fill(key) → 颜色或颜色数组（分治）, edge(a, b) → 'same' | 'front' | 'plain'}
-export function createOverlay({ regions, edges, water, C }) {
+// grid：平安京的条坊（Path2D，世界坐标），拉近、贴图够细时才画
+export function createOverlay({ regions, edges, water, C, grid }) {
   let style = null;
   let version = 0;
   const patterns = new Map();
@@ -148,6 +149,11 @@ export function createOverlay({ regions, edges, water, C }) {
     ctx.fillStyle = ctx.strokeStyle = WATER;
     ctx.fill(wet.lakes, 'evenodd');
     ctx.stroke(wet.rivers);
+    if (grid && k >= 6) {
+      ctx.strokeStyle = 'rgba(42,37,32,0.34)';
+      ctx.lineWidth = px * 0.9;
+      ctx.stroke(grid);
+    }
     // 国界：同一家的淡淡一道，两家之间是前线（深色衬底 + 亮线）
     const plain = new Path2D(), front = new Path2D(), same = new Path2D();
     for (const e of edges) {

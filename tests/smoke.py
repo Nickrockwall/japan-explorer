@@ -177,6 +177,19 @@ class Case:
         assert not page.evaluate('__je3d.battle.active') and page.evaluate("__je3d.opts.year") == '1590', '离开合战应回到 1590'
         # 平面 / 立体开关：平面一侧带回年份
         assert 'sg=1590' in page.get_attribute('#to2d', 'href')
+        # 3.34 年份之间：1573 的「这期间」8 件，打开第一件是 1560 桶狭间、能重演；京都卡片写天皇与实权
+        page.evaluate("__je3d.setYear('1573'); __je3d.story.chip('1573')")
+        page.wait_for_selector('#story:not([hidden]) .st-chip')
+        assert '8' in page.inner_text('#story'), page.inner_text('#story')
+        page.click('#story .st-chip')
+        page.click('#story [data-i="0"]')
+        text = page.inner_text('#story')
+        assert '1560' in text and '桶狭间' in text and page.locator('#story [data-st="battle"]').count() == 1, text[:100]
+        page.keyboard.press('Escape')
+        page.evaluate('__je3d.showCapital()')
+        text = page.inner_text('#card')
+        assert '1573' in text and '正亲町天皇' in text and '织田信长' in text, text[:160]
+        page.keyboard.press('Escape')
 
     def deeplink(self, page):
         page_kanji = page.text_content('.modern-title .kanji')
@@ -716,6 +729,7 @@ class Case:
         page.click('#hud-next')
         page.wait_for_timeout(300)
         assert page.locator('#hud-phases li.on').get_attribute('data-i') == '1', '下一阶段没有生效'
+        assert page.is_visible('#hud-3d'), '合战面板应有「立体」'  # 3.34：点了去 3d.html#bt=…&ph=1
         page.click('#hud-exit')
         page.wait_for_selector('#battle-hud', state='hidden')
 
@@ -1491,7 +1505,7 @@ class Case:
         # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；设置里可再打开，Esc 关闭
         page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
         n = int(page.text_content('.tour-n').split('/')[1])
-        assert n == 9, f'教程应有 9 步，实际 {n}'
+        assert n == 10, f'教程应有 10 步，实际 {n}'
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         for i in range(n):
             page.wait_for_timeout(300)

@@ -18,12 +18,16 @@ Old Japan laid over today's map. Which of the 68 ancient provinces became each o
   <img src="docs/screen-bday-en.jpg" alt="Phone: birthday card for June 21" width="32%">
   <img src="docs/screen-koseki-en.jpg" alt="Phone: ancestral register for Ueda" width="32%">
 </p>
+<p>
+  <img src="docs/screen-3d-en.jpg" alt="3D Sengoku map: the Battle of Sekigahara replayed on real terrain (the turning point)" width="98%">
+</p>
 
 ## Try these first
 
 - [Your birthday](https://nickrockwall.github.io/japan-explorer/#bday=06-21&lang=en): who was born and who died that day, and what happened (the link opens June 21, the day of the Honnō-ji Incident — change it to your own birthday in the dialog)
 - [Japan in 1582](https://nickrockwall.github.io/japan-explorer/#pref=26&sg=1582&sgc=oda&lang=en): who held each of the 68 provinces just before Honnō-ji, and how much of Japan the Oda held
 - [An ancestral register for Ueda, Nagano](https://nickrockwall.github.io/japan-explorer/#pref=20&muni=1&m=20203&koseki=1&lang=en): what your register would have said a few centuries ago; its closing timeline runs from Shinano Province to Nagano Prefecture
+- [Sekigahara in 3D](https://nickrockwall.github.io/japan-explorer/3d.html#bt=sekigahara&ph=2&lang=en): watch the Eastern and Western armies march across real terrain and Kobayakawa change sides; the ▶ in the year row tells the story from 1467 to 1600, flying to what happened between each pair of years
 - [Who held power](https://nickrockwall.github.io/japan-explorer/#rl=power&lang=en): from the Yamato kingship to today, who was nominally in charge and who really ran things
 - [The Korean Peninsula](https://nickrockwall.github.io/japan-explorer/#map=korea&lang=en): 29 regions, North and South, and the divisions of earlier kingdoms
 
@@ -47,7 +51,7 @@ Each of these is worked out from the app's own data, and you can open it to chec
 
 **History**
 - A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
-- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people; it also opens as a 3D map (terrain, nearly 500 castles across the country, clan banners, in the colours of a folding screen), where battles can be replayed on the terrain
+- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people; it also opens as a 3D map ("3D" on the right of the map): terrain, nearly 500 castles, clan banners, in the colours of a folding screen; playback tells 33 events between the years, battles can be replayed on the land, and Kyoto shows who held the realm each year
 - Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals themselves
 - Edo domains: the lords of 498 domains by prefecture; a lord's birth and death dates sit next to the name and mark the place on the map
 - Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)

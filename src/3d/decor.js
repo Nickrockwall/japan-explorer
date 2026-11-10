@@ -94,16 +94,65 @@ export function createBanners() {
   }
   // 每帧：插在地面上、朝向镜头（只绕竖轴转），大小随距离；远看（近乎俯视）时收起，由文字标签带家纹
   const FAR = 950;
-  function update(camera, dist, groundY) {
+  // time：秒；给了就让旗绕竿轻摆（每面旗的相位不同）
+  function update(camera, dist, groundY, time = 0) {
     group.visible = dist < FAR;
     const k = THREE.MathUtils.clamp(dist / 20, 1.8, 45);
     for (const b of list) {
       const [x, z] = b.a.at;
       b.obj.position.set(x, groundY(x, z), z);
       b.obj.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z);
+      const sway = time ? Math.sin(time * 1.4 + x * 0.37 + z * 0.21) * 0.22 + Math.sin(time * 2.9 + x) * 0.06 : 0;
+      b.obj.children[1].rotation.y = b.obj.children[2].rotation.y = sway;
       b.obj.scale.setScalar(k * b.size);
       b.height = 1.5 * k * b.size;
     }
   }
   return { group, set, update, get list() { return group.visible ? list : []; } };
+}
+
+// 炊烟：近处正在用的城上方一缕烟（几团淡灰的圆，往上飘、散开、淡去）
+function puffTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  r.addColorStop(0, 'rgba(176,169,157,0.95)');
+  r.addColorStop(0.6, 'rgba(190,183,171,0.4)');
+  r.addColorStop(1, 'rgba(190,183,171,0)');
+  g.fillStyle = r;
+  g.fillRect(0, 0, 64, 64);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+export function createSmoke(max = 18, puffs = 5) {
+  const group = new THREE.Group();
+  const tex = puffTexture();
+  const cols = [];
+  for (let i = 0; i < max; i++) {
+    const col = [];
+    for (let j = 0; j < puffs; j++) {
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+      s.visible = false;
+      group.add(s);
+      col.push(s);
+    }
+    cols.push(col);
+  }
+  // sources：[{x, y, z, k}]（y 为屋顶高度，k 为建筑缩放），time：秒
+  function update(sources, time) {
+    cols.forEach((col, i) => {
+      const src = sources[i];
+      col.forEach((s, j) => {
+        if (!src) { s.visible = false; return; }
+        const ph = ((time * 0.18 + j / col.length + i * 0.13) % 1);
+        s.visible = true;
+        s.position.set(src.x + Math.sin(ph * 3 + i) * src.k * 0.25 + ph * src.k * 0.6, src.y + ph * src.k * 2.6, src.z + ph * src.k * 0.2);
+        s.scale.setScalar(src.k * (0.35 + ph * 0.9));
+        s.material.opacity = 0.7 * Math.sin(Math.PI * ph);
+      });
+    });
+  }
+  return { group, update };
 }

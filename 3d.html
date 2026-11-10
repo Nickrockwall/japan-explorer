@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>立体战国图 · 古今日本地图</title>
 <link rel="icon" href="src/assets/icons/favicon.svg" type="image/svg+xml">
+<meta name="description" content="立体战国图：真实地形上的 1467–1600 年战国势力、全国近五百座城与各家的旗，看年份之间发生了什么，在地形上重演合战。3D Sengoku map of Japan, 1467–1600.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Japan Explorer">
+<meta property="og:url" content="https://nickrockwall.github.io/japan-explorer/3d.html">
+<meta property="og:title" content="立体战国图 · 3D Sengoku Map · Japan Explorer">
+<meta property="og:description" content="真实地形上的战国势力、全国近五百座城与合战重演。Terrain, castles and battles of Sengoku Japan in 3D. 中文 / English / 日本語">
+<meta property="og:image" content="https://nickrockwall.github.io/japan-explorer/src/assets/og-3d.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root {
     --bg: #e7dec6; --panel: #f4efe2; --line: #c4b89c; --ink: #2a2520; --muted: #6b6155; --shu: #b3302a; --kin: #c9a54a;
@@ -75,6 +85,32 @@
   .lb.bt-mk, .lb.bt-from { font: 600 12px var(--serif); padding: 0 4px; background: rgba(244, 239, 226, .88); border-left: 3px solid var(--ink); text-shadow: none; }
   .lb.bt-from { border-left-color: var(--muted); }
 
+  /* 年份之间（story.js）：底部正中一行「这期间 · N 件事」，点开是列表或一件事的说明 */
+  #story { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(66px + var(--safe-b)); width: min(440px, calc(100% - 520px)); min-width: 300px; max-height: 46%; overflow: auto; padding: 10px 12px; }
+  #story:has(.st-chip) { width: auto; min-width: 0; padding: 3px; border-radius: 18px; }
+  #story .st-chip { border: 0; background: none; font: 600 13px var(--serif); padding: 5px 12px; border-radius: 15px; white-space: nowrap; }
+  #story .st-chip:hover { background: rgba(42, 37, 32, .07); }
+  #story .st-head { display: flex; align-items: center; gap: 8px; }
+  #story .st-head b { flex: 1; font: 700 16px var(--serif); }
+  #story .st-y { color: var(--shu); margin-right: 8px; font-family: var(--sans); font-size: 14px; }
+  #story .x { border: 0; background: none; font-size: 20px; width: 32px; height: 32px; }
+  #story p { margin: 6px 0; font: 14px/1.65 var(--serif); }
+  #story .st-list { margin: 4px 0 0; padding: 0; list-style: none; }
+  #story .st-list button { display: flex; gap: 10px; width: 100%; border: 0; background: none; padding: 6px 4px; text-align: left; font: 600 14px var(--serif); border-radius: 3px; }
+  #story .st-list button:hover { background: rgba(42, 37, 32, .07); }
+  #story .st-list span { color: var(--shu); font-family: var(--sans); width: 3em; flex: none; }
+  #story .st-ctl { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; }
+  #story .st-ctl button { min-width: 34px; min-height: 32px; border: 1px solid var(--line); background: none; border-radius: 3px; font-weight: 600; }
+  #story .st-ctl button:disabled { opacity: .35; }
+  #story .st-ctl .st-bt { padding: 0 10px; border-color: var(--shu); color: var(--shu); }
+  #story .st-ctl a { margin-left: auto; color: var(--shu); font-size: 12px; }
+  body.in-battle #story { display: none; }
+  .lb.st-pin { font: 700 14px var(--serif); color: var(--shu); padding: 1px 6px; background: rgba(244, 239, 226, .92); border: 1px solid var(--shu); border-radius: 2px; text-shadow: none; visibility: visible; }
+  /* 京：一直在，写着「天下」在谁手里；能点 */
+  .lb.capital { display: flex; flex-direction: column; align-items: center; pointer-events: auto; cursor: pointer; text-shadow: none; }
+  .lb.capital b { display: grid; place-items: center; width: 30px; height: 30px; font: 700 18px var(--serif); color: #fff; background: var(--shu); border: 2px solid #f3e2c0; border-radius: 3px; box-shadow: 0 1px 0 rgba(42, 37, 32, .4); }
+  .lb.capital small { margin-top: 2px; padding: 0 5px; font: 600 11px var(--serif); background: rgba(244, 239, 226, .92); border: 1px solid var(--line); border-radius: 2px; white-space: nowrap; }
+  #card table.kv th { width: 5.5em; color: var(--muted); font-weight: 600; font-size: 12px; }
   #card .who[data-person] { cursor: pointer; text-decoration: underline dotted; }
   #card .portrait { float: right; width: 84px; margin: 0 0 6px 10px; border: 1px solid var(--line); border-radius: 2px; }
   #card .provs { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
@@ -132,6 +168,7 @@
   #viewtoggle a:hover { background: rgba(42, 37, 32, .08); }
   #viewtoggle span { background: var(--ink); color: var(--panel); }
   #credit { position: fixed; right: calc(8px + var(--safe-r)); bottom: calc(4px + var(--safe-b)); font-size: 10px; color: var(--muted); text-shadow: 0 0 2px var(--bg); max-width: 70%; text-align: right; }
+  #hint { pointer-events: none; }
   #hint { position: fixed; left: 50%; bottom: calc(26px + var(--safe-b)); transform: translateX(-50%); font-size: 12px; color: var(--muted); padding: 4px 10px; }
 
   #loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 10; }
@@ -171,6 +208,9 @@
     #search { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); width: auto; top: calc(104px + var(--safe-t)); }
     #battle { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); bottom: calc(10px + var(--safe-b)); width: auto; max-height: 48%; }
     .tools button.wide { padding: 0 8px; }
+    #story { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); transform: none; width: auto; min-width: 0; bottom: calc(82px + var(--safe-b)); }
+    #story:has(.st-chip) { left: 50%; right: auto; transform: translateX(-50%); }
+    body.card-open #story { display: none; }
   }
 </style>
 </head>
@@ -200,6 +240,7 @@
   <div id="search-list" role="listbox"></div>
 </div>
 <div id="battle" class="float" hidden aria-live="polite"></div>
+<div id="story" class="float" hidden aria-live="polite"></div>
 <div id="settings" class="float" hidden>
   <h3 data-t="exag">地形起伏</h3>
   <div class="seg"><button type="button" data-exag="1" data-t="real">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>
@@ -211,6 +252,7 @@
   <label><input type="checkbox" data-opt="castles"> <span data-t="o.castles">城</span></label>
   <label><input type="checkbox" data-opt="sites"> <span data-t="o.sites">一宫·国府·国分寺</span></label>
   <label><input type="checkbox" data-opt="trees"> <span data-t="o.trees">树林（拉近时）</span></label>
+  <label><input type="checkbox" data-opt="motion"> <span data-t="o.motion">动态（海浪、旗、雾、炊烟）</span></label>
   <label><input type="checkbox" id="opt-sound"> <span data-t="o.sound">声音</span></label>
   <button id="btn-save" class="save" type="button" data-t="save">把这个画面存成图片</button>
 </div>

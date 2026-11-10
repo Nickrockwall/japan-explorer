@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.34 · 2026-11-11
+
+- The 3D map now tells what happened between the years: 33 events (the Ōnin War, the arrival of firearms, Nobunaga's march on Kyoto, Honnō-ji, the siege of Odawara…), each checked against Japanese Wikipedia for year, place and key facts. ▶ flies to each one in turn before returning to the whole country and spreading the ink to the next year; when you change the year yourself, "N events" appears at the bottom to step through, and battles can be replayed from there
+- Kyoto carries weight: an always-visible "Kyō" seal shows who held the realm that year, and opens to the emperor, the shogun, and who ruled in name and in fact; zoom in to see the Heian-kyō street grid (schematic)
+- The world moves: rows of seigaiha waves swell on the sea, low mist drifts, banners stir in the wind and smoke rises above castles in use nearby (can be turned off in settings; off by default if your system asks for reduced motion)
+- The 2D battle panel has a "3D" button that opens the same battle at the same stage on the terrain; the tour gains a step pointing out the map's "3D" button
+- Keyboard: arrows pan, + / - zoom, 1–6 change the year, Space plays, N faces north, T toggles top-down
+- The README has a 3D screenshot and a "Sekigahara in 3D" link; links to the 3D map get their own preview image when shared
+
 ## 3.33 · 2026-11-11
 
 - The 2D/3D switch now sits on the map itself: a dark "3D" button on the right of the main map (above the location button), easy to spot on desktop, tablet and phone without opening the Sengoku view first; the 3D view has a "2D | 3D" switch in the same place

@@ -1281,6 +1281,10 @@ async function main() {
     guide.endBattle();
   }
   $('hud-exit').addEventListener('click', exitBattle);
+  // 立体重演：同一场合战、同一阶段（3d.html 的 bt= / ph=）
+  $('hud-3d').addEventListener('click', () => {
+    if (app.battle) location.href = `3d.html#bt=${app.battle.key}&ph=${app.phase}&lang=${lang}`;
+  });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
     if (!kokuCardEl.hidden) closeKoku();
@@ -1378,6 +1382,7 @@ async function main() {
     { key: 'tools', target: () => document.querySelector('.map-toolbar'), before: onMap },
     { key: 'time', target: () => $('timebar'), before: onMap },
     { key: 'locate', target: () => $('btn-locate'), before: onMap },
+    { key: 'view3d', target: () => $('btn-3d'), before: onMap },
     { key: 'battle', target: () => $('btn-battle'), always: true, before: () => { if (menu.phone) menu.open(); } }, // 手机上合战、御朱印在「更多」菜单里，开到这一步才展开
     { key: 'end', before: () => menu.close() },
   ], { onEnd: () => { menu.close(); uiPref.set('tourDone', true); } });

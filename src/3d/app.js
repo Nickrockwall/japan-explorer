@@ -5,7 +5,8 @@ import { unpack } from '../js/store.js';
 import { loadTerrain, buildChunkGeometry, levelFor, terrainUniforms, terrainMaterial, oceanMesh, MPU } from './terrain.js';
 import { buildRegions, sharedEdges, buildWater, createOverlay } from './overlay.js';
 import * as models from './models.js';
-import { createBanners } from './decor.js';
+import { createBanners, createSmoke } from './decor.js';
+import { createStory } from './story.js';
 import { lang, t, nm, circuit, applyStatic } from './i18n.js';
 import { createBattle } from './battle.js';
 import { audio } from '../js/audio.js';
@@ -29,6 +30,7 @@ const opts = {
   exag: saved.exag || 2,
   quality: saved.quality || (coarsePointer || lowEnd ? 'low' : 'high'),
   top: saved.top ?? false, // 俯视
+  motion: saved.motion ?? !matchMedia('(prefers-reduced-motion: reduce)').matches, // 海浪、旗、雾、炊烟
   castles: saved.castles ?? true,
   sites: saved.sites ?? true,
   trees: saved.trees ?? true,
@@ -66,6 +68,9 @@ async function main() {
     json('src/3d/castles.json'),
     json('src/3d/water.json').then(unpack),
     json(`${DATA}/people.json`).catch(() => ({})),
+    json('src/3d/story.json').catch(() => []),
+    json(`${DATA}/regimes.json`).catch(() => ({ periods: [] })),
+    json(`${DATA}/rulers.json`).catch(() => ({ emperors: [], shoguns: [] })),
   ];
   let got = 0;
   const progress = () => {
@@ -73,7 +78,7 @@ async function main() {
     $('#loading-bar i').style.width = `${got / jobs.length * 100}%`;
   };
   progress();
-  const [terrain, provinces, units, sg, sites, castles, waterRaw, bios] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
+  const [terrain, provinces, units, sg, sites, castles, waterRaw, bios, storyData, regimes, rulers] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
   status(t('build'));
   if (!sg.years.includes(opts.year)) opts.year = '1560';
   const P = terrain.project;
@@ -86,7 +91,18 @@ async function main() {
   const byKey = new Map(regions.map((r) => [r.key, r]));
   const edges = sharedEdges(regions, P);
   const water = buildWater(waterRaw, P);
-  const overlay = createOverlay({ regions, edges, water, C });
+  // 平安京的条坊（示意）：朱雀大路 = 今千本通，罗城门北纬 34.9817，南北约 5.2 km、东西约 4.5 km；南北 9 条、东西 10 条大路
+  const HEIAN = { w: 135.7178, e: 135.7671, s: 34.9817, n: 35.0285 };
+  const grid = new Path2D();
+  for (let i = 0; i <= 8; i++) {
+    const lon = HEIAN.w + (HEIAN.e - HEIAN.w) * i / 8;
+    grid.moveTo(...P(lon, HEIAN.s)); grid.lineTo(...P(lon, HEIAN.n));
+  }
+  for (let j = 0; j <= 9; j++) {
+    const lat = HEIAN.s + (HEIAN.n - HEIAN.s) * j / 9;
+    grid.moveTo(...P(HEIAN.w, lat)); grid.lineTo(...P(HEIAN.e, lat));
+  }
+  const overlay = createOverlay({ regions, edges, water, C, grid });
 
   // —— 势力 ——
   const entry = (k, y = opts.year) => (sg.units?.[k] || sg.provinces[k])?.[y];
@@ -342,6 +358,12 @@ async function main() {
     placeBuildings.k = k;
   }
 
+  // —— 天下：某一年的天皇、将军与实权（regimes.json / rulers.json，都对过日文维基）——
+  const KYOTO = [135.7621, 35.0254]; // 京都御所
+  const HEIAN_C = [135.7424, 35.0051];
+  const MUROMACHI_END = 1573; // 槙岛城之战后义昭被逐出京都（story.json 的 makishima），之后不再列将军
+  const regimeOf = (y) => { const ps = regimes.periods.filter((r) => r.from < +y); return ps[ps.length - 1] || regimes.periods[0]; };
+  const rulerOf = (arr, y) => arr.filter((r) => r.from <= +y && (r.to ?? 9999) >= +y).pop();
   // —— 文字标签 ——
   const labelsEl = $('#labels');
   const pool = new Map();
@@ -410,6 +432,13 @@ async function main() {
         add(`c-${opts.year}-${a.c}-${flag ? 'f' : 'm'}`, a.at[0], a.at[1], flag ? flag.height * 1.04 : 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${esc(nm(ci))}</b>`, 'clan');
       }
     }
+    // 京：一直显示，写着这一年「天下」在谁手里；点开看天皇、将军与实权
+    if (!battle.active) {
+      const rg = regimeOf(opts.year);
+      const [kx, kz] = P(...KYOTO);
+      add(`cap-${opts.year}`, kx, kz, 2.5, 5000, `<b>${esc(t('cap.kyo'))}</b><small>${esc(t('cap.tenka'))} · ${esc(nm(rg?.short))}</small>`, 'capital');
+    }
+    if (d < 70) { const [hx, hz] = P(...HEIAN_C); add('heian', hx, hz, 0.6, 150, esc(t('heian')), 'site'); }
     if (d < 1500) {
       for (const r of regions) {
         if (!r.center || !r.props.zh) continue;
@@ -441,7 +470,7 @@ async function main() {
     for (const [k, el] of pool) {
       const on = used.has(k);
       if (el.classList.contains('on') !== on) el.classList.toggle('on', on);
-      if (!on && !k.startsWith('p-') && !k.startsWith('k-') && !k.startsWith('s-') && !k.includes(`-${opts.year}-`)) { el.remove(); pool.delete(k); }
+      if (!on && !k.startsWith('p-') && !k.startsWith('k-') && !k.startsWith('s-') && k !== 'heian' && !k.includes(`-${opts.year}-`) && k !== `cap-${opts.year}`) { el.remove(); pool.delete(k); }
     }
   }
 
@@ -622,6 +651,21 @@ async function main() {
       <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(c.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
     flyTo(c.xz[0], c.xz[1], Math.min(camera.position.distanceTo(controls.target), 60));
   }
+  function showCapital() {
+    const y = opts.year, rg = regimeOf(y);
+    const emp = rulerOf(rulers.emperors, y), sho = +y <= MUROMACHI_END ? rulerOf(rulers.shoguns, y) : null;
+    focused = { type: 'capital' };
+    const row = (k, v) => (v ? `<tr><th>${esc(t(k))}</th><td>${esc(v)}</td></tr>` : '');
+    openCard(`<h2>${esc(t('cap.title', { y }))}</h2>
+      <p class="sub">${esc(t('cap.sub'))}</p>
+      <table class="kv">${row('cap.emp', nm(emp))}${row('cap.shogun', sho ? nm(sho) : '')}${row('cap.nominal', nm(rg?.nominal))}${row('cap.real', nm(rg?.real))}${row('cap.seat', nm(rg?.seat))}</table>
+      ${rg?.note ? `<p class="note">${esc(nm(rg.note))}</p>` : ''}
+      <p class="note">${esc(t('heianNote'))}</p>
+      <p class="links"><a href="index.html#rl=power&lang=${lang}">${esc(t('cap.more'))}</a></p>`);
+    const [x, z] = P(...KYOTO);
+    flyTo(x, z, Math.min(camDist(), 90));
+  }
+  labelsEl.addEventListener('click', (e) => { if (e.target.closest('.lb.capital')) { sound('click'); showCapital(); } });
   function showSite(s) {
     focused = { type: 'site', id: s.id };
     openCard(`<h2>${esc(s.name)}</h2>
@@ -702,32 +746,33 @@ async function main() {
     stopPlay();
     if (y !== opts.year) sound('click');
     setYear(y);
+    story.chip(y);
   }
-  // ▶ 从 1467 播到 1600：每个年份墨晕一次、停一会儿
-  let playing = null;
-  const PLAY_MS = 3400;
+  // ▶ 从当前年份播到 1600：每到一个年份，先飞去讲这一段发生的事（story.js），再回到全国、墨晕到下一年
+  let playing = false;
+  const playBtn = () => $('#years .play');
   function stopPlay() {
     if (!playing) return;
-    clearInterval(playing);
-    playing = null;
-    $('#years .play').setAttribute('aria-pressed', 'false');
-    $('#years .play').textContent = '▶';
+    playing = false;
+    story.cancel();
+    playBtn().setAttribute('aria-pressed', 'false');
+    playBtn().textContent = '▶';
   }
   function togglePlay() {
     if (playing) { stopPlay(); return; }
     if (battle.active) battle.leave();
-    const ys = sg.years;
-    if (opts.year === ys[ys.length - 1]) setYear(ys[0]);
-    else setYear(ys[ys.indexOf(opts.year) + 1]);
-    sound('click');
-    playing = setInterval(() => {
-      const i = ys.indexOf(opts.year);
-      if (i >= ys.length - 1) { stopPlay(); return; }
-      setYear(ys[i + 1]);
-      sound('click');
-    }, PLAY_MS);
-    $('#years .play').setAttribute('aria-pressed', 'true');
-    $('#years .play').textContent = '■';
+    closeCard();
+    playing = true;
+    playBtn().setAttribute('aria-pressed', 'true');
+    playBtn().textContent = '■';
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const overview = () => flyTo(...P(137.2, 35.6), homeDist() * 0.8);
+    story.play(opts.year, (y) => { setYear(y); sound('click'); }, overview, wait).then(() => {
+      if (!playing) return;
+      playing = false;
+      playBtn().setAttribute('aria-pressed', 'false');
+      playBtn().textContent = '▶';
+    });
   }
   $('#years').innerHTML = `<button type="button" class="play" aria-pressed="false" title="${t('play')}" aria-label="${t('play')}">▶</button>`
     + sg.years.map((y) => `<button type="button" data-y="${y}" aria-pressed="${y === opts.year}">${y}</button>`).join('');
@@ -788,6 +833,7 @@ async function main() {
     store.set({ [i.dataset.opt]: i.checked });
     if (i.dataset.opt === 'tint') { applyStyle(); refreshBanners(); $('#legend').hidden = !opts.tint; }
     if (i.dataset.opt === 'style') applyLook();
+    if (i.dataset.opt === 'motion' && !i.checked) smoke.update([], 0);
     placeBuildings();
     dirty = true;
   });
@@ -821,6 +867,8 @@ async function main() {
     if (e.key !== 'Escape') return;
     if (!$('#search').hidden) { $('#search').hidden = true; return; }
     if (battle.active) { battle.leave(); return; }
+    if (playing) { stopPlay(); story.close(); return; }
+    if (story.mode === 'event' || story.mode === 'list') { story.close(); return; }
     closeCard();
     panel.hidden = true;
     $('#battle').hidden = true;
@@ -843,6 +891,7 @@ async function main() {
     scene, P, groundY, flyTo, camera, labelsEl, panel: $('#battle'), sound,
     onEnter(b) {
       stopPlay();
+      story.close();
       closeCard();
       preBattle ??= { year: opts.year, x: controls.target.x, z: controls.target.z, d: camDist() };
       document.body.classList.add('in-battle');
@@ -868,6 +917,23 @@ async function main() {
     },
   });
   $('#btn-battle').onclick = () => { $('#search').hidden = true; if (!battle.active) battle.openList(); };
+  const story = createStory({
+    events: storyData, years: sg.years, P, groundY, scene, camera, flyTo, panel: $('#story'), labelsEl, sound,
+    startBattle: (k) => { stopPlay(); battle.start(k); },
+    onUser: () => { if (playing) stopPlay(); },
+  });
+  const smoke = createSmoke();
+  scene.add(smoke.group);
+  // 炊烟：近处（< 160）正在用、放了建筑的城，离镜头目标点最近的 18 座
+  function smokeSources() {
+    const d = camDist();
+    if (!opts.motion || !opts.castles || d > 160 || !placeBuildings.kept) return [];
+    const k = placeBuildings.k;
+    return castles.filter((c) => placeBuildings.kept.has(c) && castleOn(c))
+      .map((c) => ({ c, dd: Math.hypot(c.xz[0] - controls.target.x, c.xz[1] - controls.target.z) }))
+      .sort((a, b) => a.dd - b.dd).slice(0, 18)
+      .map(({ c }) => ({ x: c.xz[0], z: c.xz[1], y: groundY(c.xz[0], c.xz[1]) + k * (c.size || 1) * 1.1, k: k * (c.size || 1) }));
+  }
 
   // —— 搜索：国名、城名、家名（三种语言的写法都认，英文不管长音符号，片假名当平假名）——
   const fold = (x) => String(x || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -1023,9 +1089,37 @@ async function main() {
     showRegion(want);
     if (v.length !== 4) flyTo(want.center[0], want.center[1], THREE.MathUtils.clamp(Math.sqrt(want.area) * 3, 150, 700));
   }
-  if (link.get('bt')) battle.start(link.get('bt'));
+  if (link.get('bt')) battle.start(link.get('bt'), +link.get('ph') || 0);
+  else story.chip(opts.year);
+  // 键盘：方向键平移、+ / - 缩放、1–6 换年份、空格播放、N 朝北、T 俯视（输入框里不管）
+  addEventListener('keydown', (e) => {
+    if (e.target.closest?.('input, textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
+    const d = camDist();
+    const off = camera.position.clone().sub(controls.target);
+    const az = Math.atan2(off.x, off.z);
+    const pan = (fx, fz) => { // fx：向右，fz：向前（屏幕上方）
+      const s = d * 0.18;
+      const x = controls.target.x + (Math.cos(az) * fx - Math.sin(az) * fz) * s;
+      const z = controls.target.z + (-Math.sin(az) * fx - Math.cos(az) * fz) * s;
+      flyTo(x, z, d);
+    };
+    const k = e.key;
+    if (k === 'ArrowLeft') pan(-1, 0);
+    else if (k === 'ArrowRight') pan(1, 0);
+    else if (k === 'ArrowUp') pan(0, 1);
+    else if (k === 'ArrowDown') pan(0, -1);
+    else if (k === '+' || k === '=') zoomBy(0.6);
+    else if (k === '-' || k === '_') zoomBy(1 / 0.6);
+    else if (/^[1-6]$/.test(k) && sg.years[+k - 1]) userYear(sg.years[+k - 1]);
+    else if (k === ' ') togglePlay();
+    else if (k === 'n' || k === 'N') $('#btn-north').click();
+    else if (k === 't' || k === 'T') $('#btn-tilt').click();
+    else return;
+    e.preventDefault();
+  });
 
   const northEl = $('#btn-north svg');
+  let lastAnim = 0;
   let frames = 0;
   function frame(now) {
     requestAnimationFrame(frame);
@@ -1052,13 +1146,21 @@ async function main() {
     uniforms.uTint.value = (opts.tint ? 1 : 0.5) * THREE.MathUtils.lerp(0.3, 0.52, THREE.MathUtils.smoothstep(d, 40, 500));
     if (Math.abs(d - lastD) / d > 0.04) { placeBuildings(); lastD = d; }
     if (battle.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
+    if (story.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
+    // 动态：海浪、雾、旗、炊烟（约 30 帧；关掉或系统要求减少动态时整个画面是静的）
+    if (opts.motion && now - lastAnim > 33) {
+      lastAnim = now;
+      uniforms.uTime.value = now / 1000;
+      smoke.update(smokeSources(), now / 1000);
+      dirty = true;
+    }
     // 指北针：镜头的方位角（0 = 朝北看）
     const off = camera.position.clone().sub(controls.target);
     northEl.style.transform = `rotate(${Math.atan2(off.x, off.z)}rad)`;
     if (!dirty) return;
     dirty = false;
     uniforms.uDist.value = d;
-    banners.update(camera, d, groundY);
+    banners.update(camera, d, groundY, opts.motion ? now / 1000 : 0);
     treeBudget = 2;
     updateChunks();
     renderer.render(scene, camera);
@@ -1067,7 +1169,7 @@ async function main() {
   }
   placeBuildings();
   requestAnimationFrame(frame);
-  window.__je3d = { battle, showClan, showPerson, togglePlay, saveImage, choose: (q) => { searchQ.value = q; runSearch(); choose(hits[0]); }, camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P, regions, castles, groundY, pick: (x, y) => pick({ clientX: x, clientY: y }) };
+  window.__je3d = { battle, story, smoke, showCapital, showClan, showPerson, togglePlay, saveImage, choose: (q) => { searchQ.value = q; runSearch(); choose(hits[0]); }, camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P, regions, castles, groundY, pick: (x, y) => pick({ clientX: x, clientY: y }) };
 }
 
 main().catch((e) => {

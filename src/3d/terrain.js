@@ -204,6 +204,7 @@ const FRAG = /* glsl */`
 uniform sampler2D uTex;
 uniform sampler2D uPrev;
 uniform float uInk;
+uniform float uTime;
 uniform float uTint;
 uniform vec3 uFog;
 uniform float uFogDensity;
@@ -278,7 +279,7 @@ void main() {
     vec3 leaf = vec3(0.90, 0.72, 0.32) * (0.9 + 0.2 * hash(floor(vW.xz * 3.0)));
     col = mix(col, leaf, clamp(gold, 0.0, 1.0) * mix(0.6, 0.95, far));
     // 低处的雾：一团团的，远看与拉近时都淡
-    float mist = (1.0 - smoothstep(20.0, 260.0, vH)) * smoothstep(0.45, 0.8, vnoise(vW.xz / 18.0 + 3.1));
+    float mist = (1.0 - smoothstep(20.0, 260.0, vH)) * smoothstep(0.45, 0.8, vnoise(vW.xz / 18.0 + 3.1 + vec2(uTime * 0.04, uTime * 0.015))); // 雾慢慢飘
     mist *= smoothstep(30.0, 200.0, uDist) * (1.0 - smoothstep(700.0, 1800.0, uDist));
     col = mix(col, vec3(0.96, 0.94, 0.88), mist * 0.45);
     col *= 0.96 + 0.07 * paper();
@@ -305,6 +306,7 @@ export function terrainUniforms() {
     uStyle: { value: 1 },
     uDist: { value: 1000 },
     uInk: { value: 1 },
+    uTime: { value: 0 },
   };
 }
 
@@ -323,6 +325,7 @@ uniform float uFogDensity;
 uniform vec3 uWater;
 uniform float uStyle;
 uniform float uDist;
+uniform float uTime;
 varying vec3 vW;
 ${COMMON}
 // 青海波：一排排圆，后一排压住前一排；圆里画同心弧
@@ -345,14 +348,15 @@ void main() {
   float d = length(vW - cameraPosition) * uFogDensity;
   vec3 col = uWater * 1.04;
   if (uStyle > 0.5) {
-    col = mix(vec3(0.46, 0.60, 0.67), vec3(0.55, 0.68, 0.73), vnoise(vW.xz / 120.0));
+    col = mix(vec3(0.46, 0.60, 0.67), vec3(0.55, 0.68, 0.73), vnoise(vW.xz / 120.0 + vec2(uTime * 0.02, uTime * 0.008)));
     float k = uDist * 0.045;
     vec2 p = vW.xz / k;
     float r = seigaiha(p) * 3.0;                                    // 每个圆里 3 道弧
     float w = fwidth(r);
     float ring = 1.0 - smoothstep(0.05, 0.05 + w * 1.5, abs(fract(r + 0.5) - 0.5));
     float fade = 1.0 - smoothstep(0.25, 0.6, w);                    // 太密时淡掉，免得闪
-    col = mix(col, vec3(0.84, 0.89, 0.88), ring * 0.4 * fade * mix(0.55, 1.0, smoothstep(200.0, 1200.0, uDist)));
+    float swell = 0.78 + 0.22 * sin(uTime * 1.1 - (vW.x * 0.6 + vW.z) / k * 0.9); // 波纹一排排明暗起伏，像海浪推过来
+    col = mix(col, vec3(0.84, 0.89, 0.88), ring * 0.4 * fade * swell * mix(0.55, 1.0, smoothstep(200.0, 1200.0, uDist)));
     col *= 0.98 + 0.03 * paper();
   }
   gl_FragColor = vec4(mix(col, uFog, 1.0 - exp(-d * d)), 1.0);

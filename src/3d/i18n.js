@@ -43,6 +43,9 @@ const S = {
     'c.provs': '{n} 国', 'c.split': '另有 {n} 国分治', 'c.koku': '推算石高约 {n} 万石', 'c.kokuGe': '推算石高 ≥{n} 万石（奥羽按郡的分区没有石高）', 'c.rank': '当年第 {n}', 'c.head': '代表人物', 'c.note': '石高按 1598 年太阁检地的各国国高推算，分治的国按家数平分。',
     'p.life': '{a}–{b}', 'p.back': '‹ 返回', 'p.img': '肖像：{l}', holder: '{y} 年这里属于', bc: '约 {c} 世纪筑城（信息框只写到世纪）',
     'save.title': '立体战国图 · {y} 年',
+    'st.between': '{a} → {b} 之间', 'st.open': '开场', 'st.n': '{n} 件事', 'st.replay': '重演这场合战',
+    'cap.kyo': '京', 'cap.tenka': '天下', 'cap.title': '{y} 年的天下', 'cap.sub': '京都 · 名义上与实际上谁说了算', 'cap.emp': '天皇', 'cap.shogun': '将军', 'cap.nominal': '名义上', 'cap.real': '实际掌权', 'cap.seat': '政权所在', 'cap.more': '在年表里看各时期的实权',
+    heian: '平安京（条坊示意）', heianNote: '地图上京都的方格是平安京的条坊（示意）：战国时京都已缩成上京、下京两块，街道大多还在。', 'o.motion': '动态（海浪、旗、雾、炊烟）',
     more: '其余 {n} 家', ryukyu: '琉球', view: '平面或立体', flat2d: '平面', flat3d: '立体',
   },
   en: {
@@ -67,6 +70,9 @@ const S = {
     'c.provs': '{n} provinces', 'c.split': 'plus {n} shared', 'c.koku': 'about {n} koku (estimated)', 'c.kokuGe': 'at least {n} koku (the Ōu district units have no koku figures)', 'c.rank': 'No. {n} that year', 'c.head': 'Leading figure', 'c.note': 'Koku estimated from the 1598 Taikō land survey, province by province; shared provinces are split evenly.',
     'p.life': '{a}–{b}', 'p.back': '‹ Back', 'p.img': 'Portrait: {l}', holder: 'In {y} this was held by', bc: 'built around the {c}th century (the infobox gives only the century)',
     'save.title': '3D Sengoku Map · {y}',
+    'st.between': 'Between {a} and {b}', 'st.open': 'Opening', 'st.n': '{n} events', 'st.replay': 'Replay this battle',
+    'cap.kyo': 'Kyō', 'cap.tenka': 'The realm', 'cap.title': 'Who held the realm in {y}', 'cap.sub': 'Kyoto · who was in charge, in name and in fact', 'cap.emp': 'Emperor', 'cap.shogun': 'Shogun', 'cap.nominal': 'In name', 'cap.real': 'In fact', 'cap.seat': 'Seat of power', 'cap.more': 'See who held power in each period',
+    heian: 'Heian-kyō street grid (schematic)', heianNote: 'The grid drawn at Kyoto is the street plan of Heian-kyō (schematic). By the Sengoku period the city had shrunk to two parts, Kamigyō and Shimogyō, though most streets survived.', 'o.motion': 'Motion (waves, banners, mist, smoke)',
     more: '{n} more', ryukyu: 'Ryūkyū', view: '2D or 3D', flat2d: '2D', flat3d: '3D',
   },
   ja: {
@@ -91,6 +97,9 @@ const S = {
     'c.provs': '{n} か国', 'c.split': 'ほかに分割 {n} か国', 'c.koku': '推定石高 約{n}万石', 'c.kokuGe': '推定石高 {n}万石以上（奥羽の郡単位の区分は石高なし）', 'c.rank': 'その年の第 {n} 位', 'c.head': '代表的な人物', 'c.note': '石高は1598年の太閤検地の国高から推定。分割の国は家の数で等分。',
     'p.life': '{a}–{b}', 'p.back': '‹ 戻る', 'p.img': '肖像：{l}', holder: '{y}年にここを治めていたのは', bc: '{c}世紀ごろの築城（情報欄は世紀のみ）',
     'save.title': '立体戦国図 · {y}年',
+    'st.between': '{a}→{b}のあいだ', 'st.open': 'はじまり', 'st.n': '{n} の出来事', 'st.replay': 'この合戦を再現',
+    'cap.kyo': '京', 'cap.tenka': '天下', 'cap.title': '{y}年の天下', 'cap.sub': '京都 · 名目上と実際に誰が治めていたか', 'cap.emp': '天皇', 'cap.shogun': '将軍', 'cap.nominal': '名目上', 'cap.real': '実権', 'cap.seat': '政権の所在', 'cap.more': '年表で各時期の実権を見る',
+    heian: '平安京（条坊・模式）', heianNote: '京都に描いた碁盤目は平安京の条坊（模式図）。戦国時代の京都は上京・下京の二つに縮んでいたが、通りの多くは残っていた。', 'o.motion': '動き（波・旗・霧・炊煙）',
     more: 'ほか {n} 家', ryukyu: '琉球', view: '平面か立体か', flat2d: '平面', flat3d: '立体',
   },
 };

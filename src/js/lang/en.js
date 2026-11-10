@@ -169,6 +169,7 @@ export default {
   'tour.guide.h': `Time-travel guide`, 'tour.guide.b': `A guide who changes identity with the region — a Heian court lady, an ukiyo-e cat, a famous general… Ask anything. Quick questions work even without an AI key.`,
   'tour.tools.h': `Layers and filters`, 'tour.tools.b': `Switch <b>layers</b> here (history, ramen, pilgrimage, ancient sites, sake) and <b>history filters</b> (ancient circuits, Sengoku powers, rankings…); swipe a row sideways for more. 🔍 searches prefectures, provinces and towns.`,
   'tour.time.h': `Time travel`, 'tour.time.b': `Drag the slider or press ▶ to watch nine eras, from Asuka to today, with their capitals.`,
+  'tour.view3d.h': `2D / 3D`, 'tour.view3d.b': `Tap here for the 3D map: real terrain, nearly 500 castles and every clan's banner — watch what happened between the years and replay battles on the land.`, 'hud.3d': `⛰ 3D`, 'hud.3d.title': `Replay this stage on the 3D terrain`,
   'tour.locate.h': `Where am I? · Ancestral register`, 'tour.locate.b': `Tap here to see which ancient province you're standing in, and make your own "ancestral register". Your location is worked out on your device and never uploaded.`,
   'tour.battle.h': `Battles and goshuin`, 'tour.battle.b': `Battles replays Sekigahara, Okehazama and more on the map, narrated by the generals; the Goshuin Book collects the stamps you earn in each prefecture.`,
   'tour.end.h': `You're all set!`, 'tour.end.b': `Start by tapping a prefecture. To see this again, open "Quick tour" in settings (⚙) or on the welcome page.`,

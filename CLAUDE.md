@@ -426,7 +426,12 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 合战（3.33，`src/3d/battle.js`）：与主站合战演武同一份 `historic_battles`（英日按覆盖层 merge），第一次点「合战」才下载。行军路线按约 0.3 单位加密后贴地（抬高 1.6 个半径），`TubeGeometry` + 箭头圆锥，半径按整场的范围；进入某段时 `setDrawRange` 在 1.6 秒里长出来；`impact` 的段在战场放一圈圈扩散的朱色环；要地 / 出阵地 / 战场是 battle.js 自己管的 DOM 标签（`.bt-*`）。每段按本段路线、要地与战场取景。`onEnter`：1467–1600 的合战换到不晚于它的那一年（川中岛 1561 → 1560），其余（坛之浦、西南战争）`battleNeutral` 不着色、不插旗；`onLeave` 回到原来的年份与镜头。`body.in-battle` 收起图例与提示，Esc 退出，链接 `bt=键` 直接开始。
 - 势力总览与人物卡（3.33）：图例里点一家（总称 `LOOSE` 只飞过去）`showClan`：`spot` 让 `styleFor` 把别家的国淡成纸色（`mixHex` 72%），卡片写国数 / 分治、推算石高（`clanKoku`：1598 国高，分治按家数平分；领有奥羽按郡分区的写「≥」、不排名）、名次、代表人物与各国按钮；关卡片取消聚光，换年份重算、这一年没有这家就关。人名（`[data-person]`）开 `showPerson`：sengoku.json 的生卒 + people.json 的简介、肖像与许可，维基链接走 Wikidata `Special:GoToLinkedPage/jawiki/QID`，「返回」回到来的卡片。
 - 其余（3.33）：年份行最前的 ▶（`togglePlay`，每 3.4 秒下一年，到 1600 停；用户点年份或开合战就停）；城按语言条目数放大（0.8–1.4 倍，`c.size`）、卡片写当年归谁（`holderHTML`）、只写到世纪的写 `bc`；搜索 `#search`（`fold`：NFKD 去附加符号、小写、片假名转平假名；国 > 家 > 城，完全一致 > 开头 > 包含，最多 8 个；城当年不存在先换年份，家当年没有换到最近有它的年份）；`#nav` 竖排 ＋ － ⌂ 朝北（`flyTo` 的第 4 个参数是目标方位角，走近的一边）与俯视（`opts.top`，极角 0.012π，存 `je.3d.top`）；地址栏 `syncHash`（停 0.5 秒后写 `y / p / v=经度,纬度,距离,方位角 / bt / lang`，打开时 `v` 优先于全国取景）；设置里的存图 `saveImage`（render 后同一任务里 drawImage WebGL 画布，叠上看得见的 `.lb` 文字，纸边 + 印 + 标题，手机走系统分享）与声音（`audio.js` 共用 `je.ui.audio`）；加载进度按文件计数（`#loading-bar`）；sw.js 只跳过 `src/3d/terrain/d/`（粗地形与代码离线可用，立体页自己也注册 sw）；内存 ≤4 GB 或核数 ≤4 默认省电画质；没有 WebGL 时 `#loading-back` 回平面图。
-- 测试：smoke `three_d`（中文三种尺寸：加载、1582 图例居首织田、点甲斐国出六个年份、Esc、1560 没有安土城、有江户城 / 小田原城 / 熊本城而没有多賀城、换 1573 后墨晕走完）、首里城按世纪收、织田势力总览与人物卡、搜索姬路、桶狭间 4 段换到 1560 且离开回到 1590、`#to2d` 带年份，与 `three_d_link`（三语三尺寸：地图上的 `#btn-3d` 看得见、美浓国卡片的立体链接带 1600 与语言、立体页按语言显示并弹出美浓、回平面图的链接带 sg / sgp / lang）。截图检查用本机 Chrome 加 `--enable-gpu --use-angle=d3d11`；Playwright 自带 Chromium 走软件渲染，一帧约 1 秒、截图可能超时，但能跑通测试。
+- 年份之间（3.34，`src/3d/story.js` + `python -X utf8 tools/story_tool.py` → `src/3d/story.json`）：33 件事 `{key, y, to, coords, wiki, title, text, battle?}`，`to` 是通往的年份（1467 是开场）。文字三语自写；工具核对条目存在、正文有「{y}年」、`ev` 词都在、三语西历年一致，坐标取 `place` 条目（整批取 coordinates 偶尔漏，漏的单独再取，再退 Wikidata P625）。▶ 播放 = `story.play`：每到一个年份先逐件 `show`（飞到 180、朱色圈与标签、底部说明 5.2 秒），再回全国、`setYear`、等 3.4 秒；用户点任何 story 按钮或 Esc 都停。手动换年份 `story.chip(y)` 在底部（故事面板在提示上方 66px，`#hint` 不拦点击，第一次拖动后收起，≤900px 不显示）。合战开始时收起。
+- 天下与京都（3.34）：`regimes.json` 取 `from < 年份` 的最后一段（1467 → 足利将军，1560 → 各地战国大名，1573 / 1582 → 织田，1590 → 丰臣，1600 → 德川家康），`rulers.json` 取当年的天皇与将军（1573 年以后不列将军：`MUROMACHI_END`，槙岛城）。「京」标签（`.lb.capital`，能点，`cap-年` 不会被清掉）一直显示「天下 · 短名」，`showCapital` 卡片。平安京条坊是 overlay 的 `grid`（Path2D：朱雀大路 = 千本通 135.7424、罗城门 34.9817，东西 4.5 km 南北 5.2 km，9 × 10 条线，示意），贴图每单位 ≥6 像素才画，`d < 70` 时标「平安京（条坊示意）」。
+- 动态（3.34，设置「动态」`opts.motion`，存 `je.3d.motion`，系统减少动态时默认关）：约 30 帧一次 `uTime`——海面颜色噪声慢移、青海波按 `swell` 一排排明暗起伏、低处的雾随时间移动；旗的长旗与横木绕竿 `sin` 轻摆（`banners.update(..., time)`）；炊烟 `createSmoke`（decor.js）：距离 < 160 时离目标点最近的 18 座放了建筑、当年在用的城，每座 5 团精灵上升、散开、淡去。关掉动态时画面不再每帧重画。
+- 键盘（3.34）：方向键按镜头方位平移 0.18 × 距离，+ / - 缩放，1–6 年份，空格播放，N 朝北，T 俯视；输入框里不管。主站合战面板的 `#hud-3d`（半岛模式隐藏）→ `3d.html#bt=键&ph=阶段`。
+- 分享：3d.html 有自己的 description 与 og / twitter 标签，封面 `src/assets/og-3d.png` 与 README 的 `docs/screen-3d-{zh,en,ja}.jpg` 由 `tools/make_screens.py` 生成（立体图用本机 Chrome 加 `--enable-gpu`）。
+- 测试：smoke `three_d`（中文三种尺寸：加载、1582 图例居首织田、点甲斐国出六个年份、Esc、1560 没有安土城、有江户城 / 小田原城 / 熊本城而没有多賀城、换 1573 后墨晕走完）、首里城按世纪收、织田势力总览与人物卡、搜索姬路、桶狭间 4 段换到 1560 且离开回到 1590、`#to2d` 带年份、1573 的「这期间」8 件且第一件桶狭间能重演、1573 京都卡片有正亲町天皇与织田信长，与 `three_d_link`（三语三尺寸：地图上的 `#btn-3d` 看得见、美浓国卡片的立体链接带 1600 与语言、立体页按语言显示并弹出美浓、回平面图的链接带 sg / sgp / lang）。截图检查用本机 Chrome 加 `--enable-gpu --use-angle=d3d11`；Playwright 自带 Chromium 走软件渲染，一帧约 1 秒、截图可能超时，但能跑通测试。
 
 ## 地图文件压缩（pack_geo.py，3.27）
 
@@ -563,7 +568,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `sgedges` 有内容、家纹旗含武田织田、标题家纹与许可；点柱子换 1560、点接壤的家换人、图例点织田 1582 居首、换 1600 后收起且无旗；三语三种尺寸）
   - `shared`（共同历史对话框：9 件按年代、标签一行且选中的不被截断或压扁、每件 4–6 条事实 / ≥2 方叙述 / ≥2 条来源、不出屏，日本与半岛两种模式内容一致）
   - `sound`（音效触发、静音保存、开背景音乐）
-  - `tour`（全新访客自动出现、9 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
+  - `tour`（全新访客自动出现、10 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

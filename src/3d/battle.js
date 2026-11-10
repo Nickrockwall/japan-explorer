@@ -67,7 +67,7 @@ export function createBattle(ctx) {
     return { mesh, cone, count, shownAt: null, xz: dense };
   }
 
-  function start(key) {
+  function start(key, phase = 0) {
     const b = battles.find((x) => x.key === key);
     if (!b) return;
     stopAuto();
@@ -91,7 +91,7 @@ export function createBattle(ctx) {
     cur = { b, phase: -1, group, routes, radius, ring, labels: [], auto: null };
     ctx.onEnter(b);
     ctx.sound('battle');
-    setPhase(0);
+    setPhase(THREE.MathUtils.clamp(phase | 0, 0, b.phases.length - 1));
   }
 
   function label(name, lon, lat, cls) {
@@ -215,7 +215,7 @@ export function createBattle(ctx) {
 
   return {
     openList,
-    start: async (key) => { battles ??= await loadBattles(); start(key); },
+    start: async (key, phase) => { battles ??= await loadBattles(); start(key, phase); },
     leave,
     update,
     get active() { return !!cur; },

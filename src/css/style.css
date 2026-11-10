@@ -685,6 +685,8 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .hud-phases li.on .ph-t { color: #fff; }
 .hud-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
 .hud-nav .btn { padding: 5px 12px; font-size: 12.5px; }
+.hud-nav .hud-3d { margin-right: auto; }
+:root[data-map="korea"] .hud-3d { display: none; }
 
 .battles {
   border: 0; padding: 0; width: min(760px, calc(100vw - 32px - var(--safe-l) - var(--safe-r))); max-height: calc(var(--vh) - 48px - var(--safe-t) - var(--safe-b));
