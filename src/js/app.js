@@ -608,8 +608,12 @@ async function main() {
     openClan(b.dataset.clan);
     audio.play('click');
   });
-  // 立体战国图（3d.html）：带上年份、选中的国与语言
-  const open3d = () => { location.href = `3d.html#y=${sg.year}${sg.focus ? `&p=${encodeURIComponent(sg.focus)}` : ''}&lang=${lang}`; };
+  // 立体战国图（3d.html）：带上年份、选中的国与语言；没开过战国图时用上次的年份
+  const open3d = () => {
+    const y = sg?.year || uiPref.get('sgYear', '1560');
+    location.href = `3d.html#y=${y}${sg?.focus ? `&p=${encodeURIComponent(sg.focus)}` : ''}&lang=${lang}`;
+  };
+  $('btn-3d').addEventListener('click', open3d);
   sgYears.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="rl-open"]')) { openRulers(); return; }
     if (e.target.closest('[data-act="sg-3d"]')) { open3d(); return; }

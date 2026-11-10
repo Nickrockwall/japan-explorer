@@ -47,7 +47,7 @@ Each of these is worked out from the app's own data, and you can open it to chec
 
 **History**
 - A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
-- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people; it also opens as a 3D map (terrain, 400-odd castles across the country, clan banners, in the colours of a folding screen)
+- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people; it also opens as a 3D map (terrain, nearly 500 castles across the country, clan banners, in the colours of a folding screen), where battles can be replayed on the terrain
 - Battles: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion, replayed in four phases and narrated by the generals themselves
 - Edo domains: the lords of 498 domains by prefecture; a lord's birth and death dates sit next to the name and mark the place on the map
 - Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)

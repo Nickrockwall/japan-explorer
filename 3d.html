@@ -35,7 +35,56 @@
   #years button { border: 0; background: none; padding: 5px 10px; border-radius: 3px; font-weight: 600; min-height: 32px; }
   #years button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
   .tools { margin-left: auto; display: flex; gap: 6px; }
-  .tools button { min-width: 36px; min-height: 36px; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; box-shadow: var(--float); }
+  .tools button, #nav button { min-width: 36px; min-height: 36px; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; box-shadow: var(--float); display: inline-grid; place-items: center; }
+  .tools button.wide { padding: 0 12px; font: 700 14px var(--serif); display: inline-flex; align-items: center; gap: 4px; }
+  .tools svg, #nav svg { width: 20px; height: 20px; }
+  #nav { position: fixed; right: calc(10px + var(--safe-r)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
+  #nav button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  body.card-open #nav { right: calc(320px + var(--safe-r)); }
+  #years .play { font-size: 12px; min-width: 32px; color: var(--shu); }
+  #years .play[aria-pressed="true"] { background: var(--shu); color: #fff; }
+
+  #search { position: fixed; top: calc(60px + var(--safe-t)); right: calc(10px + var(--safe-r)); width: 280px; padding: 8px; }
+  #search input { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px; background: #fffdf6; color: var(--ink); }
+  #search-list button { display: flex; width: 100%; gap: 8px; align-items: baseline; border: 0; background: none; text-align: left; padding: 6px 4px; border-radius: 3px; }
+  #search-list button:hover, #search-list button.on { background: rgba(42, 37, 32, .08); }
+  #search-list small { color: var(--muted); margin-left: auto; font-size: 11px; white-space: nowrap; }
+
+  #battle { position: fixed; left: calc(10px + var(--safe-l)); bottom: calc(26px + var(--safe-b)); width: 360px; max-height: calc(100% - 120px); overflow: auto; padding: 10px 12px; }
+  #battle .bt-head { display: flex; align-items: center; gap: 8px; }
+  #battle .bt-head b { font: 700 16px var(--serif); flex: 1; }
+  #battle .x { border: 0; background: none; font-size: 20px; width: 32px; height: 32px; }
+  #battle .bt-list button { display: flex; gap: 10px; width: 100%; border: 0; background: none; padding: 7px 4px; text-align: left; font: 600 14px var(--serif); border-radius: 3px; }
+  #battle .bt-list button:hover { background: rgba(42, 37, 32, .07); }
+  #battle .bt-list span { color: var(--muted); font-family: var(--sans); width: 3em; }
+  #battle .bt-note, #battle .bt-time { color: var(--muted); font-size: 12px; margin: 6px 0 2px; }
+  #battle .bt-fac { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 8px; font-size: 13px; }
+  #battle .bt-fac small { color: var(--muted); margin-left: 6px; font-size: 11px; }
+  #battle .bt-tabs { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
+  #battle .bt-tabs button { flex: 1; border: 0; background: none; padding: 4px 0; border-radius: 3px; font-weight: 600; }
+  #battle .bt-tabs button[aria-selected="true"] { background: var(--ink); color: var(--panel); }
+  #battle .bt-desc { margin: 4px 0; font-size: 13px; }
+  #battle blockquote { margin: 6px 0; padding: 6px 10px; border-left: 3px solid var(--shu); background: rgba(179, 48, 42, .06); font: 14px/1.6 var(--serif); }
+  #battle blockquote b { display: block; font-size: 12px; color: var(--shu); }
+  #battle .bt-ctl { display: flex; gap: 6px; margin-top: 8px; }
+  #battle .bt-ctl button { flex: 1; min-height: 34px; border: 1px solid var(--line); background: none; border-radius: 3px; font-weight: 600; }
+  #battle .bt-ctl button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+  #battle .bt-ctl button:disabled { opacity: .35; }
+  body.in-battle #legend, body.in-battle #hint { display: none; }
+  .lb.bt-field { font: 700 15px var(--serif); color: var(--shu); }
+  .lb.bt-mk, .lb.bt-from { font: 600 12px var(--serif); padding: 0 4px; background: rgba(244, 239, 226, .88); border-left: 3px solid var(--ink); text-shadow: none; }
+  .lb.bt-from { border-left-color: var(--muted); }
+
+  #card .who[data-person] { cursor: pointer; text-decoration: underline dotted; }
+  #card .portrait { float: right; width: 84px; margin: 0 0 6px 10px; border: 1px solid var(--line); border-radius: 2px; }
+  #card .provs { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+  #card .provs button { border: 1px solid var(--line); background: none; border-radius: 3px; padding: 1px 6px; font-size: 12px; }
+  #card .back { border: 0; background: none; color: var(--muted); padding: 0; margin-bottom: 4px; font-size: 12px; }
+  #card .mon-img { width: 30px; height: 30px; vertical-align: -6px; margin-right: 6px; background: var(--ink); padding: 3px; border-radius: 2px; }
+  #settings .save { width: 100%; margin-top: 8px; min-height: 34px; border: 1px solid var(--ink); background: var(--ink); color: var(--panel); border-radius: 3px; font-weight: 600; }
+  #loading-bar { width: 180px; height: 3px; margin: 10px auto 0; background: var(--line); border-radius: 2px; overflow: hidden; }
+  #loading-bar i { display: block; height: 100%; width: 0; background: var(--shu); transition: width .2s; }
+  #loading-back { display: inline-block; margin-top: 12px; color: var(--shu); }
 
   #legend { position: fixed; left: calc(10px + var(--safe-l)); bottom: calc(26px + var(--safe-b)); max-width: 240px; max-height: 50vh; overflow: auto; padding: 6px; display: flex; flex-direction: column; gap: 1px; }
   #legend button { display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 3px 6px; text-align: left; border-radius: 3px; }
@@ -77,6 +126,11 @@
   .lb.site { font-size: 12px; text-shadow: 0 0 2px #fff, 0 0 3px #fff; }
   .lb.site small { color: var(--shu); margin-right: 3px; }
 
+  /* 平面 / 立体开关：与主站「立体」按钮同在右下，立体一侧亮着 */
+  #viewtoggle { position: fixed; right: calc(10px + var(--safe-r)); bottom: calc(26px + var(--safe-b)); display: flex; padding: 3px; gap: 2px; border-radius: 19px; }
+  #viewtoggle a, #viewtoggle span { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: 16px; font: 700 14px var(--serif); letter-spacing: .06em; text-decoration: none; color: var(--ink); }
+  #viewtoggle a:hover { background: rgba(42, 37, 32, .08); }
+  #viewtoggle span { background: var(--ink); color: var(--panel); }
   #credit { position: fixed; right: calc(8px + var(--safe-r)); bottom: calc(4px + var(--safe-b)); font-size: 10px; color: var(--muted); text-shadow: 0 0 2px var(--bg); max-width: 70%; text-align: right; }
   #hint { position: fixed; left: 50%; bottom: calc(26px + var(--safe-b)); transform: translateX(-50%); font-size: 12px; color: var(--muted); padding: 4px 10px; }
 
@@ -87,6 +141,18 @@
   #loading p { margin: 10px 0 0; color: var(--muted); }
   @keyframes pulse { 50% { opacity: .4; } }
 
+  /* 卡片打开时开关挪到卡片左边；操作提示第一次拖动或点按后就收起，平板与手机不显示（会压住图例） */
+  body.card-open #viewtoggle { right: calc(320px + var(--safe-r)); }
+  body.used #hint { display: none; }
+  @media (max-width: 900px) { #hint { display: none; } }
+  /* 横屏手机：右侧按钮从上面排、小一点；卡片矮一点 */
+  @media (max-height: 520px) and (orientation: landscape) {
+    #nav { top: calc(60px + var(--safe-t)); transform: none; gap: 4px; }
+    #nav button { min-width: 32px; min-height: 32px; }
+    #legend { max-height: calc(100% - 90px); }
+    #card { max-height: calc(100% - 70px); }
+    #battle { max-height: calc(100% - 70px); }
+  }
   @media (max-width: 640px) {
     .brand small, #hint { display: none; }
     #years { order: 3; width: 100%; justify-content: space-between; }
@@ -97,8 +163,14 @@
     #legend button { flex: none; white-space: nowrap; }
     #legend button span { padding-left: 4px; }
     #legend .more { flex: none; white-space: nowrap; align-self: center; }
-    body.card-open #legend, body.card-open #credit { display: none; }
+    body.card-open #legend, body.card-open #credit, body.in-battle #credit, body.in-battle #viewtoggle { display: none; }
     #credit { max-width: 100%; left: 8px; font-size: 9px; }
+    #viewtoggle { bottom: auto; top: calc(104px + var(--safe-t)); }
+    #nav { top: calc(150px + var(--safe-t)); transform: none; }
+    body.card-open #nav, body.in-battle #nav { display: none; }
+    #search { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); width: auto; top: calc(104px + var(--safe-t)); }
+    #battle { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); bottom: calc(10px + var(--safe-b)); width: auto; max-height: 48%; }
+    .tools button.wide { padding: 0 8px; }
   }
 </style>
 </head>
@@ -111,12 +183,23 @@
   </a>
   <div id="years" class="float" role="group" data-t-aria="years" aria-label="年份"></div>
   <div class="tools">
-    <button id="btn-in" type="button" data-t-title="in" data-t-aria="in" title="拉近" aria-label="拉近">＋</button>
-    <button id="btn-out" type="button" data-t-title="out" data-t-aria="out" title="拉远" aria-label="拉远">－</button>
-    <button id="btn-home" type="button" data-t-title="home" data-t-aria="home" title="回到全国" aria-label="回到全国">⌂</button>
+    <button id="btn-battle" class="wide" type="button" data-t-title="bt.title"><span aria-hidden="true">⚔</span> <span data-t="bt">合战</span></button>
+    <button id="btn-search" type="button" data-t-title="search" data-t-aria="search" title="搜索" aria-label="搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     <button id="btn-settings" type="button" data-t-title="settings" data-t-aria="settings" title="设置" aria-label="设置">⚙</button>
   </div>
 </div>
+<div id="nav">
+  <button id="btn-in" type="button" data-t-title="in" data-t-aria="in" title="拉近" aria-label="拉近">＋</button>
+  <button id="btn-out" type="button" data-t-title="out" data-t-aria="out" title="拉远" aria-label="拉远">－</button>
+  <button id="btn-home" type="button" data-t-title="home" data-t-aria="home" title="回到全国" aria-label="回到全国">⌂</button>
+  <button id="btn-north" type="button" data-t-title="north" data-t-aria="north" title="朝北" aria-label="朝北"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 9h-9z" fill="#b3302a"/><path d="M12 21l-4.5-9h9z" fill="currentColor" opacity=".45"/></svg></button>
+  <button id="btn-tilt" type="button" data-t-title="tilt" data-t-aria="tilt" title="俯视 / 斜看" aria-label="俯视 / 斜看" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l9 4 9-4-9-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 3v8M9 8l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+</div>
+<div id="search" class="float" hidden>
+  <input id="search-q" type="search" autocomplete="off" data-t-ph="searchPh" placeholder="国名、城名或家名">
+  <div id="search-list" role="listbox"></div>
+</div>
+<div id="battle" class="float" hidden aria-live="polite"></div>
 <div id="settings" class="float" hidden>
   <h3 data-t="exag">地形起伏</h3>
   <div class="seg"><button type="button" data-exag="1" data-t="real">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>
@@ -128,12 +211,17 @@
   <label><input type="checkbox" data-opt="castles"> <span data-t="o.castles">城</span></label>
   <label><input type="checkbox" data-opt="sites"> <span data-t="o.sites">一宫·国府·国分寺</span></label>
   <label><input type="checkbox" data-opt="trees"> <span data-t="o.trees">树林（拉近时）</span></label>
+  <label><input type="checkbox" id="opt-sound"> <span data-t="o.sound">声音</span></label>
+  <button id="btn-save" class="save" type="button" data-t="save">把这个画面存成图片</button>
 </div>
 <div id="legend" class="float"></div>
+<div id="viewtoggle" class="float" role="group" data-t-aria="view">
+  <a id="to2d" href="index.html" data-t="flat2d">平面</a><span aria-current="true" data-t="flat3d">立体</span>
+</div>
 <div id="card" class="float" hidden></div>
 <div id="hint" class="float" data-t="hint">拖动平移 · 滚轮缩放 · 右键拖动旋转 · 点一国看六个年份</div>
 <div id="credit" data-t="credit">地形：国土地理院 標高タイル · 湖河与土地覆盖：地球地図日本 · 城：Wikidata / 日文维基百科 · 渲染：three.js</div>
-<div id="loading"><div><img src="src/assets/icons/seal.svg" alt=""><p id="loading-text" data-t="loading">正在加载…</p></div></div>
+<div id="loading"><div><img src="src/assets/icons/seal.svg" alt=""><p id="loading-text" data-t="loading">正在加载…</p><div id="loading-bar"><i></i></div><a id="loading-back" href="index.html" hidden data-t="back2d">回到平面地图</a></div></div>
 <script type="importmap">
 { "imports": { "three": "./src/3d/vendor/three.module.min.js" } }
 </script>

@@ -35,7 +35,15 @@ const S = {
     late: '1576 年安土城之后统一画成天守，', early: '1576 年安土城之前统一画成土垒与望楼，', castleNote: '只是示意，不代表这座城当年的样子。年份取自日文维基百科。',
     jawiki: '日文维基百科', ichi: '一宫', fu: '国府', ji: '国分寺', muni: ' · 位置只到市町村',
     siteNote: '古国三迹：律令时代各国的一宫、国府与国分寺，与平面地图「古国巡礼」相同。战国时多数国府与国分寺已经荒废。',
-    more: '其余 {n} 家', ryukyu: '琉球',
+    bt: '合战', 'bt.title': '在立体地形上重演五场合战', 'bt.pick': '选一场合战', 'bt.note': '与平面地图「合战演武」同一份资料；战国以外的两场不着势力色。',
+    'bt.prev': '上一段', 'bt.next': '下一段', 'bt.auto': '自动推演', 'bt.stop': '停止', 'bt.exit': '退出合战',
+    search: '搜索', searchPh: '国名、城名或家名', 'k.prov': '国', 'k.castle': '城', 'k.clan': '家', none: '没有找到',
+    north: '朝北', tilt: '俯视 / 斜看', 'o.sound': '声音', save: '把这个画面存成图片', back2d: '回到平面地图',
+    play: '从 1467 播到 1600', dlN: '正在下载… {n} / {m}',
+    'c.provs': '{n} 国', 'c.split': '另有 {n} 国分治', 'c.koku': '推算石高约 {n} 万石', 'c.kokuGe': '推算石高 ≥{n} 万石（奥羽按郡的分区没有石高）', 'c.rank': '当年第 {n}', 'c.head': '代表人物', 'c.note': '石高按 1598 年太阁检地的各国国高推算，分治的国按家数平分。',
+    'p.life': '{a}–{b}', 'p.back': '‹ 返回', 'p.img': '肖像：{l}', holder: '{y} 年这里属于', bc: '约 {c} 世纪筑城（信息框只写到世纪）',
+    'save.title': '立体战国图 · {y} 年',
+    more: '其余 {n} 家', ryukyu: '琉球', view: '平面或立体', flat2d: '平面', flat3d: '立体',
   },
   en: {
     title: '3D Sengoku Map · Japan, Then and Now', brand: '3D Sengoku Map', back: '← 2D map', backTitle: 'Back to the 2D Sengoku map',
@@ -51,7 +59,15 @@ const S = {
     late: 'After Azuchi Castle (1576) every castle is drawn with a keep; ', early: 'Before Azuchi Castle (1576) every castle is drawn as earthworks and a watchtower; ', castleNote: "it's a symbol, not how this castle looked. Years from Japanese Wikipedia.",
     jawiki: 'Japanese Wikipedia', ichi: 'Ichinomiya', fu: 'Kokufu', ji: 'Kokubunji', muni: ' · located to the municipality only',
     siteNote: "Ancient sites: each province's chief shrine (ichinomiya), capital (kokufu) and provincial temple (kokubunji), as in the 2D map's Ancient sites layer. By the Sengoku period most capitals and temples were long abandoned.",
-    more: '{n} more', ryukyu: 'Ryūkyū',
+    bt: 'Battles', 'bt.title': 'Replay five battles on the 3D terrain', 'bt.pick': 'Pick a battle', 'bt.note': "Same material as the 2D map's battle mode; the two outside the Sengoku period are shown without clan colours.",
+    'bt.prev': 'Back', 'bt.next': 'Next', 'bt.auto': 'Play', 'bt.stop': 'Stop', 'bt.exit': 'Leave the battle',
+    search: 'Search', searchPh: 'Province, castle or clan', 'k.prov': 'Province', 'k.castle': 'Castle', 'k.clan': 'Clan', none: 'Nothing found',
+    north: 'Face north', tilt: 'Top-down / tilted', 'o.sound': 'Sound', save: 'Save this view as an image', back2d: 'Back to the 2D map',
+    play: 'Play 1467 to 1600', dlN: 'Downloading… {n} / {m}',
+    'c.provs': '{n} provinces', 'c.split': 'plus {n} shared', 'c.koku': 'about {n} koku (estimated)', 'c.kokuGe': 'at least {n} koku (the Ōu district units have no koku figures)', 'c.rank': 'No. {n} that year', 'c.head': 'Leading figure', 'c.note': 'Koku estimated from the 1598 Taikō land survey, province by province; shared provinces are split evenly.',
+    'p.life': '{a}–{b}', 'p.back': '‹ Back', 'p.img': 'Portrait: {l}', holder: 'In {y} this was held by', bc: 'built around the {c}th century (the infobox gives only the century)',
+    'save.title': '3D Sengoku Map · {y}',
+    more: '{n} more', ryukyu: 'Ryūkyū', view: '2D or 3D', flat2d: '2D', flat3d: '3D',
   },
   ja: {
     title: '立体戦国図 · 古今日本地図', brand: '立体戦国図', back: '← 平面地図', backTitle: '平面の戦国図に戻る',
@@ -67,7 +83,15 @@ const S = {
     late: '1576年の安土城以降はすべて天守で描いています。', early: '1576年の安土城以前はすべて土塁と櫓で描いています。', castleNote: '模式図で、その城の当時の姿ではありません。年は日本語版ウィキペディアによります。',
     jawiki: 'ウィキペディア', ichi: '一宮', fu: '国府', ji: '国分寺', muni: ' · 位置は市町村まで',
     siteNote: '旧国の三つの跡：律令時代の各国の一宮・国府・国分寺（平面地図の「古国めぐり」と同じ）。戦国時代には多くの国府・国分寺がすでに廃れていました。',
-    more: 'ほか {n} 家', ryukyu: '琉球',
+    bt: '合戦', 'bt.title': '立体の地形で五つの合戦を再現', 'bt.pick': '合戦を選ぶ', 'bt.note': '平面地図の「合戦演武」と同じ資料。戦国以外の二つは勢力の色を付けません。',
+    'bt.prev': '前へ', 'bt.next': '次へ', 'bt.auto': '自動で進む', 'bt.stop': '止める', 'bt.exit': '合戦を終える',
+    search: '検索', searchPh: '国名・城名・家名', 'k.prov': '国', 'k.castle': '城', 'k.clan': '家', none: '見つかりません',
+    north: '北を上に', tilt: '真上から / 斜めから', 'o.sound': '音', save: 'この画面を画像で保存', back2d: '平面地図に戻る',
+    play: '1467年から1600年まで再生', dlN: 'ダウンロード中… {n} / {m}',
+    'c.provs': '{n} か国', 'c.split': 'ほかに分割 {n} か国', 'c.koku': '推定石高 約{n}万石', 'c.kokuGe': '推定石高 {n}万石以上（奥羽の郡単位の区分は石高なし）', 'c.rank': 'その年の第 {n} 位', 'c.head': '代表的な人物', 'c.note': '石高は1598年の太閤検地の国高から推定。分割の国は家の数で等分。',
+    'p.life': '{a}–{b}', 'p.back': '‹ 戻る', 'p.img': '肖像：{l}', holder: '{y}年にここを治めていたのは', bc: '{c}世紀ごろの築城（情報欄は世紀のみ）',
+    'save.title': '立体戦国図 · {y}年',
+    more: 'ほか {n} 家', ryukyu: '琉球', view: '平面か立体か', flat2d: '平面', flat3d: '立体',
   },
 };
 export const t = (k, v = {}) => (S[lang][k] ?? S.zh[k] ?? k).replace(/\{(\w+)\}/g, (_, n) => v[n]);
@@ -90,5 +114,6 @@ export function applyStatic() {
   document.title = t('title');
   document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll('[data-t-title]').forEach((el) => { el.title = t(el.dataset.tTitle); });
+  document.querySelectorAll('[data-t-ph]').forEach((el) => { el.placeholder = t(el.dataset.tPh); });
   document.querySelectorAll('[data-t-aria]').forEach((el) => { el.setAttribute('aria-label', t(el.dataset.tAria)); });
 }

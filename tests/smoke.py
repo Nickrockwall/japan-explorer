@@ -150,6 +150,33 @@ class Case:
         # 换年份：墨晕（uInk 0 → 1）走完，旧贴图丢掉
         page.click('#years [data-y="1573"]')
         page.wait_for_function('__je3d.uniforms.uInk.value >= 1', timeout=40000)
+        # 3.33：冲绳的城按世纪收进来（首里城），英文名按读音
+        assert page.evaluate("__je3d.castles.some((c) => c.ja === '首里城' && c.bc === 14)"), '应有首里城（14 世纪）'
+        # 势力总览：聚光织田，卡片有国数与代表人物；关卡片取消聚光
+        page.evaluate("__je3d.setYear('1582')")
+        page.evaluate("__je3d.showClan('oda', false)")
+        text = page.inner_text('#card')
+        assert '织田' in text and '国' in text and '织田信长' in text, f'势力总览：{text[:120]!r}'
+        page.click('#card [data-person]')
+        page.wait_for_selector('#card .back')
+        page.keyboard.press('Escape')
+        # 搜索
+        page.evaluate("__je3d.choose('姫路')")
+        assert '姬路城' in page.inner_text('#card h2'), page.inner_text('#card h2')
+        page.keyboard.press('Escape')
+        # 合战：桶狭间 4 段，地址栏带 bt=，离开后回到原来的年份
+        page.evaluate("__je3d.setYear('1590')")
+        page.evaluate("__je3d.battle.start('okehazama')")
+        page.wait_for_selector('#battle:not([hidden]) .bt-tabs')
+        assert page.locator('#battle .bt-tabs button').count() == 4
+        assert page.evaluate("__je3d.opts.year") == '1560', '桶狭间应换到 1560 年'
+        page.click('#battle [data-bt="next"]')
+        assert page.evaluate('__je3d.battle.phase') == 1
+        page.wait_for_function("location.hash.includes('bt=okehazama')", timeout=10000)
+        page.keyboard.press('Escape')
+        assert not page.evaluate('__je3d.battle.active') and page.evaluate("__je3d.opts.year") == '1590', '离开合战应回到 1590'
+        # 平面 / 立体开关：平面一侧带回年份
+        assert 'sg=1590' in page.get_attribute('#to2d', 'href')
 
     def deeplink(self, page):
         page_kanji = page.text_content('.modern-title .kanji')
@@ -1165,6 +1192,10 @@ class Case:
     def three_d_link(self, page):
         # 平面 ⇄ 立体（3.32）：美浓国卡片的「在立体地图里看」打开 3d.html，带上 1600 年、美浓与语言；
         # 立体页按语言显示、弹出同一国的卡片，左上角回平面图的链接带回 sg / sgp / lang
+        # 地图上的「立体」按钮各种尺寸都看得见（3.33）
+        if self.narrow:
+            self.tab(page, 'map')
+        assert page.is_visible('#btn-3d'), '地图上应有立体按钮'
         page.wait_for_selector('#sg-card:not([hidden]) .sg-3d-link', timeout=20000)
         page.click('#sg-card .sg-3d-link')
         page.wait_for_url('**/3d.html#*', timeout=20000)

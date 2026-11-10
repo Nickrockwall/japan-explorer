@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.33 · 2026-11-11
+
+- The 2D/3D switch now sits on the map itself: a dark "3D" button on the right of the main map (above the location button), easy to spot on desktop, tablet and phone without opening the Sengoku view first; the 3D view has a "2D | 3D" switch in the same place
+- Battles can be replayed in 3D: Okehazama, Kawanakajima, Sekigahara, Dan-no-ura and the Satsuma Rebellion. Marching routes grow along the terrain stage by stage, the camera frames each stage, with the commanders' lines and an autoplay; Sengoku battles switch to the matching year, the other two are shown without clan colours
+- A ▶ at the start of the year row plays 1467 to 1600, with the ink spreading at each year
+- Clicking a clan in the legend opens its overview: its provinces are highlighted, with the number of provinces, estimated koku and rank that year, its leading figure and the provinces themselves; names in province cards and overviews open person cards (with a portrait and bio where we have one)
+- Famous castles are drawn larger; castle cards say who held the place that year; English castle names now follow the Japanese reading ("Himeji Castle"); castles whose infobox gives only a century are included too (Shuri, Nakijin…, shown as "around the 14th century") — 483 castles in all
+- New search (provinces, castles, clans, in any of the three languages), a face-north button and a top-down/tilted switch; the address bar follows the year, the selected province, the camera and the battle, so a copied link opens the same view
+- Settings can save the current view as an image (paper border, title and seal) and turn sound on or off; loading shows progress; once opened, the 3D map works offline (except the detailed terrain); weaker devices start in battery-saver quality, and if WebGL is unavailable there's a link back to the 2D map
+
 ## 3.32 · 2026-11-10
 
 - The 3D Sengoku map is now part of the site: the Sengoku year row has a "3D" button and province cards have "See it in 3D", which carry the year and province over; "← 2D map" in the 3D view brings you back to the same year and province. The 3D map now speaks Chinese, English and Japanese

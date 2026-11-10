@@ -8,6 +8,9 @@
   没有築城年、或築城年晚于 1600 的不收——试验页按战国 6 个年份显示城，年份不明的城没法放。
   废城早于 1467（第一个年份）的也不收，反正哪年都不显示；1000 年以前筑、又没写废城年的是古代城柵与山城（多賀城、水城、
   大野城……），信息框不写废城年是因为早已废弃，不收（否则会被当成战国时还在）。
+  築城年只写了世纪的（首里城「14世紀末」）按该世纪的开头算、记下 `bc`（世纪），前端写「约 14 世纪」；16 世纪以后的不收。
+- 英文名：条目开头写的读音（「姫路城（ひめじじょう）」或 {{読み仮名}}）转罗马字，「じょう / しろ」结尾的写「Himeji Castle」，
+  「ぐすく」结尾的写「… Gusuku」，其余（館など）整个转写；没有读音才用 Wikidata 英文标签（以前全用标签，写法不统一）。
 - 全部收下（近畿当时 90 座的上限没碰到；全国几百座由前端的标签避让与 900 以外不画来控制密度）。
 数据：Wikidata CC0；築城年 / 廃城年取自日文维基信息框（事实数据）。
 """
@@ -21,7 +24,7 @@ import urllib.request
 from shapely.geometry import Point, shape
 
 sys.path.insert(0, os.path.dirname(__file__))
-from build_bundle import ja_to_zh_table  # noqa: E402
+from build_bundle import ja_to_zh_table, romaji  # noqa: E402
 from pilgrimage_tool import UA, pages, text_of  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -62,11 +65,44 @@ def sparql():
     return list(out.values())
 
 
-def english(label, ja):
-    """Wikidata 英文标签；没有、或标签就是日文的，用不上（前端退回日文名）"""
+def reading(text, name):
+    """条目开头写的读音（平假名）；片假名转平假名，去掉「・」与空格"""
+    head = text[:4000]
+    # 只认写的就是这个名字的（页首的说明模板里常有别的词的读音：広島城曾取到「り」）
+    n = re.escape(name)
+    m = re.search(r"\{\{読み仮名(?:_ruby不使用)?\|(?:''')?" + n + r"(?:''')?\|([^|}]+)", head) \
+        or re.search(r"'''" + n + r"'''\s*[（(]([^）)、，,]+)", head)
+    if not m:
+        return None
+    k = ''.join(chr(ord(ch) - 0x60) if 'ァ' <= ch <= 'ヶ' else ch for ch in m.group(1))
+    k = re.sub(r'[・\s]', '', k)
+    return k if re.fullmatch(r'[ぁ-ゖー]+', k) else None
+
+
+def english(kana, label):
+    """读音转写：○○じょう / ○○しろ → ○○ Castle，○○ぐすく → ○○ Gusuku；没有读音时用 Wikidata 英文标签（含假名汉字的不要）"""
+    if kana:
+        for tail, word in (('じょう', 'Castle'), ('しろ', 'Castle'), ('ぐすく', 'Gusuku'), ('ぐしく', 'Gusuku')):
+            if kana.endswith(tail) and len(kana) > len(tail):
+                stem = romaji(kana[:-len(tail)])
+                if stem:
+                    return f'{stem} {word}'
+        whole = romaji(kana)
+        if whole:
+            return whole
     if not label or re.search(r'[぀-ヿ一-鿿]', label):
         return None
     return label
+
+
+def infobox_century(text, field):
+    """信息框某一栏只写了世纪（「14世紀末」）→ 14"""
+    m = re.search(r'^\|\s*' + field + r'\s*=\s*(.*)$', text, re.M)
+    if not m:
+        return None
+    v = re.sub(r'<ref[^>]*/>|<ref.*?</ref>|<!--.*?-->', '', m.group(1))
+    c = re.search(r'(\d{1,2})世紀', v)
+    return int(c.group(1)) if c else None
 
 
 def infobox_year(text, field):
@@ -110,6 +146,10 @@ def main():
     for c in sorted(cands, key=lambda c: (-c['links'], c['title'])):
         text = text_of(texts.get(c['title'])) or ''
         built = infobox_year(text, '(?:築城年|build_y)')
+        century = None
+        if built is None:
+            century = infobox_century(text, '(?:築城年|build_y)')
+            built = (century - 1) * 100 if century and century <= 16 else None
         if built is None or built > 1600:
             skipped += 1
             continue
@@ -120,9 +160,12 @@ def main():
             continue
         name = re.sub(r'\s*\(.*\)$', '', c['title'])
         z = lambda t: ''.join(zh.get(ch, ch) for ch in t)
-        out.append({'ja': name, 'zh': z(name), 'en': english(c['en'], name), 'wiki': c['title'], 'q': c['q'],
+        row = {'ja': name, 'zh': z(name), 'en': english(reading(text, name), c['en']), 'wiki': c['title'], 'q': c['q'],
                     'coords': c['coords'], 'pref': c['pref'], 'prov': c['prov'] or OUTSIDE[c['pref']], 'built': built,
-                    'gone': gone, 'links': c['links']})
+                    'gone': gone, 'links': c['links']}
+        if century:
+            row['bc'] = century
+        out.append(row)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
@@ -133,6 +176,7 @@ def main():
     # 锚点：安土城 1576 年筑、大坂城 1583 年筑（日文维基信息框）
     assert by['安土城']['built'] == 1576, by.get('安土城')
     assert by['大坂城']['built'] == 1583, by.get('大坂城')
+    assert by['姫路城']['en'] == 'Himeji Castle', by['姫路城']['en']
     assert by['江戸城']['built'] == 1457, by.get('江戸城')
     assert '多賀城' not in by and '水城' not in by
 

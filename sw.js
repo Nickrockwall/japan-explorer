@@ -34,7 +34,7 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin === location.origin && /\/src\/fonts\/.+\.woff2$/.test(url.pathname)) e.respondWith(cacheFirst(req, FONTS));
-  else if (url.origin === location.origin && url.pathname.includes('/src/3d/terrain/')) return; // 立体图的地形块（几百个）不进缓存
+  else if (url.origin === location.origin && url.pathname.includes('/src/3d/terrain/d/')) return; // 立体图的精细地形块（250 个、8 MB）不进缓存；粗地形照常网络优先 + 缓存，离线也能打开
   else if (url.origin === location.origin) e.respondWith(networkFirst(req));
   else if (CDN.includes(url.hostname)) e.respondWith(cacheFirst(req));
 });
