@@ -121,6 +121,29 @@ class Case:
             page.wait_for_timeout(200)
 
     # ── 场景 ──
+    def three_d(self, page):
+        # 立体战国图（试验页 3d.html）：能加载、换年份图例居首是织田、点甲斐国弹出六个年份的卡片
+        page.goto(self.base.replace('index.html', '3d.html'), timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.click('#years [data-y="1582"]')
+        first = page.text_content('#legend button')
+        assert '织田' in first, f'1582 年图例居首是 {first!r}'
+        page.evaluate('__je3d.lookAt(138.6, 35.6, 300, 0)')
+        page.wait_for_timeout(500)
+        x, y = page.evaluate('''([lon, lat]) => { const J = __je3d; const [x, z] = J.P(lon, lat);
+          const v = J.camera.position.clone().set(x, J.groundY(x, z), z).project(J.camera);
+          const r = document.querySelector('#scene').getBoundingClientRect();
+          return [(v.x + 1) / 2 * r.width + r.left, (1 - v.y) / 2 * r.height + r.top]; }''', [138.55, 35.65])
+        page.mouse.click(x, y)
+        page.wait_for_selector('#card:not([hidden])', timeout=10000)
+        text = page.inner_text('#card')
+        assert '甲斐' in text and '武田胜赖' in text and '1600' in text, f'甲斐国卡片：{text[:120]!r}'
+        page.keyboard.press('Escape')
+        assert page.is_hidden('#card'), 'Esc 后卡片应关闭'
+        # 1560 年还没有安土城（1576 年筑），1582 年有
+        on = page.evaluate("y => __je3d.castles.filter((c) => c.built <= y && (!c.gone || c.gone >= y)).map((c) => c.ja)", 1560)
+        assert '安土城' not in on and len(on) >= 30, f'1560 年的城：{len(on)}'
+
     def deeplink(self, page):
         page_kanji = page.text_content('.modern-title .kanji')
         assert page_kanji == '京都府', f'详卡标题是 {page_kanji!r}'
@@ -1525,7 +1548,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

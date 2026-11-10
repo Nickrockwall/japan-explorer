@@ -4,6 +4,10 @@
 
 Newest first.
 
+## 3.30 · 2026-11-10
+
+- New experimental page, “3D Sengoku map” (`3d.html`, not yet linked from the main site): 3D terrain from GSI elevation data with the six years of Sengoku territories, borders and front lines, lakes and rivers. Zooming in switches to ~250 m terrain and adds forests, 74 castles in the Kinki region (shown by the years they were built and abandoned) and small models of each province’s ichinomiya, provincial office and kokubunji. Click a province for its six years, or a castle for its dates
+
 ## 3.29 · 2026-11-09
 
 - Went through every prefecture card's original text (timeline, sights, specialties, dialect, local jokes, characters, ramen, sake) and fixed 18 items against Japanese Wikipedia, in all three languages:

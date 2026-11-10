@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>立体战国图（试验版）· 古今日本地图</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="src/assets/icons/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #e7dec6; --panel: #f4efe2; --line: #c4b89c; --ink: #2a2520; --muted: #6b6155; --shu: #b3302a; --kin: #c9a54a;
+    --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", system-ui, sans-serif;
+    --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+    --float: 0 2px 0 rgba(42, 37, 32, .14);
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--sans); }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .float { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--float); }
+
+  #top { position: fixed; top: calc(10px + var(--safe-t)); left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; pointer-events: none; }
+  #top > * { pointer-events: auto; }
+  .brand { display: flex; align-items: center; gap: 8px; padding: 6px 10px; text-decoration: none; color: var(--ink); }
+  .brand img { width: 22px; height: 22px; }
+  .brand b { font: 700 15px var(--serif); }
+  .brand small { color: var(--muted); }
+  .beta { font-size: 11px; color: #fff; background: var(--shu); border-radius: 3px; padding: 0 5px; }
+  #years { display: flex; padding: 3px; gap: 2px; }
+  #years button { border: 0; background: none; padding: 5px 10px; border-radius: 3px; font-weight: 600; min-height: 32px; }
+  #years button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+  .tools { margin-left: auto; display: flex; gap: 6px; }
+  .tools button { min-width: 36px; min-height: 36px; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; box-shadow: var(--float); }
+
+  #legend { position: fixed; left: calc(10px + var(--safe-l)); bottom: calc(26px + var(--safe-b)); max-width: 240px; max-height: 50vh; overflow: auto; padding: 6px; display: flex; flex-direction: column; gap: 1px; }
+  #legend button { display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 3px 6px; text-align: left; border-radius: 3px; }
+  #legend button:hover { background: rgba(42, 37, 32, .07); }
+  #legend button span { margin-left: auto; color: var(--muted); font-size: 12px; padding-left: 8px; }
+  #legend .more { color: var(--muted); font-size: 12px; padding: 2px 6px; }
+  .sw { display: inline-block; width: 14px; height: 10px; border-radius: 50%; border: 1px solid rgba(42, 37, 32, .5); flex: none; vertical-align: -1px; margin-right: 3px; }
+
+  #settings { position: fixed; top: calc(60px + var(--safe-t)); right: calc(10px + var(--safe-r)); width: 230px; padding: 10px 12px; }
+  #settings h3 { margin: 6px 0 4px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  #settings .seg { display: flex; gap: 4px; }
+  #settings .seg button { flex: 1; border: 1px solid var(--line); background: none; border-radius: 3px; padding: 4px 0; }
+  #settings .seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  #settings label { display: flex; align-items: center; gap: 6px; padding: 3px 0; }
+
+  #card { position: fixed; top: calc(60px + var(--safe-t)); right: calc(10px + var(--safe-r)); width: 300px; max-height: calc(100% - 100px); overflow: auto; padding: 12px 14px; }
+  #card h2 { margin: 0 24px 2px 0; font: 700 18px var(--serif); }
+  #card .sub { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+  #card .x { position: absolute; top: 6px; right: 6px; border: 0; background: none; font-size: 20px; width: 32px; height: 32px; }
+  #card table { width: 100%; border-collapse: collapse; }
+  #card th { text-align: left; font-weight: 600; padding: 4px 8px 4px 0; vertical-align: top; width: 3.2em; }
+  #card td { padding: 4px 0; }
+  #card tr[data-y] { cursor: pointer; }
+  #card tr.cur { background: rgba(179, 48, 42, .1); }
+  #card em { font-style: normal; font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; margin-left: 4px; }
+  #card .who { display: block; color: var(--muted); font-size: 12px; }
+  #card .note { color: var(--muted); font-size: 12px; }
+  #card .links a { color: var(--shu); }
+
+  #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .lb { position: absolute; left: 0; top: 0; white-space: nowrap; visibility: hidden; color: var(--ink); text-shadow: 0 0 2px var(--bg), 0 0 2px var(--bg), 0 0 4px var(--bg); will-change: transform; }
+  .lb.on { visibility: visible; }
+  .lb.prov { font: 500 12px var(--serif); opacity: .85; }
+  .lb.clan { display: flex; align-items: center; gap: 4px; font: 700 15px var(--serif); padding-bottom: 2px; }
+  .lb.clan b { border-bottom: 3px solid var(--c); }
+  .lb.clan .mon { display: grid; place-items: center; width: 24px; height: 24px; background: var(--ink); border: 2px solid; border-radius: 2px; }
+  .lb.clan .mon i { width: 18px; height: 18px; background: var(--kin); -webkit-mask: var(--mon) center / contain no-repeat; mask: var(--mon) center / contain no-repeat; }
+  .lb.castle { font: 700 13px var(--serif); padding: 1px 5px; background: rgba(244, 239, 226, .9); border: 1px solid var(--ink); border-radius: 2px; text-shadow: none; }
+  .lb.site { font-size: 12px; text-shadow: 0 0 2px #fff, 0 0 3px #fff; }
+  .lb.site small { color: var(--shu); margin-right: 3px; }
+
+  #credit { position: fixed; right: calc(8px + var(--safe-r)); bottom: calc(4px + var(--safe-b)); font-size: 10px; color: var(--muted); text-shadow: 0 0 2px var(--bg); max-width: 70%; text-align: right; }
+  #hint { position: fixed; left: 50%; bottom: calc(26px + var(--safe-b)); transform: translateX(-50%); font-size: 12px; color: var(--muted); padding: 4px 10px; }
+
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 10; }
+  #loading div { text-align: center; }
+  #loading img { width: 56px; height: 56px; animation: pulse 1.4s ease-in-out infinite; }
+  #loading.failed img { animation: none; filter: grayscale(1); }
+  #loading p { margin: 10px 0 0; color: var(--muted); }
+  @keyframes pulse { 50% { opacity: .4; } }
+
+  @media (max-width: 640px) {
+    .brand small, #hint { display: none; }
+    #years { order: 3; width: 100%; justify-content: space-between; }
+    #years button { flex: 1; padding: 5px 0; }
+    #card { top: auto; bottom: calc(10px + var(--safe-b)); left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); width: auto; max-height: 46%; }
+    #settings { top: calc(104px + var(--safe-t)); }
+    #legend { left: calc(10px + var(--safe-l)); right: calc(10px + var(--safe-r)); bottom: calc(36px + var(--safe-b)); max-width: none; max-height: none; flex-direction: row; overflow-x: auto; padding: 4px; font-size: 13px; scrollbar-width: none; }
+    #legend button { flex: none; white-space: nowrap; }
+    #legend button span { padding-left: 4px; }
+    #legend .more { flex: none; white-space: nowrap; align-self: center; }
+    body.card-open #legend, body.card-open #credit { display: none; }
+    #credit { max-width: 100%; left: 8px; font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="scene" aria-label="立体战国图：拖动平移，滚轮或双指缩放，右键或双指旋转"></canvas>
+<div id="labels"></div>
+<div id="top">
+  <a class="brand float" href="index.html" title="回到平面地图">
+    <img src="src/assets/icons/seal.svg" alt=""><b>立体战国图</b><span class="beta">试验版</span><small>← 平面地图</small>
+  </a>
+  <div id="years" class="float" role="group" aria-label="年份"></div>
+  <div class="tools">
+    <button id="btn-in" type="button" title="拉近" aria-label="拉近">＋</button>
+    <button id="btn-out" type="button" title="拉远" aria-label="拉远">－</button>
+    <button id="btn-home" type="button" title="回到全国" aria-label="回到全国">⌂</button>
+    <button id="btn-settings" type="button" title="设置" aria-label="设置">⚙</button>
+  </div>
+</div>
+<div id="settings" class="float" hidden>
+  <h3>地形起伏</h3>
+  <div class="seg"><button type="button" data-exag="1">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>
+  <h3>画质</h3>
+  <div class="seg"><button type="button" data-q="high">高</button><button type="button" data-q="low">省电</button></div>
+  <h3>显示</h3>
+  <label><input type="checkbox" data-opt="tint"> 势力着色</label>
+  <label><input type="checkbox" data-opt="castles"> 城（近畿）</label>
+  <label><input type="checkbox" data-opt="sites"> 一宫·国府·国分寺</label>
+  <label><input type="checkbox" data-opt="trees"> 树林（拉近时）</label>
+</div>
+<div id="legend" class="float"></div>
+<div id="card" class="float" hidden></div>
+<div id="hint" class="float">拖动平移 · 滚轮缩放 · 右键拖动旋转 · 点一国看六个年份</div>
+<div id="credit">地形：国土地理院 標高タイル · 湖河与土地覆盖：地球地図日本 · 城：Wikidata / 日文维基百科 · 渲染：three.js</div>
+<div id="loading"><div><img src="src/assets/icons/seal.svg" alt=""><p id="loading-text">正在加载…</p></div></div>
+<script type="importmap">
+{ "imports": { "three": "./src/3d/vendor/three.module.min.js" } }
+</script>
+<script type="module" src="src/3d/app.js"></script>
+</body>
+</html>

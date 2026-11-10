@@ -406,6 +406,21 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 各地图的 `geo` 必须设 `animationDurationUpdate: 0`：ECharts 在 setOption（改中心 / 缩放、重设着色）时会用全局的 update 动画把底图 group 滑向新位置，而拖动只直接改 group；动画途中一拖，动画结束时把底图拉回旧目标，填色就与 `animation: false` 的叠加层（线、国名、图钉、旗）永久错开。smoke `map_sync` 核对。
 - 衬线字体（Noto Serif SC/JP）用于标题与古名，无衬线（系统字体）用于正文。
 
+## 立体战国图（试验页 3d.html，2026-11-10）
+
+单独的页面，主站没有入口（`<meta name="robots" content="noindex">`），用来试 3D 的样子；定下来以后再接进主站做「平面 / 立体」开关。只有中文界面。deploy 的 cp 列表里有 `3d.html`。
+
+- 渲染：three.js r170 随站发布在 `src/3d/vendor/`（importmap 把 `three` 指到 `three.module.min.js`，不走 CDN）。代码在 `src/3d/`，不在 `src/js/`（免得进 sw.js 的 SHELL 被每个访客预先下载）；`sw.js` 不缓存 `src/3d/terrain/`。
+- 坐标：世界 x / z = 粗图像素（z7 墨卡托瓦片 × 256，原点是 `terrain.json` 的 `tile`），约 1 km；y = 标高 m × 起伏倍数 / `MPU`（北纬 36° 每单位的米数）。网格的 position.y 存米，着色器里才乘倍数，所以改起伏不用重建网格；包围球按最大倍数 4 算。点选不用三角形求交，沿视线步进比标高（`groundHit`），国用 `isPointInPath`。
+- 地形：`python -X utf8 tools/build_terrain.py`（需 numpy pillow）下载国土地理院标高瓦片（缓存 `.cache/terrain/`）：粗图 z7 一张 `coarse.png`（R/G = 标高 + 500，0 = 海 / NA；B = 土地覆盖 7 类，取自地球地図日本 lc.tif），精细图 z9 每块（64 粗图像素 = 一张 z9 瓦片）一张 `d/cx_cz.png`（257×257，带右、下各一像素）。www1.gsi.go.jp 要旧式 TLS 重协商（`legacy_tls()`）。
+- 分块与远近细节（terrain.js / app.js `updateChunks`）：只给有陆地的 250 块建网格，段数 4–64 用粗图、128 / 256 要先下载精细图（最多留 48 块）；按块到镜头的距离与屏幕高度算段数，视野外最多 16；外圈有向下的裙边盖住段数不同的接缝；每帧最多 12ms 建网格。海是一整块平面（先画、不写深度），陆地片元在贴图 alpha < 0.2 处丢掉露出海。
+- 贴图（overlay.js）：每块一张 canvas（128–1024，随段数），按底图（824 年 68 国 + 奥羽分区，与平面战国图同）画势力色（分治画斜条纹）、国界（同一家很淡、两家之间是深底亮线的前线），湖与河擦掉后画成 alpha 0.5（着色器当水面）。**CanvasTexture 要 `flipY = false`**（v 就是 canvas 的 y），否则每一行块的颜色上下颠倒。换年份只把 `version` 加一，可见的块逐帧重画。
+- 湖与河：`python -X utf8 tools/build_water.py`（需 shapely pyshp）取地球地図日本的 inwatera / riverl，pack 格式写进 `src/3d/water.json`。
+- 城：`python -X utf8 tools/fetch_castles.py`（需 shapely）取 Wikidata「日本の城」（Q92026）在近畿 7 县（含三重）里、有日文条目的，年份只用条目信息框 `build_y` / `reject_y` 的第一个西历年；没有筑城年或晚于 1600 的不收，按语言条目数取前 90（现 74 座）。某年显示 = 筑城 ≤ 该年且（没有废城年或废城 ≥ 该年）。模型：1576 年以前画土垒与望楼、以后画天守（示意，卡片里写明）。
+- 建筑与树（models.js）：程序生成的低多边形（顶点色），InstancedMesh；城与古国三迹（koku_sites.json）随镜头距离放大，远于 900 不画；树只在段数 ≥64、距离 < 70（省电 40）的块里按森林像素种（每像素 3 棵，位置由像素号决定）。
+- 镜头：MapControls，极角随距离自动变（远处近乎俯视、近处约 60°），右键 / 双指只转方位；目标点贴地、镜头不入地。标签是 DOM（按优先级贪心避让，最多 70 个）：远处家名 + 家纹、中距离国名、近处城名（< 280）与一宫等（< 110）。设置（起伏、画质、显示项、年份）存 `je.3d`。
+- 测试：smoke `three_d`（中文三种尺寸：加载、1582 图例居首织田、点甲斐国出六个年份、Esc、1560 没有安土城）。截图检查用本机 Chrome 加 `--enable-gpu --use-angle=d3d11`；Playwright 自带 Chromium 走软件渲染，一帧约 1 秒、截图可能超时，但能跑通测试。
+
 ## 地图文件压缩（pack_geo.py，3.27）
 
 网站下载的 GeoJSON 都是 `.pack.json`：japan、provinces、province_eras、sengoku_units 与 municipalities/NN。`python -X utf8 tools/pack_geo.py` 把每串坐标（环 / 折线）改写成 `{_d: [x0, y0, dx, dy, …]}`（3 位小数 ×1000 的差分整数），无损，前端 `store.js` 的 `unpack` / `fetchGeo` 还原（muni.js、locate.js 也用）；日本全图 gzip 后 292 → 115 KB，51 个文件 6.8 → 2.7 MB。源文件不动，各工具照旧读源文件；**改了源 GeoJSON（build_provinces / build_municipalities）后重跑 pack_geo**，`check_data.check_packs` 与单元测试核对。半岛模式的文件没压（`unpack` 对普通 JSON 原样返回）。

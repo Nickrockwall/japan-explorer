@@ -83,7 +83,7 @@ jobs:
       - name: Assemble site (only what the page needs — no tools/ or tests/)
         run: |
           mkdir _site
-          cp -r index.html manifest.webmanifest sw.js src _site/
+          cp -r index.html 3d.html manifest.webmanifest sw.js src _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

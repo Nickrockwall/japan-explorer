@@ -37,6 +37,10 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | 文件 / File | 来源 / Source | 条款 / Terms |
 |---|---|---|
 | `src/vendor/echarts*` | [Apache ECharts](https://echarts.apache.org/) | Apache-2.0（见 `src/vendor/echarts-LICENSE`、`echarts-NOTICE`） |
+| `src/3d/vendor/`（立体战国图试验页） | [three.js](https://threejs.org/) r170（`three.module.min.js` 与 OrbitControls / MapControls / BufferGeometryUtils） | MIT（见 `src/3d/vendor/three-LICENSE`） |
+| `src/3d/terrain/`（立体战国图的地形） | [国土地理院 標高タイル](https://maps.gsi.go.jp/development/ichiran.html#dem)（基盤地図情報数値標高モデル）を加工して作成；粗图的蓝色通道是地球地図日本（国土地理院）的土地覆盖（lc） | 国土地理院コンテンツ利用規約（须注明出典；页面底部已写） |
+| `src/3d/water.json`（立体战国图的湖与河） | 地球地図日本（国土地理院）第 2.2 版的内水面与河川 | 须注明「出典：地球地図日本」 |
+| `src/3d/castles.json`（立体战国图的城） | 名称与坐标取自 [Wikidata](https://www.wikidata.org/)（CC0）；筑城 / 废城年取自[日本語版ウィキペディア](https://ja.wikipedia.org/)各城条目信息框 | 事实数据 |
 | `src/fonts/` | [Noto Serif SC / JP](https://github.com/notofonts/noto-cjk)（按网站用到的字切片） | SIL Open Font License 1.1（见 `src/fonts/OFL.txt`） |
 | `src/assets/geojson/japan.json` | 地球地図日本（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换 | 须注明「出典：地球地図日本」；商用须向国土地理院报告 |
 | `src/data/municipalities/` 的边界，及由其合并而成的 `src/data/provinces.json` | 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成，经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化 | 国土数値情報の利用規約 |
