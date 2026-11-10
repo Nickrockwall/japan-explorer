@@ -608,12 +608,34 @@ async function main() {
     openClan(b.dataset.clan);
     audio.play('click');
   });
-  // 立体战国图（3d.html）：带上年份、选中的国与语言；没开过战国图时用上次的年份
+  // 立体图（3d.html，3.35 起五个时代）：平面图正在看的时代对应到立体图的年份——战国势力图 → 同一年份与选中的国；
+  // 五畿七道（奈良）→ 当前的国界年份（712 / 757 / 824，1869 → 1871）；时空穿越的其他时代 → 最近的立体年份；
+  // 都没有时用上次战国图的年份。放大过的话带上视野（立体图的距离 = 3000 / 平面的缩放，与立体图回来时同一个换算）
+  const ERA3D = { asuka: '712', heian: '824', kamakura: '1250', muromachi: '1467', edo: '1867', meiji: '1871', taisho: '1888', modern: '1888' };
+  function target3d() {
+    const era = app.eraIdx != null ? eras[app.eraIdx] : null;
+    if (map.sgMode || era?.filter === 'sengoku') return { y: sg?.year || uiPref.get('sgYear', '1560'), p: map.sgMode ? sg?.focus : null };
+    if (map.provMode || era?.filter === 'circuit') { const pe = map.provEra; return { y: pe === '1869' ? '1871' : ['712', '757', '824'].includes(pe) ? pe : '757' }; }
+    if (era && ERA3D[era.key]) return { y: ERA3D[era.key] };
+    return { y: uiPref.get('sgYear', '1560') };
+  }
   const open3d = () => {
-    const y = sg?.year || uiPref.get('sgYear', '1560');
-    location.href = `3d.html#y=${y}${sg?.focus ? `&p=${encodeURIComponent(sg.focus)}` : ''}&lang=${lang}`;
+    const { y, p } = target3d();
+    const parts = [`y=${y}`];
+    if (p) parts.push(`p=${encodeURIComponent(p)}`);
+    const v = map.view();
+    if (v.zoom >= 2.2) parts.push(`v=${v.center[0].toFixed(3)},${v.center[1].toFixed(3)},${Math.round(3000 / v.zoom)},0`);
+    parts.push(`lang=${lang}`);
+    location.href = `3d.html#${parts.join('&')}`;
   };
-  $('btn-3d').addEventListener('click', open3d);
+  // 地图上的「平面 | 立体」开关：金箔片先滑到「立体」一侧再跳过去（系统要求减少动态时直接跳）
+  $('btn-3d').addEventListener('click', () => {
+    const sw = $('btn-3d').closest('.viewswitch');
+    if (!sw || matchMedia('(prefers-reduced-motion: reduce)').matches) { open3d(); return; }
+    sw.dataset.on = '3d';
+    audio.play('click');
+    setTimeout(open3d, 260);
+  });
   sgYears.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="rl-open"]')) { openRulers(); return; }
     if (e.target.closest('[data-act="sg-3d"]')) { open3d(); return; }
@@ -1413,6 +1435,17 @@ async function main() {
     if (app.eraIdx !== SG_ERA) applyFilter('sengoku'); else ensureSengoku();
   }
   const sgLink = !!sgWant;
+  // 深链接（立体图回来时带的）：#te=edo 时空穿越的某个时代，&pe=757 奈良时代的国界年份，&v=经度,纬度,缩放 视野
+  const tei = eras.findIndex((e) => e.key === hp.get('te'));
+  if (tei >= 0 && !sgLink) {
+    setEra(tei, { banner: false });
+    const pe = hp.get('pe');
+    if (/^(712|757|824|1869)$/.test(pe || '') && eras[tei].filter === 'circuit') {
+      provinces.then(async (g) => { if (!g) return; await (erasLoad ?? Promise.resolve()).catch(() => {}); pickProvEra(pe, { sound: false }); });
+    }
+  }
+  const vv = (hp.get('v') || '').split(',').map(Number);
+  if (vv.length === 3 && vv.every(Number.isFinite)) map.setView({ center: [vv[0], vv[1]], zoom: Math.min(Math.max(vv[2], 1), 12) });
   // 深链接：#pref=26 直接打开京都
   const m = location.hash.match(/pref=(\d+)/);
   // 先读出来：onSelect 会改写地址栏

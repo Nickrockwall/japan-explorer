@@ -197,7 +197,7 @@ export default {
   'ht.note0': `按年份串起这里的归属：古代与战国按旧国（奥羽按郡），江户是幕末领有本郡町村最多的藩及其各家（年份按藩主在位）。「彼时今日」里还没有地点落在本市区町村的条目。`,
   'sg.years': `战国年份`, 'sg.y': `{y} 年`, 'sg.split': `分治：另有 {list}`, 'sg.card.sub': `六个年份各归谁`, 'sg.life': `{a}–{b}`, 'sg.wiki': `维基百科`, 'sg.back': `返回`,
   'sg.role': `{clan}的代表人物（{n} 国）`, 'sg.role.side': `{clan}的代表人物（{n} 国）`, 'sg.rest': `其余 {n} 家`, 'sg.related': `相关人物`, 'sg.img': `肖像来自 Wikimedia Commons（公有领域）`, 'sg.img.by': `肖像：{author}，{license}，Wikimedia Commons`, 'sg.bc': `前 {y}`, 'ks.r.sengoku6': `战国`,
-  'sg.3d.card': `在立体地图里看 ›`, 'sg.3d': `立体`, 'sg.3d.title': `在立体地图里看这一年（地形、城与旗）`,
+  'sg.3d.card': `在立体地图里看 ›`, 'sg.3d': `立体`, 'sg.3d.title': `在立体地图里看这个时代（地形、城与旗）`, 'view.2d': `平面`, 'view.sw': `平面或立体`,
   'rl.open': `年表`, 'rl.title': `历代掌权年表`, 'rl.sub': `「实权」按时期列出谁说了算；其余各页点一行看人物卡，带头像或圆点的有详细介绍`, 'rl.tab.emperor': `天皇`, 'rl.tab.shogun': `将军`, 'rl.tab.shikken': `执权`,
   'rl.early': `古坟时代以前`, 'rl.legend': `早期天皇的在位年份按《日本书纪》所记，多为传说`, 'rl.capital': `都：{name}`, 'rl.seat': `幕府：{name}`, 'rl.again': `（再任）`,
   'rl.bakufu.鎌倉': `镰仓幕府`, 'rl.bakufu.室町': `室町幕府`, 'rl.bakufu.江戸': `江户幕府`,

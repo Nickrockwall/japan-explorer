@@ -197,7 +197,7 @@ export default {
   'ht.note0': `Who held this place, year by year: antiquity and the Sengoku period by province (Ōu by district); for the Edo period, the domain holding most villages of the district at its end and each house that ruled it (years are the lords' reigns). No On this day entry is located in this municipality yet.`,
   'sg.years': `Sengoku year`, 'sg.y': `{y}`, 'sg.split': `Shared with {list}`, 'sg.card.sub': `Who held it in six years`, 'sg.life': `{a}–{b}`, 'sg.wiki': `Wikipedia`, 'sg.back': `Back`,
   'sg.role': `Led the {clan} · {n} prov.`, 'sg.role.side': `Led the {clan} · {n} prov.`, 'sg.rest': `{n} more`, 'sg.related': `Related`, 'sg.img': `Portrait from Wikimedia Commons (public domain)`, 'sg.img.by': `Portrait: {author}, {license}, via Wikimedia Commons`, 'sg.bc': `{y} BC`, 'ks.r.sengoku6': `Sengoku`,
-  'sg.3d.card': `See it in 3D ›`, 'sg.3d': `3D`, 'sg.3d.title': `See this year on the 3D map (terrain, castles, banners)`,
+  'sg.3d.card': `See it in 3D ›`, 'sg.3d': `3D`, 'sg.3d.title': `See this period on the 3D map (terrain, castles, banners)`, 'view.2d': `2D`, 'view.sw': `2D or 3D`,
   'rl.open': `Timeline`, 'rl.title': `Who held power`, 'rl.sub': `"Who ruled" shows who really held power in each period; on the other tabs, tap a row for the person card (a portrait or dot means a fuller entry)`, 'rl.tab.emperor': `Emperors`, 'rl.tab.shogun': `Shoguns`, 'rl.tab.shikken': `Regents`,
   'rl.early': `Before the Asuka period`, 'rl.legend': `Reign years of the early emperors follow the Nihon Shoki and are largely legendary`, 'rl.capital': `Capital: {name}`, 'rl.seat': `Seat: {name}`, 'rl.again': `(second term)`,
   'rl.bakufu.鎌倉': `Kamakura shogunate`, 'rl.bakufu.室町': `Muromachi shogunate`, 'rl.bakufu.江戸': `Edo shogunate`,

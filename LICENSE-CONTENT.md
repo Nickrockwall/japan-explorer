@@ -41,6 +41,11 @@ Free to use, modify and use commercially, as long as the copyright notice and li
 | `src/3d/terrain/`（立体战国图的地形） | [国土地理院 標高タイル](https://maps.gsi.go.jp/development/ichiran.html#dem)（基盤地図情報数値標高モデル）を加工して作成；粗图的蓝色通道是地球地図日本（国土地理院）的土地覆盖（lc） | 国土地理院コンテンツ利用規約（须注明出典；页面底部已写） |
 | `src/3d/water.json`（立体战国图的湖与河） | 地球地図日本（国土地理院）第 2.2 版的内水面与河川 | 须注明「出典：地球地図日本」 |
 | `src/3d/castles.json`（立体战国图的城） | 名称（含英文名）与坐标取自 [Wikidata](https://www.wikidata.org/)（CC0）；筑城 / 废城年取自[日本語版ウィキペディア](https://ja.wikipedia.org/)各城条目信息框 | 事实数据 |
+| `src/3d/edo.json`（立体图江户与 1871 年的藩领） | 由 `tools/kyudaka.json`（国立历史民俗博物馆「旧高旧領取調帳データベース」按市区町村的汇总）取各市区町村石高最多的领主拼成；藩名、藩厅与藩主见 `han.json`、`tools/seats.json`；1871 年的县名对照[日本語版ウィキペディア](https://ja.wikipedia.org/)各藩条目 | 同 kyudaka（非营利、注明出处，只放汇总结果）；县名为事实数据 |
+| `src/3d/meiji.json`（立体图 1876 / 1888 年的府县） | 今天的都道府县与市区町村边界按规则拼成，合并与分立对照[日本語版ウィキペディア](https://ja.wikipedia.org/)各县条目；英文名来自 [Wikidata](https://www.wikidata.org/)（CC0） | 事实数据 |
+| `src/3d/kamakura.json`（立体图镰仓各国的守护） | [日本語版ウィキペディア](https://ja.wikipedia.org/)各国条目「守護」一节的鎌倉幕府守护名单（人名与任期） | 事实数据 |
+| `src/3d/kaido.json`（五街道的宿场与明治最早的铁路） | 宿场名单与坐标取自[日本語版ウィキペディア](https://ja.wikipedia.org/)各街道与宿场条目（没写坐标的取 [Wikidata](https://www.wikidata.org/) P625）；铁路开业年与车站坐标取自各车站条目 | 事实数据 |
+| `src/3d/kodai.json`（古代的城柵与平城京） | [日本語版ウィキペディア](https://ja.wikipedia.org/)各城柵条目与「平城京」条目（年份、规模）及其坐标 | 事实数据 |
 | `src/fonts/` | [Noto Serif SC / JP](https://github.com/notofonts/noto-cjk)（按网站用到的字切片） | SIL Open Font License 1.1（见 `src/fonts/OFL.txt`） |
 | `src/assets/geojson/japan.json` | 地球地図日本（国土地理院），经 [dataofjapan/land](https://github.com/dataofjapan/land) 转换 | 须注明「出典：地球地図日本」；商用须向国土地理院报告 |
 | `src/data/municipalities/` 的边界，及由其合并而成的 `src/data/provinces.json` | 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成，经 [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 简化 | 国土数値情報の利用規約 |

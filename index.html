@@ -181,10 +181,10 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <div class="muni-card art-card loc-card" id="loc-card" hidden aria-live="polite"></div>
-      <!-- 平面 / 立体：打开立体战国图（3d.html），带上战国年份、选中的国与语言 -->
-      <button type="button" class="view3d-btn" id="btn-3d" data-i18n-title="sg.3d.title" title="在立体地图里看这一年（地形、城与旗）">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 19l6.5-10 4 6 3-4.5L22 19z" fill="currentColor"/><circle cx="17.5" cy="6" r="2" fill="currentColor"/></svg><span data-i18n="sg.3d">立体</span>
-      </button>
+      <!-- 平面 / 立体开关（3.35 改版，与立体图同一个样子）：打开立体图（3d.html），带上时代、年份、选中的国、视野与语言 -->
+      <div class="viewswitch view3d-btn" data-on="2d" role="group" data-i18n-aria="view.sw" aria-label="平面或立体">
+        <span aria-current="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="view.2d">平面</span></span><button type="button" id="btn-3d" data-i18n-title="sg.3d.title" title="在立体地图里看这个时代（地形、城与旗）"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 19l6.5-10 3.5 5.2 2.8-4.2L22 19z" fill="currentColor"/><path d="M8.5 9l1.6 2.4-1.6-.6-1.4 1z" fill="#f4efe2" opacity=".75"/><circle cx="18" cy="6" r="2" fill="currentColor"/></svg><span data-i18n="sg.3d">立体</span></button>
+      </div>
       <!-- 古国巡礼：一宫 / 国府 / 国分寺的卡片（koku.js） -->
       <div class="muni-card pil-card koku-card" id="koku-card" hidden aria-live="polite"></div>
 

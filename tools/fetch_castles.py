@@ -5,12 +5,14 @@
 - 候选：Wikidata「日本の城」（Q92026 及其子类）与「グスク」（Q1044204）里有坐标（P625）、有日文维基条目的，
   坐标落在 47 都道府县里（落在海上的按 0.02° 内最近的县算，岛上小城的坐标常偏到岸外）。
 - 年份只取日文维基条目信息框（日本の城郭概要表）的 build_y「築城年」、reject_y「廃城年」（取其中第一个西历年；「不明」或没有西历年的不算）。
-  没有築城年、或築城年晚于 1600 的不收——试验页按战国 6 个年份显示城，年份不明的城没法放。
-  废城早于 1467（第一个年份）的也不收，反正哪年都不显示；1000 年以前筑、又没写废城年的是古代城柵与山城（多賀城、水城、
+  没有築城年、或築城年晚于 1888（立体图最后一个年份）的不收——立体图按年份显示城，年份不明的城没法放（3.35 以前只到 1600）。
+  废城早于 1200（镰仓第一个年份，3.35 以前是 1467）的也不收，反正哪年都不显示；1000 年以前筑、又没写废城年的是古代城柵与山城（多賀城、水城、
   大野城……），信息框不写废城年是因为早已废弃，不收（否则会被当成战国时还在）。
   築城年只写了世纪的（首里城「14世紀末」）按该世纪的开头算、记下 `bc`（世纪），前端写「约 14 世纪」；16 世纪以后的不收。
 - 英文名：条目开头写的读音（「姫路城（ひめじじょう）」或 {{読み仮名}}）转罗马字，「じょう / しろ」结尾的写「Himeji Castle」，
   「ぐすく」结尾的写「… Gusuku」，其余（館など）整个转写；没有读音才用 Wikidata 英文标签（以前全用标签，写法不统一）。
+- `edo`：江户时代确实在用的城——幕末藩厅（tools/seats.json 的城名）、江户城（将军居城）、1600 年以后才筑的城。
+  前端 1600 年以后的年份里，没写废城年的城只画带 `edo` 的（没写废城年的多是早已荒废的山城，信息框没写而已）。
 - 全部收下（近畿当时 90 座的上限没碰到；全国几百座由前端的标签避让与 900 以外不画来控制密度）。
 数据：Wikidata CC0；築城年 / 廃城年取自日文维基信息框（事实数据）。
 """
@@ -36,7 +38,8 @@ QUERY = '''SELECT ?c ?title ?coord ?links ?en WHERE {
   ?a schema:about ?c ; schema:isPartOf <https://ja.wikipedia.org/> ; schema:name ?title .
   OPTIONAL { ?c rdfs:label ?en FILTER(lang(?en) = 'en') }
 }'''
-FIRST = 1467  # 战国图第一个年份
+FIRST = 1200  # 立体图里会显示城的第一个年份（镰仓 1200；古代三个年份不画城）
+LAST = 1888  # 立体图最后一个年份（明治）
 ANCIENT = 1000
 NEAR = 0.02  # 度；海上的点归到这个距离内最近的县
 # 卡片里「所在国」：provinces.json 的键（日文）；北海道归蝦夷地（provinces.json 有这一项），冲绳与「令制外」的奄美写琉球（前端另有译名）
@@ -142,6 +145,8 @@ def main():
 
     texts = pages([c['title'] for c in cands], 'revisions', rvprop='content', rvslots='main')
     zh = ja_to_zh_table()
+    seats = json.load(open(os.path.join(ROOT, 'tools', 'seats.json'), encoding='utf-8'))
+    seat_castles = {v[1] for v in seats.values() if isinstance(v, list) and v[1]} | {'江戸城'}
     out, skipped = [], 0
     for c in sorted(cands, key=lambda c: (-c['links'], c['title'])):
         text = text_of(texts.get(c['title'])) or ''
@@ -150,7 +155,7 @@ def main():
         if built is None:
             century = infobox_century(text, '(?:築城年|build_y)')
             built = (century - 1) * 100 if century and century <= 16 else None
-        if built is None or built > 1600:
+        if built is None or built > LAST:
             skipped += 1
             continue
         gone = infobox_year(text, '(?:廃城年|reject_y)')
@@ -165,11 +170,13 @@ def main():
                     'gone': gone, 'links': c['links']}
         if century:
             row['bc'] = century
+        if name in seat_castles or built > 1600:
+            row['edo'] = 1
         out.append(row)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
-    print(f'wrote {len(out)} castles ({skipped} skipped: no 築城年, after 1600, gone before 1467 or ancient)')
+    print(f'wrote {len(out)} castles ({skipped} skipped: no 築城年, after 1888, gone before 1200 or ancient)')
     for c in out[:15]:
         print(' ', c['ja'], c['built'], c['gone'], c['prov'])
     by = {c['ja']: c for c in out}
@@ -179,6 +186,8 @@ def main():
     assert by['姫路城']['en'] == 'Himeji Castle', by['姫路城']['en']
     assert by['江戸城']['built'] == 1457, by.get('江戸城')
     assert '多賀城' not in by and '水城' not in by
+    assert by['姫路城'].get('edo') and by['江戸城'].get('edo') and not by['安土城'].get('edo')
+    assert by['名古屋城']['built'] == 1609 and by['五稜郭']['built'] == 1866, (by.get('名古屋城'), by.get('五稜郭'))
 
 
 if __name__ == '__main__':

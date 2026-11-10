@@ -1203,6 +1203,84 @@ class Case:
         page.keyboard.press('Escape')
         assert 'sgp=' not in page.evaluate('location.hash'), '关卡片后地址栏不应再带 sgp'
 
+    def three_d_eras(self, page):
+        # 立体图五个时代（3.35）：古代（712 平城京、五畿七道、没有城、724 年的多贺城还不在）→ 镰仓（1300 北条居首、信浓卡片有比企与北条）
+        # → 江户（藩领：加贺藩卡片写金泽城与 1871 年的金泽县）→ 明治（1876 年 41 块、堺县含今天的大阪与奈良；1888 年 47 块）；
+        # 合战列表打开时左下角的图例让开；回平面图的链接带上时代与年份
+        page.goto(self.base.replace('index.html', '3d.html') + '#y=712', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        assert page.evaluate('__je3d.base') == 'p712' and page.evaluate('document.body.dataset.era') == 'kodai'
+        assert page.get_attribute('#eras [data-era="kodai"]', 'aria-selected') == 'true'
+        assert '东海道' in page.inner_text('#legend'), page.inner_text('#legend')[:80]
+        assert page.evaluate("__je3d.forts.filter((f) => !f.built || f.built <= 712).map((f) => f.ja)").count('多賀城') == 0
+        page.evaluate('__je3d.showCapital()')
+        assert '平城京' in page.inner_text('#card'), page.inner_text('#card')[:120]
+        page.keyboard.press('Escape')
+        assert 'te=nara' in page.get_attribute('#to2d', 'href') and 'pe=712' in page.get_attribute('#to2d', 'href')
+        # 镰仓：点时代按钮换到第一个年份，再换 1300
+        page.click('#eras [data-era="kamakura"]')
+        page.wait_for_function("__je3d.opts.year === '1200'", timeout=20000)
+        page.click('#years [data-y="1300"]')
+        first = page.text_content('#legend button')
+        assert '北条' in first, f'1300 年图例居首是 {first!r}'
+        page.evaluate("__je3d.showRegion(__je3d.regions.find((r) => r.key === '信濃国'))")
+        text = page.inner_text('#card')
+        assert '比企' in text and '北条' in text and '1250' in text, text[:160]
+        page.keyboard.press('Escape')
+        # 合战列表与图例都在左下角：列表开着时图例让开（以前叠在一起）
+        page.click('#btn-battle')
+        page.wait_for_selector('#battle:not([hidden]) .bt-list')
+        assert page.is_hidden('#legend'), '合战列表打开时图例应让开'
+        page.click('#battle [data-bt="close"]')
+        page.wait_for_function("!document.body.classList.contains('battle-open')")
+        assert page.is_visible('#legend'), '关掉合战列表后图例应回来'
+        # 江户：藩领（要先下载 edo.json）
+        page.click('#eras [data-era="edo"]')
+        page.wait_for_function("__je3d.base === 'edo'", timeout=40000)
+        assert '加贺藩' in page.inner_text('#legend'), page.inner_text('#legend')[:120]
+        page.evaluate("__je3d.showRegion(__je3d.regions.find((r) => r.key === '加賀藩'))")
+        text = page.inner_text('#card')
+        assert '金沢城' in text and '金泽县' in text and '万石' in text, text[:200]
+        page.keyboard.press('Escape')
+        page.evaluate("__je3d.choose('上田')")
+        assert '上田藩' in page.inner_text('#card h2'), page.inner_text('#card h2')
+        page.keyboard.press('Escape')
+        assert 'te=edo' in page.get_attribute('#to2d', 'href')
+        # 明治
+        page.click('#eras [data-era="meiji"]')
+        page.wait_for_function("__je3d.opts.year === '1871'", timeout=40000)
+        assert '旧幕府领的府县' in page.inner_text('#legend')
+        page.click('#years [data-y="1876"]')
+        page.wait_for_function("__je3d.base === 'm1876'", timeout=40000)
+        assert page.evaluate('__je3d.regions.length') == 41
+        page.evaluate("__je3d.showRegion(__je3d.regions.find((r) => r.key === '堺県'))")
+        text = page.inner_text('#card')
+        assert '大阪府' in text and '奈良县' in text, text[:160]
+        page.keyboard.press('Escape')
+        page.click('#years [data-y="1888"]')
+        page.wait_for_function("__je3d.base === 'm1888' && __je3d.regions.length === 47", timeout=40000)
+        # 坛之浦（1185）：换到 1200 年、不着色；离开回到 1888
+        page.evaluate("__je3d.battle.start('dannoura')")
+        page.wait_for_selector('#battle:not([hidden]) .bt-tabs')
+        assert page.evaluate('__je3d.opts.year') == '1200'
+        page.keyboard.press('Escape')
+        page.wait_for_function("__je3d.opts.year === '1888'", timeout=20000)
+
+    def three_d_sync(self, page):
+        # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
+        # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
+        page.goto(self.base.replace('index.html', 'index.html?r=edo') + '#te=edo&v=139.70,35.60,4.5', timeout=60000)
+        page.wait_for_function("document.body.classList.contains('time-travel')", timeout=30000)
+        if self.narrow:
+            self.tab(page, 'map')
+        assert page.is_visible('#btn-3d'), '地图上应有平面 / 立体开关'
+        page.click('#btn-3d')
+        page.wait_for_url('**/3d.html#*', timeout=20000)
+        assert 'y=1867' in page.url and 'v=139.7' in page.url and f'lang={self.lang}' in page.url, page.url
+        page.goto(self.base.replace('index.html', 'index.html?r=nara') + '#te=nara&pe=712', timeout=60000)
+        page.wait_for_function("document.body.classList.contains('time-travel')", timeout=30000)
+        page.wait_for_function("document.querySelector('#prov-eras [data-y=\"712\"]')?.classList.contains('on')", timeout=30000)
+
     def three_d_link(self, page):
         # 平面 ⇄ 立体（3.32）：美浓国卡片的「在立体地图里看」打开 3d.html，带上 1600 年、美浓与语言；
         # 立体页按语言显示、弹出同一国的卡片，左上角回平面图的链接带回 sg / sgp / lang
@@ -1219,7 +1297,7 @@ class Case:
         name = {'zh': '美浓国', 'en': 'Mino Province', 'ja': '美濃国'}[self.lang]
         assert name in page.inner_text('#card h2'), f'立体页卡片：{page.inner_text("#card h2")!r}'
         assert page.evaluate('document.documentElement.lang') == {'zh': 'zh-CN', 'en': 'en', 'ja': 'ja'}[self.lang]
-        assert page.text_content('.brand b') == {'zh': '立体战国图', 'en': '3D Sengoku Map', 'ja': '立体戦国図'}[self.lang]
+        assert page.text_content('.brand b') == {'zh': '立体古今图', 'en': '3D Through Time', 'ja': '立体古今図'}[self.lang]
         back = page.get_attribute('#back', 'href')
         assert 'sg=1600' in back and 'sgp=' in back and f'lang={self.lang}' in back, back
 
@@ -1601,7 +1679,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('three_d_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['three_d_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('three_d_sync', '', ['three_d_sync']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('three_d_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['three_d_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
@@ -1616,7 +1694,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

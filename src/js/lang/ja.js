@@ -197,7 +197,7 @@ export default {
   'ht.note0': `この地の支配者を年代順に並べたもの：古代と戦国は旧国単位（奥羽は郡単位）、江戸は幕末にこの郡の町村をもっとも多く領した藩と、その藩を治めた家（年代は藩主の在任期間）。「今日は何の日」には、場所がこの市区町村にある記録はまだありません。`,
   'sg.years': `戦国の年`, 'sg.y': `{y}年`, 'sg.split': `ほかに {list} が分立`, 'sg.card.sub': `六つの年、誰の国か`, 'sg.life': `{a}–{b}`, 'sg.wiki': `Wikipedia`, 'sg.back': `戻る`,
   'sg.role': `{clan}を率いる（{n}か国）`, 'sg.role.side': `{clan}を率いる（{n}か国）`, 'sg.rest': `ほか {n} 家`, 'sg.related': `関連人物`, 'sg.img': `肖像は Wikimedia Commons（パブリックドメイン）`, 'sg.img.by': `肖像：{author}、{license}、Wikimedia Commons`, 'sg.bc': `前{y}`, 'ks.r.sengoku6': `戦国`,
-  'sg.3d.card': `立体地図で見る ›`, 'sg.3d': `立体`, 'sg.3d.title': `この年を立体地図で見る（地形・城・旗）`,
+  'sg.3d.card': `立体地図で見る ›`, 'sg.3d': `立体`, 'sg.3d.title': `この時代を立体地図で見る（地形・城・旗）`, 'view.2d': `平面`, 'view.sw': `平面か立体か`,
   'rl.open': `年表`, 'rl.title': `実権と歴代年表`, 'rl.sub': `「実権」は時代ごとに実際に権力を握った者。ほかのページは行をタップすると人物カード（肖像や点のある人は詳しい紹介あり）`, 'rl.tab.emperor': `天皇`, 'rl.tab.shogun': `将軍`, 'rl.tab.shikken': `執権`,
   'rl.early': `飛鳥時代以前`, 'rl.legend': `初期の天皇の在位年は『日本書紀』による。多くは伝承`, 'rl.capital': `都：{name}`, 'rl.seat': `幕府：{name}`, 'rl.again': `（再任）`,
   'rl.bakufu.鎌倉': `鎌倉幕府`, 'rl.bakufu.室町': `室町幕府`, 'rl.bakufu.江戸': `江戸幕府`,

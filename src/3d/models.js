@@ -115,6 +115,28 @@ export function office() {
   return merge(p);
 }
 
+// 古代的城柵：木栅围起的方形，四角望楼，中间政厅（多贺城、胆沢城……示意）
+export function fort() {
+  const p = [];
+  for (let i = 0; i < 4; i++) {
+    const g = box(0.9, 0.1, 0.03, 0, 0, 0.45, COL.wood);
+    g.rotateY(i * Math.PI / 2);
+    p.push(g);
+  }
+  for (const [x, z] of [[-0.45, -0.45], [0.45, -0.45], [-0.45, 0.45], [0.45, 0.45]]) {
+    p.push(box(0.1, 0.26, 0.1, x, 0, z, COL.wood), roof(0.18, 0.18, 0.07, 0.26, COL.roof, x, z));
+  }
+  p.push(box(0.36, 0.12, 0.22, 0, 0, 0, COL.shu), roof(0.48, 0.34, 0.12, 0.11, COL.tile));
+  return merge(p);
+}
+
+// 江户的宿场：一排町家（示意）
+export function inn() {
+  const p = [];
+  for (const x of [-0.22, 0, 0.22]) p.push(box(0.18, 0.1, 0.16, x, 0, 0, COL.wall), roof(0.22, 0.2, 0.07, 0.1, COL.roof, x, 0));
+  return merge(p);
+}
+
 export function tree() {
   const g = new THREE.ConeGeometry(0.07, 0.22, 5, 1);
   g.translate(0, 0.13, 0);

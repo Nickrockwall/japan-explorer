@@ -1123,13 +1123,25 @@ body.sg-mode .sg-years button.on { background: var(--ink); }
 .locate-btn.busy svg { animation: loc-spin 1s linear infinite; }
 @keyframes loc-spin { to { transform: rotate(360deg); } }
 /* 平面 / 立体：定位按钮上方一枚墨色药丸，各种屏幕都一眼看得到 */
-.view3d-btn {
-  position: absolute; right: 16px; bottom: 156px; z-index: 3; height: 38px; padding: 0 14px 0 11px; border-radius: 19px;
-  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font: 700 14px var(--serif); letter-spacing: .06em;
-  color: var(--panel); background: var(--ink); border: 1px solid var(--ink); box-shadow: var(--float);
-}
-.view3d-btn svg { width: 18px; height: 18px; }
-.view3d-btn:hover { background: #4a4038; }
+.view3d-btn { position: absolute; right: 16px; bottom: 156px; z-index: 3; }
+/* 平面 / 立体开关（3.35 改版，与 3d.html 同一个样子）：漆黑底、金边，金箔片滑到当前一侧；和别的按钮都不一样，一眼能认出是「换一种看法」 */
+.viewswitch { display: inline-flex; position: relative; padding: 3px; border-radius: 22px; isolation: isolate;
+  background: linear-gradient(#332c26, #1f1a16); border: 1px solid #b08a3e;
+  box-shadow: 0 3px 0 rgba(42, 37, 32, .28), inset 0 1px 0 rgba(255, 236, 190, .14); }
+.viewswitch::before { content: ""; position: absolute; z-index: -1; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 19px;
+  background: linear-gradient(115deg, #f3dc94 0%, #c9a24e 38%, #a77d2e 62%, #e8cb7c 100%); background-size: 220% 100%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(60, 40, 10, .35);
+  transition: transform .38s cubic-bezier(.3, 1.35, .5, 1); animation: vs-shine 1.6s ease-out .6s 1 both; }
+.viewswitch[data-on="3d"]::before { transform: translateX(100%); }
+.viewswitch:hover::before { animation: vs-shine 1.1s ease-out 1; }
+@keyframes vs-shine { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.viewswitch > a, .viewswitch > button, .viewswitch > span { flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 78px; height: 34px; padding: 0 12px;
+  border: 0; border-radius: 19px; background: none; font: 700 14px var(--serif); letter-spacing: .1em; color: #ead9ae; text-decoration: none; cursor: pointer; transition: color .25s; }
+.viewswitch > a:hover, .viewswitch > button:hover { color: #fff4d2; }
+.viewswitch > [aria-current] { color: #2a2520; cursor: default; }
+.viewswitch svg { width: 18px; height: 18px; flex: none; }
+@media (prefers-reduced-motion: reduce) { .viewswitch::before { transition: none; animation: none; } }
+.viewswitch.view3d-btn { position: absolute; } /* .viewswitch 的 relative 不能盖掉地图上的定位 */
 body.in-battle .view3d-btn, body.muni-open .view3d-btn, :root[data-map="korea"] .view3d-btn { display: none; }
 body.in-battle .locate-btn, body.muni-open .locate-btn, body.in-battle .loc-card, body.muni-open .loc-card { display: none; }
 .loc-kicker { font-size: 11.5px; color: var(--ai); letter-spacing: .08em; margin-bottom: 2px; }
@@ -1282,7 +1294,9 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .art-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; padding-top: 6px; }
   .art-sname { display: none; }
   .locate-btn { bottom: auto; top: 222px; right: 10px; width: 38px; height: 38px; }
-  .view3d-btn { bottom: auto; top: 270px; right: 10px; height: 34px; padding: 0 11px 0 9px; font-size: 13px; }
+  .view3d-btn { bottom: auto; top: 270px; right: 10px; }
+  .viewswitch > a, .viewswitch > button, .viewswitch > span { min-width: 60px; height: 30px; font-size: 13px; padding: 0 8px; gap: 4px; }
+  .viewswitch svg { width: 16px; height: 16px; }
   .art-title b { font-size: 14px; }
   .art-dlg[open] { grid-template-columns: 40px minmax(0, 1fr) 40px; }
   .art-nav { width: 34px; height: 34px; font-size: 20px; }
@@ -1426,7 +1440,7 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   .tb-info { width: auto; max-width: 34%; }
   .tb-info b { font-size: 12.5px; }
   .locate-btn { top: auto; bottom: 52px; right: 10px; width: 34px; height: 34px; }
-  .view3d-btn { top: auto; bottom: 94px; right: 10px; height: 32px; }
+  .view3d-btn { top: auto; bottom: 94px; right: 10px; }
   .era-banner { top: 50%; padding: 10px 24px; }
   /* 卡片放到右侧，不再从底部盖住大半个地图 */
   .muni-card, .muni-card.art-card, .muni-card.power-card {
@@ -1805,7 +1819,7 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
   .map-toolbar .search input, .map-toolbar .search input:focus { width: 40px; height: 40px; border-radius: 6px; padding-left: 38px; background-position: 12px 50%; }
   .map-toolbar .search input:focus, .map-toolbar .search input:not(:placeholder-shown) { width: calc(100vw - 20px - var(--safe-l) - var(--safe-r)); }
   .locate-btn { top: 104px; width: 44px; height: 44px; }
-  .view3d-btn { top: 156px; height: 38px; }
+  .view3d-btn { top: 156px; }
 
   /* 底部：图例一行（说明点一下才展开）+ 时空滑块一行 */
   .timebar { grid-template-columns: 34px auto minmax(0, 1fr) auto; align-items: center; column-gap: 10px; padding: 4px 8px; }

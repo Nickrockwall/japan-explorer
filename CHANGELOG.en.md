@@ -4,6 +4,18 @@
 
 Newest first.
 
+## 3.35 · 2026-11-11
+
+- The 3D map is no longer Sengoku only: a new row picks the period — Ancient, Kamakura, Sengoku, Edo, Meiji — 16 years in all, and ▶ plays from 712 to 1888
+- Ancient (712 / 757 / 824): the provinces as they were that year (Kaga, Noto, Awa and others before they split off), coloured by circuit; the street grids of Heijō-kyō and Heian-kyō, the circuit highways (schematic, joining the provincial capitals), provincial capitals and temples (temples only after the edict of 741), forts such as Taga and Isawa, and Dazaifu; Musashi sits in the Tōsandō before 771
+- Kamakura (1200 / 1250 / 1300): provinces coloured by the constable's family, from the lists in each province's Japanese Wikipedia article (the Hōjō grow from 4 provinces to 30); where a list has a gap with the same family on both sides that family is shown and noted, otherwise "Not recorded"; Kamakura gets a 幕 seal
+- Edo (1867): the domains at the end of the period — 192 domains plus shogunate and hatamoto land, built from the lord with the most koku in each of today's municipalities (National Museum of Japanese History data); cards give the koku, seat, last lord and the 1871 prefecture; the five highways and their post towns; Hiroshige's Famous Views of the Sixty-odd Provinces hang where they were painted; castles are now the ones really in use in the Edo period (546 castles, up to 1888)
+- Meiji: 1871 (domains become prefectures, names checked against the domain articles), 1876 (3 + 35) and 1888 (3 + 43), with today's prefectures on each card; the first railways; castles thin out after the 1873 abolition order; the capital moves to Tokyo
+- "Between the years" grows from 33 to 73 events — the Taika reforms, Heijō-kyō, the Great Buddha, Heian-kyō, the Genpei War, the Jōkyū War, the Mongol invasions, the fall of Kamakura, the sieges of Osaka, alternate attendance, the Black Ships, the return of power, the abolition of the domains, the Satsuma Rebellion… all checked against Japanese Wikipedia; Dan-no-ura and the Satsuma Rebellion replay in their own periods
+- 2D and 3D stay in step: whatever period and place you are looking at in 2D, "3D" opens the matching year at the same spot, and going back carries the period, the province year and the view
+- A new 2D | 3D switch: lacquer black with a gold rim and a gold-leaf plate that slides to the current side — the same switch on both maps, unmistakable among the other buttons
+- Fixed: in 3D the battle picker sat on top of the legend in the bottom-left corner (the legend now steps aside while it is open); on tablet widths the "between the years" chip no longer covers the legend
+
 ## 3.34 · 2026-11-11
 
 - The 3D map now tells what happened between the years: 33 events (the Ōnin War, the arrival of firearms, Nobunaga's march on Kyoto, Honnō-ji, the siege of Odawara…), each checked against Japanese Wikipedia for year, place and key facts. ▶ flies to each one in turn before returning to the whole country and spreading the ink to the next year; when you change the year yourself, "N events" appears at the bottom to step through, and battles can be replayed from there

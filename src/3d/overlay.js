@@ -107,10 +107,12 @@ function stripes(colors) {
 }
 
 // style: {fill(key) → 颜色或颜色数组（分治）, edge(a, b) → 'same' | 'front' | 'plain'}
-// grid：平安京的条坊（Path2D，世界坐标），拉近、贴图够细时才画
-export function createOverlay({ regions, edges, water, C, grid }) {
+// setBase：换底图（古代各年份的国、藩领、明治府县……，3.35）
+// setDecor：grids = 都城的条坊（Path2D，世界坐标，拉近、贴图够细时才画）；lines = 官道、街道、铁路（{path, color, width（贴图像素）, dash?}）
+export function createOverlay({ regions, edges, water, C }) {
   let style = null;
   let version = 0;
+  let grids = [], lines = [];
   const patterns = new Map();
   const pattern = (ctx, colors) => {
     const k = colors.join();
@@ -149,10 +151,10 @@ export function createOverlay({ regions, edges, water, C, grid }) {
     ctx.fillStyle = ctx.strokeStyle = WATER;
     ctx.fill(wet.lakes, 'evenodd');
     ctx.stroke(wet.rivers);
-    if (grid && k >= 6) {
+    if (k >= 6) {
       ctx.strokeStyle = 'rgba(42,37,32,0.34)';
       ctx.lineWidth = px * 0.9;
-      ctx.stroke(grid);
+      for (const g of grids) ctx.stroke(g);
     }
     // 国界：同一家的淡淡一道，两家之间是前线（深色衬底 + 亮线）
     const plain = new Path2D(), front = new Path2D(), same = new Path2D();
@@ -176,6 +178,17 @@ export function createOverlay({ regions, edges, water, C, grid }) {
     ctx.strokeStyle = '#f3e2c0';
     ctx.lineWidth = px * 1.3;
     ctx.stroke(front);
+    // 道路与铁路压在国界上面；虚线的段长按世界单位，远近一样
+    for (const l of lines) {
+      ctx.setLineDash(l.dash ? l.dash.map((d) => d) : []);
+      ctx.strokeStyle = l.under || '#f4efe2';
+      ctx.lineWidth = px * (l.width + 2.4);
+      if (l.under !== false) ctx.stroke(l.path);
+      ctx.strokeStyle = l.color;
+      ctx.lineWidth = px * l.width;
+      ctx.stroke(l.path);
+    }
+    ctx.setLineDash([]);
   }
 
   // 每块一个 canvas 贴图，尺寸随段数变
@@ -210,6 +223,8 @@ export function createOverlay({ regions, edges, water, C, grid }) {
 
   return {
     setStyle(s) { style = s; version++; },
+    setBase(r, e) { regions = r; edges = e; version++; },
+    setDecor(d) { grids = d.grids || []; lines = d.lines || []; version++; },
     get version() { return version; },
     texture,
   };

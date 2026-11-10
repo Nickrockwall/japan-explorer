@@ -1040,6 +1040,9 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (spot) setView({ center: spot.coords, zoom: Math.max(getView().zoom, 5) });
     },
     setEra(era) { state.era = era || null; render(); },
+    // 视野（立体图来回时带上：#v=经度,纬度,缩放）
+    view: () => getView(),
+    setView: (v) => { roamed = true; setView(v); }, // 链接给的视野：之后宽屏的自动取景不再盖掉它
     startBattle(b) {
       const saved = getView();
       state.battle = b;

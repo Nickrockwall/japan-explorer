@@ -32,8 +32,12 @@ def stable(text, digits):
 
 def api(params):
     os.makedirs(CACHE, exist_ok=True)
-    key = re.sub(r'[^\w]', '_', urllib.parse.urlencode(sorted(params.items())))[:150]
-    path = os.path.join(CACHE, f'{stable(key, 12)}.json')
+    full = re.sub(r'[^\w]', '_', urllib.parse.urlencode(sorted(params.items())))
+    key = full[:150]
+    # 只按前 150 个字符取名时，开头相同的两批条目（多了几个标题的同一份名单）会撞上同一个缓存文件，
+    # 后一批拿到前一批的回应、新标题被当成不存在（3.35 补故事时撞上）：长的另加全文的哈希；短的文件名不变，旧缓存照用
+    name = f'{stable(key, 12)}' if len(full) <= 150 else f'{stable(key, 12)}_{stable(full, 12)}'
+    path = os.path.join(CACHE, f'{name}.json')
     if os.path.exists(path):
         with open(path, encoding='utf-8') as f:
             return json.load(f)
