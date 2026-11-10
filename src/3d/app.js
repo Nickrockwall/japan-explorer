@@ -1,4 +1,4 @@
-// 立体战国图（试验版）：地形 + 战国势力 + 城与古国三迹
+// 立体战国图：地形 + 战国势力 + 城与古国三迹（主站战国势力图年份行的「立体」进来，#y=年&p=国&lang=）
 import * as THREE from 'three';
 import { MapControls } from './vendor/MapControls.js';
 import { unpack } from '../js/store.js';
@@ -6,11 +6,11 @@ import { loadTerrain, buildChunkGeometry, levelFor, terrainUniforms, terrainMate
 import { buildRegions, sharedEdges, buildWater, createOverlay } from './overlay.js';
 import * as models from './models.js';
 import { createBanners } from './decor.js';
+import { lang, t, nm, circuit, applyStatic } from './i18n.js';
 
 const $ = (s) => document.querySelector(s);
 const DATA = 'src/data';
 const LOOSE = new Set(['gunyu', 'contest', 'toyo_small', 'ou', 'outside', 'turn', 'split', 'neutral', 'ainu']);
-const KIND = { ichi: '一宫', fu: '国府', ji: '国分寺' };
 const coarsePointer = matchMedia('(pointer: coarse)').matches;
 
 const store = {
@@ -18,8 +18,10 @@ const store = {
   set(v) { try { localStorage.setItem('je.3d', JSON.stringify({ ...store.get(), ...v })); } catch { /* 无痕模式 */ } },
 };
 const saved = store.get();
+// 链接带来的状态：#y=1582&p=甲斐国（主站战国图的年份与选中的国）
+const link = new URLSearchParams(location.hash.slice(1));
 const opts = {
-  year: saved.year || '1560',
+  year: link.get('y') || saved.year || '1560',
   exag: saved.exag || 2,
   quality: saved.quality || (coarsePointer ? 'low' : 'high'),
   castles: saved.castles ?? true,
@@ -33,19 +35,20 @@ const json = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(`${r.statu
 const status = (s) => { $('#loading-text').textContent = s; };
 
 async function main() {
+  applyStatic();
   const canvas = $('#scene');
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: opts.quality === 'high', powerPreference: 'high-performance' });
   } catch (e) {
-    status('这台设备的浏览器不支持 WebGL，立体地图打不开。');
+    status(t('noWebgl'));
     $('#loading').classList.add('failed');
     return;
   }
   renderer.setPixelRatio(Math.min(devicePixelRatio, opts.quality === 'high' ? 2 : 1.25));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  status('正在下载地形…');
+  status(t('dl'));
   const [terrain, provinces, units, sg, sites, castles, waterRaw] = await Promise.all([
     loadTerrain('src/3d/terrain'),
     json(`${DATA}/provinces.pack.json`).then(unpack),
@@ -55,7 +58,8 @@ async function main() {
     json('src/3d/castles.json'),
     json('src/3d/water.json').then(unpack),
   ]);
-  status('正在搭建地形…');
+  status(t('build'));
+  if (!sg.years.includes(opts.year)) opts.year = '1560';
   const P = terrain.project;
   const C = terrain.C;
 
@@ -161,11 +165,15 @@ async function main() {
 
   function buildChunk(ch, n) {
     const geo = buildChunkGeometry(terrain, ch.cx, ch.cz, n);
-    const tex = overlay.texture(ch.cx, ch.cz, texSize(n), ch.mesh?.material.uniforms.uTex.value);
+    const u = ch.mesh?.material.uniforms;
+    // 墨晕进行中、这块还留着旧贴图：另开一张画新的，旧的留给 uPrev
+    const keep = u && !(ink && u.uPrev.value === u.uTex.value);
+    const tex = overlay.texture(ch.cx, ch.cz, texSize(n), keep ? u.uTex.value : null);
     if (ch.mesh) {
       ch.mesh.geometry.dispose();
       ch.mesh.geometry = geo;
-      ch.mesh.material.uniforms.uTex.value = tex;
+      if (u.uPrev.value === u.uTex.value && !ink) u.uPrev.value = tex;
+      u.uTex.value = tex;
     } else {
       ch.mesh = new THREE.Mesh(geo, terrainMaterial(uniforms, tex));
       terrainGroup.add(ch.mesh);
@@ -245,9 +253,15 @@ async function main() {
     const t0 = performance.now();
     for (const job of todo) {
       if (performance.now() - t0 > 12) { dirty = true; break; }
-      if (job.texOnly) overlay.texture(job.ch.cx, job.ch.cz, texSize(job.ch.n), job.ch.mesh.material.uniforms.uTex.value);
-      else buildChunk(job.ch, job.n);
+      if (job.texOnly) {
+        const u = job.ch.mesh.material.uniforms;
+        if (ink && u.uPrev.value === u.uTex.value) u.uTex.value = overlay.texture(job.ch.cx, job.ch.cz, texSize(job.ch.n), null);
+        else overlay.texture(job.ch.cx, job.ch.cz, texSize(job.ch.n), u.uTex.value);
+        job.done = true;
+      } else buildChunk(job.ch, job.n);
     }
+    // 新贴图都画好了（或等了 1.5 秒）才开始晕开，免得一块块跳出来
+    if (ink && ink.start === null && (!todo.some((j) => j.texOnly && !j.done) || performance.now() - ink.t0 > 1500)) ink.start = performance.now();
     if (todo.length) dirty = true;
   }
 
@@ -284,11 +298,25 @@ async function main() {
       mesh.computeBoundingSphere();
       mesh.userData.list = list;
     };
-    const on = show && opts.castles ? castles.filter(castleOn) : [];
+    // 全国几百座城：彼此太近的只留条目多的（castles 已按语言条目数排好），拉近后间距变小、逐渐都显示；古国三迹排在城后面
+    const gap = k * 2.4, grid = new Map(), kept = new Set();
+    const room = (o) => {
+      const gx = Math.floor(o.xz[0] / gap), gz = Math.floor(o.xz[1] / gap);
+      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+        for (const b of grid.get(`${gx + i},${gz + j}`) || []) if (Math.hypot(b.xz[0] - o.xz[0], b.xz[1] - o.xz[1]) < gap) return false;
+      }
+      const key = `${gx},${gz}`;
+      grid.set(key, [...(grid.get(key) || []), o]);
+      kept.add(o);
+      return true;
+    };
+    const on = show && opts.castles ? castles.filter((c) => castleOn(c) && room(c)) : [];
     const late = +opts.year >= 1576; // 安土城（1576）以后画成天守，以前画成土垒与望楼（示意）
     fill(kinds.tenshu, late ? on : [], 1);
     fill(kinds.yagura, late ? [] : on, 1);
-    for (const kind of ['ichi', 'ji', 'fu']) fill(kinds[kind], show && opts.sites ? sites.filter((s) => s.kind === kind) : [], 0.8);
+    const siteOn = show && opts.sites ? sites.filter(room) : [];
+    for (const kind of ['ichi', 'ji', 'fu']) fill(kinds[kind], siteOn.filter((s) => s.kind === kind), 0.8);
+    placeBuildings.kept = kept;
     placeBuildings.k = k;
   }
 
@@ -357,20 +385,20 @@ async function main() {
         const flag = flags.get(a.c);
         // 有旗时名字写在旗顶上（家纹在旗上）；没有旗的（1600 年两军）照旧
         const mon = !flag && sg.clans[a.c]?.mon ? `<span class="mon" style="border-color:${ci.color}"><i style="--mon:url(src/assets/crests/${a.c}.png)"></i></span>` : '';
-        add(`c-${opts.year}-${a.c}-${flag ? 'f' : 'm'}`, a.at[0], a.at[1], flag ? flag.height * 1.04 : 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${ci.zh}</b>`, 'clan');
+        add(`c-${opts.year}-${a.c}-${flag ? 'f' : 'm'}`, a.at[0], a.at[1], flag ? flag.height * 1.04 : 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${esc(nm(ci))}</b>`, 'clan');
       }
     }
     if (d < 1500) {
       for (const r of regions) {
         if (!r.center || !r.props.zh) continue;
-        add(`p-${r.key}`, r.center[0], r.center[1], 1, 300 + r.area / 50, r.props.zh, 'prov');
+        add(`p-${r.key}`, r.center[0], r.center[1], 1, 300 + r.area / 50, esc(provName(r.key, true)), 'prov');
       }
     }
     if (d < 280 && opts.castles) {
-      for (const c of castles) if (castleOn(c)) add(`k-${c.q}`, c.xz[0], c.xz[1], 1.6 * placeBuildings.k, 200 + c.links, c.zh, 'castle');
+      for (const c of castles) if (placeBuildings.kept.has(c)) add(`k-${c.q}`, c.xz[0], c.xz[1], 1.6 * placeBuildings.k, 200 + c.links, esc(castleName(c)), 'castle');
     }
     if (d < 110 && opts.sites) {
-      for (const s of sites) add(`s-${s.id}`, s.xz[0], s.xz[1], 1.0 * placeBuildings.k, 100 + (s.kind === 'ichi' ? 10 : 0), `<small>${KIND[s.kind]}</small>${s.name}`, 'site');
+      for (const s of sites) if (placeBuildings.kept.has(s)) add(`s-${s.id}`, s.xz[0], s.xz[1], 1.0 * placeBuildings.k, 100 + (s.kind === 'ichi' ? 10 : 0), `<small>${t(s.kind)}</small>${esc(s.name)}`, 'site');
     }
     items.sort((a, b) => b.pri - a.pri);
     const placed = [];
@@ -445,15 +473,27 @@ async function main() {
   const card = $('#card');
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const sw = (c) => `<i class="sw" style="background:${info(c).color}"></i>`;
-  const personZh = (ja) => people[ja]?.zh || ja;
+  const castleName = (c) => (lang === 'zh' ? c.zh : lang === 'en' ? c.en || c.ja : c.ja);
+  // 回平面战国图：同一年份、选中的国、同一语言（顶栏左上的链接跟着变）
+  const flatLink = (key) => `index.html#sg=${opts.year}${key ? `&sgp=${encodeURIComponent(key)}` : ''}&lang=${lang}`;
+  const syncBack = () => { $('#back').href = flatLink(focused?.type === 'region' ? focused.key : null); };
+  const person = (ja) => nm(people[ja]) || ja;
+  // 国名：英文去掉「Province」；陆奥、出羽的分区与蝦夷地在 provinces 之外另查
+  const provProps = new Map([...provinces.features, ...units.add].map((f) => [f.properties.key, f.properties]));
+  const provName = (key, short) => {
+    if (key === '琉球') return t('ryukyu');
+    const n = nm(provProps.get(key)) || key;
+    return short && lang === 'en' ? n.replace(/ Province$/, '') : n;
+  };
   let focused = null;
   function openCard(html) {
-    card.innerHTML = `<button class="x" type="button" aria-label="关闭">×</button>${html}`;
+    card.innerHTML = `<button class="x" type="button" aria-label="${t('close')}">×</button>${html}`;
     card.hidden = false;
     document.body.classList.add('card-open');
     card.querySelector('.x').onclick = closeCard;
+    syncBack();
   }
-  function closeCard() { card.hidden = true; focused = null; document.body.classList.remove('card-open'); }
+  function closeCard() { card.hidden = true; focused = null; document.body.classList.remove('card-open'); syncBack(); }
   function showRegion(r) {
     focused = { type: 'region', key: r.key };
     const rows = sg.years.map((y) => {
@@ -461,32 +501,32 @@ async function main() {
       if (!e) return '';
       const cs = [e.c, ...(e.with || [])];
       const head = sg.heads[y]?.[e.c];
-      return `<tr class="${y === opts.year ? 'cur' : ''}" data-y="${y}"><th>${y}</th><td>${cs.map((c) => `${sw(c)}${esc(info(c).zh)}`).join('、')}${e.with ? '<em>分治</em>' : ''}${head ? `<span class="who">${esc(personZh(head))}</span>` : ''}</td></tr>`;
+      return `<tr class="${y === opts.year ? 'cur' : ''}" data-y="${y}"><th>${y}</th><td>${cs.map((c) => `${sw(c)}${esc(nm(info(c)))}`).join(lang === 'en' ? ', ' : '、')}${e.with ? `<em>${t('split')}</em>` : ''}${head ? `<span class="who">${esc(person(head))}</span>` : ''}</td></tr>`;
     }).join('');
     const koku = sg.koku?.[r.key];
-    const parent = r.props.parent ? `（${esc(r.props.parent.replace(/国$/, ''))}国内的分区）` : '';
-    const link = `index.html#sg=${opts.year}&sgp=${encodeURIComponent(r.key)}`;
-    openCard(`<h2>${esc(r.props.zh || r.key)}${parent}</h2>
-      <p class="sub">${esc(r.props.circuit || '')}${koku ? ` · 1598 年石高约 ${Math.round(koku / 10000)} 万石` : ''}</p>
+    const parent = r.props.parent ? t('part', { p: provName(r.props.parent) }) : '';
+    const n = lang === 'en' ? Math.round(koku / 1000) * 1000 : Math.round(koku / 10000);
+    openCard(`<h2>${esc(nm(r.props) || r.key)}${esc(parent)}</h2>
+      <p class="sub">${esc(circuit(r.props.circuit || ''))}${koku ? esc(t('koku', { n: n.toLocaleString('en') })) : ''}</p>
       <table class="yrs">${rows}</table>
-      <p class="links"><a href="${link}">在平面战国图里看</a></p>`);
+      <p class="links"><a href="${flatLink(r.key)}">${t('flat')}</a></p>`);
     card.querySelectorAll('tr[data-y]').forEach((tr) => { tr.onclick = () => setYear(tr.dataset.y); });
   }
   function showCastle(c) {
     focused = { type: 'castle', q: c.q };
-    openCard(`<h2>${esc(c.zh)}</h2>
-      <p class="sub">${esc((c.prov || '').replace(/国$/, '国'))} · 城</p>
-      <p>筑城 ${c.built} 年${c.gone ? ` · 废城 ${c.gone} 年` : ''}</p>
-      <p class="note">${+opts.year >= 1576 ? '1576 年安土城之后统一画成天守，' : '1576 年安土城之前统一画成土垒与望楼，'}只是示意，不代表这座城当年的样子。年份取自日文维基百科。</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(c.wiki)}" target="_blank" rel="noopener">日文维基百科</a></p>`);
+    openCard(`<h2>${esc(castleName(c))}</h2>
+      <p class="sub">${esc(provName(c.prov))} · ${t('castle')}</p>
+      <p>${t('built', { y: c.built })}${c.gone ? t('gone', { y: c.gone }) : ''}</p>
+      <p class="note">${t(+opts.year >= 1576 ? 'late' : 'early')}${t('castleNote')}</p>
+      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(c.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
     flyTo(c.xz[0], c.xz[1], Math.min(camera.position.distanceTo(controls.target), 60));
   }
   function showSite(s) {
     focused = { type: 'site', id: s.id };
     openCard(`<h2>${esc(s.name)}</h2>
-      <p class="sub">${esc(s.prov)} · ${KIND[s.kind]}${s.precise ? '' : ' · 位置只到市町村'}</p>
-      <p class="note">古国三迹：律令时代各国的一宫、国府与国分寺，与平面地图「古国巡礼」相同。战国时多数国府与国分寺已经荒废。</p>
-      ${s.wiki ? `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(s.wiki)}" target="_blank" rel="noopener">日文维基百科</a></p>` : ''}`);
+      <p class="sub">${esc(provName(s.prov))} · ${t(s.kind)}${s.precise ? '' : t('muni')}</p>
+      <p class="note">${t('siteNote')}</p>
+      ${s.wiki ? `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(s.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>` : ''}`);
     flyTo(s.xz[0], s.xz[1], Math.min(camera.position.distanceTo(controls.target), 40));
   }
 
@@ -509,10 +549,38 @@ async function main() {
     dirty = true;
   }
 
+  // —— 换年份的墨晕 ——
+  // 每块留着旧贴图（uPrev），新势力色画进另一张 canvas；可见的块都画好后 uInk 从 0 走到 1（着色器 inkSpread），再丢掉旧贴图
+  const INK_MS = 1600;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let ink = null; // {t0, start}：start 为 null 时还在等新贴图画完
+  function finishInk() {
+    for (const ch of chunks) {
+      const u = ch.mesh?.material.uniforms;
+      if (u && u.uPrev.value !== u.uTex.value) { u.uPrev.value.dispose(); u.uPrev.value = u.uTex.value; }
+    }
+    uniforms.uInk.value = 1;
+    ink = null;
+  }
+  function stepInk(now) {
+    if (!ink) return;
+    dirty = true;
+    if (ink.start === null) return;
+    const t = Math.min((now - ink.start) / INK_MS, 1);
+    uniforms.uInk.value = 1 - (1 - t) ** 2;
+    if (t >= 1) finishInk();
+  }
+
   // —— 年份、图例、设置 ——
   function setYear(y) {
+    if (ink) finishInk();
+    const changed = y !== opts.year;
     opts.year = y;
     store.set({ year: y });
+    if (changed && opts.tint && !calm) {
+      ink = { t0: performance.now(), start: null };
+      uniforms.uInk.value = 0;
+    }
     applyStyle();
     anchors = clanAnchors(y);
     refreshBanners();
@@ -520,6 +588,7 @@ async function main() {
     renderLegend();
     placeBuildings();
     if (focused?.type === 'region') showRegion(byKey.get(focused.key));
+    syncBack();
     dirty = true;
   }
   $('#years').innerHTML = sg.years.map((y) => `<button type="button" data-y="${y}" aria-pressed="${y === opts.year}">${y}</button>`).join('');
@@ -533,8 +602,8 @@ async function main() {
       count.set(c, (count.get(c) || 0) + 1);
     }
     const list = [...count].sort((a, b) => (LOOSE.has(a[0]) - LOOSE.has(b[0])) || b[1] - a[1]);
-    $('#legend').innerHTML = list.slice(0, 14).map(([c, n]) => `<button type="button" data-c="${c}">${sw(c)}${esc(info(c).zh)}<span>${n}</span></button>`).join('')
-      + (list.length > 14 ? `<span class="more">其余 ${list.length - 14} 家</span>` : '');
+    $('#legend').innerHTML = list.slice(0, 14).map(([c, n]) => `<button type="button" data-c="${c}">${sw(c)}${esc(nm(info(c)))}<span>${n}</span></button>`).join('')
+      + (list.length > 14 ? `<span class="more">${t('more', { n: list.length - 14 })}</span>` : '');
   }
   $('#legend').addEventListener('click', (e) => {
     const b = e.target.closest('button[data-c]');
@@ -610,11 +679,19 @@ async function main() {
   addEventListener('resize', resize);
   resize();
   lookAt(137.2, 35.6, homeDist());
+  syncBack();
+  // 从平面战国图带着选中的国进来：打开它的卡片并飞过去
+  const want = byKey.get(link.get('p'));
+  if (want?.center) {
+    showRegion(want);
+    flyTo(want.center[0], want.center[1], THREE.MathUtils.clamp(Math.sqrt(want.area) * 3, 150, 700));
+  }
 
   let frames = 0;
   function frame(now) {
     requestAnimationFrame(frame);
     stepFlight(now);
+    stepInk(now);
     // 目标点贴着地面，镜头不钻进山里
     const ty = groundY(controls.target.x, controls.target.z);
     if (Math.abs(controls.target.y - ty) > 0.01) {
@@ -647,11 +724,11 @@ async function main() {
   }
   placeBuildings();
   requestAnimationFrame(frame);
-  window.__je3d = { camera, controls, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P, regions, castles, groundY, pick: (x, y) => pick({ clientX: x, clientY: y }) };
+  window.__je3d = { camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P, regions, castles, groundY, pick: (x, y) => pick({ clientX: x, clientY: y }) };
 }
 
 main().catch((e) => {
   console.error(e);
-  status(`加载失败：${e.message}`);
+  status(t('fail', { m: e.message }));
   $('#loading').classList.add('failed');
 });

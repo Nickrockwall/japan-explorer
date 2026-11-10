@@ -202,6 +202,8 @@ float paper() {
 
 const FRAG = /* glsl */`
 uniform sampler2D uTex;
+uniform sampler2D uPrev;
+uniform float uInk;
 uniform float uTint;
 uniform vec3 uFog;
 uniform float uFogDensity;
@@ -224,8 +226,26 @@ vec3 hypso(float h) {
   c = mix(c, vec3(0.93, 0.92, 0.89), smoothstep(2500.0, 3100.0, h));
   return c;
 }
+// 换年份时的墨晕：新势力色从噪声的低处一团团晕开（uInk 0 → 1），前沿一圈墨边，只在颜色有变化的地方
+vec4 inkSpread(vec4 ov) {
+  vec4 ov0 = texture2D(uPrev, vUv);
+  vec2 q = vW.xz / (uDist * 0.07 + 6.0);
+  float n = 0.55 * vnoise(q) + 0.3 * vnoise(q * 2.3 + 7.0) + 0.15 * vnoise(q * 5.1 + 3.0);
+  float front = uInk * 1.3 - 0.15;
+  float e = 0.025;
+  float m = smoothstep(n - e, n + e, front);
+  vec4 c = mix(ov0, ov, m);
+  float changed = smoothstep(0.03, 0.12, length(ov.rgb - ov0.rgb));
+  // 墨边在还没晕到的一侧，往外渐淡，带点洇开的颗粒
+  float ahead = n - front;
+  float rim = smoothstep(-e, 0.0, ahead) * (1.0 - smoothstep(0.0, 0.06, ahead)) * changed * (1.0 - smoothstep(0.85, 1.0, uInk));
+  rim *= 0.7 + 0.3 * vnoise(q * 23.0);
+  c.rgb = mix(c.rgb, vec3(0.16, 0.14, 0.13), rim * 0.7);
+  return c;
+}
 void main() {
   vec4 ov = texture2D(uTex, vUv);
+  if (uInk < 1.0) ov = inkSpread(ov);
   if (ov.a < 0.2) discard;
   vec3 n = normalize(vN);
   float slope = 1.0 - n.y;
@@ -284,12 +304,13 @@ export function terrainUniforms() {
     uDetail: { value: 1 },
     uStyle: { value: 1 },
     uDist: { value: 1000 },
+    uInk: { value: 1 },
   };
 }
 
 export function terrainMaterial(shared, tex) {
   return new THREE.ShaderMaterial({
-    uniforms: { ...shared, uTex: { value: tex } },
+    uniforms: { ...shared, uTex: { value: tex }, uPrev: { value: tex } },
     vertexShader: VERT,
     fragmentShader: FRAG,
   });

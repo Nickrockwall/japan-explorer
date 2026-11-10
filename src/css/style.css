@@ -1614,6 +1614,8 @@ dialog.shared::backdrop { background: rgba(42,37,32,.45); }
 .pw-go:hover { background: #3a1f1c; color: #f3ead9; }
 /* 「数据有误？」：各卡片末尾一行，不抢眼 */
 .fix-row { margin: 10px 0 2px; text-align: right; }
+.sg-3d-link { float: left; font-size: 12px; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--kin); }
+.sg-3d-link:hover { color: var(--kin); }
 .fix-link { font-size: 11px; color: var(--muted); text-decoration: none; border-bottom: 1px dotted currentColor; }
 .fix-link:hover { color: var(--kin); }
 .koseki .fix-link, .rl-body .fix-link { color: #8a7a68; }

@@ -608,8 +608,11 @@ async function main() {
     openClan(b.dataset.clan);
     audio.play('click');
   });
+  // 立体战国图（3d.html）：带上年份、选中的国与语言
+  const open3d = () => { location.href = `3d.html#y=${sg.year}${sg.focus ? `&p=${encodeURIComponent(sg.focus)}` : ''}&lang=${lang}`; };
   sgYears.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="rl-open"]')) { openRulers(); return; }
+    if (e.target.closest('[data-act="sg-3d"]')) { open3d(); return; }
     const b = e.target.closest('[data-y]');
     if (b) setSengokuYear(b.dataset.y);
   });
@@ -672,6 +675,7 @@ async function main() {
   });
   sgCard.addEventListener('click', (e) => {
     if (e.target.closest('[data-act="sg-close"]')) { closeSengoku(); return; }
+    if (e.target.closest('[data-act="sg-3d"]')) { e.preventDefault(); open3d(); return; }
     const r = sg?.handle(e);
     if (r?.prov) { focusSengoku(r.prov); return; }
     if (r?.close) { closeSengoku(); return; }
@@ -1056,7 +1060,8 @@ async function main() {
         sg = createSengoku(d, map.setSengokuUnits(units), uiPref.get('sgYear', '1560'), { rulers, bios });
         if (rulers && !rl) rl = { rulers, bios, regimes: null };
         sgYears.innerHTML = sg.years.map((y) => `<button type="button" role="tab" data-y="${y}">${esc(t(`sg.btn.${y}`))}</button>`).join('')
-          + (rl ? `<button type="button" class="kr-open" data-act="rl-open">${esc(t('rl.open'))}</button>` : '');
+          + (rl ? `<button type="button" class="kr-open" data-act="rl-open">${esc(t('rl.open'))}</button>` : '')
+          + `<button type="button" class="kr-open" data-act="sg-3d" title="${esc(t('sg.3d.title'))}">${esc(t('sg.3d'))}</button>`;
         map.setSengoku(sg);
         updateLegend(map);
         syncArtCard();

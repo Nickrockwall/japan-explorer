@@ -144,6 +144,12 @@ class Case:
         # 1560 年还没有安土城（1576 年筑），1582 年有
         on = page.evaluate("y => __je3d.castles.filter((c) => c.built <= y && (!c.gone || c.gone >= y)).map((c) => c.ja)", 1560)
         assert '安土城' not in on and len(on) >= 30, f'1560 年的城：{len(on)}'
+        # 全国的城（3.32）：关东、东北、九州都有；古代城柵（多賀城）不在
+        names = page.evaluate("__je3d.castles.map((c) => c.ja)")
+        assert {'江戸城', '小田原城', '熊本城', '会津若松城'} & set(names) >= {'江戸城', '小田原城', '熊本城'} and '多賀城' not in names, f'城 {len(names)}'
+        # 换年份：墨晕（uInk 0 → 1）走完，旧贴图丢掉
+        page.click('#years [data-y="1573"]')
+        page.wait_for_function('__je3d.uniforms.uInk.value >= 1', timeout=40000)
 
     def deeplink(self, page):
         page_kanji = page.text_content('.modern-title .kanji')
@@ -1156,6 +1162,22 @@ class Case:
         page.keyboard.press('Escape')
         assert 'sgp=' not in page.evaluate('location.hash'), '关卡片后地址栏不应再带 sgp'
 
+    def three_d_link(self, page):
+        # 平面 ⇄ 立体（3.32）：美浓国卡片的「在立体地图里看」打开 3d.html，带上 1600 年、美浓与语言；
+        # 立体页按语言显示、弹出同一国的卡片，左上角回平面图的链接带回 sg / sgp / lang
+        page.wait_for_selector('#sg-card:not([hidden]) .sg-3d-link', timeout=20000)
+        page.click('#sg-card .sg-3d-link')
+        page.wait_for_url('**/3d.html#*', timeout=20000)
+        assert 'y=1600' in page.url and f'lang={self.lang}' in page.url, page.url
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.wait_for_selector('#card:not([hidden])', timeout=40000)
+        name = {'zh': '美浓国', 'en': 'Mino Province', 'ja': '美濃国'}[self.lang]
+        assert name in page.inner_text('#card h2'), f'立体页卡片：{page.inner_text("#card h2")!r}'
+        assert page.evaluate('document.documentElement.lang') == {'zh': 'zh-CN', 'en': 'en', 'ja': 'ja'}[self.lang]
+        assert page.text_content('.brand b') == {'zh': '立体战国图', 'en': '3D Sengoku Map', 'ja': '立体戦国図'}[self.lang]
+        back = page.get_attribute('#back', 'href')
+        assert 'sg=1600' in back and 'sgp=' in back and f'lang={self.lang}' in back, back
+
     def kako(self, page):
         # 彼时今日：深链接 #kako=06-21 打开 6 月 21 日（1582 年本能寺之变 / 信长忌日在其中），每页 3 条可换一批，
         # 同一天刷新顺序不变；点一条选中所在县并在地图上插图钉
@@ -1534,7 +1556,7 @@ class Case:
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
-             ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
+             ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('three_d_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['three_d_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),

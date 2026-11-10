@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>立体战国图（试验版）· 古今日本地图</title>
-<meta name="robots" content="noindex">
+<title>立体战国图 · 古今日本地图</title>
 <link rel="icon" href="src/assets/icons/favicon.svg" type="image/svg+xml">
 <style>
   :root {
@@ -14,6 +13,10 @@
     --float: 0 2px 0 rgba(42, 37, 32, .14);
     --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
     --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  }
+  :root:not([lang="zh-CN"]) {
+    --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", "Noto Sans JP", "Noto Sans CJK JP", system-ui, sans-serif;
+    --serif: "Noto Serif JP", "Source Han Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
@@ -28,7 +31,6 @@
   .brand img { width: 22px; height: 22px; }
   .brand b { font: 700 15px var(--serif); }
   .brand small { color: var(--muted); }
-  .beta { font-size: 11px; color: #fff; background: var(--shu); border-radius: 3px; padding: 0 5px; }
   #years { display: flex; padding: 3px; gap: 2px; }
   #years button { border: 0; background: none; padding: 5px 10px; border-radius: 3px; font-weight: 600; min-height: 32px; }
   #years button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
@@ -101,37 +103,37 @@
 </style>
 </head>
 <body>
-<canvas id="scene" aria-label="立体战国图：拖动平移，滚轮或双指缩放，右键或双指旋转"></canvas>
+<canvas id="scene" data-t-aria="scene" aria-label="立体战国图：拖动平移，滚轮或双指缩放，右键或双指旋转"></canvas>
 <div id="labels"></div>
 <div id="top">
-  <a class="brand float" href="index.html" title="回到平面地图">
-    <img src="src/assets/icons/seal.svg" alt=""><b>立体战国图</b><span class="beta">试验版</span><small>← 平面地图</small>
+  <a class="brand float" id="back" href="index.html" data-t-title="backTitle" title="回到平面战国图">
+    <img src="src/assets/icons/seal.svg" alt=""><b data-t="brand">立体战国图</b><small data-t="back">← 平面地图</small>
   </a>
-  <div id="years" class="float" role="group" aria-label="年份"></div>
+  <div id="years" class="float" role="group" data-t-aria="years" aria-label="年份"></div>
   <div class="tools">
-    <button id="btn-in" type="button" title="拉近" aria-label="拉近">＋</button>
-    <button id="btn-out" type="button" title="拉远" aria-label="拉远">－</button>
-    <button id="btn-home" type="button" title="回到全国" aria-label="回到全国">⌂</button>
-    <button id="btn-settings" type="button" title="设置" aria-label="设置">⚙</button>
+    <button id="btn-in" type="button" data-t-title="in" data-t-aria="in" title="拉近" aria-label="拉近">＋</button>
+    <button id="btn-out" type="button" data-t-title="out" data-t-aria="out" title="拉远" aria-label="拉远">－</button>
+    <button id="btn-home" type="button" data-t-title="home" data-t-aria="home" title="回到全国" aria-label="回到全国">⌂</button>
+    <button id="btn-settings" type="button" data-t-title="settings" data-t-aria="settings" title="设置" aria-label="设置">⚙</button>
   </div>
 </div>
 <div id="settings" class="float" hidden>
-  <h3>地形起伏</h3>
-  <div class="seg"><button type="button" data-exag="1">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>
-  <h3>画质</h3>
-  <div class="seg"><button type="button" data-q="high">高</button><button type="button" data-q="low">省电</button></div>
-  <h3>显示</h3>
-  <label><input type="checkbox" data-opt="style"> 屏风风格（青海波、描金、墨色）</label>
-  <label><input type="checkbox" data-opt="tint"> 势力着色</label>
-  <label><input type="checkbox" data-opt="castles"> 城（近畿）</label>
-  <label><input type="checkbox" data-opt="sites"> 一宫·国府·国分寺</label>
-  <label><input type="checkbox" data-opt="trees"> 树林（拉近时）</label>
+  <h3 data-t="exag">地形起伏</h3>
+  <div class="seg"><button type="button" data-exag="1" data-t="real">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>
+  <h3 data-t="quality">画质</h3>
+  <div class="seg"><button type="button" data-q="high" data-t="high">高</button><button type="button" data-q="low" data-t="low">省电</button></div>
+  <h3 data-t="show">显示</h3>
+  <label><input type="checkbox" data-opt="style"> <span data-t="o.style">屏风风格（青海波、描金、墨色）</span></label>
+  <label><input type="checkbox" data-opt="tint"> <span data-t="o.tint">势力着色</span></label>
+  <label><input type="checkbox" data-opt="castles"> <span data-t="o.castles">城</span></label>
+  <label><input type="checkbox" data-opt="sites"> <span data-t="o.sites">一宫·国府·国分寺</span></label>
+  <label><input type="checkbox" data-opt="trees"> <span data-t="o.trees">树林（拉近时）</span></label>
 </div>
 <div id="legend" class="float"></div>
 <div id="card" class="float" hidden></div>
-<div id="hint" class="float">拖动平移 · 滚轮缩放 · 右键拖动旋转 · 点一国看六个年份</div>
-<div id="credit">地形：国土地理院 標高タイル · 湖河与土地覆盖：地球地図日本 · 城：Wikidata / 日文维基百科 · 渲染：three.js</div>
-<div id="loading"><div><img src="src/assets/icons/seal.svg" alt=""><p id="loading-text">正在加载…</p></div></div>
+<div id="hint" class="float" data-t="hint">拖动平移 · 滚轮缩放 · 右键拖动旋转 · 点一国看六个年份</div>
+<div id="credit" data-t="credit">地形：国土地理院 標高タイル · 湖河与土地覆盖：地球地図日本 · 城：Wikidata / 日文维基百科 · 渲染：three.js</div>
+<div id="loading"><div><img src="src/assets/icons/seal.svg" alt=""><p id="loading-text" data-t="loading">正在加载…</p></div></div>
 <script type="importmap">
 { "imports": { "three": "./src/3d/vendor/three.module.min.js" } }
 </script>

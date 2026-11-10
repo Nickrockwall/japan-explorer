@@ -1,5 +1,6 @@
-// 各家的旗指物（色地 + 白圈家纹 + 竖写家名）
+// 各家的旗指物（色地 + 白圈家纹 + 竖写家名；英文界面也写日文汉字家名，旗上的名字照旗指物的样子竖写）
 import * as THREE from 'three';
+import { lang } from './i18n.js';
 
 // 旗指物：竿 + 横木 + 长旗（贴图：家的颜色作地，上部白圈里墨色家纹，下面竖写家名）
 const crestCache = new Map();
@@ -81,7 +82,7 @@ export function createBanners() {
       const b = { a, obj, mat, size: THREE.MathUtils.clamp(Math.sqrt(a.n) * 0.8, 1, 1.6) };
       (hasMon(a.c) ? loadCrest(a.c) : Promise.resolve(null)).then((img) => {
         if (my !== token) return;
-        const tex = new THREE.CanvasTexture(bannerCanvas(ci.color, ci.zh, img));
+        const tex = new THREE.CanvasTexture(bannerCanvas(ci.color, lang === 'zh' ? ci.zh : ci.ja, img));
         tex.colorSpace = THREE.SRGBColorSpace;
         mat.map = tex;
         mat.color.set('#ffffff');

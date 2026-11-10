@@ -245,7 +245,9 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const x = `<button class="muni-card-x" type="button" data-act="sg-close" aria-label="${esc(t('close'))}">×</button>`;
     const what = person ? t('fix.w.person', { name: personName(person) })
       : clan ? t('fix.w.clan', { name: clanName(year, clan), y: year }) : t('fix.w.prov', { name: provName(focus) });
-    return x + (person ? personCard(person) : clan ? clanCard(clan) : provCard(focus)) + `<p class="fix-row">${fixLink(what)}</p>`;
+    // 国别卡：左边「在立体地图里看」（3d.html，带上年份与这一国）
+    const go3d = person || clan ? '' : `<a class="sg-3d-link" href="3d.html" data-act="sg-3d">${esc(t('sg.3d.card'))}</a>`;
+    return x + (person ? personCard(person) : clan ? clanCard(clan) : provCard(focus)) + `<p class="fix-row">${go3d}${fixLink(what)}</p>`;
   }
   // 两国交界怎么画：0 = 同一家的领国，不画（合成一片）；2 = 两家各自的领国，势力前线；1 = 其余（照常画国界）。
   // 总称（LOOSE）不是一家，不合并；分治的国也不合并

@@ -70,15 +70,26 @@ export function sharedEdges(regions, project) {
   return out;
 }
 
+// 湖与河各条带包围盒；每块只拼自己范围里的（见 waterIn），整张日本的路径每块都光栅化一次太慢
 export function buildWater(water, project) {
-  const lakes = new Path2D();
-  for (const poly of water.lakes) poly.forEach((r) => ringPath(lakes, r, project));
-  const rivers = new Path2D();
-  for (const line of water.rivers) line.forEach(([lon, lat], i) => {
-    const [x, z] = project(lon, lat);
-    if (i) rivers.lineTo(x, z); else rivers.moveTo(x, z);
+  const lakes = water.lakes.map((poly) => ({ poly, bbox: bboxOf(poly, project) }));
+  const rivers = water.rivers.map((line) => ({ line, bbox: bboxOf([line], project) }));
+  return { lakes, rivers, project, cache: new Map() };
+}
+
+function waterIn(water, x0, z0, x1, z1) {
+  const key = `${x0},${z0}`;
+  let w = water.cache.get(key);
+  if (w) return w;
+  const hit = (b) => b[2] >= x0 && b[0] <= x1 && b[3] >= z0 && b[1] <= z1;
+  w = { lakes: new Path2D(), rivers: new Path2D() };
+  for (const l of water.lakes) if (hit(l.bbox)) l.poly.forEach((r) => ringPath(w.lakes, r, water.project));
+  for (const r of water.rivers) if (hit(r.bbox)) r.line.forEach(([lon, lat], i) => {
+    const [x, z] = water.project(lon, lat);
+    if (i) w.rivers.lineTo(x, z); else w.rivers.moveTo(x, z);
   });
-  return { lakes, rivers };
+  water.cache.set(key, w);
+  return w;
 }
 
 function stripes(colors) {
@@ -127,15 +138,16 @@ export function createOverlay({ regions, edges, water, C }) {
       if (!Array.isArray(f)) { ctx.strokeStyle = f; ctx.lineWidth = px * 1.2; ctx.stroke(r.path); }
     }
     // 湖、河：画成半透明（alpha 0.5 = 水面）。先擦掉再画，免得与陆地色叠成不透明
+    const wet = waterIn(water, x0 - pad, z0 - pad, x0 + C + pad, z0 + C + pad);
     ctx.lineWidth = Math.max(px * 1.2, 0.12);
     ctx.lineCap = ctx.lineJoin = 'round';
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fill(water.lakes, 'evenodd');
-    ctx.stroke(water.rivers);
+    ctx.fill(wet.lakes, 'evenodd');
+    ctx.stroke(wet.rivers);
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = ctx.strokeStyle = WATER;
-    ctx.fill(water.lakes, 'evenodd');
-    ctx.stroke(water.rivers);
+    ctx.fill(wet.lakes, 'evenodd');
+    ctx.stroke(wet.rivers);
     // 国界：同一家的淡淡一道，两家之间是前线（深色衬底 + 亮线）
     const plain = new Path2D(), front = new Path2D(), same = new Path2D();
     for (const e of edges) {
@@ -167,16 +179,23 @@ export function createOverlay({ regions, edges, water, C }) {
       tex?.dispose();
       const c = document.createElement('canvas');
       c.width = c.height = size;
-      tex = new THREE.CanvasTexture(c);
+      // 画在 CPU 的 canvas 上，读出像素用 DataTexture 上传：直接上传 canvas（CanvasTexture）每张都要约 20ms
+      //（浏览器要做格式转换），换年份时 250 块要卡好几秒；读像素 + 上传数组不到 1ms
+      c.getContext('2d', { willReadFrequently: true });
+      tex = new THREE.DataTexture(new Uint8Array(size * size * 4), size, size);
+      tex.userData.canvas = c;
       tex.colorSpace = THREE.NoColorSpace;
       tex.flipY = false; // uv 的 v 就是 canvas 的 y（向南）
       tex.anisotropy = 4;
       tex.generateMipmaps = true;
       tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
       tex.userData.v = -1;
     }
     if (tex.userData.v !== version) {
-      draw(tex.image, cx, cz);
+      const c = tex.userData.canvas;
+      draw(c, cx, cz);
+      tex.image.data.set(c.getContext('2d').getImageData(0, 0, size, size).data);
       tex.userData.v = version;
       tex.needsUpdate = true;
     }

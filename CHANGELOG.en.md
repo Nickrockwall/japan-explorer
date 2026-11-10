@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.32 · 2026-11-10
+
+- The 3D Sengoku map is now part of the site: the Sengoku year row has a "3D" button and province cards have "See it in 3D", which carry the year and province over; "← 2D map" in the 3D view brings you back to the same year and province. The 3D map now speaks Chinese, English and Japanese
+- Castles across the whole country instead of just Kinki: 424 of them, with the same rule — only castles whose Japanese Wikipedia article gives a founding year before 1600. Ancient forts long abandoned by then (Taga, Mizuki…) are left out. From far away, castles too close together show only the better-known one; more appear as you zoom in
+- Changing the year now spreads the new colours like ink, with a dark ink edge (switches instantly if your system asks for reduced motion)
+- Changing the year no longer freezes for several seconds: map textures are drawn on the CPU and uploaded in one go, and each tile draws only its own lakes and rivers
+
 ## 3.31 · 2026-11-10
 
 - The 3D Sengoku map gets a folding-screen look: ink-washed shaded slopes, gold on sunlit ridges, paper grain, low mist and a seigaiha wave pattern on the sea. Each clan’s territory now has a nobori banner (clan colour, crest and name); from far above it switches back to crest labels. The style can be turned off in settings
