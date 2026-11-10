@@ -4,6 +4,10 @@
 
 Newest first.
 
+## 3.31 · 2026-11-10
+
+- The 3D Sengoku map gets a folding-screen look: ink-washed shaded slopes, gold on sunlit ridges, paper grain, low mist and a seigaiha wave pattern on the sea. Each clan’s territory now has a nobori banner (clan colour, crest and name); from far above it switches back to crest labels. The style can be turned off in settings
+
 ## 3.30 · 2026-11-10
 
 - New experimental page, “3D Sengoku map” (`3d.html`, not yet linked from the main site): 3D terrain from GSI elevation data with the six years of Sengoku territories, borders and front lines, lakes and rivers. Zooming in switches to ~250 m terrain and adds forests, 74 castles in the Kinki region (shown by the years they were built and abandoned) and small models of each province’s ichinomiya, provincial office and kokubunji. Click a province for its six years, or a castle for its dates

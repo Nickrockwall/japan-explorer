@@ -186,6 +186,20 @@ void main() {
   gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
 }`;
 
+// 屏风风格（uStyle = 1）：山脊描金、阴坡墨染、纸纹、低处的雾；远看时装饰重一些，拉近后淡掉（金云试过，挡视线，不用）
+const COMMON = /* glsl */`
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vnoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+// 纸纹：屏幕上细小的纤维颗粒
+float paper() {
+  vec2 q = gl_FragCoord.xy;
+  return 0.6 * hash(floor(q * 0.5)) + 0.4 * vnoise(q * vec2(0.05, 0.6));
+}`;
+
 const FRAG = /* glsl */`
 uniform sampler2D uTex;
 uniform float uTint;
@@ -194,12 +208,14 @@ uniform float uFogDensity;
 uniform vec3 uSun;
 uniform vec3 uWater;
 uniform float uDetail;
+uniform float uStyle;
+uniform float uDist;
 varying vec2 vUv;
 varying vec3 vN;
 varying vec3 vLc;
 varying float vH;
 varying vec3 vW;
-float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+${COMMON}
 vec3 hypso(float h) {
   vec3 c = mix(vec3(0.80, 0.78, 0.62), vec3(0.73, 0.74, 0.56), smoothstep(0.0, 150.0, h));
   c = mix(c, vec3(0.62, 0.66, 0.50), smoothstep(150.0, 700.0, h));
@@ -224,10 +240,31 @@ void main() {
   base = mix(base, vec3(0.70, 0.67, 0.63) * (0.9 + 0.15 * hash(floor(vW.xz * 25.0)) * near), vLc.z * 0.4);
   base = mix(base, vec3(0.55, 0.52, 0.47), smoothstep(0.35, 0.7, slope));
   vec3 col;
-  if (ov.a < 0.8) col = uWater;                          // 湖、河
+  bool water = ov.a < 0.8;
+  if (water) col = uWater;                               // 湖、河
   else col = mix(base, ov.rgb, uTint);                   // 势力色（含国界线）
   float diff = max(dot(n, normalize(uSun)), 0.0);
-  col *= 0.5 + 0.7 * diff;
+  float far = smoothstep(120.0, 1500.0, uDist);
+  if (uStyle > 0.5 && !water) {
+    // 阴坡墨染：背光的陡坡往墨色里化，而不是单纯变暗
+    float ink = (1.0 - diff) * smoothstep(0.15, 0.6, slope);
+    col = mix(col * (0.62 + 0.55 * diff), vec3(0.23, 0.21, 0.20), ink * 0.45);
+    // 墨线：法线变化快的地方（山脊、谷底）
+    float crease = smoothstep(0.06, 0.22, length(fwidth(n)));
+    col = mix(col, vec3(0.20, 0.18, 0.17), crease * 0.28 * smoothstep(150.0, 800.0, vH));
+    // 山脊描金：向阳的陡坡、较高处
+    float gold = smoothstep(0.68, 0.9, diff) * smoothstep(0.1, 0.32, slope) * smoothstep(180.0, 650.0, vH);
+    gold = max(gold, crease * smoothstep(0.3, 0.8, diff) * smoothstep(350.0, 900.0, vH));
+    vec3 leaf = vec3(0.90, 0.72, 0.32) * (0.9 + 0.2 * hash(floor(vW.xz * 3.0)));
+    col = mix(col, leaf, clamp(gold, 0.0, 1.0) * mix(0.6, 0.95, far));
+    // 低处的雾：一团团的，远看与拉近时都淡
+    float mist = (1.0 - smoothstep(20.0, 260.0, vH)) * smoothstep(0.45, 0.8, vnoise(vW.xz / 18.0 + 3.1));
+    mist *= smoothstep(30.0, 200.0, uDist) * (1.0 - smoothstep(700.0, 1800.0, uDist));
+    col = mix(col, vec3(0.96, 0.94, 0.88), mist * 0.45);
+    col *= 0.96 + 0.07 * paper();
+  } else {
+    col *= 0.5 + 0.7 * diff;
+  }
   float d = length(vW - cameraPosition) * uFogDensity;
   col = mix(col, uFog, 1.0 - exp(-d * d));
   gl_FragColor = vec4(col, 1.0);
@@ -245,6 +282,8 @@ export function terrainUniforms() {
     uSun: { value: new THREE.Vector3(-0.8, 1.1, -0.5) },
     uWater: { value: srgb('#8ba7b3') },
     uDetail: { value: 1 },
+    uStyle: { value: 1 },
+    uDist: { value: 1000 },
   };
 }
 
@@ -256,14 +295,45 @@ export function terrainMaterial(shared, tex) {
   });
 }
 
+// 海：屏风风格时铺青海波（每格的大小随镜头距离变，屏幕上看起来一样大），拉近淡成水面
 const WATER_FRAG = /* glsl */`
 uniform vec3 uFog;
 uniform float uFogDensity;
 uniform vec3 uWater;
+uniform float uStyle;
+uniform float uDist;
 varying vec3 vW;
+${COMMON}
+// 青海波：一排排圆，后一排压住前一排；圆里画同心弧
+float seigaiha(vec2 p) {
+  float best = -1e9, dd = 1.0;
+  float jy = floor(p.y * 2.0);
+  for (int dj = -1; dj <= 2; dj++) {
+    float j = jy + float(dj);
+    float off = mod(j, 2.0) * 0.5;
+    for (int di = -1; di <= 1; di++) {
+      float i = floor(p.x - off) + float(di);
+      vec2 c = vec2(i + off + 0.5, j * 0.5);
+      float d = length(p - c);
+      if (d < 0.5 && c.y > best) { best = c.y; dd = d; }
+    }
+  }
+  return dd;
+}
 void main() {
   float d = length(vW - cameraPosition) * uFogDensity;
   vec3 col = uWater * 1.04;
+  if (uStyle > 0.5) {
+    col = mix(vec3(0.46, 0.60, 0.67), vec3(0.55, 0.68, 0.73), vnoise(vW.xz / 120.0));
+    float k = uDist * 0.045;
+    vec2 p = vW.xz / k;
+    float r = seigaiha(p) * 3.0;                                    // 每个圆里 3 道弧
+    float w = fwidth(r);
+    float ring = 1.0 - smoothstep(0.05, 0.05 + w * 1.5, abs(fract(r + 0.5) - 0.5));
+    float fade = 1.0 - smoothstep(0.25, 0.6, w);                    // 太密时淡掉，免得闪
+    col = mix(col, vec3(0.84, 0.89, 0.88), ring * 0.4 * fade * mix(0.55, 1.0, smoothstep(200.0, 1200.0, uDist)));
+    col *= 0.98 + 0.03 * paper();
+  }
   gl_FragColor = vec4(mix(col, uFog, 1.0 - exp(-d * d)), 1.0);
 }`;
 

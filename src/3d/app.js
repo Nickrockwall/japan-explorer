@@ -5,6 +5,7 @@ import { unpack } from '../js/store.js';
 import { loadTerrain, buildChunkGeometry, levelFor, terrainUniforms, terrainMaterial, oceanMesh, MPU } from './terrain.js';
 import { buildRegions, sharedEdges, buildWater, createOverlay } from './overlay.js';
 import * as models from './models.js';
+import { createBanners } from './decor.js';
 
 const $ = (s) => document.querySelector(s);
 const DATA = 'src/data';
@@ -25,6 +26,7 @@ const opts = {
   sites: saved.sites ?? true,
   trees: saved.trees ?? true,
   tint: saved.tint ?? true,
+  style: saved.style ?? true,
 };
 
 const json = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(`${r.status}: ${u}`); return r.json(); });
@@ -93,6 +95,8 @@ async function main() {
   // —— 场景 ——
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#e7dec6');
+  // 屏风风格：底色偏金的纸，雾也是同一个颜色
+  const PAPER = { on: '#e9dcb6', off: '#e7dec6' };
   const uniforms = terrainUniforms();
   uniforms.uExag.value = opts.exag;
   uniforms.uTint.value = 0.5;
@@ -311,6 +315,22 @@ async function main() {
   }
   let anchors = clanAnchors(opts.year);
 
+  // —— 旗指物 ——
+  const banners = createBanners();
+  scene.add(banners.group);
+  banners.set.onReady = () => { dirty = true; };
+  // 1600 年是东西两军，不插家的旗（与平面图相同）
+  const refreshBanners = () => banners.set(opts.year === '1600' || !opts.tint ? [] : anchors, info, (c) => !!sg.clans[c]?.mon);
+  refreshBanners();
+  function applyLook() {
+    uniforms.uStyle.value = opts.style ? 1 : 0;
+    const paper = opts.style ? PAPER.on : PAPER.off;
+    scene.background.set(paper);
+    uniforms.uFog.value.set(...[1, 3, 5].map((i) => parseInt(paper.slice(i, i + 2), 16) / 255));
+    document.documentElement.style.setProperty('--bg', paper);
+  }
+  applyLook();
+
   function label(key, html, cls) {
     let el = pool.get(key);
     if (!el) {
@@ -331,10 +351,13 @@ async function main() {
     const items = [];
     const add = (key, x, z, lift, pri, html, cls) => items.push({ key, x, z, lift, pri, html, cls });
     if (opts.tint && d > 160) {
+      const flags = new Map(banners.list.map((b) => [b.a.c, b]));
       for (const a of anchors) {
         const ci = info(a.c);
-        const mon = sg.clans[a.c]?.mon ? `<span class="mon" style="border-color:${ci.color}"><i style="--mon:url(src/assets/crests/${a.c}.png)"></i></span>` : '';
-        add(`c-${opts.year}-${a.c}`, a.at[0], a.at[1], 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${ci.zh}</b>`, 'clan');
+        const flag = flags.get(a.c);
+        // 有旗时名字写在旗顶上（家纹在旗上）；没有旗的（1600 年两军）照旧
+        const mon = !flag && sg.clans[a.c]?.mon ? `<span class="mon" style="border-color:${ci.color}"><i style="--mon:url(src/assets/crests/${a.c}.png)"></i></span>` : '';
+        add(`c-${opts.year}-${a.c}-${flag ? 'f' : 'm'}`, a.at[0], a.at[1], flag ? flag.height * 1.04 : 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${ci.zh}</b>`, 'clan');
       }
     }
     if (d < 1500) {
@@ -492,6 +515,7 @@ async function main() {
     store.set({ year: y });
     applyStyle();
     anchors = clanAnchors(y);
+    refreshBanners();
     document.querySelectorAll('#years button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.y === y));
     renderLegend();
     placeBuildings();
@@ -545,7 +569,8 @@ async function main() {
     if (!i) return;
     opts[i.dataset.opt] = i.checked;
     store.set({ [i.dataset.opt]: i.checked });
-    if (i.dataset.opt === 'tint') { applyStyle(); $('#legend').hidden = !opts.tint; }
+    if (i.dataset.opt === 'tint') { applyStyle(); refreshBanners(); $('#legend').hidden = !opts.tint; }
+    if (i.dataset.opt === 'style') applyLook();
     placeBuildings();
     dirty = true;
   });
@@ -612,6 +637,8 @@ async function main() {
     if (Math.abs(d - lastD) / d > 0.04) { placeBuildings(); lastD = d; }
     if (!dirty) return;
     dirty = false;
+    uniforms.uDist.value = d;
+    banners.update(camera, d, groundY);
     treeBudget = 2;
     updateChunks();
     renderer.render(scene, camera);
