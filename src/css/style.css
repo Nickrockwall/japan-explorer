@@ -663,6 +663,9 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 .hud-exit { padding: 5px 12px; font-size: 12.5px; flex: none; }
 .hud-sides { display: flex; align-items: stretch; gap: 10px; margin: 10px 0 8px; }
 .hud-sides em { align-self: center; font: 900 14px var(--serif); color: var(--kin); font-style: normal; }
+.hud-force { display: flex; height: 16px; margin: 0 0 8px; border: 1px solid var(--ink); border-radius: 2px; overflow: hidden; }
+.hud-force i { display: flex; align-items: center; justify-content: center; min-width: 4em; font: 600 10.5px var(--sans); color: var(--ink); text-shadow: 0 0 2px rgba(255,255,255,.85), 0 0 3px rgba(255,255,255,.85); }
+.hud-force i + i { border-left: 1px solid var(--ink); }
 .side { flex: 1; display: grid; padding: 6px 10px; border-radius: var(--r); border-left: 4px solid var(--c); background: rgba(42,37,32,.04); font-size: 12.5px; }
 .side b { font: 900 14px var(--serif); color: var(--c); }
 .side small { color: var(--muted); font-size: 11px; }
@@ -847,7 +850,10 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 }
 .hud-fold:hover { border-color: var(--kin); color: var(--kin); }
 .battle-hud.folded { padding: 8px 12px; }
-.battle-hud.folded .hud-sides, .battle-hud.folded .hud-brief { display: none; }
+.battle-hud.folded .hud-sides, .battle-hud.folded .hud-brief, .battle-hud.folded .hud-force, .battle-hud.folded .hud-debate { display: none; }
+.hud-debate { margin: 0 0 8px; font-size: 12.5px; border-left: 3px solid var(--kin); padding: 2px 0 2px 8px; }
+.hud-debate summary { cursor: pointer; font: 600 13px var(--serif); }
+.hud-debate p { margin: 4px 0 0; line-height: 1.65; }
 .battle-hud.folded .hud-phases { margin: 8px 0 0; }
 .battle-hud.folded .hud-nav { margin-top: 6px; }
 .battle-hud.folded .hud-head b { font-size: 15px; }

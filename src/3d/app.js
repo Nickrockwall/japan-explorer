@@ -15,6 +15,9 @@ import { createChunks } from './chunks.js';
 import { createBuildings } from './buildings.js';
 import { createLabels } from './labels.js';
 import { snapshot } from './snapshot.js';
+import { createHelp } from './help.js';
+import { createLookout } from './lookout.js';
+import { createHere } from './here.js';
 import { audio } from '../js/audio.js';
 import { ERAS, YEARS, eraOf, eraYears, baseOf, capitalOf, SHOGUNATE, ROUTES, ROUTE_MUSASHI_TOSANDO, ROUTE_MUSASHI_TOKAIDO, CIRCUIT_COLOR, KIND_COLOR, graphColors } from './eras.js';
 
@@ -73,15 +76,21 @@ async function main() {
   const lazyFiles = {
     provEras: () => json(`${DATA}/province_eras.pack.json`).then(unpack),
     edo: () => json('src/3d/edo.json').then(unpack),
-    meiji: () => json('src/3d/meiji.json').then(unpack),
+    m1876: () => json('src/3d/meiji-1876.json').then(unpack).then((d) => d['1876']),
+    m1888: () => json('src/3d/meiji-1888.json').then(unpack).then((d) => d['1888']),
     prints: () => json(`${DATA}/hiroshige.json`).catch(() => []),
   };
   const lazy = {};
+  let lookout = null; // 登上天守远望（下面创建；flyTo 在它之前就定义了）
+  let here = null; // 此地千年（下面创建；userYear 在它之前就定义了）
   let dirty = true; // 下一帧要重画（湖与河、精细地形后到时也置位，所以放在最前面）
-  const need = { kodai: ['provEras'], edo: ['edo', 'prints'], meiji: ['edo', 'meiji'] };
+  // 各时代（或某一年）要先下载的文件；明治按年份分开（3.37）：1871 年用江户的藩领，1876、1888 年各一个文件
+  const need = { kodai: ['provEras'], edo: ['edo', 'prints'], meiji: ['edo', 'm1876', 'm1888'], 1871: ['edo'], 1876: ['m1876'], 1888: ['m1888'] };
+  const needOf = (k) => need[k] || need[eraOf(k)] || [];
   const loadFile = (k) => (lazy[k] ??= lazyFiles[k]().then((v) => { lazy[k + 'Data'] = v; return v; }));
-  const eraReady = (era) => (need[era] || []).every((k) => lazy[k + 'Data']);
-  const loadEra = (era) => Promise.all((need[era] || []).map(loadFile));
+  // k 是年份（只等这一年要的文件）或时代键
+  const eraReady = (k) => needOf(k).every((f) => lazy[f + 'Data']);
+  const loadEra = (k) => Promise.all(needOf(k).map(loadFile));
 
   // 下载进度：按文件计数。首屏只等预览地形与当年的底图（约 0.7 MB）；粗地形、湖与河在后台补上（3.36）
   const waterJob = json('src/3d/water.json').then(unpack);
@@ -99,7 +108,7 @@ async function main() {
     json('src/3d/kamakura.json'),
     json('src/3d/kodai.json'),
     json('src/3d/kaido.json').catch(() => ({ roads: [], rail: [] })),
-    loadEra(eraOf(opts.year)),
+    loadEra(opts.year),
   ];
   let got = 0;
   const progress = () => {
@@ -127,8 +136,8 @@ async function main() {
     p712: () => withEra('712'),
     p757: () => withEra('757'),
     edo: () => lazy.edoData.features,
-    m1876: () => lazy.meijiData['1876'],
-    m1888: () => lazy.meijiData['1888'],
+    m1876: () => lazy.m1876Data,
+    m1888: () => lazy.m1888Data,
   };
   const bases = new Map();
   function getBase(name) {
@@ -175,8 +184,8 @@ async function main() {
     const color = p.kind && p.kind !== 'han' ? KIND_COLOR[p.kind] || OUTSIDE_COLOR : S.base.colors?.get(k) || OUTSIDE_COLOR;
     return { ...blockName(p), color };
   };
-  function blockName(p) {
-    if (opts.year === '1871') {
+  function blockName(p, y = opts.year) {
+    if (y === '1871') {
       if (p.ken) return { ja: p.ken[0], zh: p.ken[1], en: p.ken[2] || `${p.en || p.ja} → ${t('m.ken')}` };
       if (p.kind === 'bakufu') return { zh: t('m.exBakufu'), en: t('m.exBakufu'), ja: t('m.exBakufu') };
     }
@@ -365,6 +374,8 @@ async function main() {
   const labels = createLabels(S, {
     el: labelsEl, camera, controls, canvas, opts, P, groundY, banners, info, esc, blockName, provName, castleName, castles, sites, B, kodai, prints, regimeOf,
     inBattle: () => battle.active,
+    looking: () => !!lookout?.active,
+    marker: () => here?.marker,
   });
 
   // —— 点选 ——
@@ -394,7 +405,31 @@ async function main() {
     }
     return null;
   }
-  const regionAt = (x, z) => S.regions.find((r) => x >= r.bbox[0] && x <= r.bbox[2] && z >= r.bbox[1] && z <= r.bbox[3] && pickCtx.isPointInPath(r.path, x, z, 'evenodd'));
+  const regionIn = (regions, x, z) => regions.find((r) => x >= r.bbox[0] && x <= r.bbox[2] && z >= r.bbox[1] && z <= r.bbox[3] && pickCtx.isPointInPath(r.path, x, z, 'evenodd'));
+  const regionAt = (x, z) => regionIn(S.regions, x, z);
+  // 某一年某一点在哪一国（藩、府县）（此地千年，3.37）；资料还没下载时返回 null
+  function placeAt(x, z, y) {
+    if (!eraReady(y)) return null;
+    const r = regionIn(getBase(baseOf(y)).regions, x, z);
+    if (!r) return null;
+    return modeFor(y).blocks ? nm(blockName(r.props, y)) : provName(r.key);
+  }
+  // 某一年某一点归谁（城的一生，3.37）：按那一年的底图与上色方式；那个时代的资料还没下载时返回 null
+  function holderAt(x, z, y) {
+    if (!eraReady(y)) return null;
+    const b = getBase(baseOf(y)), m = modeFor(y);
+    const r = regionIn(b.regions, x, z);
+    if (!r) return [];
+    if (m.blocks) {
+      const p = r.props;
+      if (p.kind === 'none') return [];
+      const color = p.kind && p.kind !== 'han' ? KIND_COLOR[p.kind] || OUTSIDE_COLOR : b.colors?.get(r.key) || OUTSIDE_COLOR;
+      return [{ key: `${b.name}:${r.key}`, name: nm(blockName(p, y)), color }];
+    }
+    const e = m.entry(r.key);
+    if (!e) return [];
+    return [e.c, ...(e.with || [])].map((c) => { const i = m.info(c); return { key: c, name: nm(i), color: i.color }; });
+  }
 
   function pick(ev) {
     const rect = canvas.getBoundingClientRect();
@@ -446,6 +481,7 @@ async function main() {
   // —— 镜头飞行 ——
   let flight = null;
   function flyTo(x, z, dist, az1) {
+    if (lookout?.active) lookout.leave(); // 远望中飞去别处：先从天守下来
     const from = controls.target.clone(), d0 = camera.position.distanceTo(controls.target);
     const off = camera.position.clone().sub(controls.target);
     const az0 = Math.atan2(off.x, off.z);
@@ -472,10 +508,10 @@ async function main() {
     y = String(y);
     const era = eraOf(y);
     if (!era) return;
-    if (!eraReady(era)) {
+    if (!eraReady(y)) {
       wantYear = y;
       busy(true);
-      loadEra(era).then(() => { busy(false); if (wantYear === y) setYear(y); }).catch(() => busy(false, true));
+      loadEra(y).then(() => { busy(false); if (wantYear === y) setYear(y); }).catch(() => busy(false, true));
       return;
     }
     wantYear = null;
@@ -526,6 +562,7 @@ async function main() {
   // 用户换年份：停掉自动播放，有声音
   function userYear(y) {
     stopPlay();
+    here?.stop();
     if (y !== opts.year) sound('click');
     setYear(y);
     story.chip(y);
@@ -550,7 +587,7 @@ async function main() {
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const overview = () => flyTo(...P(137.2, 35.6), homeDist() * 0.8);
     // 下一个时代的资料先下载，免得讲完一段才开始等
-    story.play(opts.year, (y) => { setYear(y); sound('click'); const n = YEARS[YEARS.indexOf(y) + 1]; if (n) loadEra(eraOf(n)); }, overview, wait).then(() => {
+    story.play(opts.year, (y) => { setYear(y); sound('click'); const n = YEARS[YEARS.indexOf(y) + 1]; if (n) loadEra(n); }, overview, wait).then(() => {
       if (!playing) return;
       playing = false;
       playBtn().setAttribute('aria-pressed', 'false');
@@ -624,7 +661,7 @@ async function main() {
   renderLegend();
 
   const panel = $('#settings');
-  $('#btn-settings').onclick = () => { panel.hidden = !panel.hidden; };
+  $('#btn-settings').onclick = () => { panel.hidden = !panel.hidden; help.close(); };
   function syncSettings() {
     panel.querySelectorAll('[data-exag]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.exag === opts.exag));
     panel.querySelectorAll('[data-q]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.q === opts.quality));
@@ -637,7 +674,7 @@ async function main() {
       opts.exag = +b.dataset.exag;
       uniforms.uExag.value = opts.exag;
       store.set({ exag: opts.exag });
-      controls.target.y = groundY(controls.target.x, controls.target.z);
+      if (lookout.active) lookout.follow(); else controls.target.y = groundY(controls.target.x, controls.target.z);
       B.place();
     }
     if (b.dataset.q && b.dataset.q !== opts.quality) { store.set({ quality: b.dataset.q }); location.reload(); }
@@ -665,7 +702,7 @@ async function main() {
 
   // 竖屏手机要拉得更远才放得下整个列岛
   function homeDist() { return 2400 * Math.max(1, 1 / (canvas.clientWidth / canvas.clientHeight) * 0.9); }
-  $('#btn-home').onclick = () => { cards.closeCard(); flyTo(...P(137.2, 35.6), homeDist()); };
+  $('#btn-home').onclick = () => { cards.closeCard(); lookout.leave(); flyTo(...P(137.2, 35.6), homeDist()); };
   // 朝北：方位转回 0（镜头在南、朝北看）；俯视：极角压到近乎 0，再点回到随距离变的斜看
   $('#btn-north').onclick = () => flyTo(controls.target.x, controls.target.z, camDist(), 0);
   const syncTiltBtn = () => $('#btn-tilt').setAttribute('aria-pressed', String(opts.top));
@@ -684,8 +721,11 @@ async function main() {
   }
   addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    if (lookout.active) { lookout.leave(); return; }
+    if (help.open) { help.close(); return; }
     if (!$('#search').hidden) { $('#search').hidden = true; return; }
     if (battle.active) { battle.leave(); return; }
+    if (here.playing) { here.stop(); return; }
     if (playing) { stopPlay(); story.close(); return; }
     if (story.mode === 'event' || story.mode === 'list') { story.close(); return; }
     cards.closeCard();
@@ -697,7 +737,7 @@ async function main() {
   let down = null;
   canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; flight = null; document.body.classList.add('used'); });
   canvas.addEventListener('pointerup', (e) => {
-    if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6 && performance.now() - down.t < 600) pick(e);
+    if (!lookout.active && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6 && performance.now() - down.t < 600) pick(e);
     down = null;
   });
 
@@ -709,6 +749,8 @@ async function main() {
     opts, sg, kama, bios, sites, rulers, people, camera, controls, P, LOOSE, KAMA_LOOSE,
     esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
     flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
+    holderAt, castleOnIn, eraReady, loadEra,
+    lookFrom: (c) => { lookout.enter(c.xz[0], c.xz[1]); $('#lookout-bar b').textContent = castleName(c); },
   });
 
   // —— 合战（battle.js）——
@@ -725,6 +767,7 @@ async function main() {
     target: () => controls.target,
     onEnter(b) {
       stopPlay();
+      here.stop();
       story.close();
       cards.closeCard();
       preBattle ??= { year: opts.year, x: controls.target.x, z: controls.target.z, d: camDist() };
@@ -761,13 +804,22 @@ async function main() {
     startBattle: (k) => { stopPlay(); battle.start(k); },
     onUser: () => { if (playing) stopPlay(); },
   });
+  const help = createHelp({ esc, coarse: coarsePointer, notice, store, onOpen: () => { panel.hidden = true; $('#search').hidden = true; } });
   const search = createSearch(S, {
     opts, sg, kama, castles, LOOSE, KAMA_LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards,
-    onOpen: () => { panel.hidden = true; },
+    onOpen: () => { panel.hidden = true; help.close(); },
   });
   const SMOKE_N = opts.quality === 'high' ? 18 : 8; // 省电画质少一半多的炊烟
   const smoke = createSmoke(SMOKE_N);
   scene.add(smoke.group);
+  here = createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, placeAt, esc, sound });
+  // 登上天守远望（lookout.js）：建筑、树、旗、炊烟都收起来（放大了的示意模型会挡住视线）
+  lookout = createLookout({
+    camera, controls, groundY, scale,
+    setHidden: (h) => { for (const m of Object.values(B.kinds)) m.visible = !h; tc.setTreesVisible(!h); smoke.group.visible = !h; },
+    onChange: (on) => { $('#lookout-bar').hidden = !on; if (on) { cards.closeCard(); stopPlay(); } dirty = true; syncHash(); },
+  });
+  $('#lookout-bar').addEventListener('click', (e) => { if (e.target.closest('button')) { sound('click'); lookout.leave(); } });
 
 
   // —— 地址栏：年份、选中的块、镜头、合战（停下 0.5 秒后写，复制即分享）——
@@ -822,7 +874,10 @@ async function main() {
     cards.showRegion(want);
     if (v.length !== 4) flyTo(want.center[0], want.center[1], THREE.MathUtils.clamp(Math.sqrt(want.area) * 3, 150, 700));
   }
+  // 此地千年：#here=经度,纬度&hn=地名（平面图古代户籍的链接）
+  const hv = (link.get('here') || '').split(',').map(Number);
   if (link.get('bt')) battle.start(link.get('bt'), +link.get('ph') || 0);
+  else if (hv.length === 2 && hv.every(Number.isFinite)) here.start(hv[0], hv[1], link.get('hn'));
   else story.chip(opts.year);
   // 键盘：方向键平移、+ / - 缩放、1–6 换这个时代的年份、[ ] 换时代、空格播放、N 朝北、T 俯视（输入框里不管）
   addEventListener('keydown', (e) => {
@@ -880,17 +935,18 @@ async function main() {
     requestAnimationFrame(frame);
     stepFlight(now);
     if (tc.stepInk(now)) dirty = true;
-    // 目标点贴着地面，镜头不钻进山里
+    // 目标点贴着地面，镜头不钻进山里（登上天守远望时目标点就是眼睛，不贴地、不改俯仰）
+    const looking = lookout.active;
     const ty0 = groundY(controls.target.x, controls.target.z);
-    if (Math.abs(controls.target.y - ty0) > 0.01) {
+    if (!looking && Math.abs(controls.target.y - ty0) > 0.01) {
       const dy = (ty0 - controls.target.y) * 0.2;
       controls.target.y += dy;
       camera.position.y += dy;
       dirty = true;
     }
-    setTilt();
+    if (!looking) setTilt();
     controls.update();
-    const floor = groundY(camera.position.x, camera.position.z) + 1.5;
+    const floor = groundY(camera.position.x, camera.position.z) + (looking ? 0.02 : 1.5);
     if (camera.position.y < floor) camera.position.y = floor;
     const d = camera.position.distanceTo(controls.target);
     camera.near = Math.max(0.05, d * 0.01);
@@ -916,7 +972,8 @@ async function main() {
     dirty = false;
     guardFrame(now);
     uniforms.uDist.value = d;
-    banners.update(camera, d, groundY, opts.motion ? now / 1000 : 0);
+    if (looking) banners.group.visible = false;
+    else banners.update(camera, d, groundY, opts.motion ? now / 1000 : 0);
     if (tc.update()) dirty = true;
     renderer.render(scene, camera);
     labels.update();
@@ -934,7 +991,7 @@ async function main() {
   B.place();
   requestAnimationFrame(frame);
   window.__je3d = {
-    battle, story, smoke, slowGuard, ...cards, togglePlay, saveImage,
+    battle, story, smoke, slowGuard, lookout, get here() { return here; }, ...cards, togglePlay, saveImage,
     choose: (q) => search.query(q), camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P,
     get regions() { return S.regions; }, get base() { return S.base.name; }, get mode() { return S.mode; }, castles, forts, stations, groundY, eraReady,
     pick: (x, y) => pick({ clientX: x, clientY: y }),

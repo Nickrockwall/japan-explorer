@@ -211,5 +211,32 @@ class Battles(unittest.TestCase):
                 self.assertTrue(f.get('men', 0) > 0 and f.get('unit') in ('men', 'ships'), f'{b["key"]} {f["key"]}')
 
 
+class Famous(unittest.TestCase):
+    """3.37：政令市的区 → 市的代码（以前按「前三位 + 00」算，滨松的区算到了静冈）"""
+    def test_famous_city(self):
+        city_of = {'22101': '静岡市', '22102': '静岡市', '22131': '浜松市', '22137': '浜松市', '22203': None}
+        famous = {'22100': [], '22130': [], '22203': []}
+        self.assertEqual(build_bundle.famous_city(famous, '22', city_of),
+                         {'22101': '22100', '22102': '22100', '22131': '22130', '22137': '22130'})
+
+
+class Kamakura(unittest.TestCase):
+    """3.37：守护名单的各种写法（粗体的「鎌倉幕府」、整节只有镰仓、「不設置」、只写结束年的一行）"""
+    def test_section(self):
+        import kamakura_tool as K
+        bold = "'" * 3
+        text = '== 守護 ==\n' + bold + '鎌倉幕府' + bold + '\n* 1221年 - ？ - 三浦義村\n' + bold + '室町幕府' + bold + '\n* 1336年 - 細川顕氏\n== 脚注 ==\n'
+        self.assertIn('三浦義村', K.section(text))
+        self.assertNotIn('細川', K.section(text))
+        text = '=== 守護 ===\n*[[安達親長]]（[[1190年]] - [[1199年]]）\n== 関連 ==\n'
+        self.assertIn('安達親長', K.section(text))
+
+    def test_parse_end_from_next(self):
+        import kamakura_tool as K
+        rows = K.parse('* 1221年 - ？ - 三浦義村\n* ？ - 1247年 - 三浦泰村\n* 1280年 - ？ - 北条久時')
+        self.assertEqual(rows[0]['end'], 1247, '三浦义村应到 1247 年为止（下一行只写了结束年）')
+        self.assertEqual(K.family('不設置（侍所・政所管掌?）'), 'none')
+
+
 if __name__ == '__main__':
     unittest.main()

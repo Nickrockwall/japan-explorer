@@ -402,7 +402,7 @@ async function main() {
     const ctx = {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
       sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid), prefOf: prefLabel,
-      sengoku: await sengokuData(), han: await ensureHan().then(() => han), town: await (townLoad[pid] ??= loadTown(lang, pid)),
+      sengoku: await sengokuData(), han: await ensureHan().then(() => han), town: await (townLoad[pid] ??= loadTown(lang, pid)), battles,
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）
@@ -1274,6 +1274,17 @@ async function main() {
     $('hud-title').textContent = b.name;
     $('hud-sides').innerHTML = b.factions.map((f) =>
       `<span class="side" style="--c:${f.color}"><b>${esc(f.name)}</b>${esc(f.leader)}<small>${esc(f.strength)}</small></span>`).join('<em>VS</em>');
+    // 兵力条（3.37，与立体图相同）：按各家写的比较数字 men 分长短
+    const sum = b.factions.reduce((a, f) => a + (f.men || 0), 0);
+    const num = (v) => v.toLocaleString(lang === 'en' ? 'en' : 'ja');
+    $('hud-force').hidden = !sum;
+    $('hud-force').setAttribute('aria-label', b.factions.map((f) => `${f.name} ${num(f.men || 0)}`).join(' / '));
+    $('hud-force').innerHTML = sum ? b.factions.map((f) => `<i style="flex:${f.men / sum};background:${f.color}"><b>${num(f.men)}${b.factions[0].unit === 'ships' ? ` ${esc(t('hud.ships'))}` : ''}</b></i>`).join('') : '';
+    // 众说纷纭（3.37）：史家至今在争的一点
+    const deb = $('hud-debate');
+    deb.hidden = !b.debate;
+    deb.open = false;
+    if (b.debate) { deb.querySelector('summary').textContent = `${t('hud.debate')}：${b.debate.q}`; deb.querySelector('p').textContent = b.debate.a; }
     phaseBox.innerHTML = b.phases.map((ph, k) =>
       `<li data-i="${k}"><span class="ph-n">${k + 1}</span><span class="ph-t">${esc(ph.title)}</span></li>`).join('');
     $('battle-hud').hidden = false;

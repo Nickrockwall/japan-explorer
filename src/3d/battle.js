@@ -174,6 +174,7 @@ export function createBattle(ctx) {
       <p class="bt-time">${esc(ph.time)}</p>
       <p class="bt-desc">${esc(ph.desc)}</p>
       <blockquote><b>${esc(b.narrator.name)}</b>${esc(ph.line)}</blockquote>
+      ${b.debate ? `<details class="bt-debate"${cur.debateOpen ? ' open' : ''}><summary>${esc(t('bt.debate'))}：${esc(b.debate.q)}</summary><p>${esc(b.debate.a)}</p></details>` : ''}
       <div class="bt-ctl">
         <button type="button" data-bt="prev" ${phase === 0 ? 'disabled' : ''}>‹ ${esc(t('bt.prev'))}</button>
         <button type="button" data-bt="auto" aria-pressed="${!!cur.auto}">${esc(t(cur.auto ? 'bt.stop' : 'bt.auto'))}</button>
@@ -207,6 +208,7 @@ export function createBattle(ctx) {
     if (restore) ctx.onLeave();
   }
 
+  panel.addEventListener('toggle', (e) => { if (cur && e.target.classList?.contains('bt-debate')) cur.debateOpen = e.target.open; }, true);
   panel.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-bt]');
     if (!btn) return;

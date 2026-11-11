@@ -167,5 +167,5 @@ export function createChunks({ terrain, overlay, scene, camera, canvas, uniforms
     for (const ch of chunks) if (ch.trees) { treeGroup.remove(ch.trees); ch.trees.dispose(); ch.trees = null; }
   }
 
-  return { chunks, update, dropTrees, startInk, stepInk, finishInk, get inking() { return !!ink; } };
+  return { chunks, update, dropTrees, setTreesVisible: (v) => { treeGroup.visible = v; }, startInk, stepInk, finishInk, get inking() { return !!ink; } };
 }

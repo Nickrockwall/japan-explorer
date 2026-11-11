@@ -730,6 +730,11 @@ class Case:
         page.wait_for_timeout(300)
         assert page.locator('#hud-phases li.on').get_attribute('data-i') == '1', '下一阶段没有生效'
         assert page.is_visible('#hud-3d'), '合战面板应有「立体」'  # 3.34：点了去 3d.html#bt=…&ph=1
+        # 3.37：兵力条（两家各一段）与「众说纷纭」
+        assert page.locator('#hud-force i').count() == 2, '平面图合战面板应有兵力条'
+        if page.evaluate("document.getElementById('battle-hud').classList.contains('folded')"):
+            page.click('#hud-fold')  # 手机默认收起
+        assert page.is_visible('#hud-debate summary'), '应有众说纷纭'
         page.click('#hud-exit')
         page.wait_for_selector('#battle-hud', state='hidden')
 
@@ -1295,6 +1300,41 @@ class Case:
         page.wait_for_function("__je3d.opts.year === '1867' && __je3d.base === 'edo'", timeout=40000)
         assert '加贺藩' in page.inner_text('#legend') or page.is_hidden('#legend'), '换到江户后图例应是藩'
 
+    def three_d_337(self, page):
+        # 3.37：右上角「?」说明；城卡片的「这一带历年归谁」与登上天守远望；合战面板的众说纷纭；大和国「不设守护」；此地千年
+        page.goto(self.base.replace('index.html', '3d.html') + '#y=1590', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.click('#btn-help')
+        page.wait_for_selector('#help3d:not([hidden]) section')
+        assert page.locator('#help3d section').count() >= 6
+        page.keyboard.press('Escape')
+        assert page.is_hidden('#help3d')
+        page.evaluate("__je3d.choose('姫路')")
+        page.wait_for_selector('#card:not([hidden]) .life tr')
+        assert page.locator('#card .life tr').count() >= 5, page.inner_text('#card')[:300]
+        page.click('#card .look-btn')
+        page.wait_for_function('__je3d.lookout.active')
+        assert page.is_visible('#lookout-bar') and page.is_hidden('#card')
+        page.click('#lookout-bar button')
+        page.wait_for_function('!__je3d.lookout.active')
+        page.evaluate("__je3d.battle.start('nagashino')")
+        page.wait_for_selector('#battle:not([hidden]) .bt-debate summary')
+        assert '三段' in page.inner_text('#battle .bt-debate summary')
+        page.keyboard.press('Escape')
+        page.wait_for_function('!__je3d.battle.active', timeout=20000)
+        page.evaluate("__je3d.setYear('1300')")
+        page.evaluate("__je3d.showRegion(__je3d.regions.find((r) => r.key === '大和国'))")
+        assert '不设守护' in page.inner_text('#card'), page.inner_text('#card')[:200]
+        page.keyboard.press('Escape')
+        # 此地千年：链接进来，从 712 年开始一年年列出
+        page.goto(self.base.replace('index.html', '3d.html?r=here') + '#here=138.5877,35.6971&hn=%E7%94%B2%E5%BA%9C%E5%B8%82', timeout=60000)  # 只换 # 不会重新载入
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.wait_for_function("document.querySelectorAll('#here tr').length >= 3", timeout=90000)
+        text = page.inner_text('#here')
+        assert '甲府市' in text and '712' in text and '甲斐国' in text, text[:200]
+        page.keyboard.press('Escape')
+        page.wait_for_function('!__je3d.here.playing')
+
     def three_d_sync(self, page):
         # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
         # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
@@ -1406,7 +1446,12 @@ class Case:
         # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 11, f'应有 11 栏（含古代郷名、明治町村与平成合并前）：{rows}'
+        assert len(rows) == 13, f'应有 13 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人）：{rows}'
+        # 3.37：家乡在合战中站哪边（川中岛按 1560 年信浓归武田）、同乡名人、去立体图看此地千年
+        assert any(('武田' in r or 'Takeda' in r) and ('川中' in r or 'Kawanakajima' in r) for r in rows), f'合战中一栏：{rows}'
+        assert page.locator('.ks-row[data-k="famous"]').count() == 1, '应有同乡名人一栏'
+        href = page.get_attribute('.ks-3d', 'href')
+        assert href.startswith('3d.html#here=') and 'hn=' in href, href
         assert any('上田町' in r and '1889' in r for r in rows), f'明治町村应写出 1889 年与上田町：{rows}'
         # 平成合并前（3.28，CODH 1995 年边界 + 存续期间）：上田市·丸子町·真田町·武石村，2006 年起为今天的上田市；此地年表也有 2006 一行
         hs = page.locator('.ks-row[data-k="heisei"]').inner_text()
@@ -1730,7 +1775,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

@@ -1,7 +1,8 @@
 """立体图的江户与明治底图（3.35）：
 
     pip install shapely          # 仅生成时需要
-    python -X utf8 tools/build_eras3d.py          # 写出 src/3d/edo.json、src/3d/meiji.json（pack_geo 格式）
+    python -X utf8 tools/build_eras3d.py --ken-en  # 只补 1871 年县名的英文（3.37）
+    python -X utf8 tools/build_eras3d.py          # 写出 src/3d/edo.json、src/3d/meiji-1876.json、meiji-1888.json（pack_geo 格式；3.37 起明治按年份分两个文件，到哪一年才下载哪个）
 
 江户（幕末）：今天的每个市区町村按 tools/kyudaka.json（歴博《旧高旧領取調帳》按市区町村汇总的石高）取石高最多的领主，
 同一领主的市区町村合并成一块。所以领地边界沿今天的市区町村界走，是近似；一村几方共管、飞地、小藩在大市里的领地都看不出来。
@@ -36,7 +37,7 @@ from build_provinces import rounded  # noqa: E402
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA = os.path.join(ROOT, 'src', 'data')
 OUT_EDO = os.path.join(ROOT, 'src', '3d', 'edo.json')
-OUT_MEIJI = os.path.join(ROOT, 'src', '3d', 'meiji.json')
+OUT_MEIJI = os.path.join(ROOT, 'src', '3d', 'meiji-{}.json')
 wiki.CACHE = os.path.join(ROOT, '.cache', 'eras3d')
 SIMPLIFY = 0.004
 
@@ -161,6 +162,42 @@ def wikidata_en(titles):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False)
     return {t: cache[t] for t in titles if cache.get(t) is not None}
+
+
+# 1871 年县名的英文（3.37）：Wikidata 没有、藩名也改了的那些，读音有出处的才写：
+# ① 条目里写了「X県（よみ）」的（READ_EV：条目 → 那段原文）；② 县名就是藩厅所在的城下町、也就是今天同名的市（CITY_SAME），
+# 用 municipalities 里那个市的读音。其余（大泉、斗南、館……）读音没有可靠出处，照旧写「… Domain → prefecture」
+READ_EV = {'舞鶴県': ('丹後田辺藩', 'まいづる'), '松岡県': ('常陸松岡藩', 'まつおか'), '松山県': ('石鉄県', 'まつやま')}
+CITY_SAME = {'豊橋県': '豊橋市', '亀岡県': '亀岡市', '亀山県': '亀山市', '飯田県': '飯田市', '高梁県': '高梁市', '金沢県': '金沢市', '田辺県': '田辺市'}
+
+
+def fill_ken_en(features):
+    from build_bundle import romaji
+    from pilgrimage_tool import pages
+    texts = pages([t for t, _ in READ_EV.values()], 'revisions', rvprop='content', rvslots='main')
+    kana = {}
+    for ken, (title, yomi) in READ_EV.items():
+        txt = texts[title]['revisions'][0]['slots']['main']['content']
+        if not re.search(re.escape(ken) + r"(?:\]\]|'{3})?\s*[（(]" + yomi + 'けん[）)、，,：:]', txt):
+            raise SystemExit(f'READ_EV {ken}：{title} 里没有「{ken}（{yomi}けん）」')
+        kana[ken] = yomi
+    city = {}
+    for pid in range(1, 48):
+        for f in json.load(open(os.path.join(ROOT, 'src', 'data', 'municipalities', f'{pid:02d}.json'), encoding='utf-8'))['features']:
+            pr = f['properties']
+            city.setdefault(pr.get('name'), []).append(pr.get('kana') or '')
+    for ken, name in CITY_SAME.items():
+        ks = city.get(name, [])
+        if len(ks) != 1 or not ks[0].endswith('し'):
+            raise SystemExit(f'CITY_SAME {ken}：{name} 找不到唯一的读音 {ks}')
+        kana[ken] = ks[0][:-1]
+    n = 0
+    for f in features:
+        k = f['properties'].get('ken')
+        if k and not k[2] and k[0] in kana:
+            k[2] = f'{romaji(kana[k[0]])} Prefecture'
+            n += 1
+    return n
 
 
 def main():
@@ -334,12 +371,21 @@ def main():
     assert sum(1 for f in meiji['1888'] if f['properties']['key'].endswith('県')) == 43
     assert sum(1 for f in meiji['1876'] if f['properties']['key'].endswith('府')) == 3
 
+    fill_ken_en(edo)
     with open(OUT_EDO, 'w', encoding='utf-8', newline='\n') as f:
         json.dump(pack_geo.pack({'features': edo}), f, ensure_ascii=False, separators=(',', ':'))
-    with open(OUT_MEIJI, 'w', encoding='utf-8', newline='\n') as f:
-        json.dump(pack_geo.pack(meiji), f, ensure_ascii=False, separators=(',', ':'))
-    print(f'→ {os.path.relpath(OUT_EDO, ROOT)}（{os.path.getsize(OUT_EDO) // 1024} KB）、{os.path.relpath(OUT_MEIJI, ROOT)}（{os.path.getsize(OUT_MEIJI) // 1024} KB）')
+    for year, feats in meiji.items():
+        with open(OUT_MEIJI.format(year), 'w', encoding='utf-8', newline='\n') as f:
+            json.dump(pack_geo.pack({year: feats}), f, ensure_ascii=False, separators=(',', ':'))
+    print(f'→ {os.path.relpath(OUT_EDO, ROOT)}（{os.path.getsize(OUT_EDO) // 1024} KB）、' + '、'.join(f'meiji-{y}.json（{os.path.getsize(OUT_MEIJI.format(y)) // 1024} KB）' for y in meiji))
 
 
 if __name__ == '__main__':
-    main()
+    if '--ken-en' in sys.argv:  # 只补现有 edo.json 里 1871 年县名的英文，不重算藩领（不用 shapely）
+        data = json.load(open(OUT_EDO, encoding='utf-8'))
+        feats = pack_geo.unpack(data)['features']
+        print(f'补了 {fill_ken_en(feats)} 个')
+        with open(OUT_EDO, 'w', encoding='utf-8', newline='\n') as f:
+            json.dump(pack_geo.pack({'features': feats}), f, ensure_ascii=False, separators=(',', ':'))
+    else:
+        main()

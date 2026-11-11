@@ -6,6 +6,7 @@
 - 新合战（一之谷、严岛、长篠、山崎、鸟羽·伏见）：文字自己写（三语），每场的 `wiki` 条目里必须出现 `ev` 的每个词与合战的西历年，
   不然报错不写出；坐标取条目坐标（`PLACES`，取不到的报错），条目没有坐标的地点（包浦、塔之冈……）是按地图写的示意坐标，在 `NEAR` 里列出、
   与同一场的战场相距不超过 `MAX_KM`。
+- `debate`（3.37）：每场一个「众说纷纭」的问与答（DEBATE），关键词同样要出现在条目里。
 - 平面图与立体图共用这份数据；合战必须恰好 4 个阶段（check_data）。按键名替换：重跑不会重复添加，新合战排在原来 5 场后面（英日覆盖层按下标对齐）。
 """
 import json
@@ -393,6 +394,61 @@ def battles():
     ]
 
 
+# 众说纷纭（3.37）：每场一个史家至今在争的点，问与答三语自写；`ev` 的词都要出现在 `wiki` 条目里
+DEBATE = {
+    'okehazama': dict(wiki='桶狭間の戦い', ev=['迂回', '正面攻撃', '信長公記', '藤本正行'],
+        q=L('是奇袭还是正面进攻？', 'A surprise attack from the flank, or a frontal assault?', '奇襲か、正面攻撃か？'),
+        a=L('过去常说信长绕到今川本阵背后奇袭（迂回奇袭说）；但《信长公记》写的是信长从正面冲向今川军，藤本正行等据此主张正面攻击说。两说至今都有人支持。',
+            'The old story has Nobunaga circling round to fall on the Imagawa headquarters from behind; but the Shinchō kōki describes him charging straight at the Imagawa army, and Fujimoto Masayuki and others argue for a frontal attack. Both views still have supporters.',
+            'かつては信長が今川本陣の背後に回り込んで奇襲したとされた（迂回奇襲説）。しかし『信長公記』は信長が正面から今川軍に突撃したと記し、藤本正行らはこれに基づいて正面攻撃説を唱える。どちらの説にも支持者がいる。')),
+    'kawanakajima': dict(wiki='川中島の戦い', ev=['啄木鳥', '甲陽軍鑑', '一騎討ち'],
+        q=L('「啄木鸟战法」和信玄、谦信的单挑是真的吗？', 'Were the "woodpecker" plan and the duel of Shingen and Kenshin real?', '「啄木鳥戦法」と信玄・謙信の一騎討ちは本当か？'),
+        a=L('武田军分兵绕到妻女山背后、把上杉军赶下山的「啄木鸟战法」，以及谦信冲进本阵与信玄一对一交锋，都出自江户时代的《甲阳军鉴》；这些记载有不少异议，未必是史实。',
+            'Both the "woodpecker" plan — a Takeda detachment circling behind Mount Saijo to drive the Uesugi down — and Kenshin riding into the Takeda camp to duel Shingen come from the Edo-period Kōyō gunkan; they are much disputed and may not be history.',
+            '別働隊が妻女山の背後に回って上杉軍を追い落とす「啄木鳥戦法」も、謙信が本陣に斬り込んで信玄と一騎討ちしたという話も、江戸時代の『甲陽軍鑑』による。異論が多く、史実とは限らない。')),
+    'sekigahara': dict(wiki='関ヶ原の戦い', ev=['問い鉄砲', '慶長軍記', '呉座勇一', '笠谷和比古'],
+        q=L('家康真的开枪逼小早川倒戈吗？', 'Did Ieyasu really fire on Matsuo hill to make Kobayakawa turn?', '家康は本当に「問い鉄砲」を撃ったのか？'),
+        a=L('「问铁炮」——家康向松尾山开枪逼小早川秀秋表态——据吴座勇一的调查，最早见于 1663 年的军记《庆长军记》，比合战晚了六十多年；有人认为小早川一开战就倒戈、问铁炮是后人编的，笠谷和比古等则不同意。',
+            'The "prodding volley" — Ieyasu firing on Matsuo hill to force Kobayakawa Hideaki to declare himself — first appears, according to Goza Yūichi, in the war tale Keichō gunki of 1663, more than sixty years later. Some say Kobayakawa turned as soon as the fighting began and the volley was invented; Kasaya Kazuhiko and others disagree.',
+            '家康が松尾山に鉄砲を撃ちかけて小早川秀秋に去就を迫った「問い鉄砲」は、呉座勇一の調べでは1663年刊の軍記『慶長軍記』が初出で、合戦から六十年以上後のこと。小早川は開戦直後に寝返り、問い鉄砲は後世の作り話とする見方がある一方、笠谷和比古らは異を唱える。')),
+    'dannoura': dict(wiki='壇ノ浦の戦い', ev=['黒板勝美', '金指正三', '潮流'],
+        q=L('是潮流决定了胜负吗？', 'Did the tide decide the battle?', '潮の流れが勝敗を決めたのか？'),
+        a=L('黑板胜美提出：上午潮流对平氏有利，午后潮流转向，源氏借势反攻获胜。后来海事史学者金指正三用计算机推算当天的潮流，认为那天潮流很弱，这一说受到质疑。',
+            'Kuroita Katsumi argued that the current favoured the Taira in the morning and turned in the afternoon, carrying the Minamoto to victory. The maritime historian Kanazashi Shōzō later computed the tides for that day, found the current weak, and the theory has been questioned.',
+            '黒板勝美は、午前は潮流が平家に有利で、午後に潮の向きが変わって源氏が勝ったと唱えた。のちに海事史の金指正三が当日の潮流をコンピュータで解析し、潮流は弱かったとして、この説には疑問が出されている。')),
+    'seinan': dict(wiki='西南戦争', ev=['私学校', '中原尚雄', '自白書'],
+        q=L('西乡是自己想起兵的吗？', 'Did Saigō want this war?', '西郷は自ら挙兵を望んだのか？'),
+        a=L('1877 年 2 月，私学校党抓住政府派回鹿儿岛的警察中原尚雄等人，拷问出「奉命刺杀西乡」的供词，学生们群情激愤，西乡随后率军出发。他本人事先有没有起兵的打算，说法不一。',
+            'In February 1877 the Private School faction seized Nakahara Hisao and other police officers sent home to Kagoshima and, under torture, extracted a "confession" that they had come to assassinate Saigō. The students were enraged and Saigō marched out soon after; whether he himself had meant to rise is disputed.',
+            '1877年2月、私学校党は鹿児島に帰郷していた警官中原尚雄らを捕らえ、拷問で「西郷暗殺の指示を受けた」という自白書をとった。私学校徒は激昂し、西郷はまもなく兵を率いて出発した。西郷自身にもともと挙兵の意図があったかは説が分かれる。')),
+    'ichinotani': dict(wiki='一ノ谷の戦い', ev=['逆落とし', '多田行綱', '夢野'],
+        q=L('「鹎越逆落」到底在哪里？', 'Where was the famous descent of Hiyodorigoe?', '「鵯越の逆落とし」はどこだったのか？'),
+        a=L('义经一队从山崖冲下的地点，史料没有写清楚。一般说是鹎越，但鹎越离一之谷有一段路；也有说法认为攻下山手（梦野口）的是多田行纲，义经本人则绕到了一之谷背后。',
+            'The sources never say exactly where Yoshitsune\'s men rode down the cliff. Hiyodorigoe is the usual answer, but it lies some way from Ichi-no-Tani; another reading is that Tada Yukitsuna took the Yumeno pass on the hill side while Yoshitsune himself went round behind Ichi-no-Tani.',
+            '義経の一隊が崖を駆け下りた場所は史料にはっきり書かれていない。ふつう鵯越とされるが、鵯越は一ノ谷から離れている。山の手（夢野口）を落としたのは多田行綱で、義経自身は一ノ谷の背後に回ったとする見方もある。')),
+    'itsukushima': dict(wiki='厳島の戦い', ev=['囮', '陰徳太平記', '宮尾城'],
+        q=L('宫尾城是诱敌上岛的饵吗？', 'Was Miyao Castle bait?', '宮尾城は囮だったのか？'),
+        a=L('据《阴德太平记》《吉田物语》等，元就在 1555 年春特意筑起宫尾城，作为引陶晴贤上岛的诱饵。不过这些都是后来写成的军记，是不是真的出于计谋，还难以确定。',
+            'The Intoku taiheiki, the Yoshida monogatari and other accounts say Motonari built Miyao Castle in the spring of 1555 as bait to lure Sue Harukata onto the island. They were all written later, so whether it really was a ruse is hard to say.',
+            '『陰徳太平記』『吉田物語』などは、元就が1555年春に陶晴賢を厳島へおびき寄せる囮として宮尾城を築いたとする。ただしいずれも後に書かれた軍記で、本当に計略だったかは確かめにくい。')),
+    'nagashino': dict(wiki='長篠の戦い', ev=['三段撃ち', '甫庵信長記', '信長公記', '鉄砲奉行'],
+        q=L('「三千挺铁炮三段击」是真的吗？', 'Three thousand guns firing in three ranks — true?', '「鉄砲三千挺の三段撃ち」は本当か？'),
+        a=L('《信长公记》只说让五名铁炮奉行指挥，没有写三段轮射；「三千挺、三段击」出自江户时代的《甫庵信长记》，明治时写进教科书才广为流传。',
+            'The Shinchō kōki only says five gun commanders were put in charge; it says nothing of firing in three ranks. "Three thousand guns in three ranks" comes from the Edo-period Hoan Shinchōki and spread once Meiji textbooks taught it as fact.',
+            '『信長公記』は鉄砲奉行5人に指揮させたと書くだけで、三段撃ちの記述はない。「三千挺・三段撃ち」は江戸時代の『甫庵信長記』によるもので、明治期の教科書が史実として載せて広まった。')),
+    'yamazaki': dict(wiki='山崎の戦い', ev=['太閤記', '天王山', '円明寺川'],
+        q=L('真的是争夺天王山决定了胜负吗？', 'Was it really the race for Mount Tennō that decided it?', '本当に天王山の争奪が勝敗を決めたのか？'),
+        a=L('「先占领天王山的一方获胜」主要出自《太阁记》等后来的书；实际的交战是在天王山山脚与圆明寺川一带开始的。「天王山」作为决胜关头的说法也由此而来。',
+            '"Whoever held Mount Tennō won" comes mainly from later books such as the Taikōki; the fighting itself began at the foot of the mountain and along the Enmyōji stream. The phrase "Tennōzan" for a decisive moment grew from that story.',
+            '「天王山を先に押さえた方が勝った」という話は主に『太閤記』など後の書物による。実際の戦闘は天王山の山裾と円明寺川のあたりで始まった。勝負所を「天王山」と呼ぶのもこの話から。')),
+    'tobafushimi': dict(wiki='鳥羽・伏見の戦い', ev=['昔夢会筆記', '朝敵', '東帰'],
+        q=L('庆喜为什么丢下大军回江户？', 'Why did Yoshinobu leave his army and sail for Edo?', '慶喜はなぜ大軍を置いて江戸へ帰ったのか？'),
+        a=L('庆喜晚年在《昔梦会笔记》里回忆：他不愿背上「朝敌」之名，决定先回江户再作打算。当时与后世对他这样做的评价很不一样。',
+            'Late in life Yoshinobu explained in the Sekimukai hikki that he would not bear the name of "enemy of the court" and decided to return east first and think again. Opinions of what he did differed widely, then and since.',
+            '慶喜は晩年の『昔夢会筆記』で、「朝敵」の名を負うことを避け、いったん東帰して善後策を考えるつもりだったと回想している。この行動への評価は当時も後世も大きく分かれる。')),
+}
+
+
 def split(obj, lang, full):
     """三语树 → 一种语言：full=True 给底本（中文，含不翻译的字段），否则只留要翻译的叶子（英日覆盖层）"""
     if isinstance(obj, L):
@@ -438,6 +494,12 @@ def main():
     raw = pages([b['wiki'] for b in new], 'revisions', rvprop='content', rvslots='main')
     for b in new:
         check(b, raw[b['wiki']]['revisions'][0]['slots']['main']['content'])
+    texts = pages([d['wiki'] for d in DEBATE.values()], 'revisions', rvprop='content', rvslots='main')
+    for k, d in DEBATE.items():
+        text = texts[d['wiki']]['revisions'][0]['slots']['main']['content']
+        lost = [w for w in d['ev'] if w not in text]
+        if lost:
+            raise SystemExit(f'众说纷纭 {k}：{d["wiki"]} 里找不到 {lost}')
     base = json.load(open(BASE, encoding='utf-8'))
     over = {lang: json.load(open(p, encoding='utf-8')) for lang, p in OVER.items()}
     keys = {b['key'] for b in new}
@@ -459,11 +521,16 @@ def main():
         base['historic_battles'].append(z)
         for lang, o in over.items():
             o['historic_battles'].append(split(entry, lang, False))
+    for i, b in enumerate(base['historic_battles']):
+        d = DEBATE[b['key']]
+        b['debate'] = {'q': d['q']['zh'], 'a': d['a']['zh']}
+        for lang, o in over.items():
+            o['historic_battles'][i]['debate'] = {'q': d['q'][lang], 'a': d['a'][lang]}
     for path, data in [(BASE, base), *((OVER[lang], over[lang]) for lang in OVER)]:
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
             f.write('\n')
-    record_revisions('battles_tool', [b['wiki'] for b in new])
+    record_revisions('battles_tool', [b['wiki'] for b in new] + [d['wiki'] for d in DEBATE.values()])
     print(f'{len(base["historic_battles"])} 场合战：', '、'.join(b['key'] for b in base['historic_battles']))
 
 

@@ -40,37 +40,53 @@ FAMILIES = {
     'utsunomiya': ('宇都宫', 'Utsunomiya', '宇都宮', '#c9839b', '宇都宮氏', ('宇都宮',)),
     'ashikaga': ('足利', 'Ashikaga', '足利', '#8c86c4', '足利氏', ('足利',)),
     'gokenin': ('其他御家人', 'Other vassals', 'その他の御家人', '#c8b98f', None, ()),
+    # 3.37：条目写明「不設置」的（出羽一直没设，相模 1247 年以后由侍所、政所管，大和由兴福寺代行）
+    'none': ('不设守护', 'No constable', '守護不設置', '#e3d9c0', None, ('不設置', '設置されず')),
     'unknown': ('不详', 'Not recorded', '不詳', '#d9cfb6', None, ()),
 }
-LOOSE = {'gokenin', 'unknown'}
+LOOSE = {'gokenin', 'unknown', 'none'}
 
 
 def section(text):
-    """「守護」一节下的「鎌倉幕府」（备前国写「鎌倉時代」）"""
-    i = max(text.find('=== 守護 ==='), text.find('=== 守護職 ==='))
-    if i < 0:
+    """「守護」一节下的「鎌倉幕府」（备前国写「鎌倉時代」）。3.37：标题哪一级都认；镰仓一段也可能是粗体的「鎌倉幕府」
+    而不是小标题（摄津、河内、上总、和泉），或者整节只有镰仓的名单（出云，到「室町」为止）"""
+    m = re.search(r'^(=+)\s*守護職?\s*\1\s*$', text, re.M)
+    if not m:
         return None
-    m = re.search(r'==== 鎌倉(?:幕府|時代) ====\n(.*?)(?=\n==|\Z)', text[i:], re.S)
-    return m.group(1) if m else None
+    lv = len(m.group(1))
+    rest = text[m.end():]
+    end = re.search(r'^={2,%d}[^=].*$' % lv, rest, re.M)
+    sec = rest[:end.start()] if end else rest
+    bold = "'''"
+    start = r'(?:^=+\s*鎌倉(?:幕府|時代)\s*=+\s*$|' + bold + r'\[*鎌倉(?:幕府|時代)\]*' + bold + ')'
+    stop = r'(?=^=+\s*室町|' + bold + r'\[*室町|\Z)'
+    k = re.search(start + '(.*?)' + stop, sec, re.S | re.M)
+    if k:
+        return k.group(1)
+    head = re.split(r'^=+\s*室町|' + bold + r'\[*室町', sec, flags=re.M)[0]
+    return head if head.strip() else None
 
 
 def parse(block):
     """名单的写法各条目不一样（「1190年 - 1203年：比企能員」「梶原景時：元暦元年（1184年） 〜 …」「1187年～1211年 - 大内惟義」
     「? - 1194年（建久5年） - 三浦義澄」）：西历年按出现顺序取，去掉年份、和历、问号与分隔符后剩下的是人名"""
     rows = []
+    # 表格（纪伊）：一行一位，「|-」分行，各格拼成一行
+    if '{|' in block:
+        block = '\n'.join(' - '.join(c.strip() for c in re.split(r'\n[|!]', r) if c.strip() and not c.strip().startswith(('{|', '|}', 'style'))) for r in block.split('|-'))
     for line in block.splitlines():
         line = line.strip()
         years = [(m.start(), int(m.group(1))) for m in re.finditer(r'(1[0-3]\d{2})年', line)]
         if not years:
             continue
         before = line[:years[0][0]]
-        head_unknown = bool(re.search(r'(不明|[?？])\s*[-－～〜]', before))
+        head_unknown = bool(re.search(r'(不明|不詳|[?？])\s*[-－～〜]', before))
         ys = [y for _, y in years]
         start = None if head_unknown else ys[0]
         end = ys[0] if head_unknown else (ys[1] if len(ys) > 1 else None)
         who = re.sub(r'（[^）]*）|\([^)]*\)|[←→]', '', line)
         who = re.sub(r'(元暦|文治|建久|正治|建仁|元久|建永|承元|建暦|建保|承久|貞応|元仁|嘉禄|安貞|寛喜|貞永|天福|文暦|嘉禎|暦仁|延応|仁治|寛元|宝治|建長|康元|正嘉|正元|文応|弘長|文永|建治|弘安|正応|永仁|正安|乾元|嘉元|徳治|延慶|応長|正和|文保|元応|元亨|正中|嘉暦|元徳|元弘|正慶)?\s*(\d+|元)年(\d+月)?(頃|ごろ)?', '', who)
-        who = re.sub(r'不明|[?？]|頃|[-－～〜：:、,]|\s', '', who)
+        who = re.sub(r'不明|不詳|[?？]|頃|[-－～〜：:、,]|\s', '', who)
         if not who:
             continue
         rows.append({'start': start, 'end': end, 'who': who, 'line': line})
@@ -78,7 +94,8 @@ def parse(block):
         if r['start'] is None and i:
             r['start'] = rows[i - 1]['end'] or rows[i - 1]['start']
         if r['end'] is None:
-            nxt = next((x['start'] for x in rows[i + 1:] if x['start']), None)
+            # 下一个写了年份的人：有开始年用开始年；只写了结束年（「? - 1247年 - 三浦泰村」）用它的结束年（3.37：以前跳过它，河内的三浦义村一直算到 1280 年）
+            nxt = next(((x['start'] or x['end']) for x in rows[i + 1:] if x['start'] or x['end']), None)
             r['end'] = nxt or 1333
     return [r for r in rows if r['start']]
 
@@ -115,6 +132,10 @@ def main():
         rows = parse(block) if block else []
         row = {}
         fams = {family(x['who']) for x in all_rows(block)} if block else set()
+        # 整节只说「守護不設置」（出羽、大和）：各年份都记「不设守护」
+        if block and not rows and re.search('不設置|設置されず', block):
+            out[prov] = {str(y): {'c': 'none'} for y in YEARS}
+            continue
         for y in YEARS:
             hit = [r for r in rows if r['start'] <= y <= r['end']]
             if not hit:

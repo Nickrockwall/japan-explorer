@@ -2,13 +2,14 @@
 // 会变的状态（当前的块、上色方式、选中的东西、聚光的家）都在 app 的 S 里；其余是 app 给的数据与函数
 import * as THREE from 'three';
 import { lang, t, nm, circuit } from './i18n.js';
-import { eraOf, capitalOf } from './eras.js';
+import { YEARS, eraOf, capitalOf } from './eras.js';
 
 export function createCards(S, ctx) {
   const {
     opts, sg, kama, bios, sites, rulers, people, camera, controls, P, LOOSE, KAMA_LOOSE,
     esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
     flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
+    holderAt, castleOnIn, eraReady, loadEra, lookFrom,
   } = ctx;
   const card = document.querySelector('#card');
   const person = (ja) => nm(people[ja]) || ja;
@@ -196,11 +197,32 @@ export function createCards(S, ctx) {
     openCard(`<h2>${sw(r.key)}${esc(regionName(r))}</h2>${body}`);
   }
   // 城所在的块在当前年份归谁（分治列出各家）
-  function holderHTML(c) {
-    const r = regionAt(c.xz[0], c.xz[1]);
-    const e = r && entry(r.key);
-    if (!e || !opts.tint) return '';
-    return `<p>${esc(t('holder', { y: opts.year }))}：${[e.c, ...(e.with || [])].map((k) => `${sw(k)}${esc(nm(info(k)))}`).join(lang === 'en' ? ', ' : '、')}</p>`;
+  // 城的一生（3.37）：这座城在立体图的每个年份（古代不画城）所在的那块归谁，前后相同的并成一段；点一段换到那一年。
+  // 江户、明治的资料还没下载的先不列，下载完再刷新这张卡片（还开着的话）
+  function lifeHTML(c) {
+    const ys = YEARS.filter((y) => eraOf(y) !== 'kodai' && castleOnIn(c, y));
+    const wait = ys.filter((y) => !eraReady(y));
+    if (wait.length) {
+      Promise.all(wait.map(loadEra)).then(() => {
+        if (S.focused?.type === 'castle' && S.focused.q === c.q && !card.hidden) showCastle(c, false);
+      }).catch(() => {});
+    }
+    const runs = [];
+    for (const y of ys) {
+      const h = holderAt(c.xz[0], c.xz[1], y);
+      if (!h) continue;
+      const id = h.map((x) => x.name).join('|');
+      const last = runs[runs.length - 1];
+      if (last && last.id === id && YEARS.indexOf(y) === YEARS.indexOf(last.ys[last.ys.length - 1]) + 1) last.ys.push(y);
+      else runs.push({ id, h, ys: [y] });
+    }
+    if (!runs.length) return '';
+    const rows = runs.map((r) => {
+      const span = r.ys.length > 1 ? `${r.ys[0]}–${r.ys[r.ys.length - 1]}` : r.ys[0];
+      const who = r.h.length ? r.h.map((x) => `<i class="sw" style="background:${x.color}"></i>${esc(x.name)}`).join(lang === 'en' ? ', ' : '、') : esc(t('life.none'));
+      return `<tr class="${r.ys.includes(opts.year) ? 'cur' : ''}" data-y="${r.ys.includes(opts.year) ? opts.year : r.ys[0]}"><th>${span}</th><td>${who}</td></tr>`;
+    }).join('');
+    return `<h3 class="life-h">${esc(t('life.h'))}</h3><table class="yrs life">${rows}</table>${wait.length ? `<p class="note">${esc(t('life.loading'))}</p>` : ''}<p class="note">${esc(t('life.note'))}</p>`;
   }
   // 100名城 / 续 100 名城的编号、现存天守（castle_extra_tool.py，3.36）
   function meijoHTML(c) {
@@ -208,16 +230,19 @@ export function createCards(S, ctx) {
     if (!rows.length) return '';
     return rows.map((r) => (r.startsWith('<') ? r : `<p class="meijo">${esc(r)}</p>`)).join('') + `<p class="note">${esc(t('meijoNote'))}</p>`;
   }
-  function showCastle(c) {
+  function showCastle(c, fly = true) {
     S.focused = { type: 'castle', q: c.q };
     openCard(`<h2>${esc(castleName(c))}</h2>
       <p class="sub">${esc(provName(c.prov))} · ${t('castle')}</p>
       <p>${c.bc ? esc(t('bc', { c: c.bc })) : t(c.ba ? 'ba' : 'built', { y: c.built })}${c.gone ? t('gone', { y: c.gone }) : ''}</p>
-      ${holderHTML(c)}
       ${meijoHTML(c)}
+      <p><button type="button" class="look-btn">${esc(t(+opts.year >= 1576 ? 'look.tenshu' : 'look.yagura'))}</button></p>
+      ${lifeHTML(c)}
       <p class="note">${t(+opts.year >= 1576 ? 'late' : 'early')}${t('castleNote')}</p>
       <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(c.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    flyTo(c.xz[0], c.xz[1], Math.min(camera.position.distanceTo(controls.target), 60));
+    card.querySelectorAll('.life tr[data-y]').forEach((tr) => { tr.onclick = () => userYear(tr.dataset.y); });
+    card.querySelector('.look-btn').onclick = () => lookFrom(c);
+    if (fly) flyTo(c.xz[0], c.xz[1], Math.min(camera.position.distanceTo(controls.target), 60));
   }
   function showFort(f) {
     S.focused = { type: 'fort', ja: f.ja };

@@ -333,7 +333,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "A surprise attack from the flank, or a frontal assault?",
+        "a": "The old story has Nobunaga circling round to fall on the Imagawa headquarters from behind; but the Shinchō kōki describes him charging straight at the Imagawa army, and Fujimoto Masayuki and others argue for a frontal attack. Both views still have supporters."
+      }
     },
     {
       "name": "Fourth Battle of Kawanakajima (1561)",
@@ -433,7 +437,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Were the \"woodpecker\" plan and the duel of Shingen and Kenshin real?",
+        "a": "Both the \"woodpecker\" plan — a Takeda detachment circling behind Mount Saijo to drive the Uesugi down — and Kenshin riding into the Takeda camp to duel Shingen come from the Edo-period Kōyō gunkan; they are much disputed and may not be history."
+      }
     },
     {
       "name": "Battle of Sekigahara (1600)",
@@ -557,7 +565,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Did Ieyasu really fire on Matsuo hill to make Kobayakawa turn?",
+        "a": "The \"prodding volley\" — Ieyasu firing on Matsuo hill to force Kobayakawa Hideaki to declare himself — first appears, according to Goza Yūichi, in the war tale Keichō gunki of 1663, more than sixty years later. Some say Kobayakawa turned as soon as the fighting began and the volley was invented; Kasaya Kazuhiko and others disagree."
+      }
     },
     {
       "name": "Battle of Dan-no-ura (1185)",
@@ -663,7 +675,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Did the tide decide the battle?",
+        "a": "Kuroita Katsumi argued that the current favoured the Taira in the morning and turned in the afternoon, carrying the Minamoto to victory. The maritime historian Kanazashi Shōzō later computed the tides for that day, found the current weak, and the theory has been questioned."
+      }
     },
     {
       "name": "Satsuma Rebellion (1877)",
@@ -769,7 +785,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Did Saigō want this war?",
+        "a": "In February 1877 the Private School faction seized Nakahara Hisao and other police officers sent home to Kagoshima and, under torture, extracted a \"confession\" that they had come to assassinate Saigō. The students were enraged and Saigō marched out soon after; whether he himself had meant to rise is disputed."
+      }
     },
     {
       "name": "Battle of Ichi-no-Tani (1184)",
@@ -884,7 +904,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Where was the famous descent of Hiyodorigoe?",
+        "a": "The sources never say exactly where Yoshitsune's men rode down the cliff. Hiyodorigoe is the usual answer, but it lies some way from Ichi-no-Tani; another reading is that Tada Yukitsuna took the Yumeno pass on the hill side while Yoshitsune himself went round behind Ichi-no-Tani."
+      }
     },
     {
       "name": "Battle of Itsukushima (1555)",
@@ -996,7 +1020,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Was Miyao Castle bait?",
+        "a": "The Intoku taiheiki, the Yoshida monogatari and other accounts say Motonari built Miyao Castle in the spring of 1555 as bait to lure Sue Harukata onto the island. They were all written later, so whether it really was a ruse is hard to say."
+      }
     },
     {
       "name": "Battle of Nagashino (1575)",
@@ -1126,7 +1154,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Three thousand guns firing in three ranks — true?",
+        "a": "The Shinchō kōki only says five gun commanders were put in charge; it says nothing of firing in three ranks. \"Three thousand guns in three ranks\" comes from the Edo-period Hoan Shinchōki and spread once Meiji textbooks taught it as fact."
+      }
     },
     {
       "name": "Battle of Yamazaki (1582)",
@@ -1235,7 +1267,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Was it really the race for Mount Tennō that decided it?",
+        "a": "\"Whoever held Mount Tennō won\" comes mainly from later books such as the Taikōki; the fighting itself began at the foot of the mountain and along the Enmyōji stream. The phrase \"Tennōzan\" for a decisive moment grew from that story."
+      }
     },
     {
       "name": "Battle of Toba–Fushimi (1868)",
@@ -1359,7 +1395,11 @@
             }
           ]
         }
-      ]
+      ],
+      "debate": {
+        "q": "Why did Yoshinobu leave his army and sail for Edo?",
+        "a": "Late in life Yoshinobu explained in the Sekimukai hikki that he would not bear the name of \"enemy of the court\" and decided to return east first and think again. Opinions of what he did differed widely, then and since."
+      }
     }
   ]
 }

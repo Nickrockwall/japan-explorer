@@ -46,6 +46,35 @@ NEAR = 0.02  # 度；海上的点归到这个距离内最近的县
 OUTSIDE = {1: '蝦夷地', 47: '琉球'}
 
 
+# 不在 Wikidata 那两类里、但在 100 名城 / 续 100 名城名单上的城（3.37）：按日文条目的坐标补进候选，其余规则不变
+EXTRA = ['玄蕃尾城', '小牧山', '浪岡城']
+NAME = {'小牧山': ('小牧山城', 'Komakiyama Castle')}  # 条目名不是城名的
+# 信息框没写确切築城年、正文写了的（3.37，人工读过正文；ev 那句话要原样出现在条目里，否则报错）：(年, 是否大约, ev)
+BODY_BUILT = {
+    '洲本城': (1526, False, '1526年（大永6年）、三好氏の重臣・安宅治興が築城した'),
+    '浪岡城': (1460, True, '1460年代に浪岡北畠氏によって築城され'),
+    '苗木城': (1331, True, '高森山（現在の中津川市苗木町）に砦を築く'),
+}
+
+
+def extra_cands(have):
+    """EXTRA 里 Wikidata 没给的：条目坐标、Wikidata 编号、语言条目数（+1 算上日文）"""
+    need = [t for t in EXTRA if t not in have]
+    if not need:
+        return []
+    co = pages(need, 'coordinates')
+    pp = pages(need, 'pageprops')
+    ll = pages(need, 'langlinks', lllimit='max')
+    out = []
+    for t in need:
+        c = co[t].get('coordinates')
+        if not c:
+            raise SystemExit(f'EXTRA {t} 没有坐标')
+        out.append({'q': pp[t].get('pageprops', {}).get('wikibase_item', ''), 'title': co[t].get('title', t),
+                    'coords': [round(c[0]['lon'], 5), round(c[0]['lat'], 5)], 'links': len(ll[t].get('langlinks', [])) + 1, 'en': None})
+    return out
+
+
 def sparql():
     rows = []
     for cls in CLASSES:
@@ -154,7 +183,8 @@ def main():
     provs = [(f['properties']['key'], shape(f['geometry'])) for f in provs]
 
     cands = []
-    for c in sparql():
+    found = sparql()
+    for c in found + extra_cands({c['title'] for c in found}):
         pt = Point(c['coords'])
         pid = next((i for i, g in prefs if g.contains(pt)), None)
         if pid is None:
@@ -185,6 +215,11 @@ def main():
             built = approx = infobox_nengo(text, '(?:築城年|build_y)')
         elif re.search(r'年間|[？?]|か\s*$', infobox_value(text, '(?:築城年|build_y)') or ''):
             approx = built  # 「永正年間（1504年 - 1520年）？」：写的是一段年号或带问号，前端写「约」
+        if built is None and c['title'] in BODY_BUILT:
+            y, rough, ev = BODY_BUILT[c['title']]
+            if ev not in text:
+                raise SystemExit(f'BODY_BUILT {c["title"]}：条目里找不到「{ev}」')
+            built, approx = y, (y if rough else None)
         if built is None:
             century = infobox_century(text, '(?:築城年|build_y)')
             built = (century - 1) * 100 if century and century <= 16 else None
@@ -198,7 +233,10 @@ def main():
             continue
         name = re.sub(r'\s*\(.*\)$', '', c['title'])
         z = lambda t: ''.join(zh.get(ch, ch) for ch in t)
-        row = {'ja': name, 'zh': z(name), 'en': english(reading(text, name), c['en']), 'wiki': c['title'], 'q': c['q'],
+        en = english(reading(text, name), c['en'])
+        if c['title'] in NAME:
+            name, en = NAME[c['title']]
+        row = {'ja': name, 'zh': z(name), 'en': en, 'wiki': c['title'], 'q': c['q'],
                     'coords': c['coords'], 'pref': c['pref'], 'prov': c['prov'] or OUTSIDE[c['pref']], 'built': built,
                     'gone': gone, 'links': c['links']}
         if century:
@@ -228,6 +266,8 @@ def main():
     # 3.36：「|」前有空格的信息框也认（浜松城 1504 年号开头、米沢城 1238）；只写时代的春日山城按 14 世纪
     assert by['浜松城']['built'] == 1504 and by['浜松城'].get('ba') and by['米沢城']['built'] == 1238, (by.get('浜松城'), by.get('米沢城'))
     assert by['春日山城'].get('bc') == 14 and by['春日山城']['gone'] == 1607, by.get('春日山城')
+    # 3.37：名单上 Wikidata 漏了的（小牧山城、玄蕃尾城）、正文才写築城年的（洲本城）
+    assert by['小牧山城']['built'] == 1563 and by['玄蕃尾城']['built'] == 1578 and by['洲本城']['built'] == 1526, (by.get('小牧山城'), by.get('洲本城'))
 
 
 if __name__ == '__main__':

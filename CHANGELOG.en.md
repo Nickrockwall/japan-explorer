@@ -4,6 +4,17 @@
 
 Newest first.
 
+## 3.37 · 2026-11-11
+
+- Two new rows in the koseki: "In battle" — which side your hometown was on at Okehazama, Kawanakajima, Nagashino and Sekigahara (from that year's Sengoku map, only where the area's holder actually fought); and "Born here" — historical figures born in the municipality (Wikidata birthplaces, kept only when the person's Japanese article names the place, so Wikidata's mistakes drop out)
+- A thousand years here: "A thousand years here, in 3D" in the koseki opens the 3D map on that spot and plays from 712 to 1888, listing the province (domain, prefecture) and holder for every year
+- A castle's life: castle cards list who held the area in each map year, merging runs, and tapping a row jumps to that year
+- Climb the keep: a button on castle cards puts the camera about 100 m above the castle, looking out level; drag to look around, with names on the far hills and castles
+- Still debated: each of the ten battles explains one point historians still argue about (surprise attack or frontal assault at Okehazama, the "prodding volley", the tide at Dan-no-ura, the three-rank volley, Mount Tennō…), in both the 2D and 3D battle panels; the 2D panel now has the strength bar too
+- A "?" help panel on the 3D map, and a one-time tip the first time it opens on a phone (phones had no instructions before)
+- More data: Komakiyama, Genbao, Sumoto and Naegi castles from the 100 Fine Castles lists (812 castles); fewer unknown Kamakura constables (16 → 9 provinces in 1300), with Dewa, Yamato and Sagami marked as having no constable; English names for 10 more prefectures of 1871
+- Meiji data is split by year and downloaded only for the year you open; 1871 no longer downloads it
+
 ## 3.36 · 2026-11-11
 
 - The 3D map opens faster: a 60 KB preview of the terrain draws the whole country first and the detailed terrain (about 720 KB) swaps in when it arrives; lakes and rivers no longer hold up the first view

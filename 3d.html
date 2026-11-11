@@ -57,7 +57,37 @@
   #nav { position: fixed; right: calc(10px + var(--safe-r)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
   #nav button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
   body.card-open #nav { right: calc(320px + var(--safe-r)); }
-  #card, #settings, #search { top: calc(var(--top-h, 50px) + 10px); }
+  #card, #settings, #search, #help3d { top: calc(var(--top-h, 50px) + 10px); }
+  #help3d { position: fixed; right: calc(10px + var(--safe-r)); width: 330px; max-width: calc(100% - 20px - var(--safe-l) - var(--safe-r)); max-height: calc(100% - var(--top-h, 50px) - 30px); overflow: auto; padding: 10px 14px 12px; z-index: 6; }
+  #help3d .h3-head { display: flex; align-items: center; justify-content: space-between; }
+  #help3d .h3-head b { font: 700 16px var(--serif); }
+  #help3d .x { border: 0; background: none; font-size: 20px; width: 32px; height: 32px; }
+  #help3d section { border-top: 1px solid var(--line); padding: 7px 0; }
+  #help3d h3 { margin: 0 0 2px; font: 700 13px var(--serif); }
+  #help3d p { margin: 0; font-size: 12.5px; line-height: 1.65; }
+  #btn-help { font: 700 15px var(--serif); }
+  #here { position: fixed; left: calc(10px + var(--safe-l)); top: calc(var(--top-h, 50px) + 10px); width: 290px; max-width: calc(100% - 20px); max-height: calc(100% - var(--top-h, 50px) - 140px); display: flex; flex-direction: column; padding: 8px 12px 10px; z-index: 5; }
+  #here .here-head { display: flex; align-items: center; gap: 6px; }
+  #here .here-head b { flex: 1; font: 700 15px var(--serif); }
+  #here .here-head button { border: 1px solid var(--line); background: none; border-radius: 3px; min-width: 32px; height: 32px; }
+  #here .here-head .x { border: 0; font-size: 20px; }
+  #here .here-body { overflow: auto; min-height: 0; }
+  #here table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  #here th { text-align: left; padding: 3px 8px 3px 0; width: 3em; font-variant-numeric: tabular-nums; vertical-align: top; }
+  #here td { padding: 3px 0; }
+  #here td span { display: block; color: var(--muted); }
+  #here tr { cursor: pointer; }
+  #here tr.cur { background: rgba(179, 48, 42, .1); }
+  #here .note { color: var(--muted); font-size: 11px; margin: 6px 0 0; }
+  .lb.here b { display: inline-block; padding: 1px 6px; background: var(--shu); color: #fff; font: 700 13px var(--serif); border-radius: 2px; }
+  body:has(#here:not([hidden])) #legend { display: none; } /* 此地千年开着时左下角的图例让开（面板在左上，高了会叠上） */
+  @media (max-width: 640px) { #here { max-height: 42%; } }
+  #card .look-btn { border: 1px solid var(--ink); background: var(--ink); color: var(--panel); border-radius: 3px; padding: 5px 12px; font: 600 13px var(--serif); min-height: 32px; }
+  #lookout-bar { position: fixed; left: 50%; bottom: calc(26px + var(--safe-b)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 14px; z-index: 6; white-space: nowrap; }
+  #lookout-bar b { font: 700 15px var(--serif); }
+  #lookout-bar span { color: var(--muted); font-size: 12px; }
+  #lookout-bar button { border: 1px solid var(--ink); background: var(--ink); color: var(--panel); border-radius: 3px; padding: 5px 12px; min-height: 32px; font-weight: 600; }
+  body.lookout #legend, body.lookout #hint, body.lookout #story, body.lookout #nav { display: none; }
   #years .play { font-size: 12px; min-width: 32px; color: var(--shu); }
   #years .play[aria-pressed="true"] { background: var(--shu); color: #fff; }
 
@@ -81,6 +111,9 @@
   #battle .bt-force i { display: flex; align-items: center; justify-content: center; min-width: 3.4em; font: 600 11px var(--sans); color: var(--ink); text-shadow: 0 0 2px rgba(255, 255, 255, .8), 0 0 3px rgba(255, 255, 255, .8); }
   #battle .bt-force i + i { border-left: 1px solid var(--ink); }
   #battle .bt-per { color: var(--muted); font-size: 11px; margin: 0 0 6px; }
+  #battle .bt-debate { margin: 6px 0 8px; font-size: 12.5px; border-left: 3px solid var(--kin); padding: 2px 0 2px 8px; }
+  #battle .bt-debate summary { cursor: pointer; font: 600 13px var(--serif); }
+  #battle .bt-debate p { margin: 4px 0 0; line-height: 1.65; }
   #battle .bt-tabs { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
   #battle .bt-tabs button { flex: 1; border: 0; background: none; padding: 4px 0; border-radius: 3px; font-weight: 600; }
   #battle .bt-tabs button[aria-selected="true"] { background: var(--ink); color: var(--panel); }
@@ -165,6 +198,8 @@
   #card .note { color: var(--muted); font-size: 12px; }
   #card .meijo { margin: 4px 0; padding: 2px 0 2px 8px; border-left: 3px solid var(--shu); font: 600 13px var(--serif); }
   #card .meijo.k { border-left-color: var(--kin); }
+  #card .life-h { margin: 10px 0 2px; font: 700 13px var(--serif); }
+  #card .life th { width: auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
   #card .links a { color: var(--shu); }
 
   #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
@@ -270,6 +305,7 @@
   <div class="tools">
     <button id="btn-battle" class="wide" type="button" data-t-title="bt.title"><span aria-hidden="true">⚔</span> <span data-t="bt">合战</span></button>
     <button id="btn-search" type="button" data-t-title="search" data-t-aria="search" title="搜索" aria-label="搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <button id="btn-help" type="button" data-t-title="help" data-t-aria="help" title="说明" aria-label="说明">?</button>
     <button id="btn-settings" type="button" data-t-title="settings" data-t-aria="settings" title="设置" aria-label="设置">⚙</button>
   </div>
 </div>
@@ -286,6 +322,9 @@
 </div>
 <div id="battle" class="float" hidden aria-live="polite"></div>
 <div id="story" class="float" hidden aria-live="polite"></div>
+<div id="help3d" class="float" hidden></div>
+<div id="here" class="float" hidden aria-live="polite"></div>
+<div id="lookout-bar" class="float" hidden aria-live="polite"><b></b><span data-t="look.tip">拖动环顾四周</span><button type="button" data-t="look.back">回到地图</button></div>
 <div id="settings" class="float" hidden>
   <h3 data-t="exag">地形起伏</h3>
   <div class="seg"><button type="button" data-exag="1" data-t="real">实际</button><button type="button" data-exag="2">×2</button><button type="button" data-exag="3">×3</button></div>

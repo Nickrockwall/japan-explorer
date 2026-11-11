@@ -51,7 +51,35 @@ const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d
 const DOU_SITE = { fuchu: 'fu', kofu: 'fu', soja: 'fu', kokubu: 'ji', ichi: 'ichi' };
 
 // ctx：{ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, prefOf, sengoku, han, town }（prefOf：县 id → 县名）（town：bundle/town/<lang>/NN.json 的明治町村与地名来历，可能为 null）
-export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, prefOf, sengoku, han, town }) {
+// 家乡站在哪一边（3.37）：只取战国势力图的年份与合战同年或只差一两年的四场（桶狭间 1560、川中岛 1561 → 1560、长篠 1575 → 1573、
+// 关原 1600），那一年这块地归的家正是合战的一方才写（值是合战数据里的 faction 键）；关原按 1600 年的东西两军，观望、倒戈也照写
+const SIDES = [
+  { key: 'okehazama', y: '1560', side: { oda: 'oda', imagawa: 'imagawa' } },
+  { key: 'kawanakajima', y: '1560', side: { takeda: 'takeda', uesugi: 'uesugi' } },
+  { key: 'nagashino', y: '1573', side: { oda: 'oda', tokugawa: 'oda', takeda: 'takeda' } },
+  { key: 'sekigahara', y: '1600', sides: true },
+];
+function sidesRow(sg, sengoku, battles) {
+  const out = [];
+  const colon = lang === 'en' ? ': ' : '：';
+  for (const s of SIDES) {
+    const b = battles?.find((x) => x.key === s.key);
+    const e = sg?.[s.y];
+    if (!b || !e) continue;
+    const cs = [e.c, ...(e.with || [])];
+    const title = b.name.replace(/\s*[（(]\d+[)）]$/, '');
+    if (s.sides) {
+      const g = sengoku.sides[e.c];
+      if (g) out.push(`${title}${colon}${g[lang] || g.zh}${e.with ? t('ks.sides.split') : ''}`);
+      continue;
+    }
+    const fs = [...new Set(cs.map((c) => s.side[c]).filter(Boolean))].map((k) => b.factions.find((f) => f.key === k)?.name).filter(Boolean);
+    if (fs.length) out.push(`${title}${colon}${fs.join(t('list.sep'))}`);
+  }
+  return out;
+}
+
+export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun, power, prints, prefLabel, prefOf, sengoku, han, town, battles }) {
   const pn = (ja) => provNames?.[ja]?.[lang] || ja;
   const key = props.province;
   const short = key?.replace(/国$/, '');
@@ -101,6 +129,8 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
       return `${y} ${g[lang] || g.zh}`;
     };
     rows.push({ k: 'sengoku6', seal: unit ? 'gun' : 'prov', main: ['1560', '1582', '1600'].map(at).join(' → '), sub: ['1467', '1573', '1590'].map(at).join(' · ') });
+    const sides = sidesRow(sg, sengoku, battles);
+    if (sides.length) rows.push({ k: 'sides', seal: unit ? 'gun' : 'prov', main: sides.join(' · '), sub: t('ks.sides.note') });
   } else {
     rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });
   }
@@ -154,6 +184,14 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   }
   const ph = pref.dialect?.phrases?.[0];
   if (ph) rows.push({ k: 'voice', seal: 'pref', main: `「${ph.phrase}」`, sub: ph.meaning, voice: true });
+  // 同乡名人（town.famous，3.37）：Wikidata 出生地落在这里的已故人物，按语言条目数排（tools/famous_tool.py）
+  // 政令市的区没有自己的（出生地多记在市上）：用市的（town.famousCity：区 → 市的代码），印「全市」
+  const famCity = !town?.famous?.[props.code] && props.city ? town?.famous?.[town.famousCity?.[props.code]] : null;
+  const fam = town?.famous?.[props.code] || famCity;
+  if (fam?.length) {
+    const life = (b, d) => (lang === 'en' ? ` (${b ?? '?'}–${d ?? '?'})` : `（${b ?? '?'}–${d ?? '?'}）`);
+    rows.push({ k: 'famous', seal: famCity ? 'city' : 'muni', main: fam.slice(0, 3).map(([, n, b, d]) => `${n}${life(b, d)}`).join(t('list.sep')), sub: [fam.length > 3 ? fam.slice(3).map(([, n]) => n).join(t('list.sep')) : '', t('ks.famous.note')].filter(Boolean).join(' · ') });
+  }
   // 地名来历（town.yurai）：政令市的区用市名的来历（印「全市」），其余按本市区町村
   const yd = town?.yurai?.[pref.id];
   const own = yd?.[props.name];
@@ -213,6 +251,7 @@ export function kosekiHTML(ctx, data, name, extra = '') {
     <div class="ks-actions">
       <button type="button" class="btn" data-act="ks-image">${esc(t('ks.image'))}</button>
       <button type="button" class="btn btn-ghost" data-act="ks-link">${esc(t('ks.link'))}</button>
+      ${ctx.pt ? `<a class="btn btn-ghost ks-3d" href="3d.html#here=${ctx.pt[0].toFixed(4)},${ctx.pt[1].toFixed(4)}&hn=${encodeURIComponent(lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name)}&lang=${lang}">${esc(t('ks.3d'))}</a>` : ''}
     </div>
     <p class="fix-row">${fixLink(t('fix.w.ks', { name: title }))}</p>`;
 }

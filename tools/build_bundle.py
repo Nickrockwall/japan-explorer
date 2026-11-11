@@ -327,6 +327,19 @@ def dou_names(mura, heisei):
     return out
 
 
+def famous_city(famous, pre, city_of):
+    """政令市的区 → 市的代码。municipalities 只有区；famous 里市本身的代码（静冈市 22100、滨松市 22130）就在它的第一个区前面，
+    同一个市的区按区的 city 认（以前按「前三位 + 00」算，滨松的区算到了静冈）"""
+    codes = sorted(city_of)
+    out = {}
+    for city in sorted(c for c in famous if c.startswith(pre) and c not in city_of):
+        first = next((c for c in codes if c > city), None)
+        name = first and city_of[first]
+        if name:
+            out.update({w: city for w in codes if city_of[w] == name})
+    return out
+
+
 def build_town(lang):
     """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、平成大合并前的市町村（tools/fetch_heisei.py）、地名的来历（tools/yurai_tool.py）、
     幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py）。按县拆成 bundle/town/<lang>/NN.json
@@ -334,7 +347,10 @@ def build_town(lang):
     町村名、郷名中文按字形转换，英文仍用日文（没有可靠的罗马字；郷名附读音）"""
     conv = ja_to_zh_table() if lang == 'zh' else {}
     zh = lambda n: ''.join(conv.get(c, c) for c in n)
-    mp, yp, wp, hp = (os.path.join(ROOT, 'tools', f) for f in ('mura.json', 'yurai.json', 'wamyo.json', 'heisei.json'))
+    mp, yp, wp, hp, fp = (os.path.join(ROOT, 'tools', f) for f in ('mura.json', 'yurai.json', 'wamyo.json', 'heisei.json', 'famous.json'))
+    famous = load(fp) if os.path.exists(fp) else {}
+    # 同乡名人（tools/famous_tool.py，3.37）：[[QID, 名字, 生年, 卒年, 日文条目]]；中文没有标签的按日文字形转，英文没有的用日文
+    fname = lambda p: (p[2] or zh(p[1])) if lang == 'zh' else (p[3] or p[1]) if lang == 'en' else p[1]
     mura = load(mp) if os.path.exists(mp) else {}
     heisei = load(hp) if os.path.exists(hp) else {}
     yurai = load(yp) if os.path.exists(yp) else {}
@@ -344,8 +360,9 @@ def build_town(lang):
     out = {}
     for pid in range(1, 48):
         pre = f'{pid:02d}'
-        prov_of = {f['properties']['code']: f['properties'].get('province')
-                   for f in load(os.path.join(DATA, 'municipalities', f'{pre}.json'))['features'] if f['properties'].get('code')}
+        feats = [f['properties'] for f in load(os.path.join(DATA, 'municipalities', f'{pre}.json'))['features'] if f['properties'].get('code')]
+        prov_of = {p['code']: p.get('province') for p in feats}
+        city_of = {p['code']: p.get('city') for p in feats}
         wm = {c: g for c, g in wamyo['muni'].items() if c.startswith(pre)}
         # 和名抄：{古郡（今天的市区町村代码 → 郡）, 郷（旧国 → 郡 → [[郷, 读音]]）}，只放本县的市区町村用得上的郡
         gou = {}
@@ -359,6 +376,9 @@ def build_town(lang):
             'heisei': {code: [[zh(n), part, y] for n, _, part, y in rows] for code, rows in heisei.items() if code.startswith(pre)},
             'yurai': {pref: {name: v[lang] for name, v in d.items()} for pref, d in yurai.items() if pref == str(pid)},
             'kyu': {c: v for c, v in kyu.items() if c.startswith(pre)},
+            'famous': {c: [[p[0], fname(p), p[4], p[5], p[6]] for p in ps] for c, ps in famous.items() if c.startswith(pre)},
+            # 政令市的区 → 市的代码（区自己没有同乡名人时用市的）：市的代码是比这个区小的、最近的一个不在区列表里的 famous 键
+            'famousCity': famous_city(famous, pre, city_of),
             'wamyo': {'muni': wm, 'gou': gou},
             # 同名地名：本县有带这些字的地名时，放全国同一个键的全部（其他县的要列出来）
             'dou': [x for x in dou if any(y[0] == x[0] and y[2] == pid for y in dou)],

@@ -5,7 +5,7 @@ import { t, nm } from './i18n.js';
 import { eraOf, capitalOf, SHOGUNATE } from './eras.js';
 
 export function createLabels(S, ctx) {
-  const { el: el0, camera, controls, canvas, opts, P, groundY, banners, info, esc, blockName, provName, castleName, castles, sites, B, kodai, prints, regimeOf, inBattle } = ctx;
+  const { el: el0, camera, controls, canvas, opts, P, groundY, banners, info, esc, blockName, provName, castleName, castles, sites, B, kodai, prints, regimeOf, inBattle, looking, marker } = ctx;
   const { forts, stations } = B;
   const pool = new Map();
   function label(key, html, cls) {
@@ -79,11 +79,14 @@ export function createLabels(S, ctx) {
       if (d < 120) for (const s of stations) if (B.kept.has(s)) add(`i-${s.ja}`, s.xz[0], s.xz[1], 0.8 * B.k, 90, esc(nm(s)), 'site inn');
       if (d < 700) for (const h of prints()) { const [x, z] = P(...h.coords); add(`h-${h.no}`, x, z, 2, 120, `<img src="${h.img}" alt="" loading="lazy" data-print="${h.no}">`, 'print'); }
     }
+    const mk = marker();
+    if (mk) add(`here-${mk.name}`, mk.x, mk.z, 0.5, 9000, `<b>${esc(mk.name)}</b>`, 'here');
     items.sort((a, b) => b.pri - a.pri);
     const placed = [];
     const used = new Set();
+    const lift = looking() ? 0.06 : 1; // 远望时建筑收起来了，标签贴近地面
     for (const it of items) {
-      v3.set(it.x, groundY(it.x, it.z) + it.lift, it.z).project(camera);
+      v3.set(it.x, groundY(it.x, it.z) + it.lift * lift, it.z).project(camera);
       if (v3.z > 1 || v3.x < -1.1 || v3.x > 1.1 || v3.y < -1.1 || v3.y > 1.1) continue;
       const sx = (v3.x + 1) / 2 * W, sy = (1 - v3.y) / 2 * H;
       const el = label(it.key, it.html, it.cls);
