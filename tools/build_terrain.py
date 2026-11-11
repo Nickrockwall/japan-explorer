@@ -1,12 +1,15 @@
 """3D 试验页的地形：国土地理院标高瓦片（dem_png）→ 全国粗图 + 按块的精细图。
 
     python -X utf8 tools/build_terrain.py          # 下载（缓存在 .cache/terrain/）并写出 src/3d/terrain/
+    python -X utf8 tools/build_terrain.py --preview  # 只按现有 coarse.png 重做预览图 coarse-q.png
 
 出典：国土地理院 標高タイル（基盤地図情報数値標高モデル）。海与国外是 NA。
 - 粗图 z7（约 1 km/像素）：一张 PNG，覆盖 BBOX 对齐到 z7 瓦片边界。
 - 精细图 z9（约 250 m/像素）：粗图每 64 像素一块，正好一张 z9 瓦片；只给有陆地的块，
   另带右边、下边各一像素（取自相邻瓦片），共 257×257，块与块接缝处取样一致。
 编码：v = round(标高 m) + 500（最小 1），海 / NA = 0；R = v >> 8，G = v & 255，B = 0。
+预览图 coarse-q.png（3.36）：粗图每 4×4 像素并成一个（约 4 km/像素，约 70 KB），立体页先用它画出全国，
+粗图（约 720 KB）在后台下载完再换上——全国取景时每块只有 4–16 段，看不出差别。
 粗图的 B 是土地覆盖（地球地図日本 第 1.1 版 lc.tif，1/120 度格网，取每像素中心最近的格）：
 1 森林、2 草地灌丛、3 裸地、4 湿地、5 农田、6 城镇、7 水面，0 没有数据。
 """
@@ -126,6 +129,31 @@ def save(img, path):
     img.save(path, optimize=True, compress_level=9)
 
 
+PREVIEW = 4
+
+
+def preview():
+    """粗图每 PREVIEW×PREVIEW 并一个像素：有 1/4 以上是陆地才算陆地，标高取陆地的平均，土地覆盖取陆地里最多的一类"""
+    rgb = np.asarray(Image.open(os.path.join(OUT, 'coarse.png')).convert('RGB')).astype(np.int32)
+    v = (rgb[..., 0] << 8) | rgb[..., 1]
+    lc = rgb[..., 2]
+    f = PREVIEW
+    H, W = v.shape
+    assert H % f == 0 and W % f == 0, (W, H)
+    blocks = v.reshape(H // f, f, W // f, f).transpose(0, 2, 1, 3).reshape(H // f, W // f, f * f)
+    lcb = lc.reshape(H // f, f, W // f, f).transpose(0, 2, 1, 3).reshape(H // f, W // f, f * f)
+    land = blocks > 0
+    n = land.sum(-1)
+    mean = np.where(n > 0, (blocks * land).sum(-1) / np.maximum(n, 1), 0)
+    h = np.where(n * 4 >= f * f, mean - OFFSET, np.nan)
+    counts = np.stack([((lcb == k) & land).sum(-1) for k in range(8)], -1)
+    mode = counts[..., 1:].argmax(-1) + 1
+    mode = np.where(counts[..., 1:].max(-1) > 0, mode, 0)
+    path = os.path.join(OUT, 'coarse-q.png')
+    save(encode(h.astype(np.float32), mode.astype(np.uint8)), path)
+    print(f'preview 1/{f}: {W // f}×{H // f} px, {os.path.getsize(path) / 1e3:.0f} KB')
+
+
 def main():
     w, s, e, n = BBOX
     x0, y0 = (int(math.floor(v)) for v in tile_xy(w, n, Z0))
@@ -179,4 +207,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if '--preview' not in sys.argv:
+        main()
+    preview()

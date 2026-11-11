@@ -5,6 +5,8 @@
 - 候选：Wikidata「日本の城」（Q92026 及其子类）与「グスク」（Q1044204）里有坐标（P625）、有日文维基条目的，
   坐标落在 47 都道府县里（落在海上的按 0.02° 内最近的县算，岛上小城的坐标常偏到岸外）。
 - 年份只取日文维基条目信息框（日本の城郭概要表）的 build_y「築城年」、reject_y「廃城年」（取其中第一个西历年；「不明」或没有西历年的不算）。
+  3.36：各栏「|」前带空格的也认（以前漏了一百多座）；只写年号「天文年間」的按年号开头算、记 `ba`（大约）；只写「南北朝時代」这类
+  整个落在一个世纪里的时代，按世纪收（见 ERA_CENTURY）。
   没有築城年、或築城年晚于 1888（立体图最后一个年份）的不收——立体图按年份显示城，年份不明的城没法放（3.35 以前只到 1600）。
   废城早于 1200（镰仓第一个年份，3.35 以前是 1467）的也不收，反正哪年都不显示；1000 年以前筑、又没写废城年的是古代城柵与山城（多賀城、水城、
   大野城……），信息框不写废城年是因为早已废弃，不收（否则会被当成战国时还在）。
@@ -22,8 +24,6 @@ import re
 import sys
 import urllib.parse
 import urllib.request
-
-from shapely.geometry import Point, shape
 
 sys.path.insert(0, os.path.dirname(__file__))
 from build_bundle import ja_to_zh_table, romaji  # noqa: E402
@@ -98,27 +98,56 @@ def english(kana, label):
     return label
 
 
-def infobox_century(text, field):
-    """信息框某一栏只写了世纪（「14世紀末」）→ 14"""
-    m = re.search(r'^\|\s*' + field + r'\s*=\s*(.*)$', text, re.M)
+ERA_CENTURY = (('南北朝時代', 14), ('室町時代中期|室町中期', 15), ('戦国時代初期|戦国初期', 15))
+# 只写了年号「天文年間」的：按年号开头那一年算、记 `ba`（大约），前端写「约 1532 年」（3.36）
+NENGO = {'応永': 1394, '正長': 1428, '永享': 1429, '嘉吉': 1441, '文安': 1444, '宝徳': 1449, '享徳': 1452, '康正': 1455, '長禄': 1457,
+         '寛正': 1460, '文正': 1466, '応仁': 1467, '文明': 1469, '長享': 1487, '延徳': 1489, '明応': 1492, '文亀': 1501, '永正': 1504,
+         '大永': 1521, '享禄': 1528, '天文': 1532, '弘治': 1555, '永禄': 1558, '元亀': 1570, '天正': 1573, '文禄': 1592, '慶長': 1596}
+
+
+def infobox_value(text, field):
+    """信息框某一栏的值（去掉注释与脚注）。各栏的「|」前面常有空格（` | build_y = …`）——3.35 以前只认顶格的「|」，
+    浜松城、米沢城、春日山城等一百多座城因此被当成没有築城年漏掉（3.36 修）"""
+    m = re.search(r'^\s*\|\s*' + field + r'\s*=(.*)$', text, re.M)
     if not m:
         return None
-    v = re.sub(r'<ref[^>]*/>|<ref.*?</ref>|<!--.*?-->', '', m.group(1))
+    v = re.sub(r'<ref[^>]*/>|<ref.*?</ref>|<!--.*?-->', '', m.group(1)).strip()
+    return None if v.startswith('|') else v  # 「| build_y = |revamp = …」：这一栏空着，下一栏挤在同一行
+
+
+def infobox_nengo(text, field):
+    """「天文年間か」「永正年間（…）？」这类只写了年号的 → 年号开头的西历年"""
+    v = infobox_value(text, field)
+    m = v and re.match(r'\s*(' + '|'.join(NENGO) + r')年間', v)
+    return NENGO[m.group(1)] if m else None
+
+
+def infobox_century(text, field):
+    """信息框某一栏只写了世纪（「14世紀末」）→ 14"""
+    v = infobox_value(text, field)
+    if v is None:
+        return None
     c = re.search(r'(\d{1,2})世紀', v)
-    return int(c.group(1)) if c else None
+    if c:
+        return int(c.group(1))
+    # 只写了时代（3.36）：南北朝时代整个在 14 世纪；室町中期、战国初期在 15 世纪；其他（室町后期、战国时代）跨两个世纪，不算
+    for words, cent in ERA_CENTURY:
+        if re.fullmatch(r'\s*(?:' + words + r')(?:頃|ごろ)?\s*', v):
+            return cent
+    return None
 
 
 def infobox_year(text, field):
     """信息框某一栏的第一个西历年（「天正4年（1576年）」→ 1576；「1394年 - 1428年」→ 1394）"""
-    m = re.search(r'^\|\s*' + field + r'\s*=\s*(.*)$', text, re.M)
-    if not m:
+    v = infobox_value(text, field)
+    if v is None:
         return None
-    v = re.sub(r'<ref[^>]*/>|<ref.*?</ref>|<!--.*?-->', '', m.group(1))
     y = re.search(r'(?<![\d万])(\d{3,4})年', v)
     return int(y.group(1)) if y else None
 
 
 def main():
+    from shapely.geometry import Point, shape  # 放在这里：单元测试（CI 没装 shapely）只导入解析函数
     geo = json.load(open(os.path.join(ROOT, 'src', 'assets', 'geojson', 'japan.json'), encoding='utf-8'))
     prefs = [(f['properties']['id'], shape(f['geometry'])) for f in geo['features']]
     provs = json.load(open(os.path.join(ROOT, 'src', 'data', 'provinces.json'), encoding='utf-8'))['features']
@@ -151,7 +180,11 @@ def main():
     for c in sorted(cands, key=lambda c: (-c['links'], c['title'])):
         text = text_of(texts.get(c['title'])) or ''
         built = infobox_year(text, '(?:築城年|build_y)')
-        century = None
+        century = approx = None
+        if built is None:
+            built = approx = infobox_nengo(text, '(?:築城年|build_y)')
+        elif re.search(r'年間|[？?]|か\s*$', infobox_value(text, '(?:築城年|build_y)') or ''):
+            approx = built  # 「永正年間（1504年 - 1520年）？」：写的是一段年号或带问号，前端写「约」
         if built is None:
             century = infobox_century(text, '(?:築城年|build_y)')
             built = (century - 1) * 100 if century and century <= 16 else None
@@ -170,12 +203,16 @@ def main():
                     'gone': gone, 'links': c['links']}
         if century:
             row['bc'] = century
+        if approx:
+            row['ba'] = 1
         if name in seat_castles or built > 1600:
             row['edo'] = 1
         out.append(row)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
+    import castle_extra_tool  # 100名城编号与现存天守写进同一个文件
+    castle_extra_tool.main()
     print(f'wrote {len(out)} castles ({skipped} skipped: no 築城年, after 1888, gone before 1200 or ancient)')
     for c in out[:15]:
         print(' ', c['ja'], c['built'], c['gone'], c['prov'])
@@ -188,6 +225,9 @@ def main():
     assert '多賀城' not in by and '水城' not in by
     assert by['姫路城'].get('edo') and by['江戸城'].get('edo') and not by['安土城'].get('edo')
     assert by['名古屋城']['built'] == 1609 and by['五稜郭']['built'] == 1866, (by.get('名古屋城'), by.get('五稜郭'))
+    # 3.36：「|」前有空格的信息框也认（浜松城 1504 年号开头、米沢城 1238）；只写时代的春日山城按 14 世纪
+    assert by['浜松城']['built'] == 1504 and by['浜松城'].get('ba') and by['米沢城']['built'] == 1238, (by.get('浜松城'), by.get('米沢城'))
+    assert by['春日山城'].get('bc') == 14 and by['春日山城']['gone'] == 1607, by.get('春日山城')
 
 
 if __name__ == '__main__':

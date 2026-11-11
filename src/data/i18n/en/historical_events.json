@@ -770,6 +770,596 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Battle of Ichi-no-Tani (1184)",
+      "battlefield": {
+        "name": "Ichi-no-Tani, Settsu"
+      },
+      "factions": [
+        {
+          "name": "Minamoto",
+          "leader": "Minamoto no Noriyori, Minamoto no Yoshitsune",
+          "strength": "c. 74,000 riders (Azuma Kagami; the Gyokuyō diary says only one or two thousand)"
+        },
+        {
+          "name": "Taira",
+          "leader": "Taira no Tomomori, Taira no Shigehira",
+          "strength": "c. 20,000 riders (Gyokuyō)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Ikuta Wood"
+          },
+          "desc": "Minamoto no Noriyori led the main army out of Kyoto along the San’yō road and attacked the eastern Taira line at Ikuta Wood head-on"
+        },
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Ichi-no-Tani"
+          },
+          "desc": "Minamoto no Yoshitsune took the rear army through Tanba, routed Taira no Sukemori at Mikusayama by night, then circled behind Ichi-no-Tani by way of Hiyodorigoe"
+        },
+        {
+          "from": {
+            "name": "Yashima"
+          },
+          "to": {
+            "name": "Fukuhara"
+          },
+          "desc": "The Taira crossed from Yashima in Sanuki, landed at Ōwada-no-tomari and occupied their old capital Fukuhara, holding a line from Ikuta Wood in the east to Ichi-no-Tani in the west"
+        }
+      ],
+      "brief": "In 1184 the Taira, recovered after fleeing the capital, occupied Fukuhara in Settsu and prepared to retake Kyoto. Minamoto no Yoritomo sent Noriyori and Yoshitsune west: Noriyori struck Ikuta Wood head-on while Yoshitsune circled through Tanba and fell on Ichi-no-Tani from behind. The Taira were routed; Tadanori, Atsumori and many others died, Shigehira was captured, and the rest withdrew by sea to Yashima.",
+      "key_points": {
+        "turning_point": "A detachment under Yoshitsune charged down the slopes behind Ichi-no-Tani (the \"descent of Hiyodorigoe\") and threw the western Taira position into chaos. Sources differ on where they came down and whether Yoshitsune led it himself.",
+        "forces": "The Azuma Kagami gives Noriyori c. 54,000 riders and Yoshitsune c. 20,000; Kujō Kanezane’s diary Gyokuyō says the Taira had about 20,000 and the Minamoto only one or two thousand (figures vary).",
+        "aftermath": "The Taira lost their foothold on Honshū and fell back to Yashima; the captive Shigehira was later sent to Kamakura. The next year (1185) the Minamoto won at Yashima and Dan-no-ura, and the Taira were destroyed."
+      },
+      "narrator": {
+        "name": "Taira no Tomomori",
+        "title": "Taira general",
+        "self": "I",
+        "opening": "Our main strength holds Ikuta Wood; let the Minamoto bring tens of thousands, they will not pass… but the hills behind Ichi-no-Tani in the west — is there truly no way down?",
+        "tone": "calm and steadfast; sees the Taira decline yet fights on"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "Early 2nd month, 1184 (lunar)",
+          "desc": "The Taira fortified Fukuhara from Ikuta Wood in the east to Ichi-no-Tani in the west; Noriyori and Yoshitsune left Kyoto by two roads.",
+          "line": "Ikuta Wood to the east, Ichi-no-Tani to the west, mountains to the north — the Minamoto cannot break in here.",
+          "markers": [
+            {
+              "name": "Fukuhara"
+            },
+            {
+              "name": "Ikuta Wood"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "Night of the 5th",
+          "desc": "Yoshitsune’s rear army marched west through Tanba and fell on Taira no Sukemori at Mikusayama by night; his force scattered.",
+          "line": "Sukemori routed at Mikusayama by a night attack? …So Yoshitsune is coming through the hills.",
+          "markers": [
+            {
+              "name": "Mikusayama"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Dawn of the 7th",
+          "desc": "Noriyori’s main army pressed hard at Ikuta Wood while Yoshitsune’s band plunged down the cliffs behind Ichi-no-Tani; the western Taira camp burned and broke.",
+          "line": "Fire in the west? How can the enemy be behind us… they came down the mountain!",
+          "markers": [
+            {
+              "name": "Hiyodorigoe"
+            },
+            {
+              "name": "Ikuta Wood"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon of the 7th",
+          "desc": "The Taira lines gave way one after another and men fought to reach the ships. Tomomori’s son Tomoakira died shielding his father; Tadanori, Atsumori and others fell and Shigehira was captured. The Taira withdrew to Yashima.",
+          "line": "Tomoakira held off the pursuers for me… and I took to the boat alone. Back to Yashima — we shall try again.",
+          "markers": [
+            {
+              "name": "Suma shore"
+            },
+            {
+              "name": "Ichi-no-Tani"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Itsukushima (1555)",
+      "battlefield": {
+        "name": "Itsukushima, Aki"
+      },
+      "factions": [
+        {
+          "name": "Mōri army",
+          "leader": "Mōri Motonari",
+          "strength": "6,000 or more (one account)"
+        },
+        {
+          "name": "Sue army",
+          "leader": "Sue Harukata",
+          "strength": "traditionally 20,000+ (some recent studies say under 10,000)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Yamaguchi"
+          },
+          "to": {
+            "name": "Miyao Castle"
+          },
+          "desc": "Sue Harukata led his army out of Suō, crossed in some 500 boats, landed on Itsukushima and besieged the Mōri fort of Miyao"
+        },
+        {
+          "from": {
+            "name": "Yoshida-Kōriyama Castle"
+          },
+          "to": {
+            "name": "Tsutsumigaura"
+          },
+          "desc": "Motonari came south from Yoshida-Kōriyama, crossed on a stormy night and landed at Tsutsumigaura on the island’s east shore"
+        },
+        {
+          "from": {
+            "name": "Kusatsu"
+          },
+          "to": {
+            "name": "before Itsukushima Shrine"
+          },
+          "desc": "Kobayakawa Takakage brought the fleet round to land in front of Itsukushima Shrine"
+        }
+      ],
+      "brief": "In 1551 Sue Harukata overthrew his lord Ōuchi Yoshitaka (the Tainei-ji incident) and took control of the Ōuchi. After Mōri Motonari broke with him, Harukata crossed to Itsukushima in 1555 to take the Mōri fort there. Motonari crossed on a stormy night and struck; the Sue army collapsed and Harukata took his own life. The Mōri rose from here.",
+      "key_points": {
+        "turning_point": "At dawn on the 1st of the 10th month the main Mōri force charged down from Bakuchio behind the Sue camp while Kobayakawa’s men struck from the front; on the cramped island the larger army could not deploy and broke.",
+        "forces": "Mōri 6,000 or more (one account); Sue traditionally over 20,000, though some recent work says under 10,000 (figures vary).",
+        "aftermath": "Harukata fled to Ōenoura in the southwest of the island, found no boat and killed himself; Hironaka Takakane held out a few days before he fell. The Mōri then advanced into Suō and Nagato, and the Ōuchi were gone by 1557."
+      },
+      "narrator": {
+        "name": "Mōri Motonari",
+        "title": "the schemer of Aki",
+        "self": "I",
+        "opening": "Harukata has packed his whole army onto this little island… a high wind and heavy sea tonight — just right for a crossing.",
+        "tone": "shrewd and patient, a master of stratagem and timing"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "9th month, 1555",
+          "desc": "Harukata’s army crossed to Itsukushima, camped on Tō-no-oka and besieged the Mōri fort of Miyao.",
+          "line": "“Take Miyao and Aki lies open” — that is what Harukata believes.",
+          "markers": [
+            {
+              "name": "Miyao Castle"
+            },
+            {
+              "name": "Tō-no-oka"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "Night of the 30th",
+          "desc": "In the storm Motonari put out from Jigozen with the main force, landed at Tsutsumigaura on the east shore and climbed Bakuchio; Kobayakawa Takakage’s fleet went round to the front.",
+          "line": "Every light out; row in silence. At first light we go down the hill.",
+          "markers": [
+            {
+              "name": "Tsutsumigaura"
+            },
+            {
+              "name": "Bakuchio"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Dawn of the 10th month, 1st day",
+          "desc": "The Mōri main body poured down from Bakuchio onto the Sue headquarters on Tō-no-oka while Kobayakawa attacked from the front; the Sue army fell into confusion in the narrow ground.",
+          "line": "Now! Here, on this island, their great numbers are only a burden.",
+          "markers": [
+            {
+              "name": "Tō-no-oka"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "10th month, 1st day",
+          "desc": "Harukata fled southwest across the island, found no boat and killed himself at Ōenoura; Hironaka Takakane held a height for some days before he fell.",
+          "line": "Harukata is dead. …Next, Suō and Nagato.",
+          "markers": [
+            {
+              "name": "Ōenoura"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Nagashino (1575)",
+      "battlefield": {
+        "name": "Shitaragahara, Mikawa"
+      },
+      "factions": [
+        {
+          "name": "Oda–Tokugawa allies",
+          "leader": "Oda Nobunaga, Tokugawa Ieyasu",
+          "strength": "c. 38,000 (common view; figures vary)"
+        },
+        {
+          "name": "Takeda army",
+          "leader": "Takeda Katsuyori",
+          "strength": "c. 15,000 (common view)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Gifu Castle"
+          },
+          "to": {
+            "name": "Gokurakuji hill"
+          },
+          "desc": "Nobunaga marched from Gifu with some 30,000, joined Ieyasu at Okazaki and dug in on the west bank of the Rengo stream at Shitaragahara behind horse-stopping fences"
+        },
+        {
+          "from": {
+            "name": "Okazaki Castle"
+          },
+          "to": {
+            "name": "Takamatsu hill"
+          },
+          "desc": "Ieyasu’s Tokugawa troops took the forward position on Takamatsu hill"
+        },
+        {
+          "from": {
+            "name": "Tsutsujigasaki (Kōfu)"
+          },
+          "to": {
+            "name": "Nagashino Castle"
+          },
+          "desc": "Katsuyori marched from Kai through Shinano into Mikawa and besieged the Tokugawa castle of Nagashino"
+        },
+        {
+          "from": {
+            "name": "Nagashino Castle"
+          },
+          "to": {
+            "name": "Shitaragahara"
+          },
+          "desc": "Leaving men to hold the siege, Katsuyori crossed the Takizawa river and faced the allies at Shitaragahara"
+        },
+        {
+          "from": {
+            "name": "Shitaragahara"
+          },
+          "to": {
+            "name": "Tobigasuyama fort"
+          },
+          "desc": "Sakai Tadatsugu took a flying column round by night to storm the Takeda fort on Tobigasuyama watching Nagashino"
+        }
+      ],
+      "brief": "In 1575 Takeda Katsuyori invaded Mikawa and besieged Nagashino. Oda Nobunaga came with a large army and, with Tokugawa Ieyasu, entrenched behind fences at Shitaragahara. On the 21st of the 5th month the Takeda attacked the fenced line head-on and suffered terribly under massed gunfire; Yamagata Masakage, Baba Nobuharu and many senior retainers died.",
+      "key_points": {
+        "turning_point": "At dawn Sakai Tadatsugu’s column took the Tobigasuyama fort, threatening the Takeda rear; the main army attacked the fences at Shitaragahara and met the allies’ massed guns (the famous \"three-rank volley\" is now widely doubted).",
+        "forces": "Oda–Tokugawa c. 38,000 and Takeda c. 15,000 by the common view (figures vary).",
+        "aftermath": "The Takeda lost a generation of senior retainers and could no longer push west; in 1582 Oda and Tokugawa invaded Kai and the Takeda fell."
+      },
+      "narrator": {
+        "name": "Takeda Katsuyori",
+        "title": "head of the Takeda of Kai",
+        "self": "I",
+        "opening": "Tobigasuyama is lost… there is no way back, so forward! Can the Oda behind their fences stop the best of the Takeda?",
+        "tone": "proud and combative, carrying his father Shingen’s name; restless and unwilling to yield"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "5th month, 1575",
+          "desc": "The Takeda besieged Nagashino, held by Okudaira Sadamasa with about 500 men; Torii Suneemon slipped out to fetch help.",
+          "line": "Nagashino has only five hundred men. Take it and Mikawa lies open.",
+          "markers": [
+            {
+              "name": "Nagashino Castle"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "18th–20th",
+          "desc": "The allies reached Shitaragahara and built fences along the Rengo stream; Katsuyori left a siege force and advanced to face them. That night Sakai Tadatsugu’s column set off round toward Tobigasuyama.",
+          "line": "The Oda hide behind fences and will not come out? …Then we break them head-on.",
+          "markers": [
+            {
+              "name": "Gokurakuji hill (Nobunaga)"
+            },
+            {
+              "name": "Shitaragahara"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "21st, dawn to noon",
+          "desc": "Tobigasuyama fell; wave after wave of Takeda troops charged the fences and were cut down by gunfire.",
+          "line": "One company falls, the next goes in… why do the fences still stand!",
+          "markers": [
+            {
+              "name": "Tobigasuyama fort"
+            },
+            {
+              "name": "the fences"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon of the 21st",
+          "desc": "The Takeda broke. Yamagata Masakage, Baba Nobuharu, Naitō Masahide and other senior retainers were killed; Katsuyori escaped to Kai with a handful of men.",
+          "line": "My father’s old retainers… all of them lie on this field.",
+          "markers": [
+            {
+              "name": "Shitaragahara"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Yamazaki (1582)",
+      "battlefield": {
+        "name": "Yamazaki, Yamashiro"
+      },
+      "factions": [
+        {
+          "name": "Hashiba army",
+          "leader": "Hashiba Hideyoshi (nominally under Oda Nobutaka)",
+          "strength": "c. 20,000–40,000 (figures vary)"
+        },
+        {
+          "name": "Akechi army",
+          "leader": "Akechi Mitsuhide",
+          "strength": "c. 10,000–16,000 (figures vary)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Bitchū-Takamatsu Castle"
+          },
+          "to": {
+            "name": "Hōshakuji (Hideyoshi’s camp)"
+          },
+          "desc": "Hearing of Honnō-ji, Hideyoshi made peace with the Mōri and raced back east from Bitchū (the \"Great Return from Chūgoku\") via Himeji and Amagasaki, joining Oda Nobutaka and Niwa Nagahide at Tonda in Settsu"
+        },
+        {
+          "from": {
+            "name": "Sakamoto Castle"
+          },
+          "to": {
+            "name": "Shōryūji Castle"
+          },
+          "desc": "After killing Nobunaga at Honnō-ji, Mitsuhide failed to win over the Hosokawa and Tsutsui and drew up behind the Enmyōji stream by Shōryūji Castle"
+        }
+      ],
+      "brief": "On the 2nd of the 6th month, 1582, Akechi Mitsuhide killed Oda Nobunaga at Honnō-ji. Hashiba Hideyoshi, besieging Takamatsu in Bitchū, quickly made peace with the Mōri, hurried back east and met the Akechi army at Yamazaki on the 13th. The Akechi were beaten and Mitsuhide died at Ogurusu while fleeing toward Sakamoto.",
+      "key_points": {
+        "turning_point": "The armies faced each other across the Enmyōji stream and fighting began late in the afternoon. Ikeda Tsuneoki and others crossed on the right and struck the flank; the Akechi line gave way. (Later tradition made the struggle for Mount Tennō the decisive moment, and \"Tennōzan\" became a byword for a showdown.)",
+        "forces": "Hashiba c. 20,000–40,000, Akechi c. 10,000–16,000 (figures vary).",
+        "aftermath": "After Mitsuhide’s death Hideyoshi steered the Oda succession at the Kiyosu conference, beat Shibata Katsuie at Shizugatake the next year and set out to unify the realm."
+      },
+      "narrator": {
+        "name": "Hashiba Hideyoshi",
+        "title": "leader of the Great Return",
+        "self": "I",
+        "opening": "Our lord murdered at Honnō-ji… Mitsuhide, did you think the Mōri still had me pinned in Bitchū? March day and night — back to Kyoto!",
+        "tone": "quick and decisive, a born winner of hearts; warm in tone with an edge"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "6th month, 2nd–5th, 1582",
+          "desc": "Nobunaga died at Honnō-ji. Mitsuhide sought allies while Hideyoshi, far off in Bitchū, made peace with the Mōri the moment he heard.",
+          "line": "Sign the peace at once! Takamatsu is finished business.",
+          "markers": [
+            {
+              "name": "Honnō-ji"
+            },
+            {
+              "name": "Bitchū-Takamatsu Castle"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "6th–12th",
+          "desc": "Hideyoshi hurried east through Himeji and Amagasaki and joined Oda Nobutaka and Niwa Nagahide at Tonda. Tsutsui Junkei never came to Mitsuhide’s aid; the Akechi drew up around Shōryūji Castle.",
+          "line": "Gentlemen, the hour to avenge our lord has come!",
+          "markers": [
+            {
+              "name": "Himeji Castle"
+            },
+            {
+              "name": "Tonda"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Evening of the 13th",
+          "desc": "The armies faced each other across the Enmyōji stream and clashed toward evening. Ikeda Tsuneoki crossed on the right and fell on the Akechi flank, which collapsed; the whole line fell back.",
+          "line": "Our right is across! The Akechi line is wavering — everyone forward!",
+          "markers": [
+            {
+              "name": "Mount Tennō"
+            },
+            {
+              "name": "Enmyōji stream"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Night of the 13th",
+          "desc": "Mitsuhide fell back into Shōryūji Castle and slipped out at night for Sakamoto, but was killed by villagers hunting fugitives at Ogurusu (some say he took his own life after being wounded).",
+          "line": "Mitsuhide is dead. …Now — who will inherit the Oda realm?",
+          "markers": [
+            {
+              "name": "Shōryūji Castle"
+            },
+            {
+              "name": "Ogurusu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battle of Toba–Fushimi (1868)",
+      "battlefield": {
+        "name": "Toba and Fushimi, Yamashiro"
+      },
+      "factions": [
+        {
+          "name": "New government army",
+          "leader": "Saigō Takamori and others (mainly Satsuma and Chōshū)",
+          "strength": "c. 5,000"
+        },
+        {
+          "name": "Former shogunate army",
+          "leader": "Ōkōchi Masatada and others (Aizu and Kuwana troops, the Shinsengumi)",
+          "strength": "c. 15,000"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Osaka Castle"
+          },
+          "to": {
+            "name": "Koeda bridge (Toba)"
+          },
+          "desc": "The main former-shogunate force marched north from Osaka \"to punish Satsuma\", heading for Kyoto along the Toba road"
+        },
+        {
+          "from": {
+            "name": "Yodo"
+          },
+          "to": {
+            "name": "Fushimi magistrate’s office"
+          },
+          "desc": "Aizu troops and the Shinsengumi occupied the Fushimi magistrate’s office"
+        },
+        {
+          "from": {
+            "name": "Tō-ji"
+          },
+          "to": {
+            "name": "Koeda bridge (Toba)"
+          },
+          "desc": "Satsuma troops came south from Tō-ji to block the road at Koeda bridge in Toba"
+        },
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Gokōnomiya Shrine"
+          },
+          "desc": "Satsuma and Chōshū troops took position around Gokōnomiya, their guns trained on the magistrate’s office"
+        }
+      ],
+      "brief": "After the return of power to the throne and the restoration of imperial rule in 1867, the quarrel between Satsuma and the former shogunate came to a head. On the 3rd of the 1st month, 1868, shogunate troops marching on Kyoto clashed at Toba and Fushimi with a smaller new-government force led by Satsuma and Chōshū, and lost. Tokugawa Yoshinobu fled Osaka Castle by ship for Edo. The Boshin War had begun.",
+      "key_points": {
+        "turning_point": "The new government raised the imperial brocade banner, making the shogunate side \"enemies of the court\"; the retreating troops were refused entry to Yodo Castle, then the Tsu domain changed sides at Yamazaki and shelled them, and the whole army gave way.",
+        "forces": "Former shogunate c. 15,000; new government c. 5,000.",
+        "aftermath": "On the night of the 6th Yoshinobu quietly left Osaka Castle and sailed for Edo in the Kaiyō Maru, where he submitted. Edo Castle was handed over in the 4th month and the war moved to the northeast and Hakodate."
+      },
+      "narrator": {
+        "name": "Hijikata Toshizō",
+        "title": "vice-commander of the Shinsengumi",
+        "self": "I",
+        "opening": "Commander Kondō has a bullet wound, so Fushimi is mine to command. Satsuma’s guns sit on the Gokōnomiya rise — the Shinsengumi do not fall back.",
+        "tone": "cold and resolute; quick to grasp what modern guns had changed"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "1st month, 2nd–3rd, 1868",
+          "desc": "The shogunate army marched north from Osaka; Satsuma men blocked the road at Koeda bridge in Toba, and Satsuma and Chōshū troops held the Gokōnomiya rise in Fushimi.",
+          "line": "Get past this road and Kyoto is right in front of us.",
+          "markers": [
+            {
+              "name": "Koeda bridge"
+            },
+            {
+              "name": "Gokōnomiya Shrine"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "Evening of the 3rd",
+          "desc": "At Koeda bridge the shogunate column demanded passage; talks failed, Satsuma’s guns opened fire and fighting broke out at Toba and Fushimi at once. The Fushimi magistrate’s office was shelled and set ablaze.",
+          "line": "Guns at Toba! …The office is on fire — out, and charge!",
+          "markers": [
+            {
+              "name": "Fushimi magistrate’s office"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "4th–5th",
+          "desc": "The new government raised the brocade banner; the shogunate troops were pushed back around Senryōmatsu and, trying to fall back into Yodo Castle, found its gates shut against them.",
+          "line": "The brocade banner… so now we are the court’s enemies? Swords and spears are no match for their guns.",
+          "markers": [
+            {
+              "name": "Senryōmatsu"
+            },
+            {
+              "name": "Yodo Castle"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "6th",
+          "desc": "The Tsu domain turned on them at Yamazaki and shelled them from across the river; the army fell back to Osaka. That night Tokugawa Yoshinobu quietly left Osaka Castle and sailed for Edo in the Kaiyō Maru.",
+          "line": "The shogun is gone… but the war is not over. On to Edo, and then north.",
+          "markers": [
+            {
+              "name": "Yamazaki"
+            },
+            {
+              "name": "Osaka Castle"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

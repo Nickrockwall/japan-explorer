@@ -19,6 +19,7 @@ import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
 import { hanSection, setLordDays, lordOfFn } from './han.js';
 import { bdayData, bdayHTML, bdayImage } from './bday.js';
 import { createTour } from './tour.js';
+import { createHelp } from './help.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
 import { namesTip, namesBlock, namesSection } from './provnames.js';
 import { audio } from './audio.js';
@@ -112,6 +113,7 @@ async function main() {
 
   let openSettings = () => {};
   let startTour = () => {}; // 新手教程（初始化完成后赋值）
+  let openHelp = () => {}; // 帮助（3.36：设置与欢迎页的「帮助」）
   const guide = createGuide({
     chat: $('chat'), quick: $('quick'), form: $('composer'), input: $('chat-input'), send: $('btn-send'),
     avatar: $('guide-avatar'), name: $('guide-name'), title: $('guide-title'), mode: $('guide-mode'),
@@ -1372,7 +1374,7 @@ async function main() {
     map.setVisited(set);
     renderCurrent();
     updateLegend(map);
-  }, () => startTour());
+  }, () => openHelp());
 
   // ── 初始状态 ──
   const set = visited.get();
@@ -1394,25 +1396,22 @@ async function main() {
   guide.showIntro();
   loading.classList.add('hidden');
 
-  // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始；设置里与欢迎卡上可再看
+  // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始。3.36 起只有 4 步（以前 10 步嫌长）：欢迎与点县、时空穿越、平面 / 立体、结束；
+  // 详情、案内人、图层与滤镜、我在哪、合战等的说明放进「帮助」（help.js，设置与欢迎页打开，里面能再看一遍导览）
   const onMap = () => { menu.close(); if (narrow()) tabs.set('map'); };
   const tour = createTour([
-    { key: 'hi' },
-    { key: 'map', target: () => $('map'), before: onMap },
-    { key: 'detail', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="detail"]') : detailEl) },
-    { key: 'guide', target: () => (narrow() ? $('tabbar').querySelector('[data-tab="guide"]') : document.querySelector('.guide')) },
-    { key: 'tools', target: () => document.querySelector('.map-toolbar'), before: onMap },
+    { key: 'hi', target: () => $('map'), before: onMap },
     { key: 'time', target: () => $('timebar'), before: onMap },
-    { key: 'locate', target: () => $('btn-locate'), before: onMap },
     { key: 'view3d', target: () => $('btn-3d'), before: onMap },
-    { key: 'battle', target: () => $('btn-battle'), always: true, before: () => { if (menu.phone) menu.open(); } }, // 手机上合战、御朱印在「更多」菜单里，开到这一步才展开
     { key: 'end', before: () => menu.close() },
   ], { onEnd: () => { menu.close(); uiPref.set('tourDone', true); } });
   startTour = () => { if (app.battle) exitBattle(); closeMuni(); tour.start(); };
+  const help = createHelp($('help'), () => startTour());
+  openHelp = () => { menu.close(); help.open(); };
   detailEl.addEventListener('click', (e) => {
     const more = e.target.closest('[data-act="hn-more"]');
     if (more) { more.closest('.hn-list').classList.add('all'); more.remove(); return; }
-    if (e.target.closest('[data-act="tour"]')) startTour();
+    if (e.target.closest('[data-act="tour"]')) openHelp();
     // 欢迎卡「从这里开始」：三个最有意思的入口，都只是替用户按下已有的按钮
     if (e.target.closest('[data-act="st-home"]')) {
       onMap();

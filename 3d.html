@@ -77,6 +77,10 @@
   #battle .bt-note, #battle .bt-time { color: var(--muted); font-size: 12px; margin: 6px 0 2px; }
   #battle .bt-fac { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 8px; font-size: 13px; }
   #battle .bt-fac small { color: var(--muted); margin-left: 6px; font-size: 11px; }
+  #battle .bt-force { display: flex; height: 18px; border: 1px solid var(--ink); border-radius: 2px; overflow: hidden; margin: 2px 0; }
+  #battle .bt-force i { display: flex; align-items: center; justify-content: center; min-width: 3.4em; font: 600 11px var(--sans); color: var(--ink); text-shadow: 0 0 2px rgba(255, 255, 255, .8), 0 0 3px rgba(255, 255, 255, .8); }
+  #battle .bt-force i + i { border-left: 1px solid var(--ink); }
+  #battle .bt-per { color: var(--muted); font-size: 11px; margin: 0 0 6px; }
   #battle .bt-tabs { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
   #battle .bt-tabs button { flex: 1; border: 0; background: none; padding: 4px 0; border-radius: 3px; font-weight: 600; }
   #battle .bt-tabs button[aria-selected="true"] { background: var(--ink); color: var(--panel); }
@@ -159,6 +163,8 @@
   #card em { font-style: normal; font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; margin-left: 4px; }
   #card .who { display: block; color: var(--muted); font-size: 12px; }
   #card .note { color: var(--muted); font-size: 12px; }
+  #card .meijo { margin: 4px 0; padding: 2px 0 2px 8px; border-left: 3px solid var(--shu); font: 600 13px var(--serif); }
+  #card .meijo.k { border-left-color: var(--kin); }
   #card .links a { color: var(--shu); }
 
   #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }

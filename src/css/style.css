@@ -1611,6 +1611,14 @@ dialog.shared::backdrop { background: rgba(42,37,32,.45); }
 .sg-rel { border: 1px solid var(--line); background: transparent; color: var(--text-2); border-radius: 6px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
 .sg-rel:hover { border-color: var(--kin); color: var(--kin); }
 
+/* 帮助（3.36） */
+.help { width: min(560px, calc(100vw - 32px - var(--safe-l) - var(--safe-r))); }
+.help-body { overflow-y: auto; padding: 4px 22px 8px; min-height: 0; }
+.help-body section { border-top: 1px solid rgba(201,176,138,.55); padding: 10px 0; }
+.help-body h3 { margin: 0 0 4px; font: 900 15px var(--serif); color: #3a1f1c; }
+.help-body p { margin: 0; font-size: 13.5px; line-height: 1.7; color: #2b2420; }
+.help-foot { margin: 0; padding: 10px 22px 18px; border-top: 1px solid #d8c6a6; }
+
 /* 天皇 · 将军年表 */
 .rulers { width: min(560px, calc(100vw - 32px - var(--safe-l) - var(--safe-r))); }
 .rl-inner .book-tabs { flex: none; }

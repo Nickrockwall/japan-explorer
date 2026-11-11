@@ -111,6 +111,111 @@ export function createBanners() {
   return { group, set, update, get list() { return group.visible ? list : []; } };
 }
 
+// 合战的兵力小旗（3.36）：每面旗代表一样多的兵（或船），按各家的 men 插在本阶段军势所在的地方，换阶段时走过去
+function troopCanvas(color, crest, ch) {
+  const W = 64, H = 176;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = color;
+  g.fillRect(0, 0, W, H);
+  g.fillStyle = 'rgba(0,0,0,0.2)';
+  g.fillRect(W - 5, 0, 5, H);
+  g.fillStyle = '#f7f1e3';
+  g.beginPath(); g.arc(W / 2, 40, 25, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#2a2520';
+  if (crest) {
+    const t = document.createElement('canvas');
+    t.width = t.height = 48;
+    const tg = t.getContext('2d');
+    tg.drawImage(crest, 0, 0, 48, 48);
+    tg.globalCompositeOperation = 'source-in';
+    tg.fillStyle = '#2a2520';
+    tg.fillRect(0, 0, 48, 48);
+    g.drawImage(t, W / 2 - 20, 20, 40, 40);
+  } else {
+    g.font = '700 30px "Noto Serif SC", "Songti SC", "SimSun", serif';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText(ch, W / 2, 42);
+  }
+  return c;
+}
+const troopPole = new THREE.CylinderGeometry(0.04, 0.05, 3, 4).translate(0, 1.5, 0);
+const troopFlag = new THREE.PlaneGeometry(0.62, 1.7).translate(0.33, 2.05, 0);
+// 一面旗代表多少：让人多的一方不超过 MAX 面
+const STEPS = { men: [100, 200, 500, 1000, 2000, 2500, 5000, 10000], ships: [10, 20, 50, 100] };
+const MAX = 24;
+export function troopUnit(factions) {
+  const unit = factions[0]?.unit || 'men';
+  const most = Math.max(...factions.map((f) => f.men || 0));
+  return { unit, per: STEPS[unit].find((v) => most / v <= MAX) || STEPS[unit].at(-1) };
+}
+
+export function createTroops(factions, { hasCrest }) {
+  const group = new THREE.Group();
+  const { per } = troopUnit(factions);
+  const sides = factions.map((f) => {
+    const n = Math.max(1, Math.round((f.men || 0) / per));
+    const mat = new THREE.MeshBasicMaterial({ color: f.color, side: THREE.DoubleSide });
+    (hasCrest(f.key) ? loadCrest(f.key) : Promise.resolve(null)).then((img) => {
+      const tex = new THREE.CanvasTexture(troopCanvas(f.color, img, [...(f.name || '?')][0]));
+      tex.colorSpace = THREE.SRGBColorSpace;
+      mat.map = tex;
+      mat.color.set('#ffffff');
+      mat.needsUpdate = true;
+    });
+    const cols = Math.min(6, Math.ceil(Math.sqrt(n * 1.5)));
+    const flags = Array.from({ length: n }, (_, i) => {
+      const o = new THREE.Group();
+      o.add(new THREE.Mesh(troopPole, poleMat), new THREE.Mesh(troopFlag, mat));
+      group.add(o);
+      // 阵形里的位置（以旗距为单位）：r 行往后，c 列横排，每行居中
+      const r = Math.floor(i / cols), c = i % cols - (Math.min(cols, n - r * cols) - 1) / 2;
+      return { o, r: r + 0.8, c };
+    });
+    return { key: f.key, mat, flags, from: null, to: null, t0: 0, on: false };
+  });
+  // 军势的位置：at = [x, z]，back = 来路的方向（旗排在它后面）；换位置时 1.6 秒走过去
+  function place(key, at, back, now) {
+    const s = sides.find((x) => x.key === key);
+    if (!s) return;
+    const len = Math.hypot(back[0], back[1]) || 1;
+    const to = { x: at[0], z: at[1], bx: back[0] / len, bz: back[1] / len };
+    s.from = s.on && s.to ? cur(s, now) : to;
+    s.to = to;
+    s.t0 = now;
+    s.on = true;
+  }
+  function hide(key) { const s = sides.find((x) => x.key === key); if (s) s.on = false; }
+  function cur(s, now) {
+    const k = Math.min((now - s.t0) / 1600, 1), e = k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2;
+    const m = (a, b) => a + (b - a) * e;
+    return { x: m(s.from.x, s.to.x), z: m(s.from.z, s.to.z), bx: m(s.from.bx, s.to.bx), bz: m(s.from.bz, s.to.bz), k };
+  }
+  // 每帧：大小随镜头距离（屏幕上差不多大），贴地、朝向镜头、轻摆
+  function update(camera, dist, now, ground) {
+    const size = dist * 0.016, gap = size * 1.15;
+    let moving = false;
+    for (const s of sides) {
+      for (const f of s.flags) f.o.visible = s.on;
+      if (!s.on) continue;
+      const a = cur(s, now);
+      if (a.k < 1) moving = true;
+      const len = Math.hypot(a.bx, a.bz) || 1, bx = a.bx / len, bz = a.bz / len;
+      s.flags.forEach((f, i) => {
+        const x = a.x + (bx * f.r - bz * f.c) * gap, z = a.z + (bz * f.r + bx * f.c) * gap;
+        f.o.position.set(x, ground(x, z), z);
+        f.o.scale.setScalar(size);
+        f.o.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z);
+        f.o.children[1].rotation.y = Math.sin(now / 700 + i * 1.7) * 0.18;
+      });
+    }
+    return moving;
+  }
+  return { group, place, hide, update, per, dispose() { for (const s of sides) { s.mat.map?.dispose(); s.mat.dispose(); } } };
+}
+
 // 炊烟：近处正在用的城上方一缕烟（几团淡灰的圆，往上飘、散开、淡去）
 function puffTexture() {
   const c = document.createElement('canvas');

@@ -4,6 +4,17 @@
 
 Newest first.
 
+## 3.36 · 2026-11-11
+
+- The 3D map opens faster: a 60 KB preview of the terrain draws the whole country first and the detailed terrain (about 720 KB) swaps in when it arrives; lakes and rivers no longer hold up the first view
+- No more stutter: if the view stays below 15 frames a second, motion (waves, banners, smoke) switches itself off once, with a note, and can be turned back on in Settings; devices with little memory or few cores start with motion off, and power-saving quality has half the smoke
+- Battles go from 5 to 10: Ichi-no-Tani, Itsukushima, Nagashino, Yamazaki and Toba–Fushimi are new, written in three languages and checked against Japanese Wikipedia, on both the 2D and 3D maps
+- Strength at a glance: the battle panel has a strength bar, and on the 3D map each side plants small banners by its numbers (each banner the same number of men — ships at Dan-no-ura) that march with the main army from phase to phase; disputed figures say where they come from or "one account"
+- Castle cards show the number in Japan’s 100 Fine Castles or the Next 100, and the 12 surviving original keeps (5 of them National Treasures); build years given only as an era range read "c."
+- Castles go from 546 to 808: the infobox reader used to miss fields with a space before the "|", so Kasugayama, Hamamatsu, Yonezawa and many others were left out
+- The first-visit tour is down from 10 steps to 4 (welcome and tapping a prefecture, time travel, 2D/3D, done); everything else is in the new Help (in Settings or on the welcome page), which can also replay the tour
+- The 3D map’s code is split into cards, labels, search, terrain chunks, buildings and image saving; nothing changes for you
+
 ## 3.35 · 2026-11-11
 
 - The 3D map is no longer Sengoku only: a new row picks the period — Ancient, Kamakura, Sengoku, Edo, Meiji — 16 years in all, and ▶ plays from 712 to 1888

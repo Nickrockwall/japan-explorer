@@ -43,23 +43,32 @@ export function projector(meta) {
   };
 }
 
+// 先用预览图（coarse-q.png，粗图的 1/4，约 60 KB）画出全国，粗图（约 720 KB）由 upgrade() 在后台换上（3.36）；
+// 换上后 gen 加一，app 按它重建各块的网格
 export async function loadTerrain(base) {
   const meta = await (await fetch(`${base}/terrain.json`)).json();
-  const coarse = heights(await decodePNG(`${base}/coarse.png`), meta.offset, true);
   const [W, H] = meta.size;
   const C = meta.chunk;
   const hasDetail = new Set(meta.chunks.map(([x, y]) => `${x}_${y}`));
   const detail = new Map(); // 'cx_cy' → Int16Array(257²)
   const loading = new Map();
+  // 当前用的那一张：{h, lc, w, f}，f = 粗图几像素并成它的一个像素
+  const src = (img) => ({ ...heights(img, meta.offset, true), w: img.w, hh: img.h, f: W / img.w });
+  let coarse = src(await decodePNG(`${base}/coarse-q.png`));
+  let upgrading = null;
+  const self = { gen: 0 };
+  self.upgrade = () => (upgrading ??= decodePNG(`${base}/coarse.png`).then((img) => { coarse = src(img); self.gen++; }));
 
-  const at = (x, y) => {
-    x = Math.min(Math.max(x, 0), W - 1);
-    y = Math.min(Math.max(y, 0), H - 1);
-    const v = coarse.h[y * W + x];
+  const at = (i, j) => {
+    i = Math.min(Math.max(i, 0), coarse.w - 1);
+    j = Math.min(Math.max(j, 0), coarse.hh - 1);
+    const v = coarse.h[j * coarse.w + i];
     return v === SEA ? 0 : Math.max(v, 0);
   };
+  // 粗图像素坐标 → 当前那一张的格（标高在格点上；预览图的格点是 f×f 块的中心）
   const coarseH = (x, z) => {
-    const x0 = Math.floor(x), z0 = Math.floor(z), fx = x - x0, fz = z - z0;
+    const u = (x + 0.5) / coarse.f - 0.5, v = (z + 0.5) / coarse.f - 0.5;
+    const x0 = Math.floor(u), z0 = Math.floor(v), fx = u - x0, fz = v - z0;
     return (at(x0, z0) * (1 - fx) + at(x0 + 1, z0) * fx) * (1 - fz) + (at(x0, z0 + 1) * (1 - fx) + at(x0 + 1, z0 + 1) * fx) * fz;
   };
   const S = meta.detail - 1; // 256：每块精细图的格数
@@ -76,23 +85,25 @@ export async function loadTerrain(base) {
     return coarseH(x, z);
   };
   const landcover = (x, z) => {
-    const xi = Math.min(Math.max(Math.round(x), 0), W - 1), zi = Math.min(Math.max(Math.round(z), 0), H - 1);
-    return coarse.lc[zi * W + xi];
+    const f = coarse.f;
+    const xi = Math.min(Math.max(Math.round((x + 0.5) / f - 0.5), 0), coarse.w - 1), zi = Math.min(Math.max(Math.round((z + 0.5) / f - 0.5), 0), coarse.hh - 1);
+    return coarse.lc[zi * coarse.w + xi];
   };
   // 森林、农田、城镇的比重（相邻 4 格双线性），近看不出 1 公里的方块
   const cover = (x, z, out) => {
-    const x0 = Math.floor(x - 0.5), z0 = Math.floor(z - 0.5), fx = x - 0.5 - x0, fz = z - 0.5 - z0;
+    const f = coarse.f, u = x / f - 0.5, v = z / f - 0.5;
+    const x0 = Math.floor(u), z0 = Math.floor(v), fx = u - x0, fz = v - z0;
     out[0] = out[1] = out[2] = 0;
     for (const [dx, dz, w] of [[0, 0, (1 - fx) * (1 - fz)], [1, 0, fx * (1 - fz)], [0, 1, (1 - fx) * fz], [1, 1, fx * fz]]) {
-      const xi = Math.min(Math.max(x0 + dx, 0), W - 1), zi = Math.min(Math.max(z0 + dz, 0), H - 1);
-      const c = coarse.lc[zi * W + xi];
+      const xi = Math.min(Math.max(x0 + dx, 0), coarse.w - 1), zi = Math.min(Math.max(z0 + dz, 0), coarse.hh - 1);
+      const c = coarse.lc[zi * coarse.w + xi];
       if (c === 1) out[0] += w; else if (c === 5) out[1] += w; else if (c === 6) out[2] += w;
     }
     return out;
   };
   const isLand = (x, z) => {
-    const xi = Math.min(Math.max(Math.floor(x), 0), W - 1), zi = Math.min(Math.max(Math.floor(z), 0), H - 1);
-    return coarse.h[zi * W + xi] !== SEA;
+    const xi = Math.min(Math.max(Math.floor(x / coarse.f), 0), coarse.w - 1), zi = Math.min(Math.max(Math.floor(z / coarse.f), 0), coarse.hh - 1);
+    return coarse.h[zi * coarse.w + xi] !== SEA;
   };
   function loadDetail(key) {
     if (detail.has(key) || !hasDetail.has(key)) return Promise.resolve(detail.get(key));
@@ -107,7 +118,7 @@ export async function loadTerrain(base) {
     return loading.get(key);
   }
 
-  return { meta, W, H, C, chunks: meta.chunks, hasDetail, detail, height, landcover, cover, isLand, loadDetail, project: projector(meta) };
+  return Object.assign(self, { meta, W, H, C, chunks: meta.chunks, hasDetail, detail, height, landcover, cover, isLand, loadDetail, project: projector(meta) });
 }
 
 // 一块的网格：(n+3)² 个点，外面一圈是向下的裙边，盖住相邻两块段数不同时的缝

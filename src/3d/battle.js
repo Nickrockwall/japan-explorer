@@ -3,6 +3,7 @@
 // 年份：战国（1467–1600）的合战换到不晚于它的那个年份着色；坛之浦、西南战争不着势力色（app 的 onEnter 决定）。
 import * as THREE from 'three';
 import { lang, t } from './i18n.js';
+import { createTroops, troopUnit } from './decor.js';
 
 const AUTO_MS = 7000;
 const GROW_MS = 1600;
@@ -28,7 +29,7 @@ async function loadBattles() {
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// ctx: { scene, P, groundY, flyTo, camera, labelsEl, panel, onEnter(b), onLeave(), sound(name), redraw() }
+// ctx: { scene, P, groundY, flyTo, camera, labelsEl, panel, onEnter(b), onLeave(), sound(name), hasCrest(家) }
 export function createBattle(ctx) {
   const { scene, P, groundY, panel } = ctx;
   let battles = null;
@@ -87,8 +88,11 @@ export function createBattle(ctx) {
     ring.rotation.x = -Math.PI / 2;
     ring.visible = false;
     group.add(ring);
+    // 兵力小旗（3.36）：每面代表同样多的人（坛之浦是船）
+    const troops = createTroops(b.factions, { hasCrest: ctx.hasCrest || (() => false) });
+    group.add(troops.group);
     scene.add(group);
-    cur = { b, phase: -1, group, routes, radius, ring, labels: [], auto: null };
+    cur = { b, phase: -1, group, routes, radius, ring, troops, labels: [], auto: null };
     ctx.onEnter(b);
     ctx.sound('battle');
     setPhase(THREE.MathUtils.clamp(phase | 0, 0, b.phases.length - 1));
@@ -120,6 +124,7 @@ export function createBattle(ctx) {
       ...(ph.markers || []).map((m) => label(m.name, ...m.coords, 'bt-mk')),
       label(b.battlefield.name, ...b.battlefield.coords, 'bt-field'),
     ];
+    placeTroops(i, now);
     const [fx, fz] = P(...b.battlefield.coords);
     cur.ring.position.set(fx, groundY(fx, fz) + 0.2, fz);
     cur.ring.visible = !!ph.impact;
@@ -133,11 +138,38 @@ export function createBattle(ctx) {
     renderPanel();
   }
 
+  // 各家的主力：到这一阶段为止走过的这一家的路线里排在最前的那条（别动队、援军的路线排在后面），旗插在它的终点、排在来路的后方；
+  // 还没出发的在第一条路线的起点
+  function placeTroops(i, now) {
+    const { b } = cur;
+    for (const f of b.factions) {
+      let last = null;
+      for (let p = 0; p <= i; p++) for (const k of b.phases[p].routes || []) if (b.march_routes[k]?.faction === f.key && (last === null || k < last)) last = k;
+      const first = b.march_routes.findIndex((r) => r.faction === f.key);
+      if (last === null && first < 0) { cur.troops.hide(f.key); continue; }
+      const xz = cur.routes[last ?? first].xz;
+      const [at, back] = last === null ? [xz[0], xz[Math.min(1, xz.length - 1)]] : [xz.at(-1), xz.at(-2) || xz[0]];
+      const dir = last === null ? [at[0] - back[0], at[1] - back[1]] : [back[0] - at[0], back[1] - at[1]];
+      cur.troops.place(f.key, at, dir, now);
+    }
+  }
+
+  // 兵力条：按各家写的数字（men）分长短，下面写一面小旗代表多少
+  function forceBar(b) {
+    if (!b.factions.every((f) => f.men)) return '';
+    const sum = b.factions.reduce((a, f) => a + f.men, 0);
+    const { unit, per } = troopUnit(b.factions);
+    const n = (v) => v.toLocaleString(lang === 'en' ? 'en' : 'ja');
+    return `<div class="bt-force" role="img" aria-label="${esc(b.factions.map((f) => `${f.name} ${n(f.men)}`).join(' / '))}">${b.factions.map((f) => `<i style="flex:${f.men / sum};background:${f.color}"><b>${n(f.men)}</b></i>`).join('')}</div>
+      <p class="bt-per">${esc(t(unit === 'ships' ? 'bt.perShip' : 'bt.per', { n: n(per) }))}</p>`;
+  }
+
   function renderPanel() {
     const { b, phase } = cur;
     const ph = b.phases[phase];
     panel.innerHTML = `<div class="bt-head"><b>${esc(b.name)}</b><button class="x" type="button" data-bt="leave" aria-label="${esc(t('bt.exit'))}">×</button></div>
       <div class="bt-fac">${b.factions.map((f) => `<span><i class="sw" style="background:${f.color}"></i>${esc(f.name)}<small>${esc(f.leader)} · ${esc(f.strength)}</small></span>`).join('')}</div>
+      ${forceBar(b)}
       <div class="bt-tabs" role="tablist">${b.phases.map((p, k) => `<button type="button" role="tab" data-bt="phase" data-i="${k}" aria-selected="${k === phase}">${esc(p.title)}</button>`).join('')}</div>
       <p class="bt-time">${esc(ph.time)}</p>
       <p class="bt-desc">${esc(ph.desc)}</p>
@@ -167,6 +199,8 @@ export function createBattle(ctx) {
     stopAuto();
     cur.labels.forEach((l) => l.el.remove());
     scene.remove(cur.group);
+    cur.group.remove(cur.troops.group); // 小旗的竿与旗面几何体是共用的，不丢
+    cur.troops.dispose();
     cur.group.traverse((o) => { o.geometry?.dispose(); o.material?.dispose?.(); });
     cur = null;
     panel.hidden = true;
@@ -190,12 +224,17 @@ export function createBattle(ctx) {
   const v = new THREE.Vector3();
   function update(now, W, H) {
     if (!cur) return false;
+    // 箭头按整场的范围定大小，镜头拉近时缩小（3.36：长篠拉近到设乐原时箭头盖住了兵力小旗）
+    const dist = ctx.camera.position.distanceTo(ctx.target());
+    const coneK = THREE.MathUtils.clamp(dist * 0.006 / cur.radius, 0.2, 1);
     for (const r of cur.routes) {
       if (r.shownAt === null) continue;
       const p = Math.min((now - r.shownAt) / GROW_MS, 1);
       r.mesh.geometry.setDrawRange(0, Math.floor(r.count * p / 3) * 3);
       r.cone.visible = p >= 1;
+      r.cone.scale.setScalar(coneK);
     }
+    cur.troops.update(ctx.camera, dist, now, groundY);
     if (cur.ring.visible) {
       const k = (now % 1600) / 1600;
       const s = cur.radius * (6 + 30 * k);
@@ -221,5 +260,6 @@ export function createBattle(ctx) {
     get active() { return !!cur; },
     get key() { return cur?.b.key || null; },
     get phase() { return cur?.phase ?? -1; },
+    get troops() { return cur?.troops || null; },
   };
 }

@@ -88,7 +88,7 @@ function renderWelcome(el) {
       <h2>${t('kr.w.h')}</h2>
       <p>${t('kr.w.p1')}</p>
       <p>${t('kr.w.p2')}</p>
-      <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
+      <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.replay')}</button></p>
       <div class="section-h">${t('sh.h')}</div>${sharedButtons()}
       <p class="legal">${legalHTML()}</p>
     </div>`;
@@ -780,6 +780,9 @@ export async function main() {
     { key: 'krend' },
   ], { onEnd: () => uiPref.set('tourKorea', true) });
   const startTour = () => { closeCard(); closePlace(); if (counties.open) closeCounties(); tour.start(); };
+  // 主站 3.36 把设置里的这个按钮改成「帮助」；半岛模式没有帮助页，仍是教程
+  const tourBtn = document.querySelector('#settings [value="tour"]');
+  if (tourBtn) { tourBtn.removeAttribute('data-i18n'); tourBtn.textContent = t('tour.replay'); }
   openSettings = setupSettings(guide, () => {
     visited.clear();
     goshuinBook.clear();

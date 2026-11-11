@@ -3,13 +3,18 @@
 import * as THREE from 'three';
 import { MapControls } from './vendor/MapControls.js';
 import { unpack } from '../js/store.js';
-import { loadTerrain, buildChunkGeometry, levelFor, terrainUniforms, terrainMaterial, oceanMesh, MPU } from './terrain.js';
+import { loadTerrain, terrainUniforms, oceanMesh, MPU } from './terrain.js';
 import { buildRegions, sharedEdges, buildWater, createOverlay } from './overlay.js';
-import * as models from './models.js';
 import { createBanners, createSmoke } from './decor.js';
 import { createStory } from './story.js';
 import { lang, t, nm, circuit, applyStatic } from './i18n.js';
 import { createBattle } from './battle.js';
+import { createCards } from './cards.js';
+import { createSearch } from './search.js';
+import { createChunks } from './chunks.js';
+import { createBuildings } from './buildings.js';
+import { createLabels } from './labels.js';
+import { snapshot } from './snapshot.js';
 import { audio } from '../js/audio.js';
 import { ERAS, YEARS, eraOf, eraYears, baseOf, capitalOf, SHOGUNATE, ROUTES, ROUTE_MUSASHI_TOSANDO, ROUTE_MUSASHI_TOKAIDO, CIRCUIT_COLOR, KIND_COLOR, graphColors } from './eras.js';
 
@@ -18,6 +23,7 @@ const DATA = 'src/data';
 const LOOSE = new Set(['gunyu', 'contest', 'toyo_small', 'ou', 'outside', 'turn', 'split', 'neutral', 'ainu']);
 const OUTSIDE_COLOR = '#ddd4c1';
 const coarsePointer = matchMedia('(pointer: coarse)').matches;
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches; // 系统要求减少动态：不播墨晕、开关不滑
 // 内存或核数少的设备默认省电画质（手机一律省电）
 const lowEnd = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
 
@@ -33,7 +39,8 @@ const opts = {
   exag: saved.exag || 2,
   quality: saved.quality || (coarsePointer || lowEnd ? 'low' : 'high'),
   top: saved.top ?? false, // 俯视
-  motion: saved.motion ?? !matchMedia('(prefers-reduced-motion: reduce)').matches, // 海浪、旗、雾、炊烟
+  // 海浪、旗、雾、炊烟：内存或核数少的设备默认关（3.36），开着时太卡会自动关（见 frame 的 slowGuard）
+  motion: saved.motion ?? (!matchMedia('(prefers-reduced-motion: reduce)').matches && !lowEnd),
   castles: saved.castles ?? true,
   sites: saved.sites ?? true,
   trees: saved.trees ?? true,
@@ -70,12 +77,14 @@ async function main() {
     prints: () => json(`${DATA}/hiroshige.json`).catch(() => []),
   };
   const lazy = {};
+  let dirty = true; // 下一帧要重画（湖与河、精细地形后到时也置位，所以放在最前面）
   const need = { kodai: ['provEras'], edo: ['edo', 'prints'], meiji: ['edo', 'meiji'] };
   const loadFile = (k) => (lazy[k] ??= lazyFiles[k]().then((v) => { lazy[k + 'Data'] = v; return v; }));
   const eraReady = (era) => (need[era] || []).every((k) => lazy[k + 'Data']);
   const loadEra = (era) => Promise.all((need[era] || []).map(loadFile));
 
-  // 下载进度：按文件计数（地形与数据约 3 MB，手机上要好一会儿）
+  // 下载进度：按文件计数。首屏只等预览地形与当年的底图（约 0.7 MB）；粗地形、湖与河在后台补上（3.36）
+  const waterJob = json('src/3d/water.json').then(unpack);
   const jobs = [
     loadTerrain('src/3d/terrain'),
     json(`${DATA}/provinces.pack.json`).then(unpack),
@@ -83,7 +92,6 @@ async function main() {
     json(`${DATA}/sengoku.json`),
     json(`${DATA}/koku_sites.json`),
     json('src/3d/castles.json'),
-    json('src/3d/water.json').then(unpack),
     json(`${DATA}/people.json`).catch(() => ({})),
     json('src/3d/story.json').catch(() => []),
     json(`${DATA}/regimes.json`).catch(() => ({ periods: [] })),
@@ -99,7 +107,7 @@ async function main() {
     $('#loading-bar i').style.width = `${got / jobs.length * 100}%`;
   };
   progress();
-  const [terrain, provinces, units, sg, sites, castles, waterRaw, bios, storyData, regimes, rulers, kama, kodai, kaido] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
+  const [terrain, provinces, units, sg, sites, castles, bios, storyData, regimes, rulers, kama, kodai, kaido] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
   status(t('build'));
   const P = terrain.project;
   const C = terrain.C;
@@ -133,10 +141,11 @@ async function main() {
     }
     return bases.get(name);
   }
-  let base = getBase(baseOf(opts.year));
-  let regions = base.regions;
-  let byKey = base.byKey;
-  const water = buildWater(waterRaw, P);
+  // 会变的状态都放在 S 里，各模块（cards / labels / search …）共用：当前底图与它的块、上色方式（mode）、
+  // 选中的东西（focused）、聚光的家（spot）、各家的锚点（anchors）、合战离地图年份太远时不着色（battleNeutral）
+  const S = { base: getBase(baseOf(opts.year)), mode: null, spot: null, focused: null, anchors: [], battleNeutral: false };
+  S.regions = S.base.regions;
+  S.byKey = S.base.byKey;
   // 都城的条坊（示意）：平安京（朱雀大路 = 今千本通，罗城门北纬 34.9817，南北约 5.2 km、东西约 4.5 km；南北 9 条、东西 10 条大路）；
   // 平城京（kodai.json：东西 8 坊约 4.3 km、南北 9 条约 4.8 km）
   function gridPath(b, nx, nz) {
@@ -147,22 +156,23 @@ async function main() {
   }
   const HEIAN = { w: 135.7178, e: 135.7671, s: 34.9817, n: 35.0285 };
   const GRID = { heian: gridPath(HEIAN, 8, 9), heijo: gridPath(kodai.heijo, 8, 9) };
-  const overlay = createOverlay({ regions, edges: base.edges, water, C });
+  const overlay = createOverlay({ regions: S.regions, edges: S.base.edges, water: buildWater({ lakes: [], rivers: [] }, P), C });
+  waterJob.then((w) => { overlay.setWater(buildWater(w, P)); dirty = true; }).catch((e) => console.warn('water', e));
 
   // —— 各时代怎么上色：entry(块) → {c, with?}，info(c) → {zh, en, ja, color}；loose 是总称（不画前线、不插旗）——
   const KAMA_LOOSE = new Set(kama.loose);
   const sgInfo = (c) => sg.clans[c] || sg.sides[c] || sg.clans.outside;
   const circuitOf = (k, y) => {
-    const p = provProps.get(k) || byKey.get(k)?.props;
+    const p = provProps.get(k) || S.byKey.get(k)?.props;
     const c = p?.circuit || '令制外';
     return k === '武蔵国' && +y < kodai.musashi_tosando_until ? '东山道' : c;
   };
   const circuitInfo = (c) => { const n = circuit(c); return { zh: n, en: n, ja: n, color: CIRCUIT_COLOR[c] || OUTSIDE_COLOR }; };
   // 江户、明治：每块就是一家（藩、府县）；名字取当年的叫法（1871 年藩改县）
   const blockInfo = (k) => {
-    const r = byKey.get(k);
+    const r = S.byKey.get(k);
     const p = r?.props || {};
-    const color = p.kind && p.kind !== 'han' ? KIND_COLOR[p.kind] || OUTSIDE_COLOR : base.colors?.get(k) || OUTSIDE_COLOR;
+    const color = p.kind && p.kind !== 'han' ? KIND_COLOR[p.kind] || OUTSIDE_COLOR : S.base.colors?.get(k) || OUTSIDE_COLOR;
     return { ...blockName(p), color };
   };
   function blockName(p) {
@@ -179,15 +189,25 @@ async function main() {
     if (era === 'kodai') return { era, entry: (k) => ({ c: circuitOf(k, y) }), info: circuitInfo, loose: new Set(['令制外']), front: true, flags: false, hasMon: () => false };
     return { era, entry: (k) => ({ c: k }), info: blockInfo, loose: new Set(), front: false, flags: false, hasMon: () => false, blocks: true };
   }
-  let mode = modeFor(opts.year);
-  const entry = (k) => mode.entry(k);
-  const info = (c) => mode.info(c);
+  S.mode = modeFor(opts.year);
+  const entry = (k) => S.mode.entry(k);
+  const info = (c) => S.mode.info(c);
   const ownerKey = (e) => e?.c || 'outside';
+  // 文字与名字：卡片、标签、图例、搜索都用
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const sw = (c) => `<i class="sw" style="background:${info(c).color}"></i>`;
+  const castleName = (c) => (lang === 'zh' ? c.zh : lang === 'en' ? c.en || c.ja : c.ja);
+  // 国名：英文去掉「Province」；陆奥、出羽的分区与蝦夷地、各时代新出现的国在 provProps 里
+  const provName = (key, short) => {
+    if (key === '琉球') return t('ryukyu');
+    const n = nm(provProps.get(key)) || nm(S.byKey.get(key)?.props) || key;
+    return short && lang === 'en' ? n.replace(/ Province$/, '') : n;
+  };
+  const regionName = (r) => (S.mode.blocks ? nm(blockName(r.props)) : provName(r.key));
   const mixHex = (a, b, f) => `#${[1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('')}`;
-  let spot = null; // 点图例看势力总览时聚光的家（道）：不属于它的块淡成纸色
   function styleFor() {
-    const m = mode;
-    const dim = (cs, c) => (spot && !cs.includes(spot) ? mixHex(c, '#e9e0c8', 0.72) : c);
+    const m = S.mode;
+    const dim = (cs, c) => (S.spot && !cs.includes(S.spot) ? mixHex(c, '#e9e0c8', 0.72) : c);
     return {
       fill(k) {
         const e = m.entry(k);
@@ -206,8 +226,7 @@ async function main() {
     };
   }
   const NEUTRAL = { fill: () => '#e9e0c8', edge: () => 'plain' };
-  let battleNeutral = false; // 与地图年份差太远的合战（坛之浦）：不着色
-  const applyStyle = () => overlay.setStyle(opts.tint && !battleNeutral ? styleFor() : NEUTRAL);
+  const applyStyle = () => overlay.setStyle(opts.tint && !S.battleNeutral ? styleFor() : NEUTRAL);
   applyStyle();
 
   // —— 场景 ——
@@ -252,203 +271,13 @@ async function main() {
     controls.update();
   }
 
-  // —— 地形分块 ——
-  const terrainGroup = new THREE.Group();
-  scene.add(terrainGroup);
-  const chunks = terrain.chunks.map(([cx, cz]) => ({ cx, cz, key: `${cx}_${cz}`, n: 0, mesh: null, trees: null }));
-  const maxTex = opts.quality === 'high' ? 1024 : 512;
-  const texSize = (n) => Math.min(n <= 8 ? 128 : n <= 32 ? 256 : n <= 64 ? 512 : 1024, maxTex);
-  const pxPerSeg = opts.quality === 'high' ? 7 : 11;
-  const frustum = new THREE.Frustum();
-  const tmpM = new THREE.Matrix4();
+  // —— 地形分块、树、换年份的墨晕（chunks.js）——
+  const tc = createChunks({ terrain, overlay, scene, camera, canvas, uniforms, opts, scale, onDirty: () => { dirty = true; } });
+  const { chunks } = tc;
 
-  function desired(ch) {
-    const s = scale();
-    const x0 = ch.cx * C, z0 = ch.cz * C;
-    const top = (ch.mesh?.geometry.userData.hmax || 1500) * s;
-    const p = camera.position;
-    const dx = Math.max(x0 - p.x, 0, p.x - x0 - C), dz = Math.max(z0 - p.z, 0, p.z - z0 - C), dy = Math.max(0 - p.y, 0, p.y - top);
-    const d = Math.max(Math.hypot(dx, dy, dz), 0.5);
-    const f = canvas.clientHeight / (2 * Math.tan(camera.fov * Math.PI / 360));
-    let n = levelFor(C * f / (d * pxPerSeg), terrain.hasDetail.has(ch.key));
-    const box = new THREE.Box3(new THREE.Vector3(x0, -1, z0), new THREE.Vector3(x0 + C, top + 1, z0 + C));
-    if (!frustum.intersectsBox(box)) n = Math.min(n, 16);
-    return { n, d };
-  }
-
-  function buildChunk(ch, n) {
-    const geo = buildChunkGeometry(terrain, ch.cx, ch.cz, n);
-    const u = ch.mesh?.material.uniforms;
-    // 墨晕进行中、这块还留着旧贴图：另开一张画新的，旧的留给 uPrev
-    const keep = u && !(ink && u.uPrev.value === u.uTex.value);
-    const tex = overlay.texture(ch.cx, ch.cz, texSize(n), keep ? u.uTex.value : null);
-    if (ch.mesh) {
-      ch.mesh.geometry.dispose();
-      ch.mesh.geometry = geo;
-      if (u.uPrev.value === u.uTex.value && !ink) u.uPrev.value = tex;
-      u.uTex.value = tex;
-    } else {
-      ch.mesh = new THREE.Mesh(geo, terrainMaterial(uniforms, tex));
-      terrainGroup.add(ch.mesh);
-    }
-    ch.n = n;
-  }
-
-  // 树：近处有森林的块才种（每个森林像素 3 棵，位置由像素号决定，每次一样）
-  const treeGeo = models.tree();
-  const treeMat = models.buildingMaterial();
-  const hash = (a, b, c) => { const s = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453; return s - Math.floor(s); };
-  function plantTrees(ch) {
-    const list = [];
-    const x0 = ch.cx * C, z0 = ch.cz * C;
-    for (let z = 0; z < C; z++) for (let x = 0; x < C; x++) {
-      if (terrain.landcover(x0 + x + 0.5, z0 + z + 0.5) !== 1) continue;
-      for (let k = 0; k < 3; k++) list.push([x0 + x + hash(x, z, k), z0 + z + hash(z, x, k + 7), hash(x + k, z, 3)]);
-    }
-    const mesh = new THREE.InstancedMesh(treeGeo, treeMat, list.length);
-    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3(), c = new THREE.Color();
-    list.forEach(([x, z, r], i) => {
-      const h = terrain.height(x, z);
-      s.setScalar(0.8 + r * 0.6);
-      p.set(x, h, z);
-      m.compose(p, q, s);
-      mesh.setMatrixAt(i, m);
-      mesh.setColorAt(i, c.setHSL(0.27 + r * 0.08, 0.32, 0.26 + r * 0.1));
-    });
-    mesh.userData.heights = true; // y 存的是米，按起伏倍数缩放（见 placeTrees）
-    mesh.frustumCulled = false;
-    return mesh;
-  }
-  const treeGroup = new THREE.Group();
-  scene.add(treeGroup);
-  // 树的矩阵里 y 是米：整组按起伏倍数在 y 方向缩放会把树也压扁，所以改为每次起伏变化时重排
-  function placeTrees(mesh) {
-    const s = scale();
-    const m = new THREE.Matrix4(), p = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
-    const base0 = mesh.userData.base || (mesh.userData.base = mesh.instanceMatrix.array.slice());
-    for (let i = 0; i < mesh.count; i++) {
-      m.fromArray(base0, i * 16);
-      m.decompose(p, q, sc);
-      p.y *= s;
-      m.compose(p, q, sc);
-      mesh.setMatrixAt(i, m);
-    }
-    mesh.instanceMatrix.needsUpdate = true;
-    mesh.userData.s = s;
-  }
-
-  let treeBudget = 0;
-  function updateChunks() {
-    camera.updateMatrixWorld();
-    frustum.setFromProjectionMatrix(tmpM.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
-    const todo = [];
-    for (const ch of chunks) {
-      const { n, d } = desired(ch);
-      ch.d = d;
-      if (n > 64 && !terrain.detail.has(ch.key)) {
-        terrain.loadDetail(ch.key).then(() => { dirty = true; });
-        if (ch.n !== Math.min(n, 64)) todo.push({ ch, n: Math.min(n, 64), d });
-      } else if (n !== ch.n) todo.push({ ch, n, d });
-      else if (ch.mesh && ch.mesh.material.uniforms.uTex.value.userData.v !== overlay.version) todo.push({ ch, n, d, texOnly: true });
-      const wantTrees = opts.trees && ch.n >= 64 && d < (opts.quality === 'high' ? 70 : 40);
-      if (wantTrees && !ch.trees && treeBudget-- > 0) {
-        ch.trees = plantTrees(ch);
-        placeTrees(ch.trees);
-        treeGroup.add(ch.trees);
-      } else if (!wantTrees && ch.trees) {
-        treeGroup.remove(ch.trees);
-        ch.trees.dispose();
-        ch.trees = null;
-      }
-      if (ch.trees && ch.trees.userData.s !== scale()) placeTrees(ch.trees);
-    }
-    todo.sort((a, b) => a.d - b.d);
-    const t0 = performance.now();
-    for (const job of todo) {
-      if (performance.now() - t0 > 12) { dirty = true; break; }
-      if (job.texOnly) {
-        const u = job.ch.mesh.material.uniforms;
-        if (ink && u.uPrev.value === u.uTex.value) u.uTex.value = overlay.texture(job.ch.cx, job.ch.cz, texSize(job.ch.n), null);
-        else overlay.texture(job.ch.cx, job.ch.cz, texSize(job.ch.n), u.uTex.value);
-        job.done = true;
-      } else buildChunk(job.ch, job.n);
-    }
-    // 新贴图都画好了（或等了 1.5 秒）才开始晕开，免得一块块跳出来
-    if (ink && ink.start === null && (!todo.some((j) => j.texOnly && !j.done) || performance.now() - ink.t0 > 1500)) ink.start = performance.now();
-    if (todo.length) dirty = true;
-  }
-
-  // —— 建筑：城、古国三迹、城柵（古代）、宿场（江户）——
-  const forts = kodai.forts.map((f) => ({ ...f, kind: 'fort' }));
-  const stations = [];
-  for (const r of kaido.roads) {
-    for (const [ja, zh, en, lon, lat] of r.st) if (!stations.some((s) => s.ja === ja)) stations.push({ ja, zh, en, coords: [lon, lat], road: r, kind: 'inn' });
-  }
-  const bMat = models.buildingMaterial();
-  const kinds = {
-    tenshu: new THREE.InstancedMesh(models.tenshu(), bMat, castles.length),
-    yagura: new THREE.InstancedMesh(models.yagura(), bMat, castles.length),
-    ichi: new THREE.InstancedMesh(models.shrine(), bMat, sites.length),
-    ji: new THREE.InstancedMesh(models.pagoda(), bMat, sites.length),
-    fu: new THREE.InstancedMesh(models.office(), bMat, sites.length),
-    fort: new THREE.InstancedMesh(models.fort(), bMat, forts.length),
-    inn: new THREE.InstancedMesh(models.inn(), bMat, stations.length),
-  };
-  for (const m of Object.values(kinds)) { m.frustumCulled = false; scene.add(m); }
-  // 条目多（有名）的城画得大一些：语言条目 2 → 0.85 倍，80 → 1.4 倍
-  castles.forEach((c) => { c.xz = P(...c.coords); c.rot = hash(c.xz[0], c.xz[1], 1) * Math.PI; c.size = 0.8 + 0.6 * THREE.MathUtils.clamp(Math.log(c.links) / Math.log(80), 0, 1); });
-  [...sites, ...forts, ...stations].forEach((s) => { s.xz = P(...s.coords); s.rot = hash(s.xz[0], s.xz[1], 2) * Math.PI; });
-  // 某年在不在：1600 年以后没写废城年的城只画江户时代确实在用的（藩厅、江户城、1600 年以后筑的：castles.json 的 edo）
-  const castleOnIn = (c, y) => c.built <= +y && (c.gone ? c.gone >= +y : (+y <= 1600 || !!c.edo));
-  const castleOn = (c) => eraOf(opts.year) !== 'kodai' && castleOnIn(c, opts.year);
-  const fortOn = (f) => eraOf(opts.year) === 'kodai' && (!f.built || f.built <= +opts.year) && (!f.gone || f.gone >= +opts.year);
-  // 古代：国府都在，国分寺 741 年诏令以后才有，一宫是平安后期才有的叫法（古代不画）
-  const siteOn = (s) => (eraOf(opts.year) !== 'kodai' ? true : s.kind === 'fu' || (s.kind === 'ji' && +opts.year >= 741));
-  function placeBuildings() {
-    const d = camera.position.distanceTo(controls.target);
-    const show = d < 900;
-    const k = THREE.MathUtils.clamp(d / 45, 1.1, 8);
-    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
-    const fill = (mesh, list, size) => {
-      let i = 0;
-      for (const o of list) {
-        p.set(o.xz[0], groundY(o.xz[0], o.xz[1]), o.xz[1]);
-        q.setFromAxisAngle(up, o.rot);
-        s.setScalar(k * size * (o.size || 1));
-        mesh.setMatrixAt(i++, m.compose(p, q, s));
-        o.mesh = mesh;
-        o.idx = i - 1;
-      }
-      mesh.count = i;
-      mesh.instanceMatrix.needsUpdate = true;
-      mesh.computeBoundingSphere();
-      mesh.userData.list = list;
-    };
-    // 全国几百座城：彼此太近的只留条目多的（castles 已按语言条目数排好），拉近后间距变小、逐渐都显示；古国三迹排在城后面
-    const gap = k * 2.4, grid = new Map(), kept = new Set();
-    const room = (o) => {
-      const gx = Math.floor(o.xz[0] / gap), gz = Math.floor(o.xz[1] / gap);
-      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
-        for (const b of grid.get(`${gx + i},${gz + j}`) || []) if (Math.hypot(b.xz[0] - o.xz[0], b.xz[1] - o.xz[1]) < gap) return false;
-      }
-      const key = `${gx},${gz}`;
-      grid.set(key, [...(grid.get(key) || []), o]);
-      kept.add(o);
-      return true;
-    };
-    const fortList = show ? forts.filter((f) => fortOn(f) && room(f)) : [];
-    const on = show && opts.castles ? castles.filter((c) => castleOn(c) && room(c)) : [];
-    const late = +opts.year >= 1576; // 安土城（1576）以后画成天守，以前画成土垒与望楼（示意）
-    fill(kinds.tenshu, late ? on : [], 1);
-    fill(kinds.yagura, late ? [] : on, 1);
-    fill(kinds.fort, fortList, 1.1);
-    const siteList = show && opts.sites ? sites.filter((x) => siteOn(x) && room(x)) : [];
-    for (const kind of ['ichi', 'ji', 'fu']) fill(kinds[kind], siteList.filter((x) => x.kind === kind), 0.8);
-    // 宿场：拉近才画（全国一百七十多个，远看挤成一团）
-    fill(kinds.inn, show && d < 220 && eraOf(opts.year) === 'edo' ? stations.filter(room) : [], 0.6);
-    placeBuildings.kept = kept;
-    placeBuildings.k = k;
-  }
+  // —— 建筑：城、古国三迹、城柵（古代）、宿场（江户）（buildings.js）——
+  const B = createBuildings({ scene, P, castles, sites, kodai, kaido, opts, camera, controls, groundY });
+  const { forts, stations, castleOnIn, castleOn, siteOn } = B;
 
   // —— 道路：古代官道（示意）、江户五街道、明治铁路（overlay 的 lines）——
   const fuAt = new Map();
@@ -459,7 +288,7 @@ async function main() {
     const lines = [];
     if (era === 'kodai') {
       const cap = P(...capitalOf(y).at);
-      const at = (k) => (k === 'CAP' ? cap : fuAt.get(k) || byKey.get(k)?.center);
+      const at = (k) => (k === 'CAP' ? cap : fuAt.get(k) || S.byKey.get(k)?.center);
       const path = new Path2D();
       const routes = [...ROUTES, +y < kodai.musashi_tosando_until ? ROUTE_MUSASHI_TOSANDO : ROUTE_MUSASHI_TOKAIDO];
       for (const r of routes) {
@@ -494,14 +323,13 @@ async function main() {
   };
   // —— 文字标签 ——
   const labelsEl = $('#labels');
-  const pool = new Map();
   const people = sg.people || {};
   function clanAnchors(year) {
-    if (mode.blocks) return [];
+    if (S.mode.blocks) return [];
     const by = new Map();
-    for (const r of regions) {
+    for (const r of S.regions) {
       const e = entry(r.key, year);
-      if (!e || e.with || mode.loose.has(e.c)) continue;
+      if (!e || e.with || S.mode.loose.has(e.c)) continue;
       if (!by.has(e.c)) by.set(e.c, []);
       by.get(e.c).push(r);
     }
@@ -514,14 +342,14 @@ async function main() {
     }
     return out.sort((x, y) => y.area - x.area);
   }
-  let anchors = clanAnchors(opts.year);
+  S.anchors = clanAnchors(opts.year);
 
   // —— 旗指物（战国、镰仓）——
   const banners = createBanners();
   scene.add(banners.group);
   banners.set.onReady = () => { dirty = true; };
   // 1600 年是东西两军，不插家的旗（与平面图相同）
-  const refreshBanners = () => banners.set(mode.flags && opts.tint && !battleNeutral ? anchors : [], info, mode.hasMon);
+  const refreshBanners = () => banners.set(S.mode.flags && opts.tint && !S.battleNeutral ? S.anchors : [], info, S.mode.hasMon);
   refreshBanners();
   function applyLook() {
     uniforms.uStyle.value = opts.style ? 1 : 0;
@@ -532,102 +360,12 @@ async function main() {
   }
   applyLook();
 
-  function label(key, html, cls) {
-    let el = pool.get(key);
-    if (!el) {
-      el = document.createElement('div');
-      el.className = `lb ${cls}`;
-      el.innerHTML = html;
-      labelsEl.appendChild(el);
-      pool.set(key, el);
-      el._w = el.offsetWidth;
-      el._h = el.offsetHeight;
-    }
-    return el;
-  }
   // 江户：广重《六十余州名所图会》挂在画中地点（hiroshige.json，只收公有领域）
   const prints = () => (lazy.printsData || []).filter((h) => h.coords);
-  const v3 = new THREE.Vector3();
-  function updateLabels() {
-    const d = camera.position.distanceTo(controls.target);
-    const W = canvas.clientWidth, H = canvas.clientHeight;
-    const y = opts.year, era = eraOf(y);
-    const items = [];
-    const add = (key, x, z, lift, pri, html, cls) => items.push({ key, x, z, lift, pri, html, cls });
-    if (opts.tint && !battleNeutral && d > 160) {
-      const flags = new Map(banners.list.map((b) => [b.a.c, b]));
-      for (const a of anchors) {
-        const ci = info(a.c);
-        const flag = flags.get(a.c);
-        // 有旗时名字写在旗顶上（家纹在旗上）；没有旗的（1600 年两军、古代的道）照旧
-        const mon = !flag && mode.hasMon(a.c) ? `<span class="mon" style="border-color:${ci.color}"><i style="--mon:url(src/assets/crests/${a.c}.png)"></i></span>` : '';
-        add(`c-${y}-${a.c}-${flag ? 'f' : 'm'}`, a.at[0], a.at[1], flag ? flag.height * 1.04 : 3, 1000 + a.area / 100, `${mon}<b style="--c:${ci.color}">${esc(nm(ci))}</b>`, 'clan');
-      }
-    }
-    // 都：一直显示，写着这一年「天下」在谁手里；镰仓、江户另有一枚「幕」（幕府所在）；点开看天皇、将军与实权
-    if (!battle.active) {
-      const rg = regimeOf(y);
-      const cap = capitalOf(y);
-      const [kx, kz] = P(...cap.at);
-      add(`cap-${y}`, kx, kz, 2.5, 5000, `<b>${esc(t(`cap.seal.${cap.key}`))}</b><small>${esc(t(`cap.name.${cap.key}`))} · ${esc(nm(rg?.short))}</small>`, 'capital');
-      const bak = SHOGUNATE[era];
-      if (bak) {
-        const [bx, bz] = P(...bak.at);
-        add(`bak-${y}`, bx, bz, 2.5, 4900, `<b>${esc(t('bak.seal'))}</b><small>${esc(t(`bak.${bak.key}`))}</small>`, 'capital bak');
-      }
-    }
-    if (d < 70) {
-      if (+y >= 794) { const [hx, hz] = P(135.7424, 35.0051); add('heian', hx, hz, 0.6, 150, esc(t('heian')), 'site'); }
-      else { const [hx, hz] = P(...kodai.heijo.palace); add('heijo', hx, hz, 0.6, 150, esc(t('heijo')), 'site'); }
-    }
-    // 国名；江户、明治是藩名与府县名（字大一点，远看也写）
-    if (d < (mode.blocks ? 2600 : 1500)) {
-      for (const r of regions) {
-        if (!r.center) continue;
-        if (mode.blocks) {
-          const n = r.props.kind !== 'none' && nm(blockName(r.props));
-          if (!n) continue;
-          const pri = 300 + (r.props.koku ? r.props.koku / 2000 : r.area / 50);
-          add(`p-${base.name}-${y === '1871' ? 'k' : ''}${r.key}`, r.center[0], r.center[1], 1, pri, esc(n), 'prov blk');
-        } else if (r.props.zh) {
-          add(`p-${base.name}-${r.key}`, r.center[0], r.center[1], 1, 300 + r.area / 50, esc(provName(r.key, true)), 'prov');
-        }
-      }
-    }
-    if (d < 280 && opts.castles) {
-      for (const c of castles) if (placeBuildings.kept.has(c)) add(`k-${c.q}`, c.xz[0], c.xz[1], 1.6 * placeBuildings.k, 200 + c.links, esc(castleName(c)), 'castle');
-    }
-    if (d < 600) for (const f of forts) if (placeBuildings.kept.has(f)) add(`f-${f.ja}`, f.xz[0], f.xz[1], 1.4 * placeBuildings.k, 260, esc(nm(f)), 'castle fort');
-    if (d < 110 && opts.sites) {
-      for (const s of sites) if (placeBuildings.kept.has(s)) add(`s-${s.id}`, s.xz[0], s.xz[1], 1.0 * placeBuildings.k, 100 + (s.kind === 'ichi' ? 10 : 0), `<small>${t(s.kind)}</small>${esc(s.name)}`, 'site');
-    }
-    if (era === 'edo') {
-      if (d < 120) for (const s of stations) if (placeBuildings.kept.has(s)) add(`i-${s.ja}`, s.xz[0], s.xz[1], 0.8 * placeBuildings.k, 90, esc(nm(s)), 'site inn');
-      if (d < 700) for (const h of prints()) { const [x, z] = P(...h.coords); add(`h-${h.no}`, x, z, 2, 120, `<img src="${h.img}" alt="" loading="lazy" data-print="${h.no}">`, 'print'); }
-    }
-    items.sort((a, b) => b.pri - a.pri);
-    const placed = [];
-    const used = new Set();
-    for (const it of items) {
-      v3.set(it.x, groundY(it.x, it.z) + it.lift, it.z).project(camera);
-      if (v3.z > 1 || v3.x < -1.1 || v3.x > 1.1 || v3.y < -1.1 || v3.y > 1.1) continue;
-      const sx = (v3.x + 1) / 2 * W, sy = (1 - v3.y) / 2 * H;
-      const el = label(it.key, it.html, it.cls);
-      const w = el._w || el.offsetWidth, h = el._h || el.offsetHeight;
-      const r = [sx - w / 2, sy - h, sx + w / 2, sy];
-      if (placed.some((o) => r[0] < o[2] && r[2] > o[0] && r[1] < o[3] && r[3] > o[1])) continue;
-      placed.push(r);
-      used.add(it.key);
-      el.style.transform = `translate(${Math.round(r[0])}px, ${Math.round(r[1])}px)`;
-      if (placed.length > 70) break;
-    }
-    const keep = (k) => /^(p|k|s|f|i|h)-/.test(k) || k === 'heian' || k === 'heijo' || k.includes(`-${y}-`) || k === `cap-${y}` || k === `bak-${y}`;
-    for (const [k, el] of pool) {
-      const on = used.has(k);
-      if (el.classList.contains('on') !== on) el.classList.toggle('on', on);
-      if (!on && !keep(k)) { el.remove(); pool.delete(k); }
-    }
-  }
+  const labels = createLabels(S, {
+    el: labelsEl, camera, controls, canvas, opts, P, groundY, banners, info, esc, blockName, provName, castleName, castles, sites, B, kodai, prints, regimeOf,
+    inBattle: () => battle.active,
+  });
 
   // —— 点选 ——
   const ray = new THREE.Raycaster();
@@ -656,32 +394,28 @@ async function main() {
     }
     return null;
   }
-  const regionAt = (x, z) => regions.find((r) => x >= r.bbox[0] && x <= r.bbox[2] && z >= r.bbox[1] && z <= r.bbox[3] && pickCtx.isPointInPath(r.path, x, z, 'evenodd'));
+  const regionAt = (x, z) => S.regions.find((r) => x >= r.bbox[0] && x <= r.bbox[2] && z >= r.bbox[1] && z <= r.bbox[3] && pickCtx.isPointInPath(r.path, x, z, 'evenodd'));
 
   function pick(ev) {
     const rect = canvas.getBoundingClientRect();
     const ndc = new THREE.Vector2((ev.clientX - rect.left) / rect.width * 2 - 1, -(ev.clientY - rect.top) / rect.height * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const hits = ray.intersectObjects(Object.values(kinds).filter((m) => m.count), false);
+    const hits = ray.intersectObjects(B.meshes(), false);
     if (hits.length) {
       const h = hits[0];
       const o = h.object.userData.list[h.instanceId];
       if (o) {
         sound('click');
-        return o.kind === 'fort' ? showFort(o) : o.kind === 'inn' ? showStation(o) : o.kind ? showSite(o) : showCastle(o);
+        return o.kind === 'fort' ? cards.showFort(o) : o.kind === 'inn' ? cards.showStation(o) : o.kind ? cards.showSite(o) : cards.showCastle(o);
       }
     }
     const p = groundHit(ndc);
-    if (!p) return closeCard();
+    if (!p) return cards.closeCard();
     const r = regionAt(p.x, p.z);
-    if (r) { sound('click'); showRegion(r, p); } else closeCard();
+    if (r) { sound('click'); cards.showRegion(r, p); } else cards.closeCard();
   }
 
   // —— 卡片 ——
-  const card = $('#card');
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const sw = (c) => `<i class="sw" style="background:${info(c).color}"></i>`;
-  const castleName = (c) => (lang === 'zh' ? c.zh : lang === 'en' ? c.en || c.ja : c.ja);
   // 回平面地图：同一个时代与年份、选中的块、同一语言、大致同一个地方（顶栏左上的链接跟着变）
   // 战国 → 平面战国势力图；古代 → 奈良时代的旧国（当年的国界）；镰仓 / 江户 / 明治 → 平面图时空穿越的同一时代
   const ERA2D = { kodai: 'nara', kamakura: 'kamakura', edo: 'edo', meiji: 'meiji' };
@@ -701,274 +435,13 @@ async function main() {
     parts.push(`lang=${lang}`);
     return `index.html#${parts.join('&')}`;
   }
-  const syncBack = () => { $('#back').href = $('#to2d').href = flatLink(focused?.type === 'region' && eraOf(opts.year) === 'sengoku' ? focused.key : null); };
-  const person = (ja) => nm(people[ja]) || ja;
-  // 国名：英文去掉「Province」；陆奥、出羽的分区与蝦夷地、各时代新出现的国在 provProps 里
-  const provName = (key, short) => {
-    if (key === '琉球') return t('ryukyu');
-    const n = nm(provProps.get(key)) || nm(byKey.get(key)?.props) || key;
-    return short && lang === 'en' ? n.replace(/ Province$/, '') : n;
-  };
-  const regionName = (r) => (mode.blocks ? nm(blockName(r.props)) : provName(r.key));
-  let focused = null;
-  function openCard(html) {
-    card.innerHTML = `<button class="x" type="button" aria-label="${t('close')}">×</button>${html}`;
-    card.hidden = false;
-    document.body.classList.add('card-open');
-    card.querySelector('.x').onclick = closeCard;
-    syncBack();
-  }
-  function closeCard() {
-    card.hidden = true;
-    focused = null;
-    document.body.classList.remove('card-open');
-    if (spot) { spot = null; applyStyle(); }
-    syncBack();
-    syncHash();
-  }
-  const wikiOf = (ja, qid) => (qid ? `https://www.wikidata.org/wiki/Special:GoToLinkedPage/jawiki/${qid}` : `https://ja.wikipedia.org/wiki/${encodeURIComponent(ja)}`);
-  // 人物卡：sengoku.json 的生卒 + people.json 的自写简介与肖像（有的人才有）；从哪张卡来就能回哪张
-  function showPerson(ja, back) {
-    const p = people[ja] || {}, b = bios[ja];
-    focused = { type: 'person', ja };
-    openCard(`${back ? `<button class="back" type="button">${t('p.back')}</button>` : ''}
-      ${b?.img ? `<img class="portrait" src="${b.img}" alt="">` : ''}
-      <h2>${esc(person(ja))}</h2>
-      <p class="sub">${esc(t('p.life', { a: p.born ?? '?', b: p.died ?? '?' }))}</p>
-      ${b?.bio ? `<p>${esc(b.bio[lang] || b.bio.zh)}</p>` : ''}
-      ${b?.img ? `<p class="note">${esc(t('p.img', { l: [b.license, b.author].filter(Boolean).join(' · ') }))}</p>` : ''}
-      <p class="links"><a href="${wikiOf(ja, p.qid)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    card.querySelector('.back')?.addEventListener('click', back);
-  }
-  // 每家当年的推算石高（分治按家数平分）；领有奥羽按郡分区（没有石高）的记 missing
-  function clanKoku(year) {
-    const sum = new Map(), missing = new Set();
-    for (const r of regions) {
-      const e = entry(r.key, year);
-      if (!e) continue;
-      const cs = [e.c, ...(e.with || [])];
-      const k = sg.koku?.[r.key];
-      for (const c of cs) {
-        if (k == null) missing.add(c);
-        else sum.set(c, (sum.get(c) || 0) + k / cs.length);
-      }
-    }
-    return { sum, missing };
-  }
-  const flyRegion = (r) => flyTo(r.center[0], r.center[1], THREE.MathUtils.clamp(Math.sqrt(r.area) * 3, 120, 700));
-  const provButtons = (rs) => `<div class="provs">${rs.map((r) => `<button type="button" data-k="${esc(r.key)}">${esc(mode.blocks ? regionName(r) : provName(r.key, true))}</button>`).join('')}</div>`;
-  const bindProvButtons = () => card.querySelectorAll('.provs button').forEach((b) => { b.onclick = () => { const r = byKey.get(b.dataset.k); showRegion(r); flyRegion(r); }; });
-  // 势力总览：图例里点一家（或搜索）——聚光它的领国，列出国数 / 推算石高 / 名次 / 代表人物 / 各国；镰仓是守护的家、古代是道
-  function showClan(c, fly = true) {
-    const own = [], shared = [];
-    for (const r of regions) {
-      const e = entry(r.key);
-      if (!e) continue;
-      const cs = [e.c, ...(e.with || [])];
-      if (cs.includes(c)) (cs.length > 1 ? shared : own).push(r);
-    }
-    if (!own.length && !shared.length) { closeCard(); return; }
-    spot = c;
-    applyStyle();
-    focused = { type: 'clan', c };
-    const ci = info(c);
-    const era = eraOf(opts.year);
-    if (era === 'sengoku') {
-      const { sum, missing } = clanKoku(opts.year);
-      const man = (v) => (lang === 'en' ? (Math.round(v / 1000) * 1000).toLocaleString('en') : Math.round(v / 10000));
-      const mine = sum.get(c) || 0;
-      const rank = missing.has(c) || LOOSE.has(c) ? 0 : 1 + [...sum].filter(([k, v]) => !LOOSE.has(k) && !missing.has(k) && v > mine).length;
-      const head = sg.heads[opts.year]?.[c];
-      const mon = sg.clans[c]?.mon ? `<img class="mon-img" src="src/assets/crests/${c}.png" alt="">` : sw(c);
-      openCard(`<h2>${mon}${esc(nm(ci))}</h2>
-        <p class="sub">${opts.year} · ${esc(t('c.provs', { n: own.length }))}${shared.length ? ` · ${esc(t('c.split', { n: shared.length }))}` : ''}</p>
-        ${mine ? `<p>${esc(t(missing.has(c) ? 'c.kokuGe' : 'c.koku', { n: man(mine) }))}${rank ? ` · ${esc(t('c.rank', { n: rank }))}` : ''}</p>` : ''}
-        ${head ? `<p>${esc(t('c.head'))}：<span class="who" data-person="${esc(head)}">${esc(person(head))}</span></p>` : ''}
-        ${provButtons([...own, ...shared])}
-        <p class="note">${esc(t('c.note'))}</p>`);
-      card.querySelector('[data-person]')?.addEventListener('click', (e) => showPerson(e.target.dataset.person, () => showClan(c, false)));
-    } else if (era === 'kamakura') {
-      const mon = mode.hasMon(c) ? `<img class="mon-img" src="src/assets/crests/${c}.png" alt="">` : sw(c);
-      const who = own.map((r) => entry(r.key)?.who).filter(Boolean).map((w) => (lang === 'zh' ? w[1] : w[0]));
-      openCard(`<h2>${mon}${esc(nm(ci))}</h2>
-        <p class="sub">${opts.year} · ${esc(t('k.provs', { n: own.length }))}</p>
-        ${who.length ? `<p>${esc(t('k.who'))}：${esc([...new Set(who)].join(lang === 'en' ? ', ' : '、'))}</p>` : ''}
-        ${provButtons(own)}
-        <p class="note">${esc(t(KAMA_LOOSE.has(c) ? 'k.looseNote' : 'k.note'))}</p>
-        ${ci.wiki ? `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(ci.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>` : ''}`);
-    } else {
-      openCard(`<h2>${sw(c)}${esc(nm(ci))}</h2>
-        <p class="sub">${opts.year} · ${esc(t('c.provs', { n: own.length }))}</p>
-        ${provButtons(own)}
-        <p class="note">${esc(t('kd.circuitNote'))}</p>`);
-    }
-    bindProvButtons();
-    if (fly) {
-      const a = anchors.find((x) => x.c === c);
-      const r = a || { at: (own[0] || shared[0]).center, area: (own[0] || shared[0]).area };
-      flyTo(r.at[0], r.at[1], THREE.MathUtils.clamp(Math.sqrt(a ? a.area : r.area) * 2.4, 140, 900));
-    }
-  }
-  const sitesIn = (key) => sites.filter((s) => s.prov === key);
-  function showRegion(r) {
-    if (!r) return;
-    focused = { type: 'region', key: r.key };
-    const era = eraOf(opts.year);
-    if (era === 'sengoku') showSengokuRegion(r);
-    else if (era === 'kamakura') showKamakuraRegion(r);
-    else if (era === 'kodai') showKodaiRegion(r);
-    else showBlock(r);
-    syncHash();
-  }
-  function showSengokuRegion(r) {
-    const rows = sg.years.map((y) => {
-      const e = (sg.units?.[r.key] || sg.provinces[r.key])?.[y];
-      if (!e) return '';
-      const cs = [e.c, ...(e.with || [])];
-      const head = sg.heads[y]?.[e.c];
-      return `<tr class="${y === opts.year ? 'cur' : ''}" data-y="${y}"><th>${y}</th><td>${cs.map((c) => `${sw(c)}${esc(nm(info(c)))}`).join(lang === 'en' ? ', ' : '、')}${e.with ? `<em>${t('split')}</em>` : ''}${head ? `<span class="who" data-person="${esc(head)}">${esc(person(head))}</span>` : ''}</td></tr>`;
-    }).join('');
-    const koku = sg.koku?.[r.key];
-    const parent = r.props.parent ? t('part', { p: provName(r.props.parent) }) : '';
-    const n = lang === 'en' ? Math.round(koku / 1000) * 1000 : Math.round(koku / 10000);
-    openCard(`<h2>${esc(nm(r.props) || r.key)}${esc(parent)}</h2>
-      <p class="sub">${esc(circuit(r.props.circuit || ''))}${koku ? esc(t('koku', { n: n.toLocaleString('en') })) : ''}</p>
-      <table class="yrs">${rows}</table>
-      <p class="links"><a href="${flatLink(r.key)}">${t('flat')}</a></p>`);
-    card.querySelectorAll('tr[data-y]').forEach((tr) => { tr.onclick = (e) => { if (!e.target.closest('[data-person]')) userYear(tr.dataset.y); }; });
-    card.querySelectorAll('[data-person]').forEach((el) => { el.onclick = () => showPerson(el.dataset.person, () => showRegion(r)); });
-  }
-  function showKamakuraRegion(r) {
-    const fam = (c) => kama.families[c] || kama.families.unknown;
-    const rows = kama.years.map((y) => {
-      const e = kama.provinces[r.key]?.[y];
-      if (!e) return '';
-      const who = e.who ? (lang === 'zh' ? e.who[1] : e.who[0]) : '';
-      const sub = who ? `${esc(who)}${e.from ? ` · ${esc(t('k.from', { y: e.from }))}` : ''}` : e.gap ? esc(t('k.gap')) : '';
-      return `<tr class="${y === opts.year ? 'cur' : ''}" data-y="${y}"><th>${y}</th><td><i class="sw" style="background:${fam(e.c).color}"></i>${esc(nm(fam(e.c)))}${sub ? `<span class="who">${sub}</span>` : ''}</td></tr>`;
-    }).join('');
-    openCard(`<h2>${esc(provName(r.key))}</h2>
-      <p class="sub">${esc(circuit(r.props.circuit || ''))} · ${esc(t('k.sub'))}</p>
-      ${rows ? `<table class="yrs">${rows}</table>` : `<p>${esc(t('k.none'))}</p>`}
-      <p class="note">${esc(t('k.note'))}</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(r.key)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    card.querySelectorAll('tr[data-y]').forEach((tr) => { tr.onclick = () => userYear(tr.dataset.y); });
-  }
-  function showKodaiRegion(r) {
-    const c = circuitOf(r.key, opts.year);
-    const ss = sitesIn(r.key).filter(siteOn);
-    const list = ss.map((s) => `<li><small>${esc(t(s.kind))}</small> ${esc(s.name)}</li>`).join('');
-    openCard(`<h2>${esc(provName(r.key))}</h2>
-      <p class="sub">${opts.year} · ${sw(c)}${esc(circuit(c))}</p>
-      ${list ? `<ul class="plain">${list}</ul>` : ''}
-      ${r.key === '武蔵国' ? `<p class="note">${esc(t('kd.musashi'))}</p>` : ''}
-      <p class="note">${esc(t('kd.note', { y: opts.year }))}</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(r.key)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-  }
-  // 江户的藩领、明治的府县
-  function showBlock(r) {
-    const p = r.props, y = opts.year;
-    const man = (v) => (lang === 'en' ? `${Math.round(v / 1000).toLocaleString('en')}k` : Math.round(v / 10000).toLocaleString('en'));
-    let body = '';
-    if (base.name === 'edo') {
-      const kindName = t(`e.kind.${p.kind}`);
-      if (y === '1871') {
-        body = `<p class="sub">1871 · ${esc(t('m.haihan'))}</p>
-          ${p.kind === 'han' ? `<p>${esc(t('m.from', { h: nm(p) }))}</p>` : `<p>${esc(kindName)}</p>`}
-          <p class="note">${esc(t(p.ken ? 'm.kenNote' : 'm.noKen'))}</p>`;
-      } else {
-        body = `<p class="sub">${esc(t('e.sub'))} · ${esc(kindName)}</p>
-          ${p.koku ? `<p>${esc(t('e.koku', { n: man(p.koku) }))}</p>` : ''}
-          ${p.seat ? `<p>${esc(t('e.seat'))}：${esc(p.seat)}</p>` : ''}
-          ${p.lord ? `<p>${esc(t('e.lord'))}：${esc(lang === 'en' ? p.lord[2] || p.lord[0] : lang === 'zh' ? p.lord[1] : p.lord[0])}</p>` : ''}
-          ${p.ken ? `<p>${esc(t('e.ken'))}：${esc(nm({ ja: p.ken[0], zh: p.ken[1], en: p.ken[2] || p.ken[0] }))}</p>` : ''}
-          <p class="note">${esc(t('e.note'))}</p>`;
-      }
-      if (p.kind === 'han') body += `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(p.ja)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`;
-    } else {
-      const today = (p.today || []).map((x) => (lang === 'en' ? x[2] : lang === 'zh' ? x[1] : x[0]));
-      body = `<p class="sub">${y} · ${esc(t(`m.cap.${y}`))}</p>
-        ${today.length ? `<p>${esc(t('m.today'))}：${esc(today.join(lang === 'en' ? ', ' : '、'))}</p>` : ''}
-        <p class="note">${esc(t('m.note'))}</p>
-        <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(p.ja)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`;
-    }
-    openCard(`<h2>${sw(r.key)}${esc(regionName(r))}</h2>${body}`);
-  }
-  // 城所在的块在当前年份归谁（分治列出各家）
-  function holderHTML(c) {
-    const r = regionAt(c.xz[0], c.xz[1]);
-    const e = r && entry(r.key);
-    if (!e || !opts.tint) return '';
-    return `<p>${esc(t('holder', { y: opts.year }))}：${[e.c, ...(e.with || [])].map((k) => `${sw(k)}${esc(nm(info(k)))}`).join(lang === 'en' ? ', ' : '、')}</p>`;
-  }
-  function showCastle(c) {
-    focused = { type: 'castle', q: c.q };
-    openCard(`<h2>${esc(castleName(c))}</h2>
-      <p class="sub">${esc(provName(c.prov))} · ${t('castle')}</p>
-      <p>${c.bc ? esc(t('bc', { c: c.bc })) : t('built', { y: c.built })}${c.gone ? t('gone', { y: c.gone }) : ''}</p>
-      ${holderHTML(c)}
-      <p class="note">${t(+opts.year >= 1576 ? 'late' : 'early')}${t('castleNote')}</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(c.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    flyTo(c.xz[0], c.xz[1], Math.min(camera.position.distanceTo(controls.target), 60));
-  }
-  function showFort(f) {
-    focused = { type: 'fort', ja: f.ja };
-    openCard(`<h2>${esc(nm(f))}</h2>
-      <p class="sub">${esc(t('fort'))}${f.built ? ` · ${esc(t('built', { y: f.built }))}` : ''}${f.gone ? esc(t('gone', { y: f.gone })) : ''}</p>
-      <p class="note">${esc(t('fortNote'))}</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    flyTo(f.xz[0], f.xz[1], Math.min(camDist(), 80));
-  }
-  function showStation(s) {
-    focused = { type: 'inn', ja: s.ja };
-    openCard(`<h2>${esc(nm(s))}</h2>
-      <p class="sub">${esc(nm(s.road))} · ${esc(t('inn'))}</p>
-      <p class="note">${esc(t('innNote'))}</p>
-      <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(s.ja)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
-    flyTo(s.xz[0], s.xz[1], Math.min(camDist(), 40));
-  }
-  function showPrint(no) {
-    const h = prints().find((x) => x.no === +no);
-    if (!h) return;
-    focused = { type: 'print', no: h.no };
-    const title = lang === 'zh' ? h.title_zh : lang === 'en' ? h.title_en : h.title;
-    openCard(`<h2>${esc(title)}</h2>
-      <p class="sub">${esc(provName(h.province))} · ${esc(t('pr.series'))}</p>
-      <img class="print-big" src="${h.img}" alt="">
-      <p class="note">${esc(t('pr.note'))}</p>
-      <p class="links"><a href="${h.source}" target="_blank" rel="noopener">Wikimedia Commons</a></p>`);
-    const [x, z] = P(...h.coords);
-    flyTo(x, z, Math.min(camDist(), 120));
-  }
-  function showCapital() {
-    const y = opts.year, rg = regimeOf(y);
-    const emp = rulerOf(rulers.emperors, y), sho = shogunOf(y);
-    const shikken = eraOf(y) === 'kamakura' ? rulerOf(rulers.shikken, y) : null;
-    const cap = capitalOf(y);
-    focused = { type: 'capital' };
-    const row = (k, v) => (v ? `<tr><th>${esc(t(k))}</th><td>${esc(v)}</td></tr>` : '');
-    openCard(`<h2>${esc(t('cap.title', { y }))}</h2>
-      <p class="sub">${esc(t(`cap.name.${cap.key}`))} · ${esc(t('cap.sub2'))}</p>
-      <table class="kv">${row('cap.emp', nm(emp))}${row('cap.shogun', sho ? nm(sho) : '')}${row('cap.shikken', shikken ? nm(shikken) : '')}${row('cap.nominal', nm(rg?.nominal))}${row('cap.real', nm(rg?.real))}${row('cap.seat', nm(rg?.seat))}</table>
-      ${rg?.note ? `<p class="note">${esc(nm(rg.note))}</p>` : ''}
-      <p class="note">${esc(t(+y < 794 ? 'heijoNote' : +y < 1869 ? 'heianNote' : 'tokyoNote'))}</p>
-      <p class="links"><a href="index.html#rl=power&lang=${lang}">${esc(t('cap.more'))}</a></p>`);
-    const [x, z] = P(...cap.at);
-    flyTo(x, z, Math.min(camDist(), 90));
-  }
+  const syncBack = () => { $('#back').href = $('#to2d').href = flatLink(S.focused?.type === 'region' && eraOf(opts.year) === 'sengoku' ? S.focused.key : null); };
   labelsEl.addEventListener('click', (e) => {
-    if (e.target.closest('.lb.capital')) { sound('click'); showCapital(); return; }
+    if (e.target.closest('.lb.capital')) { sound('click'); cards.showCapital(); return; }
     const pr = e.target.closest('[data-print]');
-    if (pr) { sound('click'); showPrint(pr.dataset.print); }
+    if (pr) { sound('click'); cards.showPrint(pr.dataset.print); }
   });
-  function showSite(s) {
-    focused = { type: 'site', id: s.id };
-    openCard(`<h2>${esc(s.name)}</h2>
-      <p class="sub">${esc(provName(s.prov))} · ${t(s.kind)}${s.precise ? '' : t('muni')}</p>
-      <p class="note">${t('siteNote')}</p>
-      ${s.wiki ? `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(s.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>` : ''}`);
-    flyTo(s.xz[0], s.xz[1], Math.min(camera.position.distanceTo(controls.target), 40));
-  }
+
 
   // —— 镜头飞行 ——
   let flight = null;
@@ -992,28 +465,6 @@ async function main() {
     dirty = true;
   }
 
-  // —— 换年份的墨晕 ——
-  // 每块留着旧贴图（uPrev），新势力色画进另一张 canvas；可见的块都画好后 uInk 从 0 走到 1（着色器 inkSpread），再丢掉旧贴图
-  const INK_MS = 1600;
-  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let ink = null; // {t0, start}：start 为 null 时还在等新贴图画完
-  function finishInk() {
-    for (const ch of chunks) {
-      const u = ch.mesh?.material.uniforms;
-      if (u && u.uPrev.value !== u.uTex.value) { u.uPrev.value.dispose(); u.uPrev.value = u.uTex.value; }
-    }
-    uniforms.uInk.value = 1;
-    ink = null;
-  }
-  function stepInk(now) {
-    if (!ink) return;
-    dirty = true;
-    if (ink.start === null) return;
-    const t = Math.min((now - ink.start) / INK_MS, 1);
-    uniforms.uInk.value = 1 - (1 - t) ** 2;
-    if (t >= 1) finishInk();
-  }
-
   // —— 年份、时代、图例、设置 ——
   // 换到别的时代时先下载那个时代的资料（江户的藩领、明治府县、古代的国界），下载期间提示一下，到了再换
   let wantYear = null;
@@ -1028,37 +479,34 @@ async function main() {
       return;
     }
     wantYear = null;
-    if (ink) finishInk();
+    if (tc.inking) tc.finishInk();
     const changed = y !== opts.year;
     const eraChanged = eraOf(opts.year) !== era;
     opts.year = y;
     store.set({ year: y });
-    if (changed && opts.tint && !calm) {
-      ink = { t0: performance.now(), start: null };
-      uniforms.uInk.value = 0;
-    }
+    if (changed && opts.tint && !calm) tc.startInk();
     const bname = baseOf(y);
-    if (bname !== base.name) {
-      base = getBase(bname);
-      regions = base.regions;
-      byKey = base.byKey;
-      overlay.setBase(regions, base.edges);
-      for (const [k, el] of pool) if (k.startsWith('p-')) { el.remove(); pool.delete(k); }
-      index = null;
-      if (focused?.type === 'region' && !byKey.has(focused.key)) closeCard();
+    if (bname !== S.base.name) {
+      S.base = getBase(bname);
+      S.regions = S.base.regions;
+      S.byKey = S.base.byKey;
+      overlay.setBase(S.regions, S.base.edges);
+      labels.dropProv();
+      search.reset();
+      if (S.focused?.type === 'region' && !S.byKey.has(S.focused.key)) cards.closeCard();
     }
-    if (eraChanged) { index = null; if (spot) spot = null; }
-    mode = modeFor(y);
+    if (eraChanged) { search.reset(); if (S.spot) S.spot = null; }
+    S.mode = modeFor(y);
     overlay.setDecor(decorFor(y));
     applyStyle();
-    anchors = clanAnchors(y);
+    S.anchors = clanAnchors(y);
     refreshBanners();
     renderTimebar();
     renderLegend();
-    placeBuildings();
-    if (focused?.type === 'region' && byKey.get(focused.key)) showRegion(byKey.get(focused.key));
-    else if (focused?.type === 'clan') showClan(focused.c, false);
-    else if (focused?.type === 'capital') showCapital();
+    B.place();
+    if (S.focused?.type === 'region' && S.byKey.get(S.focused.key)) cards.showRegion(S.byKey.get(S.focused.key));
+    else if (S.focused?.type === 'clan') cards.showClan(S.focused.c, false);
+    else if (S.focused?.type === 'capital') cards.showCapital();
     syncHash();
     syncBack();
     dirty = true;
@@ -1068,6 +516,12 @@ async function main() {
     busyEl.textContent = t(failed ? 'eraFail' : 'eraLoading');
     busyEl.hidden = !on && !failed;
     if (failed) setTimeout(() => { busyEl.hidden = true; }, 3000);
+  }
+  // 一句提示，几秒后收起（与「正在下载」同一个位置）
+  function notice(text, ms = 5000) {
+    busyEl.textContent = text;
+    busyEl.hidden = false;
+    setTimeout(() => { if (busyEl.textContent === text) busyEl.hidden = true; }, ms);
   }
   // 用户换年份：停掉自动播放，有声音
   function userYear(y) {
@@ -1089,7 +543,7 @@ async function main() {
   function togglePlay() {
     if (playing) { stopPlay(); return; }
     if (battle.active) battle.leave();
-    closeCard();
+    cards.closeCard();
     playing = true;
     playBtn().setAttribute('aria-pressed', 'true');
     playBtn().textContent = '■';
@@ -1131,41 +585,41 @@ async function main() {
   function legendItems() {
     const era = eraOf(opts.year);
     const count = new Map();
-    if (mode.blocks) {
-      const rs = [...regions].filter((r) => r.props.kind !== 'none');
+    if (S.mode.blocks) {
+      const rs = [...S.regions].filter((r) => r.props.kind !== 'none');
       // 江户：幕府领、旗本领在前，然后按石高列藩，寺社领、御三卿、虾夷地、琉球在后；
       // 明治：府在前，然后是合并出来的县（今天的几个县并在一起，1876 年的故事就在这里），再按面积
       const rank = (p) => ({ bakufu: 0, hatamoto: 1, han: 2 }[p.kind] ?? 3);
-      const order = base.name === 'edo'
+      const order = S.base.name === 'edo'
         ? rs.sort((a, b) => rank(a.props) - rank(b.props) || (b.props.koku || 0) - (a.props.koku || 0))
         : rs.sort((a, b) => (b.props.fu - a.props.fu) || ((b.props.today?.length || 0) - (a.props.today?.length || 0)) || b.area - a.area);
       return order.map((r) => [r.key, null]);
     }
-    for (const r of regions) {
+    for (const r of S.regions) {
       const c = ownerKey(entry(r.key));
       count.set(c, (count.get(c) || 0) + 1);
     }
-    return [...count].sort((a, b) => (mode.loose.has(a[0]) - mode.loose.has(b[0])) || b[1] - a[1]).filter(([c]) => era === 'sengoku' || c !== 'outside');
+    return [...count].sort((a, b) => (S.mode.loose.has(a[0]) - S.mode.loose.has(b[0])) || b[1] - a[1]).filter(([c]) => era === 'sengoku' || c !== 'outside');
   }
   function renderLegend() {
     const list = legendItems();
     const y = opts.year, era = eraOf(y);
-    const capKey = base.name === 'edo' ? (y === '1871' ? 'lg.1871' : 'lg.edo') : `lg.${era === 'meiji' ? y : era}`;
-    const label = (c) => (mode.blocks ? nm(blockName(byKey.get(c).props)) : nm(info(c)));
-    $('#legend').innerHTML = `<p class="cap">${esc(t(capKey, { y, n: regions.filter((r) => r.props.kind === 'han').length }))}</p>`
+    const capKey = S.base.name === 'edo' ? (y === '1871' ? 'lg.1871' : 'lg.edo') : `lg.${era === 'meiji' ? y : era}`;
+    const label = (c) => (S.mode.blocks ? nm(blockName(S.byKey.get(c).props)) : nm(info(c)));
+    $('#legend').innerHTML = `<p class="cap">${esc(t(capKey, { y, n: S.regions.filter((r) => r.props.kind === 'han').length }))}</p>`
       + list.slice(0, 14).map(([c, n]) => `<button type="button" data-c="${esc(c)}">${sw(c)}${esc(label(c))}${n != null ? `<span>${n}</span>` : ''}</button>`).join('')
-      + (list.length > 14 ? `<span class="more">${t(mode.blocks ? 'moreBlk' : 'more', { n: list.length - 14 })}</span>` : '');
+      + (list.length > 14 ? `<span class="more">${t(S.mode.blocks ? 'moreBlk' : 'more', { n: list.length - 14 })}</span>` : '');
   }
   $('#legend').addEventListener('click', (e) => {
     const b = e.target.closest('button[data-c]');
     if (!b) return;
     sound('click');
     const c = b.dataset.c;
-    if (mode.blocks) { const r = byKey.get(c); showRegion(r); flyRegion(r); return; }
-    if (mode.loose.has(c)) {
-      const a = anchors.find((x) => x.c === c);
+    if (S.mode.blocks) { const r = S.byKey.get(c); cards.showRegion(r); cards.flyRegion(r); return; }
+    if (S.mode.loose.has(c)) {
+      const a = S.anchors.find((x) => x.c === c);
       if (a) flyTo(a.at[0], a.at[1], THREE.MathUtils.clamp(Math.sqrt(a.area) * 2.2, 120, 900));
-    } else showClan(c);
+    } else cards.showClan(c);
   });
   renderLegend();
 
@@ -1184,7 +638,7 @@ async function main() {
       uniforms.uExag.value = opts.exag;
       store.set({ exag: opts.exag });
       controls.target.y = groundY(controls.target.x, controls.target.z);
-      placeBuildings();
+      B.place();
     }
     if (b.dataset.q && b.dataset.q !== opts.quality) { store.set({ quality: b.dataset.q }); location.reload(); }
     syncSettings();
@@ -1198,7 +652,7 @@ async function main() {
     if (i.dataset.opt === 'tint') { applyStyle(); refreshBanners(); $('#legend').hidden = !opts.tint; }
     if (i.dataset.opt === 'style') applyLook();
     if (i.dataset.opt === 'motion' && !i.checked) smoke.update([], 0);
-    placeBuildings();
+    B.place();
     dirty = true;
   });
   syncSettings();
@@ -1206,11 +660,12 @@ async function main() {
   const soundBox = $('#opt-sound');
   soundBox.checked = !audio.state().muted;
   soundBox.addEventListener('change', () => { audio.setMuted(!soundBox.checked); sound('click'); });
+  const saveImage = () => snapshot({ renderer, scene, camera, canvas, labelsEl, year: opts.year, battleTitle: battle.active ? $('#battle .bt-head b')?.textContent || '' : '', share: coarsePointer });
   $('#btn-save').addEventListener('click', () => { panel.hidden = true; saveImage(); });
 
   // 竖屏手机要拉得更远才放得下整个列岛
   function homeDist() { return 2400 * Math.max(1, 1 / (canvas.clientWidth / canvas.clientHeight) * 0.9); }
-  $('#btn-home').onclick = () => { closeCard(); flyTo(...P(137.2, 35.6), homeDist()); };
+  $('#btn-home').onclick = () => { cards.closeCard(); flyTo(...P(137.2, 35.6), homeDist()); };
   // 朝北：方位转回 0（镜头在南、朝北看）；俯视：极角压到近乎 0，再点回到随距离变的斜看
   $('#btn-north').onclick = () => flyTo(controls.target.x, controls.target.z, camDist(), 0);
   const syncTiltBtn = () => $('#btn-tilt').setAttribute('aria-pressed', String(opts.top));
@@ -1233,7 +688,7 @@ async function main() {
     if (battle.active) { battle.leave(); return; }
     if (playing) { stopPlay(); story.close(); return; }
     if (story.mode === 'event' || story.mode === 'list') { story.close(); return; }
-    closeCard();
+    cards.closeCard();
     panel.hidden = true;
     $('#battle').hidden = true;
   });
@@ -1249,6 +704,13 @@ async function main() {
   const camDist = () => camera.position.distanceTo(controls.target);
   const sound = (name) => audio.play(name); // audio 出错只会警告
 
+  // —— 卡片（cards.js）——
+  const cards = createCards(S, {
+    opts, sg, kama, bios, sites, rulers, people, camera, controls, P, LOOSE, KAMA_LOOSE,
+    esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
+    flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
+  });
+
   // —— 合战（battle.js）——
   // 合战的年份：换到不晚于它的那一年；差 50 年以上（坛之浦 1185 前面是 824）就换到它之后的第一个年份；差 10 年以上不着色
   let preBattle = null;
@@ -1259,20 +721,22 @@ async function main() {
   };
   const battle = createBattle({
     scene, P, groundY, flyTo, camera, labelsEl, panel: $('#battle'), sound,
+    hasCrest: (k) => !!sg.clans[k]?.mon, // 兵力小旗上画家纹（战国的家才有）
+    target: () => controls.target,
     onEnter(b) {
       stopPlay();
       story.close();
-      closeCard();
+      cards.closeCard();
       preBattle ??= { year: opts.year, x: controls.target.x, z: controls.target.z, d: camDist() };
       document.body.classList.add('in-battle');
       const y = battleYear(b.year);
-      battleNeutral = Math.abs(b.year - +y) > 10;
+      S.battleNeutral = Math.abs(b.year - +y) > 10;
       if (y !== opts.year) setYear(y); else { applyStyle(); refreshBanners(); }
       syncHash();
     },
     onLeave() {
       document.body.classList.remove('in-battle');
-      battleNeutral = false;
+      S.battleNeutral = false;
       const p = preBattle;
       preBattle = null;
       if (p && p.year !== opts.year) setYear(p.year); else { applyStyle(); refreshBanners(); }
@@ -1297,88 +761,14 @@ async function main() {
     startBattle: (k) => { stopPlay(); battle.start(k); },
     onUser: () => { if (playing) stopPlay(); },
   });
-  const smoke = createSmoke();
+  const search = createSearch(S, {
+    opts, sg, kama, castles, LOOSE, KAMA_LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards,
+    onOpen: () => { panel.hidden = true; },
+  });
+  const SMOKE_N = opts.quality === 'high' ? 18 : 8; // 省电画质少一半多的炊烟
+  const smoke = createSmoke(SMOKE_N);
   scene.add(smoke.group);
-  // 炊烟：近处（< 160）正在用、放了建筑的城，离镜头目标点最近的 18 座
-  function smokeSources() {
-    const d = camDist();
-    if (!opts.motion || !opts.castles || d > 160 || !placeBuildings.kept) return [];
-    const k = placeBuildings.k;
-    return castles.filter((c) => placeBuildings.kept.has(c) && castleOn(c))
-      .map((c) => ({ c, dd: Math.hypot(c.xz[0] - controls.target.x, c.xz[1] - controls.target.z) }))
-      .sort((a, b) => a.dd - b.dd).slice(0, 18)
-      .map(({ c }) => ({ x: c.xz[0], z: c.xz[1], y: groundY(c.xz[0], c.xz[1]) + k * (c.size || 1) * 1.1, k: k * (c.size || 1) }));
-  }
 
-  // —— 搜索：当前底图的块（国、藩、府县）、城、家（三种语言的写法都认，英文不管长音符号，片假名当平假名）——
-  const fold = (x) => String(x || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/[ァ-ヶ]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60)).replace(/\s+/g, '');
-  let index = null;
-  function buildIndex() {
-    const out = [];
-    const era = eraOf(opts.year);
-    for (const r of regions) {
-      const p = r.props;
-      if (mode.blocks) {
-        if (p.kind === 'none') continue;
-        const b = blockName(p);
-        out.push({ kind: base.name === 'edo' && opts.year !== '1871' ? 'han' : 'pref', key: r.key, label: nm(b), names: [b.zh, b.ja, b.en, p.ja, p.zh, p.en, r.key].map(fold) });
-      } else if (p.zh || p.ja) out.push({ kind: 'prov', key: r.key, label: provName(r.key), names: [p.zh, p.ja, p.en, p.kana, r.key].map(fold) });
-    }
-    if (era === 'sengoku') for (const [k, c] of Object.entries(sg.clans)) if (!LOOSE.has(k)) out.push({ kind: 'clan', key: k, label: nm(c), names: [c.zh, c.ja, c.en].map(fold) });
-    if (era === 'kamakura') for (const [k, c] of Object.entries(kama.families)) if (!KAMA_LOOSE.has(k)) out.push({ kind: 'clan', key: k, label: nm(c), names: [c.zh, c.ja, c.en].map(fold) });
-    for (const c of castles) out.push({ kind: 'castle', key: c.q, label: castleName(c), names: [c.zh, c.ja, c.en].map(fold), c });
-    return out;
-  }
-  const searchEl = $('#search'), searchQ = $('#search-q'), searchList = $('#search-list');
-  let hits = [];
-  function runSearch() {
-    const q = fold(searchQ.value);
-    index ??= buildIndex();
-    const order = { prov: 0, han: 0, pref: 0, clan: 1, castle: 2 };
-    hits = !q ? [] : index.map((it) => ({ it, s: it.names.some((n) => n === q) ? 0 : it.names.some((n) => n.startsWith(q)) ? 1 : it.names.some((n) => n.includes(q)) ? 2 : 9 }))
-      .filter((x) => x.s < 9).sort((a, b) => a.s - b.s || order[a.it.kind] - order[b.it.kind]).slice(0, 8).map((x) => x.it);
-    searchList.innerHTML = hits.length ? hits.map((it, i) => `<button type="button" role="option" data-i="${i}" class="${i ? '' : 'on'}">${esc(it.label)}<small>${esc(t(`k.${it.kind}`))}</small></button>`).join('')
-      : q ? `<p class="note">${esc(t('none'))}</p>` : '';
-  }
-  function choose(it) {
-    if (!it) return;
-    searchEl.hidden = true;
-    searchQ.value = '';
-    searchList.innerHTML = '';
-    if (battle.active) battle.leave();
-    if (it.kind === 'castle') {
-      // 这一年没有这座城（或在古代）：换到同一时代里有它的年份，再不行换到最近有它的年份
-      if (!castleOn(it.c)) {
-        const near = [...YEARS].filter((v) => eraOf(v) !== 'kodai' && castleOnIn(it.c, v)).sort((a, b) => (eraOf(b) === eraOf(opts.year)) - (eraOf(a) === eraOf(opts.year)) || Math.abs(a - opts.year) - Math.abs(b - opts.year));
-        if (near[0]) setYear(near[0]);
-      }
-      showCastle(it.c);
-      flyTo(it.c.xz[0], it.c.xz[1], 50);
-    } else if (it.kind === 'clan') {
-      // 这一年没有这一家：换到同一时代里最近一个有它的年份
-      const has = (y) => regions.some((r) => { const e = mode.entry(r.key, y); return e && (e.c === it.key || e.with?.includes(it.key)); });
-      const ys = eraYears(eraOf(opts.year));
-      if (!has(opts.year)) {
-        const m0 = mode;
-        const y = [...ys].sort((a, b) => Math.abs(a - opts.year) - Math.abs(b - opts.year)).find((v) => { mode = modeFor(v); const ok = has(v); mode = m0; return ok; });
-        if (y) setYear(y);
-      }
-      showClan(it.key);
-    } else {
-      const r = byKey.get(it.key);
-      showRegion(r);
-      flyRegion(r);
-    }
-  }
-  $('#btn-search').onclick = () => {
-    searchEl.hidden = !searchEl.hidden;
-    panel.hidden = true;
-    if (!searchEl.hidden) searchQ.focus();
-  };
-  searchQ.addEventListener('input', runSearch);
-  searchQ.addEventListener('keydown', (e) => { if (e.key === 'Enter') choose(hits[0]); });
-  searchList.addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) choose(hits[+b.dataset.i]); });
 
   // —— 地址栏：年份、选中的块、镜头、合战（停下 0.5 秒后写，复制即分享）——
   const { z: tz, tile: [tx, ty] } = terrain.meta;
@@ -1394,7 +784,7 @@ async function main() {
       const off = camera.position.clone().sub(controls.target);
       const az = Math.round(Math.atan2(off.x, off.z) * 180 / Math.PI);
       const parts = [`y=${opts.year}`];
-      if (focused?.type === 'region') parts.push(`p=${encodeURIComponent(focused.key)}`);
+      if (S.focused?.type === 'region') parts.push(`p=${encodeURIComponent(S.focused.key)}`);
       parts.push(`v=${lon.toFixed(3)},${lat.toFixed(3)},${Math.round(camDist())},${az}`);
       if (battle.active) parts.push(`bt=${battle.key}`);
       parts.push(`lang=${lang}`);
@@ -1403,63 +793,7 @@ async function main() {
     }, 500);
   }
 
-  // —— 存图：当前画面 + 看得见的文字标签，加纸边、标题与印 ——
-  async function saveImage() {
-    const seal = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = 'src/assets/icons/seal.svg'; });
-    renderer.render(scene, camera);
-    const src = renderer.domElement;
-    const W = src.width, H = src.height, k = W / canvas.clientWidth;
-    const pad = Math.round(Math.min(W, H) * 0.035), band = Math.round(pad * 2.4);
-    const out = document.createElement('canvas');
-    out.width = W + pad * 2;
-    out.height = H + pad * 2 + band;
-    const g = out.getContext('2d');
-    g.fillStyle = '#e9dcb6';
-    g.fillRect(0, 0, out.width, out.height);
-    g.drawImage(src, pad, pad); // 与 render 同一个任务里取，WebGL 的画面还在
-    g.strokeStyle = '#2a2520';
-    g.lineWidth = Math.max(2, k * 1.5);
-    g.strokeRect(pad, pad, W, H);
-    const serif = getComputedStyle(document.documentElement).getPropertyValue('--serif');
-    const box = canvas.getBoundingClientRect();
-    g.textAlign = 'left';
-    g.textBaseline = 'bottom';
-    for (const el of labelsEl.querySelectorAll('.lb')) {
-      if (el.style.visibility === 'hidden' || (!el.classList.contains('on')) || !el.textContent) continue;
-      const r = el.getBoundingClientRect();
-      if (r.right < box.left || r.left > box.right || r.bottom < box.top || r.top > box.bottom) continue;
-      const cs = getComputedStyle(el);
-      g.font = `${cs.fontWeight} ${parseFloat(cs.fontSize) * k}px ${serif}`;
-      const x = pad + (r.left - box.left) * k, y = pad + (r.bottom - box.top) * k;
-      g.lineWidth = 3 * k;
-      g.strokeStyle = 'rgba(244,239,226,.9)';
-      g.strokeText(el.textContent, x, y);
-      g.fillStyle = cs.color;
-      g.fillText(el.textContent, x, y);
-    }
-    const by = H + pad * 2 + band / 2;
-    if (seal) g.drawImage(seal, pad, by - band * 0.4, band * 0.8, band * 0.8);
-    g.fillStyle = '#2a2520';
-    g.textBaseline = 'middle';
-    g.font = `700 ${Math.round(band * 0.36)}px ${serif}`;
-    g.fillText(battle.active ? `${t('save.title', { y: opts.year })} · ${$('#battle .bt-head b')?.textContent || ''}` : t('save.title', { y: opts.year }), pad + band, by);
-    g.textAlign = 'right';
-    g.fillStyle = '#6b6155';
-    g.font = `${Math.round(band * 0.22)}px ${serif}`;
-    g.fillText('nickrockwall.github.io/japan-explorer', W + pad, by);
-    const blob = await new Promise((res) => out.toBlob(res, 'image/png'));
-    const name = `japan-explorer-3d-${opts.year}.png`;
-    const file = new File([blob], name, { type: 'image/png' });
-    if (coarsePointer && navigator.canShare?.({ files: [file] })) { navigator.share({ files: [file] }).catch(() => {}); return; }
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  }
-
   // —— 主循环 ——
-  let dirty = true;
   let lastD = -1;
   controls.addEventListener('change', () => { dirty = true; });
   controls.addEventListener('end', () => syncHash());
@@ -1483,9 +817,9 @@ async function main() {
   else lookAt(137.2, 35.6, homeDist());
   syncBack();
   // 从平面地图带着选中的块进来：打开它的卡片并飞过去
-  const want = byKey.get(link.get('p'));
+  const want = S.byKey.get(link.get('p'));
   if (want?.center) {
-    showRegion(want);
+    cards.showRegion(want);
     if (v.length !== 4) flyTo(want.center[0], want.center[1], THREE.MathUtils.clamp(Math.sqrt(want.area) * 3, 150, 700));
   }
   if (link.get('bt')) battle.start(link.get('bt'), +link.get('ph') || 0);
@@ -1520,13 +854,32 @@ async function main() {
     e.preventDefault();
   });
 
+  // 太卡就关掉动态（3.36）：开着动态时画面约 30 帧一画，量相邻两次画的间隔（含等显卡）；
+  // 加载完 6 秒以后、页面在前台时，连续两段（各 90 次）的中位数都超过 70ms（不到 15 帧）就关掉，提示一次、记住
+  const slowGuard = { last: 0, buf: [], slow: 0, from: 0 };
+  function guardFrame(now) {
+    const g = slowGuard;
+    if (!opts.motion || document.hidden || !g.from || now < g.from) { g.last = 0; return; }
+    if (g.last) g.buf.push(Math.min(now - g.last, 1000)); // 切到后台的不算（document.hidden）
+    g.last = now;
+    if (g.buf.length < 90) return;
+    const med = g.buf.sort((a, b) => a - b)[45];
+    g.buf = [];
+    g.slow = med > 70 ? g.slow + 1 : 0;
+    if (g.slow < 2) return;
+    opts.motion = false;
+    store.set({ motion: false });
+    smoke.update([], 0);
+    syncSettings();
+    notice(t('slowMotion'), 7000);
+  }
   const northEl = $('#btn-north svg');
   let lastAnim = 0;
   let frames = 0;
   function frame(now) {
     requestAnimationFrame(frame);
     stepFlight(now);
-    stepInk(now);
+    if (tc.stepInk(now)) dirty = true;
     // 目标点贴着地面，镜头不钻进山里
     const ty0 = groundY(controls.target.x, controls.target.z);
     if (Math.abs(controls.target.y - ty0) > 0.01) {
@@ -1546,14 +899,14 @@ async function main() {
     uniforms.uFogDensity.value = 1 / (d * 4 + 2500);
     // 拉近时势力色淡一些，看得清地形
     uniforms.uTint.value = (opts.tint ? 1 : 0.5) * THREE.MathUtils.lerp(0.3, 0.52, THREE.MathUtils.smoothstep(d, 40, 500));
-    if (Math.abs(d - lastD) / d > 0.04) { placeBuildings(); lastD = d; }
+    if (Math.abs(d - lastD) / d > 0.04) { B.place(); lastD = d; }
     if (battle.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
     if (story.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
     // 动态：海浪、雾、旗、炊烟（约 30 帧；关掉或系统要求减少动态时整个画面是静的）
     if (opts.motion && now - lastAnim > 33) {
       lastAnim = now;
       uniforms.uTime.value = now / 1000;
-      smoke.update(smokeSources(), now / 1000);
+      smoke.update(B.smokeSources(SMOKE_N), now / 1000);
       dirty = true;
     }
     // 指北针：镜头的方位角（0 = 朝北看）
@@ -1561,20 +914,29 @@ async function main() {
     northEl.style.transform = `rotate(${Math.atan2(off.x, off.z)}rad)`;
     if (!dirty) return;
     dirty = false;
+    guardFrame(now);
     uniforms.uDist.value = d;
     banners.update(camera, d, groundY, opts.motion ? now / 1000 : 0);
-    treeBudget = 2;
-    updateChunks();
+    if (tc.update()) dirty = true;
     renderer.render(scene, camera);
-    updateLabels();
-    if (++frames === 3) $('#loading').hidden = true;
+    labels.update();
+    if (++frames === 3) {
+      $('#loading').hidden = true;
+      slowGuard.from = now + 6000;
+      // 首屏画出来以后才下载粗地形；换上后重建网格、重放建筑，近处的树按新的土地覆盖重种
+      terrain.upgrade().then(() => {
+        tc.dropTrees();
+        B.place();
+        dirty = true;
+      }).catch((e) => console.warn('terrain', e));
+    }
   }
-  placeBuildings();
+  B.place();
   requestAnimationFrame(frame);
   window.__je3d = {
-    battle, story, smoke, showCapital, showClan, showPerson, showRegion, showPrint, togglePlay, saveImage,
-    choose: (q) => { searchQ.value = q; runSearch(); choose(hits[0]); }, camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P,
-    get regions() { return regions; }, get base() { return base.name; }, get mode() { return mode; }, castles, forts, stations, groundY, eraReady,
+    battle, story, smoke, slowGuard, ...cards, togglePlay, saveImage,
+    choose: (q) => search.query(q), camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P,
+    get regions() { return S.regions; }, get base() { return S.base.name; }, get mode() { return S.mode; }, castles, forts, stations, groundY, eraReady,
     pick: (x, y) => pick({ clientX: x, clientY: y }),
   };
 }

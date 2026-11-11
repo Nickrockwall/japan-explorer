@@ -225,6 +225,7 @@ export function createOverlay({ regions, edges, water, C }) {
     setStyle(s) { style = s; version++; },
     setBase(r, e) { regions = r; edges = e; version++; },
     setDecor(d) { grids = d.grids || []; lines = d.lines || []; version++; },
+    setWater(w) { water = w; version++; }, // 湖与河后到（3.36：不挡首屏）
     get version() { return version; },
     texture,
   };

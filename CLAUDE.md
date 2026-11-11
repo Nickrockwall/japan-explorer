@@ -44,10 +44,10 @@ src/js/guide.js                右下：AI 案内人（史官/名将双模式、
 src/js/goshuin.js              御朱印帐弹窗（47 格、按地方筛选）
 src/js/crests.js               家纹/神纹 SVG 印纹库（crestSVG(code)）
 src/js/audio.js                和风音频单例：Web Audio 合成音效与背景音乐（可选 mp3 见 src/assets/audio/）
-src/3d/                       立体古今图（3d.html）的代码与资料：app.js 主程序、eras.js 五个时代的定义、overlay / terrain / models / decor / story / battle；edo.json · meiji.json（build_eras3d.py）、kamakura.json（kamakura_tool.py）、kodai.json（kodai_tool.py）、kaido.json（kaido_tool.py）、castles.json、story.json、water.json
+src/3d/                       立体古今图（3d.html）的代码与资料：app.js 主程序（底图、上色、年份、图例、设置、主循环）、eras.js 五个时代的定义、overlay / terrain / models / decor / story / battle，3.36 从 app.js 拆出 cards（卡片）/ labels（文字标签）/ search / chunks（地形分块、树、墨晕）/ buildings（城与社寺等、炊烟）/ snapshot（存图）；edo.json · meiji.json（build_eras3d.py）、kamakura.json（kamakura_tool.py）、kodai.json（kodai_tool.py）、kaido.json（kaido_tool.py）、castles.json、story.json、water.json
 src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, nam, nam_ja；name = 规范汉字全称如「京都府」，须与县数据 name.kanji 及 ECharts series.data.name 严格一致）；网站下载的是 japan.pack.json（见下「地图文件压缩」）
 src/data/index.json            47 县清单（id, slug, file, kanji, zh, region）
-src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3.14 加了大正·昭和前期 1912–1945）+ historic_battles（5 场合战）
+src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3.14 加了大正·昭和前期 1912–1945）+ historic_battles（10 场合战，3.36 起由 tools/battles_tool.py 加兵力数字与新合战）
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
 src/data/province_eras.json    古国演变时间轴：712 / 757 / 1869 年与 824 年的差异（remove + add）
@@ -75,6 +75,7 @@ src/js/han.js                  详卡「江户诸藩」、藩主 ⇄ 彼时今�
 src/js/bday.js                 生日帖：某一天的全部条目、几个数字、存图
 src/data/emblems.json          47 都道府县章（tools/fetch_emblems.py：Wikidata P94 → Commons 只收公有领域 → src/assets/emblems/NN.png 透明底），详卡头像
 src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
+src/js/help.js                 帮助（dialog#help，3.36）：各功能的说明（与教程共用 tour.<key> 文案），能从头再看教程
 src/js/toc.js                  详卡目录：一行吸顶的跳转按钮（日本与半岛详卡共用）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）
 src/js/hometown.js             户籍末尾「此地年表」：古代的国 → 战国 → 江户的藩与各家 → 今天，插入落在本市区町村的彼时今日条目
@@ -263,7 +264,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 能横滑的按钮行（`.filters`、图例、快捷提问、`.toc` 等，见 shell.js `HINT`）有内容未露出的一侧加 `.more-r` / `.more-l` 渐隐，选中项变了会滚进视野。
 - 详卡目录（toc.js `addToc`，日本与半岛详卡渲染后调用）：扫 `.section-h` / `.art-section-h` / 地域修罗场与圣地巡礼的 summary，在统计格下放一行吸顶按钮，点了展开折叠并滚过去，滚动时标出当前一节。江户诸藩超过 8 个时先列 6 个（`.hn-x` + 「显示其余」`data-act="hn-more"`）。年表 `.rl-jump` 按时代分组跳转。
 - **横屏手机**（高 ≤520px 的横屏，`SHORT`）：地图页工具条一行（图层左半、滤镜右半，子行换到第二行左侧），底部一行（图例左半、去掉说明；时空滑块右半、只留播放键 + 滑轨 + 时代名）；各种卡片（`.muni-card`，含国力榜、古国 / 巡礼 / 我在哪卡）改放右侧；`layoutCenter` 把地图中心放在上下两行之间，取景用 `LANDSCAPE_VIEW`；合战时 `setInset({ left })` 让地图避开左上的合战面板。转屏（竖屏手机 / 横屏手机 / 宽屏三种形态之间）时 `resize` 回到该形态的默认取景。smoke 有 `landscape`（844×390）视口，只跑 `LANDSCAPE_CASES`。
-- 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过；窄屏的「详情」「向导」步骤指向底部标签按钮。首次访问且地址栏不带 `pref=` 时自动开始，设置弹窗与欢迎卡可再打开；走完或跳过都记 `tourDone`。
+- 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过。首次访问且地址栏不带 `pref=` 时自动开始；走完或跳过都记 `tourDone`。3.36 起只有 4 步（`hi` 指着地图并说怎么点县、`time`、`view3d`、`end`），以前 10 步嫌长；其余说明（详情、向导、图层与滤镜、我在哪、合战等 8 项，文案仍是 `tour.<key>`）放进「帮助」`dialog#help`（help.js），设置弹窗的按钮（`value="tour"`，文字「帮助」）与欢迎卡打开它，帮助底部「从头再看一遍导览」。半岛模式没有帮助页：它的欢迎卡与设置按钮仍叫「新手教程」（`tour.replay`），开半岛教程。
 - 欢迎卡「从这里开始」（3.25）：三个按钮只是替用户按下已有的控件——`st-home` 切到地图页、聚焦搜索框并提示「选中后点古代户籍」，`st-sg` 打开战国势力滤镜，`st-loc` 点「我在哪」。不要往这里加新功能入口，入口多了就失去意义。
 - 键盘与读屏（3.25）：页面第一个可聚焦元素是「跳到搜索」链接（`.skip-link`，平时在屏幕外），`#map` 有 `aria-label` 说明用搜索框；「/」聚焦搜索框（正在输入或有对话框时不抢）；空搜索框按 ↓ 按编号列出 47 都道府县（`allPrefs`），Enter 打开。地图本身是 canvas，键盘用户一律走搜索框。
 - 彼时今日数据（kako.json，约 160 KB）在浏览器空闲时才下载（`requestIdleCallback`，最多等 1.5 秒），让首屏先拿地图与数据包；`#kako=` / `#bday=` 链接立即下载。
@@ -375,11 +376,12 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
     "prefecture_keys":   { "1": "outside", …, "47": "outside" },   // 47 县分类键
     "prefecture_colors": { "1": "#33333a", …, "47": "#33333a" }    // 47 县色值
   }],
-  "historic_battles": [{              // 5 场：桶狭间 川中岛 关原 坛之浦 西南战争
+  "historic_battles": [{              // 10 场：一之谷 坛之浦 严岛 桶狭间 川中岛 长篠 山崎 关原 鸟羽伏见 西南战争（后 5 场 3.36，battles_tool.py）
     "key": "sekigahara", "name": "关原之战 (1600)", "year": 1600,
     "battlefield": { "name": "美浓国关原", "prefecture_id": 21, "coords": [136.5311, 35.3622] },
     "view": { "center": [137.7, 35.35], "zoom": 5.6 },   // 沙盘视角
-    "factions": [{ "key": "east", "name": "东军", "leader": "德川家康", "strength": "约75,000（一说）", "color": "#4f86b8" }],
+    "factions": [{ "key": "east", "name": "东军", "leader": "德川家康", "strength": "约75,000（一说）", "color": "#4f86b8",
+                   "men": 75000, "unit": "men" }],   // 3.36：比较用的数字（区间取中点）与单位（men / ships），立体图插小旗、面板画兵力条
     "march_routes": [{ "faction": "east", "from": { "name": "江户城", "coords": […], "prefecture_id": 13 },
                        "via": [[lon, lat], …], "to": { "name": "关原", "coords": […] }, "color": "#4f86b8", "desc": "…" }],
     "brief": "100 字以内",
@@ -425,7 +427,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 贴图（overlay.js）：每块一张 canvas（128–1024，随段数），按底图（824 年 68 国 + 奥羽分区，与平面战国图同）画势力色（分治画斜条纹）、国界（同一家很淡、两家之间是深底亮线的前线），湖与河擦掉后画成 alpha 0.5（着色器当水面）。canvas 用 `willReadFrequently`（在 CPU 上画），画完 `getImageData` 填进 **DataTexture** 上传——直接用 CanvasTexture 时每张上传约 20ms（3.31 换年份要卡 4–5 秒）。湖与河每块只拼落在本块的那些（`waterIn`，按块缓存 Path2D；以前每块都光栅化全日本的水系）。贴图 `flipY = false`（v 就是 canvas 的 y），否则每一行块的颜色上下颠倒。换年份只把 `version` 加一，可见的块逐帧重画（每帧 12ms 预算，全国约 0.5 秒画完）。
 - 墨晕（3.32）：换年份时每块留着旧贴图做 `uPrev`，新的画进另一张；`todo` 里的贴图都画完（或等了 1.5 秒）后 `uInk` 在 1.6 秒内从 0 走到 1（`stepInk`），着色器 `inkSpread` 用世界坐标的分形噪声（尺度随 `uDist`，屏幕上大小不变）作阈值，新颜色从噪声低处一团团晕开，还没晕到的一侧有一圈墨边（只在新旧颜色不同处），走完 `finishInk` 丢掉旧贴图。动画中再换年份先 `finishInk`。只在年份真的变了、开着势力着色、系统没要求减少动态效果时播。
 - 湖与河：`python -X utf8 tools/build_water.py`（需 shapely pyshp）取地球地図日本的 inwatera / riverl，pack 格式写进 `src/3d/water.json`。
-- 城：`python -X utf8 tools/fetch_castles.py`（需 shapely）取 Wikidata「日本の城」（Q92026）与「グスク」（Q1044204，两个分开查，合在一个查询里会超时）全国有日文条目的（坐标落在海上的按 0.02° 内最近的县），年份只用条目信息框 `build_y` / `reject_y` 的第一个西历年，築城年只写了世纪的（≤16 世纪）按世纪开头算并记 `bc`（3.33，首里城等，前端写「约 N 世纪」）；英文名 `en` 按条目开头的读音（`'''名'''（よみ）` 或写的就是这个名字的 {{読み仮名}}——页首模板里常有别的词的读音）转罗马字，「じょう / しろ」→ Castle、「ぐすく」→ Gusuku，没有读音才用 Wikidata 标签；没有筑城年或晚于 1888 的不收（3.35 以前是 1600），废城早于 1200 的不收（3.35 以前是 1467），1000 年以前筑又没写废城年的古代城柵 / 山城（多賀城、水城）不收；现 546 座（3.30 只有近畿 74 座，3.32 全国 424 座，3.33 483 座）。`edo`：幕末藩厅（seats.json 的城）、江户城、1600 年以后筑的城——1600 年以后的年份里没写废城年的城只画带 `edo` 的（没写废城年的多是早已荒废的山城）；明治的年份里城随 1871–1874 年的废城年一下子少了。`prov` 是 provinces.json 的键（北海道 = 蝦夷地，冲绳与令制外的奄美 = 琉球，前端另有译名）。某年显示 = 筑城 ≤ 该年且（废城 ≥ 该年，或没有废城年且（≤1600 或 `edo`））（`castleOnIn`）。模型：1576 年以前画土垒与望楼、以后画天守（示意，卡片里写明）。密度：`placeBuildings` 按城的语言条目数（castles.json 已排好）贪心放，与已放的距离小于 2.4 × 建筑缩放（随镜头距离）的不放，古国三迹排在城后面；城名、社寺名标签只给放了建筑的。
+- 城：`python -X utf8 tools/fetch_castles.py`（需 shapely）取 Wikidata「日本の城」（Q92026）与「グスク」（Q1044204，两个分开查，合在一个查询里会超时）全国有日文条目的（坐标落在海上的按 0.02° 内最近的县），年份只用条目信息框 `build_y` / `reject_y` 的第一个西历年，築城年只写了世纪的（≤16 世纪）按世纪开头算并记 `bc`（3.33，首里城等，前端写「约 N 世纪」）；英文名 `en` 按条目开头的读音（`'''名'''（よみ）` 或写的就是这个名字的 {{読み仮名}}——页首模板里常有别的词的读音）转罗马字，「じょう / しろ」→ Castle、「ぐすく」→ Gusuku，没有读音才用 Wikidata 标签；没有筑城年或晚于 1888 的不收（3.35 以前是 1600）；3.36 修了信息框「|」前带空格（` | build_y = …`）的写法——以前当成没有築城年漏掉了春日山城、浜松城、米沢城等两百多座，`infobox_value` 也认空栏后面挤着下一栏（`| build_y = |revamp = …`）；只写年号「天文年間」的按年号开头算、记 `ba`（前端写「约」，写的是年号区间或带问号的也记），只写「南北朝時代」这类整个落在一个世纪里的时代按世纪收（`ERA_CENTURY`），废城早于 1200 的不收（3.35 以前是 1467），1000 年以前筑又没写废城年的古代城柵 / 山城（多賀城、水城）不收；现 808 座（3.30 只有近畿 74 座，3.32 全国 424 座，3.33 483 座，3.35 546 座）。100 名城：`python -X utf8 tools/castle_extra_tool.py`（fetch_castles 写完会自己调用）读日文维基「日本100名城」「続日本100名城」的表与「現存天守」，写进各城 `h100` / `z100` 编号、`tenshu`（`kokuho` / `genzon`），名单数量不是 100 / 100 / 12 / 5 就报错；对不上的（チャシ、館、台场等没筑城年的）只打印；卡片 `meijoHTML`。`edo`：幕末藩厅（seats.json 的城）、江户城、1600 年以后筑的城——1600 年以后的年份里没写废城年的城只画带 `edo` 的（没写废城年的多是早已荒废的山城）；明治的年份里城随 1871–1874 年的废城年一下子少了。`prov` 是 provinces.json 的键（北海道 = 蝦夷地，冲绳与令制外的奄美 = 琉球，前端另有译名）。某年显示 = 筑城 ≤ 该年且（废城 ≥ 该年，或没有废城年且（≤1600 或 `edo`））（`castleOnIn`）。模型：1576 年以前画土垒与望楼、以后画天守（示意，卡片里写明）。密度：`placeBuildings` 按城的语言条目数（castles.json 已排好）贪心放，与已放的距离小于 2.4 × 建筑缩放（随镜头距离）的不放，古国三迹排在城后面；城名、社寺名标签只给放了建筑的。
 - 建筑与树（models.js）：程序生成的低多边形（顶点色），InstancedMesh；城与古国三迹（koku_sites.json）随镜头距离放大，远于 900 不画；树只在段数 ≥64、距离 < 70（省电 40）的块里按森林像素种（每像素 3 棵，位置由像素号决定）。
 - 镜头：MapControls，极角随距离自动变（远处近乎俯视、近处约 60°），右键 / 双指只转方位；目标点贴地、镜头不入地。标签是 DOM（按优先级贪心避让，最多 70 个）：远处家名 + 家纹、中距离国名、近处城名（< 280）与一宫等（< 110）。设置（起伏、画质、显示项、年份）存 `je.3d`。
 - 屏风风格（3.31，设置「屏风风格」开关，存 `je.3d.style`，默认开）：地形着色器 `uStyle` 时阴坡往墨色里晕、法线变化快处描淡墨、向阳的陡坡与较高处描金（远看更重，`uDist` = 镜头到目标点距离）、低处一团团薄雾、屏幕纸纹；海面铺青海波（每格大小 = 距离 × 0.045，屏幕上一样大，太密时淡掉）；底色与雾换成偏金的纸 `#e9dcb6`。金云试过（海上的金箔横云精灵），用户觉得挡视线，去掉了。旗指物（decor.js `createBanners`）：各家独占领地的锚点插长旗（色地、白圈墨色家纹、竖写家名，只绕竖轴转向镜头），距离 ≥950（近乎俯视）时收起、改回带家纹的文字标签；1600 年与关掉势力着色时不插。
@@ -437,6 +439,13 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 动态（3.34，设置「动态」`opts.motion`，存 `je.3d.motion`，系统减少动态时默认关）：约 30 帧一次 `uTime`——海面颜色噪声慢移、青海波按 `swell` 一排排明暗起伏、低处的雾随时间移动；旗的长旗与横木绕竿 `sin` 轻摆（`banners.update(..., time)`）；炊烟 `createSmoke`（decor.js）：距离 < 160 时离目标点最近的 18 座放了建筑、当年在用的城，每座 5 团精灵上升、散开、淡去。关掉动态时画面不再每帧重画。
 - 键盘（3.34）：方向键按镜头方位平移 0.18 × 距离，+ / - 缩放，1–6 年份，空格播放，N 朝北，T 俯视；输入框里不管。主站合战面板的 `#hud-3d`（半岛模式隐藏）→ `3d.html#bt=键&ph=阶段`。
 - 分享：3d.html 有自己的 description 与 og / twitter 标签，封面 `src/assets/og-3d.png` 与 README 的 `docs/screen-3d-{zh,en,ja}.jpg` 由 `tools/make_screens.py` 生成（立体图用本机 Chrome 加 `--enable-gpu`）。
+- 3.36：
+  - 先快后精：`loadTerrain` 先解 `terrain/coarse-q.png`（粗图每 4×4 并一格，约 60 KB，`build_terrain.py --preview` 生成；标高 1/4 以上是陆地才算陆地、取陆地平均，土地覆盖取最多的一类），前三帧画出来后 `terrain.upgrade()` 才下载粗图，换上后 `gen` 加一，`chunks.update` 把 `gen` 不同的块只换网格（贴图不重画），树拔掉按新的土地覆盖重种；预览图里的格点是 f×f 块的中心（`(x + 0.5) / f - 0.5`）。湖与河（water.json）也不进首屏的等待，到了 `overlay.setWater` 重画。
+  - 防卡顿 `slowGuard`：开着动态时量相邻两次重画的间隔（含等显卡），加载完 6 秒以后、页面在前台，连续两段（各 90 次）中位数都超过 70ms 就关动态、记住、`notice` 提示一次；内存 ≤4 GB 或核数 ≤4 默认不开动态；省电画质炊烟 8 座（高画质 18）。本机无法复现真机显卡瓶颈：把 CPU 降 12 倍画面仍是 30 帧（动态本身吃 CPU 很少），守卫用 rAF 里忙等 90ms 模拟过。
+  - 合战兵力：`decor.createTroops`（battle.js 用）每家按 `men / per` 插小旗（`troopUnit`：每面多少人取 100–10000 里让人多的一方不超过 24 面的最小值，船 10–100），插在这一家到本阶段为止走过的路线里排最前的那条（主力；别动队、援军的路线排在后面）的终点、排在来路后方，换阶段 1.6 秒走过去；旗的大小随镜头距离（屏幕上差不多大）；有家纹的家（`sg.clans[k].mon`）旗上画家纹。路线箭头按整场范围定大小，拉近时随距离缩小（长篠拉近时箭头盖住了小旗）。面板 `forceBar`。
+  - 新合战（battles_tool.py）：文字三语自写，`ev` 词与西历年都要出现在 `wiki` 条目里，地点坐标取条目坐标，条目没坐标的示意坐标列在 `NEAR` 并检查离战场不超过 25 km。核对时改掉的：洞之峠（筒井顺庆布阵洞之峠被日文维基判为误传，不写）；一之谷用《吾妻镜》（源氏 54,000 + 20,000）与《玉叶》（平氏两万、源氏一两千）的数字。
+  - 代码拆分：会变的状态都在 `S`（`base / regions / byKey / mode / focused / spot / anchors / battleNeutral`），模块 `createX(S, ctx)` 读 `S.*`、其余由 ctx 给；`esc / sw / castleName / provName / regionName` 在 app 里定义得早（标签模块创建时就要），`dirty` 在 main 最前面声明（湖与河、精细地形后到时置位）。
+- 测试：smoke `three_d_336`（中文三种尺寸：粗地形换上且所有块 gen = 1、城 > 700 座、现存天守 12、姬路城卡片国宝与第 59 号、春日山城「14 世纪」、长篠 27 面小旗与兵力条、鸟羽伏见换到 1867）；unittest `Castles`（信息框写法、名城表解析、castles.json）与 `Battles`（三语拆分、覆盖层与底本对齐、各家 men / unit）。
 - 测试：smoke `three_d`（中文三种尺寸：加载、1582 图例居首织田、点甲斐国出六个年份、Esc、1560 没有安土城、有江户城 / 小田原城 / 熊本城而没有多賀城、换 1573 后墨晕走完）、首里城按世纪收、织田势力总览与人物卡、搜索姬路、桶狭间 4 段换到 1560 且离开回到 1590、`#to2d` 带年份、1573 的「这期间」8 件且第一件桶狭间能重演、1573 京都卡片有正亲町天皇与织田信长，`three_d_eras`（中文三种尺寸，3.35：712 底图 p712、图例有东海道、712 年还没有多贺城、天下卡片写平城京、回平面图带 te=nara&pe=712；点「镰仓」到 1200、1300 图例居首北条、信浓卡片有比企与北条；合战列表打开时图例隐藏、关掉回来；江户底图 edo、加贺藩卡片有金泽城 / 金泽县 / 万石、搜上田得上田藩、回平面图带 te=edo；明治 1871 图例有旧幕府领的府县、1876 年 41 块且堺县含大阪与奈良、1888 年 47 块；坛之浦换到 1200 并在离开后回到 1888）、`three_d_sync`（三语三尺寸：平面图 `#te=edo&v=…` 停在江户时代，点开关进立体图的链接带 y=1867 与视野；`#te=nara&pe=712` 停在奈良时代、国界 712），与 `three_d_link`（三语三尺寸：地图上的 `#btn-3d` 看得见、美浓国卡片的立体链接带 1600 与语言、立体页按语言显示并弹出美浓、回平面图的链接带 sg / sgp / lang）。截图检查用本机 Chrome 加 `--enable-gpu --use-angle=d3d11`；Playwright 自带 Chromium 走软件渲染，一帧约 1 秒、截图可能超时，但能跑通测试。
 
 ## 地图文件压缩（pack_geo.py，3.27）
@@ -574,7 +583,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `sgedges` 有内容、家纹旗含武田织田、标题家纹与许可；点柱子换 1560、点接壤的家换人、图例点织田 1582 居首、换 1600 后收起且无旗；三语三种尺寸）
   - `shared`（共同历史对话框：9 件按年代、标签一行且选中的不被截断或压扁、每件 4–6 条事实 / ≥2 方叙述 / ≥2 条来源、不出屏，日本与半岛两种模式内容一致）
   - `sound`（音效触发、静音保存、开背景音乐）
-  - `tour`（全新访客自动出现、10 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置里重开、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
+  - `tour`（全新访客自动出现、4 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置的「帮助」有 8 项且不出屏、帮助里重开导览、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定

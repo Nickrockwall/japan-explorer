@@ -835,6 +835,8 @@ class Case:
         for i in (0, 4, 5, 8):
             page.evaluate(js, i)
             page.wait_for_timeout(700)
+            # 横幅有入场动画：机器忙时（与立体图测试并行）700ms 还没走完，等动画结束再量
+            page.wait_for_function("!document.querySelector('.era-banner').getAnimations({ subtree: true }).some((a) => a.playState === 'running')", timeout=10000)
             boxes.append(page.evaluate('''() => ['.map-legend', '.era-banner'].map((s) => {
                 const b = document.querySelector(s).getBoundingClientRect(); return [s, Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)]; })'''))
         assert all(b == boxes[0] for b in boxes), f'换时代时排版在变：{boxes}'
@@ -1266,6 +1268,33 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_function("__je3d.opts.year === '1888'", timeout=20000)
 
+    def three_d_336(self, page):
+        # 3.36：先用预览地形画出全国、粗地形后到并重建所有块；城卡片写 100 名城 / 现存天守；新合战（长篠）插兵力小旗、面板有兵力条
+        page.goto(self.base.replace('index.html', '3d.html') + '#y=1573', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.wait_for_function('__je3d.terrain.gen === 1', timeout=90000)
+        page.wait_for_function('__je3d.chunks.every((c) => !c.mesh || c.gen === 1)', timeout=90000)
+        assert page.evaluate("__je3d.castles.length") > 700, '城应有七百座以上（3.36 修了信息框带空格的写法）'
+        assert page.evaluate("__je3d.castles.filter((c) => c.tenshu).length") == 12, '现存天守应有 12 座'
+        page.evaluate("__je3d.choose('姫路')")
+        page.wait_for_selector('#card:not([hidden]) .meijo')
+        text = page.inner_text('#card')
+        assert '国宝' in text and '第 59 号' in text, f'姬路城卡片：{text[:200]!r}'
+        page.evaluate("__je3d.choose('春日山')")
+        page.wait_for_function("document.querySelector('#card').innerText.includes('14 世纪')", timeout=20000)
+        page.keyboard.press('Escape')
+        page.evaluate("__je3d.battle.start('nagashino')")
+        page.wait_for_selector('#battle:not([hidden]) .bt-force i >> nth=1')
+        assert page.evaluate('__je3d.opts.year') == '1573'
+        assert page.evaluate('__je3d.battle.troops.group.children.length') == 27, '长篠：38,000 与 15,000，每面 2,000 人应是 19 + 8 面'
+        assert '2,000' in page.inner_text('#battle .bt-per')
+        page.keyboard.press('Escape')
+        page.wait_for_function("!__je3d.battle.active", timeout=20000)
+        # 鸟羽伏见（1868）换到 1867 年（江户的藩领要先下载）
+        page.evaluate("__je3d.battle.start('tobafushimi')")
+        page.wait_for_function("__je3d.opts.year === '1867' && __je3d.base === 'edo'", timeout=40000)
+        assert '加贺藩' in page.inner_text('#legend') or page.is_hidden('#legend'), '换到江户后图例应是藩'
+
     def three_d_sync(self, page):
         # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
         # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
@@ -1580,16 +1609,17 @@ class Case:
         assert ok == [True, True], ok
 
     def tour(self, page):
-        # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；设置里可再打开，Esc 关闭
+        # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；
+        # 3.36 起只有 4 步，其余说明在「帮助」里：设置的「帮助」打开帮助（8 项），帮助里能从头再看导览，Esc 关闭
         page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
         n = int(page.text_content('.tour-n').split('/')[1])
-        assert n == 10, f'教程应有 10 步，实际 {n}'
+        assert n == 4, f'教程应有 4 步，实际 {n}'
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         for i in range(n):
             page.wait_for_timeout(300)
             box = page.locator('.tour-tip').bounding_box()
             assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'第 {i + 1} 步气泡出屏：{box}'
-            if 0 < i < n - 1:
+            if i < n - 1:
                 hole = page.locator('.tour-hole').bounding_box()
                 assert hole and hole['width'] > 10 and hole['height'] > 10, f'第 {i + 1} 步没有对准控件'
             page.click('[data-tour="next"]')
@@ -1601,7 +1631,13 @@ class Case:
         assert page.locator('.tour').count() == 0, '看过教程后不应再自动出现'
         self.top(page, '#btn-settings')
         page.click('#settings button[value="tour"]')
+        page.wait_for_selector('#help[open] .help-body')
+        assert page.locator('#help section').count() == 8, '帮助应有 8 项'
+        box = page.locator('#help .help-inner').bounding_box()
+        assert box['y'] >= 0 and box['y'] + box['height'] <= vh + 1, f'帮助出屏：{box}'
+        page.click('#help [data-act="help-tour"]')
         page.wait_for_selector('.tour')
+        assert not page.is_visible('#help'), '开导览时帮助应关掉'
         page.keyboard.press('Escape')
         page.wait_for_selector('.tour', state='detached')
 
@@ -1694,7 +1730,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

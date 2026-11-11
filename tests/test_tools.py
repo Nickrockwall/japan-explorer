@@ -161,5 +161,55 @@ class Heisei(unittest.TestCase):
         self.assertEqual(mine[('kofu', '23207')], ('国府村', 1889))
 
 
+
+class Castles(unittest.TestCase):
+    """3.36：信息框各栏「|」前带空格（浜松城、米沢城、春日山城……以前漏了两百多座）、只写年号或时代的築城年"""
+    def test_infobox(self):
+        import fetch_castles as F
+        text = '{{日本の城郭概要表\n | name = 浜松城\n | build_y = 永正年間（1504年 - 1520年）？\n | reject_y = 1871年（明治4年）\n}}'
+        self.assertEqual(F.infobox_year(text, '(?:築城年|build_y)'), 1504)
+        self.assertEqual(F.infobox_year(text, '(?:廃城年|reject_y)'), 1871)
+        self.assertIsNone(F.infobox_year('| build_y = |revamp = 溝口秀勝', '(?:築城年|build_y)'), '空栏后面挤着下一栏')
+        self.assertEqual(F.infobox_nengo(' | build_y = 天文年間か', '(?:築城年|build_y)'), 1532)
+        self.assertEqual(F.infobox_century(' | build_y = 南北朝時代', '(?:築城年|build_y)'), 14)
+        self.assertEqual(F.infobox_century('|build_y=14世紀末', '(?:築城年|build_y)'), 14)
+        self.assertIsNone(F.infobox_century(' | build_y = 室町時代後期', '(?:築城年|build_y)'), '跨两个世纪的时代不算')
+
+    def test_meijo_tables(self):
+        import castle_extra_tool as X
+        wt = '|-\n| {{center|1}}\n! [[根室半島チャシ跡群]]\n|-\n| {{nowrap|100}}\n! {{nowrap|[[首里城]]}}\n|-\n|style="text-align:center"|102\n!nowrap|[[勝山館|上ノ国勝山館]]\n'
+        self.assertEqual(X.numbered(wt, 1, 100), {1: '根室半島チャシ跡群', 100: '首里城'})
+        self.assertEqual(X.numbered(wt, 101, 200), {102: '勝山館'})
+        wt = '== 現存12天守 ==\n=== 弘前城 ===\n=== 姫路城 ===\n== 脚注 ==\n国宝に指定されている[[姫路城]]の五つの天守'
+        self.assertEqual(X.genzon(wt), (['弘前城', '姫路城'], ['姫路城']))
+
+    def test_castles_json(self):
+        cs = json.load(open(os.path.join(ROOT, 'src', '3d', 'castles.json'), encoding='utf-8'))
+        self.assertEqual(sum(1 for c in cs if c.get('tenshu')), 12)
+        self.assertEqual(sum(1 for c in cs if c.get('tenshu') == 'kokuho'), 5)
+        self.assertEqual(len({c['h100'] for c in cs if c.get('h100')}), sum(1 for c in cs if c.get('h100')), '100名城编号不应重复')
+
+
+class Battles(unittest.TestCase):
+    """3.36：合战的兵力数字与新合战（battles_tool.py）"""
+    def test_split(self):
+        import battles_tool as B
+        tree = {'name': B.L('甲', 'A', '乙'), 'year': 1, 'list': [{'n': B.L('x', 'y', 'z'), 'c': [1, 2]}]}
+        self.assertEqual(B.split(tree, 'zh', True), {'name': '甲', 'year': 1, 'list': [{'n': 'x', 'c': [1, 2]}]})
+        self.assertEqual(B.split(tree, 'en', False), {'name': 'A', 'list': [{'n': 'y'}]})
+
+    def test_data(self):
+        base = json.load(open(os.path.join(ROOT, 'src', 'data', 'historical_events.json'), encoding='utf-8'))['historic_battles']
+        for lang in ('en', 'ja'):
+            over = json.load(open(os.path.join(ROOT, 'src', 'data', 'i18n', lang, 'historical_events.json'), encoding='utf-8'))['historic_battles']
+            self.assertEqual(len(over), len(base), f'{lang} 覆盖层要与底本一一对应')
+            for b, o in zip(base, over):
+                self.assertEqual(len(o['phases']), len(b['phases']), b['key'])
+                self.assertEqual(len(o['factions']), len(b['factions']), b['key'])
+        for b in base:
+            for f in b['factions']:
+                self.assertTrue(f.get('men', 0) > 0 and f.get('unit') in ('men', 'ships'), f'{b["key"]} {f["key"]}')
+
+
 if __name__ == '__main__':
     unittest.main()
