@@ -4,6 +4,13 @@
 
 Newest first.
 
+## 3.39 · 2026-11-12
+
+- Buildings on the 3D map redone: castle keeps get upturned eaves, triangular gables, a hip-and-gable top roof with golden shachihoko, a curved stone base, and black lower siding; the 100 Fine Castles, the Next 100 and surviving keeps gain a ring of white walls, two corner turrets and a gate when you zoom in; early castles are earthworks with a post-by-post palisade, a watchtower and a thatched hall; ichinomiya shrines have a torii with upturned black top beam and a nagare-style hall; kokubunji have a vermilion five-storey pagoda with its spire and a main hall; provincial capitals are walled compounds with a main hall and two side halls; post towns are a row of townhouses and an inn; trees are two-tier cedars
+- Building shading follows the folding-screen style (shadows lean to ink, highlights to gold)
+- Performance: only buildings close to the camera use the detailed models, the rest use simple ones, and buildings off screen aren't drawn at all (before, hundreds of castles nationwide were always drawn). In the same close-up near Kyoto, building triangles went from about 49,000 for the castles alone to about 9,000; about 20,000 at mid range. Frame time on a computer is unchanged (about 6 ms)
+- Name labels for shrines, temples, post towns and forts now sit at the new buildings' height instead of floating above them
+
 ## 3.38 · 2026-11-12
 
 - On a computer, the jump row in the timelines used to stop at 1392 (its scrollbar was hidden and the mouse wheel only scrolled up and down). Every sideways row of buttons (timeline jumps, filters, legends, quick questions, card contents) now scrolls with the wheel or by dragging; the timeline row has ‹ › at the ends and marks the period you're reading

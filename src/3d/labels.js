@@ -5,6 +5,8 @@ import { t, nm } from './i18n.js';
 import { eraOf, capitalOf, SHOGUNATE } from './eras.js';
 
 export function createLabels(S, ctx) {
+  // 标签抬到建筑顶上一点（3.39 按 models.js 各模型的高度 × 摆放时的缩放）
+  const SITE_LIFT = { ichi: 0.4, ji: 0.75, fu: 0.3 };
   const { el: el0, camera, controls, canvas, opts, P, groundY, banners, info, esc, blockName, provName, castleName, castles, sites, B, kodai, prints, regimeOf, inBattle, looking, marker } = ctx;
   const { forts, stations } = B;
   const pool = new Map();
@@ -71,12 +73,12 @@ export function createLabels(S, ctx) {
     if (d < 280 && opts.castles) {
       for (const c of castles) if (B.kept.has(c)) add(`k-${c.q}`, c.xz[0], c.xz[1], 1.6 * B.k, 200 + c.links, esc(castleName(c)), 'castle');
     }
-    if (d < 600) for (const f of forts) if (B.kept.has(f)) add(`f-${f.ja}`, f.xz[0], f.xz[1], 1.4 * B.k, 260, esc(nm(f)), 'castle fort');
+    if (d < 600) for (const f of forts) if (B.kept.has(f)) add(`f-${f.ja}`, f.xz[0], f.xz[1], 0.6 * B.k, 260, esc(nm(f)), 'castle fort');
     if (d < 110 && opts.sites) {
-      for (const s of sites) if (B.kept.has(s)) add(`s-${s.id}`, s.xz[0], s.xz[1], 1.0 * B.k, 100 + (s.kind === 'ichi' ? 10 : 0), `<small>${t(s.kind)}</small>${esc(s.name)}`, 'site');
+      for (const s of sites) if (B.kept.has(s)) add(`s-${s.id}`, s.xz[0], s.xz[1], SITE_LIFT[s.kind] * B.k, 100 + (s.kind === 'ichi' ? 10 : 0), `<small>${t(s.kind)}</small>${esc(s.name)}`, 'site');
     }
     if (era === 'edo') {
-      if (d < 120) for (const s of stations) if (B.kept.has(s)) add(`i-${s.ja}`, s.xz[0], s.xz[1], 0.8 * B.k, 90, esc(nm(s)), 'site inn');
+      if (d < 120) for (const s of stations) if (B.kept.has(s)) add(`i-${s.ja}`, s.xz[0], s.xz[1], 0.25 * B.k, 90, esc(nm(s)), 'site inn');
       if (d < 700) for (const h of prints()) { const [x, z] = P(...h.coords); add(`h-${h.no}`, x, z, 2, 120, `<img src="${h.img}" alt="" loading="lazy" data-print="${h.no}">`, 'print'); }
     }
     const mk = marker();

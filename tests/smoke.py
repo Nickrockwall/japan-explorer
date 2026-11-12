@@ -1369,6 +1369,20 @@ class Case:
         page.wait_for_function("!document.querySelector('#here').hidden && document.querySelectorAll('#here tr').length >= 1", timeout=60000)
         page.keyboard.press('Escape')
 
+    def three_d_339(self, page):
+        # 3.39：建筑两份模型——拉近（姬路城 8）用细的、名城外面一圈城墙；拉远（700）大多换粗的、没有城墙；视野外的不放
+        page.goto(self.base.replace('index.html', '3d.html') + '#y=1600', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        tris = page.evaluate("(() => { const k = __je3d.buildings.kinds; const t = (m) => m.geometry.index.count / 3; return [t(k.tenshu), t(k.tenshuLo)]; })()")
+        assert tris[0] > tris[1] * 1.5, f'细模型应比粗模型多不少三角形：{tris}'
+        page.evaluate("(() => { const [x, z] = __je3d.P(134.694, 34.839); __je3d.flyTo(x, z, 8); })()")
+        page.wait_for_function("(() => { const k = __je3d.buildings.kinds; return k.tenshu.count > 0 && k.enclosure.count > 0; })()", timeout=20000)
+        on = page.evaluate("__je3d.castles.filter((c) => c.built <= 1600 && (c.gone ? c.gone >= 1600 : true)).length")
+        placed = page.evaluate("(() => { const k = __je3d.buildings.kinds; return k.tenshu.count + k.tenshuLo.count; })()")
+        assert placed < on / 4, f'拉近时视野外的城不该放：放了 {placed} / 当年 {on}'
+        page.evaluate("(() => { const [x, z] = __je3d.P(135.5, 35.0); __je3d.flyTo(x, z, 700); })()")
+        page.wait_for_function("(() => { const k = __je3d.buildings.kinds; return k.tenshuLo.count > k.tenshu.count && k.enclosure.count < 5; })()", timeout=20000)
+
     def three_d_sync(self, page):
         # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
         # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
@@ -1841,7 +1855,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('three_d_338', '', ['three_d_338']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('three_d_338', '', ['three_d_338']), ('three_d_339', '', ['three_d_339']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

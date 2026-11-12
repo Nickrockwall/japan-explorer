@@ -13,6 +13,7 @@ import { createCards } from './cards.js';
 import { createSearch } from './search.js';
 import { createChunks } from './chunks.js';
 import { createBuildings } from './buildings.js';
+import { STYLE as BUILDING_STYLE } from './models.js';
 import { createLabels } from './labels.js';
 import { snapshot } from './snapshot.js';
 import { createHelp } from './help.js';
@@ -368,6 +369,7 @@ async function main() {
   refreshBanners();
   function applyLook() {
     uniforms.uStyle.value = opts.style ? 1 : 0;
+    BUILDING_STYLE.value = opts.style ? 1 : 0; // 建筑与树的材质（models.js）同样随屏风风格
     const paper = opts.style ? PAPER.on : PAPER.off;
     scene.background.set(paper);
     uniforms.uFog.value.set(...[1, 3, 5].map((i) => parseInt(paper.slice(i, i + 2), 16) / 255));
@@ -878,7 +880,8 @@ async function main() {
   }
 
   // —— 主循环 ——
-  let lastD = -1;
+  let lastD = -1, lastAz = 0;
+  const lastT = new THREE.Vector3();
   controls.addEventListener('change', () => { dirty = true; });
   controls.addEventListener('end', () => syncHash());
   // 顶上几行（品牌、时代、年份、工具）的实际高度：卡片、设置、搜索都从它下面开始（手机上时代与年份各占一行）
@@ -987,7 +990,14 @@ async function main() {
     uniforms.uFogDensity.value = 1 / (d * 4 + 2500);
     // 拉近时势力色淡一些，看得清地形
     uniforms.uTint.value = (opts.tint ? 1 : 0.5) * THREE.MathUtils.lerp(0.3, 0.52, THREE.MathUtils.smoothstep(d, 40, 500));
-    if (Math.abs(d - lastD) / d > 0.04) { B.place(); lastD = d; }
+    // 建筑按视野与远近放（buildings.js）：拉近拉远 4%、目标点移动超过 0.15 × 距离或转了约 8° 都重放
+    const az = Math.atan2(camera.position.x - controls.target.x, camera.position.z - controls.target.z);
+    if (Math.abs(d - lastD) / d > 0.04 || Math.hypot(controls.target.x - lastT.x, controls.target.z - lastT.z) > d * 0.15 || Math.abs(Math.sin((az - lastAz) / 2)) > 0.07) {
+      B.place();
+      lastD = d;
+      lastT.copy(controls.target);
+      lastAz = az;
+    }
     if (battle.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
     if (story.update(now, canvas.clientWidth, canvas.clientHeight)) dirty = true;
     // 动态：海浪、雾、旗、炊烟（约 30 帧；关掉或系统要求减少动态时整个画面是静的）
@@ -1026,7 +1036,7 @@ async function main() {
     battle, story, smoke, slowGuard, lookout, get here() { return here; }, ...cards, togglePlay, saveImage,
     choose: (q) => search.query(q), camera, controls, uniforms, chunks, terrain, opts, overlay, setYear, lookAt, flyTo, P,
     get regions() { return S.regions; }, get base() { return S.base.name; }, get mode() { return S.mode; }, castles, forts, stations, groundY, eraReady,
-    pick: (x, y) => pick({ clientX: x, clientY: y }),
+    pick: (x, y) => pick({ clientX: x, clientY: y }), renderer, buildings: B,
   };
 }
 
