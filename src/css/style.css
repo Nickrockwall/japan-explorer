@@ -529,6 +529,15 @@ body.resizing { cursor: row-resize; user-select: none; }
   font-size: 12px; cursor: pointer;
 }
 .book-tab small { margin-left: 4px; color: #9a8466; }
+.book-grid.foot { display: block; }
+.ft-pick { cursor: pointer; border-color: var(--shu); color: var(--shu); }
+.ft-c { margin: 0 0 10px; }
+.ft-c h3 { font: 700 13px var(--serif); color: var(--kin); margin: 0 0 4px; }
+.ft-c > div { display: flex; flex-wrap: wrap; gap: 4px; }
+.ft { display: inline-flex; align-items: baseline; gap: 3px; padding: 3px 8px; border: 1px dashed var(--line); border-radius: 3px; font: 600 13px var(--serif); color: var(--muted); }
+.ft.on { border: 1px solid var(--shu); background: var(--shu); color: var(--on-shu, #fff); }
+.ft small { font: 400 10px var(--sans); opacity: .85; }
+.ft-note { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 8px 0 0; }
 .book-tab.on { background: var(--ink); border-color: var(--ink); color: var(--on-shu); }
 .book-tab.on small { color: var(--shu); }
 .book-grid {
@@ -1064,6 +1073,9 @@ body.power-mode .power-metrics button.on { background: var(--ink); }
 
 /* 战国势力：年份行 + 国别 / 人物卡片 */
 .sg-years { display: none; }
+.era-years { display: none; }
+body.era-real .era-years { display: inline-flex; align-self: flex-start; }
+body.era-real .era-years button.on { background: var(--ink); }
 body.sg-mode .sg-years { display: inline-flex; align-self: flex-start; max-width: 100%; }
 body.sg-mode .sg-years button.on { background: var(--ink); }
 .sg-years button { white-space: nowrap; }
@@ -1719,6 +1731,12 @@ dialog.shared::backdrop { background: rgba(42,37,32,.45); }
 .bd-fact span { font-size: 11px; color: #8a3b33; }
 .bd-fact b { font: 700 15px/1.3 var(--serif); color: #2b2420; }
 .bd-fact small { font-size: 11px; color: #5a4a3e; line-height: 1.4; overflow-wrap: anywhere; }
+.bd-you { margin: 8px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(58,31,28,.25); }
+.bd-you .bd-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bd-you h3 { font: 700 14px/1.4 var(--serif); color: #8a3b33; margin: 10px 0 4px; }
+.bd-age { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.bd-age li { font-size: 13px; line-height: 1.5; color: #2b2420; }
+.bd-age b { font-family: var(--serif); margin-right: 4px; }
 .bd-group h3 { margin: 14px 0 4px; padding-bottom: 4px; border-bottom: 2px solid #3a1f1c; font: 700 14px var(--serif); color: #8a3b33; }
 .bd-group ol { list-style: none; margin: 0; padding: 0; }
 .bd-item { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; width: 100%; padding: 6px 4px; border: 0; border-bottom: 1px solid #d8c6a6;
@@ -1844,7 +1862,7 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
   body.layers-open .map-toolbar .layers { display: flex; }
   .map-toolbar .layers button { min-height: 44px; padding: 0 14px; text-align: left; font-size: 14px; }
   .map-toolbar .filters { order: 1; flex: 1 1 0; min-width: 0; height: 40px; align-items: center; }
-  .map-toolbar .prov-eras, .map-toolbar .power-metrics, .map-toolbar .sg-years { order: 3; flex: 0 1 auto; } /* 上一行的滤镜已撑满，自然换到下一行 */
+  .map-toolbar .prov-eras, .map-toolbar .power-metrics, .map-toolbar .sg-years, .map-toolbar .era-years { order: 3; flex: 0 1 auto; } /* 上一行的滤镜已撑满，自然换到下一行 */
   .map-toolbar .filters button { min-height: 32px; padding: 0 12px; font-size: 13px; }
   .toolbar-row > .search { order: 2; width: 40px; height: 40px; }
   .map-toolbar .search input, .map-toolbar .search input:focus { width: 40px; height: 40px; border-radius: 6px; padding-left: 38px; background-position: 12px 50%; }

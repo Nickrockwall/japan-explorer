@@ -99,6 +99,8 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const home = [circuit ? label('circuit', circuit) : null, key ? pn(key) : t('muni.outside'), homeGun].filter(Boolean).join(' · ');
   const partial = props.partial?.length ? t('muni.partial', { list: props.partial.map(pn).join(' · ') }) : '';
   rows.push({ k: 'home', seal: 'muni', main: home, sub: [t('ks.now', { place: `${prefLabel} ${muniName}` }), partial].filter(Boolean).join(' · ') });
+  const kr = kuniRow(town?.kuni, key, pref.id, pn, prefOf);
+  if (kr) rows.push(kr);
 
   if (mine.length && pt) {
     const ichi = nearest(mine.filter((s) => s.kind === 'ichi'), pt);
@@ -120,6 +122,13 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   if (gous?.length) {
     const names = gous.slice(0, 14).map(([n, k]) => (!k || k === '-' ? n : lang === 'en' ? `${n} (${k})` : `${n}（${k}）`)).join(t('list.sep'));
     rows.push({ k: 'wamyo', seal: 'gun', main: t('ks.wamyo', { gun: wg, n: gous.length }), sub: gous.length > 14 ? `${names} ${t('ks.mura.more', { n: gous.length })}` : names });
+  }
+  // 千年地名（town.sennen，3.40）：今天、平成合并前或明治町村的名字（去掉市町村区）正是同一古郡的《和名抄》郷名
+  const sn = town?.sennen?.[props.code];
+  if (sn?.length) {
+    const q = (n) => (lang === 'en' ? `“${n}”` : `「${n}」`);
+    rows.push({ k: 'sennen', seal: 'gun', main: t('ks.sennen', { list: sn.map(([, , g]) => q(g)).join(t('list.sep')) }),
+      sub: [sn.map(([n, w]) => t(`ks.sennen.w${w}`, { name: n })).join(t('list.sep')), t('ks.sennen.note')].join(' · ') });
   }
 
   const f = pref.map_filters;
@@ -169,6 +178,13 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
     const list = pref.historical_lineage.edo_domains || [];
     rows.push({ k: 'edo', seal: 'pref', main: list.slice(0, 3).join(t('list.sep')) || '—', sub: list.length > 3 ? t('ks.more', { n: list.length - 3 }) : '' });
   }
+  // 远方的领主（town.far，3.40）：幕末这里有 5% 以上的石高属于藩厅在 150 公里外的藩
+  const far = town?.far?.[props.code];
+  if (far?.length) {
+    const [h, kmv, pc] = far[0];
+    rows.push({ k: 'far', seal: 'muni', main: t('ks.farlord', { han: h, km: kmv, pct: pc }),
+      sub: [far.slice(1).map(([h2, k2, p2]) => t('ks.farlord.more', { han: h2, km: k2, pct: p2 })).join(t('list.sep')), t('ks.farlord.note')].filter(Boolean).join(' · ') });
+  }
   rows.push({ k: 'boshin', seal: 'pref', main: label('bk', f.bakumatsu), sub: '' });
   // 明治町村（town.mura）：町村制时今属这里的町村（郡条目里写明的，可能不全），最多列 14 个
   const mura = town?.mura?.[props.code];
@@ -185,6 +201,14 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   if (P) {
     const rank = Object.values(power.provinces).filter((v) => v.pop > P.pop).length + 1;
     rows.push({ k: 'power', seal: 'prov', main: t('ks.power', { prov: pn(key), pop: fmtPeople(P.pop), rank }), sub: '' });
+  }
+  // 市区町村的逆袭（town.rise，3.40）：幕末石高的全国名次 → 今天人口的名次
+  const rr = town?.rise?.r?.[props.code];
+  if (rr) {
+    const [a, b] = rr;
+    const n = town.rise.n;
+    // 名次相差三倍以上才算逆袭 / 没落（83 → 322 算没落，16 → 45 算差不多）
+    rows.push({ k: 'rise', seal: 'muni', main: t('ks.rise', { a, b, n }), sub: t(a >= b * 3 ? 'ks.rise.up' : b >= a * 3 ? 'ks.rise.down' : 'ks.rise.flat') });
   }
   const ph = pref.dialect?.phrases?.[0];
   if (ph) rows.push({ k: 'voice', seal: 'pref', main: `「${ph.phrase}」`, sub: ph.meaning, voice: true });
@@ -221,6 +245,24 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   return { rows, short, print: prints?.[0] || null };
 }
 
+// 你其实是别国人（3.40，town.kuni：按今天的人口，旧国的大半在哪个县、本县的大半是哪个国）：
+// 这里的旧国大半在别县 → 写出来；或本县大半是另一个国、这个国只占本县不到四成 → 写出来；都不是就不出这一栏
+function kuniRow(kuni, key, pid, pn, prefOf) {
+  const share = kuni?.prov?.[key];
+  if (!share?.length || !prefOf) return null;
+  const here = share.find(([p]) => p === pid)?.[1];
+  const [mp, mpct] = share[0];
+  if (mp !== pid) {
+    return { k: 'kuni', seal: 'prov', main: t('ks.kuni.away', { prov: pn(key), pref: prefOf(mp), pct: mpct }), sub: t('ks.kuni.here', { prov: pn(key), pct: here ?? '<1' }) };
+  }
+  const top = kuni.pref?.[0];
+  const mine = kuni.pref?.find(([k]) => k === key)?.[1];
+  if (top && top[0] !== key && mine != null && mine < 40) {
+    return { k: 'kuni', seal: 'prov', main: t('ks.kuni.minor', { prov: pn(key), main: pn(top[0]), pct: top[1] }), sub: t('ks.kuni.minor.sub', { prov: pn(key), pct: mine }) };
+  }
+  return null;
+}
+
 // 1995 年的市町村（一部的加注）与变动年份（几年的写成「2004–2006」）；max 个以后写「等 n 个」
 export function heiseiOf(town, code, max = 14) {
   const hs = town?.heisei?.[code];
@@ -255,7 +297,8 @@ export function kosekiHTML(ctx, data, name, extra = '') {
     <div class="ks-actions">
       <button type="button" class="btn" data-act="ks-image">${esc(t('ks.image'))}</button>
       <button type="button" class="btn btn-ghost" data-act="ks-link">${esc(t('ks.link'))}</button>
-      ${ctx.pt ? `<a class="btn btn-ghost ks-3d" href="3d.html#here=${ctx.pt[0].toFixed(4)},${ctx.pt[1].toFixed(4)}&hn=${encodeURIComponent(lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name)}&lang=${lang}">${esc(t('ks.3d'))}</a>` : ''}
+      ${ctx.pt ? `<a class="btn btn-ghost ks-3d" href="3d.html#here=${ctx.pt[0].toFixed(4)},${ctx.pt[1].toFixed(4)}&hn=${encodeURIComponent(lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name)}&lang=${lang}">${esc(t('ks.3d'))}</a>
+      <a class="btn btn-ghost ks-look" href="3d.html#look=${ctx.pt[0].toFixed(4)},${ctx.pt[1].toFixed(4)}&hn=${encodeURIComponent(lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name)}&lang=${lang}">${esc(t('ks.look'))}</a>` : ''}
     </div>
     <p class="fix-row">${fixLink(t('fix.w.ks', { name: title }))}</p>`;
 }

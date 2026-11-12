@@ -26,7 +26,14 @@ export function fmtPeople(n) {
 }
 const fmtKoku = (n) => (n == null ? '—' : lang === 'en' ? `${fmt(n / 1e6, 2)}M koku` : t('kr.koku.v', { n: fmt(n / 1e4, n < 1e5 ? 1 : 0) }));
 
-export function createPower(data, provinces) {
+// 市区町村的逆袭榜（3.40）：bundle/rise-<lang>.json，幕末石高（歴博）与今天人口的全国名次；卡片切到这一页时才下载
+let riseLoad = null;
+const loadRise = () => (riseLoad ??= fetch(`src/data/bundle/rise-${lang}.json`).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .catch((e) => { riseLoad = null; throw e; }));
+// 东京 23 区与政令市的区：江户的町人地、城下的町没有村的石高，名次一律靠后，榜上全是它们；榜单里不列（户籍里照样写）
+const isWard = (code, name) => /^131[0-2]\d$/.test(code) || /区$|-ku$|Ward$/.test(name);
+
+export function createPower(data, provinces, { onUpdate = () => {} } = {}) {
   const P = data.provinces;
   const props = new Map(provinces.features.map((f) => [f.properties.key, f.properties]));
   const outside = (k) => props.get(k)?.circuit === '令制外';
@@ -159,14 +166,29 @@ export function createPower(data, provinces) {
 
   // ── 卡片：头条 + 榜单 / PK ──
   let tab = 'rank';
+  let riseData = null;
+  let riseDir = 'up';
+  function muniView() {
+    if (!riseData) {
+      loadRise().then((d) => { riseData = d; onUpdate(); }).catch(() => {});
+      return `<p class="kr-note">${t('kr.muni.loading')}</p>`;
+    }
+    const rows = riseData.rows.filter((r) => !isWard(r[0], r[1]));
+    const score = (r) => Math.log(r[5] / r[6]);
+    const list = rows.slice().sort((a, b) => (riseDir === 'up' ? score(b) - score(a) : score(a) - score(b))).slice(0, 30);
+    const chips = ['up', 'down'].map((d) => `<button type="button" data-rise="${d}" class="${d === riseDir ? 'on' : ''}">${t(`kr.muni.${d}`)}</button>`).join('');
+    return `<div class="kr-pk-chips">${chips}</div><ol class="kr-list kr-muni">${list.map((r, i) => `<li data-code="${r[0]}" data-pid="${r[2]}" title="${esc(t('kr.muni.open'))}"><span class="no">${i + 1}</span><span class="nm">${esc(r[1])}</span>
+      <span class="val">${t('kr.rise.v', { a: r[5], b: r[6] })}</span></li>`).join('')}</ol>
+      <p class="kr-note">${t('kr.muni.note', { n: riseData.n })}</p>`;
+  }
   function card() {
-    const tabs = ['rank', 'pk'].map((x) => `<button type="button" role="tab" data-kr-tab="${x}" aria-selected="${x === tab}" class="${x === tab ? 'on' : ''}">${t(`kr.tab.${x}`)}</button>`).join('');
+    const tabs = ['rank', 'pk', 'muni'].map((x) => `<button type="button" role="tab" data-kr-tab="${x}" aria-selected="${x === tab}" class="${x === tab ? 'on' : ''}">${t(`kr.tab.${x}`)}</button>`).join('');
     return `<button class="muni-card-x" type="button" data-act="kr-close" aria-label="${esc(t('close'))}">×</button>
       <div class="muni-name">${t('kr.title')}</div>
       <div class="kr-fact"><span>${facts[factIdx]}</span><button type="button" data-act="kr-fact" title="${esc(t('kr.next'))}">${t('kr.next')} ›</button></div>
       <div class="kr-tabs" role="tablist">${tabs}</div>
-      <div class="kr-body">${tab === 'rank' ? rankList() : pkView()}
-      <p class="kr-note">${t('kr.note', { year: data.pop_year })}</p></div>`;
+      <div class="kr-body">${tab === 'rank' ? rankList() : tab === 'muni' ? muniView() : pkView()}
+      ${tab === 'muni' ? '' : `<p class="kr-note">${t('kr.note', { year: data.pop_year })}</p>`}</div>`;
   }
   function rankList() {
     const list = (metric === 'rise' ? both.slice().sort((a, b) => rise(b) - rise(a) || rNow.get(a) - rNow.get(b))
@@ -202,6 +224,8 @@ export function createPower(data, provinces) {
       const tb = e.target.closest('[data-kr-tab]');
       if (tb) { tab = tb.dataset.krTab; return true; }
       if (e.target.closest('[data-act="kr-fact"]')) { factIdx = (factIdx + 1) % facts.length; return true; }
+      const rd = e.target.closest('[data-rise]');
+      if (rd) { riseDir = rd.dataset.rise; return true; }
       const pk = e.target.closest('[data-pk]');
       if (pk) { pkId = pk.dataset.pk; pkCustom = null; return true; }
       return false;

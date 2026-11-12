@@ -31,7 +31,64 @@ function facts(d, prefName) {
 
 const GROUPS = ['born', 'died', 'ev'];
 
-export function bdayHTML(d, { prefName, lordOf, name }) {
+// ── 出生年（3.40，只存本机）：年号、干支、今年几岁、同龄的他们 ──
+// 年号按公历日期换（1873 年改用公历以后才准，输入框最早 1873）；干支按公历年，立春（2 月 4 日前后）以前出生的另注一句
+const GENGO = [['meiji', 1868, '01-01'], ['taisho', 1912, '07-30'], ['showa', 1926, '12-25'], ['heisei', 1989, '01-08'], ['reiwa', 2019, '05-01']];
+export function wareki(y, md) {
+  let g = null;
+  for (const e of GENGO) if (y > e[1] || (y === e[1] && md >= e[2])) g = e;
+  return g ? { key: g[0], n: y - g[1] + 1 } : null;
+}
+const STEM = '甲乙丙丁戊己庚辛壬癸';
+const BRANCH = '子丑寅卯辰巳午未申酉戌亥';
+const STEM_EN = ['kinoe', 'kinoto', 'hinoe', 'hinoto', 'tsuchinoe', 'tsuchinoto', 'kanoe', 'kanoto', 'mizunoe', 'mizunoto'];
+const BRANCH_EN = ['ne', 'ushi', 'tora', 'u', 'tatsu', 'mi', 'uma', 'hitsuji', 'saru', 'tori', 'inu', 'i'];
+export function eto(y) {
+  const i = (((y - 4) % 60) + 60) % 60;
+  return { kan: STEM[i % 10] + BRANCH[i % 12], en: `${STEM_EN[i % 10]}-${BRANCH_EN[i % 12]}`, b: i % 12 };
+}
+export function ageOn(y, md, now = new Date()) {
+  const today = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  return now.getFullYear() - y - (today < md ? 1 : 0);
+}
+// 同龄的他们：ages.json（tools/age_tool.py）里「那一年 − 生年」正好等于这个岁数的事；没有就取最近的岁数
+const KIND_ORDER = { bat: 0, sho: 1, shk: 2, emp: 3, die: 4 };
+export function sameAge(ages, age, max = 8) {
+  if (!ages?.e?.length) return { age, list: [] };
+  let a = age;
+  let hit = ages.e.filter((e) => e[2] === a);
+  for (let d = 1; !hit.length && d < 40; d++) {
+    for (const x of [age - d, age + d]) {
+      if (!hit.length) { hit = ages.e.filter((e) => e[2] === x); if (hit.length) a = x; }
+    }
+  }
+  hit = hit.slice().sort((p, q) => KIND_ORDER[p[3]] - KIND_ORDER[q[3]] || p[1] - q[1]);
+  return { age: a, list: hit.slice(0, max), more: Math.max(0, hit.length - max) };
+}
+const pname = (p) => (lang === 'ja' ? p[0] : lang === 'en' ? p[2] || p[0] : p[1] || p[0]);
+export function youHTML(you, ages, battles) {
+  if (!you) return '';
+  const w = wareki(you.y, you.md);
+  const e = eto(you.y);
+  const age = ageOn(you.y, you.md);
+  const gengo = w ? t('bd.y.gengo', { g: t(`bd.gg.${w.key}`), n: w.n === 1 ? t('bd.y.gan') : w.n }) : '';
+  const etoTxt = lang === 'en' ? t('bd.y.eto', { animal: t(`bd.an.${e.b}`), kan: e.kan, rd: e.en }) : t('bd.y.eto', { kan: e.kan, animal: t(`bd.an.${e.b}`) });
+  const early = you.md < '02-05' ? `<small>${esc(t('bd.y.risshun', { kan: eto(you.y - 1).kan }))}</small>` : '';
+  const sa = sameAge(ages, age);
+  const what = (x) => {
+    if (x[3] === 'bat') return t('bd.age.bat', { b: (battles.find((b) => b.key === x[4])?.name || '').replace(/\s*[（(]\d+[)）]$/, '') });
+    return t(`bd.age.${x[3]}`);
+  };
+  const items = sa.list.map((x) => `<li><b>${esc(pname(ages.p[x[0]]))}</b>${esc(t('bd.age.item', { age: x[2], y: x[1], what: what(x) }))}</li>`).join('');
+  const head = sa.age === age ? t('bd.age.h', { age }) : t('bd.age.near', { age, a: sa.age });
+  return `<section class="bd-you">
+    <div class="bd-facts"><div class="bd-fact"><span>${esc(t('bd.y.k'))}</span><b>${esc(gengo || String(you.y))}</b><small>${esc(etoTxt)}</small>${early}</div>
+    <div class="bd-fact"><span>${esc(t('bd.y.age'))}</span><b>${esc(t('bd.y.agev', { n: age }))}</b></div></div>
+    ${ages ? `<h3>${esc(head)}</h3>${items ? `<ul class="bd-age">${items}</ul>` : ''}<p class="ks-note">${esc(t('bd.age.note'))}</p>` : ''}
+  </section>`;
+}
+
+export function bdayHTML(d, { prefName, lordOf, name, you, ages, battles }) {
   const [m, day] = d.key.split('-').map(Number);
   const fact = facts(d, prefName).map((f) => `<div class="bd-fact"><span>${esc(f.k)}</span><b>${esc(f.v)}</b>${f.sub ? `<small>${esc(f.sub.join(' · '))}</small>` : ''}</div>`).join('');
   const group = (g) => {
@@ -49,7 +106,9 @@ export function bdayHTML(d, { prefName, lordOf, name }) {
       <h2 id="bday-h">${esc(t('bd.title', { m, d: day }))}</h2>
       <label class="ks-name">${esc(t('bd.name'))}<input type="text" maxlength="16" data-bd-name value="${esc(name)}" placeholder="${esc(t('ks.name.ph'))}"></label>
       <label class="bd-date">${esc(t('kk.pick'))}<input type="date" data-bd-date value="${d.year}-${d.key}"></label>
+      <label class="bd-date">${esc(t('bd.y.in'))}<input type="number" inputmode="numeric" min="1873" max="${d.year}" placeholder="${esc(t('bd.y.ph'))}" data-bd-year value="${you?.y || ''}"></label>
     </header>
+    ${youHTML(you, ages, battles || [])}
     <div class="bd-facts">${fact}</div>
     ${d.total ? GROUPS.map(group).join('') : `<p class="kk-none">${esc(t('kk.none'))}</p>`}
     <p class="ks-note">${esc(t('bd.note'))}</p>

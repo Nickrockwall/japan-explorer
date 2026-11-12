@@ -236,10 +236,29 @@ export function createCards(S, ctx) {
     if (!rows.length) return '';
     return rows.map((r) => (r.startsWith('<') ? r : `<p class="meijo">${esc(r)}</p>`)).join('') + `<p class="note">${esc(t('meijoNote'))}</p>`;
   }
+  // 城的照片（3.40，tools/castle_photo_tool.py）：100名城、続100名城与现存天守，第一次打开城卡片时才下载索引
+  let photos = null;
+  let photosLoad = null;
+  const photoHTML = (c) => {
+    const p = photos?.[c.q];
+    if (!p) return '';
+    const [src, lic, author, file] = p;
+    const credit = [author, lic].filter(Boolean).join(' · ');
+    return `<figure class="castle-photo"><img src="${src}" alt="${esc(castleName(c))}" loading="lazy">
+      <figcaption>${esc(t('photo.by', { credit }))} · <a href="https://commons.wikimedia.org/wiki/${encodeURIComponent(file)}" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>`;
+  };
   function showCastle(c, fly = true) {
+    if (!photos && (c.h100 || c.z100 || c.tenshu)) {
+      photosLoad ??= fetch('src/3d/castle_photos.json').then((r) => r.json()).catch(() => ({}));
+      photosLoad.then((d) => {
+        photos = d;
+        if (S.focused?.type === 'castle' && S.focused.q === c.q && !card.hidden && photos[c.q]) card.querySelector('.sub')?.insertAdjacentHTML('afterend', photoHTML(c));
+      });
+    }
     S.focused = { type: 'castle', q: c.q };
     openCard(`<h2>${esc(castleName(c))}</h2>
       <p class="sub">${esc(provName(c.prov))} · ${t('castle')}</p>
+      ${photoHTML(c)}
       <p>${c.bc ? esc(t('bc', { c: c.bc })) : t(c.ba ? 'ba' : 'built', { y: c.built })}${c.gone ? t('gone', { y: c.gone }) : ''}</p>
       ${meijoHTML(c)}
       <p><button type="button" class="look-btn">${esc(t(+opts.year >= 1576 ? 'look.tenshu' : 'look.yagura'))}</button></p>

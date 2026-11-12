@@ -101,7 +101,13 @@ def section(wt):
     sec = rest[:end.start()] if end else rest
     k = re.search(r'^(=+)\s*室町(?:幕府|時代)\s*\1\s*$', sec, re.M)
     if not k:
-        return None
+        # 3.40：小标题写成粗体一行的（和泉国「'''室町幕府'''」）：读到下一个粗体行或标题为止
+        b = re.search(r"^'''\[?\[?室町(?:幕府|時代)\]?\]?'''\s*$", sec, re.M)
+        if not b:
+            return None
+        body = sec[b.end():]
+        nxt = re.search(r"^(?:'''[^'\n]+'''\s*$|=)", body, re.M)
+        return body[:nxt.start()] if nxt else body
     body = sec[k.end():]
     nxt = re.search(r'^={2,%d}[^=].*$' % len(k.group(1)), body, re.M)
     return body[:nxt.start()] if nxt else body

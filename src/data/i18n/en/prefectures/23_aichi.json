@@ -89,14 +89,14 @@
   ],
   "dialect": {
     "name": "Nagoya dialect",
-    "features": "Vowels merge (ai → ææ, as in '-dagyaa'); 'dera' means very, and a bicycle is a 'kettā mashīn'.",
+    "features": "Vowels merge (ai → ææ); 'dera' means very, and a bicycle is a 'kettā mashīn'.",
     "phrases": [
       {
         "meaning": "very",
         "note": ""
       },
       {
-        "meaning": "it's…!",
+        "meaning": "please (do it for me)",
         "note": ""
       },
       {

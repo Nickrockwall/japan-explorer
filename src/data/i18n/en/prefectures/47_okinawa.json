@@ -78,18 +78,18 @@
   ],
   "dialect": {
     "name": "Okinawan (Uchināguchi)",
-    "features": "The Ryukyuan languages share roots with Japanese but are barely mutually intelligible, with mainly three vowels (a, i, u); 'nankurunaisa' sums up the islanders' optimism.",
+    "features": "The Ryukyuan languages share roots with Japanese but are barely mutually intelligible, with mainly three vowels (a, i, u); Okinawan calls itself 'uchinaaguchi'.",
     "phrases": [
       {
         "meaning": "hello",
         "note": "used by men / by women"
       },
       {
-        "meaning": "welcome",
+        "meaning": "auspicious, happy",
         "note": ""
       },
       {
-        "meaning": "it'll all work out",
+        "meaning": "the Okinawan language",
         "note": ""
       }
     ]

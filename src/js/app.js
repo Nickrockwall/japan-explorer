@@ -14,10 +14,11 @@ import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { hometownItems, hometownHTML } from './hometown.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
+import { REAL_ERAS, createEraBase } from './era2d.js';
 import { rulersHTML, powerChain, powerCaption } from './rulers.js';
 import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
 import { hanSection, setLordDays, lordOfFn } from './han.js';
-import { bdayData, bdayHTML, bdayImage } from './bday.js';
+import { setupBday } from './bday-dialog.js';
 import { createTour } from './tour.js';
 import { createHelp } from './help.js';
 import { kokuCard, kokuSection, distanceKm, CHECKIN_KM } from './koku.js';
@@ -213,62 +214,9 @@ async function main() {
     if (d && app.currentId) renderCurrent();
   });
 
-  // ── 生日帖：彼时今日里某一天的全部条目 + 几个数字，可存图；深链接 #bday=MM-DD ──
-  const bdDlg = $('bday');
-  let bd = null;
-  const bdCtx = () => ({ prefName: prefLabel, lordOf, name: uiPref.get('kosekiName', '') });
-  async function openBday(key) {
-    if (!kako.all) return;
-    await ensureHan();
-    bd = bdayData(kako.all, key);
-    bdDlg.innerHTML = bdayHTML(bd, bdCtx());
-    if (!bdDlg.open) bdDlg.showModal();
-    bdDlg.scrollTop = 0;
-    history.replaceState(null, '', `#bday=${key}&lang=${lang}`);
-    audio.play('click');
-  }
-  bdDlg.addEventListener('close', () => {
-    if (/bday=/.test(location.hash)) history.replaceState(null, '', app.currentId ? stateHash(app.currentId) : location.pathname + location.search);
-  });
-  bdDlg.addEventListener('input', (e) => {
-    if (e.target.matches('[data-bd-name]')) uiPref.set('kosekiName', e.target.value.trim());
-  });
-  bdDlg.addEventListener('change', (e) => {
-    const m = e.target.closest('[data-bd-date]')?.value.match(/^\d+-(\d\d)-(\d\d)$/);
-    if (m) {
-      kako.key = `${m[1]}-${m[2]}`;
-      kako.page = 0;
-      renderKako();
-      openBday(kako.key);
-    }
-  });
-  bdDlg.addEventListener('click', async (e) => {
-    if (e.target === bdDlg || e.target.closest('[data-act="bd-close"]')) { bdDlg.close(); return; }
-    const it = e.target.closest('[data-kako]');
-    if (it) { bdDlg.close(); showKako(it.dataset.kako, it.dataset.kt); return; }
-    const b = e.target.closest('[data-act]');
-    if (!b || !bd) return;
-    if (b.dataset.act === 'bd-link') {
-      const url = `${location.origin}${location.pathname}#bday=${bd.key}&lang=${lang}`;
-      try {
-        await navigator.clipboard.writeText(url);
-        toast(t('share.copied'));
-      } catch {
-        toast(t(legacyCopy(url) ? 'share.copied' : 'share.fail'));
-      }
-    }
-    if (b.dataset.act === 'bd-image') {
-      b.disabled = true;
-      try {
-        await saveImage(await bdayImage(bd, bdCtx()), `birthday-${bd.key}.png`, t('bd.kicker'));
-      } catch (err) {
-        console.warn('生日帖图片生成失败', err);
-        toast(t('ks.fail'));
-      } finally {
-        b.disabled = false;
-      }
-    }
-  });
+  // ── 生日帖（bday-dialog.js，3.40 拆出） ──
+  // prefLabel 在下面才定义、lordOf 会在 han.json 到了以后换掉：都包一层，用到时再取
+  const { openBday } = setupBday({ kako, ensureHan, prefLabel: (id) => prefLabel(id), lordOf: (e) => lordOf(e), renderKako, showKako, saveImage, data, app });
 
   // ── 广重《六十余州名所图会》：古国地图上点一国弹卡片，详卡列出本县的画，点缩略图看大图 ──
   const art = data.hiroshige || [];
@@ -521,6 +469,9 @@ async function main() {
     if (e.target.closest('[data-act="kr-close"]')) { closePower(); return; }
     const li = e.target.closest('.kr-list li[data-k]');
     if (li) { focusPower(li.dataset.k, true); return; }
+    // 市区町村逆袭榜（3.40）：点一行打开那里的古代户籍
+    const mu = e.target.closest('.kr-muni li[data-code]');
+    if (mu) { openKoseki(+mu.dataset.pid, mu.dataset.code); return; }
     if (power?.handle(e)) renderPower();
   });
   powerCard.addEventListener('change', (e) => {
@@ -1018,6 +969,7 @@ async function main() {
       eraPrevFilter = null;
     }
     map.setEra(ef ? null : era); // 这几个时代由对应滤镜着色（时代数据里没有按县着色）
+    syncEraBase(era);
     document.body.classList.toggle('time-travel', !!era);
     $('tb-exit').hidden = !era;
     if (era) {
@@ -1048,6 +1000,38 @@ async function main() {
     syncArtCard();
     if (app.currentId) era ? highlightEra(detailEl, era) : highlightEra(detailEl, null);
   }
+
+  // 3.40：镰仓、室町、江户、明治用真实边界（era2d.js；旧国边界与这一时代的数据下载好之前仍按县粗略着色）。
+  // 有几个年份的时代在工具条多一行年份（#era-years），选过的年份按时代记住（只在这次打开页面里）
+  const eraYearBox = $('era-years');
+  const eraYearOf = {};
+  let eraBaseTok = 0;
+  async function syncEraBase(era) {
+    const cfg = era && REAL_ERAS[era.key];
+    const tok = ++eraBaseTok;
+    document.body.classList.toggle('era-real', !!cfg && cfg.years.length > 1);
+    if (!cfg) { map.setEraBase(null); return; }
+    const y = eraYearOf[era.key] || cfg.y;
+    eraYearBox.innerHTML = cfg.years.map((x) => `<button type="button" role="tab" data-y="${x}" class="${x === y ? 'on' : ''}" aria-selected="${x === y}">${esc(t('prov.y', { y: x }))}</button>`).join('');
+    ensureProvinces();
+    try {
+      const [b] = await Promise.all([createEraBase(era.key, y), provinces]);
+      if (tok !== eraBaseTok) return;
+      map.setEraBase(b);
+      updateLegend(map);
+    } catch (err) {
+      console.warn('时代底图加载失败，仍按县着色', err);
+    }
+  }
+  eraYearBox.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-y]');
+    const era = app.eraIdx != null ? eras[app.eraIdx] : null;
+    if (!b || !era || b.classList.contains('on')) return;
+    stopPlay();
+    eraYearOf[era.key] = b.dataset.y;
+    audio.play('click');
+    syncEraBase(era);
+  });
 
   function stopPlay() {
     clearInterval(playTimer);
@@ -1102,7 +1086,7 @@ async function main() {
       .then((g) => {
         map.setProvinces(g);
         if (data.kokuryoku) {
-          power = createPower(data.kokuryoku, g);
+          power = createPower(data.kokuryoku, g, { onUpdate: () => renderPower() });
           map.setPower(power);
         }
         updateLegend(map);
@@ -1311,7 +1295,7 @@ async function main() {
     $('hud-sides').innerHTML = b.factions.map((f) =>
       `<span class="side" style="--c:${f.color}"><b>${esc(f.name)}</b>${esc(f.leader)}<small>${esc(f.strength)}</small></span>`).join('<em>VS</em>');
     // 兵力条（3.37，与立体图相同）：按各家写的比较数字 men 分长短
-    const sum = b.factions.reduce((a, f) => a + (f.men || 0), 0);
+    const sum = b.factions.every((f) => f.men) ? b.factions.reduce((a, f) => a + f.men, 0) : 0; // 有一方没有数字（姉川的织田·德川）就不画
     const num = (v) => v.toLocaleString(lang === 'en' ? 'en' : 'ja');
     $('hud-force').hidden = !sum;
     $('hud-force').setAttribute('aria-label', b.factions.map((f) => `${f.name} ${num(f.men || 0)}`).join(' / '));
@@ -1402,10 +1386,47 @@ async function main() {
       onPick: (prov) => openKoku(kokuSites.find((s) => s.id === ichinomiya.get()[prov]?.site)
         || kokuSites.find((s) => s.kind === 'ichi' && s.prov === prov)),
     },
+    // 真实足迹（3.40）：旧国边界按需下载；只存每国张数（je.ui.footprint），不存坐标
+    foot: {
+      provinces: () => { ensureProvinces(); return provinces.then((g) => g || Promise.reject(new Error('no provinces'))); },
+      get: () => uiPref.get('footprint', null),
+      set: (v) => uiPref.set('footprint', v),
+    },
   });
   $('btn-book').addEventListener('click', () => bookUI.open());
 
-  createSearch($('search'), { prefs, onPref: (id) => map.onSelect(id), onMuni: focusMuni });
+  // 3.40：也能搜人物（战国势力图的人物卡）、城（立体图里打开）、藩（选中所在县，详卡展开江户诸藩）、合战
+  createSearch($('search'), {
+    prefs, onPref: (id) => map.onSelect(id), onMuni: focusMuni, battles: data.events?.historic_battles || [],
+    onPick: async (e) => {
+      if (e.type === 'battle') { const b = (data.events?.historic_battles || []).find((x) => x.key === e.key); if (b) startBattle(b); return; }
+      if (e.type === 'castle') { location.href = `3d.html#cs=${encodeURIComponent(e.ja)}&lang=${lang}`; return; }
+      if (e.type === 'han') {
+        map.onSelect(e.id);
+        if (narrow()) tabs.set('detail');
+        // 详卡画好（江户诸藩在 han.json 到了以后才有）再展开这个藩：本身与外层的 details 都打开，藏起来的（.hn-x）露出来
+        const want = Date.now() + 4000;
+        const tryOpen = () => {
+          const hit = [...detailEl.querySelectorAll('details.hn-han')].find((d) => d.querySelector('summary b')?.textContent === e.title);
+          if (!hit) { if (Date.now() < want) setTimeout(tryOpen, 250); return; }
+          hit.classList.remove('hn-x');
+          for (let d = hit; d; d = d.parentElement?.closest('details')) d.open = true;
+          hit.scrollIntoView({ block: 'center' });
+        };
+        setTimeout(tryOpen, 300);
+        return;
+      }
+      if (e.type === 'person') {
+        if (app.layer !== 'history') applyLayer('history');
+        if (!sg) { applyFilter('sengoku'); await sengokuLoad; }
+        if (sg?.showPerson(e.ja)) {
+          if (narrow()) tabs.set('map');
+          sgCard.hidden = false;
+          renderSengoku();
+        }
+      }
+    },
+  });
   setupSplitter(() => map.resize());
   setupPersonaSwitch(guide);
 

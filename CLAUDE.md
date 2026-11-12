@@ -47,7 +47,7 @@ src/js/audio.js                和风音频单例：Web Audio 合成音效与背
 src/3d/                       立体古今图（3d.html）的代码与资料：app.js 主程序（底图、上色、年份、图例、设置、主循环）、eras.js 五个时代的定义、overlay / terrain / models / decor / story / battle，3.36 从 app.js 拆出 cards（卡片）/ labels（文字标签）/ search / chunks（地形分块、树、墨晕）/ buildings（城与社寺等、炊烟）/ snapshot（存图），3.37 加 help（说明）/ lookout（登天守远望）/ here（此地千年）；edo.json · meiji-1876.json · meiji-1888.json（build_eras3d.py；3.37 起明治按年份分开）、kamakura.json（kamakura_tool.py）、kodai.json（kodai_tool.py）、kaido.json（kaido_tool.py）、castles.json、story.json、water.json
 src/assets/geojson/japan.json  47 都道府县 GeoJSON（properties: id, name, nam, nam_ja；name = 规范汉字全称如「京都府」，须与县数据 name.kanji 及 ECharts series.data.name 严格一致）；网站下载的是 japan.pack.json（见下「地图文件压缩」）
 src/data/index.json            47 县清单（id, slug, file, kanji, zh, region）
-src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3.14 加了大正·昭和前期 1912–1945）+ historic_battles（10 场合战，3.36 起由 tools/battles_tool.py 加兵力数字与新合战）
+src/data/historical_events.json  全国共享：timeline_eras（10 个时代，3.14 加了大正·昭和前期 1912–1945）+ historic_battles（16 场合战，3.36 起由 tools/battles_tool.py 加兵力数字与新合战，3.40 的六场在 battles_more.py）
 src/data/prefectures/NN_slug.json  各县数据（01_hokkaido … 47_okinawa）
 src/data/provinces.json        68 令制国真实边界 + 县界线（tools/build_provinces.py 由市区町村合并生成）
 src/data/province_eras.json    古国演变时间轴：712 / 757 / 1869 年与 824 年的差异（remove + add）
@@ -514,6 +514,21 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 背景音乐：都节音阶（E F A B C）随机游走的古筝拨弦 + E/B 持续低音 + 合成混响，不循环；默认关，在设置弹窗「声音」区块开启（改动立即生效，不随保存/取消）。开启 + 未静音 + 页面在前台才播放，切后台淡出后停止。
 - 想用录好的 mp3：放进 `src/assets/audio/`，在 audio.js 顶部 `FILES` 登记（不自动探测，免得 404 进控制台），加载/播放失败自动退回合成。
 - 任何音频错误只 `console.warn`，不得抛出；smoke 的 `audio_broken` 场景删掉 AudioContext 后走一遍盖印、合战、开音乐。
+
+## 3.40 加的东西（详见 CHANGELOG）
+
+- **户籍四栏**（koseki.js，数据在 town 包，build_bundle 的 `sennen` / `far_lords` / `kuni_share` / `rise_ranks`）：`sennen` 千年地名（今天 / 1995 / 明治町村名去掉市町村区 = 同一古郡的《和名抄》郷名，驿家不算；措辞写明「明治村名有的是复古取的」）；`far` 远方领主（kyudaka 各藩 ≥5% 且藩厅 ≥150 km，按占比排；藩厅坐标 `tools/han_seats.json` ← `tools/hanseat_tool.py`：藩厅条目坐标 → Wikidata → 藩条目 → 「現在の○○市」或藩名 = 今天 / 明治町村名的市区町村质心，坐标须落在本县）；`kuni` 别国人（按人口：旧国大半在别县，或本县大半是别国且本国 <40%）；`rise` 石高与人口名次（名次相差三倍以上才说逆袭 / 没落）。上田的户籍因此 14 栏（smoke `koseki`）。
+- **市町村逆袭榜**：`bundle/rise-<lang>.json`（build_bundle `build_rise`），古国国力卡片的「市町村」页（kokuryoku.js `muniView`，不列东京 23 区与名字以区结尾的），点一行 `openKoseki`。
+- **平面图真实边界**（era2d.js）：`REAL_ERAS` 镰仓 / 室町（824 年 68 国 + 3D 的 kamakura / muromachi.json）、江户（3D edo.json 的藩领块）、明治（1871 = edo 块按 ken 名、1876 / 1888 = meiji-*.json）；map.js `setEraBase`、`eraBaseOn()` 时 `curProv()` 换成它，`provRegion` / `provTip` / 图例走 eraBase；藩与府县按共用顶点的相邻关系贪心着色（同 3D 的 PALETTE）。年份行 `#era-years`（`body.era-real`），选过的年份只记在本次页面。数据没到之前仍按县粗略着色。
+- **远望看名山**（3D viewshed.js + peaks.json ← `tools/peaks_tool.py`，《日本百名山》表）：每 400 m 取地形高度、扣地球曲率与折射 k=0.13，离山顶 1.5 km 内不算；天守 100 m、此地 10 m（lookout.enter 的第三个参数；3D app 里的函数叫 `viewFrom`，别和移动镜头的 `lookAt` 撞名）。`#look=经,纬&hn=` 链接（户籍 `.ks-look`），`#peaks` 面板点一座山 `lookout.face` 转过去。地形粗，结果写明是近似。
+- **生日帖出生年**（bday.js `wareki` / `eto` / `sameAge`，`je.ui.bdayYear` 只存本机，1873 年以后）：同龄的他们读 `src/data/ages.json` ← `tools/age_tool.py`（Wikidata 生卒年，精确到年；事件只用本站已核对的：即位 / 任将军 / 任执权 / 合战领军 / 去世；岁数 = 年份相减）。生日帖对话框代码在 bday-dialog.js（3.40 从 app.js 拆出；app.js 其余各段共用会被重新赋值的状态，没有再拆）。
+- **真实足迹**（footprint.js，御朱印帐第三篇 `foot`）：在文件里找「Exif\0\0」后的 TIFF 头读 GPS（JPEG 与 HEIC 都这样），落在 824 年 68 国哪一国；`je.ui.footprint` = {p: {国: 张数}, n, k}，不存坐标。测试照片 `tests/fixtures/`。
+- **搜索**：`bundle/search.json`（build_bundle `build_search`：战国人物 + 6 世纪后天皇 / 将军 / 执权、立体图的城、藩，三语名字放一起），打开搜索框时下载；合战来自数据包。人物 → 战国图人物卡；城 → `3d.html#cs=城名`（3D 打开城卡片）；藩 → 选县并展开那一个 `details.hn-han`。
+- **城的照片**：`tools/castle_photo_tool.py` → `src/assets/castles/<QID>.webp`（480px q70）与 `src/3d/castle_photos.json`（[文件, 许可, 作者, Commons 页]），许可规矩同人物肖像；`NOT_PHOTO` 是人工看过不是实景的（屏风画、版画）。登记在 LICENSE-CONTENT。
+- **合战 16 场**：新六场在 `tools/battles_more.py`（battles_tool 导入），姉川的织田·德川兵力条目没写 → 两方都不给 `men`，兵力条不画（app.js 与 3D 都要求两方都有）；unit test 的 `NO_MEN`。
+- **第二轮核对**：`tools/recheck_tool.py`（方言例句先在方言条目里找、再全文检索，地酒按日文名找条目，拉面看「ご当地ラーメン」）；维基没有的再查 Kotobank（`.cache/kotobank/`）。日文维基方言条目把重音写成粗体（ぶ'''んに'''），找字前要去掉 `'''`。
+- **han.json 的县**：han_tool `PREF` 加了七户 / 八户（2）、久保田（5）、佐土原（45）——以前按名单的国推错了；hanseat_tool 会打印坐标落在别县的藩，有新的就核对后写进 PREF。
+- **加载量**：`python -X utf8 tools/measure_load.py https://nickrockwall.github.io/japan-explorer/`（模拟 9 Mbps / 60 ms）。3.39 线上：首屏约 2.8 s、1.4 MB（字体 0.54 MB），立体图约 2 s、0.76 MB。本地 http.server 不压缩，量线上才准。
 
 ## 检查与测试（改完提交前先跑）
 

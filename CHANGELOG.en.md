@@ -4,6 +4,25 @@
 
 Newest first.
 
+## 3.40 · 2026-11-13
+
+- Four new rows in the family register: "1,000-year name" — today's name, the pre-Heisei-merger name or a Meiji village name is exactly a township of the same ancient district in the 10th-century Wamyōshō (Serita and Imoi in Nagano); "Distant lord" — over 5% of the 1868 rice yield here belonged to a domain seated 150+ km away (29% of Sano went to Hikone in Ōmi); "Other province" — most of this old province lies in another prefecture today (Amagasaki was Settsu, most of which is in Osaka), or most of this prefecture was another province (Obama was Wakasa, while 91% of Fukui lives in old Echizen); "Rice vs people" — national rank for 1868 rice yield against today's population
+- The province-power card has a "Towns" page: municipalities whose 1868 yield rank and today's population rank differ the most (village to city / rich land, few people); tap one to open its register
+- Time travel uses real borders for Kamakura, Muromachi, Edo and Meiji: provincial constables (choose 1200/1250/1300 or 1350/1400/1440), the 1867 lands of every domain, the shogunate and hatamoto, and the prefectures of 1871/1876/1888 — the same data as the 3D map
+- Which famous peaks can you see? The 3D lookout now works out which of the 100 Famous Mountains are in view (rough line of sight with terrain, earth curvature and refraction) and says whether Mt Fuji is visible or what hides it; the register has a link for it and the "thousand years" panel can do it from 10 m up
+- The birthday card takes a birth year (kept on this device): era name and zodiac year, your age, and "At your age" — historical figures who were enthroned, became shogun, fought or died in the year they turned that age
+- A third part of the goshuin book, "Footprints": pick photos and the browser reads where they were taken, marking which of the 68 provinces you've been to; photos are never uploaded, only a count per province is kept
+- Search now finds people, castles, domains and battles: "Ueda" gives Ueda city, Ueda Castle and Ueda Domain; people open their card, castles open in 3D, domains open the prefecture's list
+- Castle cards for the 100 Fine Castles, the Next 100 and surviving keeps show a photo (166, from Wikimedia Commons, each licence checked and the author credited)
+- "A thousand years here" can be saved as an image
+- Six more battles: Minatogawa (1336), Anegawa (1570), Mikatagahara (1573), Shizugatake (1583), Komaki–Nagakute (1584) and the summer siege of Osaka (1615) — sixteen in all, on both maps, each with four phases, march routes, a narrator and a debated point, keywords and years checked against Japanese Wikipedia
+- Seven fewer "unknown" Muromachi constables (Izumi, Settsu, Kawachi, Kazusa and others — lists written under a bold line were missed before)
+- Second fact check: dialect phrases traced one by one; the 11 with no source in Japanese Wikipedia or Kotobank were replaced with phrases the dialect articles do give (Osaka's "nande yanen" became "honma", Okinawa's "mensōre" became "kariyushi"), with the notes rewritten; Sekigahara and Satsuma Rebellion troop numbers now follow the article infoboxes; every local sake and ramen has a source
+- Fixed: Shichinohe and Hachinohe domains were filed under Iwate, Kubota (Akita) under Tochigi and Sadowara (Miyazaki) under Shiga, so prefecture cards listed them in the wrong place; now by the domain seat
+- Measured loading: on simulated 4G (9 Mbps) the first screen is usable in about 2.8 s after 1.4 MB (0.54 MB of fonts, which don't block), the 3D map in about 2 s after 0.76 MB — no further optimisation needed for now
+- The birthday dialog moved out of the main app.js (bday-dialog.js); the other sections share too much changing state to split safely, so they stay
+- Swept the Japanese interface and data: no stray simplified Chinese characters or Chinese wording
+
 ## 3.39 · 2026-11-12
 
 - Buildings on the 3D map redone: castle keeps get upturned eaves, triangular gables, a hip-and-gable top roof with golden shachihoko, a curved stone base, and black lower siding; the 100 Fine Castles, the Next 100 and surviving keeps gain a ring of white walls, two corner turrets and a gate when you zoom in; early castles are earthworks with a post-by-post palisade, a watchtower and a thatched hall; ichinomiya shrines have a torii with upturned black top beam and a nagare-style hall; kokubunji have a vermilion five-storey pagoda with its spire and a main hall; provincial capitals are walled compounds with a main hall and two side halls; post towns are a row of townhouses and an inn; trees are two-tier cedars

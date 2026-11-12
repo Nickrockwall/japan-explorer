@@ -96,10 +96,10 @@
   ],
   "dialect": {
     "name": "Hakata dialect",
-    "features": "'-to?', '-bai' and '-ken'; 'suitō yo' (I like you) is hailed as the cutest confession in Japan.",
+    "features": "'-to?', '-bai' and '-ken'; questions often end in 'to?', as in 'shittō to?' (do you know?).",
     "phrases": [
       {
-        "meaning": "I like you",
+        "meaning": "Do you know?",
         "note": ""
       },
       {

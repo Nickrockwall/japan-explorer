@@ -452,12 +452,12 @@
         {
           "name": "Eastern army",
           "leader": "Tokugawa Ieyasu",
-          "strength": "c. 75,000 (one account)"
+          "strength": "c. 74,000–104,000 (accounts vary)"
         },
         {
           "name": "Western army",
           "leader": "Ishida Mitsunari",
-          "strength": "c. 80,000 incl. non-combatants (one account)"
+          "strength": "over 80,000 incl. non-combatants (accounts vary)"
         }
       ],
       "march_routes": [
@@ -501,7 +501,7 @@
       "brief": "After Toyotomi Hideyoshi's death, Tokugawa Ieyasu and Ishida Mitsunari came to blows. On the 15th day of the 9th month, 1600, they met at Sekigahara; Kobayakawa Hideaki and others defected from the West, and the East won within half a day. Ieyasu took the realm and founded the Edo shogunate three years later.",
       "key_points": {
         "turning_point": "Kobayakawa Hideaki turned on Ōtani Yoshitsugu's position and Wakisaka and three others followed in a chain of defections; the Mōri and Kikkawa never moved. Ieyasu's \"prodding volley\" at Matsuo-yama is one account.",
-        "forces": "East c. 75,000; West c. 80,000, though far fewer actually fought (figures vary).",
+        "forces": "East c. 74,000–104,000; West over 80,000, though far fewer actually fought (figures vary).",
         "aftermath": "Mitsunari was executed and western daimyo were stripped or reduced; Ieyasu became shogun in 1603, and the Toyotomi fell at the Summer Siege of Osaka in 1615."
       },
       "narrator": {
@@ -690,12 +690,12 @@
         {
           "name": "Satsuma army",
           "leader": "Saigō Takamori",
-          "strength": "c. 30,000 (one account)"
+          "strength": "c. 20,000–30,000 (accounts vary)"
         },
         {
           "name": "Government army",
           "leader": "Yamagata Aritomo et al. (commander-in-chief Prince Arisugawa Taruhito)",
-          "strength": "c. 60,000 in total (one account)"
+          "strength": "c. 80,000–100,000 (accounts vary)"
         }
       ],
       "march_routes": [
@@ -730,7 +730,7 @@
       "brief": "When the Meiji government abolished samurai privileges, disaffected Satsuma samurai rose under Saigō Takamori. Unable to take Kumamoto Castle, they fought government forces at Tabaruzaka for seventeen days and nights before falling back; Saigō died at Shiroyama, ending Japan's last civil war.",
       "key_points": {
         "turning_point": "Tani Tateki held Kumamoto Castle for over fifty days; in seventeen days of fighting at Tabaruzaka the government's numbers, supplies and modern rifles wore down the Satsuma army, and the rear landing left it attacked from both sides.",
-        "forces": "Satsuma c. 30,000; government forces c. 60,000 in total (figures vary).",
+        "forces": "Satsuma c. 20,000–30,000; government forces c. 80,000–100,000 (figures vary).",
         "aftermath": "Saigō took his own life at Shiroyama in Kagoshima on 24 September; armed samurai resistance ended and political struggle shifted to the Freedom and People's Rights Movement."
       },
       "narrator": {
@@ -1399,6 +1399,750 @@
       "debate": {
         "q": "Why did Yoshinobu leave his army and sail for Edo?",
         "a": "Late in life Yoshinobu explained in the Sekimukai hikki that he would not bear the name of \"enemy of the court\" and decided to return east first and think again. Opinions of what he did differed widely, then and since."
+      }
+    },
+    {
+      "name": "Battle of Anegawa (1570)",
+      "battlefield": {
+        "name": "Anegawa, Ōmi"
+      },
+      "factions": [
+        {
+          "name": "Oda–Tokugawa",
+          "leader": "Oda Nobunaga, Tokugawa Ieyasu",
+          "strength": "not given in the article"
+        },
+        {
+          "name": "Azai–Asakura",
+          "leader": "Azai Nagamasa, Asakura Kagetake",
+          "strength": "c. 13,000 (Azai c. 5,000, Asakura c. 8,000)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Gifu"
+          },
+          "to": {
+            "name": "Tatsugahana"
+          },
+          "desc": "Nobunaga marched from Gifu into northern Ōmi, burned the town below Odani Castle, besieged Yokoyama Castle and camped at Tatsugahana, where Tokugawa Ieyasu joined him"
+        },
+        {
+          "from": {
+            "name": "Ichijōdani, Echizen"
+          },
+          "to": {
+            "name": "Ōyoriyama"
+          },
+          "desc": "Asakura Kagetake arrived with about 8,000 men and camped on Ōyoriyama east of Odani Castle, joining Azai Nagamasa’s 5,000"
+        },
+        {
+          "from": {
+            "name": "Ōyoriyama"
+          },
+          "to": {
+            "name": "Nomura"
+          },
+          "desc": "Before dawn on the 28th the Azai and Asakura split in two and formed up at Nomura and Mitamura on the north bank of the Ane"
+        }
+      ],
+      "brief": "In 1570 Azai Nagamasa broke with Nobunaga and came to the aid of the Asakura, forcing Nobunaga to retreat from Echizen. That summer Nobunaga and Tokugawa Ieyasu invaded northern Ōmi and met the Azai–Asakura army on the banks of the Ane. Hard pressed at first, the Oda side won after the Tokugawa struck the enemy flank — but Odani Castle, the Azai seat, held out.",
+      "key_points": {
+        "turning_point": "The Oda line was in danger for a while; Ieyasu saw that the Azai–Asakura front was stretched thin and sent Sakakibara Yasumasa against its flank. The Asakura broke first, then the Azai.",
+        "forces": "Azai about 5,000 and Asakura about 8,000, some 13,000 in all; the article gives no figure for the Oda–Tokugawa side.",
+        "aftermath": "The Oda side took over 1,100 heads and the Azai lost senior men such as Endō Naotsune; Yokoyama Castle soon surrendered and Kinoshita Hideyoshi was put in charge of it, but Odani stayed in Azai hands."
+      },
+      "narrator": {
+        "name": "Azai Nagamasa",
+        "title": "lord of northern Ōmi",
+        "self": "I",
+        "opening": "It was I who broke faith with Nobunaga first… so be it — let it be settled at the Ane.",
+        "tone": "upright, carrying both his betrayal of his brother-in-law Nobunaga and his loyalty to the Asakura"
+      },
+      "phases": [
+        {
+          "title": "Deployment",
+          "time": "6th month, 1570 (lunar)",
+          "desc": "Nobunaga burned the town below Odani, besieged Yokoyama Castle and camped with Ieyasu at Tatsugahana; the Asakura relief force reached Ōyoriyama, bringing the allies to about 13,000.",
+          "line": "They have burned the town below Odani… but the Asakura have come — they are on Ōyoriyama.",
+          "markers": [
+            {
+              "name": "Odani Castle"
+            },
+            {
+              "name": "Yokoyama Castle"
+            }
+          ]
+        },
+        {
+          "title": "Opening",
+          "time": "Dawn of the 28th",
+          "desc": "The Azai and Asakura broke camp on the 27th, only to reappear before dawn on the 28th on the north bank, at Nomura and Mitamura. The Tokugawa went for the Asakura at Mitamura in the west, Nobunaga’s guard and the three Western Mino lords for the Azai at Nomura in the east; fighting began around six.",
+          "line": "Breaking camp yesterday was for their eyes only. Across the Ane!",
+          "markers": [
+            {
+              "name": "Nomura"
+            },
+            {
+              "name": "Mitamura"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "Morning of the 28th",
+          "desc": "The Oda were hard pressed; Ieyasu, seeing the enemy line overstretched, sent Sakakibara Yasumasa at its flank. The Asakura gave way first, then the Azai.",
+          "line": "The Asakura line broken from the side? …Where did the Tokugawa come from!",
+          "markers": [
+            {
+              "name": "Mitamura"
+            },
+            {
+              "name": "Ane River"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon of the 28th",
+          "desc": "The Oda side took over 1,100 heads. Nobunaga chased the Azai to the foot of Odani, judged it too strong to storm and fell back to Yokoyama, which soon surrendered and was given to Kinoshita Hideyoshi. The Azai lost Endō Naotsune and other senior men.",
+          "line": "Endō Naotsune is dead too… back to Odani — we hold the mountain castle.",
+          "markers": [
+            {
+              "name": "Odani Castle"
+            },
+            {
+              "name": "Yokoyama Castle"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "A pitched battle, or a surprise attack by the Azai and Asakura?",
+        "a": "The usual view is that the armies formed up across the Ane and fought head-on. Takazawa Hitoshi, reading the Shinchō kōki line that the enemy \"seemed to have broken camp, yet before dawn on the 28th came within thirty chō\", argues for a surprise attack that caught the Oda before they could form up."
+      }
+    },
+    {
+      "name": "Battle of Mikatagahara (1573)",
+      "battlefield": {
+        "name": "Mikatagahara, Tōtōmi"
+      },
+      "factions": [
+        {
+          "name": "Takeda",
+          "leader": "Takeda Shingen",
+          "strength": "c. 27,000 (the most the Takeda could field)"
+        },
+        {
+          "name": "Tokugawa–Oda",
+          "leader": "Tokugawa Ieyasu",
+          "strength": "Tokugawa c. 8,000, plus an Oda relief force (figures vary; one says c. 3,000)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kōfu"
+          },
+          "to": {
+            "name": "Futamata Castle"
+          },
+          "desc": "Shingen left Kōfu on the 3rd of the 10th month 1572, entered Tōtōmi by way of Shinano and besieged Futamata Castle"
+        },
+        {
+          "from": {
+            "name": "Futamata Castle"
+          },
+          "to": {
+            "name": "Iwaita"
+          },
+          "desc": "On the 22nd of the 12th month the Takeda left Futamata westwards, passed by Hamamatsu Castle and made for the Mikatagahara plateau"
+        },
+        {
+          "from": {
+            "name": "Hamamatsu Castle"
+          },
+          "to": {
+            "name": "Mikatagahara"
+          },
+          "desc": "Overruling some of his retainers, Ieyasu led the allies out of Hamamatsu to catch the Takeda from behind as they went down the Iwaita slope"
+        }
+      ],
+      "brief": "In 1572 Takeda Shingen launched his westward campaign into Tōtōmi. At the end of the year his army marched past Tokugawa Ieyasu’s Hamamatsu Castle towards Mikatagahara; Ieyasu came out after it, only to be routed by a Takeda army already drawn up for battle, and barely escaped back to his castle.",
+      "key_points": {
+        "turning_point": "The Takeda seemed to be bypassing Hamamatsu, drawing Ieyasu out to fight in the open; when he reached Mikatagahara the Takeda were waiting in fish-scale formation.",
+        "forces": "The Takeda brought about 27,000, the most they ever fielded; the Tokugawa could raise only about 8,000, plus the Oda relief force (numbers vary).",
+        "aftermath": "One account gives about 200 Takeda casualties against about 2,000 Tokugawa; Natsume Yoshinobu and others died covering Ieyasu’s escape. The Takeda wintered in Tōtōmi and took Noda Castle the next year, but Shingen fell ill and died on the way home."
+      },
+      "narrator": {
+        "name": "Tokugawa Ieyasu",
+        "title": "lord of Hamamatsu",
+        "self": "I",
+        "opening": "The strongest army in the land is marching across my domain… am I just to watch?",
+        "tone": "young and proud, unwilling to look weak; learns patience from defeat"
+      },
+      "phases": [
+        {
+          "title": "The march west",
+          "time": "10th–12th month, 1572",
+          "desc": "Shingen left Kōfu on the 3rd of the 10th month, entered Tōtōmi via Shinano and besieged Futamata; the castle surrendered on the 19th of the 12th month, and northern Tōtōmi became Takeda land.",
+          "line": "Futamata has fallen too… Shingen will come for Hamamatsu next.",
+          "markers": [
+            {
+              "name": "Futamata Castle"
+            }
+          ]
+        },
+        {
+          "title": "The sortie",
+          "time": "22nd day, 12th month",
+          "desc": "The Takeda left Futamata heading west but marched straight past Hamamatsu, as if bound for the Mikatagahara plateau; against some of his retainers’ advice Ieyasu led the allies out in pursuit.",
+          "line": "Marching right past my gate? To be scorned like this — what kind of warrior would stand for it? Out!",
+          "markers": [
+            {
+              "name": "Hamamatsu Castle"
+            },
+            {
+              "name": "Iwaita"
+            }
+          ]
+        },
+        {
+          "title": "Battle",
+          "time": "Evening of the 22nd",
+          "desc": "On the plateau the Takeda were already waiting in fish-scale formation; Ieyasu spread his men in crane’s-wing order, and in about two hours before sunset the allies were broken. Natsume Yoshinobu and others died so that Ieyasu could escape.",
+          "line": "They were waiting for us all along… it was a trap!",
+          "markers": [
+            {
+              "name": "Mikatagahara"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "That night to the 4th month, 1573",
+          "desc": "Ieyasu got back to Hamamatsu with a handful of men and, the story goes, threw open the gates and lit fires (the \"empty fort ploy\"); the night raid at Saigagake appears only in later Tokugawa sources. The Takeda wintered in Tōtōmi and took Noda Castle the next year, but Shingen fell ill and died on the way home.",
+          "line": "Natsume died in my place… this life of mine was given back to me.",
+          "markers": [
+            {
+              "name": "Hamamatsu Castle"
+            },
+            {
+              "name": "Saigagake"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "Where exactly was the battle fought?",
+        "a": "Nobody knows for sure. There is a memorial stone near the Mikatahara cemetery, but the site is not established. Hirayama Yū lists four main theories — Azukimochi, Nearai (above the Iwaita slope), Ōshibahara and Ōya; few sources describe the field directly, and some sites have been moved or lost to development."
+      }
+    },
+    {
+      "name": "Battle of Minatogawa (1336)",
+      "battlefield": {
+        "name": "Minatogawa, Settsu"
+      },
+      "factions": [
+        {
+          "name": "Ashikaga",
+          "leader": "Ashikaga Takauji, Ashikaga Tadayoshi",
+          "strength": "est. c. 35,000 (the Taiheiki says over 500,000; figures vary)"
+        },
+        {
+          "name": "Nitta–Kusunoki",
+          "leader": "Nitta Yoshisada, Kusunoki Masashige",
+          "strength": "est. c. 17,500 (the Taiheiki says over 50,000; figures vary)"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Tomo, Bingo"
+          },
+          "to": {
+            "name": "Wada Point"
+          },
+          "desc": "After winning Kyūshū at Tatarahama, Takauji came east by way of Tomo in Bingo, joined the Hosokawa fleets from Shikoku and advanced by sea"
+        },
+        {
+          "from": {
+            "name": "Tomo, Bingo"
+          },
+          "to": {
+            "name": "Egeyama"
+          },
+          "desc": "Ashikaga Tadayoshi led the main land army east along the Saigoku road"
+        },
+        {
+          "from": {
+            "name": "Harima"
+          },
+          "to": {
+            "name": "Wada Point"
+          },
+          "desc": "Nitta Yoshisada, bogged down besieging the Akamatsu in Harima, fell back to Hyōgo on the 13th to regroup"
+        },
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Egeyama"
+          },
+          "desc": "His plan rejected, Kusunoki Masashige was ordered to Hyōgo on the 16th and joined Yoshisada on the 24th"
+        }
+      ],
+      "brief": "In 1336 Ashikaga Takauji, who had been driven to Kyūshū, rebuilt his strength and came back east by land and sea. Emperor Go-Daigo sent Nitta Yoshisada and Kusunoki Masashige to stop him at Hyōgo in Settsu. An outflanking landing by the Ashikaga fleet cut Nitta off from Kusunoki, and Masashige fought on alone until he took his own life.",
+      "key_points": {
+        "turning_point": "The Hosokawa fleet moved east as if to land there, drawing Yoshisada after it; the ships at the rear turned and landed at Wada Point, cutting the Nitta off from the Kusunoki.",
+        "forces": "The Taiheiki claims over 500,000 Ashikaga against over 50,000 imperial troops; later estimates put it at about 35,000 to 17,500. Masashige himself had only some 700 riders.",
+        "aftermath": "When Hosokawa Jōzen landed at Ikuta Wood, Yoshisada fell back east for fear of being cut off; left alone, Masashige charged Tadayoshi’s army and in the end took his life together with his brother Masasue."
+      },
+      "narrator": {
+        "name": "Kusunoki Masashige",
+        "title": "Go-Daigo’s loyal commander",
+        "self": "I",
+        "opening": "Let the Ashikaga into the capital and crush them between us — the court would not hear of it. Then at Hyōgo I shall do my duty.",
+        "tone": "clear-eyed and calm, loyal to the end though he sees the odds"
+      },
+      "phases": [
+        {
+          "title": "The march east",
+          "time": "5th month, 1336 (lunar)",
+          "desc": "Takauji came by sea and Tadayoshi by land; Nitta Yoshisada fell back to Hyōgo, and Masashige, sent down from the capital, joined him on the 24th.",
+          "line": "By land and sea — what a host… Lord Nitta, let us drink together tonight.",
+          "markers": [
+            {
+              "name": "Tomo"
+            },
+            {
+              "name": "Hyōgo"
+            }
+          ]
+        },
+        {
+          "title": "Deployment",
+          "time": "25th, around 8 a.m.",
+          "desc": "Yoshisada held Wada Point with 25,000 and Wakiya Yoshisuke the Kyōjima island; Masashige, with only some 700 riders, took the hill of Egeyama against the enemy coming by land.",
+          "line": "I have but seven hundred riders and no one else’s men — the Kusunoki will hold this hill.",
+          "markers": [
+            {
+              "name": "Egeyama"
+            },
+            {
+              "name": "Kyōjima"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "25th",
+          "desc": "The Hosokawa fleet sailed east to feint a landing and drew Yoshisada after it; the rear ships turned and landed at Wada Point, splitting the Nitta from the Kusunoki. When Hosokawa Jōzen came ashore at Ikuta Wood, Yoshisada withdrew east rather than be cut off.",
+          "line": "Lord Nitta has gone east… we are cut off — the enemy before us and behind.",
+          "markers": [
+            {
+              "name": "Wada Point"
+            },
+            {
+              "name": "Ikuta Wood"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "Afternoon of the 25th",
+          "desc": "Masashige led his 700 riders against Tadayoshi’s great army and broke through again and again, until at last he and his brother Masasue took their own lives.",
+          "line": "Break the enemy ahead, then turn on the one behind… Masasue, this is as far as we go.",
+          "markers": [
+            {
+              "name": "Minatogawa"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "Why did Nitta Yoshisada deploy with his back to the sea?",
+        "a": "Yoshisada camped on Wada Point, with sea on three sides and his back to the Ashikaga fleet; if Kusunoki and Wakiya to the north were broken he would be surrounded with nowhere to go — a \"strange deployment\", as it has long been called. Some suggest he chose a \"back to the water\" position on purpose, so that his men would fight to the death."
+      }
+    },
+    {
+      "name": "Battle of Shizugatake (1583)",
+      "battlefield": {
+        "name": "Shizugatake, Ōmi"
+      },
+      "factions": [
+        {
+          "name": "Hashiba",
+          "leader": "Hashiba Hideyoshi",
+          "strength": "c. 50,000 (as reported)"
+        },
+        {
+          "name": "Shibata",
+          "leader": "Shibata Katsuie",
+          "strength": "c. 30,000"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kitanoshō Castle"
+          },
+          "to": {
+            "name": "Yanagase"
+          },
+          "desc": "Before the snows had gone, Katsuie led some 30,000 out of Kitanoshō in Echizen and took up position at Yanagase in Ōmi on the 12th of the 3rd month"
+        },
+        {
+          "from": {
+            "name": "Nagahama"
+          },
+          "to": {
+            "name": "Kinomoto"
+          },
+          "desc": "Hideyoshi camped at Kinomoto with about 50,000 on the 19th; both sides fortified the hills"
+        },
+        {
+          "from": {
+            "name": "Yanagase"
+          },
+          "to": {
+            "name": "Ōiwayama"
+          },
+          "desc": "With Hideyoshi away, Sakuma Morimasa slipped round Lake Yogo to strike the Ōiwayama fort"
+        },
+        {
+          "from": {
+            "name": "Ōgaki Castle"
+          },
+          "to": {
+            "name": "Kinomoto"
+          },
+          "desc": "The \"great Mino return\": leaving Ōgaki at 2 p.m., Hideyoshi covered 13 ri (about 52 km) back to Kinomoto in five hours"
+        }
+      ],
+      "brief": "After the Honnō-ji incident of 1582, Hashiba Hideyoshi and Shibata Katsuie fought over control of the Oda house. In the 4th month of 1583 their armies faced each other around Shizugatake in Ōmi. Katsuie’s general Sakuma Morimasa won a surprise attack but would not pull back; Hideyoshi raced back from Mino to counter-attack, Maeda Toshiie left the field, and Katsuie, routed, withdrew to Kitanoshō and took his own life.",
+      "key_points": {
+        "turning_point": "Hearing at Ōgaki that Ōiwayama had fallen, Hideyoshi marched 52 km in five hours (the \"great Mino return\"), while Niwa Nagahide crossed Lake Biwa and secured the Shizugatake fort.",
+        "forces": "Hideyoshi with about 50,000 (as reported) against Katsuie’s 30,000 or so.",
+        "aftermath": "Most of the old Oda retainers came over to Hideyoshi, who soon began building Osaka Castle on the site of the Ishiyama Hongan-ji — his first step to ruling the realm."
+      },
+      "narrator": {
+        "name": "Shibata Katsuie",
+        "title": "senior elder of the Oda house",
+        "self": "I",
+        "opening": "The moment the snow melted I marched. I will not hand Lord Nobunaga’s realm to that monkey.",
+        "tone": "a fierce old soldier, no schemer"
+      },
+      "phases": [
+        {
+          "title": "Standoff",
+          "time": "3rd month, 1583",
+          "desc": "Katsuie reached Yanagase with some 30,000 on the 12th; Hideyoshi camped at Kinomoto with about 50,000 on the 19th. Both sides dug in on the hills and neither moved first.",
+          "line": "The monkey is building forts at Kinomoto… very well, we shall see who loses patience first.",
+          "markers": [
+            {
+              "name": "Yanagase"
+            },
+            {
+              "name": "Kinomoto"
+            }
+          ]
+        },
+        {
+          "title": "Surprise attack",
+          "time": "19th–20th, 4th month",
+          "desc": "Oda Nobutaka rose again at Gifu and Hideyoshi went to Mino, entering Ōgaki Castle. Katsuie seized the moment and sent Sakuma Morimasa against the Ōiwayama fort; Nakagawa Kiyohide was killed. But Morimasa ignored the order to fall back and stayed forward.",
+          "line": "Ōiwayama is ours! Morimasa, that is enough — come back! …He will not listen.",
+          "markers": [
+            {
+              "name": "Ōiwayama"
+            },
+            {
+              "name": "Ōgaki Castle"
+            }
+          ]
+        },
+        {
+          "title": "Turning point",
+          "time": "20th–21st",
+          "desc": "Niwa Nagahide crossed Lake Biwa and held the Shizugatake fort; Hideyoshi, told at Ōgaki, set out at 2 p.m. and was back at Kinomoto five hours later. At dawn the Hashiba army attacked, the \"Seven Spears of Shizugatake\" among them.",
+          "line": "Was the monkey not in Mino? …All those torches overnight — he is back!",
+          "markers": [
+            {
+              "name": "Shizugatake"
+            },
+            {
+              "name": "Kinomoto"
+            }
+          ]
+        },
+        {
+          "title": "Outcome",
+          "time": "21st–24th",
+          "desc": "In the thick of it Maeda Toshiie suddenly withdrew from the line and the Shibata army’s spirit broke. Katsuie fell back to Kitanoshō, was surrounded on the 23rd and on the 24th took his life with his wife Oichi.",
+          "line": "Toshiie too… back to Kitanoshō. Oichi — forgive me, for all of it.",
+          "markers": [
+            {
+              "name": "Kitanoshō Castle"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "Why did Maeda Toshiie leave the field?",
+        "a": "At the height of the fighting Maeda Toshiie, posted on Shigeyama, suddenly pulled out, and the Shibata army collapsed. It is usually supposed that he had long since accepted Hideyoshi’s overtures — but how far he had agreed in advance, and when he decided to go, is not established."
+      }
+    },
+    {
+      "name": "Battle of Komaki–Nagakute (1584)",
+      "battlefield": {
+        "name": "Nagakute, Owari"
+      },
+      "factions": [
+        {
+          "name": "Hashiba",
+          "leader": "Hashiba Hideyoshi",
+          "strength": "c. 100,000"
+        },
+        {
+          "name": "Oda–Tokugawa",
+          "leader": "Tokugawa Ieyasu, Oda Nobukatsu",
+          "strength": "c. 30,000"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Inuyama Castle"
+          },
+          "to": {
+            "name": "Gakuden"
+          },
+          "desc": "Ikeda Tsuneoki seized Inuyama; Hideyoshi arrived there on the 27th and camped at Gakuden"
+        },
+        {
+          "from": {
+            "name": "Kiyosu Castle"
+          },
+          "to": {
+            "name": "Komakiyama Castle"
+          },
+          "desc": "Ieyasu hurried from Kiyosu to Komakiyama Castle and ringed it with forts and earthworks"
+        },
+        {
+          "from": {
+            "name": "Gakuden"
+          },
+          "to": {
+            "name": "Iwasaki Castle"
+          },
+          "desc": "The \"drive into Mikawa\": four columns under Ikeda Tsuneoki, Mori Nagayoshi, Hori Hidemasa and Hashiba Hidetsugu swung towards Mikawa, taking Iwasaki Castle on the way"
+        },
+        {
+          "from": {
+            "name": "Komakiyama Castle"
+          },
+          "to": {
+            "name": "Nagakute"
+          },
+          "desc": "Ieyasu found out, left Komaki by night for Obata Castle and came up behind the raiding columns"
+        }
+      ],
+      "brief": "In 1584 Oda Nobukatsu and Tokugawa Ieyasu joined against Hashiba Hideyoshi and the armies faced each other around Komaki in Owari. Hideyoshi sent a raiding force into Mikawa; Ieyasu caught it at Nagakute, where Ikeda Tsuneoki and Mori Nagayoshi were killed. But Hideyoshi then made a separate peace with Nobukatsu, and Ieyasu had to stop too.",
+      "key_points": {
+        "turning_point": "Ieyasu saw through the raid and followed it by night; Hashiba Hidetsugu was routed at Hakusanbayashi, and at Nagakute Mori Nagayoshi was shot and Ikeda Tsuneoki killed by Nagai Naokatsu.",
+        "forces": "Hashiba about 100,000, Oda–Tokugawa about 30,000.",
+        "aftermath": "Some 2,500 Hashiba men died at Nagakute against 590 on the other side; on the 12th of the 11th month Hideyoshi made peace with Nobukatsu, and Ieyasu came to terms too, sending his son Ogimaru (Yūki Hideyasu) to Osaka as Hideyoshi’s adopted son."
+      },
+      "narrator": {
+        "name": "Hashiba Hideyoshi",
+        "title": "Nobunaga’s successor",
+        "self": "I",
+        "opening": "Lord Nobukatsu has sided with Ieyasu… fine. Let us see what the old fox of the Tōkaidō can do.",
+        "tone": "shrewd and easy-going; if he cannot win one way he wins another"
+      },
+      "phases": [
+        {
+          "title": "Standoff",
+          "time": "3rd month, 1584",
+          "desc": "On the 13th Ikeda Tsuneoki went over to Hideyoshi and seized Inuyama; on the 17th Sakai Tadatsugu and others beat Mori Nagayoshi at Haguro. Ieyasu held Komakiyama, Hideyoshi camped at Gakuden, both dug forts, and the war stalled.",
+          "line": "Ieyasu is dug in on Komaki behind fort after fort… at this rate neither of us can move.",
+          "markers": [
+            {
+              "name": "Inuyama Castle"
+            },
+            {
+              "name": "Komakiyama Castle"
+            }
+          ]
+        },
+        {
+          "title": "The raid",
+          "time": "6th to dawn of the 9th, 4th month",
+          "desc": "Ikeda Tsuneoki proposed striking Mikawa while it lay empty, so Ieyasu could not stay at Komaki. Hideyoshi agreed and four columns set out; at dawn on the 9th they took Iwasaki Castle.",
+          "line": "Tsuneoki wants to raid Mikawa… very well, let them go.",
+          "markers": [
+            {
+              "name": "Iwasaki Castle"
+            }
+          ]
+        },
+        {
+          "title": "Nagakute",
+          "time": "9th",
+          "desc": "Ieyasu slipped out of Komaki by night to Obata Castle; at dawn his men fell on Hashiba Hidetsugu at Hakusanbayashi and routed him. Around ten the main armies clashed at Nagakute for two hours; Mori Nagayoshi was shot dead and Ikeda Tsuneoki killed by Nagai Naokatsu.",
+          "line": "Hidetsugu beaten? Tsuneoki and Nagayoshi both dead… Ieyasu came up behind them.",
+          "markers": [
+            {
+              "name": "Hakusanbayashi"
+            },
+            {
+              "name": "Nagakute"
+            }
+          ]
+        },
+        {
+          "title": "Peace",
+          "time": "4th–11th month",
+          "desc": "Some 2,500 Hashiba men died at Nagakute against 590 Oda–Tokugawa; after that the front stood still. On the 12th of the 11th month Hideyoshi made a separate peace with Nobukatsu, and Ieyasu stopped too, sending his son Ogimaru (Yūki Hideyasu) to Osaka as Hideyoshi’s adopted son.",
+          "line": "I lost a battle, but Lord Nobukatsu came to make peace first. Ieyasu, you have no cause left to fight.",
+          "markers": [
+            {
+              "name": "Komakiyama Castle"
+            },
+            {
+              "name": "Gakuden"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "Who actually won at Komaki–Nagakute?",
+        "a": "In the field at Nagakute the Tokugawa side won handsomely, killing Ikeda Tsuneoki and Mori Nagayoshi; but Hideyoshi held Mino, Ise and elsewhere and got Nobukatsu to make a separate peace, leaving Ieyasu with no cause to fight. Hence the usual verdict: a tactical win for Oda–Tokugawa, a strategic win for Hashiba."
+      }
+    },
+    {
+      "name": "Summer Siege of Osaka (1615)",
+      "battlefield": {
+        "name": "Osaka, Settsu"
+      },
+      "factions": [
+        {
+          "name": "Shogunate",
+          "leader": "Tokugawa Ieyasu, Tokugawa Hidetada",
+          "strength": "c. 165,000 in the summer campaign"
+        },
+        {
+          "name": "Toyotomi",
+          "leader": "Toyotomi Hideyori (with Sanada Nobushige, Mōri Yoshimasa and others)",
+          "strength": "c. 55,000 in the summer campaign"
+        }
+      ],
+      "march_routes": [
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Dōmyōji"
+          },
+          "desc": "A shogunate column of about 35,000 came by the Yamato road towards Osaka"
+        },
+        {
+          "from": {
+            "name": "Kyoto"
+          },
+          "to": {
+            "name": "Okayama"
+          },
+          "desc": "Ieyasu and Hidetada brought the main army south to deploy before Tennōji and Okayama"
+        },
+        {
+          "from": {
+            "name": "Osaka Castle"
+          },
+          "to": {
+            "name": "Dōmyōji"
+          },
+          "desc": "Gotō Masachika, Sanada Nobushige and others marched out to meet the shogunate army on the Yamato road"
+        },
+        {
+          "from": {
+            "name": "Osaka Castle"
+          },
+          "to": {
+            "name": "Chausuyama"
+          },
+          "desc": "On the 7th the Toyotomi army drew up at Tennōji (Sanada, Mōri and others) and Okayama"
+        }
+      ],
+      "brief": "After the peace that ended the winter siege of 1614, Osaka Castle’s outer moat and even its second and third baileys were filled in. War broke out again in 1615, and the Toyotomi, their defences gone, came out to fight: Gotō Masachika fell at Dōmyōji on the 6th of the 5th month, Sanada Nobushige and others died fighting at Tennōji–Okayama on the 7th, and on the 8th the castle fell. Toyotomi Hideyori and his mother Yodo-dono took their own lives, and the Toyotomi line came to an end.",
+      "key_points": {
+        "turning_point": "With the moats filled the castle could not be held, so the Toyotomi had to fight in the open — and, poorly coordinated, they were beaten piecemeal at Dōmyōji.",
+        "forces": "In the summer campaign the shogunate had about 165,000, the Toyotomi about 55,000.",
+        "aftermath": "On the 8th Hideyori, Yodo-dono and others killed themselves in a surviving storehouse in the Yamazato bailey, ending the Toyotomi; no daimyo was left who could stand against the Tokugawa."
+      },
+      "narrator": {
+        "name": "Sanada Nobushige",
+        "title": "rōnin commander at Osaka",
+        "self": "I",
+        "opening": "They have filled in the moats… this castle can no longer be held. If we are to win, we must go out and fight.",
+        "tone": "cool and decisive; knows the cause is lost but means to be remembered"
+      },
+      "phases": [
+        {
+          "title": "After the winter siege",
+          "time": "Winter 1614 to 3rd month 1615",
+          "desc": "After the winter peace the outer moat and the second and third baileys were filled in; in the 3rd month of 1615 the Kyoto deputy reported unrest among the rōnin in Osaka, and war came again.",
+          "line": "The moats are gone… to win, we must fight outside the walls.",
+          "markers": [
+            {
+              "name": "Osaka Castle"
+            }
+          ]
+        },
+        {
+          "title": "Dōmyōji",
+          "time": "6th, 5th month",
+          "desc": "At Dōmyōji–Konda, Gotō Masachika (Matabei) reached Komatsuyama first and fought more than twenty thousand under Date Masamune and others on his own until he fell; Sanada and the rest arrived later and fought the Date.",
+          "line": "Matabei is already… we came too late.",
+          "markers": [
+            {
+              "name": "Dōmyōji"
+            }
+          ]
+        },
+        {
+          "title": "Tennōji–Okayama",
+          "time": "7th",
+          "desc": "The Toyotomi drew up at Tennōji (Sanada Nobushige, Mōri Yoshimasa and others, about 14,500) and Okayama; the Sanada charged Ieyasu’s headquarters, and after bitter fighting Nobushige was killed and the Toyotomi fell back.",
+          "line": "One target only — Ieyasu’s own camp!",
+          "markers": [
+            {
+              "name": "Chausuyama"
+            },
+            {
+              "name": "Okayama"
+            }
+          ]
+        },
+        {
+          "title": "The fall",
+          "time": "8th",
+          "desc": "Osaka Castle fell; Hideyori, Yodo-dono, Ōno Harunaga and others killed themselves in a surviving storehouse in the Yamazato bailey, and the Toyotomi were no more.",
+          "line": "…Lord Hideyori, Nobushige goes ahead of you.",
+          "markers": [
+            {
+              "name": "Osaka Castle"
+            }
+          ]
+        }
+      ],
+      "debate": {
+        "q": "Was filling in the inner moats a trick by Ieyasu?",
+        "a": "The popular story is that the peace covered only the outer moat and the Tokugawa treacherously filled the inner ones too. But the daimyo’s letters from the time show no sign of a quarrel over the work, and some research holds that filling the second and third baileys as well as the outer moat was agreed from the start, and accepted by the Osaka side."
       }
     }
   ]

@@ -207,8 +207,14 @@ class Battles(unittest.TestCase):
                 self.assertEqual(len(o['phases']), len(b['phases']), b['key'])
                 self.assertEqual(len(o['factions']), len(b['factions']), b['key'])
         for b in base:
+            # 3.40：条目没写某一方兵力的（姉川的织田·德川）两方都不给 men，兵力条不画；给了就要两方都有
+            has = [f.get('men', 0) > 0 for f in b['factions']]
+            self.assertTrue(all(has) or b['key'] in NO_MEN, b['key'])
             for f in b['factions']:
-                self.assertTrue(f.get('men', 0) > 0 and f.get('unit') in ('men', 'ships'), f'{b["key"]} {f["key"]}')
+                self.assertIn(f.get('unit'), ('men', 'ships'), f'{b["key"]} {f["key"]}')
+
+
+NO_MEN = {'anegawa'}
 
 
 class Famous(unittest.TestCase):

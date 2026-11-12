@@ -548,8 +548,29 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
   let sg = null;
   const sgMode = () => !!prov && !!sg && state.layer === 'history' && !state.era && !state.battle && state.filter === 'sengoku';
   // 旧国底图：五畿七道滤镜、古国国力、战国势力，或古国巡礼图层（巡礼固定用 824 年的 68 国，压暗作衬底）
-  const provBaseOn = () => !!prov && !state.battle && (provMode() || powerMode() || sgMode() || state.layer === 'koku');
-  const curProv = () => (sgMode() ? buildProv('sengoku') : state.layer === 'koku' || powerMode() ? buildProv('824') : prov);
+  // 时空穿越的镰仓、室町、江户、明治（3.40，era2d.js）：真实边界的底图——镰仓室町是 824 年 68 国按守护着色，江户与明治是自带的块
+  let eraBase = null;
+  const eraBaseOn = () => !!prov && !!eraBase && state.layer === 'history' && !!state.era && !state.battle && state.era.key === eraBase.era;
+  const ownMaps = new Map();
+  function eraMap() {
+    if (eraBase.base === 'prov') return buildProv('824');
+    if (!ownMaps.has(eraBase.mapId)) {
+      const features = eraBase.features;
+      for (const f of features) f.properties.name = f.properties.key;
+      echarts.registerMap(eraBase.mapId, { type: 'FeatureCollection', features });
+      ownMaps.set(eraBase.mapId, {
+        mapName: eraBase.mapId,
+        features,
+        byKey: new Map(features.map((f) => [f.properties.key, f])),
+        borders: borderChains(),
+        labels: features.map((f) => ({ f, a: areaOf(f.geometry), name: eraBase.label(f.properties) })).filter((x) => x.name)
+          .sort((x, y) => y.a - x.a).map(({ f, name }) => ({ name, value: centroid(f.geometry) })),
+      });
+    }
+    return ownMaps.get(eraBase.mapId);
+  }
+  const provBaseOn = () => !!prov && !state.battle && (provMode() || powerMode() || sgMode() || eraBaseOn() || state.layer === 'koku');
+  const curProv = () => (eraBaseOn() ? eraMap() : sgMode() ? buildProv('sengoku') : state.layer === 'koku' || powerMode() ? buildProv('824') : prov);
 
   function provRegion(f) {
     if (state.layer === 'koku') {
@@ -560,7 +581,7 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
         label: { show: false },
       };
     }
-    const c = (powerMode() ? power.color(f.properties.key) : sgMode() ? sg.color(f.properties.key)
+    const c = (eraBaseOn() ? eraBase.color(f.properties.key) : powerMode() ? power.color(f.properties.key) : sgMode() ? sg.color(f.properties.key)
       : FILTERS.circuit.cats[f.properties.circuit]?.[1]) || COLOR.base;
     const on = (powerMode() && f.properties.key === power.focus) || (sgMode() && f.properties.key === sg.focus);
     // 战国势力图的国界由 sgedges 按归属重画，这里只留一道很淡的旧国纹理
@@ -763,6 +784,10 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
     if (!f) return '';
     const p = f.properties;
     const now = t('prov.now', { list: p.prefs.map((id) => names.get(id)).join(' · ') });
+    if (eraBaseOn()) {
+      const title = eraBase.base === 'prov' ? (p.zh ? provFull(p) : t('prov.outside')) : eraBase.title(p);
+      return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${title}</div>${eraBase.tip(p.key)}<div style="color:#6b6155;margin-top:2px">${now}</div>`;
+    }
     if (!p.zh) return `<b>${t('prov.outside')}</b><br><span style="color:#7a5719">${now}</span>`;
     if (sgMode()) {
       return `<div style="font-family:var(--serif);font-size:14px;font-weight:700">${provFull(p)}</div>
@@ -1040,6 +1065,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (spot) setView({ center: spot.coords, zoom: Math.max(getView().zoom, 5) });
     },
     setEra(era) { state.era = era || null; render(); },
+    setEraBase(b) { eraBase = b || null; render(); },
+    get eraBaseOn() { return eraBaseOn(); },
     // 视野（立体图来回时带上：#v=经度,纬度,缩放）
     view: () => getView(),
     setView: (v) => { roamed = true; setView(v); }, // 链接给的视野：之后宽屏的自动取景不再盖掉它
@@ -1101,6 +1128,8 @@ export function createMap(el, geo, prefs, { onSelect, onSpot = () => {}, onProvi
       if (state.layer !== 'history') {
         const L = LAYERS[state.layer];
         ({ caption, cats, key } = L);
+      } else if (eraBaseOn()) {
+        return eraBase.legend();
       } else if (state.era) {
         const e = state.era;
         return {

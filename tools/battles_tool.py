@@ -33,9 +33,9 @@ class L(dict):
 MEN = {
     'okehazama': {'oda': 2500, 'imagawa': 25000},
     'kawanakajima': {'takeda': 20000, 'uesugi': 13000},
-    'sekigahara': {'east': 75000, 'west': 80000},
+    'sekigahara': {'east': 89000, 'west': 80000},  # 3.40：信息框东军 74,000–104,000（中点）、西军 80,000 以上
     'dannoura': {'genji': 840, 'heike': 500},
-    'seinan': {'satsuma': 30000, 'govt': 60000},
+    'seinan': {'satsuma': 25000, 'govt': 90000},  # 3.40：信息框萨摩 20,000–30,000、政府军 80,000–100,000（中点）
 }
 UNIT = {'dannoura': 'ships'}
 
@@ -60,6 +60,12 @@ NEAR = {
     '円明寺川': ([135.694, 34.905], 'yamazaki'), '小栗栖': ([135.806, 34.953], 'yamazaki'),
     '小枝橋': ([135.7445, 34.9545], 'tobafushimi'), '千両松': ([135.728, 34.917], 'tobafushimi'), '山崎': ([135.6913, 34.9071], 'tobafushimi'),
 }
+
+
+# 3.40 的六场（tools/battles_more.py）
+import battles_more  # noqa: E402
+PLACES.update({k: None for k in battles_more.PLACES if k not in PLACES})
+NEAR.update(battles_more.NEAR)
 
 
 def coords():
@@ -391,7 +397,7 @@ def battles():
                  'routes': [], 'markers': [place(L('山崎', 'Yamazaki', '山崎'), '山崎'), place(L('大坂城', 'Osaka Castle', '大坂城'), '大坂城')], 'impact': False},
             ],
         ),
-    ]
+    ] + battles_more.more(L, at, place)
 
 
 # 众说纷纭（3.37）：每场一个史家至今在争的点，问与答三语自写；`ev` 的词都要出现在 `wiki` 条目里
@@ -447,6 +453,9 @@ DEBATE = {
             'Late in life Yoshinobu explained in the Sekimukai hikki that he would not bear the name of "enemy of the court" and decided to return east first and think again. Opinions of what he did differed widely, then and since.',
             '慶喜は晩年の『昔夢会筆記』で、「朝敵」の名を負うことを避け、いったん東帰して善後策を考えるつもりだったと回想している。この行動への評価は当時も後世も大きく分かれる。')),
 }
+
+
+DEBATE.update(battles_more.debate(L))
 
 
 def split(obj, lang, full):

@@ -1,8 +1,9 @@
 // 御朱印帐：47 格收集册，可按地方筛选
 import { crestSVG } from './crests.js';
 import { esc } from './detail.js';
-import { t, label, prefName } from './i18n.js';
+import { t, label, prefName, lang } from './i18n.js';
 import { ichiBook } from './koku.js';
+import { importPhotos } from './footprint.js';
 
 const ALL = '*';
 const REGIONS = [ALL, '北海道', '东北', '关东', '中部', '近畿', '中国', '四国', '九州·冲绳'];
@@ -13,7 +14,8 @@ const fmtDate = (iso) => {
 };
 
 // ichi：诸国一宫篇 { sites, getBook, onPick(旧国) }；帐首可在「都道府县 / 诸国一宫」之间切换
-export function createBook(dialog, prefs, { getBook, onPick, ichi = null }) {
+// foot：真实足迹篇（3.40）{ provinces: () => Promise<旧国边界>, get(), set(v) }
+export function createBook(dialog, prefs, { getBook, onPick, ichi = null, foot = null }) {
   const tabs = dialog.querySelector('.book-tabs');
   const grid = dialog.querySelector('.book-grid');
   const progress = dialog.querySelector('.book-progress');
@@ -25,7 +27,7 @@ export function createBook(dialog, prefs, { getBook, onPick, ichi = null }) {
   const modes = document.createElement('div');
   modes.className = 'book-modes';
   modes.setAttribute('role', 'tablist');
-  modes.innerHTML = ['pref', 'ichi'].map((m) => `<button type="button" role="tab" data-mode="${m}">${esc(t(`book.mode.${m}`))}</button>`).join('');
+  modes.innerHTML = ['pref', 'ichi', ...(foot ? ['foot'] : [])].map((m) => `<button type="button" role="tab" data-mode="${m}">${esc(t(`book.mode.${m}`))}</button>`).join('');
   if (ichi?.sites.length) dialog.querySelector('.book-head > div').append(modes);
   modes.addEventListener('click', (e) => {
     const b = e.target.closest('[data-mode]');
@@ -35,6 +37,8 @@ export function createBook(dialog, prefs, { getBook, onPick, ichi = null }) {
   function render() {
     modes.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === mode)));
     grid.classList.toggle('ichi', mode === 'ichi');
+    grid.classList.toggle('foot', mode === 'foot');
+    if (mode === 'foot') { renderFoot(); return; }
     if (mode === 'ichi') {
       const r = ichiBook(ichi.sites, ichi.getBook(), circuit);
       tabs.innerHTML = r.tabs;
@@ -73,7 +77,44 @@ export function createBook(dialog, prefs, { getBook, onPick, ichi = null }) {
     }).join('');
   }
 
+  // ── 真实足迹：照片 → 旧国（footprint.js）；je.footprint = { p: {国: 张数}, n: 读过的照片, k: 有位置的 } ──
+  let footBusy = '';
+  let footProv = null;
+  async function renderFoot() {
+    const fp = foot.get() || { p: {}, n: 0, k: 0 };
+    tabs.innerHTML = `<label class="book-tab ft-pick"><input type="file" accept="image/*" multiple hidden data-foot="pick">${esc(t('ft.pick'))}</label>
+      ${fp.n ? `<button type="button" class="book-tab" data-foot="clear">${esc(t('ft.clear'))}</button>` : ''}`;
+    progress.textContent = footBusy || t('ft.progress', { n: Object.keys(fp.p).length, photos: fp.n, k: fp.k });
+    footProv ??= await foot.provinces().catch(() => null);
+    if (!footProv) { grid.innerHTML = `<p class="ft-note">${esc(t('ft.noprov'))}</p>`; return; }
+    const byC = new Map();
+    for (const f of footProv.features) {
+      const q = f.properties;
+      if (!q.zh) continue;
+      (byC.get(q.circuit) || byC.set(q.circuit, []).get(q.circuit)).push([q.key, q[lang] || q.zh]);
+    }
+    grid.innerHTML = [...byC].map(([c, ks]) => `<section class="ft-c"><h3>${esc(label('circuit', c))}</h3><div>${ks.map(([k, nm]) => `<span class="ft${fp.p[k] ? ' on' : ''}">${esc(nm)}${fp.p[k] ? `<small>${fp.p[k]}</small>` : ''}</span>`).join('')}</div></section>`).join('')
+      + `<p class="ft-note">${esc(t('ft.note'))}</p>`;
+  }
+  tabs.addEventListener('change', async (e) => {
+    const inp = e.target.closest('[data-foot="pick"]');
+    if (!inp?.files?.length) return;
+    const files = [...inp.files];
+    footProv ??= await foot.provinces().catch(() => null);
+    if (!footProv) return;
+    const r = await importPhotos(files, footProv, (i, n) => { footBusy = t('ft.reading', { i, n }); progress.textContent = footBusy; });
+    const fp = foot.get() || { p: {}, n: 0, k: 0 };
+    for (const [k, c] of r.provs) fp.p[k] = (fp.p[k] || 0) + c;
+    fp.n += r.photos;
+    fp.k += r.located;
+    foot.set(fp);
+    footBusy = t(r.located ? 'ft.done' : 'ft.none', { n: r.photos, k: r.located, p: r.provs.size });
+    render();
+    setTimeout(() => { footBusy = ''; }, 0);
+  });
+
   tabs.addEventListener('click', (e) => {
+    if (e.target.closest('[data-foot="clear"]')) { foot.set(null); render(); return; }
     const c = e.target.closest('[data-circuit]');
     if (c) { circuit = c.dataset.circuit; render(); return; }
     const b = e.target.closest('[data-region]');

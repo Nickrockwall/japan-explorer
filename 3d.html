@@ -82,6 +82,18 @@
   .lb.here b { display: inline-block; padding: 1px 6px; background: var(--shu); color: #fff; font: 700 13px var(--serif); border-radius: 2px; }
   body:has(#here:not([hidden])) #legend { display: none; } /* 此地千年开着时左下角的图例让开（面板在左上，高了会叠上） */
   @media (max-width: 640px) { #here { max-height: 42%; } }
+  .castle-photo { margin: 6px 0 8px; }
+  .castle-photo img { display: block; width: 100%; max-height: 200px; object-fit: cover; border-radius: 3px; background: var(--line, #ddd); }
+  .castle-photo figcaption { font-size: 10.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; overflow-wrap: anywhere; }
+  .castle-photo a { color: inherit; }
+  #peaks { position: fixed; right: calc(10px + var(--safe-r)); top: calc(var(--top-h, 50px) + 10px); width: 270px; max-width: calc(100% - 20px); max-height: calc(100% - var(--top-h, 50px) - 150px); display: flex; flex-direction: column; padding: 8px 12px 10px; z-index: 5; }
+  #peaks .pk-fuji { margin: 4px 0 6px; font: 600 13px/1.5 var(--serif); }
+  #peaks .pk-fuji.on { color: var(--shu, #b3302a); }
+  #peaks .pk-list { list-style: none; margin: 0; padding: 0; overflow: auto; min-height: 0; flex: 1 1 auto; }
+  #peaks .pk-list button { display: flex; justify-content: space-between; gap: 8px; width: 100%; border: 0; background: none; padding: 4px 2px; text-align: left; color: inherit; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--line, rgba(0,0,0,.12)); }
+  #peaks .pk-list span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  #peaks .note { font-size: 11px; color: var(--muted); margin: 6px 0 0; }
+  @media (max-width: 640px) { #peaks { top: auto; bottom: calc(80px + var(--safe-b)); right: 10px; left: 10px; width: auto; max-height: 34%; } }
   /* 3.38：块卡片的「看此地千年」与「京」卡片里的历代实权 */
   #card .here-go { border: 1px solid var(--shu); background: transparent; color: var(--shu); border-radius: 3px; padding: 5px 12px; font: 600 13px var(--serif); min-height: 32px; cursor: pointer; }
   #card .here-go:hover { background: var(--shu); color: var(--panel); }
@@ -336,6 +348,7 @@
 <div id="story" class="float" hidden aria-live="polite"></div>
 <div id="help3d" class="float" hidden></div>
 <div id="here" class="float" hidden aria-live="polite"></div>
+<div id="peaks" class="float" hidden aria-live="polite"></div>
 <div id="lookout-bar" class="float" hidden aria-live="polite"><b></b><span data-t="look.tip">拖动环顾四周</span><button type="button" data-t="look.back">回到地图</button></div>
 <div id="settings" class="float" hidden>
   <h3 data-t="exag">地形起伏</h3>

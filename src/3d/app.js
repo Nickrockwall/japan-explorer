@@ -19,6 +19,7 @@ import { snapshot } from './snapshot.js';
 import { createHelp } from './help.js';
 import { createLookout } from './lookout.js';
 import { createHere } from './here.js';
+import { viewshed } from './viewshed.js';
 import { audio } from '../js/audio.js';
 import { ERAS, YEARS, eraOf, eraYears, baseOf, capitalOf, SHOGUNATE, ROUTES, ROUTE_MUSASHI_TOSANDO, ROUTE_MUSASHI_TOKAIDO, CIRCUIT_COLOR, KIND_COLOR, graphColors } from './eras.js';
 
@@ -783,7 +784,7 @@ async function main() {
     esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
     flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
     holderAt, castleOnIn, eraReady, loadEra,
-    lookFrom: (c) => { lookout.enter(c.xz[0], c.xz[1]); $('#lookout-bar b').textContent = castleName(c); },
+    lookFrom: (c) => viewFrom(c.xz[0], c.xz[1], castleName(c), 100),
     hereAt, regimes,
   });
 
@@ -846,13 +847,43 @@ async function main() {
   const SMOKE_N = opts.quality === 'high' ? 18 : 8; // 省电画质少一半多的炊烟
   const smoke = createSmoke(SMOKE_N);
   scene.add(smoke.group);
-  here = createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, placeAt, esc, sound });
+  here = createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, placeAt, esc, sound, look: (x, z, name) => viewFrom(x, z, name, 10) });
   // 登上天守远望（lookout.js）：建筑、树、旗、炊烟都收起来（放大了的示意模型会挡住视线）
   lookout = createLookout({
     camera, controls, groundY, scale,
     setHidden: (h) => { for (const m of Object.values(B.kinds)) m.visible = !h; tc.setTreesVisible(!h); smoke.group.visible = !h; },
-    onChange: (on) => { $('#lookout-bar').hidden = !on; if (on) { cards.closeCard(); stopPlay(); } dirty = true; syncHash(); },
+    onChange: (on) => { $('#lookout-bar').hidden = !on; if (on) { cards.closeCard(); stopPlay(); } else $('#peaks').hidden = true; dirty = true; syncHash(); },
   });
+  // 远望（3.40）：天守（100 m）或此地（10 m）；顺带算出百名山里哪些看得见（viewshed.js，peaks.json 这时才下载）
+  let peaks = null;
+  async function viewFrom(x, z, name, eye) {
+    lookout.enter(x, z, eye);
+    $('#lookout-bar b').textContent = name;
+    const box = $('#peaks');
+    box.innerHTML = `<p class="note">${esc(t('peaks.loading'))}</p>`;
+    box.hidden = false;
+    peaks ??= await fetch('src/3d/peaks.json').then((r) => r.json()).catch(() => null);
+    if (!peaks || !lookout.active) { box.hidden = !peaks; return; }
+    const [lon, lat] = unproject(x, z);
+    const all = viewshed({ height: terrain.height, P, peaks, lon, lat, eye });
+    const pn = (p) => (lang === 'ja' ? p[0] : lang === 'en' ? p[2] : p[1]);
+    const dir = (d) => t(`peaks.dir.${Math.round(d / 45) % 8}`);
+    const vis = all.filter((v) => v.vis);
+    const fuji = all.find((v) => v.pk[0] === '富士山');
+    const fujiLine = !fuji ? t('peaks.fuji.far') : fuji.vis ? t('peaks.fuji.yes', { dir: dir(fuji.deg), km: Math.round(fuji.km) })
+      : fuji.why === 'horizon' ? t('peaks.fuji.horizon', { km: Math.round(fuji.km) }) : t('peaks.fuji.block', { km: Math.round(fuji.km), at: Math.round(fuji.at) });
+    box.innerHTML = `<div class="here-head"><b>${esc(t('peaks.h', { n: vis.length }))}</b><button type="button" class="x" data-pk="x" aria-label="${esc(t('close'))}">×</button></div>
+      <p class="pk-fuji${fuji?.vis ? ' on' : ''}">${esc(fujiLine)}</p>
+      <ol class="pk-list">${vis.map((v) => `<li><button type="button" data-pk="${esc(v.pk[0])}"><b>${esc(pn(v.pk))}</b><span>${esc(dir(v.deg))} ${Math.round(v.km)} km · ${v.pk[5]} m</span></button></li>`).join('')}</ol>
+      <p class="note">${esc(t('peaks.note', { eye }))}</p>`;
+    box.onclick = (e) => {
+      const b = e.target.closest('[data-pk]');
+      if (!b) return;
+      if (b.dataset.pk === 'x') { box.hidden = true; return; }
+      const v = vis.find((q) => q.pk[0] === b.dataset.pk);
+      if (v) { const [px, pz] = P(v.pk[3], v.pk[4]); lookout.face(px, pz); dirty = true; sound('click'); }
+    };
+  }
   $('#lookout-bar').addEventListener('click', (e) => { if (e.target.closest('button')) { sound('click'); lookout.leave(); } });
 
 
@@ -913,6 +944,13 @@ async function main() {
   const hv = (link.get('here') || '').split(',').map(Number);
   if (link.get('bt')) battle.start(link.get('bt'), +link.get('ph') || 0);
   else if (hv.length === 2 && hv.every(Number.isFinite)) here.start(hv[0], hv[1], link.get('hn'));
+  // 3.40：#cs=城名（平面图搜索框搜到的城）：打开它的卡片并飞过去
+  const csName = link.get('cs');
+  const csHit = csName && castles.find((c) => c.ja === csName);
+  if (csHit) cards.showCastle(csHit);
+  // 3.40：#look=经度,纬度&hn=地名（平面图古代户籍「从这里看得见哪些名山」）：站在那里（10 m）远望
+  const lv = (link.get('look') || '').split(',').map(Number);
+  if (!link.get('bt') && lv.length === 2 && lv.every(Number.isFinite)) { const [lx, lz] = P(lv[0], lv[1]); viewFrom(lx, lz, link.get('hn') || t('here.here'), 10); }
   else story.chip(opts.year);
   // 键盘：方向键平移、+ / - 缩放、1–6 换这个时代的年份、[ ] 换时代、空格播放、N 朝北、T 俯视（输入框里不管）
   addEventListener('keydown', (e) => {

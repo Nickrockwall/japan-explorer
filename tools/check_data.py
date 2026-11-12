@@ -128,7 +128,7 @@ def check_i18n():
                        f'i18n/{lang}/historical_events.json')
 
 
-UI_ALT_VARS = {'sg.c.man': {'k'}}  # 调用处同时给了几种写法的变量（万石 v / 英文 k）
+UI_ALT_VARS = {'sg.c.man': {'k'}, 'era2.koku': {'k'}, 'bd.y.eto': {'rd'}}  # 调用处同时给了几种写法的变量（万石 v / 英文 k）
 
 
 def check_ui_strings():

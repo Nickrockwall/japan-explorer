@@ -32,8 +32,13 @@ export function loadMuniIndex() {
   return indexLoad;
 }
 
-const MAX = 8;
-const TYPE = { pref: 'search.t.pref', prov: 'search.t.prov', city: 'search.t.city', muni: 'search.t.muni' };
+// 人物、城、藩（3.40，bundle/search.json，三种语言的名字都在里面）
+let extraLoad = null;
+const loadExtra = () => (extraLoad ||= fetch(`${MAP.data}/bundle/search.json`).then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
+  .catch((e) => { extraLoad = null; throw e; }));
+
+const MAX = 10;
+const TYPE = { pref: 'search.t.pref', prov: 'search.t.prov', city: 'search.t.city', muni: 'search.t.muni', person: 'search.t.person', castle: 'search.t.castle', han: 'search.t.han', battle: 'search.t.battle' };
 
 // 打分：越小越靠前。完全一致 0 · 去后缀一致 1 · 开头一致 2 · 包含 3 · 不匹配 9
 function score(q, exact, prefixes, hay) {
@@ -46,7 +51,8 @@ function score(q, exact, prefixes, hay) {
  * 搜索框 + 自定义下拉：县 / 旧国 / 市区町村，键盘上下选择，Enter 确认，Esc 关闭。
  * onPref(id)；onMuni(row)：row 为索引中的一条。
  */
-export function createSearch(form, { prefs, onPref, onMuni }) {
+// onPick(e)：人物 / 城 / 藩 / 合战（3.40）
+export function createSearch(form, { prefs, onPref, onMuni, battles = [], onPick = () => {} }) {
   const input = form.querySelector('input');
   input.removeAttribute('list');
   input.setAttribute('role', 'combobox');
@@ -76,8 +82,27 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
       });
     }
   }
+  for (const b of battles) {
+    const n = fold(b.name.replace(/\s*[（(]\d+[)）]$/, ''));
+    base.push({ type: 'battle', key: b.key, title: b.name, sub: b.battlefield?.name || '', exact: [n, n.replace(/(之战|の戦い|合戦|の合戦|之役)$/, '')], prefixes: [n], hay: n });
+  }
+  let extra = [];
+  const nm3 = (r) => (lang === 'ja' ? r[0] : lang === 'en' ? r[2] || r[0] : r[1] || r[0]);
+  const keys3 = (r) => [r[0], r[1], r[2]].filter(Boolean).map(fold);
+  const readyExtra = () => loadExtra().then((d) => {
+    if (extra.length) return;
+    for (const r of d.people) extra.push({ type: 'person', ja: r[0], title: nm3(r), sub: lang === 'ja' ? r[2] : r[0], exact: keys3(r), prefixes: keys3(r), hay: keys3(r).join(' ') });
+    for (const r of d.castles) {
+      const k = keys3(r);
+      extra.push({ type: 'castle', ja: r[0], c: [r[3], r[4]], title: nm3(r), sub: prefName(prefs.get(r[5])), exact: k.concat(k.map((x) => x.replace(/(城|castle)$/, '').trim())), prefixes: k, hay: k.join(' ') });
+    }
+    for (const r of d.han) {
+      const k = keys3(r);
+      extra.push({ type: 'han', ja: r[0], id: r[3], title: nm3(r), sub: prefName(prefs.get(r[3])), exact: k.concat(k.map((x) => x.replace(/(藩|domain)$/, '').trim())), prefixes: k, hay: k.join(' ') });
+    }
+  }).catch(() => {});
   let munis = [];
-  const ready = () => loadMuniIndex().then((rows) => {
+  const ready = () => readyExtra().then(() => loadMuniIndex()).then((rows) => {
     if (munis.length) return;
     munis = rows.map((row) => {
       const [pid, name, kana, en, codes] = row;
@@ -98,11 +123,11 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
     const q = fold(raw.trim());
     if (!q) return [];
     const scored = [];
-    for (const e of base.concat(munis)) {
+    for (const e of base.concat(munis, extra)) {
       const s = score(q, e.exact, e.prefixes, e.hay);
       if (s === 9) continue;
-      // 同分：县 > 旧国 > 整市 > 市区町村；读音越短越接近
-      const bonus = { pref: 0, prov: 0.1, city: 0.2, muni: 0.3 }[e.type];
+      // 同分：县 > 旧国 > 整市 > 市区町村 > 人物 > 城 > 藩 > 合战；读音越短越接近
+      const bonus = { pref: 0, prov: 0.1, city: 0.2, muni: 0.3, person: 0.35, castle: 0.4, han: 0.45, battle: 0.5 }[e.type];
       scored.push([s + bonus + Math.min(e.prefixes[1]?.length || 0, 40) / 1000, e]);
     }
     scored.sort((a, b) => a[0] - b[0]);
@@ -144,7 +169,8 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
     input.value = '';
     input.blur();
     if (e.type === 'pref' || e.type === 'prov') onPref(e.id);
-    else onMuni(e.row);
+    else if (e.row) onMuni(e.row);
+    else onPick(e);
   }
   function close() {
     results = [];
@@ -158,7 +184,7 @@ export function createSearch(form, { prefs, onPref, onMuni }) {
     results = search(input.value);
     active = results.length ? 0 : -1;
     render();
-    if (!munis.length && input.value.trim()) {
+    if ((!munis.length || !extra.length) && input.value.trim()) {
       await ready(); // 索引首次下载完成后刷新一次
       results = search(input.value);
       active = results.length ? 0 : -1;

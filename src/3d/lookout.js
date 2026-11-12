@@ -7,8 +7,10 @@ const EYE_M = 100; // 天守最上层离地约几十米（姬路城天守约 31 
 
 export function createLookout({ camera, controls, groundY, scale, setHidden, onChange }) {
   let saved = null; // 进来之前的镜头与控制设置
+  let eyeM = EYE_M; // 3.40：「站在此地远望」用 10 m（二楼窗口、屋顶）
 
-  function enter(x, z) {
+  function enter(x, z, eyeIn = EYE_M) {
+    eyeM = eyeIn;
     if (!saved) {
       saved = {
         target: controls.target.clone(), pos: camera.position.clone(),
@@ -16,7 +18,7 @@ export function createLookout({ camera, controls, groundY, scale, setHidden, onC
         pan: controls.enablePan, zoom: controls.enableZoom, mouse: { ...controls.mouseButtons }, touches: { ...controls.touches },
       };
     }
-    const eye = groundY(x, z) + Math.max(0.06, EYE_M * scale());
+    const eye = groundY(x, z) + Math.max(0.06, eyeM * scale());
     // 朝向：沿原来镜头的方位角看过去
     const off = camera.position.clone().sub(controls.target);
     const az = Math.atan2(off.x, off.z);
@@ -59,10 +61,19 @@ export function createLookout({ camera, controls, groundY, scale, setHidden, onC
   function follow() {
     if (!saved) return;
     const t = controls.target;
-    const eye = groundY(t.x, t.z) + Math.max(0.06, EYE_M * scale());
+    const eye = groundY(t.x, t.z) + Math.max(0.06, eyeM * scale());
     camera.position.y += eye - t.y;
     t.y = eye;
   }
 
-  return { enter, leave, follow, get active() { return !!saved; } };
+  // 转向某个方向（世界坐标里的一点）：眼睛不动，镜头挪到眼睛背后
+  function face(x, z) {
+    if (!saved) return;
+    const t = controls.target;
+    const d = Math.hypot(x - t.x, z - t.z) || 1;
+    camera.position.set(t.x - ((x - t.x) / d) * 0.05, t.y, t.z - ((z - t.z) / d) * 0.05);
+    controls.update();
+  }
+
+  return { enter, leave, follow, face, get active() { return !!saved; }, get eye() { return eyeM; } };
 }

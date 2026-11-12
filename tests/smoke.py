@@ -1383,6 +1383,103 @@ class Case:
         page.evaluate("(() => { const [x, z] = __je3d.P(135.5, 35.0); __je3d.flyTo(x, z, 700); })()")
         page.wait_for_function("(() => { const k = __je3d.buildings.kinds; return k.tenshuLo.count > k.tenshu.count && k.enclosure.count < 5; })()", timeout=20000)
 
+    # ── 3.40 ──
+    def koseki_340(self, page):
+        # 佐野市：幕末 29% 归 322 公里外的彦根藩（远方领主，按占比排第一）；石高与人口的全国名次
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        far = page.locator('#koseki .ks-row[data-k="far"]').inner_text()
+        assert any(x in far for x in ('彦根', 'Hikone')) and '322' in far, f'远方领主一栏：{far}'
+        rise = page.locator('#koseki .ks-row[data-k="rise"]').inner_text()
+        assert re.search(r'\d+', rise), f'石高与人口一栏：{rise}'
+
+    def koseki_kuni(self, page):
+        # 小浜市：福井县 91% 的人住在旧越前国，这里却是若狭国
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        kuni = page.locator('#koseki .ks-row[data-k="kuni"]').inner_text()
+        assert any(x in kuni for x in ('若狭', 'Wakasa')) and any(x in kuni for x in ('越前', 'Echizen')), f'别国人一栏：{kuni}'
+
+    def koseki_sennen(self, page):
+        # 长野市：明治的芹田村、芋井村，名字就是《和名抄》水内郡的郷名
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
+        sn = page.locator('#koseki .ks-row[data-k="sennen"]').inner_text()
+        assert '芹田' in sn, f'千年地名一栏：{sn}'
+        assert page.locator('#koseki a.ks-look').count() == 1, '应有「从这里看得见哪些名山」的链接'
+
+    def era_real(self, page):
+        # 时空穿越的江户、明治、镰仓用真实边界（era2d.js）：江户的图例有藩与幕府领；明治换到 1888 年是当年的府县；镰仓有年份行
+        set_era = "(i) => { const r = document.getElementById('tb-range'); r.value = i; r.dispatchEvent(new Event('input', { bubbles: true })); }"
+        eras = page.evaluate("[...document.querySelectorAll('#tb-ticks button')].length")
+        page.evaluate(f"({set_era})(6)")
+        page.wait_for_function("document.getElementById('legend-items').textContent.includes('藩')", timeout=40000)
+        assert '幕府' in page.text_content('#legend-items'), '江户图例应有幕府领'
+        page.evaluate(f"({set_era})(7)")
+        page.wait_for_selector('body.era-real #era-years [data-y="1888"]', timeout=20000)
+        page.click('#era-years [data-y="1888"]')
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('1888')", timeout=40000)
+        page.evaluate(f"({set_era})(3)")
+        page.wait_for_function("document.getElementById('legend-caption').textContent.includes('守护')", timeout=40000)
+        assert eras == 10
+
+    def search_340(self, page):
+        # 搜索框也搜城、藩、人物、合战：「彦根」出彦根城与彦根藩，「关原」出合战
+        page.fill('#search-input', '')
+        page.type('#search-input', '彦根')
+        page.wait_for_function("[...document.querySelectorAll('.search-pop .sr-type')].some((x) => x.classList.contains('sr-castle'))", timeout=15000)
+        types = page.evaluate("[...document.querySelectorAll('.search-pop .sr-type')].map((x) => x.className)")
+        assert any('sr-han' in x for x in types), f'应搜到彦根藩：{types}'
+
+    def bday_year(self, page):
+        # 出生年（只存本机）：年号、干支、今年几岁、同龄的他们
+        page.wait_for_selector('#bday[open] [data-bd-year]', timeout=15000)
+        page.fill('[data-bd-year]', '1990')
+        page.dispatch_event('[data-bd-year]', 'change')
+        page.wait_for_selector('#bday .bd-you .bd-age li', timeout=15000)
+        txt = page.text_content('#bday .bd-you')
+        assert '平成' in txt and '庚午' in txt, f'1990 年应是平成 2 年、庚午：{txt[:120]}'
+
+    def footprint(self, page):
+        # 真实足迹：读照片的 GPS（只在本机），东京的那张落在武藏国；没有位置的照实说
+        self.top(page, '#btn-book')
+        page.click('[data-mode="foot"]')
+        page.wait_for_selector('.ft-c', timeout=40000)
+        fx = os.path.join(ROOT, 'tests', 'fixtures')
+        page.set_input_files('[data-foot="pick"]', [os.path.join(fx, 'gps_tokyo.jpg'), os.path.join(fx, 'nogps.jpg')])
+        page.wait_for_function("[...document.querySelectorAll('.ft.on')].length === 1", timeout=15000)
+        assert '武蔵' in page.text_content('.ft.on') or '武藏' in page.text_content('.ft.on'), page.text_content('.ft.on')
+        assert page.evaluate("JSON.parse(localStorage.getItem('je.ui.footprint')).k") == 1
+
+    def power_muni(self, page):
+        # 古国国力卡片的「市町村」页：幕末石高 → 今天人口的逆袭榜（不列东京与政令市的区），点一行打开那里的户籍
+        page.evaluate("document.querySelector('#filters [data-filter=\"power\"]').click()")
+        page.wait_for_selector('#power-card:not([hidden]) [data-kr-tab="muni"]', timeout=40000)
+        page.click('[data-kr-tab="muni"]')
+        page.wait_for_selector('.kr-muni li', timeout=15000)
+        assert page.locator('.kr-muni li').count() == 30
+        assert not any(t.strip().endswith('区') for t in page.locator('.kr-muni li .nm').all_inner_texts()), '榜单不列区'
+        page.click('.kr-muni li >> nth=0')
+        page.wait_for_selector('#koseki[open] .ks-row[data-k="rise"]', timeout=20000)
+
+    def three_d_340(self, page):
+        # 立体图：#look 站在东京远望，看得见富士山；搜索带来的 #cs=松本城 打开城卡片、有照片与出处；此地千年能存图
+        base3d = self.base.replace('index.html', '3d.html')
+        page.goto(base3d + '#look=139.7000,35.6900&hn=Tokyo', timeout=60000)
+        page.wait_for_selector('#peaks .pk-fuji', timeout=90000)
+        assert page.locator('#peaks .pk-fuji.on').count() == 1, f'东京应看得见富士山：{page.text_content("#peaks .pk-fuji")}'
+        assert page.locator('#peaks .pk-list li').count() >= 5
+        page.goto(base3d + '?r=cs#cs=%E6%9D%BE%E6%9C%AC%E5%9F%8E', timeout=60000)
+        page.wait_for_selector('.castle-photo img', timeout=90000)
+        assert 'Wikimedia Commons' in page.text_content('.castle-photo figcaption')
+        page.goto(base3d + '?r=h#here=138.249,36.402&hn=Ueda', timeout=60000)
+        page.wait_for_selector('#here [data-here="img"]', timeout=120000)
+        with page.expect_download() as dl:
+            page.click('#here [data-here="img"]')
+        assert dl.value.suggested_filename.startswith('here-')
+
+    def battles_16(self, page):
+        # 3.40：合战 16 场（加了姉川、三方原、凑川、贱岳、小牧·长久手、大坂夏之阵）
+        n = page.evaluate("fetch('src/data/historical_events.json').then((r) => r.json()).then((d) => d.historic_battles.length)")
+        assert n == 16, n
+
     def three_d_sync(self, page):
         # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
         # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
@@ -1494,7 +1591,7 @@ class Case:
         # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 13, f'应有 13 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人）：{rows}'
+        assert len(rows) == 14, f'应有 14 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人，3.40 的石高与人口）：{rows}'
         # 3.37：家乡在合战中站哪边（川中岛按 1560 年信浓归武田）、同乡名人、去立体图看此地千年
         assert any(('武田' in r or 'Takeda' in r) and ('川中' in r or 'Kawanakajima' in r) for r in rows), f'合战中一栏：{rows}'
         # 3.38：信浓国 1600 年算东军，上田城的真田昌幸是西军——按城主写
@@ -1849,13 +1946,15 @@ def plan(lang):
              ('koseki_main', 'pref=44&muni=1&m=44201&koseki=1', ['koseki_main']),
              ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
              ('koseki_dou', 'pref=23&muni=1&m=23207&koseki=1', ['koseki_dou']),
-             ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town'])]
+             ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town']),
+             ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']),
+             ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('three_d_338', '', ['three_d_338']), ('three_d_339', '', ['three_d_339']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('three_d_338', '', ['three_d_338']), ('three_d_339', '', ['three_d_339']), ('three_d_340', '', ['three_d_340']), ('era_real', '', ['era_real']), ('bday_year', 'bday=01-20', ['bday_year']), ('footprint', '', ['footprint']), ('power_muni', '', ['power_muni']), ('battles_16', '', ['battles_16']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 

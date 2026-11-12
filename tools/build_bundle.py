@@ -99,7 +99,7 @@ def ja_to_zh_table():
         if zh != ja and ja not in table and zh.encode('gb2312', 'ignore'):
             table[ja] = zh
     # zhconv 把「樫」简化成扩展 A 的「㭴」，中文写富樫氏都用「樫」
-    table.update({'㭴': '樫', '濃': '浓', '會': '会', '姫': '姬', '條': '条', '舘': '馆', '﨑': '崎', '嶋': '岛', '澤': '泽', '濱': '滨'})
+    table.update({'㭴': '樫', '濃': '浓', '會': '会', '姫': '姬', '條': '条', '舘': '馆', '﨑': '崎', '嶋': '岛', '澤': '泽', '濱': '滨', '員': '员'})
     return table
 
 
@@ -340,6 +340,164 @@ def famous_city(famous, pre, city_of):
     return out
 
 
+# —— 3.40：古代户籍的四栏 ——
+def all_munis():
+    """全国今天的市区町村 {代码: properties + 质心 c}（政令市整市一级不在里面）"""
+    out = {}
+    for pid in range(1, 48):
+        for f in load(os.path.join(DATA, 'municipalities', f'{pid:02d}.json'))['features']:
+            q = f['properties']
+            if q.get('code'):
+                out[q['code']] = dict(q, pid=pid, c=centroid(f['geometry']))
+    return out
+
+
+def centroid(geom):
+    polys = [geom['coordinates']] if geom['type'] == 'Polygon' else geom['coordinates']
+    best, ba = None, 0
+    for poly in polys:
+        ring = poly[0]
+        a = cx = cy = 0
+        for i in range(len(ring)):
+            (x1, y1), (x2, y2) = ring[i - 1], ring[i]
+            f = x1 * y2 - x2 * y1
+            a += f
+            cx += (x1 + x2) * f
+            cy += (y1 + y2) * f
+        if abs(a) > ba:
+            ba, best = abs(a), (cx / (3 * a), cy / (3 * a))
+    return best
+
+
+def km_between(a, b):
+    from math import cos, hypot, radians
+    return hypot((a[0] - b[0]) * 111.32 * cos(radians((a[1] + b[1]) / 2)), (a[1] - b[1]) * 110.95)
+
+
+MUNIS = None
+
+
+def munis():
+    global MUNIS
+    MUNIS = MUNIS or all_munis()
+    return MUNIS
+
+
+def sennen(mura, heisei, wamyo):
+    """千年地名（3.40）：今天的市区町村名、平成合并前的市町村名、1889 年町村制的町村名，去掉 市 / 町 / 村 / 区 后
+    正好是《和名抄》同一个古郡里的郷名。{代码: [[名字, 0 今天 / 1 平成合并前 / 2 明治町村, 郷名]]}。
+    只认同一个古郡（wamyo.json 的 muni → 郡）里的郷，跨郡的同名不算；驿家（うまや）不是地名，不收"""
+    stem = lambda n: re.sub(r'(市|町|村|区)$', '', n)
+    out = {}
+    for code, gun in wamyo['muni'].items():
+        q = munis().get(code)
+        if not q or q.get('province') not in wamyo['prov']:
+            continue
+        gous = {n for n, _ in wamyo['prov'][q['province']].get(gun, []) if n != '駅家'}
+        if not gous:
+            continue
+        hits, seen = [], set()
+        cands = [(q['name'], 0)] + [(r[0], 1) for r in heisei.get(code, [])] + [(r[0], 2) for r in mura.get(code, [])]
+        for n, k in cands:
+            g = stem(n)
+            if g in gous and g not in seen:
+                seen.add(g)
+                hits.append([n, k, g])
+        if hits:
+            out[code] = hits
+    return out
+
+
+def far_lords():
+    """远方的领主（3.40）：幕末这里的村有 5% 以上的石高属于藩厅在 150 公里以外的藩（飞地）。
+    藩厅坐标 tools/han_seats.json（tools/hanseat_tool.py），市区町村取质心。{代码: [[藩条目名, 公里, 百分比]]}，占得多的在前，最多 3 个"""
+    path = os.path.join(ROOT, 'tools', 'han_seats.json')
+    if not os.path.exists(path):
+        return {}
+    seats = load(path)
+    d = load(os.path.join(ROOT, 'tools', 'kyudaka.json'))
+    out = {}
+    for code, o in d['munis'].items():
+        q = munis().get(code)
+        if not q or not o['k']:
+            continue
+        rows = {}
+        for n, v in o['r']:
+            h = d['lords'].get(n, {}).get('han')
+            if h in seats:
+                rows[h] = rows.get(h, 0) + v
+        far = []
+        for h, v in rows.items():
+            km = km_between(q['c'], seats[h][:2])
+            if km >= 150 and v / o['k'] >= 0.05:
+                far.append([h, round(km), max(1, round(v / o['k'] * 100))])
+        if far:
+            out[code] = sorted(far, key=lambda x: -x[2])[:3]
+    return out
+
+
+def kuni_share():
+    """你其实是别国人（3.40）：按今天的人口，旧国的大半在哪个县、各县的大半是哪个国。
+    {旧国: [[县 id, 该国人口里的百分比]…多的在前]}、{县 id: [[旧国, 本县人口里的百分比]…]}（跨两国的市区町村整个算给主要一方）"""
+    by_prov, by_pref = {}, {}
+    for q in munis().values():
+        pv, pop = q.get('province'), q.get('pop') or 0
+        if not pv or not pop:
+            continue
+        by_prov.setdefault(pv, {}).setdefault(q['pid'], 0)
+        by_prov[pv][q['pid']] += pop
+        by_pref.setdefault(q['pid'], {}).setdefault(pv, 0)
+        by_pref[q['pid']][pv] += pop
+    pct = lambda d: [[k, round(v * 100 / sum(d.values()))] for k, v in sorted(d.items(), key=lambda x: -x[1])]
+    return {k: pct(v) for k, v in by_prov.items()}, {k: pct(v) for k, v in by_pref.items()}
+
+
+def rise_ranks():
+    """市区町村级的逆袭榜（3.40）：幕末这里各村的石高合计（歴博）在全国的名次 → 今天人口的名次。
+    只比两边都有数字的市区町村（政令市的区各算一个）。{代码: [石高名次, 人口名次]}, 总数"""
+    d = load(os.path.join(ROOT, 'tools', 'kyudaka.json'))['munis']
+    rows = [(c, o['k'], munis()[c]['pop']) for c, o in d.items() if o['k'] and c in munis() and munis()[c].get('pop')]
+    kr = {c: i + 1 for i, (c, _, _) in enumerate(sorted(rows, key=lambda x: -x[1]))}
+    pr = {c: i + 1 for i, (c, _, _) in enumerate(sorted(rows, key=lambda x: -x[2]))}
+    return {c: [kr[c], pr[c]] for c, _, _ in rows}, len(rows)
+
+
+def build_search():
+    """搜索框的人物、城、藩（3.40）：bundle/search.json，打开搜索框时才下载。
+    人物 = 战国势力图的人物 + 天皇（6 世纪以后）/ 将军 / 执权：[日, 中, 英]；城 = 立体图的城：[日, 中, 英, 经, 纬, 县]；
+    藩 = 江户诸藩：[日, 中, 英, 县, 存续到 1871]（三种语言放在一起，搜哪种写法都认）"""
+    sg = load(os.path.join(DATA, 'sengoku.json'))
+    rulers = load(os.path.join(DATA, 'rulers.json'))
+    people, seen = [], set()
+    for k, p in sg['people'].items():
+        if k not in seen:
+            seen.add(k)
+            people.append([k, p['zh'], p['en']])
+    for key in ('emperors', 'shoguns', 'shikken'):
+        for r in rulers[key]:
+            if r['ja'] not in seen and (key != 'emperors' or r['from'] >= 500):
+                seen.add(r['ja'])
+                people.append([r['ja'], r.get('zh') or r['ja'], r['en']])
+    castles = [[c['ja'], c['zh'], c['en'], c['coords'][0], c['coords'][1], c['pref']] for c in load(os.path.join(ROOT, 'src', '3d', 'castles.json'))]
+    han = [[h['t'], h['n'].get('zh') or h['n']['ja'], h['n'].get('en') or '', h['p'], h['k']] for h in load(os.path.join(DATA, 'han.json'))['han']]
+    return json.dumps({'people': people, 'castles': castles, 'han': han}, ensure_ascii=False, separators=(',', ':'))
+
+
+def build_rise(lang):
+    """逆袭榜（古国国力卡片的「市区町村」一页，3.40）：bundle/rise-<lang>.json，[[代码, 名字, 县 id, 石高, 人口, 石高名次, 人口名次]…] 全部"""
+    conv = ja_to_zh_table() if lang == 'zh' else {}
+    zh = lambda n: ''.join(conv.get(c, c) for c in n)
+    d = load(os.path.join(ROOT, 'tools', 'kyudaka.json'))['munis']
+    ranks, n = rise_ranks()
+    out = []
+    for c, (a, b) in ranks.items():
+        q = munis()[c]
+        name = q['en'] if lang == 'en' and q.get('en') else zh(q['name']) if lang == 'zh' else q['name']
+        out.append([c, name, q['pid'], d[c]['k'], q['pop'], a, b])
+    out.sort(key=lambda x: x[0])
+    return json.dumps({'n': n, 'rows': out}, ensure_ascii=False, separators=(',', ':'))
+
+
 def build_town(lang):
     """古代户籍才用的几份：1889 年町村制时今属这里的町村（tools/fetch_mura.py）、平成大合并前的市町村（tools/fetch_heisei.py）、地名的来历（tools/yurai_tool.py）、
     幕末各村的领主（kyudaka）与《和名类聚抄》的郡郷（tools/fetch_wamyo.py）。按县拆成 bundle/town/<lang>/NN.json
@@ -357,6 +515,12 @@ def build_town(lang):
     wamyo = load(wp) if os.path.exists(wp) else {'prov': {}, 'muni': {}}
     kyu = kyudaka(lang)
     dou = [[k, zh(n), pid, y, code, zh(cur)] for k, n, pid, y, code, cur in dou_names(mura, heisei)]
+    sn = sennen(mura, heisei, wamyo)
+    far = far_lords()
+    han_name = {h['t']: h['n'] for h in load(os.path.join(DATA, 'han.json'))['han']}
+    hname = lambda t: (han_name.get(t, {}).get(lang) or han_name.get(t, {}).get('ja') or t)
+    kp_prov, kp_pref = kuni_share()
+    ranks, rank_n = rise_ranks()
     out = {}
     for pid in range(1, 48):
         pre = f'{pid:02d}'
@@ -382,6 +546,11 @@ def build_town(lang):
             'wamyo': {'muni': wm, 'gou': gou},
             # 同名地名：本县有带这些字的地名时，放全国同一个键的全部（其他县的要列出来）
             'dou': [x for x in dou if any(y[0] == x[0] and y[2] == pid for y in dou)],
+            # 3.40：千年地名 [[名字, 0/1/2, 郷名]]、远方的领主 [[藩, 公里, %]]、旧国与县的人口比、石高与人口的全国名次
+            'sennen': {c: [[zh(n), k, zh(g)] for n, k, g in v] for c, v in sn.items() if c.startswith(pre)},
+            'far': {c: [[hname(h), km, pc] for h, km, pc in v] for c, v in far.items() if c.startswith(pre)},
+            'kuni': {'prov': {pv: kp_prov[pv] for pv in sorted({q for q in prov_of.values() if q in kp_prov})}, 'pref': kp_pref.get(pid, [])},
+            'rise': {'n': rank_n, 'r': {c: v for c, v in ranks.items() if c.startswith(pre)}},
         }, ensure_ascii=False, separators=(',', ':'))
     return out
 
@@ -389,6 +558,8 @@ def build_town(lang):
 def main():
     out_dir = os.path.join(DATA, 'bundle')
     os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, 'search.json'), 'w', encoding='utf-8') as f:
+        f.write(build_search())
     for lang in LANGS:
         text = build(lang)
         path = os.path.join(out_dir, f'{lang}.json')
@@ -396,6 +567,8 @@ def main():
             f.write(text)
         with open(os.path.join(out_dir, f'ken-{lang}.json'), 'w', encoding='utf-8') as f:
             f.write(build_ken(lang))
+        with open(os.path.join(out_dir, f'rise-{lang}.json'), 'w', encoding='utf-8') as f:
+            f.write(build_rise(lang))
         os.makedirs(os.path.join(out_dir, 'town', lang), exist_ok=True)
         for pid, text_t in build_town(lang).items():
             with open(os.path.join(out_dir, 'town', lang, f'{pid:02d}.json'), 'w', encoding='utf-8') as f:

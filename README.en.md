@@ -38,14 +38,14 @@ A web map that lays old Japan over today's. Which of the 68 ancient provinces be
 - A time-travel slider through ten eras, from Asuka to today, with each era's map and capital and a banner naming who really held power; click the era name to open that period in the timelines
 - Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with each family's crest banner, an overview of its lands and its leading figures (bios and portraits for 61 people)
 - Timelines: who held power in each period, the 126 emperors, the shoguns and the Kamakura regents
-- Battles: ten of them, from Ichi-no-Tani to the Satsuma Rebellion, replayed in four phases and narrated by the generals, with the size of each army and what historians still debate
+- Battles: sixteen of them, from Minatogawa, Ichi-no-Tani and Anegawa to the summer siege of Osaka and the Satsuma Rebellion, replayed in four phases and narrated by the generals, with the size of each army and what historians still debate
 - The lords of all 498 Edo domains; rankings of the 68 provinces (population today and in the Edo period, rice yield); all 69 of Hiroshige's *Famous Places in the Sixty-odd Provinces*; 190 things that still carry an old province name
 - A card for every prefecture: old and new names, six eras of history, sights, food, dialect, ramen, sake, and anime and taiga-drama locations
 
 **The 3D map** (the "2D | 3D" switch on the right of the map)
 - Six periods on real terrain: the ancient circuits and roads, the provincial constables of Kamakura and Muromachi, the Sengoku warlords, the Edo domains and five highways, and the Meiji prefectures and railways — in the colours of a folding screen
 - Over 800 castles (the 100 Fine Castles and surviving keeps are marked); a castle's card shows who held the area over the years, and you can climb the keep to look around
-- ▶ plays from 712 to 1888, flying to what happened between each pair of years (76 events); ten battles replayed on the land, with banners for each side's strength
+- ▶ plays from 712 to 1888, flying to what happened between each pair of years (76 events); sixteen battles replayed on the land, with banners for each side's strength
 - The capital's card names that year's emperor, shogun and who really held power, and can expand all 20 periods to jump between them
 - A thousand years here: long-press (phone) or right-click (computer) anywhere, and the camera stays on that spot while it lists, from 712 to 1888, which province it was in and who held it
 

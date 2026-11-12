@@ -88,7 +88,7 @@
   ],
   "dialect": {
     "name": "Niigata dialect",
-    "features": "'-iya' and '-teba' add emphasis and 'dasuke' means 'so'; the Sado dialect keeps a Kansai flavor.",
+    "features": "'Dasuke' means 'so', and '-gan' works like 'no' (hence the pun 'Echigo no gan wa kuwaren gan'); the Sado dialect keeps a Kansai flavor.",
     "phrases": [
       {
         "meaning": "so, therefore",
@@ -99,7 +99,7 @@
         "note": ""
       },
       {
-        "meaning": "I told you…!",
+        "meaning": "the thing / the one (like \"no\")",
         "note": ""
       }
     ]
