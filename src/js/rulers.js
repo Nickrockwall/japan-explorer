@@ -31,8 +31,8 @@ function row(r, bios, extra = '') {
 // 「实权」一页：每段一张小卡，名义 / 实权 / 中枢 / 说明，点「看名单」换到对应的页
 function powerHTML(regimes) {
   const P = (o) => o[lang] || o.zh;
-  return regimes.periods.map((p, i) => `<section class="rl-group rl-pw" data-rl-g="${i}" data-pw="${p.key}">
-    <h3>${esc(P(p.y))}</h3>
+  return regimes.periods.map((p, i) => `<section class="rl-group rl-pw" data-rl-g="${i}" data-pw="${p.key}" data-from="${p.from}">
+    <h3>${esc(P(p.y))}${p.from < 300 ? '' : `<small>${esc(t('pw.years', { n: spanOf(regimes, i) }))}</small>`}</h3>
     <dl class="pw-dl"><dt>${esc(t('pw.real'))}</dt><dd class="pw-real">${esc(P(p.real))}</dd>
       <dt>${esc(t('pw.nominal'))}</dt><dd>${esc(P(p.nominal))}</dd>
       <dt>${esc(t('pw.seat'))}</dt><dd>${esc(P(p.seat))}</dd></dl>
@@ -47,8 +47,29 @@ export function powerChain(regimes, era) {
   return P.filter((p, i) => p.from < e && (P[i + 1]?.from ?? 9999) > s).map((p) => p.short[lang] || p.short.zh).join(' → ');
 }
 
-// 「实权」各段在跳转行里的短名（按开始年）
-const powerJump = (regimes) => regimes.periods.map((p) => String(p.from < 300 ? t('pw.early') : p.from));
+// 「实权」各段在跳转行里写开始年 + 短名（3.38：以前只写年份，20 个按钮看不出是什么）
+const powerJump = (regimes) => regimes.periods.map((p) => `${p.from < 300 ? t('pw.early') : p.from} ${p.short[lang] || p.short.zh}`);
+
+// 第 i 段持续几年（最后一段到今年）
+const NOW = new Date().getFullYear();
+const spanOf = (regimes, i) => (regimes.periods[i + 1]?.from ?? NOW) - regimes.periods[i].from;
+
+// 3.38：实权页顶上一条按年数比例的时间带，一眼看出谁掌权多久；点一段跳过去，滚动正文时标出当前一段（app.js 的 rlSpy）
+function powerBand(regimes) {
+  const P = regimes.periods;
+  const a = P[0].from, span = NOW - a;
+  const ticks = [500, 1000, 1500, 2000].filter((y) => y > a && y < NOW)
+    .map((y) => `<i style="left:${((y - a) / span * 100).toFixed(2)}%">${y}</i>`).join('');
+  const segs = P.map((p, i) => `<button type="button" data-rl-jump="${i}" style="flex-grow:${spanOf(regimes, i)}"
+    title="${esc(`${(p.y[lang] || p.y.zh)} · ${p.short[lang] || p.short.zh}`)}" aria-label="${esc(`${(p.y[lang] || p.y.zh)} ${p.short[lang] || p.short.zh}`)}"></button>`).join('');
+  return `<div class="pw-band"><div class="pw-segs">${segs}</div><div class="pw-ticks">${ticks}</div><p class="pw-cap" aria-live="polite"></p></div>`;
+}
+export function powerCaption(regimes, i) {
+  const p = regimes.periods[i];
+  if (!p) return '';
+  // 第一段从「3 世纪后半」起，开始年不确定，不写多少年
+  return `${p.y[lang] || p.y.zh} · ${p.short[lang] || p.short.zh}${p.from < 300 ? '' : ` · ${t('pw.years', { n: spanOf(regimes, i) })}`}`;
+}
 
 export function rulersHTML(rulers, eras, bios, tab, regimes = null) {
   if (tab === 'power' && !regimes) tab = 'emperor';
@@ -90,7 +111,10 @@ export function rulersHTML(rulers, eras, bios, tab, regimes = null) {
     <header class="book-head"><div><h2 id="rulers-h">${esc(t('rl.title'))}</h2><p class="book-progress">${esc(t('rl.sub'))}</p></div>
       <button type="button" class="book-close" data-act="rl-close" aria-label="${esc(t('close'))}">×</button></header>
     <nav class="book-tabs">${tabs}</nav>
-    <nav class="rl-jump" aria-label="${esc(t('rl.jump'))}">${jump.map((x, i) => `<button type="button" data-rl-jump="${i}">${esc(x)}</button>`).join('')}</nav>
+    ${tab === 'power' ? powerBand(regimes) : ''}
+    <div class="rl-jumpwrap"><button type="button" class="rl-arr" data-rl-arr="-1" aria-label="${esc(t('rl.prev'))}">‹</button>
+      <nav class="rl-jump" aria-label="${esc(t('rl.jump'))}">${jump.map((x, i) => `<button type="button" data-rl-jump="${i}">${esc(x)}</button>`).join('')}</nav>
+      <button type="button" class="rl-arr" data-rl-arr="1" aria-label="${esc(t('rl.next'))}">›</button></div>
     <div class="rl-body">${body}<p class="rl-note">${esc(t(tab === 'power' ? 'pw.note' : 'rl.note'))}</p>
       <p class="fix-row">${fixLink(t('fix.w.rl', { tab: t(`rl.tab.${tab}`) }))}</p></div></div>`;
 }

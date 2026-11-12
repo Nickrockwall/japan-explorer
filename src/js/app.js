@@ -14,7 +14,7 @@ import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
 import { hometownItems, hometownHTML } from './hometown.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
-import { rulersHTML, powerChain } from './rulers.js';
+import { rulersHTML, powerChain, powerCaption } from './rulers.js';
 import { kakoHTML, kakoPrefHTML, dayOrder, dayKey, kakoLabel } from './kako.js';
 import { hanSection, setLordDays, lordOfFn } from './han.js';
 import { bdayData, bdayHTML, bdayImage } from './bday.js';
@@ -610,10 +610,10 @@ async function main() {
     openClan(b.dataset.clan);
     audio.play('click');
   });
-  // 立体图（3d.html，3.35 起五个时代）：平面图正在看的时代对应到立体图的年份——战国势力图 → 同一年份与选中的国；
+  // 立体图（3d.html，3.35 起五个时代，3.38 起六个）：平面图正在看的时代对应到立体图的年份——战国势力图 → 同一年份与选中的国；
   // 五畿七道（奈良）→ 当前的国界年份（712 / 757 / 824，1869 → 1871）；时空穿越的其他时代 → 最近的立体年份；
   // 都没有时用上次战国图的年份。放大过的话带上视野（立体图的距离 = 3000 / 平面的缩放，与立体图回来时同一个换算）
-  const ERA3D = { asuka: '712', heian: '824', kamakura: '1250', muromachi: '1467', edo: '1867', meiji: '1871', taisho: '1888', modern: '1888' };
+  const ERA3D = { asuka: '712', heian: '824', kamakura: '1250', muromachi: '1400', edo: '1867', meiji: '1871', taisho: '1888', modern: '1888' };
   function target3d() {
     const era = app.eraIdx != null ? eras[app.eraIdx] : null;
     if (map.sgMode || era?.filter === 'sengoku') return { y: sg?.year || uiPref.get('sgYear', '1560'), p: map.sgMode ? sg?.focus : null };
@@ -665,13 +665,34 @@ async function main() {
     history.replaceState(null, '', `#rl=${rlTab}&lang=${lang}`); // 深链接：#rl=power 直接打开「实权」页
     const body = rlDlg.querySelector('.rl-body');
     body.scrollTop = 0;
-    // 从「实权」点过来：滚到那一年所在的一组（按每组第一行的开始年）
+    // 从「实权」点过来：滚到那一年所在的一组（按每组第一行的开始年）；实权页按各段的 data-from（从时代滑块打开时）
     if (from != null) {
       const groups = [...body.querySelectorAll('.rl-group')];
-      const g = groups.filter((x) => +(x.querySelector('.rl-y')?.textContent || '0').split('–')[0] <= from).pop();
+      const startOf = (x) => (x.dataset.from != null ? +x.dataset.from : +(x.querySelector('.rl-y')?.textContent || '0').split('–')[0]);
+      const g = groups.filter((x) => startOf(x) <= from).pop();
       if (g) body.scrollTop = g.offsetTop - body.offsetTop;
     }
+    body.addEventListener('scroll', rlSpy, { passive: true });
+    rlSpy();
     audio.play('click');
+  }
+  // 3.38：滚动正文时在跳转行（与实权页的时间带）上标出当前一段；跳转行的选中项由 shell.js 的滚动提示滚进视野
+  function rlSpy() {
+    const body = rlDlg.querySelector('.rl-body');
+    if (!body) return;
+    const top = body.scrollTop + 12;
+    const groups = [...body.querySelectorAll('.rl-group')];
+    // 滚到底时最后几段可能永远到不了顶上：到底了就算最后一段
+    const atEnd = body.scrollTop + body.clientHeight >= body.scrollHeight - 2;
+    let cur = atEnd ? groups.length - 1 : 0;
+    if (!atEnd) groups.forEach((g, i) => { if (g.offsetTop - body.offsetTop <= top) cur = i; });
+    rlDlg.querySelectorAll('[data-rl-jump]').forEach((b) => {
+      const on = +b.dataset.rlJump === cur;
+      b.classList.toggle('on', on);
+      if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    });
+    const cap = rlDlg.querySelector('.pw-cap');
+    if (cap && rl?.regimes) cap.textContent = powerCaption(rl.regimes, cur);
   }
   rlDlg.addEventListener('close', () => {
     if (/(^|[#&])rl=/.test(location.hash)) history.replaceState(null, '', app.currentId ? stateHash(app.currentId) : location.pathname + location.search);
@@ -684,7 +705,13 @@ async function main() {
     if (jump) {
       const body = rlDlg.querySelector('.rl-body');
       const sec = body.querySelector(`[data-rl-g="${jump.dataset.rlJump}"]`);
-      if (sec) body.scrollTo({ top: sec.offsetTop - body.offsetTop, behavior: 'smooth' });
+      if (sec) body.scrollTo({ top: sec.offsetTop - body.offsetTop, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      return;
+    }
+    const arr = e.target.closest('[data-rl-arr]');
+    if (arr) {
+      const row = rlDlg.querySelector('.rl-jump');
+      row.scrollBy({ left: +arr.dataset.rlArr * row.clientWidth * 0.7, behavior: 'smooth' });
       return;
     }
     const li = e.target.closest('li[data-person]');
@@ -996,6 +1023,7 @@ async function main() {
     if (era) {
       range.value = i;
       $('tb-era').textContent = era.name;
+      $('tb-era').title = t('tb.era.pw');
       $('tb-capital').textContent = t('capital', { name: era.capital.name });
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.toggle('on', +b.dataset.i === i));
       if (banner) showEraBanner(era, powerChain(regimes, era));
@@ -1010,6 +1038,7 @@ async function main() {
       }
     } else {
       $('tb-era').textContent = t('tb.idle');
+      $('tb-era').title = '';
       $('tb-capital').textContent = t('tb.idle.cap');
       $('tb-ticks').querySelectorAll('button').forEach((b) => b.classList.remove('on'));
     }
@@ -1046,6 +1075,13 @@ async function main() {
   });
   playBtn.addEventListener('click', togglePlay);
   $('tb-exit').addEventListener('click', () => { stopPlay(); setEra(null); });
+  // 3.38：时空穿越时点时代名 → 年表「实权」页，停在这个时代开始的那一段
+  $('tb-era').addEventListener('click', () => {
+    const era = app.eraIdx != null ? eras[app.eraIdx] : null;
+    if (!era) return;
+    stopPlay();
+    openRulers('power', parseInt(era.years, 10));
+  });
 
   // ── 时空滤镜（历史版图下；点选即退出时空穿越） ──
   const filterBox = $('filters');

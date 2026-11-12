@@ -1767,7 +1767,24 @@ dialog.shared::backdrop { background: rgba(42,37,32,.45); }
 .hn-more:hover { border-color: var(--kin); }
 
 /* 年表：按时代跳转 */
-.rl-jump { flex: none; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 22px 8px; }
+/* 3.38：跳转行两头有 ‹ ›（还有没露出的才显示），电脑上滚轮 / 按住拖也能横滑（shell.js setupScrollHints） */
+.rl-jumpwrap { flex: none; display: flex; align-items: center; gap: 4px; padding: 2px 14px 8px; }
+.rl-jump { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+.rl-arr { flex: none; width: 26px; height: 28px; display: grid; place-items: center; visibility: hidden; cursor: pointer; border: 1px solid #c9b08a; border-radius: 6px; background: var(--card-bg); color: #5a4a3f; font: 700 16px/1 var(--serif); padding: 0; }
+.rl-arr:hover { border-color: var(--shu); color: var(--shu); }
+.rl-jumpwrap:has(.rl-jump.more-l) .rl-arr[data-rl-arr="-1"], .rl-jumpwrap:has(.rl-jump.more-r) .rl-arr[data-rl-arr="1"] { visibility: visible; }
+.rl-jump button.on { background: var(--ink); border-color: var(--ink); color: var(--card-bg); }
+/* 实权页的比例时间带 */
+.pw-band { flex: none; padding: 0 22px 6px; }
+.pw-segs { display: flex; gap: 1px; height: 14px; }
+.pw-segs button { flex-basis: 0; min-width: 3px; padding: 0; border: 0; border-radius: 1px; cursor: pointer; background: rgba(122,87,25,.32); }
+.pw-segs button:nth-child(even) { background: rgba(122,87,25,.55); }
+.pw-segs button:hover { background: var(--shu); }
+.pw-segs button.on { background: var(--ink); }
+.pw-ticks { position: relative; height: 14px; }
+.pw-ticks i { position: absolute; top: 1px; transform: translateX(-50%); font: 400 10.5px/1.2 var(--sans); font-style: normal; color: #8a7a68; font-variant-numeric: tabular-nums; }
+.pw-cap { margin: 0; min-height: 1.5em; font: 700 12.5px/1.5 var(--serif); color: #3a1f1c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.time-travel #tb-era { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
 .rl-jump::-webkit-scrollbar { display: none; }
 .rl-jump button { flex: none; white-space: nowrap; cursor: pointer; padding: 4px 10px; border-radius: 6px; border: 1px solid #c9b08a; background: transparent; color: #5a4a3f; font-size: 12px; }
 .rl-jump button:hover { border-color: var(--shu); color: var(--shu); }

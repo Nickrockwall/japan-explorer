@@ -6,10 +6,10 @@ import { YEARS, eraOf, capitalOf } from './eras.js';
 
 export function createCards(S, ctx) {
   const {
-    opts, sg, kama, bios, sites, rulers, people, camera, controls, P, LOOSE, KAMA_LOOSE,
+    opts, sg, SHUGO, bios, sites, rulers, people, camera, controls, P, LOOSE,
     esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
     flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
-    holderAt, castleOnIn, eraReady, loadEra, lookFrom,
+    holderAt, castleOnIn, eraReady, loadEra, lookFrom, hereAt, regimes,
   } = ctx;
   const card = document.querySelector('#card');
   const person = (ja) => nm(people[ja]) || ja;
@@ -89,14 +89,14 @@ export function createCards(S, ctx) {
         ${provButtons([...own, ...shared])}
         <p class="note">${esc(t('c.note'))}</p>`);
       card.querySelector('[data-person]')?.addEventListener('click', (e) => showPerson(e.target.dataset.person, () => showClan(c, false)));
-    } else if (era === 'kamakura') {
+    } else if (SHUGO[era]) {
       const mon = S.mode.hasMon(c) ? `<img class="mon-img" src="src/assets/crests/${c}.png" alt="">` : sw(c);
       const who = own.map((r) => entry(r.key)?.who).filter(Boolean).map((w) => (lang === 'zh' ? w[1] : w[0]));
       openCard(`<h2>${mon}${esc(nm(ci))}</h2>
         <p class="sub">${opts.year} · ${esc(t('k.provs', { n: own.length }))}</p>
         ${who.length ? `<p>${esc(t('k.who'))}：${esc([...new Set(who)].join(lang === 'en' ? ', ' : '、'))}</p>` : ''}
         ${provButtons(own)}
-        <p class="note">${esc(t(KAMA_LOOSE.has(c) ? 'k.looseNote' : 'k.note'))}</p>
+        <p class="note">${esc(t(`${era === 'muromachi' ? 'mu' : 'k'}.${S.mode.loose.has(c) ? 'looseNote' : 'note'}`))}</p>
         ${ci.wiki ? `<p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(ci.wiki)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>` : ''}`);
     } else {
       openCard(`<h2>${sw(c)}${esc(nm(ci))}</h2>
@@ -112,14 +112,19 @@ export function createCards(S, ctx) {
     }
   }
   const sitesIn = (key) => sites.filter((s) => s.prov === key);
-  function showRegion(r) {
+  function showRegion(r, p) {
     if (!r) return;
     S.focused = { type: 'region', key: r.key };
     const era = eraOf(opts.year);
     if (era === 'sengoku') showSengokuRegion(r);
-    else if (era === 'kamakura') showKamakuraRegion(r);
+    else if (SHUGO[era]) showShugoRegion(r, era);
     else if (era === 'kodai') showKodaiRegion(r);
     else showBlock(r);
+    // 3.38：点了地面的才有落点：从这里看此地千年（以前只能从平面图的古代户籍进来）
+    if (p && hereAt) {
+      card.insertAdjacentHTML('beforeend', `<p class="links"><button type="button" class="here-go">${esc(t('here.go'))}</button></p>`);
+      card.querySelector('.here-go').onclick = () => { closeCard(); hereAt(p.x, p.z); };
+    }
     syncHash();
   }
   function showSengokuRegion(r) {
@@ -140,19 +145,20 @@ export function createCards(S, ctx) {
     card.querySelectorAll('tr[data-y]').forEach((tr) => { tr.onclick = (e) => { if (!e.target.closest('[data-person]')) userYear(tr.dataset.y); }; });
     card.querySelectorAll('[data-person]').forEach((el) => { el.onclick = () => showPerson(el.dataset.person, () => showRegion(r)); });
   }
-  function showKamakuraRegion(r) {
-    const fam = (c) => kama.families[c] || kama.families.unknown;
-    const rows = kama.years.map((y) => {
-      const e = kama.provinces[r.key]?.[y];
+  function showShugoRegion(r, era) {
+    const d = SHUGO[era];
+    const fam = (c) => d.families[c] || d.families.unknown;
+    const rows = d.years.map((y) => {
+      const e = d.provinces[r.key]?.[y];
       if (!e) return '';
       const who = e.who ? (lang === 'zh' ? e.who[1] : e.who[0]) : '';
-      const sub = who ? `${esc(who)}${e.from ? ` · ${esc(t('k.from', { y: e.from }))}` : ''}` : e.gap ? esc(t('k.gap')) : '';
+      const sub = who ? `${esc(who)}${e.from ? ` · ${esc(t('k.from', { y: e.from }))}` : ''}` : e.gap ? esc(t('k.gap')) : e.prose ? esc(t('mu.prose')) : '';
       return `<tr class="${y === opts.year ? 'cur' : ''}" data-y="${y}"><th>${y}</th><td><i class="sw" style="background:${fam(e.c).color}"></i>${esc(nm(fam(e.c)))}${sub ? `<span class="who">${sub}</span>` : ''}</td></tr>`;
     }).join('');
     openCard(`<h2>${esc(provName(r.key))}</h2>
       <p class="sub">${esc(circuit(r.props.circuit || ''))} · ${esc(t('k.sub'))}</p>
       ${rows ? `<table class="yrs">${rows}</table>` : `<p>${esc(t('k.none'))}</p>`}
-      <p class="note">${esc(t('k.note'))}</p>
+      <p class="note">${esc(t(era === 'muromachi' ? 'mu.note' : 'k.note'))}</p>
       <p class="links"><a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(r.key)}" target="_blank" rel="noopener">${t('jawiki')}</a></p>`);
     card.querySelectorAll('tr[data-y]').forEach((tr) => { tr.onclick = () => userYear(tr.dataset.y); });
   }
@@ -280,12 +286,22 @@ export function createCards(S, ctx) {
     const cap = capitalOf(y);
     S.focused = { type: 'capital' };
     const row = (k, v) => (v ? `<tr><th>${esc(t(k))}</th><td>${esc(v)}</td></tr>` : '');
+    // 3.38：历代实权 20 段（与平面图年表「实权」页同一份 regimes.json），当前一段标出；点一段换到落在这一段里的第一个年份
+    const PS = regimes?.periods || [];
+    const inP = (i, v) => PS[i].from < +v && (!PS[i + 1] || +v <= PS[i + 1].from);
+    const pw = PS.map((p, i) => {
+      const go = YEARS.find((v) => inP(i, v));
+      const label = `${p.from < 300 ? t('pw.early') : p.from} ${nm(p.short)}`;
+      return `<li class="${p === rg ? 'cur' : ''}">${go ? `<button type="button" data-pw-y="${go}">${esc(label)}<small>→ ${go}</small></button>` : `<span>${esc(label)}</span>`}</li>`;
+    }).join('');
     openCard(`<h2>${esc(t('cap.title', { y }))}</h2>
       <p class="sub">${esc(t(`cap.name.${cap.key}`))} · ${esc(t('cap.sub2'))}</p>
       <table class="kv">${row('cap.emp', nm(emp))}${row('cap.shogun', sho ? nm(sho) : '')}${row('cap.shikken', shikken ? nm(shikken) : '')}${row('cap.nominal', nm(rg?.nominal))}${row('cap.real', nm(rg?.real))}${row('cap.seat', nm(rg?.seat))}</table>
       ${rg?.note ? `<p class="note">${esc(nm(rg.note))}</p>` : ''}
       <p class="note">${esc(t(+y < 794 ? 'heijoNote' : +y < 1869 ? 'heianNote' : 'tokyoNote'))}</p>
+      ${pw ? `<details class="pw-all"><summary>${esc(t('pw.all'))}</summary><ol>${pw}</ol><p class="note">${esc(t('pw.allNote'))}</p></details>` : ''}
       <p class="links"><a href="index.html#rl=power&lang=${lang}">${esc(t('cap.more'))}</a></p>`);
+    card.querySelectorAll('[data-pw-y]').forEach((b) => { b.onclick = () => { userYear(b.dataset.pwY); showCapital(); card.querySelector('.pw-all').open = true; }; });
     const [x, z] = P(...cap.at);
     flyTo(x, z, Math.min(camDist(), 90));
   }

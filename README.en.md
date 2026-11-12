@@ -8,7 +8,7 @@
 
 ![Japan Explorer](src/assets/og-cover-en.png)
 
-Old Japan laid over today's map. Which of the 68 ancient provinces became each of today's 47 prefectures? Who held them in the Sengoku period, which domain ruled them under the Edo shogunate, and what happened there on this day centuries ago? Tap a prefecture or a town, or use your phone's location, and see who ruled the ground under your feet in each era. You can also switch to the Korean Peninsula and compare Silla, Goryeo and Joseon with today.
+A web map that lays old Japan over today's. Which of the 68 ancient provinces became each of today's 47 prefectures? Who held them in the Sengoku period, which domain ruled them under the Edo shogunate, and which prefectures did they pass through after 1871? Tap a prefecture or a town, or use your phone's location, to see who ruled the ground under your feet in each era. No sign-up; the interface is in 中文, English and 日本語.
 
 <p>
   <img src="docs/screen-sengoku-en.jpg" alt="Sengoku map: on the eve of the Honnō-ji Incident in 1582, with Yamashiro Province's holders in six years" width="49%">
@@ -19,87 +19,78 @@ Old Japan laid over today's map. Which of the 68 ancient provinces became each o
   <img src="docs/screen-koseki-en.jpg" alt="Phone: ancestral register for Ueda" width="32%">
 </p>
 <p>
-  <img src="docs/screen-3d-en.jpg" alt="3D Sengoku map: the Battle of Sekigahara replayed on real terrain (the turning point)" width="98%">
+  <img src="docs/screen-3d-en.jpg" alt="3D map: the Battle of Sekigahara replayed on real terrain (the turning point)" width="98%">
 </p>
 
 ## Try these first
 
-- [Your birthday](https://nickrockwall.github.io/japan-explorer/#bday=06-21&lang=en): who was born and who died that day, and what happened (the link opens June 21, the day of the Honnō-ji Incident — change it to your own birthday in the dialog)
-- [Japan in 1582](https://nickrockwall.github.io/japan-explorer/#pref=26&sg=1582&sgc=oda&lang=en): who held each of the 68 provinces just before Honnō-ji, and how much of Japan the Oda held
 - [An ancestral register for Ueda, Nagano](https://nickrockwall.github.io/japan-explorer/#pref=20&muni=1&m=20203&koseki=1&lang=en): what your register would have said a few centuries ago; its closing timeline runs from Shinano Province to Nagano Prefecture
-- [Sekigahara in 3D](https://nickrockwall.github.io/japan-explorer/3d.html#bt=sekigahara&ph=2&lang=en): watch the Eastern and Western armies march across real terrain and Kobayakawa change sides; the ▶ in the year row tells the story from 1467 to 1600, flying to what happened between each pair of years
-- [Who held power](https://nickrockwall.github.io/japan-explorer/#rl=power&lang=en): from the Yamato kingship to today, who was nominally in charge and who really ran things
-- [The Korean Peninsula](https://nickrockwall.github.io/japan-explorer/#map=korea&lang=en): 29 regions, North and South, and the divisions of earlier kingdoms
+- [Japan in 1582](https://nickrockwall.github.io/japan-explorer/#pref=26&sg=1582&sgc=oda&lang=en): who held each of the 68 provinces just before Honnō-ji, and how much of Japan the Oda held
+- [Who held power](https://nickrockwall.github.io/japan-explorer/#rl=power&lang=en): 20 periods from the Yamato kingship to today, each with its nominal head and who really ran things; the band at the top shows how long each lasted
+- [Sekigahara in 3D](https://nickrockwall.github.io/japan-explorer/3d.html#bt=sekigahara&ph=2&lang=en): watch the Eastern and Western armies march across real terrain and Kobayakawa change sides
+- [The constables of 1400](https://nickrockwall.github.io/japan-explorer/3d.html#y=1400&lang=en): the Muromachi period on the 3D map — which provinces the Hosokawa, Yamana, Uesugi and Ōuchi held
+- [Your birthday](https://nickrockwall.github.io/japan-explorer/#bday=06-21&lang=en): who was born and who died that day, and what happened (the link opens June 21, the day of the Honnō-ji Incident; change it to your own)
+
+## What you can explore
+
+**The flat map**
+- The borders of the 47 prefectures and 68 ancient provinces, colored by circuit; switch between 712, 757, 824 and 1869 to watch provinces split and merge, and drill down to over 1,900 municipalities
+- A time-travel slider through ten eras, from Asuka to today, with each era's map and capital and a banner naming who really held power; click the era name to open that period in the timelines
+- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with each family's crest banner, an overview of its lands and its leading figures (bios and portraits for 61 people)
+- Timelines: who held power in each period, the 126 emperors, the shoguns and the Kamakura regents
+- Battles: ten of them, from Ichi-no-Tani to the Satsuma Rebellion, replayed in four phases and narrated by the generals, with the size of each army and what historians still debate
+- The lords of all 498 Edo domains; rankings of the 68 provinces (population today and in the Edo period, rice yield); all 69 of Hiroshige's *Famous Places in the Sixty-odd Provinces*; 190 things that still carry an old province name
+- A card for every prefecture: old and new names, six eras of history, sights, food, dialect, ramen, sake, and anime and taiga-drama locations
+
+**The 3D map** (the "2D | 3D" switch on the right of the map)
+- Six periods on real terrain: the ancient circuits and roads, the provincial constables of Kamakura and Muromachi, the Sengoku warlords, the Edo domains and five highways, and the Meiji prefectures and railways — in the colours of a folding screen
+- Over 800 castles (the 100 Fine Castles and surviving keeps are marked); a castle's card shows who held the area over the years, and you can climb the keep to look around
+- ▶ plays from 712 to 1888, flying to what happened between each pair of years (76 events); ten battles replayed on the land, with banners for each side's strength
+- The capital's card names that year's emperor, shogun and who really held power, and can expand all 20 periods to jump between them
+- A thousand years here: long-press (phone) or right-click (computer) anywhere, and the camera stays on that spot while it lists, from 712 to 1888, which province it was in and who held it
+
+**About you**
+- Ancestral register: your guardian shrine, the distance to the provincial capital, the ancient township, which side you were on in the Sengoku battles and at Sekigahara, the late-Edo lord (with rice yields for your own municipality), the Meiji village, the towns before the Heisei mergers, where the name comes from and famous people born there; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
+- On this day and the birthday card: what happened on a date centuries ago, for all 366 days; pick a date to see everything on it and save it as an image
+- Where am I?: which ancient province and district you're standing in (worked out on your device)
+- Goshuin book: a stamp for every prefecture, and an "in person" stamp at each province's ichinomiya shrine
+- A guide who changes identity with the region (a Heian court lady, an ukiyo-e cat, a general…) and answers common questions even without AI
+
+**Korean Peninsula** (the "Japan / Korean Peninsula" switch next to the title): 29 regions, North and South, with their historical divisions, household rankings from 1432, the Daedongyeojido, and nine episodes of shared history set out as facts both sides accept, each side's mainstream account, and sources.
 
 ## A few things you might not know
 
 - Add up today's population by ancient province and **Musashi alone holds 21% of Japan** (about 25.9 million) — more than the 43 smallest provinces combined. All of **Oki** has about 19,000 people, not enough to fill half of Tokyo Dome.
 - **Sado** has only 57% of the people it had in 1721, while **Kawachi** climbed from 43rd in the Edo census to 8th today.
 - Of the 498 domains of the Edo period, 265 lasted until they were abolished in 1871; the **Takada Domain** in Echigo went through 9 ruling houses and 32 lords.
-- In On this day, the busiest dates are **January 15, March 24 and May 15** (12 entries each; March 24 has the Sakuradamon Incident).
 - After the domains were abolished, today's **Kagawa** was made, merged away and made again: Takamatsu → Kagawa → Myōdō → Kagawa → Ehime, and only in 1888 Kagawa for good.
-- Ueda lies in Chiisagata District of Shinano Province; at the end of the Edo period, 106 of the district's 158 towns and villages belonged to the Ueda Domain.
+- Shinano Province mostly sided with the East at Sekigahara, but **Sanada Masayuki** at Ueda Castle fought for the West — so Ueda's register follows its lord.
 
 Each of these is worked out from the app's own data, and you can open it to check.
-
-## What's inside
-
-**Maps**
-- The real borders of the 68 ancient provinces under the 47 prefectures, colored by circuit; switch between 712, 757, 824 and 1869 to watch provinces split and merge
-- Over 1,900 municipalities, colored by province or population, with their Meiji-era districts; search works with kanji, kana and English
-- A time-travel slider through ten eras, from Asuka to today, with each era's powers and capital, and a banner naming who really held power
-
-**History**
-- A card for every prefecture: old and new names, six eras from the ritsuryō state to modern times, sights, food and dialect
-- Sengoku map: who held each province in 1467, 1560, 1573, 1582, 1590 and 1600, with the leading figure of each; plus timelines (who really held power in each period, from the Yamato kingship to today; emperors, shoguns and regents) and bios and portraits for 61 people; it also opens as a 3D map (the "2D | 3D" switch on the right of the map): the ancient circuits, Kamakura constables, Sengoku warlords, Edo domains and Meiji prefectures on real terrain, with castles, forts, the five highways and Hiroshige's prints, in the colours of a folding screen; playback runs from 712 to 1888 (73 events), battles can be replayed on the land, and the capital shows who held the realm each year
-- Battles: ten of them — Ichi-no-Tani, Dan-no-ura, Itsukushima, Okehazama, Kawanakajima, Nagashino, Yamazaki, Sekigahara, Toba–Fushimi and the Satsuma Rebellion — replayed in four phases and narrated by the generals themselves; on the 3D map small banners show each side's strength, and each battle notes what historians still debate
-- Edo domains: the lords of 498 domains by prefecture; a lord's birth and death dates sit next to the name and mark the place on the map
-- Rankings: population today, Edo population, rice yield and the "300-year shake-up" for all 68 provinces, plus rival face-offs (Iga vs Kōka, Owari vs Mikawa…)
-- All 69 prints of Hiroshige's *Famous Places in the Sixty-odd Provinces*, with where each scene is today; 190 things that still carry an old province name (the Shinano River, Sanuki udon, Iyokan…)
-
-**About you**
-- On this day: what happened in Japan on today's date centuries ago — events, and births and deaths of historical figures plus a few well-known modern people — with entries for every one of the 366 days, in a different order for everyone
-- Birthday card: pick a date (your birthday, say) to see everything on it, how eventful it is among all 366 days and which prefecture it's most tied to; add a name and save it as an image
-- Where am I?: find out which ancient province and district you're standing in
-- Ancestral register: a "Register of Then and Now" with your guardian shrine, the distance to the provincial capital, the Sengoku-era holders, the late-Edo lords, your Boshin War side and a local greeting, ending with "This place through time" — who held the place from antiquity to today (the Edo domain and its houses, the prefectures it passed through after 1871; Okinawa, Hokkaidō and Amami follow their own histories), with events, births and deaths located there; each line says whether it's exact to the town, district, prefecture or province, and you can save it as an image
-- Goshuin book: a stamp for every prefecture you visit; pay respects at each province's ichinomiya shrine online, and earn an "in person" stamp when you're actually there
-
-**Just for fun**
-- Ramen styles, local sake, 111 anime and taiga-drama locations, and regional in-jokes
-- A guide who changes identity with the region (a Heian court lady, an ukiyo-e cat, a general…) and answers quick questions even without AI
-- Japanese-style sound effects and koto background music, all synthesized in the browser
-
-**Korean Peninsula** (the "Japan / Korean Peninsula" switch next to the title)
-- 29 first-level regions, North and South (divisions as of 2026), with a drill-down to 400-plus cities and counties; names in English, Korean script and romanization
-- Historical divisions: the Three Kingdoms, Silla's nine provinces, Goryeo's circuits, Joseon's eight provinces and the thirteen provinces of 1896; the Joseon layer marks the two towns each province is named after (Gyeongsang = Gyeongju + Sangju…)
-- Household and farmland rankings from the 1432 geography of the Annals of King Sejong, six battlefields, and each region on Kim Jeong-ho's Daedongyeojido
-- A peninsula seal book with 141 hyanggyo you can check in at, and each region's heritage-listed traditional liquor
-- Nine episodes of shared history between Japan and the peninsula, set out as facts both sides accept, each side's mainstream account, and sources; disputed names such as Dokdo / Takeshima and Sea of Japan / East Sea appear side by side, with each side's position and no verdict
-
-A tour runs on your first visit, and you can replay it from settings. The interface is in 中文, English and 日本語.
 
 ## How to use it
 
 - **Phone**: open the link in your browser, in portrait or landscape. To add it to your home screen: Safari on iPhone → Share → "Add to Home Screen"; Chrome on Android → ⋮ → "Add to Home screen". Pages you've seen also work offline.
-- **Computer**: the map is on the left, details and the guide on the right.
-- **Sharing**: the Share button on a card copies a link with the region and language, e.g. `#pref=26&lang=ja` opens Kyoto in Japanese; birthday cards, ancestral registers and the Sengoku map have links of their own.
-- **AI (optional)**: to chat freely with the guide, add your own key under "API Settings". Claude, Gemini and OpenAI-compatible services (including DeepSeek) are supported. The key stays in your browser, and requests go straight from your browser to the service you chose — never through this site.
-- **Corrections**: every card ends with "Spot a mistake?", which opens a new GitHub issue already filled in with the card and the current link (needs a GitHub login).
-- **Privacy**: no accounts and no analytics. Location is used only when you tap the button and is worked out on your device; your progress, stamps and name stay in your own browser.
+- **Computer**: the map is on the left, details and the guide on the right. Rows of buttons (timeline jumps, filters, legends) scroll sideways with the mouse wheel or by dragging.
+- **Sharing**: the Share button on a card copies a link with the region and language, e.g. `#pref=26&lang=ja` opens Kyoto in Japanese; registers, birthday cards, the Sengoku map, the timelines and the 3D map's years and battles have links of their own.
+- **AI (optional)**: to chat freely with the guide, add your own key under "API Settings". Claude, Gemini and OpenAI-compatible services (including DeepSeek and Qwen) are supported. The key stays in your browser, and requests go straight from your browser to the service you chose.
+- **Corrections**: every card ends with "Spot a mistake?", which opens a new GitHub issue already filled in with the card and the current link.
+- **Privacy**: no accounts and no analytics. Your progress, stamps and name stay in your own browser.
 
 ## Where the data comes from
 
-Everything has a source where possible, and the app says so where something is approximate:
+Everything has a source where possible and is checked by script — that coordinates fall inside the province, that a name and year really appear in the article — and anything that doesn't match is left out. The app says so where something is approximate.
 
-- **Borders**: national map from 「地球地図日本」 (Geospatial Information Authority of Japan); municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成. Province borders are pieced together from municipalities, and a municipality spanning two provinces counts toward the main one, so they are approximate.
-- **Japanese Wikipedia** (CC BY-SA 4.0): Meiji-era districts; ichinomiya shrines, provincial capitals and kokubunji temples; Edo-period population and rice yield by province; each province's 1598 Taikō survey yield; late-Edo lords by district (旧高旧領取調帳); Edo domains and their lords; the towns and villages of the 1889 municipal system; where city names come from (our own summaries, checked against the articles — or against the city or prefecture's own website where Wikipedia is silent); provincial governors and daimyo of the Sengoku period; the date articles ("January 1"…). Each entry is checked by script — that coordinates fall inside the province, that a name really appears in the article — and anything that doesn't match is left out.
-- **National Museum of Japanese History, Kyūdaka Kyūryō Torishirabechō database**: the late-Edo lord in the family register, worked out for each municipality by adding up the early-Meiji lords and rice yields of every village now inside it (only the totals are published, not the records).
-- **CODH (Center for Open Data in the Humanities)** (CC BY 4.0): the 1920 / 1985 / 1995 municipal boundaries of its Historical Administrative Area Data Set, used to fill in Meiji villages Wikipedia doesn't list and to match old villages to today's municipalities; village coordinates from its Nihon Rekishi Chimei Taikei place-name data set.
-- **Nara National Research Institute for Cultural Properties, ancient place-name search**: the townships (gō) of each district in the 10th-century Wamyō Ruijushō, with readings.
-- **Wikidata** (CC0): municipal readings, populations and English names; reign years of lords that Wikipedia leaves out, from the "Lord of X Domain" position (failing that, from the daimyo table of the English Wikipedia domain article); dates, places and names in three languages for On this day — an event or person is kept only if the exact date matches Wikidata and the place falls inside a prefecture. Modern people are picked by a year (2025) of Japanese Wikipedia page views, two or three a day. Dates are Gregorian, and Julian before 1582, as on Wikipedia.
-- **Korean Peninsula**: boundaries from geoBoundaries (South: Natural Earth, citypopulation.de; North: WFP / OCHA ROAP), names and populations from Wikidata, updated to the 2026 divisions using Korean Wikipedia. Historical divisions are pieced together from today's counties — Silla's nine provinces follow Korean Wikipedia's tables, Goryeo follows the Goryeosa geography treatise — and are approximate. Households and farmland for 1432 come from the original text of the Annals of King Sejong (National Institute of Korean History site). The Daedongyeojido is the Seoul National University Kyujanggak copy (public domain), with each region's area estimated by aligning the old map to today's coastline.
-- **Images**: Hiroshige's prints, the 47 prefectural emblems and the Daedongyeojido are in the public domain; portraits are mostly public domain, two are CC BY-SA (credited on the card); the Sengoku crests come from each family's Japanese Wikipedia article and are public domain or CC BY / BY-SA (credited in the power overview). All from Wikimedia Commons.
-- **Written for this site**: bios, histories, in-jokes, ramen and sake follow common accounts, with years and events checked against Wikipedia; some coloring shows only the dominant power in a prefecture or province and is approximate; uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
+- **Borders**: national map from 「地球地図日本」 (Geospatial Information Authority of Japan); municipal boundaries: 「国土数値情報（行政区域データ）」（国土交通省）を加工して作成. Province borders are pieced together from municipalities, and a municipality spanning two provinces counts toward the main one, so they are approximate. 3D terrain from GSI elevation tiles.
+- **Japanese Wikipedia** (CC BY-SA 4.0): old districts; ichinomiya, provincial capitals and kokubunji; Edo population and rice yield; late-Edo lords by district; Edo domains and their lords; Meiji villages; provincial constables and Sengoku daimyo; castle building dates; the date articles. Bios and the stories behind place names are written for this site and only checked against the articles for years and key words.
+- **National Museum of Japanese History, Kyūdaka Kyūryō Torishirabechō database**: late-Edo lords and rice yields for each municipality (totals only).
+- **CODH** (CC BY 4.0): municipal boundaries of 1920, 1985 and 1995, and village coordinates from the Nihon Rekishi Chimei Taikei data set.
+- **Nara National Research Institute for Cultural Properties, ancient place-name search**: the townships of each district in the Wamyō Ruijushō.
+- **Wikidata** (CC0): readings, populations, English names, coordinates and life dates of castles and people, and dates and places for On this day.
+- **Korean Peninsula**: geoBoundaries, Wikidata, Korean Wikipedia, the Annals of King Sejong (National Institute of Korean History site), and the Kyujanggak copy of the Daedongyeojido.
+- **Images**: Hiroshige's prints, the prefectural emblems and the Daedongyeojido are public domain; portraits and crests are public domain or CC BY / BY-SA (credited on the card), all from Wikimedia Commons.
+
+Colouring shows only the dominant power in a province or district and is approximate; uncertain points are marked "one account says". Meant for enjoyable browsing, not as an academic source.
 
 ## License
 
@@ -113,7 +104,7 @@ What changed in each version: [CHANGELOG.en.md](CHANGELOG.en.md).
 
 ## Development
 
-A static site: plain HTML / CSS / ES modules, with [Apache ECharts](https://echarts.apache.org/) custom-built and bundled for the map, and the serif font bundled too (so it all loads in mainland China). No build step.
+A static site: plain HTML / CSS / ES modules, no build step. The flat map uses [Apache ECharts](https://echarts.apache.org/) and the 3D map [three.js](https://threejs.org/); both are bundled with the site along with the fonts, so it all loads in mainland China.
 
 ```bash
 python -m http.server 8000          # run locally, then open http://localhost:8000 (double-clicking index.html won't work)

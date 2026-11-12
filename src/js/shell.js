@@ -403,6 +403,44 @@ export function setupScrollHints() {
     if (r.left < b.left || r.right > b.right) el.scrollLeft += r.left - b.left - 24;
   };
   let raf = 0;
+  // 3.38：电脑上这些行藏了滚动条，鼠标滚轮只会上下滚，后面的按钮够不着（年表跳转行只露出到 1392）。
+  // 滚轮在行上竖着滚 → 横着滚（滚到头了就放行给外面的竖向滚动）；鼠标按住拖动也能横滑，拖过就不算点击
+  const scroller = (t) => {
+    const el = t.closest?.(HINT);
+    return el && el.scrollWidth - el.clientWidth > 2 ? el : null;
+  };
+  document.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+    const el = scroller(e.target);
+    if (!el) return;
+    const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientWidth : 1);
+    const max = el.scrollWidth - el.clientWidth;
+    if ((d < 0 && el.scrollLeft <= 0) || (d > 0 && el.scrollLeft >= max - 1)) return;
+    e.preventDefault();
+    el.scrollLeft += d;
+  }, { passive: false });
+  let drag = null;
+  document.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    const el = scroller(e.target);
+    if (el) drag = { el, x: e.clientX, left: el.scrollLeft, moved: false };
+  });
+  document.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) < 6) return;
+    drag.moved = true;
+    drag.el.scrollLeft = drag.left - dx;
+  });
+  document.addEventListener('pointerup', () => {
+    if (drag?.moved) {
+      // 松手在行外时不会有 click：下一轮就撤掉，免得吃掉之后真正的一次点击
+      const eat = (e) => { e.stopPropagation(); e.preventDefault(); };
+      addEventListener('click', eat, { capture: true, once: true });
+      setTimeout(() => removeEventListener('click', eat, { capture: true }), 0);
+    }
+    drag = null;
+  });
   const all = () => { raf = 0; document.querySelectorAll(HINT).forEach((el) => { if (el.clientWidth) reveal(el); mark(el); }); };
   const soon = () => { if (!raf) raf = requestAnimationFrame(all); };
   addEventListener('resize', soon);

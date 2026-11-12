@@ -4,6 +4,18 @@
 
 Newest first.
 
+## 3.38 · 2026-11-12
+
+- On a computer, the jump row in the timelines used to stop at 1392 (its scrollbar was hidden and the mouse wheel only scrolled up and down). Every sideways row of buttons (timeline jumps, filters, legends, quick questions, card contents) now scrolls with the wheel or by dragging; the timeline row has ‹ › at the ends and marks the period you're reading
+- The "Who ruled" page has a band at the top drawn to scale, showing how long each period lasted; tap a segment to jump to it. Each period now gives its length, and the jump buttons read "1392 Ashikaga shoguns" instead of a bare year
+- During time travel, clicking the era name opens the timelines at the start of that era
+- The 3D map gains the Muromachi period (provincial constables in 1350, 1400 and 1440), from the Muromachi constable lists in each province's Japanese Wikipedia article (tables included); "Between the years" adds the Ōei, Eikyō and Kakitsu incidents, for 76 events
+- The 3D capital card can expand all 20 periods of who held power and jump to a year in one; long-press (phone) or right-click (computer) the ground, or open an area and press "A thousand years here", to start that view anywhere
+- Ancestral register, "In battle": eight castle towns whose lord took the other side from his province at Sekigahara, as their articles state (Sanada Masayuki at Ueda, Kyōgoku Takatsugu at Ōtsu, Inuyama, Komatsu, Daishōji, Gujō Hachiman, Anotsu, Kuwana), now follow the lord
+- Read through the English interface and fixed a few unnatural or outdated lines (six periods in 3D, the map-library error message…); "nine eras" is now ten
+- README rewritten
+- Not done: a late-Heian year (around 1100) on the 3D map — Japanese Wikipedia only gives totals such as "25 provinces held by the Taira", not which ones
+
 ## 3.37 · 2026-11-11
 
 - Two new rows in the koseki: "In battle" — which side your hometown was on at Okehazama, Kawanakajima, Nagashino and Sekigahara (from that year's Sengoku map, only where the area's holder actually fought); and "Born here" — historical figures born in the municipality (Wikidata birthplaces, kept only when the person's Japanese article names the place, so Wikidata's mistakes drop out)

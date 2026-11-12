@@ -1,4 +1,4 @@
-// 立体古今图：地形 + 五个时代（古代、镰仓、战国、江户、明治）的势力 / 国界 / 藩领 / 府县，城与古国三迹、城柵、街道与宿场
+// 立体古今图：地形 + 六个时代（古代、镰仓、室町、战国、江户、明治）的势力 / 国界 / 藩领 / 府县，城与古国三迹、城柵、街道与宿场
 // 主站地图上的「立体」进来：#y=年&p=块（国 / 藩 / 府县的键）&v=经度,纬度,距离,方位角&lang=
 import * as THREE from 'three';
 import { MapControls } from './vendor/MapControls.js';
@@ -106,6 +106,7 @@ async function main() {
     json(`${DATA}/regimes.json`).catch(() => ({ periods: [] })),
     json(`${DATA}/rulers.json`).catch(() => ({ emperors: [], shoguns: [], shikken: [] })),
     json('src/3d/kamakura.json'),
+    json('src/3d/muromachi.json'),
     json('src/3d/kodai.json'),
     json('src/3d/kaido.json').catch(() => ({ roads: [], rail: [] })),
     loadEra(opts.year),
@@ -116,7 +117,7 @@ async function main() {
     $('#loading-bar i').style.width = `${got / jobs.length * 100}%`;
   };
   progress();
-  const [terrain, provinces, units, sg, sites, castles, bios, storyData, regimes, rulers, kama, kodai, kaido] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
+  const [terrain, provinces, units, sg, sites, castles, bios, storyData, regimes, rulers, kama, muro, kodai, kaido] = await Promise.all(jobs.map((j) => j.then((v) => { got++; progress(); return v; })));
   status(t('build'));
   const P = terrain.project;
   const C = terrain.C;
@@ -169,7 +170,9 @@ async function main() {
   waterJob.then((w) => { overlay.setWater(buildWater(w, P)); dirty = true; }).catch((e) => console.warn('water', e));
 
   // —— 各时代怎么上色：entry(块) → {c, with?}，info(c) → {zh, en, ja, color}；loose 是总称（不画前线、不插旗）——
-  const KAMA_LOOSE = new Set(kama.loose);
+  // 镰仓、室町（3.38）：各国守护的家，两份资料同一个形状（kamakura_tool / muromachi_tool）
+  const SHUGO = { kamakura: kama, muromachi: muro };
+  const SHUGO_LOOSE = { kamakura: new Set(kama.loose), muromachi: new Set(muro.loose) };
   const sgInfo = (c) => sg.clans[c] || sg.sides[c] || sg.clans.outside;
   const circuitOf = (k, y) => {
     const p = provProps.get(k) || S.byKey.get(k)?.props;
@@ -194,7 +197,10 @@ async function main() {
   function modeFor(y) {
     const era = eraOf(y);
     if (era === 'sengoku') return { era, entry: (k) => (sg.units?.[k] || sg.provinces[k])?.[y], info: sgInfo, loose: LOOSE, front: true, flags: y !== '1600', hasMon: (c) => !!sg.clans[c]?.mon };
-    if (era === 'kamakura') return { era, entry: (k) => kama.provinces[k]?.[y], info: (c) => kama.families[c] || kama.families.unknown, loose: KAMA_LOOSE, front: true, flags: true, hasMon: (c) => !!sg.clans[c]?.mon && !KAMA_LOOSE.has(c) };
+    if (SHUGO[era]) {
+      const d = SHUGO[era], loose = SHUGO_LOOSE[era];
+      return { era, shugo: d, entry: (k) => d.provinces[k]?.[y], info: (c) => d.families[c] || d.families.unknown, loose, front: true, flags: true, hasMon: (c) => !!sg.clans[c]?.mon && !loose.has(c) };
+    }
     if (era === 'kodai') return { era, entry: (k) => ({ c: circuitOf(k, y) }), info: circuitInfo, loose: new Set(['令制外']), front: true, flags: false, hasMon: () => false };
     return { era, entry: (k) => ({ c: k }), info: blockInfo, loose: new Set(), front: false, flags: false, hasMon: () => false, blocks: true };
   }
@@ -328,7 +334,7 @@ async function main() {
   const rulerOf = (arr, y) => (arr || []).filter((r) => r.from <= +y && (r.to ?? 9999) >= +y).pop();
   const shogunOf = (y) => {
     const era = eraOf(y);
-    return era === 'kamakura' || era === 'edo' || (era === 'sengoku' && +y <= MUROMACHI_END) ? rulerOf(rulers.shoguns, y) : null;
+    return era === 'kamakura' || era === 'muromachi' || era === 'edo' || (era === 'sengoku' && +y <= MUROMACHI_END) ? rulerOf(rulers.shoguns, y) : null;
   };
   // —— 文字标签 ——
   const labelsEl = $('#labels');
@@ -449,11 +455,19 @@ async function main() {
     const r = regionAt(p.x, p.z);
     if (r) { sound('click'); cards.showRegion(r, p); } else cards.closeCard();
   }
+  function hereAt(x, z) { const [lon, lat] = unproject(x, z); here.start(lon, lat); }
+  // 3.38：长按（触屏）或右键单击（不拖动）地面 → 此地千年
+  function hereAtScreen(ev) {
+    if (lookout.active || battle.active) return;
+    const rect = canvas.getBoundingClientRect();
+    const p = groundHit(new THREE.Vector2((ev.clientX - rect.left) / rect.width * 2 - 1, -(ev.clientY - rect.top) / rect.height * 2 + 1));
+    if (p && regionAt(p.x, p.z)) { sound('click'); cards.closeCard(); hereAt(p.x, p.z); }
+  }
 
   // —— 卡片 ——
   // 回平面地图：同一个时代与年份、选中的块、同一语言、大致同一个地方（顶栏左上的链接跟着变）
   // 战国 → 平面战国势力图；古代 → 奈良时代的旧国（当年的国界）；镰仓 / 江户 / 明治 → 平面图时空穿越的同一时代
-  const ERA2D = { kodai: 'nara', kamakura: 'kamakura', edo: 'edo', meiji: 'meiji' };
+  const ERA2D = { kodai: 'nara', kamakura: 'kamakura', muromachi: 'muromachi', edo: 'edo', meiji: 'meiji' };
   function flatLink(key) {
     const y = opts.year, era = eraOf(y);
     const parts = [];
@@ -735,22 +749,40 @@ async function main() {
 
   // 点按（不是拖动）才算点选
   let down = null;
-  canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; flight = null; document.body.classList.add('used'); });
+  let press = 0, touches = 0;
+  canvas.addEventListener('pointerdown', (e) => {
+    down = { x: e.clientX, y: e.clientY, t: performance.now(), b: e.button };
+    flight = null;
+    document.body.classList.add('used');
+    if (e.pointerType === 'touch') {
+      touches++;
+      clearTimeout(press);
+      // 一根手指按住 0.6 秒不动
+      if (touches === 1) press = setTimeout(() => { if (down && touches === 1) { down.long = true; hereAtScreen(down); } }, 600);
+    }
+  });
+  canvas.addEventListener('pointermove', (e) => { if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) >= 8) clearTimeout(press); });
+  const lift = (e) => { if (e.pointerType === 'touch') touches = Math.max(0, touches - 1); clearTimeout(press); };
+  canvas.addEventListener('pointercancel', (e) => { lift(e); down = null; });
   canvas.addEventListener('pointerup', (e) => {
-    if (!lookout.active && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6 && performance.now() - down.t < 600) pick(e);
+    lift(e);
+    if (!lookout.active && down && !down.long && down.b === 0 && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6 && performance.now() - down.t < 600) pick(e);
+    if (down?.b === 2 && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6) hereAtScreen(e);
     down = null;
   });
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
   const camDist = () => camera.position.distanceTo(controls.target);
   const sound = (name) => audio.play(name); // audio 出错只会警告
 
   // —— 卡片（cards.js）——
   const cards = createCards(S, {
-    opts, sg, kama, bios, sites, rulers, people, camera, controls, P, LOOSE, KAMA_LOOSE,
+    opts, sg, SHUGO, bios, sites, rulers, people, camera, controls, P, LOOSE,
     esc, sw, info, entry, provName, regionName, castleName, circuitOf, siteOn, regionAt, prints, regimeOf, rulerOf, shogunOf,
     flatLink, syncBack, syncHash, applyStyle, flyTo, camDist, userYear,
     holderAt, castleOnIn, eraReady, loadEra,
     lookFrom: (c) => { lookout.enter(c.xz[0], c.xz[1]); $('#lookout-bar b').textContent = castleName(c); },
+    hereAt, regimes,
   });
 
   // —— 合战（battle.js）——
@@ -806,7 +838,7 @@ async function main() {
   });
   const help = createHelp({ esc, coarse: coarsePointer, notice, store, onOpen: () => { panel.hidden = true; $('#search').hidden = true; } });
   const search = createSearch(S, {
-    opts, sg, kama, castles, LOOSE, KAMA_LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards,
+    opts, sg, SHUGO, castles, LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards,
     onOpen: () => { panel.hidden = true; help.close(); },
   });
   const SMOKE_N = opts.quality === 'high' ? 18 : 8; // 省电画质少一半多的炊烟

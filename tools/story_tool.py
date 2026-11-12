@@ -312,22 +312,37 @@ E += [
          text=L('得宗的家臣平赖纲消灭了安达泰盛一族，此后北条得宗家独揽大权，各国守护也多换成北条一门。',
                 'Taira no Yoritsuna, chief retainer of the Hōjō head, wiped out Adachi Yasumori and his family. The Hōjō main line now ruled alone, and more and more provinces got Hōjō constables.',
                 '得宗の家臣平頼綱が安達泰盛一族を滅ぼし、以後は北条得宗家が権力を独占、諸国の守護も北条一門が増えた。')),
-    # —— 1300 → 1467 ——
-    dict(key='kamakura_fall', y=1333, to=1467, wiki='東勝寺合戦', place='東勝寺 (鎌倉市)', ev=['新田義貞', '北条高時'],
+    # —— 1300 → 1350 → 1400 → 1440 → 1467（3.38 加了室町的三个年份）——
+    dict(key='kamakura_fall', y=1333, to=1350, wiki='東勝寺合戦', place='東勝寺 (鎌倉市)', ev=['新田義貞', '北条高時'],
          title=L('镰仓幕府灭亡', 'The fall of the Kamakura shogunate', '鎌倉幕府の滅亡'),
          text=L('新田义贞攻入镰仓，北条高时与一族在东胜寺自尽，镰仓幕府灭亡。',
                 'Nitta Yoshisada stormed Kamakura. Hōjō Takatoki and his clan killed themselves at Tōshō-ji, and the Kamakura shogunate ended.',
                 '新田義貞が鎌倉に攻め入り、北条高時ら一族は東勝寺で自害、鎌倉幕府は滅んだ。')),
-    dict(key='muromachi', y=1338, to=1467, wiki='足利尊氏', place='等持院', ev=['征夷大将軍', '後醍醐天皇'],
+    dict(key='muromachi', y=1338, to=1350, wiki='足利尊氏', place='等持院', ev=['征夷大将軍', '後醍醐天皇'],
          title=L('足利尊氏任征夷大将军', 'Ashikaga Takauji becomes shogun', '足利尊氏、征夷大将軍に'),
          text=L('足利尊氏背离后醍醐天皇，拥立北朝，被任命为征夷大将军，开创京都的室町幕府；后醍醐天皇在吉野另立南朝。',
                 'Ashikaga Takauji broke with Emperor Go-Daigo, backed a rival line and was named shogun, founding the Muromachi shogunate in Kyoto; Go-Daigo set up the Southern Court at Yoshino.',
                 '足利尊氏は後醍醐天皇から離れて北朝を立て、征夷大将軍となって京都に室町幕府を開いた。後醍醐天皇は吉野に南朝を開いた。')),
-    dict(key='meitoku', y=1392, to=1467, wiki='明徳の和約', place='大覚寺', ev=['後亀山天皇', '後小松天皇', '足利義満'],
+    dict(key='meitoku', y=1392, to=1400, wiki='明徳の和約', place='大覚寺', ev=['後亀山天皇', '後小松天皇', '足利義満'],
          title=L('南北朝合一', 'The two courts reunite', '南北朝の合一'),
          text=L('在将军足利义满的斡旋下，南朝的后龟山天皇回到京都，把神器交给北朝的后小松天皇，南北朝合一。',
                 'Brokered by the shogun Ashikaga Yoshimitsu, Emperor Go-Kameyama of the Southern Court returned to Kyoto and handed the regalia to Emperor Go-Komatsu; the two courts were one again.',
                 '将軍足利義満の仲介で南朝の後亀山天皇が京都に戻り、北朝の後小松天皇に神器を譲って南北朝が合一した。')),
+    dict(key='oei', y=1399, to=1400, wiki='応永の乱', place='堺', ev=['大内義弘', '足利義満', '堺'],
+         title=L('应永之乱', 'The Ōei Rebellion', '応永の乱'),
+         text=L('拥有六国守护职的大内义弘在堺起兵反抗将军足利义满，兵败战死。义满借此削弱了强大的守护大名。',
+                'Ōuchi Yoshihiro, constable of six provinces, rose against the shogun Ashikaga Yoshimitsu at Sakai and died in the fighting. Yoshimitsu used it to cut the great constables down to size.',
+                '六か国の守護を兼ねた大内義弘が堺で将軍足利義満に背いて挙兵し、敗れて討死した。義満はこれで有力守護の力を削いだ。')),
+    dict(key='eikyo', y=1438, to=1440, wiki='永享の乱', place='鶴岡八幡宮', ev=['足利持氏', '上杉憲実', '足利義教'],
+         title=L('永享之乱', 'The Eikyō Rebellion', '永享の乱'),
+         text=L('镰仓公方足利持氏与关东管领上杉宪实反目，将军足利义教派兵讨伐，持氏兵败自尽，镰仓府一度中断。',
+                'The Kamakura governor Ashikaga Mochiuji fell out with his deputy Uesugi Norizane. The shogun Ashikaga Yoshinori sent an army, Mochiuji was defeated and killed himself, and the Kamakura government lapsed for a time.',
+                '鎌倉公方足利持氏と関東管領上杉憲実が対立し、将軍足利義教が討伐軍を送った。持氏は敗れて自害し、鎌倉府は一時途絶えた。')),
+    dict(key='kakitsu', y=1441, to=1467, wiki='嘉吉の乱', place='城山城 (播磨国)', ev=['赤松満祐', '足利義教'],
+         title=L('嘉吉之乱', 'The Kakitsu Incident', '嘉吉の乱'),
+         text=L('播磨守护赤松满祐在自家宅邸宴席上杀死将军足利义教，回到领国后被幕府军讨灭。将军的权威从此大大动摇。',
+                'Akamatsu Mitsusuke, constable of Harima, killed the shogun Ashikaga Yoshinori at a banquet in his own mansion, then was hunted down in his home province. The shogun’s authority never fully recovered.',
+                '播磨守護赤松満祐が自邸の宴で将軍足利義教を殺害し、領国に戻ったのち幕府軍に討たれた。将軍の権威は大きく揺らいだ。')),
     # —— 1600 → 1867 ——
     dict(key='edo1603', y=1603, to=1867, wiki='江戸幕府', place='江戸城', ev=['徳川家康', '征夷大将軍'],
          title=L('江户幕府', 'The Edo shogunate', '江戸幕府の成立'),
@@ -461,8 +476,8 @@ def main():
     if bad:
         print('\n'.join(bad))
         sys.exit(1)
-    # 年份顺序：同一个 to 里按 y 排；to 必须是立体图的年份之一（3.35 起五个时代 16 个年份）
-    years = [712, 757, 824, 1200, 1250, 1300, 1467, 1560, 1573, 1582, 1590, 1600, 1867, 1871, 1876, 1888]
+    # 年份顺序：同一个 to 里按 y 排；to 必须是立体图的年份之一（3.38 起六个时代 19 个年份）
+    years = [712, 757, 824, 1200, 1250, 1300, 1350, 1400, 1440, 1467, 1560, 1573, 1582, 1590, 1600, 1867, 1871, 1876, 1888]
     assert all(r['to'] in years for r in out)
     assert all(r['y'] <= r['to'] for r in out)
     out.sort(key=lambda r: (r['to'], r['y']))

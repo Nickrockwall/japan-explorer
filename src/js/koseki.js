@@ -59,7 +59,7 @@ const SIDES = [
   { key: 'nagashino', y: '1573', side: { oda: 'oda', tokugawa: 'oda', takeda: 'takeda' } },
   { key: 'sekigahara', y: '1600', sides: true },
 ];
-function sidesRow(sg, sengoku, battles) {
+function sidesRow(sg, sengoku, battles, code) {
   const out = [];
   const colon = lang === 'en' ? ': ' : '：';
   for (const s of SIDES) {
@@ -69,8 +69,12 @@ function sidesRow(sg, sengoku, battles) {
     const cs = [e.c, ...(e.with || [])];
     const title = b.name.replace(/\s*[（(]\d+[)）]$/, '');
     if (s.sides) {
-      const g = sengoku.sides[e.c];
-      if (g) out.push(`${title}${colon}${g[lang] || g.zh}${e.with ? t('ks.sides.split') : ''}`);
+      // 3.38：城主站在与本国不同一边的城下（sengoku.towns，如上田的真田昌幸）按城主写
+      const tw = sengoku.towns?.[code];
+      const g = sengoku.sides[tw ? tw.c : e.c];
+      const nm = (o) => o[lang] || o.zh;
+      if (tw && g) out.push(`${title}${colon}${t('ks.sides.town', { side: nm(g), who: nm(tw.who), castle: nm(tw.castle) })}`);
+      else if (g) out.push(`${title}${colon}${g[lang] || g.zh}${e.with ? t('ks.sides.split') : ''}`);
       continue;
     }
     const fs = [...new Set(cs.map((c) => s.side[c]).filter(Boolean))].map((k) => b.factions.find((f) => f.key === k)?.name).filter(Boolean);
@@ -129,7 +133,7 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
       return `${y} ${g[lang] || g.zh}`;
     };
     rows.push({ k: 'sengoku6', seal: unit ? 'gun' : 'prov', main: ['1560', '1582', '1600'].map(at).join(' → '), sub: ['1467', '1573', '1590'].map(at).join(' · ') });
-    const sides = sidesRow(sg, sengoku, battles);
+    const sides = sidesRow(sg, sengoku, battles, props.code);
     if (sides.length) rows.push({ k: 'sides', seal: unit ? 'gun' : 'prov', main: sides.join(' · '), sub: t('ks.sides.note') });
   } else {
     rows.push({ k: 'sengoku', seal: 'pref', main: label('sg', f.sengoku_1572), sub: '' });

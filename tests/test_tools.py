@@ -238,5 +238,50 @@ class Kamakura(unittest.TestCase):
         self.assertEqual(K.family('不設置（侍所・政所管掌?）'), 'none')
 
 
+class Muromachi(unittest.TestCase):
+    """3.38：室町的守护名单（wikitext）：表格一行一位、和历在前西历在后、读音 span、行首的「宗」"""
+    def test_table(self):
+        import muromachi_tool as M
+        wt = """=== 守護 ===
+==== 鎌倉幕府 ====
+* 1190年 - 某
+==== 室町幕府 ====
+{| class="wikitable"
+|-
+! 代
+! 氏名
+! 在職期間
+|-
+! 1
+|[[畠山国清]]<br /><span style="font-size: smaller;">はたけやま くにきよ</span>
+|[[建武 (日本)|建武]]3年 - [[観応]]2年<br />[[1336年]] - [[1351年]]
+|-
+! 2
+|[[細川氏春]]
+|[[応安]]6年 - 不詳<br />[[1373年]] - 不詳
+|}
+== 脚注 ==
+"""
+        rows = M.parse(M.plain(M.section(wt)))
+        self.assertEqual([(r['start'], r['who']) for r in rows], [(1336, '畠山国清'), (1373, '細川氏春')])
+        self.assertEqual(rows[0]['end'], 1351)
+        self.assertEqual(M.family(rows[1]['who']), 'hosokawa')
+
+    def test_line(self):
+        import muromachi_tool as M
+        rows = M.parse('* 光明3年/延元元年（1336年） - ? ： 武田政義\n* 観応2年/正平6年（1351年） - 延文4年（1359年） ： 武田信武')
+        self.assertEqual(rows[0]['end'], 1351, '只写了开始的一行到下一行就任为止')
+        self.assertEqual(rows[1]['who'], '武田信武')
+        self.assertEqual(M.family('宗貞茂'), 'so')
+        self.assertEqual(M.family('宗像氏貞'), 'other')
+
+    def test_json(self):
+        d = json.load(open(os.path.join(ROOT, 'src', '3d', 'muromachi.json'), encoding='utf-8'))
+        self.assertEqual(d['years'], ['1350', '1400', '1440'])
+        self.assertEqual(len(d['provinces']), 68)
+        for row in d['provinces'].values():
+            for e in row.values():
+                self.assertIn(e['c'], d['families'])
+
 if __name__ == '__main__':
     unittest.main()

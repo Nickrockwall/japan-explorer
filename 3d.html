@@ -44,7 +44,7 @@
   #years { display: flex; padding: 3px; gap: 2px; }
   #years button { border: 0; background: none; padding: 5px 10px; border-radius: 3px; font-weight: 600; min-height: 32px; }
   #years button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
-  /* 时代（3.35）：五个时代一组，选中的写朱底白字，像年份行上面的一枚印 */
+  /* 时代（3.35）：六个时代一组（3.38 起），选中的写朱底白字，像年份行上面的一枚印 */
   #eras { display: flex; padding: 3px; gap: 2px; }
   #eras button { border: 0; background: none; padding: 5px 9px; border-radius: 3px; font: 700 14px var(--serif); min-height: 32px; letter-spacing: .04em; }
   #eras button:hover { background: rgba(42, 37, 32, .07); }
@@ -82,6 +82,18 @@
   .lb.here b { display: inline-block; padding: 1px 6px; background: var(--shu); color: #fff; font: 700 13px var(--serif); border-radius: 2px; }
   body:has(#here:not([hidden])) #legend { display: none; } /* 此地千年开着时左下角的图例让开（面板在左上，高了会叠上） */
   @media (max-width: 640px) { #here { max-height: 42%; } }
+  /* 3.38：块卡片的「看此地千年」与「京」卡片里的历代实权 */
+  #card .here-go { border: 1px solid var(--shu); background: transparent; color: var(--shu); border-radius: 3px; padding: 5px 12px; font: 600 13px var(--serif); min-height: 32px; cursor: pointer; }
+  #card .here-go:hover { background: var(--shu); color: var(--panel); }
+  #card .pw-all { margin: 8px 0; }
+  #card .pw-all summary { cursor: pointer; font: 700 13px var(--serif); }
+  #card .pw-all ol { list-style: none; margin: 6px 0 4px; padding: 0; display: grid; gap: 2px; }
+  #card .pw-all li > * { display: flex; justify-content: space-between; gap: 8px; width: 100%; padding: 4px 6px; font: 500 13px var(--serif); text-align: left; border-radius: 3px; }
+  #card .pw-all li button { border: 0; background: transparent; color: var(--ink); cursor: pointer; min-height: 30px; }
+  #card .pw-all li button:hover { background: rgba(179, 48, 42, .08); }
+  #card .pw-all li span { color: var(--muted); }
+  #card .pw-all li small { color: var(--muted); font-variant-numeric: tabular-nums; }
+  #card .pw-all li.cur > * { background: rgba(179, 48, 42, .1); font-weight: 700; }
   #card .look-btn { border: 1px solid var(--ink); background: var(--ink); color: var(--panel); border-radius: 3px; padding: 5px 12px; font: 600 13px var(--serif); min-height: 32px; }
   #lookout-bar { position: fixed; left: 50%; bottom: calc(26px + var(--safe-b)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 14px; z-index: 6; white-space: nowrap; }
   #lookout-bar b { font: 700 15px var(--serif); }

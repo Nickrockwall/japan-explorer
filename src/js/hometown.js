@@ -63,17 +63,18 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
   if (sg && key !== '-') {
     let run = null;
     for (const y of SG_YEARS) {
-      const c = sg[y]?.c;
+      const tw = y === '1600' ? sengoku.towns?.[props.code] : null; // 3.38：城主与本国站队不同的城下
+      const c = tw ? tw.c : sg[y]?.c;
       // 令制外（冲绳、和人地以外的北海道在战国图上的总称）不写；关原之战与阿伊努的土地无关，1600 年也不写
       if (!c || c === 'outside' || (y === '1600' && c === 'ainu')) continue;
       const g = (y === '1600' ? sengoku.sides : sengoku.clans)[c];
       const name = g?.[lang] || g?.zh || c;
       if (run && run.c === c && y !== '1600') { run.to = y; continue; }
-      run = { c, from: y, to: y, name, side: y === '1600' };
+      run = { c, from: y, to: y, name, side: y === '1600', tw };
       items.push(run);
     }
     for (const r of items.filter((x) => x.c)) {
-      Object.assign(r, { y: +r.from, yl: r.from === r.to ? r.from : `${r.from}–${r.to}`, main: r.side ? t('ht.side', { name: r.name }) : r.name, kind: 'sg' });
+      Object.assign(r, { y: +r.from, yl: r.from === r.to ? r.from : `${r.from}–${r.to}`, main: r.side ? t('ht.side', { name: r.tw ? t('ks.sides.town', { side: r.name, who: r.tw.who[lang] || r.tw.who.zh, castle: r.tw.castle[lang] || r.tw.castle.zh }) : r.name }) : r.name, kind: 'sg' });
     }
   }
 

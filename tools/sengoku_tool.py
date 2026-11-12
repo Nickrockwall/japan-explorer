@@ -291,6 +291,34 @@ SIDE_EV = {
 }
 
 
+# 3.38：关原时城主站在与本国不同一边的城下（户籍「合战中」按国一刀切会写错，如信浓算东军、上田的真田昌幸是西军）。
+# 团体代码 → (那一边, 城主日文名, 英文名, 城日文名, 城英文名, 日文维基条目, 条目里须出现的原文)；只收条目写明站哪边的
+TOWN_SIDE = {
+    '20203': ('west', '真田昌幸', 'Sanada Masayuki', '上田城', 'Ueda Castle', '真田昌幸', '関ヶ原の戦いで西軍についた'),
+    '25201': ('east', '京極高次', 'Kyōgoku Takatsugu', '大津城', 'Ōtsu Castle', '京極高次', '高次が東軍についていることは7月の段階で広く知られていた'),
+    '21219': ('east', '遠藤慶隆', 'Endō Yoshitaka', '郡上八幡城', 'Gujō Hachiman Castle', '遠藤慶隆', '東軍加担を決めた'),
+    '23215': ('west', '石川貞清', 'Ishikawa Sadakiyo', '犬山城', 'Inuyama Castle', '石川貞清', '関ヶ原の戦いにおいて西軍に与し'),
+    '17203': ('west', '丹羽長重', 'Niwa Nagashige', '小松城', 'Komatsu Castle', '丹羽長重', '丹羽軍3千西軍に与して'),
+    '17206': ('west', '山口宗永', 'Yamaguchi Munenaga', '大聖寺城', 'Daishōji Castle', '山口宗永', '宗永は石田三成の西軍に与した'),
+    '24201': ('east', '富田信高', 'Tomita Nobutaka', '安濃津城', 'Anotsu Castle', '富田信高', '信高は東軍に籠城の状況を伝え'),
+    '24205': ('west', '氏家行広', 'Ujiie Yukihiro', '桑名城', 'Kuwana Castle', '氏家行広', '行広は西軍に属した'),
+}
+# 城所在的国（核对与国的 1600 年站队确实不同；伊势国是「分裂」，两边都算不同）
+TOWN_PROV = {'20203': '信濃国', '25201': '近江国', '21219': '美濃国', '23215': '尾張国', '17203': '加賀国', '17206': '加賀国', '24201': '伊勢国', '24205': '伊勢国'}
+
+
+def check_towns():
+    bad = []
+    for code, (side, who, _, castle, _, art, ev) in TOWN_SIDE.items():
+        text = wiki.article('ja', art)
+        if ev not in text:
+            bad.append(f'{code} {who}：「{ev}」不在 {art} 条目里')
+        if castle.replace('郡上八幡城', '八幡城') not in text and castle not in text:
+            bad.append(f'{code} {who}：条目里没有 {castle}')
+        if DATA[TOWN_PROV[code]][-1] == side:
+            bad.append(f'{code}：与 {TOWN_PROV[code]} 的 1600 年站队相同，不必单列')
+    return bad
+
 # 奥羽按郡的分区（tools/ou_units.py）与虾夷地：分区 → [1467, 1560, 1573, 1582, 1590, 1600]
 # 1467 年按守护画，奥羽没有一般的守护（奥州探题 / 羽州探题），仍记总称「奥羽诸氏」。
 # 1590 年为奥州仕置之后：大崎、葛西旧领 13 郡给木村吉清（丰臣系小大名），伊达被收走会津四郡、岩濑、安积（给蒲生氏乡，
@@ -682,12 +710,15 @@ def build(people):
                 if u:
                     muni_units[ft['properties']['code']] = u
     return {'years': YEARS, 'clans': clans, 'sides': sides, 'provinces': prov, 'units': units, 'muni_units': muni_units,
-            'heads': HEADS, 'people': persons, 'koku': koku1598()}
+            'heads': HEADS, 'people': persons, 'koku': koku1598(),
+            'towns': {code: {'c': v[0], 'who': {'ja': v[1], 'zh': zh(v[1]), 'en': v[2]}, 'castle': {'ja': v[3], 'zh': zh(v[3]), 'en': v[4]}}
+                      for code, v in TOWN_SIDE.items()}}
 
 
 def main():
     bad, warn = check()
     bad += check_ou()
+    bad += check_towns()
     people = check_heads(bad)
     for w in warn:
         print('待核', w)

@@ -2,7 +2,7 @@
 // 触屏（粗指针）写手指的操作、不写键盘；第一次在触屏上打开立体图时提示一次「右上角 ? 有说明」
 import { t } from './i18n.js';
 
-const ROWS = ['time', 'pick', 'battle', 'search', 'more'];
+const ROWS = ['time', 'pick', 'here', 'battle', 'search', 'more'];
 
 export function createHelp({ esc, coarse, notice, store, onOpen }) {
   const panel = document.querySelector('#help3d');

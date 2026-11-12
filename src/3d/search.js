@@ -8,7 +8,7 @@ const fold = (x) => String(x || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').to
 const ORDER = { prov: 0, han: 0, pref: 0, clan: 1, castle: 2 };
 
 export function createSearch(S, ctx) {
-  const { opts, sg, kama, castles, LOOSE, KAMA_LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards, onOpen } = ctx;
+  const { opts, sg, SHUGO, castles, LOOSE, esc, blockName, provName, castleName, castleOn, castleOnIn, modeFor, setYear, flyTo, battle, cards, onOpen } = ctx;
   const searchEl = document.querySelector('#search'), searchQ = document.querySelector('#search-q'), searchList = document.querySelector('#search-list');
   let index = null; // 换底图或时代时作废（reset）
   let hits = [];
@@ -25,7 +25,7 @@ export function createSearch(S, ctx) {
       } else if (p.zh || p.ja) out.push({ kind: 'prov', key: r.key, label: provName(r.key), names: [p.zh, p.ja, p.en, p.kana, r.key].map(fold) });
     }
     if (era === 'sengoku') for (const [k, c] of Object.entries(sg.clans)) if (!LOOSE.has(k)) out.push({ kind: 'clan', key: k, label: nm(c), names: [c.zh, c.ja, c.en].map(fold) });
-    if (era === 'kamakura') for (const [k, c] of Object.entries(kama.families)) if (!KAMA_LOOSE.has(k)) out.push({ kind: 'clan', key: k, label: nm(c), names: [c.zh, c.ja, c.en].map(fold) });
+    if (SHUGO[era]) for (const [k, c] of Object.entries(SHUGO[era].families)) if (!SHUGO[era].loose.includes(k)) out.push({ kind: 'clan', key: k, label: nm(c), names: [c.zh, c.ja, c.en].map(fold) });
     for (const c of castles) out.push({ kind: 'castle', key: c.q, label: castleName(c), names: [c.zh, c.ja, c.en].map(fold), c });
     return out;
   }

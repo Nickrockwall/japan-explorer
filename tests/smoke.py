@@ -1335,6 +1335,40 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_function('!__je3d.here.playing')
 
+    def three_d_338(self, page):
+        # 3.38：室町（1350 / 1400 / 1440 的守护）；京的卡片里有历代实权 20 段、点一段换年份；块卡片的「看此地千年」；右键地面开此地千年
+        page.goto(self.base.replace('index.html', '3d.html') + '#y=1400', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        assert page.get_attribute('#eras [aria-selected="true"]', 'data-era') == 'muromachi', '1400 年应在室町'
+        assert [b.strip() for b in page.locator('#years button[data-y]').all_text_contents()] == ['1350', '1400', '1440']
+        page.evaluate("__je3d.showRegion(__je3d.regions.find((r) => r.key === '播磨国'))")
+        card = page.inner_text('#card')
+        assert '赤松' in card and '1440' in card, card[:300]
+        page.keyboard.press('Escape')
+        page.evaluate('__je3d.showCapital()')
+        page.wait_for_selector('#card .pw-all')
+        page.evaluate("document.querySelector('#card .pw-all').open = true")
+        assert page.locator('#card .pw-all li').count() == 20, '应列出 20 段实权'
+        assert '1392' in page.inner_text('#card .pw-all li.cur'), page.inner_text('#card .pw-all li.cur')
+        page.click('#card .pw-all [data-pw-y="1350"]')
+        page.wait_for_function("__je3d.opts.year === '1350'", timeout=20000)
+        page.keyboard.press('Escape')
+        # 点一块地面：卡片末尾有「看此地千年」，点了开始从 712 年列
+        box = page.locator('canvas').first.bounding_box()
+        cx, cy = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+        page.evaluate("(() => { const [x, z] = __je3d.P(138.25, 36.2); __je3d.flyTo(x, z, 300); __je3d.showRegion(__je3d.regions.find((r) => r.key === '信濃国'), { x, z }); })()")
+        page.wait_for_selector('#card:not([hidden]) .here-go', timeout=10000)
+        page.click('#card .here-go')
+        page.wait_for_function("document.querySelectorAll('#here tr').length >= 2", timeout=90000)
+        assert '712' in page.inner_text('#here')
+        page.keyboard.press('Escape')
+        page.wait_for_function('!__je3d.here.playing')
+        page.click('#here [data-here="x"]')
+        # 右键单击（不拖动）同样开此地千年
+        page.mouse.click(cx, cy, button='right')
+        page.wait_for_function("!document.querySelector('#here').hidden && document.querySelectorAll('#here tr').length >= 1", timeout=60000)
+        page.keyboard.press('Escape')
+
     def three_d_sync(self, page):
         # 平面 → 立体（3.35）：平面图停在江户时代、放大过，点地图上的「平面 | 立体」开关进立体图的 1867 年并带上视野；
         # 立体图回来的链接（#te=nara&pe=712）让平面图停在奈良时代、712 年的国界
@@ -1449,6 +1483,9 @@ class Case:
         assert len(rows) == 13, f'应有 13 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人）：{rows}'
         # 3.37：家乡在合战中站哪边（川中岛按 1560 年信浓归武田）、同乡名人、去立体图看此地千年
         assert any(('武田' in r or 'Takeda' in r) and ('川中' in r or 'Kawanakajima' in r) for r in rows), f'合战中一栏：{rows}'
+        # 3.38：信浓国 1600 年算东军，上田城的真田昌幸是西军——按城主写
+        sides = page.locator('.ks-row[data-k="sides"]').inner_text()
+        assert any(x in sides for x in ('真田昌幸', 'Sanada')) and any(x in sides for x in ('西军', '西軍', 'West')), f'上田的关原应按真田昌幸写西军：{sides}'
         assert page.locator('.ks-row[data-k="famous"]').count() == 1, '应有同乡名人一栏'
         href = page.get_attribute('.ks-3d', 'href')
         assert href.startswith('3d.html#here=') and 'hn=' in href, href
@@ -1594,6 +1631,19 @@ class Case:
         hs = page.locator('.ks-row[data-k="heisei"]').inner_text()
         assert any(x in hs for x in ('一宫町', '一宮町')) and '2006' in hs, f'平成合并前应有一宫町与 2006：{hs}'
 
+    def tb_power(self, page):
+        # 3.38：时空穿越时点时代名（#tb-era）→ 年表「实权」页，停在这个时代开始的那一段（室町 1336 → 足利氏与南朝）
+        if self.narrow:
+            self.tab(page, 'map')
+        page.evaluate("document.querySelector('#tb-ticks button:nth-child(5)').click()")
+        page.wait_for_function("document.body.classList.contains('time-travel')", timeout=10000)
+        page.wait_for_timeout(300)
+        page.evaluate("document.querySelector('#tb-era').click()")
+        page.wait_for_selector('#rulers[open] .rl-pw', timeout=15000)
+        page.wait_for_timeout(400)
+        on = page.text_content('#rulers .rl-jump .on')
+        assert on and on.startswith('1336'), f'应停在 1336 年那一段：{on}'
+
     def regimes(self, page):
         # 实权：欢迎卡打开年表的「实权」页，20 段按年份、不出屏；镰仓两种起始年都写；点江户的「看将军名单」换到将军页并滚到江户幕府
         self.tab(page, 'detail')
@@ -1601,6 +1651,22 @@ class Case:
         page.wait_for_selector('#rulers[open] .rl-pw', timeout=15000)
         assert page.locator('#rulers .rl-pw').count() == 20, '实权应有 20 段'
         assert page.get_attribute('#rulers .book-tab.on', 'data-rl-tab') == 'power', '欢迎卡应打开「实权」页'
+        # 3.38：跳转行在电脑上能横滑到 1392 以后（以前藏了滚动条、滚轮只会竖着滚）；时间带 20 段；滚到底时标出最后一段
+        assert page.locator('#rulers .pw-segs button').count() == 20, '时间带应有 20 段'
+        assert any(x in page.text_content('#rulers .rl-jump [data-rl-jump="10"]') for x in ('战国', 'warlords', '戦国')), '跳转行应写短名'
+        if not self.narrow:
+            page.wait_for_timeout(700)  # 对话框打开有缩放动画，动画中量的位置不准
+            box = page.locator('#rulers .rl-jump').bounding_box()
+            page.mouse.move(box['x'] + 60, box['y'] + box['height'] / 2)
+            page.mouse.wheel(0, 3000)
+            page.wait_for_timeout(300)
+            assert page.evaluate("(() => { const j = document.querySelector('#rulers .rl-jump'); return j.scrollLeft >= j.scrollWidth - j.clientWidth - 2; })()"), '滚轮应能把跳转行横滑到底'
+            assert page.is_visible('#rulers .rl-jump [data-rl-jump="19"]'), '滑到底后应看得见 1952'
+        page.click('#rulers .rl-jump [data-rl-jump="19"]')
+        page.wait_for_function("document.querySelector('#rulers .rl-jump [data-rl-jump=\"19\"]').classList.contains('on')", timeout=5000)
+        assert '1952' in page.text_content('#rulers .pw-cap'), page.text_content('#rulers .pw-cap')
+        page.evaluate("document.querySelector('#rulers .rl-body').scrollTop = 0")
+        page.wait_for_function("document.querySelector('#rulers .rl-jump [data-rl-jump=\"0\"]').classList.contains('on')", timeout=5000)
         kama = page.text_content('#rulers [data-pw="kamakura"] h3')
         assert '1185' in kama and '1192' in kama, f'镰仓幕府应写出 1185 与 1192 两说：{kama}'
         self.inside(page, '#rulers .book-inner')
@@ -1762,7 +1828,7 @@ def plan(lang):
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('three_d_sync', '', ['three_d_sync']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('three_d_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['three_d_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
-             ('regimes', '', ['regimes']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
+             ('regimes', '', ['regimes']), ('tb_power', '', ['tb_power']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
              ('koseki_whole', 'pref=4&muni=1&m=04207&koseki=1', ['koseki_whole']), ('okinawa_town', 'pref=47&muni=1&m=47201&koseki=1', ['okinawa_town']),
              ('amami_town', 'pref=46&muni=1&m=46527&koseki=1', ['amami_town']), ('rl_link', 'rl=power', ['rl_link']),
              ('koseki_town', 'pref=26&muni=1&m=26102&koseki=1', ['koseki_town']), ('koseki_city', 'pref=23&muni=1&m=23103&koseki=1', ['koseki_city']),
@@ -1775,7 +1841,7 @@ def plan(lang):
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
-                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
+                  ('three_d', '', ['three_d']), ('three_d_eras', '', ['three_d_eras']), ('three_d_336', '', ['three_d_336']), ('three_d_337', '', ['three_d_337']), ('three_d_338', '', ['three_d_338']), ('sound', 'pref=13', ['sound']), ('crests_added', '', ['crests_added']), ('provinces', '', ['provinces', 'no_overflow']), ('hiroshige', '', ['hiroshige', 'no_overflow']), ('locate', '', ['locate']), ('koku', '', ['koku', 'no_overflow']), ('audio_broken', 'pref=21', ['audio_broken', 'deeplink_any'])]
     return cases
 
 
