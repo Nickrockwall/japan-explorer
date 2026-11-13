@@ -44,7 +44,9 @@ def main():
             page.goto(f'{base}#lang={lang}&pref=26&sg=1582&sgc=oda')
             page.wait_for_selector('#sg-card:not([hidden]) .sg-stats', timeout=20000)
             page.wait_for_function("echarts.getInstanceByDom(document.getElementById('map')).getOption().series.find((s) => s.id === 'sgflags').data.length > 0", timeout=10000)
-            page.wait_for_timeout(1500)
+            # 进战国图时的时代横幅要 2.8 秒才淡出（以前 1.5 秒就截，横幅残影叠在地图上）
+            page.wait_for_function("!document.getAnimations().some((a) => a.playState === 'running' && a.effect?.target?.id === 'era-banner')", timeout=10000)
+            page.wait_for_timeout(600)
             shot(page, 'sengoku', lang, 85)
             ctx.close()
             # 电脑：年表的「实权」页，滚到摄关政治一段（藤原摄关 → 院政 → 平氏 → 镰仓）

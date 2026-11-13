@@ -72,7 +72,7 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_, china=False, no_audio=False, geo=None, fresh=False):
+    def open(self, hash_, china=False, no_audio=False, geo=None, fresh=False, korea=False):
         extra = {'geolocation': geo, 'permissions': ['geolocation']} if geo else {}
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
                                        service_workers='block', **extra)
@@ -80,6 +80,8 @@ class Case:
             ctx.add_init_script(NO_AUDIO)
         if not fresh:
             ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); localStorage.setItem('je.ui.tourKorea', 'true'); } catch (e) {}")
+        if korea:  # 3.42 起半岛模式与共同历史对访客隐藏；这些场景打开本机开关照常测（代码还在、两种地图共用不少代码）
+            ctx.add_init_script("try { localStorage.setItem('je.dev.korea', '1'); } catch (e) {}")
         page = ctx.new_page()
         if china:
             page.route('**/*', lambda r: r.abort() if any(h in r.request.url for h in BLOCKED_ABROAD) else r.continue_())
@@ -224,9 +226,27 @@ class Case:
             p('', null), p('#map=nope', null), p('#pref=26&lang=ja', 'japan'), p('#pref=26', 'nope'),
             p('', null, '?map=nope&lang=ja')])""")
         assert rules == ['japan'] * 5, f'pickMap 结果 {rules}'
-        assert page.evaluate("import('./src/js/country.js').then(({ pickMap: p }) => p('', 'japan', '?map=korea'))") == 'korea', '?map=korea 应打开半岛'
+        # 3.42：半岛模式对访客隐藏——?map=korea 回到日本；登记表本身还在，给全表时规则照旧
+        assert page.evaluate("import('./src/js/country.js').then(({ pickMap: p }) => p('', 'japan', '?map=korea'))") == 'japan', '半岛模式隐藏时 ?map=korea 应回到日本'
+        assert page.evaluate("import('./src/js/country.js').then(({ pickMap: p, MAPS }) => p('', 'japan', '?map=korea', MAPS))") == 'korea'
         # 老用户数据键名不变
         assert page.evaluate("JSON.parse(localStorage.getItem('je.visited') || '[]').includes(26)"), '日本模式应写入 je.visited'
+
+    def korea_hidden(self, page):
+        # 3.42：访客看不到半岛模式与共同历史——#map=korea 与上次存的 korea 都打开日本，顶栏没有地图开关，欢迎卡没有「共同历史」
+        assert page.evaluate('document.documentElement.dataset.map') == 'japan', '#map=korea 应打开日本'
+        assert not page.locator('#map-switch').is_visible(), '不应有地图开关'
+        self.tab(page, 'detail')
+        assert page.locator('#detail [data-act="shared"]').count() == 0, '欢迎卡不应有共同历史'
+        assert page.locator('#detail .welcome').count() == 1
+        if self.vp == 'phone':  # 手机顶栏：没有开关时标题回到原位
+            assert page.locator('.brand h1').is_visible(), '手机上应显示标题'
+        page.evaluate("localStorage.setItem('je.ui.map', JSON.stringify('korea'))")
+        page.goto(f'{self.base}#lang={self.lang}')
+        page.reload()
+        page.wait_for_selector('#loading.hidden', state='attached', timeout=30000)
+        assert page.evaluate('document.documentElement.dataset.map') == 'japan', '上次存的 korea 也应回到日本'
+        self.no_overflow(page)
 
     def korea_switch(self, page):
         # 顶栏开关切到朝鲜半岛：整页重载，地址栏带 map=korea
@@ -1945,7 +1965,7 @@ class Case:
 
 def plan(lang):
     full = lang == 'zh'
-    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
+    cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea_hidden', 'map=korea', ['korea_hidden']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
              ('search', '', ['search']), ('keyboard', '', ['keyboard']), ('three_d_sync', '', ['three_d_sync']), ('starts', '', ['starts']), ('power', 'pref=20', ['power', 'no_overflow']), ('sengoku', '', ['sengoku', 'no_overflow']), ('sengoku_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['sengoku_link']), ('three_d_link', 'pref=21&sg=1600&sgp=%E7%BE%8E%E6%BF%83%E5%9B%BD', ['three_d_link']), ('sengoku_clan', 'pref=19&sg=1573&sgc=takeda', ['sengoku_clan', 'no_overflow']), ('map_sync', '', ['map_sync']), ('sengoku_ou', 'pref=4&sg=1582&sgc=date', ['sengoku_ou', 'no_overflow']), ('koseki_ou', 'pref=7&muni=1&m=07213&koseki=1', ['koseki_ou']), ('kako', 'kako=06-21', ['kako']), ('bday', 'bday=06-21', ['bday']), ('han', 'pref=20', ['han']),
              ('koseki', 'pref=20&muni=1&m=20203&koseki=1', ['koseki']), ('tour', '', ['tour', 'no_overflow']),
              ('regimes', '', ['regimes']), ('tb_power', '', ['tb_power']), ('hometown', 'pref=26&muni=1&m=26104&koseki=1', ['hometown']), ('fixlink', 'pref=26', ['fixlink']),
@@ -2027,7 +2047,8 @@ def run_all():
                    else {'latitude': 35.84, 'longitude': 129.21} if name == 'korea_locate'
                    else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
                    else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
-            opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo)
+            opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo,
+                        korea=(name.startswith('korea') and name != 'korea_hidden') or name == 'shared')
             err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
             # 只有超时（等元素 / 等点击 / 等加载）重跑一次：CI 上偶尔有一步卡满 30 秒，重跑就过；断言失败与页面报错不重跑
             if isinstance(err, PWTimeout):

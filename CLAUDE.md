@@ -98,6 +98,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 
 ## 朝鲜半岛模式（korea.js）
 
+**3.42 起对访客隐藏**（用户 2026-11-13 要求，此前 2026-11-07 已说不再开发半岛）：`country.js` 的 `KOREA_ON` 只在本机 localStorage `je.dev.korea = '1'` 时为真，`OPEN` 是访客能选的地图（隐藏时只有日本），`pickMap` 默认按 `OPEN`（`#map=korea`、`?map=korea`、存着的 `je.ui.map = korea` 都回到日本），`setupMapSwitch` 只有一张地图时不出开关（`body.one-map`，手机顶栏改回显示标题），日本欢迎卡的「共同历史」只在 `KOREA_ON` 时出。代码、数据、测试都留着：smoke 的 `korea_*` 与 `shared` 场景打开开关照常跑（`Case.open(korea=True)`），`korea_hidden` 核对访客看不到。恢复：把 `KOREA_ON` 改成 true。下面是隐藏前的设计说明。
+
 设计见 `docs/superpowers/specs/2026-11-01-korean-peninsula-design.md`。品牌标题旁的 `#map-switch`（手机上取代标题文字，印章保留）切换「日本 / 朝鲜半岛」，走 `setMap` 整页重载；`app.js` 在 `mapKey !== 'japan'` 时改载 `korea.js`，日本的代码路径不动。`<html data-map>` 标记当前地图，日本独有的按钮、工具条、时代滑块、定位、图例、教程入口在 `:root[data-map="korea"]` 下隐藏；皮肤（丹青配色、韩纸纹、顶栏五方色带）也在那里覆盖 token。地图配色写在 korea.js 的 `COLOR`，着色走 `geo.regions`（map 系列绑在 geo 上时系列数据的颜色不生效）。
 
 - **名称规矩**：模式叫朝鲜半岛 / Korean Peninsula / 朝鮮半島，不叫「韩国」。地名写「当前语言名 / 한글 / 罗马字」（详卡沿用 `.modern-title` 的 kanji / kana / romaji 三格）。界面不加韩文。
@@ -583,7 +585,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `korea_locate`（模拟定位庆州：卡片含庆尚北道 / 庆尚道 / 王京，详卡道名来历含尚州）
   - `korea_power`（国力 28 区、户数第一庆北、换指标、对决、点平壤）
   - `korea_sul`（庆北两种酒、平壤문배주带原产地标、慈江道不出这一栏）
-  - `korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本）
+  - `korea_hidden`（3.42：访客的 `#map=korea` 与存着的 korea 都开日本、没有地图开关、欢迎卡没有共同历史、手机显示标题）
+  - `korea_switch`（顶栏切到半岛、地址栏带 `map=korea`、不溢出；之后打开日本老链接仍是日本；3.42 起只在本机开关打开时有开关）
   - `korea_tour`（全新访客进半岛自动出现 7 步、气泡不出屏、记住）
   - `koseki` 另查上田县 → 长野县；3.38 合战中的关原按城主写真田昌幸西军
   - `koseki` 另查此地年表（1560–1573 武田合并、上田藩三家年份、5 段战国、按年份排）

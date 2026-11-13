@@ -4,6 +4,12 @@
 
 Newest first.
 
+## 3.42 · 2026-11-13
+
+- The Korean Peninsula mode and the "shared history of Japan and the Korean Peninsula" are no longer shown to visitors: no "Japan / Korean Peninsula" switch in the header and no shared-history entry on the welcome card; old `#map=korea` links and visitors who last viewed the peninsula get the Japan map. The code and data are kept
+- On phones the header shows the title again now that there's no map switch
+- READMEs rewritten in all three languages: reorganized into "Look up your hometown / Explore the map", with the features from 3.40–3.41 (disasters nearby, search, footprints, mountains in view, castle photos and more), updated numbers (505 domains, 269 lasting to 1871), and no peninsula section; screenshots and share covers regenerated (the Sengoku screenshot used to catch the era banner mid-fade)
+
 ## 3.41 · 2026-11-13
 
 - New row in the hometown register, "Disasters nearby": large earthquakes whose epicenter was close enough (within about 30 km for M7, 95 km for M8, 300 km for M9) and major eruptions of volcanoes within 40 km — year, magnitude, direction and distance to the epicenter, and the death toll of the whole disaster ("about" where the article gives an estimate, noted where it includes the missing). The worst one comes first. 89 earthquakes and 8 eruptions, with magnitudes and tolls taken from the infobox of each Japanese Wikipedia article

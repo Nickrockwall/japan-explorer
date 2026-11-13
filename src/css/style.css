@@ -1350,6 +1350,10 @@ body.muni-open #legend, body.muni-open .battle-hud { display: none; }
   /* 手机：品牌区只留印章，地图开关占标题的位置 */
   .brand > div:not(.map-switch):not(.brand-seal) { display: none; }
   .map-switch button { padding: 4px 8px; }
+  /* 3.42：半岛模式隐藏、没有地图开关时，标题回到原位（副标题太长，手机上不写） */
+  body.one-map .brand > div:not(.map-switch):not(.brand-seal) { display: block; min-width: 0; }
+  body.one-map .brand .subtitle { display: none; }
+  body.one-map .brand h1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .explore-counter, .btn-battle, .btn-book, .btn-sound, #btn-settings { order: 2; }
   .btn-sound { flex: none; padding: 6px 7px; }
   .explore-counter { flex: none; }

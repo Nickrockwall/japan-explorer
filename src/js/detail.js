@@ -1,7 +1,7 @@
 // 右上：地区风土与历史详卡
 import { crestSVG } from './crests.js';
 import { t, label, lang, prefName, joinList } from './i18n.js';
-import { mapKey } from './country.js';
+import { mapKey, KOREA_ON } from './country.js';
 import { sharedButtons } from './shared.js';
 import { fixLink } from './report.js';
 
@@ -25,7 +25,7 @@ export function renderWelcome(el) {
       </div>
       <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
-      <div class="section-h">${t('sh.h')}</div>${sharedButtons()}
+      ${KOREA_ON ? `<div class="section-h">${t('sh.h')}</div>${sharedButtons()}` : ''}
       <div class="section-h">${t('pw.h')}</div>
       <p class="pw-open-p"><button type="button" class="btn btn-ghost pw-open" data-act="pw-open">${t('pw.open')}</button></p>
       <p class="legal">${legalHTML()}</p>
