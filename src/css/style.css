@@ -978,6 +978,19 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .ks-name input:focus { border-bottom-color: #8a3b33; }
 .ks-name input::placeholder { color: #b0a08a; font-weight: 400; }
 .ks-rows { border-top: 2px solid #3a1f1c; }
+/* 3.43 户籍分组：吸顶的跳转行 + 每组小标题（跳过去时留出跳转行的高度） */
+.ks-toc { position: sticky; top: -22px; z-index: 2; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -4px 6px; padding: 8px 4px;
+  background: #efe4cf; border-bottom: 1px solid #d8c6a6; }
+.ks-toc::-webkit-scrollbar { display: none; }
+.ks-toc button { flex: none; min-height: 32px; padding: 4px 12px; border: 1px solid #b89a74; border-radius: 999px; background: #f6efe0;
+  font: 700 13px var(--serif); color: #5a3a2e; cursor: pointer; }
+.ks-toc button:hover { border-color: #8a3b33; color: #8a3b33; }
+.ks-spark { display: block; margin: 4px 0 2px; max-width: 100%; height: auto; }
+.ks-myoji { margin: 6px 0 0; font-size: 12.5px; line-height: 1.6; color: #5a4a3e; }
+.ks-myoji:empty { display: none; }
+.ks-grp { margin: 14px 0 0; padding: 6px 0 4px; font: 700 14px var(--serif); color: #3a1f1c; letter-spacing: .2em;
+  border-bottom: 2px solid #3a1f1c; scroll-margin-top: 56px; }
+.ks-rows > .ks-grp:first-child { margin-top: 0; }
 .ks-row { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid #d8c6a6; }
 .ks-k { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; font: 700 13px var(--serif); color: #8a3b33; padding-top: 2px; }
 .ks-seal { flex: none; font-style: normal; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 3px; border-radius: var(--r-sm);
@@ -1021,6 +1034,7 @@ body.in-battle .koku-card, body.muni-open .koku-card { display: none; }
 .hn-y { font-variant-numeric: tabular-nums; }
 @media (max-width: 560px) {
   .koseki { padding: 16px 16px 14px; border-width: 7px; }
+  .ks-toc { top: -16px; }
   .ks-row { grid-template-columns: 82px minmax(0, 1fr); gap: 8px; }
   .ht-r { grid-template-columns: 72px minmax(0, 1fr); gap: 6px; }
   .ks-head h2 { font-size: 24px; }

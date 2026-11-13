@@ -1418,6 +1418,21 @@ class Case:
         main = page.locator('#koseki .ks-row[data-k="saigai"] .ks-v b').inner_text()
         assert '1995' in main and '7.3' in main and re.search(r'6[,，]?434', main), f'此地天灾一栏：{main}'
 
+    def koseki_343(self, page):
+        # 3.43：堺市堺区——最近的前方后圆坟是宫内厅治定的反正天皇陵，20 公里内最大的是大仙陵（仁德天皇陵）；
+        # 绳文的海（大半在 5 米以下）；人口按整市（区没有单独的数，印「全市」）并画小图；填户主名「真田」出同姓的真田氏（信浓）；跳到「这片土地」
+        page.wait_for_selector('#koseki[open] .ks-row[data-k="kofun"]', timeout=20000)
+        kf = page.locator('#koseki .ks-row[data-k="kofun"]').inner_text()
+        assert any(x in kf for x in ('大仙', 'Daisen')) and any(x in kf for x in ('仁德', '仁徳', 'Nintoku')), f'古坟一栏：{kf}'
+        assert page.locator('#koseki .ks-row[data-k="jomon"]').count() == 1, '应有绳文的海一栏'
+        assert page.locator('#koseki .ks-row[data-k="pop"] svg.ks-spark').count() == 1
+        assert any(x in page.locator('#koseki .ks-row[data-k="pop"] .ks-seal').text_content() for x in ('全市', 'City'))
+        page.fill('#koseki [data-ks-name]', '真田')
+        line = page.locator('#koseki [data-ks-myoji]').inner_text()
+        assert any(x in line for x in ('信浓', '信濃', 'Shinano')), f'同姓的氏族：{line}'
+        page.click('#koseki [data-act="ks-jump"][data-g="place"]')
+        page.wait_for_function("(() => { const h = document.querySelector('#koseki [data-ks-grp=place]').getBoundingClientRect(); const d = document.querySelector('#koseki').getBoundingClientRect(); return h.top - d.top < 160; })()", timeout=5000)
+
     def koseki_kuni(self, page):
         # 小浜市：福井县 91% 的人住在旧越前国，这里却是若狭国
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
@@ -1617,8 +1632,12 @@ class Case:
         # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 15, f'应有 15 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人，3.40 的石高与人口，3.41 的此地天灾）：{rows}'
+        assert len(rows) == 19, f'应有 19 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人，3.40 的石高与人口，3.41 的此地天灾，3.43 的古坟、附近的古战场、人口的变化、国宝）：{rows}'
+        # 3.43：附近的古战场第一行是第二次上田城之战；五组的跳转行
         # 3.41：此地天灾——1847 年善光寺地震（M7.4）震中在上田以北约 30 公里，死者约 8000（条目写约数）
+        bt = page.locator('.ks-row[data-k="battles"] .ks-v b').inner_text()
+        assert '1600' in bt and any(x in bt for x in ('上田', 'Ueda')), f'附近的古战场：{bt}'
+        assert page.locator('#koseki .ks-toc [data-act="ks-jump"]').count() == 5
         sg = page.locator('.ks-row[data-k="saigai"]').inner_text()
         assert any(x in sg for x in ('善光寺', 'Zenk')) and '1847' in sg and '8' in sg, f'此地天灾一栏：{sg}'
         # 3.37：家乡在合战中站哪边（川中岛按 1560 年信浓归武田）、同乡名人、去立体图看此地千年
@@ -1976,7 +1995,7 @@ def plan(lang):
              ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
              ('koseki_dou', 'pref=23&muni=1&m=23207&koseki=1', ['koseki_dou']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town']),
-             ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']),
+             ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']), ('koseki_343', 'pref=27&muni=1&m=27141&koseki=1', ['koseki_343', 'no_overflow']),
              ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),

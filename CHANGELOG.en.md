@@ -4,6 +4,19 @@
 
 Newest first.
 
+## 3.43 · 2026-11-13
+
+- The hometown register is grouped into Ancient / Wars / Edo / Modern / This place, with a heading for each and a row of jump buttons at the top (it has about 20 lines now, a long scroll on a phone)
+- Five new lines in the register:
+  - "Jōmon sea": how much of the town is less than 5 m above sea level. At the peak of the Jōmon transgression (about 6,500–6,000 years ago) Japan's sea was about 5 m higher, so these lowlands were mostly under water (Kōtō Ward about 92%; a rough estimate from today's terrain)
+  - "Kofun": the nearest keyhole tomb and its length, and the largest within 20 km; for tombs the Imperial Household Agency assigns to an emperor, who (Sakai Ward: the nearest is Emperor Hanzei's, the largest Emperor Nintoku's). 588 tombs
+  - "Battles nearby": the three closest battles within 15 km (Ueda: the second siege of Ueda Castle, 2.3 km north). 270 battles, each year checked against Japanese Wikipedia
+  - "Population": census figures 1970–2020 recalculated for today's boundaries, with a small chart to 2025; wards of designated cities use the whole city's figures when they have none of their own
+  - "National Treasures": treasures that Wikidata places here (1,029 in 163 municipalities; artworks count where they are kept)
+- A new line under the householder's name, "Clans with this surname": type a name and see clans with that surname whose origin Japanese Wikipedia records (Sanada → the Sanada clan, from Sanada in Chiisagata, Shinano; 878 surnames). It notes that a surname often belongs to several clans and most families took theirs only in the Meiji era
+- Disasters nearby: each earthquake now shows its highest tsunami and where (from the article's infobox, 26 quakes); quakes whose tsunami reached 10 m are listed within 300 km (the Meiji and Shōwa Sanriku epicenters were 150–290 km offshore, so the Iwate coast used to miss them)
+- Sengoku person cards: a birth year with two accounts shows as "1536/1537" and an uncertain one as "1560?"; only years the article calls unknown show "?" (all used to show "?")
+
 ## 3.42 · 2026-11-13
 
 - The Korean Peninsula mode and the "shared history of Japan and the Korean Peninsula" are no longer shown to visitors: no "Japan / Korean Peninsula" switch in the header and no shared-history entry on the welcome card; old `#map=korea` links and visitors who last viewed the peninsula get the Japan map. The code and data are kept

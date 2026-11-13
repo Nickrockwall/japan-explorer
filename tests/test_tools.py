@@ -339,6 +339,17 @@ class Saigai(unittest.TestCase):
         self.assertEqual(by['兵庫県南部地震'][3:6], [1995, 7.3, 6434])
         self.assertFalse(any(e[0] == '海城地震' for e in d['eq']))
 
+    def test_tsunami(self):
+        # 3.43：信息框 tsunami 一栏的最高值与地点；cm、km² 不算；海啸 ≥10 米的半径至少 300 km
+        import saigai_tool as s
+        self.assertEqual(s.tsunami(' 最大 25.7 m : 土佐久礼'), (25.7, '土佐久礼'))
+        self.assertEqual(s.tsunami(' 12m:静岡県田方郡熱海町'), (12.0, '静岡県田方郡熱海町'))
+        self.assertEqual(s.tsunami(' 綾里湾（現・大船渡市）：38.2m')[0], 38.2)
+        self.assertEqual(s.tsunami('最大観測高 9.3 m以上: 相馬港<br />最大遡上高 40.1 m: 綾里湾<br />浸水面積 561 km<sup>2</sup>'), (40.1, '綾里湾'))
+        self.assertEqual(s.tsunami('数十cm'), (None, None))
+        self.assertEqual(build_bundle.quake_r(8.2, 38.2), 300)
+        self.assertLess(build_bundle.quake_r(8.2), 150)
+
 
 if __name__ == '__main__':
     unittest.main()

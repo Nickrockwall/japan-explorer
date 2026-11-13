@@ -539,6 +539,20 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **发布不带源 GeoJSON**：checks.yml 的 deploy 步骤删掉有 `.pack.json` 的源文件；`check_data.check_raw_unused` 核对 index / 3d / sw 与 src/js、src/3d 的代码（去掉注释后）没有引用它们。
 - 立体图分享封面 `src/assets/og-3d.jpg`（`make_screens.py --og` 只重做它）。
 
+## 3.43 加的东西（详见 CHANGELOG）
+
+- **户籍分组**（koseki.js `groupRows` / `KS_GROUPS` / `KS_GROUP_OF`）：kosekiRows 最后按 古代 ancient / 战乱 war / 江户 edo / 近现代 modern / 这片土地 place（没登记的键都归 place）稳定排序，每行带 `g`；kosekiHTML 在每组第一行前插 `h3.ks-grp[data-ks-grp]`，三组以上时顶上吸顶的 `.ks-toc` 跳转按钮（`data-act="ks-jump"`，app.js 处理；`.ks-toc` 在 shell.js 的 `HINT` 里）。存图也按这个顺序。新加栏记得在 `KS_GROUP_OF` 登记。
+- **新栏**（koseki.js `placeRows`，数据在 town 包，build_bundle `place_extras`）：
+  - `jomon`：`python -X utf8 tools/jomon_tool.py`（读立体图 z9 地形 `src/3d/terrain/d/*.png`，市区町村里海拔 ≤5 m 的陆地 %，≥5% 才出；EV 核对日文维基「縄文海進」的 6500–6000 年前、约 5 米）。
+  - `kofun`：`tools/kofun_tool.py`（Wikidata 前方後円墳 Q11268718 + 条目信息框 `規模` 的墳丘長、`被葬者` 的「（宮内庁治定）」，三语名在工具里做好——build_bundle 在 CI 里只有标准库）；20 km（`KOFUN_R`）。
+  - `battles`：`tools/kassen_tool.py`（Wikidata 直接 P31 战役 / 围城 / 海战、日本、有坐标与日文条目；年份要在条目前 6000 字里；≤1945）；15 km（`KASSEN_R`）。带子类的 SPARQL 会 504。
+  - `pop`：`tools/pop_tool.py`（日文维基 `Template:人口統計/NN` 的 `fluctuation_2015`：1970–2025 每五年 12 个数，已按今天的辖域组替）；政令市的区没有完整数据时用整市（`popCity`：同县、前三位相同、不大于区代码的最大一个非市区町村代码；浜松 22130 等不是 `区[:3]+'00'`）。文字写到 2020 年，小图（`sparkSVG`）画到 2025。
+  - `kokuho`：`tools/kokuho_tool.py`（P1435 = 国宝 Q1139795；位置 = 自己的坐标 → P276 / P195 收藏处的坐标，分藏几处的不收；按名字短的排前）。
+- **同姓的氏族**（`myojiLine`，户主名下面的 `p.ks-myoji[data-ks-myoji]`，输入时 app.js 更新）：`tools/myoji_tool.py`（Template:日本の氏族 的嵌入页，条目名「○○氏 / ○○家」，信息框 `出身地` 里第一个「…国」及郡、乡）→ `tools/myoji.json` → `bundle/myoji-<lang>.json`（build_bundle `build_myoji`，户籍第一次打开时下载）。匹配用 search.js 的 `fold`，取名字开头最长的姓（1–3 字）；罗马字输入不认。
+- **此地天灾的海啸**：saigai_tool `tsunami()` 读信息框 `tsunami` 栏的最高米数与地点（去掉 cm、km²、粗体），saigai.json 每次地震多两项；海啸 ≥10 m 的半径至少 300 km（build_bundle `quake_r(m, tsu)` = koseki.js `QUAKE_R`）。津波痕跡データベース（东北大学）连不上，所以没有按地点的海啸高度。
+- **人物卡的两说**：age_tool `ja_year_text`（「1536/1537」「1560?」），sengoku_tool 写进 born / died（字符串）；在世检查只拿整数比。
+- smoke：`koseki`（上田 19 栏、附近的古战场第一行 1600 上田、跳转 5 个）、`koseki_343`（堺区：古坟有大仙陵与仁德、绳文的海、人口印「全市」且有小图、户主名「真田」出信浓、跳到「这片土地」）；unittest `Saigai.test_tsunami`。
+
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否与 build_sw 算出的一致、界面词典三语的键与占位符、字体切片有无漏字、仓库里有无 `__pycache__` / 测试页等杂物。
@@ -590,6 +604,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `korea_tour`（全新访客进半岛自动出现 7 步、气泡不出屏、记住）
   - `koseki` 另查上田县 → 长野县；3.38 合战中的关原按城主写真田昌幸西军
   - `koseki` 另查此地年表（1560–1573 武田合并、上田藩三家年份、5 段战国、按年份排）
+  - `koseki_343`（3.43：堺区的古坟 / 绳文的海 / 人口全市 / 同姓氏族 / 分组跳转）
   - `koseki_saigai`（3.41：神户中央区的此地天灾第一行是 1995 兵库县南部地震 M7.3、6,434 人）
   - `koseki`（深链接打开上田市户籍：11 栏（含古代乡名小县郡 8 郷有童女、明治町村有 1889 与上田町、平成合并前有丸子町等与 2006，此地年表有 2006 一行）、今辖境 111 村上田藩 79%、精度印「市」、展开上田藩历代藩主有真田信之、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）
   - `koseki_branch`（黑石市：幕末领主列出黑石藩，能展开历代藩主有津轻承叙——支藩从弘前藩条目那一节取）

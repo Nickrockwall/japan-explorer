@@ -9,7 +9,7 @@
   - 历史地震的震中是按震度分布推定的（宝永地震条目原文也这样说明），界面写明是「推定」。
 喷发：`VOLC` 手写的大喷发（条目要写着这一年）；坐标取火山条目的坐标。
 名字：中文取中文维基的语言链接（zhconv 转简体），没有的按日文字形转；英文取英文维基语言链接，没有的用「年份 + 罗马字」不可靠，就用日文。
-输出 tools/saigai.json：{eq: [[日, 中, 英, 年, M, 死者|null, 经, 纬, 标记（1 约数，2 含失踪者）]], vol: [[日, 中, 英, 年, 火山日, 火山中, 火山英, 经, 纬, 死者|null]]}
+输出 tools/saigai.json：{eq: [[日, 中, 英, 年, M, 死者|null, 经, 纬, 标记（1 约数，2 含失踪者）, 海啸最高米|null, 地点[日, 中, 英]|null]], vol: [[日, 中, 英, 年, 火山日, 火山中, 火山英, 经, 纬, 死者|null]]}
 build_bundle 按市区町村质心算距离（地震 R = 30 × 10^(0.5 × (M − 7)) 公里，M7 30 km、M8 95 km、M9 300 km；死者 ≥100 而 M < 7 的 25 km；
 喷发 40 km），写进 town 包的 `saigai`。
 """
@@ -106,6 +106,29 @@ def box_coords(b):
     return None
 
 
+NOTE = re.compile(r'<ref[^>]*/>|<ref[^>]*>.*?</ref>|<!--.*?-->|\{\{[Ee]fn2?[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}', re.S)
+
+
+def tsunami(v):
+    """信息框「tsunami」一栏里最高的海啸（3.43）→ (米, 地点日文|None)；不到 1 米或只写了 cm 的不给。
+    写法各异：「最大 25.7 m : 土佐久礼」「12m:静岡県田方郡熱海町」「綾里湾（現・大船渡市）：38.2m」「最大遡上高 40.1 m: 綾里湾」"""
+    v = NOTE.sub('', v)
+    v = re.sub(r'\{\{[^{}]*\}\}', '', re.sub(r'<[^>]+>', '\n', v)).replace('：', ':').replace("'''", '')  # 能登 2024 的数字是粗体
+    best = None
+    for line in v.split('\n'):
+        for m in re.finditer(r'(?<![\d.])(\d+(?:\.\d+)?)\s*(?:m|メートル)(?![²2a-zA-Z])', line):
+            if line[max(0, m.start() - 1):m.start()] in ('k', 'c') or line[m.end(1):m.end()].strip().startswith(('km', 'cm')):
+                continue
+            h = float(m.group(1))
+            if best is None or h > best[0]:
+                after = re.match(r'\s*(?:以上)?\s*:\s*([^\n:（(、,]+)', line[m.end():])
+                before = re.search(r'([^\n:、,]+?)(?:（[^）]*）)?\s*:\s*$', line[:m.start()].rstrip())
+                place = (after.group(1) if after else before.group(1) if before else '').strip()
+                place = re.sub(r'^(最大|最大観測高|最大遡上高|最大津波高|遡上高|津波)\s*', '', place)
+                best = (h, place or None)
+    return best if best and best[0] >= 1 else (None, None)
+
+
 def deaths(v):
     """信息框「deaths」的死者数 → (数, 是否约数)。前后写着約 / 以上 / 余 / 超 / 推定 / 説 / 程度 / 范围的记约数（界面写「约」）；
     「死者 4,000-10,000人」这类范围取前一个、记约数；万写法（「2万人」）也认"""
@@ -187,7 +210,9 @@ def main():
         zh = zhconv.convert(ll['zh'] if 'zh' in ll else zh_of(name), 'zh-cn')
         zh = re.sub(r'^\d+年', '', zh) or zh_of(name)
         en = re.sub(r'^\d+ ', '', ll['en']) if 'en' in ll else (reading_en(wt, name) or name)
-        eq.append([name, zh, en, int(y.group(1)), m, dead, round(lon, 3), round(lat, 3), rough])
+        th, tp = tsunami(field(b, 'tsunami'))
+        eq.append([name, zh, en, int(y.group(1)), m, dead, round(lon, 3), round(lat, 3), rough,
+                   th, [tp, zhconv.convert(zh_of(tp), 'zh-cn'), None] if tp else None])  # 英文没有可靠的地名写法：只写米数
     eq.sort(key=lambda x: (x[3], x[0]))
     # 锚点：关东地震 1923 M7.9、宝永地震 1707 M8.4、濃尾地震 1891 死者 7273、兵库县南部地震 1995
     by = {e[0]: e for e in eq}

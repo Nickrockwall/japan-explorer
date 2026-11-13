@@ -7,6 +7,7 @@ import { distanceKm } from './koku.js';
 import { fmtPeople } from './kokuryoku.js';
 import { findHan, kosekiHanHTML } from './han.js';
 import { fixLink } from './report.js';
+import { fold } from './search.js';
 
 const WALK_KM = 30; // 估算步行天数：一天约 30 公里
 const DIRS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
@@ -49,26 +50,98 @@ const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d
 
 // 此地天灾（3.41，town.saigai ← tools/saigai_tool.py）：震中离这里够近的大地震、火山在 40 公里内的大喷发。
 // 半径与 build_bundle.quake_r 相同：M7 30 km、M8 95 km、M9 300 km，M7 以下（死者 ≥100 才收的）25 km
-const QUAKE_R = (m) => (m < 7 ? 25 : 30 * 10 ** (0.5 * (m - 7)));
+const QUAKE_R = (m, tsu) => Math.max(m < 7 ? 25 : 30 * 10 ** (0.5 * (m - 7)), tsu >= 10 ? 300 : 0); // 海啸 ≥10 米的至少 300 km（3.43）
 const VOLC_R = 40;
 export function saigaiRow(list, pt) {
   if (!list?.length || !pt) return null;
-  const near = list.map(([kind, name, y, mOrMt, dead, flag, lon, lat]) => {
+  const near = list.map(([kind, name, y, mOrMt, dead, flag, lon, lat, tsu, tsuAt]) => {
     const d = distanceKm(pt, [lon, lat]);
-    return { kind, name, y, m: mOrMt, dead, flag, d, dir: bearing(pt, [lon, lat]) };
-  }).filter((e) => e.d <= (e.kind === 'e' ? QUAKE_R(e.m) : VOLC_R));
+    return { kind, name, y, m: mOrMt, dead, flag, d, dir: bearing(pt, [lon, lat]), tsu, tsuAt };
+  }).filter((e) => e.d <= (e.kind === 'e' ? QUAKE_R(e.m, e.tsu) : VOLC_R));
   if (!near.length) return null;
   const deadTxt = (e) => (e.dead == null ? '' : t(e.flag & 2 ? 'ks.saigai.dead.m' : e.flag & 1 ? 'ks.saigai.dead.r' : 'ks.saigai.dead', { n: e.dead.toLocaleString(lang) }));
   const line = (e) => (e.kind === 'e'
     ? t('ks.saigai.eq', { y: e.y, name: e.name, m: e.m, dir: e.dir, km: km(e.d) })
-    : t('ks.saigai.vol', { y: e.y, name: e.name, mt: e.m, dir: e.dir, km: km(e.d) })) + deadTxt(e);
+    : t('ks.saigai.vol', { y: e.y, name: e.name, mt: e.m, dir: e.dir, km: km(e.d) })) + deadTxt(e)
+    + (e.tsu ? (e.tsuAt ? t('ks.saigai.tsu.at', { m: e.tsu, at: e.tsuAt }) : t('ks.saigai.tsu', { m: e.tsu })) : '');
   // 最重的一次（按死者，没有死者数的按规模）写在上面，其余按年份
-  const sev = (e) => (e.dead ?? 0) * 10 + (e.kind === 'e' ? e.m : 7);
+  // 3.43：按「死者数 / 距离」挑（海啸大的地震半径放宽到 300 km 以后，神户的第一行变成了 179 km 外的宝永地震）；没有死者数的按 100 人算
+  const sev = (e) => (e.dead ?? 100) / Math.max(e.d, 10) + (e.kind === 'e' ? e.m : 7) / 1000;
   const top = near.reduce((a, b) => (sev(b) > sev(a) ? b : a));
   const rest = near.filter((e) => e !== top).sort((a, b) => a.y - b.y);
   const more = rest.length > 6 ? ` ${t('ks.saigai.more', { n: rest.length - 6 })}` : '';
   return { k: 'saigai', seal: 'muni', main: line(top),
     sub: [rest.slice(0, 6).map(line).join(t('list.sep')) + more, t('ks.saigai.note')].filter(Boolean).join(' · ') };
+}
+
+// 3.43 户籍新栏（数据在 town 包，build_bundle 的 place_extras）：绳文的海、附近的古战场、古坟、此地的国宝、人口的变化
+const KASSEN_R = 15, KOFUN_R = 20; // 与 build_bundle 的 KASSEN_R / KOFUN_R 相同
+const POP_YEARS = [1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025];
+export function placeRows(town, code, pt) {
+  const out = [];
+  if (!town) return out;
+  const near = (list, lonI, r) => (pt ? (list || []).map((x) => ({ x, d: distanceKm(pt, [x[lonI], x[lonI + 1]]), dir: bearing(pt, [x[lonI], x[lonI + 1]]) }))
+    .filter((e) => e.d <= r).sort((a, b) => a.d - b.d) : []);
+  // 绳文的海：本市海拔 5 米以下的陆地占几成（tools/jomon_tool.py）；不到 5% 不写
+  const jp = town.jomon?.[code];
+  if (jp >= 5) out.push({ k: 'jomon', seal: 'muni', main: t(jp >= 50 ? 'ks.jomon.most' : 'ks.jomon', { pct: jp }), sub: t('ks.jomon.note') });
+  // 古坟：最近的一座前方后圆坟；20 公里内更大的另写一句（宫内厅治定的陵墓写被葬者）
+  const kf = near(town.kofun, 3, KOFUN_R);
+  if (kf.length) {
+    const desc = (e) => t('ks.kofun.item', { name: e.x[0], dir: e.dir, km: km(e.d) })
+      + (e.x[1] ? t('ks.kofun.len', { m: e.x[1] }) : '') + (e.x[2] ? t('ks.kofun.ryo', { who: e.x[2] }) : '');
+    const big = kf.reduce((a, b) => ((b.x[1] || 0) > (a.x[1] || 0) ? b : a));
+    const n5 = kf.filter((e) => e.d <= 5).length;
+    out.push({ k: 'kofun', seal: 'muni', main: desc(kf[0]),
+      sub: [big !== kf[0] && big.x[1] ? t('ks.kofun.big', { item: desc(big) }) : '', n5 > 1 ? t('ks.kofun.n5', { n: n5 }) : '', t('ks.kofun.note')].filter(Boolean).join(' · ') });
+  }
+  // 附近的古战场：15 公里内最近的三场
+  const ks = near(town.kassen, 2, KASSEN_R);
+  if (ks.length) {
+    const item = (e) => t('ks.kassen.item', { y: e.x[1], name: e.x[0], dir: e.dir, km: km(e.d) });
+    out.push({ k: 'battles', seal: 'muni', main: item(ks[0]),
+      sub: [ks.slice(1, 3).map(item).join(t('list.sep')), ks.length > 3 ? t('ks.kassen.more', { n: ks.length }) : '', t('ks.kassen.note')].filter(Boolean).join(' · ') });
+  }
+  // 人口的变化：1970 → 2020 年（2025 年的数照条目画进小图，文字只写国势调查确定的 2020 年）
+  const own = town.pop?.[code];
+  const series = own || town.pop?.[town.popCity?.[code]];
+  if (series?.length === POP_YEARS.length) {
+    const a = series[0], b = series[10];
+    const pi = series.slice(0, 11).indexOf(Math.max(...series.slice(0, 11)));
+    const pct = Math.round((b / a - 1) * 100);
+    out.push({ k: 'pop', seal: own ? 'muni' : 'city', spark: series,
+      main: t('ks.pop', { a: fmtPeople(a), b: fmtPeople(b), pct: `${pct > 0 ? '+' : ''}${pct}%` }),
+      sub: [pi > 0 && pi < 10 ? t('ks.pop.peak', { y: POP_YEARS[pi], n: fmtPeople(series[pi]) }) : '', t('ks.pop.note')].filter(Boolean).join(' · ') });
+  }
+  // 此地的国宝：按 Wikidata 的位置落在这个市区町村的（收藏品写的是收藏处）
+  const kh = town.kokuho?.[code];
+  if (kh?.length) {
+    out.push({ k: 'kokuho', seal: 'muni', main: t('ks.kokuho', { n: kh.length }),
+      sub: [kh.slice(0, 8).map(([n]) => n).join(t('list.sep')) + (kh.length > 8 ? ` ${t('ks.mura.more', { n: kh.length })}` : ''), t('ks.kokuho.note')].join(' · ') });
+  }
+  return out;
+}
+
+// 户籍里人口那一栏的小折线（12 个点，1970–2025）
+function sparkSVG(v) {
+  const w = 160, h = 34, max = Math.max(...v), min = Math.min(...v), sx = w / (v.length - 1);
+  const y = (n) => (max === min ? h / 2 : h - 3 - ((n - min) / (max - min)) * (h - 6));
+  const pts = v.map((n, i) => `${(i * sx).toFixed(1)},${y(n).toFixed(1)}`).join(' ');
+  return `<svg class="ks-spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#8a3b33" stroke-width="2"/>`
+    + `<circle cx="${(10 * sx).toFixed(1)}" cy="${y(v[10]).toFixed(1)}" r="2.6" fill="#8a3b33"/></svg>`;
+}
+
+// 同姓的氏族（3.43，bundle/myoji-<lang>.json）：户主名开头的姓（最长的那个，按 fold 统一字形）有出身地的氏族
+let myojiIdx = null;
+export function myojiLine(myoji, name) {
+  if (!myoji || !name) return '';
+  myojiIdx ||= Object.fromEntries(Object.keys(myoji).map((k) => [fold(k), k]));
+  const f = fold(name.trim());
+  for (let n = Math.min(3, f.length); n >= 1; n--) {
+    const k = myojiIdx[f.slice(0, n)];
+    if (k) return t('ks.myoji', { list: myoji[k].slice(0, 3).map(([c, o]) => t('ks.myoji.item', { clan: c, from: o })).join(t('list.sep')) });
+  }
+  return '';
 }
 
 // 同名地名的键 → 对应的古代设施（量这里到本国那一处的距离）
@@ -234,6 +307,7 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
     // 名次相差三倍以上才算逆袭 / 没落（83 → 322 算没落，16 → 45 算差不多）
     rows.push({ k: 'rise', seal: 'muni', main: t('ks.rise', { a, b, n }), sub: t(a >= b * 3 ? 'ks.rise.up' : b >= a * 3 ? 'ks.rise.down' : 'ks.rise.flat') });
   }
+  rows.push(...placeRows(town, props.code, pt));
   const disaster = saigaiRow(town?.saigai, pt);
   if (disaster) rows.push(disaster);
   const ph = pref.dialect?.phrases?.[0];
@@ -268,7 +342,21 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
       t('ks.dou.list', { list: others.length > 10 ? `${list} ${t('ks.mura.more', { n: others.length })}` : list })].filter(Boolean).join(t('ks.dou.sep'));
     rows.push({ k: 'dou', seal: 'muni', main: t('ks.dou', { name: mineK[1], y: mineK[3] ? t('ks.dou.y0', { y: mineK[3] }) : '', kw: t(`ks.dou.kw.${k}`), n: others.length }), sub });
   }
-  return { rows, short, print: prints?.[0] || null };
+  return { rows: groupRows(rows), short, print: prints?.[0] || null };
+}
+
+// 3.43：户籍一长（上田 20 栏上下），按五组排：古代 / 战乱 / 江户 / 近现代 / 这片土地；组内保持原来的先后。
+// 对话框里每组有小标题，顶上一行跳转按钮（data-act="ks-jump"）；存图也按这个顺序
+export const KS_GROUPS = ['ancient', 'war', 'edo', 'modern', 'place'];
+const KS_GROUP_OF = {
+  jomon: 'ancient', kofun: 'ancient', home: 'ancient', kami: 'ancient', ritsuryo: 'ancient', wamyo: 'ancient', sennen: 'ancient', kuni: 'ancient',
+  sengoku6: 'war', sengoku: 'war', sides: 'war', battles: 'war',
+  edo: 'edo', far: 'edo', boshin: 'edo',
+  mura: 'modern', heisei: 'modern', pop: 'modern', power: 'modern', rise: 'modern',
+};
+function groupRows(rows) {
+  const gi = (r) => KS_GROUPS.indexOf(KS_GROUP_OF[r.k] || 'place');
+  return rows.map((r, i) => ({ ...r, g: KS_GROUPS[gi(r)], i })).sort((a, b) => gi(a) - gi(b) || a.i - b.i);
 }
 
 // 你其实是别国人（3.40，town.kuni：按今天的人口，旧国的大半在哪个县、本县的大半是哪个国）：
@@ -301,10 +389,13 @@ export function heiseiOf(town, code, max = 14) {
 export function kosekiHTML(ctx, data, name, extra = '') {
   const { rows, print } = data;
   const title = `${ctx.prefLabel} ${lang === 'en' && ctx.props.en ? ctx.props.en : ctx.props.name}`;
-  const body = rows.map((r) => `
+  const groups = KS_GROUPS.filter((g) => rows.some((r) => r.g === g));
+  const toc = groups.length > 2 ? `<nav class="ks-toc" aria-label="${esc(t('ks.toc'))}">${groups.map((g) =>
+    `<button type="button" data-act="ks-jump" data-g="${g}">${esc(t(`ks.g.${g}`))}</button>`).join('')}</nav>` : '';
+  const body = rows.map((r, i) => `${r.g && r.g !== rows[i - 1]?.g ? `<h3 class="ks-grp" data-ks-grp="${r.g}">${esc(t(`ks.g.${r.g}`))}</h3>` : ''}
     <div class="ks-row" data-k="${r.k}">
       <div class="ks-k">${esc(t(`ks.r.${r.k}`))}<i class="ks-seal" title="${esc(t(`ks.p.${r.seal}.t`))}">${esc(t(`ks.p.${r.seal}`))}</i></div>
-      <div class="ks-v"><b>${esc(r.main)}</b>${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
+      <div class="ks-v"><b>${esc(r.main)}</b>${r.spark ? sparkSVG(r.spark) : ''}${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
         ${r.voice ? `<button type="button" class="ks-voice" data-act="ks-voice">${esc(t('ks.voice'))}</button>` : ''}</div>
     </div>`).join('');
   const art = print ? `<button type="button" class="ks-art" data-act="art" data-no="${print.no}"><img src="${esc(print.img)}" alt="" loading="lazy"><span>${esc(t('ks.art', { title: print.title_t || print.title }))}</span></button>` : '';
@@ -315,7 +406,9 @@ export function kosekiHTML(ctx, data, name, extra = '') {
       <h2 id="koseki-h">${esc(t('ks.title'))}</h2>
       <div class="ks-place">${esc(title)}</div>
       <label class="ks-name">${esc(t('ks.name'))}<input type="text" maxlength="16" data-ks-name value="${esc(name)}" placeholder="${esc(t('ks.name.ph'))}"></label>
+      <p class="ks-myoji" data-ks-myoji>${esc(myojiLine(ctx.myoji, name))}</p>
     </header>
+    ${toc}
     <div class="ks-rows">${body}</div>
     ${art}
     <p class="ks-note">${esc(t('ks.note'))}</p>

@@ -10,7 +10,7 @@ import { createSearch, loadMuniIndex } from './search.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
 import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
-import { kosekiRows, kosekiHTML, kosekiImage, centroidOf } from './koseki.js';
+import { kosekiRows, kosekiHTML, kosekiImage, centroidOf, myojiLine } from './koseki.js';
 import { hometownItems, hometownHTML } from './hometown.js';
 import { createPower, METRICS } from './kokuryoku.js';
 import { createSengoku } from './sengoku.js';
@@ -336,6 +336,9 @@ async function main() {
     }
   }
   let ks = null; // { ctx, data }
+  // 同姓的氏族（3.43）：bundle/myoji-<lang>.json，第一次打开户籍时才下载；下载失败就不出这一行
+  let myojiLoad = null;
+  const loadMyoji = () => (myojiLoad ||= fetch(`${MAP.data}/bundle/myoji-${lang}.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null));
   const kosekiHash = (pid, code) => `${stateHash(pid)}&muni=1&m=${code}&koseki=1`;
   async function openKoseki(pid, code, pt) {
     let geo;
@@ -351,6 +354,7 @@ async function main() {
       pref: prefs.get(pid), props: f.properties, provNames: geo.provinces, pt: pt || centroidOf(f.geometry),
       sites: kokuSites, domains: data.domains, mainGun: data.mainGun, power: data.kokuryoku, prints: printsOf(art, f.properties.province), prefLabel: prefLabel(pid), prefOf: prefLabel,
       sengoku: await sengokuData(), han: await ensureHan().then(() => han), town: await (townLoad[pid] ??= loadTown(lang, pid)), battles,
+      myoji: await loadMyoji(),
     };
     ks = { ctx, data: kosekiRows(ctx), pid, code };
     // 此地年表：各时代的归属与落在这里的彼时今日条目，按年份串起来（存图时也画在各栏之后）
@@ -366,10 +370,16 @@ async function main() {
     if (ks && /koseki=1/.test(location.hash)) history.replaceState(null, '', location.hash.replace('&koseki=1', ''));
   });
   ksDlg.addEventListener('input', (e) => {
-    if (e.target.matches('[data-ks-name]')) uiPref.set('kosekiName', e.target.value.trim());
+    if (e.target.matches('[data-ks-name]')) {
+      uiPref.set('kosekiName', e.target.value.trim());
+      const line = ksDlg.querySelector('[data-ks-myoji]');
+      if (line && ks) line.textContent = myojiLine(ks.ctx.myoji, e.target.value);
+    }
   });
   ksDlg.addEventListener('click', async (e) => {
     if (e.target === ksDlg || e.target.closest('[data-act="ks-close"]')) { ksDlg.close(); return; }
+    const jump = e.target.closest('[data-act="ks-jump"]');  // 3.43 户籍分组的跳转
+    if (jump) { ksDlg.querySelector(`[data-ks-grp="${jump.dataset.g}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     const kk = e.target.closest('[data-kako]');
     if (kk) { ksDlg.close(); showKako(kk.dataset.kako, kk.dataset.kt); return; }
     const b = e.target.closest('[data-act]');

@@ -643,11 +643,15 @@ def check_heads(bad):
                 jb, jd = age_tool.ja_year(w, ('生誕', '生年')), age_tool.ja_year(w, ('死没', '没年'))
                 if jb[1] == 'none' and jd[1] == 'none':
                     jb, jd = age_tool.lead_years(w)
+                fields = {'born': ('生誕', '生年'), 'died': ('死没', '没年')}
                 for key, (v, st) in (('born', jb), ('died', jd)):
-                    if st != 'none':
+                    if st == 'ok':
                         p[key] = v
+                    elif st == 'unknown':  # 3.43：两说写「1537/1538」、拿不准写「1560?」，写不详的才是 null（卡片显示「?」）
+                        p[key] = age_tool.ja_year_text(w, fields[key])
             # 在世年份的检查：条目写不详的用 Wikidata 的数字（只用来判断这一年是不是还活着）
-            lo, hi = p['born'] or p['wd'][0], p['died'] or p['wd'][1]
+            num = lambda v: v if isinstance(v, int) else None  # noqa: E731  两说的文字年份不拿来比
+            lo, hi = num(p['born']) or p['wd'][0], num(p['died']) or p['wd'][1]
             if (y, k) in HEAD_EV:
                 art, quote = HEAD_EV[(y, k)]
                 if quote not in wiki.article('ja', art):

@@ -391,7 +391,7 @@ export function watchCards(pane, mapEl, setInset) {
 }
 
 // 能横滑的一行按钮：右边（或左边）还有内容时边缘渐隐，提示可以滑
-const HINT = '.filters, .legend-items, .quick, .kr-eras, .book-tabs, .sh-tabs, .kr-pk-chips, .kp-metrics, .rl-jump, .toc';
+const HINT = '.filters, .legend-items, .quick, .kr-eras, .book-tabs, .sh-tabs, .kr-pk-chips, .kp-metrics, .rl-jump, .toc, .ks-toc';
 export function setupScrollHints() {
   const mark = (el) => {
     const max = el.scrollWidth - el.clientWidth;

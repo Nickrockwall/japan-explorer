@@ -436,9 +436,11 @@ def far_lords():
     return out
 
 
-def quake_r(m):
-    """地震「离这里多近才列出」的半径（公里）：M7 30、M8 95、M9 300；M7 以下（死者 ≥100 才收的）25。前端 koseki.js 的 QUAKE_R 同一公式"""
-    return 25 if m < 7 else 30 * 10 ** (0.5 * (m - 7))
+def quake_r(m, tsu=None):
+    """地震「离这里多近才列出」的半径（公里）：M7 30、M8 95、M9 300；M7 以下（死者 ≥100 才收的）25。
+    3.43：海啸最高 ≥10 米的，至少 300 公里（明治、昭和三陆地震的震中在海上 150–290 公里外，死者多在岩手沿岸）。前端 koseki.js 的 QUAKE_R 同一公式"""
+    r = 25 if m < 7 else 30 * 10 ** (0.5 * (m - 7))
+    return max(r, 300) if tsu and tsu >= 10 else r
 
 
 VOLC_R = 40  # 大喷发：火山离这里 40 公里以内
@@ -455,12 +457,65 @@ def saigai_for(pid, lang):
     pts = [q['c'] for q in munis().values() if q['pid'] == pid and q.get('c')]
     out = []
     for e in d['eq']:
-        if any(km_between(p, e[6:8]) <= quake_r(e[4]) for p in pts):
-            out.append(['e', e[li], e[3], e[4], e[5], e[8], e[6], e[7]])
+        if any(km_between(p, e[6:8]) <= quake_r(e[4], e[9] if len(e) > 9 else None) for p in pts):
+            # 3.43：再带上这次地震的海啸最高（米）与地点（信息框 tsunami 一栏）
+            out.append(['e', e[li], e[3], e[4], e[5], e[8], e[6], e[7], e[9] if len(e) > 9 else None, e[10][li] if len(e) > 10 and e[10] else None])
     for v in d['vol']:
         if any(km_between(p, v[7:9]) <= VOLC_R for p in pts):
             out.append(['v', v[li], v[3], v[4 + li], v[9], 0, v[7], v[8]])
     return out
+
+
+def tool_json(name, default):
+    path = os.path.join(ROOT, 'tools', name)
+    return load(path) if os.path.exists(path) else default
+
+
+def near_items(items, pid, km, lon_i):
+    """本县有市区町村质心落在 km 公里内的条目（前端再按户籍的点筛）"""
+    pts = [q['c'] for q in munis().values() if q['pid'] == pid and q.get('c')]
+    return [x for x in items if any(km_between(p, x[lon_i:lon_i + 2]) <= km for p in pts)]
+
+
+KASSEN_R, KOFUN_R = 15, 20  # 附近的古战场 15 km、古坟 20 km（前端 koseki.js 同样的数）
+
+
+def place_extras(pid, lang, pre):
+    """3.43 户籍新栏的资料：绳文的海（tools/jomon.json）、附近的古战场（kassen.json）、古坟（kofun.json）、
+    此地的国宝（kokuho.json）、人口的变化（pop.json；政令市的区没有的用整市的，记在 popCity）"""
+    li = {'ja': 0, 'zh': 1, 'en': 2}[lang]
+    jomon = tool_json('jomon.json', {})
+    kassen = near_items(tool_json('kassen.json', []), pid, KASSEN_R, 4)
+    kofun = near_items(tool_json('kofun.json', []), pid, KOFUN_R, 5)
+    kokuho = tool_json('kokuho.json', {})
+    pop = tool_json('pop.json', {})
+    codes = [c for c, q in munis().items() if q['pid'] == pid]
+    # 政令市的区：今天的辖域没有单独的数，用整市的（模板里的市代码 = 同县、前三位相同、不大于区代码的最大一个、本身不是市区町村）
+    cities = sorted(c for c in pop if c.startswith(pre) and c not in munis())
+    pop_city = {}
+    for c in codes:
+        if c not in pop and munis()[c].get('city'):
+            cand = [k for k in cities if k[:3] == c[:3] and k <= c]
+            if cand:
+                pop_city[c] = cand[-1]
+    return {
+        'jomon': {c: v[0] for c, v in jomon.items() if c.startswith(pre)},
+        'kassen': [[x[li], x[3], x[4], x[5]] for x in kassen],
+        'kofun': [[x[li], x[3], x[4][li] if x[4] else None, x[5], x[6]] for x in kofun],
+        'kokuho': {c: [[x[li], x[3]] for x in v] for c, v in kokuho.items() if c.startswith(pre)},
+        'pop': {c: v for c, v in pop.items() if c.startswith(pre) and (c in munis() or c in pop_city.values())},
+        'popCity': pop_city,
+    }
+
+
+def build_myoji(lang):
+    """同姓的氏族（3.43）：bundle/myoji-<lang>.json {姓（日文写法）: [[氏族名, 出身地, 旧国名]]}；中文按字形转，英文旧国用英文名"""
+    d = tool_json('myoji.json', {})
+    conv = ja_to_zh_table() if lang == 'zh' else {}
+    zh = lambda n: ''.join(conv.get(c, c) for c in n)  # noqa: E731
+    prov = {f['properties']['key']: f['properties'] for f in load(os.path.join(DATA, 'provinces.json'))['features']}
+    pn = lambda k: (prov.get(k, {}).get(lang) or k)  # noqa: E731
+    return json.dumps({k: [[zh(a), zh(b), pn(c)] for a, b, c in v] for k, v in d.items()}, ensure_ascii=False, separators=(',', ':'))
 
 
 def kuni_share():
@@ -580,6 +635,7 @@ def build_town(lang):
             'rise': {'n': rank_n, 'r': {c: v for c, v in ranks.items() if c.startswith(pre)}},
             # 3.41 此地天灾：本县范围内可能列出的地震与喷发（前端按户籍的点再筛一次）
             'saigai': saigai_for(pid, lang),
+            **place_extras(pid, lang, pre),
         }, ensure_ascii=False, separators=(',', ':'))
     return out
 
@@ -598,6 +654,8 @@ def main():
             f.write(build_ken(lang))
         with open(os.path.join(out_dir, f'rise-{lang}.json'), 'w', encoding='utf-8') as f:
             f.write(build_rise(lang))
+        with open(os.path.join(out_dir, f'myoji-{lang}.json'), 'w', encoding='utf-8') as f:
+            f.write(build_myoji(lang))
         os.makedirs(os.path.join(out_dir, 'town', lang), exist_ok=True)
         for pid, text_t in build_town(lang).items():
             with open(os.path.join(out_dir, 'town', lang, f'{pid:02d}.json'), 'w', encoding='utf-8') as f:

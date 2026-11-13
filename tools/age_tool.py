@@ -84,6 +84,22 @@ def year_in(v):
     return ys.pop(), 'ok'
 
 
+def ja_year_text(wt, fields):
+    """拿不准的年份照条目写成短文字给人物卡（3.43）：两说「1537/1538」、带问号或「頃」的「1560?」；写不详、没有西历年的给 None"""
+    for f in fields:
+        m = re.search(rf'^\s*\|\s*{f}\s*=([^\n]*)', wt, flags=re.M)
+        if not (m and m.group(1).strip()):
+            continue
+        v = NOTE.sub('', m.group(1))
+        ys = sorted({int(y) for y in re.findall(r'(?<!\d)(\d{3,4})年', v)})
+        if not ys or re.search(r'不詳|不明|未詳', v):
+            return None
+        if len(ys) >= 2:
+            return f'{ys[0]}/{ys[1]}'
+        return f'{ys[0]}?'
+    return None
+
+
 def ja_year(wt, fields):
     """信息框里这一栏：(年, 'ok') / (None, 'unknown') 写明不详或拿不准 / (None, 'none') 没有这一栏"""
     for f in fields:
