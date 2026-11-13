@@ -436,6 +436,33 @@ def far_lords():
     return out
 
 
+def quake_r(m):
+    """地震「离这里多近才列出」的半径（公里）：M7 30、M8 95、M9 300；M7 以下（死者 ≥100 才收的）25。前端 koseki.js 的 QUAKE_R 同一公式"""
+    return 25 if m < 7 else 30 * 10 ** (0.5 * (m - 7))
+
+
+VOLC_R = 40  # 大喷发：火山离这里 40 公里以内
+
+
+def saigai_for(pid, lang):
+    """此地天灾（3.41）：本县有市区町村落在半径里的地震与喷发（tools/saigai.json ← tools/saigai_tool.py），
+    距离、方向在前端按户籍的点算。[[类 e|v, 名字, 年, M|火山名, 死者|null, 标记, 经, 纬]]"""
+    path = os.path.join(ROOT, 'tools', 'saigai.json')
+    if not os.path.exists(path):
+        return []
+    d = load(path)
+    li = {'ja': 0, 'zh': 1, 'en': 2}[lang]
+    pts = [q['c'] for q in munis().values() if q['pid'] == pid and q.get('c')]
+    out = []
+    for e in d['eq']:
+        if any(km_between(p, e[6:8]) <= quake_r(e[4]) for p in pts):
+            out.append(['e', e[li], e[3], e[4], e[5], e[8], e[6], e[7]])
+    for v in d['vol']:
+        if any(km_between(p, v[7:9]) <= VOLC_R for p in pts):
+            out.append(['v', v[li], v[3], v[4 + li], v[9], 0, v[7], v[8]])
+    return out
+
+
 def kuni_share():
     """你其实是别国人（3.40）：按今天的人口，旧国的大半在哪个县、各县的大半是哪个国。
     {旧国: [[县 id, 该国人口里的百分比]…多的在前]}、{县 id: [[旧国, 本县人口里的百分比]…]}（跨两国的市区町村整个算给主要一方）"""
@@ -551,6 +578,8 @@ def build_town(lang):
             'far': {c: [[hname(h), km, pc] for h, km, pc in v] for c, v in far.items() if c.startswith(pre)},
             'kuni': {'prov': {pv: kp_prov[pv] for pv in sorted({q for q in prov_of.values() if q in kp_prov})}, 'pref': kp_pref.get(pid, [])},
             'rise': {'n': rank_n, 'r': {c: v for c, v in ranks.items() if c.startswith(pre)}},
+            # 3.41 此地天灾：本县范围内可能列出的地震与喷发（前端按户籍的点再筛一次）
+            'saigai': saigai_for(pid, lang),
         }, ensure_ascii=False, separators=(',', ':'))
     return out
 

@@ -47,6 +47,30 @@ function nearest(sites, pt) {
 const km = (d) => (d < 10 ? d.toFixed(1) : Math.round(d));
 const walk = (d) => (d < 12 ? t('ks.walk.day') : t('ks.walk.n', { n: Math.ceil(d / WALK_KM) }));
 
+// 此地天灾（3.41，town.saigai ← tools/saigai_tool.py）：震中离这里够近的大地震、火山在 40 公里内的大喷发。
+// 半径与 build_bundle.quake_r 相同：M7 30 km、M8 95 km、M9 300 km，M7 以下（死者 ≥100 才收的）25 km
+const QUAKE_R = (m) => (m < 7 ? 25 : 30 * 10 ** (0.5 * (m - 7)));
+const VOLC_R = 40;
+export function saigaiRow(list, pt) {
+  if (!list?.length || !pt) return null;
+  const near = list.map(([kind, name, y, mOrMt, dead, flag, lon, lat]) => {
+    const d = distanceKm(pt, [lon, lat]);
+    return { kind, name, y, m: mOrMt, dead, flag, d, dir: bearing(pt, [lon, lat]) };
+  }).filter((e) => e.d <= (e.kind === 'e' ? QUAKE_R(e.m) : VOLC_R));
+  if (!near.length) return null;
+  const deadTxt = (e) => (e.dead == null ? '' : t(e.flag & 2 ? 'ks.saigai.dead.m' : e.flag & 1 ? 'ks.saigai.dead.r' : 'ks.saigai.dead', { n: e.dead.toLocaleString(lang) }));
+  const line = (e) => (e.kind === 'e'
+    ? t('ks.saigai.eq', { y: e.y, name: e.name, m: e.m, dir: e.dir, km: km(e.d) })
+    : t('ks.saigai.vol', { y: e.y, name: e.name, mt: e.m, dir: e.dir, km: km(e.d) })) + deadTxt(e);
+  // 最重的一次（按死者，没有死者数的按规模）写在上面，其余按年份
+  const sev = (e) => (e.dead ?? 0) * 10 + (e.kind === 'e' ? e.m : 7);
+  const top = near.reduce((a, b) => (sev(b) > sev(a) ? b : a));
+  const rest = near.filter((e) => e !== top).sort((a, b) => a.y - b.y);
+  const more = rest.length > 6 ? ` ${t('ks.saigai.more', { n: rest.length - 6 })}` : '';
+  return { k: 'saigai', seal: 'muni', main: line(top),
+    sub: [rest.slice(0, 6).map(line).join(t('list.sep')) + more, t('ks.saigai.note')].filter(Boolean).join(' · ') };
+}
+
 // 同名地名的键 → 对应的古代设施（量这里到本国那一处的距离）
 const DOU_SITE = { fuchu: 'fu', kofu: 'fu', soja: 'fu', kokubu: 'ji', ichi: 'ichi' };
 
@@ -210,6 +234,8 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
     // 名次相差三倍以上才算逆袭 / 没落（83 → 322 算没落，16 → 45 算差不多）
     rows.push({ k: 'rise', seal: 'muni', main: t('ks.rise', { a, b, n }), sub: t(a >= b * 3 ? 'ks.rise.up' : b >= a * 3 ? 'ks.rise.down' : 'ks.rise.flat') });
   }
+  const disaster = saigaiRow(town?.saigai, pt);
+  if (disaster) rows.push(disaster);
   const ph = pref.dialect?.phrases?.[0];
   if (ph) rows.push({ k: 'voice', seal: 'pref', main: `「${ph.phrase}」`, sub: ph.meaning, voice: true });
   // 同乡名人（town.famous，3.37）：Wikidata 出生地落在这里的已故人物，按语言条目数排（tools/famous_tool.py）

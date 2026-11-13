@@ -289,5 +289,56 @@ class Muromachi(unittest.TestCase):
             for e in row.values():
                 self.assertIn(e['c'], d['families'])
 
+
+class Lifespans(unittest.TestCase):
+    """3.41：生卒年按日文维基信息框（age_tool.ja_year / lead_years）"""
+
+    def test_infobox(self):
+        import age_tool
+        wt = '| 生誕 = [[永禄]]3年（[[1560年]]）\n| 死没 = [[慶長]]5年（[[1600年]]）\n'
+        self.assertEqual(age_tool.ja_year(wt, ('生誕',)), (1560, 'ok'))
+        self.assertEqual(age_tool.ja_year('| 生誕 = 不明\n', ('生誕',)), (None, 'unknown'))
+        # 两个不同的西历年 = 两说；同一年里日子两说不算
+        self.assertEqual(age_tool.ja_year('| 生誕 = 天文7年（1538年）(天文8年（1539年）とも)\n', ('生誕',))[1], 'unknown')
+        self.assertEqual(age_tool.ja_year('| 生誕 = 1534年6月23日<br />あるいは1534年7月9日\n', ('生誕',)), (1534, 'ok'))
+        # 脚注里的「一説」不影响；只写和历的按 ERA 换算
+        self.assertEqual(age_tool.ja_year('| 生誕 = [[嘉元]]3年{{efn|月日は一説に7月27日}}\n', ('生誕',)), (1305, 'ok'))
+        self.assertEqual(age_tool.ja_year('| 没年 = {{死亡年月日と没年齢|1831|7|22|1867|1|30}}\n', ('没年',)), (1867, 'ok'))
+        self.assertEqual(age_tool.ja_year('', ('生誕',)), (None, 'none'))
+
+    def test_lead(self):
+        import age_tool
+        q = "'" * 3
+        wt = f"\n{q}明治天皇{q}（めいじてんのう、[[嘉永]]5年9月22日〈[[1852年]]11月3日〉- [[1912年]]〈明治45年〉7月30日）は"
+        self.assertEqual(age_tool.lead_years(wt), ((1852, 'ok'), (1912, 'ok')))
+        wt = f"\n{q}宗尊親王{q}（むねたかしんのう）は、鎌倉幕府6代将軍（在任：[[1252年]] - [[1266年]]）"
+        self.assertEqual(age_tool.lead_years(wt), ((None, 'none'), (None, 'none')))
+
+
+class Saigai(unittest.TestCase):
+    """3.41：此地天灾的死者解析与半径"""
+
+    def test_deaths(self):
+        import saigai_tool as s
+        self.assertEqual(s.deaths('死者7,273人、負傷者17,175人'), (7273, 0))
+        self.assertEqual(s.deaths(' 死者約1,500人'), (1500, 1))
+        self.assertEqual(s.deaths('死者8000-12000人'), (8000, 1))
+        self.assertEqual(s.deaths('死者・行方不明者105,385人'), (105385, 2))
+        self.assertEqual(s.deaths(' 死者数千あるいは2万3千余'), (None, 0))
+        self.assertEqual(s.deaths('負傷者182人'), (None, 0))  # 负伤者不能当死者
+        self.assertEqual(s.deaths('10人'), (10, 0))
+
+    def test_radius_and_data(self):
+        self.assertEqual(build_bundle.quake_r(6.5), 25)
+        self.assertAlmostEqual(build_bundle.quake_r(8), 94.87, places=1)
+        with open(os.path.join(ROOT, 'src', 'js', 'koseki.js'), encoding='utf-8') as f:
+            self.assertIn('30 * 10 ** (0.5 * (m - 7))', f.read())  # 前端 QUAKE_R 与 build_bundle.quake_r 同一公式
+        with open(os.path.join(ROOT, 'tools', 'saigai.json'), encoding='utf-8') as f:
+            d = json.load(f)
+        by = {e[0]: e for e in d['eq']}
+        self.assertEqual(by['兵庫県南部地震'][3:6], [1995, 7.3, 6434])
+        self.assertFalse(any(e[0] == '海城地震' for e in d['eq']))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,8 @@
 """README 用的截图：每种语言两张电脑（战国势力图、年表「实权」）、两张手机（生日帖、古代户籍），一张立体图（关原之战重演）；
-另外生成立体图页的分享封面 src/assets/og-3d.png。
+另外生成立体图页的分享封面 src/assets/og-3d.jpg（JPEG q85，约 130 KB；PNG 要 740 KB）。
 
     python -X utf8 tools/make_screens.py          # 立体图要用本机 Chrome 的显卡（--enable-gpu），自带 Chromium 是软件渲染、截不清
+    python -X utf8 tools/make_screens.py --og     # 只重做分享封面
 
 输出 docs/screen-{sengoku,power,bday,koseki,3d}-{zh,en,ja}.jpg（docs/ 不随网站发布）。
 """
@@ -9,6 +10,7 @@ import functools
 import http.server
 import os
 import socketserver
+import sys
 import threading
 
 from playwright.sync_api import sync_playwright
@@ -28,10 +30,11 @@ def main():
     httpd = socketserver.ThreadingTCPServer(('127.0.0.1', 0), functools.partial(Quiet, directory=ROOT))
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     base = f'http://127.0.0.1:{httpd.server_address[1]}/index.html'
+    og_only = '--og' in sys.argv
     with sync_playwright() as p:
         browser = p.chromium.launch()
         shot = lambda page, name, lang, q: page.screenshot(path=os.path.join(OUT, f'screen-{name}-{lang}.jpg'), type='jpeg', quality=q)  # noqa: E731
-        for lang in ('zh', 'en', 'ja'):
+        for lang in (() if og_only else ('zh', 'en', 'ja')):
             desk = dict(viewport={'width': 1280, 'height': 800}, service_workers='block')
             phone = dict(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=2, service_workers='block')
             # 电脑：1582 年的战国势力图，打开织田的势力总览（家纹旗、合并后的领国）
@@ -77,7 +80,7 @@ def main():
         # 立体图：本机 Chrome + 显卡
         gpu = p.chromium.launch(channel='chrome', args=['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'])
         d3 = base.replace('index.html', '3d.html')
-        for lang in ('zh', 'en', 'ja'):
+        for lang in (() if og_only else ('zh', 'en', 'ja')):
             ctx = gpu.new_context(viewport={'width': 1280, 'height': 800}, service_workers='block')
             page = ctx.new_page()
             page.goto(f'{d3}#bt=sekigahara&ph=2&lang={lang}')
@@ -86,7 +89,7 @@ def main():
             page.wait_for_timeout(5000)
             shot(page, '3d', lang, 85)
             ctx.close()
-        # 分享封面：1582 年的全国（屏风风格、旗），收起界面，写上标题
+        # 分享封面：1582 年的全国（屏风风格、旗），收起界面，写上标题（页面叫立体古今图，五个时代）
         ctx = gpu.new_context(viewport={'width': 1200, 'height': 630}, service_workers='block')
         page = ctx.new_page()
         page.goto(f'{d3}#y=1582&v=136.6,35.7,1150,0&lang=zh')
@@ -95,10 +98,10 @@ def main():
         page.add_style_tag(content='#top, #nav, #legend, #viewtoggle, #credit, #hint, #story, #card { display: none !important; }')
         page.evaluate("""() => { const d = document.createElement('div');
           d.style.cssText = 'position:fixed;right:48px;bottom:44px;padding:18px 26px;background:rgba(244,239,226,.94);border:2px solid #2a2520;box-shadow:0 3px 0 rgba(42,37,32,.25);font-family:var(--serif)';
-          d.innerHTML = '<div style="font:700 46px var(--serif);color:#2a2520">立体战国图</div><div style="font:600 21px var(--serif);color:#6b6155;margin-top:4px">3D Sengoku Map · 立体戦国図</div><div style="font:15px var(--serif);color:#6b6155;margin-top:8px">1467–1600 · 地形 · 近五百座城 · 合战重演</div>';
+          d.innerHTML = '<div style="font:700 46px var(--serif);color:#2a2520">立体古今图</div><div style="font:600 21px var(--serif);color:#6b6155;margin-top:4px">3D Japan Through Time · 立体古今図</div><div style="font:15px var(--serif);color:#6b6155;margin-top:8px">古代 · 镰仓 · 室町 · 战国 · 江户 · 明治 · 八百余座城 · 合战重演</div>';
           document.body.appendChild(d); }""")
         page.wait_for_timeout(600)
-        page.screenshot(path=os.path.join(ROOT, 'src', 'assets', 'og-3d.png'))
+        page.screenshot(path=os.path.join(ROOT, 'src', 'assets', 'og-3d.jpg'), type='jpeg', quality=85)
         ctx.close()
         gpu.close()
     httpd.shutdown()

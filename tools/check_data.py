@@ -518,6 +518,22 @@ def check_packs():
             err(src, '.pack.json 不是最新的：跑 python -X utf8 tools/pack_geo.py')
 
 
+def check_raw_unused():
+    """发布时删掉有 .pack.json 的源 GeoJSON（checks.yml 的 deploy 步骤），所以网页代码不能引用它们。"""
+    import glob
+    code = [os.path.join(ROOT, f) for f in ('index.html', '3d.html', 'sw.js')]
+    code += glob.glob(os.path.join(ROOT, 'src', 'js', '**', '*.js'), recursive=True)
+    code += glob.glob(os.path.join(ROOT, 'src', '3d', '*.js'))
+    names = '|'.join(re.escape(os.path.basename(s)[:-5]) for s in __import__('pack_geo').sources() if 'municipalities' not in s)
+    raw = re.compile(r'\b(?:' + names + r')\.json[\'"`]|municipalities/\$\{[^`]*?\}\.json`')
+    for path in code:
+        text = open(path, encoding='utf-8').read()
+        text = re.sub(r'/\*.*?\*/', '', text, flags=re.S)
+        text = re.sub(r'(^|[^:\'"`])//[^\n]*', r'\1', text)
+        for m in raw.finditer(text):
+            err(os.path.relpath(path, ROOT), f'引用了只给工具用的源 GeoJSON（发布时会删掉）：{m.group(0)}，改用 .pack.json + fetchGeo')
+
+
 def check_fonts():
     import build_fonts
     for key, chars in build_fonts.missing().items():
@@ -601,7 +617,7 @@ def check_palette():
 
 
 def main():
-    for check in (check_prefectures, check_i18n, check_ui_strings, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_packs, check_fonts, check_shell, check_repo):
+    for check in (check_prefectures, check_i18n, check_ui_strings, check_events, check_bundles, check_municipalities, check_provinces, check_hiroshige, check_province_names, check_koku, check_pilgrimage, check_korea, check_han, check_regimes, check_region_eras, check_kako, check_palette, check_packs, check_raw_unused, check_fonts, check_shell, check_repo):
         before = len(ERRORS)
         check()
         print(f'{"✓" if len(ERRORS) == before else "✗"} {check.__name__[6:]}')

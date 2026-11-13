@@ -84,6 +84,9 @@ jobs:
         run: |
           mkdir _site
           cp -r index.html 3d.html manifest.webmanifest sw.js src _site/
+          # 有 .pack.json 的源 GeoJSON（japan / provinces / province_eras / sengoku_units / municipalities/NN）只给 tools 用，
+          # 网页只下载 .pack.json（约 6.6 MB 不必发布；check_data.check_raw_unused 核对代码里没有引用源文件）
+          find _site/src -name '*.pack.json' | while read -r f; do rm -f "${f%.pack.json}.json"; done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

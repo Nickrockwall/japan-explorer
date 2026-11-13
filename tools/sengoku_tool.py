@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import korea_battles_tool as wiki  # noqa: E402  复用维基条目抓取与缓存
 import zhconv  # noqa: E402
 import rulers_tool as rulers  # noqa: E402
+import age_tool  # noqa: E402  生卒按日文条目信息框的规则
 import ou_units  # noqa: E402  奥羽按郡的分区与和人地
 from rulers_tool import JA_ZH  # noqa: E402
 
@@ -629,18 +630,30 @@ def check_heads(bad):
             if not p:
                 bad.append(f'HEADS {y} {k}：Wikidata 找不到 {title}')
                 continue
-            if p['born'] is None or p['died'] is None:  # Wikidata 缺生卒：取条目信息框「生誕 / 死没」
+            # 人物卡写的生卒以日文条目为准（3.41：Wikidata 有石田三成 1559、斋藤义龙 1527、大友义统卒 1610 等与条目不同的）：
+            # 信息框写了就用；写着不详或两说的写「?」（age_tool.ja_year 同一套规则）；条目没有这一栏才用 Wikidata
+            if 'wd' not in p:
                 w = rulers.wikitext(title)
+                # 检查用的约数：Wikidata，缺的取信息框里第一个西历年（「1560年頃」「1597年?」也算，只用来判断在世）
+                rough = []
                 for key, field in (('born', '生誕'), ('died', '死没')):
                     m = re.search(rf'\|\s*{field}\s*=[^\n]*?(\d{{3,4}})年', w)
-                    if p[key] is None and m:
-                        p[key] = int(m.group(1))
+                    rough.append(p[key] if p[key] is not None else (int(m.group(1)) if m else None))
+                p['wd'] = tuple(rough)
+                jb, jd = age_tool.ja_year(w, ('生誕', '生年')), age_tool.ja_year(w, ('死没', '没年'))
+                if jb[1] == 'none' and jd[1] == 'none':
+                    jb, jd = age_tool.lead_years(w)
+                for key, (v, st) in (('born', jb), ('died', jd)):
+                    if st != 'none':
+                        p[key] = v
+            # 在世年份的检查：条目写不详的用 Wikidata 的数字（只用来判断这一年是不是还活着）
+            lo, hi = p['born'] or p['wd'][0], p['died'] or p['wd'][1]
             if (y, k) in HEAD_EV:
                 art, quote = HEAD_EV[(y, k)]
                 if quote not in wiki.article('ja', art):
                     bad.append(f'HEADS {y} {k}：依据「{quote}」不在 {art} 条目里')
-            elif not (p['born'] and p['died'] and p['born'] < int(y) <= p['died']):
-                bad.append(f'HEADS {y} {k}：{title} 生卒 {p["born"]}–{p["died"]} 不覆盖 {y}')
+            elif not (lo and hi and lo < int(y) <= hi):
+                bad.append(f'HEADS {y} {k}：{title} 生卒 {lo}–{hi} 不覆盖 {y}')
             name = HEAD_SURNAME.get(k) or surname(k)
             if name not in wiki.article('ja', title):
                 bad.append(f'HEADS {y} {k}：{title} 条目没有「{name}」')

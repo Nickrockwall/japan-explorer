@@ -4,6 +4,16 @@
 
 Newest first.
 
+## 3.41 · 2026-11-13
+
+- New row in the hometown register, "Disasters nearby": large earthquakes whose epicenter was close enough (within about 30 km for M7, 95 km for M8, 300 km for M9) and major eruptions of volcanoes within 40 km — year, magnitude, direction and distance to the epicenter, and the death toll of the whole disaster ("about" where the article gives an estimate, noted where it includes the missing). The worst one comes first. 89 earthquakes and 8 eruptions, with magnitudes and tolls taken from the infobox of each Japanese Wikipedia article
+- Third fact check:
+  - Birth and death years in the birthday card's "same age" list and on Sengoku person cards now follow Japanese Wikipedia. Wikidata differed in a few places: Ishida Mitsunari was born in 1560 (not 1559), Saitō Yoshitatsu in 1529, Ōtomo Yoshimune died in 1605 (not 1610), Toyotomi Hideyoshi was born in 1537. Where the article says the birth year is unknown or gives two (Emperor Yōmei, Mimura Iechika, Iwaki Chikataka, Hōjō Ujimasa and others) the card shows "?" and no age is computed
+  - Every number in the 16 battles (years, troop strengths, dates) was found in the matching Japanese Wikipedia article
+  - Prefecture cards in English and Japanese: names of people, provinces and castles match the Chinese source one to one, and no simplified Chinese characters slipped into the Japanese
+- The 3D map's share image is now a JPEG (740 KB → 130 KB) and says "3D Japan Through Time" with all five periods instead of the old "3D Sengoku Map · 1467–1600"
+- The raw map files used only by the tools are no longer deployed (pages only load the packed .pack.json; about 6.6 MB less to upload)
+
 ## 3.40 · 2026-11-13
 
 - Four new rows in the family register: "1,000-year name" — today's name, the pre-Heisei-merger name or a Meiji village name is exactly a township of the same ancient district in the 10th-century Wamyōshō (Serita and Imoi in Nagano); "Distant lord" — over 5% of the 1868 rice yield here belonged to a domain seated 150+ km away (29% of Sano went to Hikone in Ōmi); "Other province" — most of this old province lies in another prefecture today (Amagasaki was Settsu, most of which is in Osaka), or most of this prefecture was another province (Obama was Wakasa, while 91% of Fukui lives in old Echizen); "Rice vs people" — national rank for 1868 rice yield against today's population

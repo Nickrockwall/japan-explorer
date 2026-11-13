@@ -1392,6 +1392,12 @@ class Case:
         rise = page.locator('#koseki .ks-row[data-k="rise"]').inner_text()
         assert re.search(r'\d+', rise), f'石高与人口一栏：{rise}'
 
+    def koseki_saigai(self, page):
+        # 3.41 此地天灾：神户中央区最重的一次是 1995 年兵库县南部地震（M7.3，死者 6,434 人），写在第一行；有震中方向与距离
+        page.wait_for_selector('#koseki[open] .ks-row[data-k="saigai"]', timeout=20000)
+        main = page.locator('#koseki .ks-row[data-k="saigai"] .ks-v b').inner_text()
+        assert '1995' in main and '7.3' in main and re.search(r'6[,，]?434', main), f'此地天灾一栏：{main}'
+
     def koseki_kuni(self, page):
         # 小浜市：福井县 91% 的人住在旧越前国，这里却是若狭国
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
@@ -1591,7 +1597,10 @@ class Case:
         # 和名抄的小县郡 8 郷（童女…）；一宫、国府有距离；卷轴不出屏；户主名记住；市区町村卡片可再打开；电脑存图片；乡音跳到向导
         page.wait_for_selector('#koseki[open] .ks-row', timeout=20000)
         rows = page.locator('.ks-row').all_inner_texts()
-        assert len(rows) == 14, f'应有 14 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人，3.40 的石高与人口）：{rows}'
+        assert len(rows) == 15, f'应有 15 栏（含古代郷名、明治町村、平成合并前，3.37 的合战中与同乡名人，3.40 的石高与人口，3.41 的此地天灾）：{rows}'
+        # 3.41：此地天灾——1847 年善光寺地震（M7.4）震中在上田以北约 30 公里，死者约 8000（条目写约数）
+        sg = page.locator('.ks-row[data-k="saigai"]').inner_text()
+        assert any(x in sg for x in ('善光寺', 'Zenk')) and '1847' in sg and '8' in sg, f'此地天灾一栏：{sg}'
         # 3.37：家乡在合战中站哪边（川中岛按 1560 年信浓归武田）、同乡名人、去立体图看此地千年
         assert any(('武田' in r or 'Takeda' in r) and ('川中' in r or 'Kawanakajima' in r) for r in rows), f'合战中一栏：{rows}'
         # 3.38：信浓国 1600 年算东军，上田城的真田昌幸是西军——按城主写
@@ -1947,7 +1956,7 @@ def plan(lang):
              ('koseki_branch', 'pref=2&muni=1&m=02204&koseki=1', ['koseki_branch']), ('koseki_seat', 'pref=8&muni=1&m=08216&koseki=1', ['koseki_seat']),
              ('koseki_dou', 'pref=23&muni=1&m=23207&koseki=1', ['koseki_dou']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town']),
-             ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']),
+             ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']),
              ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),

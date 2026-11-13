@@ -440,7 +440,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 天下与京都（3.34）：`regimes.json` 取 `from < 年份` 的最后一段（1467 → 足利将军，1560 → 各地战国大名，1573 / 1582 → 织田，1590 → 丰臣，1600 → 德川家康），`rulers.json` 取当年的天皇与将军（1573 年以后不列将军：`MUROMACHI_END`，槙岛城）。「京」标签（`.lb.capital`，能点，`cap-年` 不会被清掉）一直显示「天下 · 短名」，`showCapital` 卡片。平安京条坊是 overlay 的 `grid`（Path2D：朱雀大路 = 千本通 135.7424、罗城门 34.9817，东西 4.5 km 南北 5.2 km，9 × 10 条线，示意），贴图每单位 ≥6 像素才画，`d < 70` 时标「平安京（条坊示意）」。
 - 动态（3.34，设置「动态」`opts.motion`，存 `je.3d.motion`，系统减少动态时默认关）：约 30 帧一次 `uTime`——海面颜色噪声慢移、青海波按 `swell` 一排排明暗起伏、低处的雾随时间移动；旗的长旗与横木绕竿 `sin` 轻摆（`banners.update(..., time)`）；炊烟 `createSmoke`（decor.js）：距离 < 160 时离目标点最近的 18 座放了建筑、当年在用的城，每座 5 团精灵上升、散开、淡去。关掉动态时画面不再每帧重画。
 - 键盘（3.34）：方向键按镜头方位平移 0.18 × 距离，+ / - 缩放，1–6 年份，空格播放，N 朝北，T 俯视；输入框里不管。主站合战面板的 `#hud-3d`（半岛模式隐藏）→ `3d.html#bt=键&ph=阶段`。
-- 分享：3d.html 有自己的 description 与 og / twitter 标签，封面 `src/assets/og-3d.png` 与 README 的 `docs/screen-3d-{zh,en,ja}.jpg` 由 `tools/make_screens.py` 生成（立体图用本机 Chrome 加 `--enable-gpu`）。
+- 分享：3d.html 有自己的 description 与 og / twitter 标签，封面 `src/assets/og-3d.jpg` 与 README 的 `docs/screen-3d-{zh,en,ja}.jpg` 由 `tools/make_screens.py` 生成（立体图用本机 Chrome 加 `--enable-gpu`）。
 - 3.36：
   - 先快后精：`loadTerrain` 先解 `terrain/coarse-q.png`（粗图每 4×4 并一格，约 60 KB，`build_terrain.py --preview` 生成；标高 1/4 以上是陆地才算陆地、取陆地平均，土地覆盖取最多的一类），前三帧画出来后 `terrain.upgrade()` 才下载粗图，换上后 `gen` 加一，`chunks.update` 把 `gen` 不同的块只换网格（贴图不重画），树拔掉按新的土地覆盖重种；预览图里的格点是 f×f 块的中心（`(x + 0.5) / f - 0.5`）。湖与河（water.json）也不进首屏的等待，到了 `overlay.setWater` 重画。
   - 防卡顿 `slowGuard`：开着动态时量相邻两次重画的间隔（含等显卡），加载完 6 秒以后、页面在前台，连续两段（各 90 次）中位数都超过 70ms 就关动态、记住、`notice` 提示一次；内存 ≤4 GB 或核数 ≤4 默认不开动态；省电画质炊烟 8 座（高画质 18）。本机无法复现真机显卡瓶颈：把 CPU 降 12 倍画面仍是 30 帧（动态本身吃 CPU 很少），守卫用 rAF 里忙等 90ms 模拟过。
@@ -530,6 +530,13 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **han.json 的县**：han_tool `PREF` 加了七户 / 八户（2）、久保田（5）、佐土原（45）——以前按名单的国推错了；hanseat_tool 会打印坐标落在别县的藩，有新的就核对后写进 PREF。
 - **加载量**：`python -X utf8 tools/measure_load.py https://nickrockwall.github.io/japan-explorer/`（模拟 9 Mbps / 60 ms）。3.39 线上：首屏约 2.8 s、1.4 MB（字体 0.54 MB），立体图约 2 s、0.76 MB。本地 http.server 不压缩，量线上才准。
 
+## 3.41 加的东西（详见 CHANGELOG）
+
+- **此地天灾**（koseki.js `saigaiRow`，户籍 `data-k="saigai"`，在「石高与人口」之后）：`python -X utf8 tools/saigai_tool.py` → `tools/saigai.json`。地震 = 日文维基用了 `{{地震}}` 信息框的条目（Template:地震 的嵌入页），只读信息框：`scale` 的第一个数、`date` 的西历年（也认 `{{Start date|1995|…}}`）、`deaths` 里写明「死者」的数（只有一个光秃数字的也收；写着負傷 / 行方的栏不拿别的数顶替；约 / 以上 / 余 / 范围记约数 flag 1，「死者・行方不明者」flag 2，「数千」这类不给数）；震中 = 页面坐标（`colimit=max`，默认一次只给 10 条）→ 信息框定位图 lat_deg / {{Coord}} / ウィキ座標 → Wikidata P625；日本附近、center 不写别国、M ≥7 或死者 ≥100 才收；英文名先取英文维基，没有的按条目读音转罗马字并按 `SEG` 拆成 Miyagi-ken-oki。工具断言关东 1923 M7.9、宝永 1707 M8.4、浓尾死者 7273。喷发是手写的 `VOLC`（死者原文在 `VOLC_EV`，条目里要有）。Wikidata 的地震很多没有坐标（关东、安政），不用。build_bundle `saigai_for` 把本县可能列出的放进 town 包 `saigai`，前端按户籍的点再算（`QUAKE_R` = build_bundle `quake_r`：M7 30 km、M8 95 km、M9 300 km、M<7 25 km；喷发 40 km）。smoke `koseki`（上田 15 栏、善光寺地震）、`koseki_saigai`（神户中央区第一行是 1995 兵库县南部地震）。
+- **生卒年以日文维基为准**：age_tool `ja_year` / `lead_years`（信息框「生誕 / 生年 / 死没 / 没年」，脚注先去掉；写不详、带「?」「頃」或出现两个不同西历年算不详；没有信息框的天皇按首段括号）；生年不详的人不进「同龄的他们」。sengoku_tool `check_heads` 同一套规则写人物卡的 born / died（不详写 null，前端显示「?」），在世检查用 `p['wd']`（Wikidata，缺的取信息框里的约数）。
+- **发布不带源 GeoJSON**：checks.yml 的 deploy 步骤删掉有 `.pack.json` 的源文件；`check_data.check_raw_unused` 核对 index / 3d / sw 与 src/js、src/3d 的代码（去掉注释后）没有引用它们。
+- 立体图分享封面 `src/assets/og-3d.jpg`（`make_screens.py --og` 只重做它）。
+
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否与 build_sw 算出的一致、界面词典三语的键与占位符、字体切片有无漏字、仓库里有无 `__pycache__` / 测试页等杂物。
@@ -580,6 +587,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `korea_tour`（全新访客进半岛自动出现 7 步、气泡不出屏、记住）
   - `koseki` 另查上田县 → 长野县；3.38 合战中的关原按城主写真田昌幸西军
   - `koseki` 另查此地年表（1560–1573 武田合并、上田藩三家年份、5 段战国、按年份排）
+  - `koseki_saigai`（3.41：神户中央区的此地天灾第一行是 1995 兵库县南部地震 M7.3、6,434 人）
   - `koseki`（深链接打开上田市户籍：11 栏（含古代乡名小县郡 8 郷有童女、明治町村有 1889 与上田町、平成合并前有丸子町等与 2006，此地年表有 2006 一行）、今辖境 111 村上田藩 79%、精度印「市」、展开上田藩历代藩主有真田信之、氏神诹访大社、卷轴不出屏、户主名记住、存图、市区町村卡片入口、乡音跳向导；三语都跑）
   - `koseki_branch`（黑石市：幕末领主列出黑石藩，能展开历代藩主有津轻承叙——支藩从弘前藩条目那一节取）
   - `koseki_city`（名古屋市东区：旧高旧领写尾张藩（数据里的名古屋藩按重定向改名）、精度印「市」、能展开历代藩主）
