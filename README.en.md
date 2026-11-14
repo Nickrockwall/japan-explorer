@@ -78,7 +78,7 @@ Each of these is worked out from the app's own data, and you can open it to chec
 - **Phone**: open the link in your browser, in portrait or landscape. To add it to your home screen: in Safari on iPhone, Share → "Add to Home Screen"; in Chrome on Android, ⋮ → "Add to Home screen". Pages you've seen also work offline.
 - **Computer**: the map is on the left, details and the guide on the right. Rows of buttons (timeline jumps, filters, legends) scroll sideways with the mouse wheel or by dragging.
 - **Sharing**: the Share button on a card copies a link with the region and language (`#pref=26&lang=ja` opens Kyoto in Japanese). Registers, birthday cards, the Sengoku map, the timelines, and the 3D map's years and battles have links of their own.
-- **AI (optional)**: add your own key under "API Settings" to chat freely with the guide. Claude, Gemini and OpenAI-compatible services (including DeepSeek and Qwen) are supported. The key stays in your browser, and requests go straight from your browser to the service you chose.
+- **AI (optional)**: add your own key under "Settings" in the menu to chat freely with the guide. Claude, Gemini and OpenAI-compatible services (including DeepSeek and Qwen) are supported. The key stays in your browser, and requests go straight from your browser to the service you chose.
 - **Corrections**: every card ends with "Spot a mistake?", which opens a new GitHub issue already filled in with the card and the current link.
 - **Privacy**: no accounts and no analytics. Your progress, stamps and name stay in your own browser.
 

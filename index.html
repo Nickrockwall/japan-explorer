@@ -91,6 +91,8 @@
         <span class="book-ico" aria-hidden="true">印</span><span data-i18n="btn.book">御朱印帐</span> <span class="bk-n">(<b id="goshuin-count">0</b>/47)</span>
       </button>
       <div class="menu-extra">
+        <!-- 3.44 全部功能：按「想做什么」列出每个功能、一键打开（help.js） -->
+        <button class="btn btn-ghost btn-all" id="btn-all" type="button"><span class="all-ico" aria-hidden="true">🧭</span><span data-i18n="btn.all">全部功能</span></button>
         <button class="btn btn-ghost btn-sound" id="btn-sound" type="button" aria-pressed="false" data-i18n-aria="snd.mute" aria-label="静音">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
@@ -329,7 +331,7 @@
       <div class="modal-actions">
         <button class="btn btn-ghost" value="clear" type="submit" data-i18n="set.clear">清除 Key</button>
         <button class="btn btn-ghost" value="reset-visited" type="submit" data-i18n="set.reset">重置探索与御朱印</button>
-        <button class="btn btn-ghost" value="tour" type="submit" data-i18n="tour.again">新手教程</button>
+        <button class="btn btn-ghost" value="tour" type="submit" data-i18n="btn.all">全部功能</button>
         <span class="spacer"></span>
         <button class="btn btn-ghost" value="cancel" type="submit" data-i18n="set.cancel">取消</button>
         <button class="btn btn-primary" value="save" type="submit" data-i18n="set.save">保存</button>

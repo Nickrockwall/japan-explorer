@@ -4,6 +4,14 @@
 
 Newest first.
 
+## 3.44 · 2026-11-14
+
+- New “All features” list: 17 features in three groups — My hometown, All of Japan, Play & collect — each with one line on what it does and a button that opens it (the ancestral register can show Ueda as an example, the province rankings open straight to the Towns or Rivals page, and each theme map has its own button). A box at the top filters the list. It is the first item in the menu at the top right, and there is a button under “Start here” on the welcome page. The old Help page is folded into it
+- Why: counting the taps from the home screen to every feature showed almost all are within three; the hard part is knowing a feature exists or which button it hides behind (the register needs a town first, the Towns rankings live inside the rankings card, the ukiyo-e need a tap on a province, photo footprints sit in the goshuin book)
+- The first-visit tour goes from 4 to 5 steps: a new “Look up your hometown” step points at the search box, and the last step points at the menu where “All features” lives
+- One-time hints the first time you use something: first prefecture (how to reach your hometown’s register), first town (the register button), first old-province map (tap a province for Hiroshige), first rankings (the Towns and Rivals pages). Each shows once
+- “API Settings” in the menu is now just “Settings”
+
 ## 3.43 · 2026-11-13
 
 - The hometown register is grouped into Ancient / Wars / Edo / Modern / This place, with a heading for each and a row of jump buttons at the top (it has about 20 lines now, a long scroll on a phone)

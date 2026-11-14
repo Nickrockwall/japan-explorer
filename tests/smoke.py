@@ -79,7 +79,9 @@ class Case:
         if no_audio:
             ctx.add_init_script(NO_AUDIO)
         if not fresh:
-            ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); localStorage.setItem('je.ui.tourKorea', 'true'); } catch (e) {}")
+            # 3.44 第一次用到时的提示（je.ui.tips）也预先记成看过，免得 toast 盖住别的场景要读的提示；catalog 场景自己清掉再测
+            ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); localStorage.setItem('je.ui.tourKorea', 'true'); "
+                                "localStorage.setItem('je.ui.tips', JSON.stringify(['pref', 'muni', 'circuit', 'power'])); } catch (e) {}")
         if korea:  # 3.42 起半岛模式与共同历史对访客隐藏；这些场景打开本机开关照常测（代码还在、两种地图共用不少代码）
             ctx.add_init_script("try { localStorage.setItem('je.dev.korea', '1'); } catch (e) {}")
         page = ctx.new_page()
@@ -1880,18 +1882,17 @@ class Case:
 
     def tour(self, page):
         # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；
-        # 3.36 起只有 4 步，其余说明在「帮助」里：设置的「帮助」打开帮助（8 项），帮助里能从头再看导览，Esc 关闭
+        # 3.36 起 4 步，3.44 加「查你的家乡」共 5 步、最后一步指着顶栏菜单；设置里的「全部功能」打开目录（17 项），目录里能从头再看导览，Esc 关闭
         page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
         n = int(page.text_content('.tour-n').split('/')[1])
-        assert n == 4, f'教程应有 4 步，实际 {n}'
+        assert n == 5, f'教程应有 5 步，实际 {n}'
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         for i in range(n):
             page.wait_for_timeout(300)
             box = page.locator('.tour-tip').bounding_box()
             assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'第 {i + 1} 步气泡出屏：{box}'
-            if i < n - 1:
-                hole = page.locator('.tour-hole').bounding_box()
-                assert hole and hole['width'] > 10 and hole['height'] > 10, f'第 {i + 1} 步没有对准控件'
+            hole = page.locator('.tour-hole').bounding_box()
+            assert hole and hole['width'] > 10 and hole['height'] > 10, f'第 {i + 1} 步没有对准控件'
             page.click('[data-tour="next"]')
         page.wait_for_selector('.tour', state='detached')
         assert page.evaluate("localStorage.getItem('je.ui.tourDone')") == 'true', '走完教程应记住'
@@ -1902,7 +1903,7 @@ class Case:
         self.top(page, '#btn-settings')
         page.click('#settings button[value="tour"]')
         page.wait_for_selector('#help[open] .help-body')
-        assert page.locator('#help section').count() == 8, '帮助应有 8 项'
+        assert page.locator('#help section').count() == 17, '全部功能应有 17 项'
         box = page.locator('#help .help-inner').bounding_box()
         assert box['y'] >= 0 and box['y'] + box['height'] <= vh + 1, f'帮助出屏：{box}'
         page.click('#help [data-act="help-tour"]')
@@ -1910,6 +1911,63 @@ class Case:
         assert not page.is_visible('#help'), '开导览时帮助应关掉'
         page.keyboard.press('Escape')
         page.wait_for_selector('.tour', state='detached')
+
+    def catalog(self, page):
+        # 3.44 全部功能：顶栏菜单最上面一项打开目录（三组 17 项、不出屏、筛选），每个按钮直接打开对应功能；欢迎卡也有入口；
+        # 第一次用到古国图 / 国力时各提示一次（je.ui.tips），第二次不再提示
+        page.evaluate("localStorage.removeItem('je.ui.tips')")
+        vw, vh = page.viewport_size['width'], page.viewport_size['height']
+        # 欢迎卡上的入口（还没选县时；手机在详情页），写着项数
+        self.tab(page, 'detail')
+        assert '17' in page.text_content('.welcome [data-act="tour"]')
+        page.click('.welcome [data-act="tour"]')
+        page.wait_for_selector('#help[open] .cat-g')
+        page.keyboard.press('Escape')
+        self.tab(page, 'map')
+
+        def open_cat():
+            self.top(page, '#btn-all')
+            page.wait_for_selector('#help[open] .cat-g')
+        open_cat()
+        assert page.locator('#help .cat-g').count() == 3 and page.locator('#help section').count() == 17
+        box = page.locator('#help .help-inner').bounding_box()
+        assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'目录出屏：{box}'
+        sw = page.evaluate("document.querySelector('#help .help-body').scrollWidth - document.querySelector('#help .help-body').clientWidth")
+        assert sw <= 1, f'目录横向溢出 {sw}px'
+        q = {'zh': '浮世绘', 'en': 'ukiyo', 'ja': '浮世絵'}[self.lang]
+        page.fill('#help [data-cat-q]', q)
+        assert page.locator('#help section:not([hidden])').count() == 1 and page.is_visible('#help section[data-k="circuit"]'), f'搜「{q}」应只剩古国地图'
+        page.fill('#help [data-cat-q]', 'zzzz')
+        assert page.is_visible('#help .cat-none')
+        # 古国图：关目录、换滤镜、提示一次
+        page.fill('#help [data-cat-q]', '')
+        page.click('#help [data-cat="f-circuit"]')
+        assert not page.is_visible('#help')
+        page.wait_for_function("document.querySelector('#filters [data-filter=\"circuit\"]')?.classList.contains('on')", timeout=15000)
+        page.wait_for_selector('#toast.show', timeout=5000)
+        tip = page.text_content('#toast')
+        assert any(x in tip for x in ('广重', 'Hiroshige', '広重')), f'古国图的提示：{tip}'
+        assert 'circuit' in page.evaluate("localStorage.getItem('je.ui.tips')")
+        # 国力的「宿敌 PK」页
+        open_cat()
+        page.click('#help [data-cat="power-pk"]')
+        page.wait_for_selector('#power-card:not([hidden]) [data-kr-tab="pk"].on, #power-card:not([hidden]) [data-kr-tab="pk"][aria-selected="true"]', timeout=40000)
+        # 例子：上田市的古代户籍
+        page.wait_for_timeout(5200)  # 等提示消失
+        open_cat()
+        page.click('#help [data-cat="koseki-demo"]')
+        page.wait_for_selector('#koseki[open] .ks-row', timeout=30000)
+        assert any(x in page.text_content('#koseki') for x in ('上田', 'Ueda')), '例子应是上田市的户籍'
+        page.keyboard.press('Escape')
+        # 生日帖、合战、御朱印帐的足迹页
+        open_cat()
+        page.click('#help [data-cat="bday"]')
+        page.wait_for_selector('#bday[open]', timeout=15000)
+        page.keyboard.press('Escape')
+        open_cat()
+        page.click('#help [data-cat="foot"]')
+        page.wait_for_selector('#book[open] [data-mode="foot"].on, #book[open] [data-mode="foot"][aria-selected="true"]', timeout=15000)
+        page.keyboard.press('Escape')
 
     def korea_tour(self, page):
         # 半岛的新手教程：第一次进半岛自动出现，7 步，气泡不出屏、聚光灯对准；走完单独记住
@@ -1996,7 +2054,8 @@ def plan(lang):
              ('koseki_dou', 'pref=23&muni=1&m=23207&koseki=1', ['koseki_dou']),
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town']),
              ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']), ('koseki_343', 'pref=27&muni=1&m=27141&koseki=1', ['koseki_343', 'no_overflow']),
-             ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340'])]
+             ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340']),
+             ('catalog', '', ['catalog', 'no_overflow'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),

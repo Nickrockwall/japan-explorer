@@ -4,6 +4,7 @@ import { t, label, lang, prefName, joinList } from './i18n.js';
 import { mapKey, KOREA_ON } from './country.js';
 import { sharedButtons } from './shared.js';
 import { fixLink } from './report.js';
+import { CATALOG_N } from './help.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -23,7 +24,7 @@ export function renderWelcome(el) {
         <button type="button" class="btn btn-ghost" data-act="st-sg">${t('st.sg')}</button>
         <button type="button" class="btn btn-ghost" data-act="st-loc">${t('st.loc')}</button>
       </div>
-      <p><button type="button" class="btn tour-again" data-act="tour">📖 ${t('tour.again')}</button></p>
+      <p class="all-p"><button type="button" class="btn btn-ghost tour-again" data-act="tour">${t('tour.again', { n: CATALOG_N })}</button></p>
       <div class="circuits">${CIRCUITS.map((c) => `<span class="circuit-tag">${esc(label('circuit', c))}</span>`).join('')}<span class="circuit-tag">${t('w.outside')}</span></div>
       ${KOREA_ON ? `<div class="section-h">${t('sh.h')}</div>${sharedButtons()}` : ''}
       <div class="section-h">${t('pw.h')}</div>

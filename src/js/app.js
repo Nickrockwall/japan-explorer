@@ -126,6 +126,13 @@ async function main() {
 
   const tabs = setupTabs(() => { map.resize(); muni.resize(); }, () => detailStale && renderCurrent());
   const narrow = () => matchMedia(NARROW).matches;
+  // 3.44 第一次用到某个功能时提示一次它旁边藏着的东西（je.ui.tips 记着提示过哪些，只存本机）
+  const tipOnce = (k) => {
+    const seen = uiPref.get('tips', []);
+    if (seen.includes(k)) return;
+    uiPref.set('tips', [...seen, k]);
+    setTimeout(() => toast(t(`tip.${k}`), 5000), 700);
+  };
   // 窄屏上详卡不在眼前时先不重建（整张详卡要几十毫秒，会拖慢点县），切到详情页或变宽时再补
   let detailStale = false;
   matchMedia(NARROW).addEventListener('change', () => detailStale && renderCurrent());
@@ -172,7 +179,7 @@ async function main() {
     const html = kakoHTML({ key: kako.key, list, page: kako.page, prefName: prefLabel, provName: kakoProv, lordOf });
     const old = box.querySelector('.kako');
     if (old) old.outerHTML = html;
-    else box.querySelector('.tour-again')?.closest('p').insertAdjacentHTML('beforebegin', html);
+    else box.querySelector('.tour-again')?.closest('p').insertAdjacentHTML('afterend', html);
   }
   // 同一人在彼时今日里可能有诞生与忌日两条（地点不同）：按条目类型找（data-kt，事件为空）
   function showKako(q, kt) {
@@ -883,6 +890,7 @@ async function main() {
       history.replaceState(null, '', pageHash(id));
       $('tab-pref').textContent = prefName(prefs.get(id));
       tabs.ping('detail');
+      if (!muni.open && !pendingFocus && !/muni=1/.test(location.hash)) tipOnce('pref');
       if (muni.open || pendingFocus) {
         const focus = pendingFocus;
         pendingFocus = null;
@@ -904,6 +912,7 @@ async function main() {
       if (!muni.open) return;
       history.replaceState(null, '', muniHash(app.currentId, codes));
       guide.setPlace(place); // 向导随之认得这个市区町村
+      if (codes.length === 1 && !/koseki=1/.test(location.hash)) tipOnce('muni');
       // 再把此地年表交给向导（数据到了才给；这期间又换了地方就不给）
       if (place && codes.length === 1) {
         const pid = app.currentId;
@@ -1131,6 +1140,7 @@ async function main() {
       .catch((err) => console.warn('战国势力数据加载失败，改按县着色', err));
   }
   function applyFilter(m) {
+    if (m === 'circuit' || m === 'power') tipOnce(m);
     const ei = eraOfFilter(m);
     if (ei >= 0) { stopPlay(); setEra(ei); return; } // 战国势力 / 五畿七道 / 现代区划 = 把滑块拖到对应时代
     if (m === 'circuit' || m === 'power') ensureProvinces();
@@ -1474,18 +1484,53 @@ async function main() {
   guide.showIntro();
   loading.classList.add('hidden');
 
-  // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始。3.36 起只有 4 步（以前 10 步嫌长）：欢迎与点县、时空穿越、平面 / 立体、结束；
-  // 详情、案内人、图层与滤镜、我在哪、合战等的说明放进「帮助」（help.js，设置与欢迎页打开，里面能再看一遍导览）
+  // 新手教程：第一次打开（且不是点分享链接进来的）时自动开始。3.36 起只有 4 步（以前 10 步嫌长），3.44 加「查你的家乡」（搜索框），
+  // 最后一步指着顶栏菜单：其余功能都在菜单最上面的「全部功能」（help.js，一键打开，里面能再看一遍导览）
   const onMap = () => { menu.close(); if (narrow()) tabs.set('map'); };
   const tour = createTour([
     { key: 'hi', target: () => $('map'), before: onMap },
     { key: 'time', target: () => $('timebar'), before: onMap },
     { key: 'view3d', target: () => $('btn-3d'), before: onMap },
-    { key: 'end', before: () => menu.close() },
+    { key: 'home', target: () => $('search'), before: onMap },
+    { key: 'end', target: () => $('btn-more'), before: () => menu.close() },
   ], { onEnd: () => { menu.close(); uiPref.set('tourDone', true); } });
   startTour = () => { if (app.battle) exitBattle(); closeMuni(); tour.start(); };
-  const help = createHelp($('help'), () => startTour());
+  // 等某个元素出现再点（国力卡片的页签要等旧国边界下载完才画出来）
+  const clickWhen = (sel, ms = 10000) => {
+    const t0 = Date.now();
+    const tick = () => { const el = document.querySelector(sel); if (el) el.click(); else if (Date.now() - t0 < ms) setTimeout(tick, 150); };
+    tick();
+  };
+  const toSearch = () => { onMap(); $('search-input').focus(); toast(t('st.home.tip')); };
+  // 「全部功能」里每个按钮的动作：都只是替用户按下已有的控件
+  const CAT_RUN = {
+    search: toSearch,
+    'koseki-demo': () => { if (app.battle) exitBattle(); map.onSelect(20); openMuni(20, { codes: ['20203'] }); openKoseki(20, '20203'); }, // 上田市（与深链接同样先选县）
+    locate: () => { onMap(); $('btn-locate').click(); },
+    bday: () => openBday(kako.key),
+    foot: () => { bookUI.open(); clickWhen('#book [data-mode="foot"]'); },
+    time: () => { onMap(); if (!playTimer) playBtn.click(); },
+    '3d': open3d,
+    rulers: () => openRulers('power'),
+    kako: () => {
+      renderWelcome(detailEl); renderKako();
+      if (narrow()) tabs.set('detail');
+      requestAnimationFrame(() => detailEl.querySelector('.kako')?.scrollIntoView({ block: 'start' }));
+    },
+    'power-muni': () => { onMap(); applyFilter('power'); clickWhen('#power-card:not([hidden]) [data-kr-tab="muni"]'); },
+    'power-pk': () => { onMap(); applyFilter('power'); clickWhen('#power-card:not([hidden]) [data-kr-tab="pk"]'); },
+    battle: () => { if (app.battle) exitBattle(); battleDlg.showModal(); },
+    book: () => bookUI.open(),
+    guide: () => { if (narrow()) tabs.set('guide'); else $('chat-input').focus(); },
+  };
+  const runCat = (a) => {
+    if (a.startsWith('f-')) { if (app.battle) exitBattle(); onMap(); applyFilter(a.slice(2)); return; }
+    if (a.startsWith('l-')) { if (app.battle) exitBattle(); onMap(); applyLayer(a.slice(2)); return; }
+    CAT_RUN[a]?.();
+  };
+  const help = createHelp($('help'), { onTour: () => startTour(), run: runCat });
   openHelp = () => { menu.close(); help.open(); };
+  $('btn-all').addEventListener('click', () => openHelp());
   detailEl.addEventListener('click', (e) => {
     const more = e.target.closest('[data-act="hn-more"]');
     if (more) { more.closest('.hn-list').classList.add('all'); more.remove(); return; }

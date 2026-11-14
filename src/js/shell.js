@@ -56,7 +56,7 @@ export function legacyCopy(text) {
 
 // 底部轻提示
 let toastTimer = null;
-export function toast(msg) {
+export function toast(msg, ms = 2400) {
   let el = $('toast');
   if (!el) {
     el = document.createElement('div');
@@ -68,7 +68,7 @@ export function toast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  toastTimer = setTimeout(() => el.classList.remove('show'), ms);
 }
 
 export function setupSettings(guide, onResetVisited, onTour) {

@@ -1957,3 +1957,25 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
 /* 欢迎卡「从这里开始」：三个入口，一行一个 */
 .welcome .starts { display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin: 0 0 12px; }
 .welcome .starts .btn { justify-content: flex-start; text-align: left; min-height: 36px; }
+
+/* 3.44 全部功能：顶栏菜单最上面一项（手机菜单里排第一），欢迎卡「从这里开始」下面一行；目录对话框沿用 .help 的卷册样式 */
+.btn-all .all-ico { font-size: 14px; line-height: 1; color: var(--kin); }
+.menu-extra .btn-all, body.menu-open .topbar-right .btn-all { border-color: rgba(122,87,25,.6); font-weight: 700; }
+@media (max-width: 560px) { .btn-all { order: -1; } }
+.welcome .all-p { margin: -4px 0 14px; }
+.welcome .all-p .btn { width: 100%; justify-content: center; min-height: 36px; border-color: rgba(122,87,25,.6); color: var(--kin); font-weight: 700; }
+.help .cat-q {
+  margin: 0 22px 4px; padding: 8px 12px; min-height: 38px; font: 14px var(--sans); color: #2b2420;
+  background: #fbf7ec; border: 1px solid #c9b08a; border-radius: var(--r-sm);
+}
+.help .cat-q:focus { outline: 2px solid var(--kin); outline-offset: 0; }
+.help-body .cat-gh { margin: 14px 0 2px; font: 700 12.5px var(--serif); letter-spacing: .12em; color: #7a5719; }
+.help-body .cat-g:first-child .cat-gh { margin-top: 6px; }
+.help-body .cat-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
+.help-body .cat-h h3 { margin: 0; }
+.help-body .cat-go { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.help-body .cat-h .btn { flex: none; min-height: 32px; padding: 4px 14px; font-size: 13px; }
+.help-body .cat-go .btn { min-height: 34px; padding: 5px 12px; font-size: 13px; color: #2b2420; }
+.help-body .cat-go .cat-main { background: #3a1f1c; border-color: #3a1f1c; color: #f3ead9; }
+.help-body .cat-go .cat-main:hover:not(:disabled) { background: #2a1513; color: #fff; border-color: #2a1513; }
+.help-body .cat-none { padding: 16px 0; color: #6b5a44; }

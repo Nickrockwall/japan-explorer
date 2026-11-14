@@ -22,6 +22,7 @@
   - 按地图分开的键：`visited` / `goshuin` / `ichinomiya` 与 `ui.filter` / `ui.layer` 前面接 `MAP.store`（日本即 `je.`，键名不变）；其余 `je.ui.*` 全站共用。`je.ui.map` — 上次看的地图
   - `je.ui.kosekiName` — 古代户籍的户主名（只存本机）
   - `je.ui.tourDone` — 看过（或跳过）新手教程；smoke 除 `tour` 场景外都预先写入，免得教程遮住页面
+  - `je.ui.tips` — 第一次用到时的提示已出过哪些（3.44，`tipOnce`）；smoke 除 `catalog` 场景外都预先写入
   - `je.ui.audio` — 声音 `{muted, bgm, bgmVol, sfxVol}`（默认音效开、背景音乐关）
 
 ## 目录结构
@@ -75,7 +76,7 @@ src/js/han.js                  详卡「江户诸藩」、藩主 ⇄ 彼时今�
 src/js/bday.js                 生日帖：某一天的全部条目、几个数字、存图
 src/data/emblems.json          47 都道府县章（tools/fetch_emblems.py：Wikidata P94 → Commons 只收公有领域 → src/assets/emblems/NN.png 透明底），详卡头像
 src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
-src/js/help.js                 帮助（dialog#help，3.36）：各功能的说明（与教程共用 tour.<key> 文案），能从头再看教程
+src/js/help.js                 全部功能（dialog#help，3.44 取代 3.36 的帮助）：CATALOG 三组 17 项、一键打开、筛选，能从头再看教程
 tools/famous_tool.py           同乡名人（3.37）：Wikidata 出生地 → 今天的市区町村（P429，经 P1366 / P131 最多三层），已故、1930 年以前出生、按语言条目数，本人日文条目里要写着这个地名（今名、平成合并前或明治町村名，带市町村区）才收 → tools/famous.json → town bundle 的 `famous` 与 `famousCity`（政令市的区 → 市的代码，按区的 city 认）
 src/js/toc.js                  详卡目录：一行吸顶的跳转按钮（日本与半岛详卡共用）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）；3.37 加「合战中」（`SIDES`：桶狭间、川中岛、长篠、关原，按战国势力图那一年这块地的主人是不是交战一方）、「同乡名人」（town.famous）与去立体图「此地千年」的链接 `.ks-3d`
@@ -267,7 +268,9 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 能横滑的按钮行（`.filters`、图例、快捷提问、`.toc` 等，见 shell.js `HINT`）有内容未露出的一侧加 `.more-r` / `.more-l` 渐隐，选中项变了会滚进视野。这些行藏了滚动条，电脑上鼠标滚轮只会竖着滚——3.38 起 `setupScrollHints` 把行上的竖向滚轮转成横滑（滚到头放行给外面）、鼠标按住拖动也能横滑（拖过就吃掉那一下 click）；用户报过年表跳转行只露到 1392。新加横滑行把选择器加进 `HINT`。
 - 详卡目录（toc.js `addToc`，日本与半岛详卡渲染后调用）：扫 `.section-h` / `.art-section-h` / 地域修罗场与圣地巡礼的 summary，在统计格下放一行吸顶按钮，点了展开折叠并滚过去，滚动时标出当前一节。江户诸藩超过 8 个时先列 6 个（`.hn-x` + 「显示其余」`data-act="hn-more"`）。年表 `.rl-jump` 按时代分组跳转。
 - **横屏手机**（高 ≤520px 的横屏，`SHORT`）：地图页工具条一行（图层左半、滤镜右半，子行换到第二行左侧），底部一行（图例左半、去掉说明；时空滑块右半、只留播放键 + 滑轨 + 时代名）；各种卡片（`.muni-card`，含国力榜、古国 / 巡礼 / 我在哪卡）改放右侧；`layoutCenter` 把地图中心放在上下两行之间，取景用 `LANDSCAPE_VIEW`；合战时 `setInset({ left })` 让地图避开左上的合战面板。转屏（竖屏手机 / 横屏手机 / 宽屏三种形态之间）时 `resize` 回到该形态的默认取景。smoke 有 `landscape`（844×390）视口，只跑 `LANDSCAPE_CASES`。
-- 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过。首次访问且地址栏不带 `pref=` 时自动开始；走完或跳过都记 `tourDone`。3.36 起只有 4 步（`hi` 指着地图并说怎么点县、`time`、`view3d`、`end`），以前 10 步嫌长；其余说明（详情、向导、图层与滤镜、我在哪、合战等 8 项，文案仍是 `tour.<key>`）放进「帮助」`dialog#help`（help.js），设置弹窗的按钮（`value="tour"`，文字「帮助」）与欢迎卡打开它，帮助底部「从头再看一遍导览」。半岛模式没有帮助页：它的欢迎卡与设置按钮仍叫「新手教程」（`tour.replay`），开半岛教程。
+- 新手教程（tour.js）：`createTour(steps)`，步骤 `{ key, target, before }`，文案 `tour.<key>.h/.b`；目标不可见的步骤自动跳过。首次访问且地址栏不带 `pref=` 时自动开始；走完或跳过都记 `tourDone`。3.36 起 4 步（以前 10 步嫌长），3.44 起 5 步：`hi`（地图）、`time`、`view3d`、`home`（搜索框，查家乡的户籍）、`end`（指着顶栏菜单 `#btn-more`）。半岛模式没有全部功能页：它的欢迎卡与设置按钮叫「新手教程」（`tour.replay`），开半岛教程。
+- **全部功能**（help.js，`dialog#help`，3.44 取代 3.36 的「帮助」）：`CATALOG` 三组（home / map / play）17 项，文案 `cat.<k>.h/.b`、组名 `cat.g.<g>`；每项的按钮 `[动作, 文字键]`，动作由 app.js 的 `runCat` 执行（`f-<滤镜>` / `l-<图层>` / `CAT_RUN` 里的其余动作，都只是替用户按下已有的控件；国力卡片的页签用 `clickWhen` 等它画出来再点）。只有一个按钮的项按钮放在标题右边。顶上 `[data-cat-q]` 按文字筛选。入口：顶栏菜单第一项 `#btn-all`（手机菜单里 `order: -1` 排最前）、欢迎卡「从这里开始」下面的 `.tour-again`（`data-act="tour"`，写着项数）、设置里的 `value="tour"` 按钮；目录底部能从头再看导览。**新加功能时把它登记进 `CATALOG`**（三语文案），smoke `catalog` 与 `tour` 核对项数。起因（3.44 盘点）：几乎所有功能从首页都在 1–3 下以内，用户找不到是因为不知道有、不知道在哪个按钮后面。
+- 第一次用到时的提示（3.44，app.js `tipOnce(k)`，`je.ui.tips` 记着提示过的键，只存本机）：`pref` 第一次选县（不带 muni 的）、`muni` 第一次选市町村、`circuit` / `power` 第一次开这两个滤镜；toast 5 秒（`toast(msg, ms)`）。smoke 默认预先写入全部键，`catalog` 场景清掉再测。
 - 欢迎卡「从这里开始」（3.25）：三个按钮只是替用户按下已有的控件——`st-home` 切到地图页、聚焦搜索框并提示「选中后点古代户籍」，`st-sg` 打开战国势力滤镜，`st-loc` 点「我在哪」。不要往这里加新功能入口，入口多了就失去意义。
 - 键盘与读屏（3.25）：页面第一个可聚焦元素是「跳到搜索」链接（`.skip-link`，平时在屏幕外），`#map` 有 `aria-label` 说明用搜索框；「/」聚焦搜索框（正在输入或有对话框时不抢）；空搜索框按 ↓ 按编号列出 47 都道府县（`allPrefs`），Enter 打开。地图本身是 canvas，键盘用户一律走搜索框。
 - 彼时今日数据（kako.json，约 160 KB）在浏览器空闲时才下载（`requestIdleCallback`，最多等 1.5 秒），让首屏先拿地图与数据包；`#kako=` / `#bday=` 链接立即下载。
@@ -642,7 +645,8 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `sgedges` 有内容、家纹旗含武田织田、标题家纹与许可；点柱子换 1560、点接壤的家换人、图例点织田 1582 居首、换 1600 后收起且无旗；三语三种尺寸）
   - `shared`（共同历史对话框：9 件按年代、标签一行且选中的不被截断或压扁、每件 4–6 条事实 / ≥2 方叙述 / ≥2 条来源、不出屏，日本与半岛两种模式内容一致）
   - `sound`（音效触发、静音保存、开背景音乐）
-  - `tour`（全新访客自动出现、4 步气泡不出屏且聚光灯对准、走完记住、刷新不再出现、设置的「帮助」有 8 项且不出屏、帮助里重开导览、Esc 关闭）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
+  - `tour`（全新访客自动出现、5 步气泡不出屏且每步聚光灯对准、走完记住、刷新不再出现、设置的「全部功能」有 17 项且不出屏、目录里重开导览、Esc 关闭）
+  - `catalog`（3.44 全部功能：菜单第一项打开、三组 17 项不出屏不横溢、筛选与没找到、古国图按钮换图并提示一次广重、宿敌 PK 页、上田市户籍例子、生日帖、御朱印帐足迹页、欢迎卡入口写着 17；三语、四种尺寸）；横屏 `landscape` 视口跑 deeplink / power / sengoku / battle / koseki / tour
 - 时代报幕横幅固定宽度、副标题预留两行、动画不改字间距；窄屏图例单行横滑；搜索下拉在窄屏用 fixed 铺满屏宽，高度按 `visualViewport`（软键盘以上）计算。
 
 ## 约定
