@@ -1,4 +1,5 @@
 // 右上：地区风土与历史详卡
+import { sayBtn } from './speak.js';
 import { crestSVG } from './crests.js';
 import { t, label, lang, prefName, joinList } from './i18n.js';
 import { mapKey, KOREA_ON } from './country.js';
@@ -214,7 +215,7 @@ export function renderDetail(el, p, { stampedAt, focus, extra = '', emblem } = {
         <div class="ancient-title">${ancient}<span class="arrow">→</span>${esc(prefName(p))}</div>
         <div class="modern-title">
           <span class="kanji">${esc(p.name.kanji)}</span>
-          <span class="kana">${esc(p.name.kana)}</span>
+          <span class="kana">${esc(p.name.kana)}</span>${sayBtn(p.name.kana, { label: p.name.kanji })}
           <span class="romaji">${esc(p.name.romaji)}</span>
         </div>
         <div class="badge-title">「${esc(p.badge.title)}」</div>
@@ -251,7 +252,7 @@ export function renderDetail(el, p, { stampedAt, focus, extra = '', emblem } = {
     <div class="provinces">
       ${provs.map((x) => `
         <div class="prov ${x.circuit === '令制外' ? 'outside' : ''}">
-          <span class="n">${esc(x.name)}</span><span class="kana">${esc(x.kana)}</span>
+          <span class="n">${esc(x.name)}</span><span class="kana">${esc(x.kana)}</span>${x.kana && x.circuit !== '令制外' ? sayBtn(`${x.kana}のくに`, { label: x.name }) : ''}
           <span class="meta"><span class="circ">${esc(label('circuit', x.circuit))}</span> · ${esc(x.portion)}</span>
           ${x.cross_prefectures?.length ? `<span class="cross" title="${t('cross.title')}">${esc(t('cross', { list: joinList(x.cross_prefectures) }))}</span>` : ''}
         </div>`).join('')}

@@ -1,5 +1,6 @@
 // 市区町村下钻地图：在地图区上层叠一张独立的 ECharts 地图，全国地图留在下面不动。
 // 数据由 tools/build_municipalities.py 生成，每县一个文件，进入时才加载。
+import { sayBtn } from './speak.js';
 import { MAP } from './country.js';
 import { fetchGeo } from './store.js';
 import { t, lang, serifFont } from './i18n.js';
@@ -126,7 +127,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
     if (p.district) rows.push([t('muni.district'), esc(p.district)]);
     rows.push([t('muni.pop'), p.pop ? t('muni.popYear', { n: fmtPop(p.pop), y: p.pop_year }) : '—']);
     const body = rows.map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${v}</b></div>`).join('');
-    const head = `<div class="muni-name">${esc(dn(p))}</div>${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}`;
+    const head = `<div class="muni-name">${esc(dn(p))}${full ? sayBtn(p.kana, { label: p.label || p.name }) : ''}</div>${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}`;
     if (!full) return head + body;
     const note = p.old_districts?.length ? `<div class="muni-note">${esc(t('muni.oldNote'))}</div>` : '';
     const koseki = `<button type="button" class="btn ks-open" data-act="koseki" data-code="${esc(p.code)}">${esc(t('ks.open'))}</button>`;
@@ -151,7 +152,7 @@ export function createMuniView(root, { onClose, onSelect = () => {}, onKoseki = 
     ].map(([k, v]) => `<div class="muni-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('');
     const ods = cur.geo.cities?.[city.name] || [];
     const old = ods.length ? `<div class="muni-row"><span>${esc(t('muni.old'))}</span><b>${oldList(ods, 8)}</b></div><div class="muni-note">${esc(t('muni.oldNote'))}</div>` : '';
-    return `${closeBtn()}<div class="muni-name">${esc(lang === 'en' && city.en ? city.en : city.name)}</div>
+    return `${closeBtn()}<div class="muni-name">${esc(lang === 'en' && city.en ? city.en : city.name)}${sayBtn(city.kana, { label: city.name })}</div>
       ${sub ? `<div class="muni-sub">${esc(sub)}</div>` : ''}${rows}${old}${wiki(city.name, city.en)}`;
   }
 

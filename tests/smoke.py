@@ -41,6 +41,14 @@ BLOCKED_ABROAD = ('cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'font
 # 模拟声音整个不可用（不支持 Web Audio、媒体播放被拒）：页面必须照常运行
 NO_AUDIO = '''delete window.AudioContext; delete window.webkitAudioContext;
 HTMLMediaElement.prototype.play = function () { return Promise.reject(new Error('blocked')); };'''
+# 3.46 语音：换掉浏览器的朗读与语音识别，记下读了什么（window.__said），语音识别直接「听到」window.__heard（默认「京都」）
+SAY_STUB = '''window.__said = [];
+window.SpeechSynthesisUtterance = class { constructor(text) { this.text = text; this.lang = ''; } };
+const voices = [{ lang: 'ja-JP', name: 'ja', localService: true }, { lang: 'zh-CN', name: 'zh', localService: true }, { lang: 'en-US', name: 'en', localService: true }];
+Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: {
+  getVoices: () => voices, cancel() {},
+  speak(u) { window.__said.push({ text: u.text, lang: u.lang }); setTimeout(() => u.onend && u.onend(), 30); } } });
+window.SpeechRecognition = class { start() { setTimeout(() => { this.onresult && this.onresult({ results: [[{ transcript: window.__heard || '京都' }]] }); this.onend && this.onend(); }, 30); } abort() { this.onend && this.onend(); } };'''
 AUDIO_DEBUG = "async () => (await import('./src/js/audio.js')).audio.debug()"
 # 只跑部分场景：SMOKE_ONLY='phone.*search'（匹配「尺寸 语言 场景」）
 ONLY = re.compile(os.environ['SMOKE_ONLY']) if os.environ.get('SMOKE_ONLY') else None
@@ -72,12 +80,14 @@ class Case:
         self.browser, self.base, self.vp, self.lang = browser, base, vp, lang
         self.narrow = vp != 'desktop'
 
-    def open(self, hash_, china=False, no_audio=False, geo=None, fresh=False, korea=False):
+    def open(self, hash_, china=False, no_audio=False, geo=None, fresh=False, korea=False, say=False):
         extra = {'geolocation': geo, 'permissions': ['geolocation']} if geo else {}
         ctx = self.browser.new_context(**VIEWPORTS[self.vp], locale={'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang],
                                        service_workers='block', **extra)
         if no_audio:
             ctx.add_init_script(NO_AUDIO)
+        if say:
+            ctx.add_init_script(SAY_STUB)
         if not fresh:
             # 3.44 第一次用到时的提示（je.ui.tips）也预先记成看过，免得 toast 盖住别的场景要读的提示；catalog 场景自己清掉再测
             ctx.add_init_script("try { localStorage.setItem('je.ui.tourDone', 'true'); localStorage.setItem('je.ui.tourKorea', 'true'); "
@@ -1882,7 +1892,7 @@ class Case:
 
     def tour(self, page):
         # 新手教程：全新访客自动出现；每一步的气泡都在屏幕内、聚光灯对准可见的控件；走完记住，不再自动出现；
-        # 3.36 起 4 步，3.44 加「查你的家乡」共 5 步、最后一步指着顶栏菜单；设置里的「全部功能」打开目录（17 项），目录里能从头再看导览，Esc 关闭
+        # 3.36 起 4 步，3.44 加「查你的家乡」共 5 步、最后一步指着顶栏菜单；设置里的「全部功能」打开目录（3.46 起 18 项），目录里能从头再看导览，Esc 关闭
         page.wait_for_selector('.tour .tour-tip h3', timeout=10000)
         n = int(page.text_content('.tour-n').split('/')[1])
         assert n == 5, f'教程应有 5 步，实际 {n}'
@@ -1903,7 +1913,7 @@ class Case:
         self.top(page, '#btn-settings')
         page.click('#settings button[value="tour"]')
         page.wait_for_selector('#help[open] .help-body')
-        assert page.locator('#help section').count() == 17, '全部功能应有 17 项'
+        assert page.locator('#help section').count() == 18, '全部功能应有 18 项'
         box = page.locator('#help .help-inner').bounding_box()
         assert box['y'] >= 0 and box['y'] + box['height'] <= vh + 1, f'帮助出屏：{box}'
         page.click('#help [data-act="help-tour"]')
@@ -1912,14 +1922,101 @@ class Case:
         page.keyboard.press('Escape')
         page.wait_for_selector('.tour', state='detached')
 
+    def said(self, page, n=1):
+        page.wait_for_function(f'window.__said.length >= {n}', timeout=8000)
+        return page.evaluate('window.__said.splice(0)')
+
+    def voice(self, page):
+        # 3.46 语音（欢迎卡）：彼时今日「听一遍」按界面语言读这一页的条目；搜索框麦克风听到「京都」就搜；
+        # 全部功能的「语音」打开京都府详卡并用日语读「きょうとふ」；古国一栏读「やましろのくに」；读完复原
+        tag = {'zh': 'zh-CN', 'en': 'en-US', 'ja': 'ja-JP'}[self.lang]
+        self.tab(page, 'detail')
+        page.wait_for_selector('.kako .say-all', timeout=15000)
+        n = page.locator('.kako .kk-list li').count()
+        page.click('.kako .say-all')
+        got = self.said(page, n)
+        assert len(got) == n and all(x['lang'] == tag for x in got), got
+        assert all(x['text'][:3].isdigit() for x in got), f'每条从年份读起：{got[0]}'
+        self.tab(page, 'map')
+        page.focus('#search-input')
+        assert page.is_visible('#search-mic'), '支持语音识别时搜索框旁应有麦克风'
+        page.click('#search-mic')
+        page.wait_for_function("document.getElementById('search-input').value === '京都'", timeout=5000)
+        page.wait_for_selector('.search-pop:not([hidden])', timeout=8000)
+        page.keyboard.press('Escape')
+        self.top(page, '#btn-all')
+        page.wait_for_selector('#help[open] section[data-k="voice"]')
+        page.click('#help [data-cat="voice"]')
+        got = self.said(page)
+        assert got[0] == {'text': 'きょうとふ', 'lang': 'ja-JP'}, got
+        page.click('#detail .prov .say >> nth=0')
+        got = self.said(page)
+        assert got[0]['text'] == 'やましろのくに', got
+        page.wait_for_timeout(200)
+        assert page.locator('#detail .say.saying').count() == 0, '读完应复原'
+
+    def voice_people(self, page):
+        # 人物卡：将军按罗马字转假名读（足利義満 → あしかが よしみつ），天皇按假名加「てんのう」
+        page.wait_for_selector('#rulers[open] .rl-list li', timeout=15000)
+        page.click('#rulers li[data-person="足利義満"]')
+        page.wait_for_selector('#sg-card:not([hidden]) .say', timeout=5000)
+        page.click('#sg-card .say')
+        assert self.said(page)[0]['text'] == 'あしかが よしみつ'
+        page.click('#sg-card [data-act="sg-back"]')
+        page.click('#rulers [data-rl-tab="emperor"]')
+        page.click('#rulers li[data-person="孝明天皇"]')
+        page.wait_for_selector('#sg-card:not([hidden]) .say', timeout=5000)
+        page.click('#sg-card .say')
+        assert self.said(page)[0]['text'] == 'こうめいてんのう'
+
+    def voice_koseki(self, page):
+        # 户籍：地名读音（上田市 → うえだし）；户主名写罗马字（Sanada Yukimura）也认得出姓、列出信浓的真田氏；ouchi 是大内不是越智
+        page.wait_for_selector('#koseki[open] .ks-place .say', timeout=30000)
+        page.click('#koseki .ks-place .say')
+        assert self.said(page)[0]['text'] == 'うえだし'
+        page.fill('[data-ks-name]', 'Sanada Yukimura')
+        page.wait_for_function("document.querySelector('[data-ks-myoji]').textContent.length > 0", timeout=15000)
+        txt = page.text_content('[data-ks-myoji]')
+        assert any(x in txt for x in ('真田', 'Sanada')) and any(x in txt for x in ('信浓', '信濃', 'Shinano')), txt
+        page.fill('[data-ks-name]', 'ouchi')
+        page.wait_for_timeout(300)
+        txt = page.text_content('[data-ks-myoji]')
+        assert '大内' in txt and '越智' not in txt, txt
+
+    def voice_3d(self, page):
+        # 立体图「此地千年」：🔊 打开后每播一年读一行（年份、国、归谁），开关记在 je.3d.hereSay
+        page.goto(self.base.replace('index.html', '3d.html') + '#here=138.25,36.40&hn=上田', timeout=60000)
+        page.wait_for_selector('#loading', state='hidden', timeout=90000)
+        page.wait_for_selector('#here:not([hidden]) [data-here="say"]', timeout=30000)
+        page.click('#here [data-here="say"]')
+        assert page.evaluate("localStorage.getItem('je.3d.hereSay')") == '1'
+        got = self.said(page, 2)
+        assert all(x['lang'] == 'zh-CN' for x in got) and '信浓国' in got[0]['text'], got
+        page.click('#here [data-here="play"]')
+
+    def voice_battle(self, page):
+        # 合战面板的旁白朗读：默认关、点开后换阶段就读、记住开关
+        self.top(page, '#btn-battle')
+        page.click('#battles .battle-card >> nth=0')
+        page.wait_for_selector('#battle-hud:not([hidden])')
+        page.wait_for_timeout(300)
+        assert page.evaluate('window.__said.length') == 0, '默认不朗读'
+        page.click('#hud-say')
+        assert page.get_attribute('#hud-say', 'aria-pressed') == 'true'
+        page.click('#hud-next')
+        got = self.said(page)
+        assert len(got[-1]['text']) > 20, got
+        assert page.evaluate("localStorage.getItem('je.ui.sayBattle')") == 'true'
+        page.click('#hud-exit')
+
     def catalog(self, page):
-        # 3.44 全部功能：顶栏菜单最上面一项打开目录（三组 17 项、不出屏、筛选），每个按钮直接打开对应功能；欢迎卡也有入口；
+        # 3.44 全部功能：顶栏菜单最上面一项打开目录（三组 18 项，3.46 加语音、不出屏、筛选），每个按钮直接打开对应功能；欢迎卡也有入口；
         # 第一次用到古国图 / 国力时各提示一次（je.ui.tips），第二次不再提示
         page.evaluate("localStorage.removeItem('je.ui.tips')")
         vw, vh = page.viewport_size['width'], page.viewport_size['height']
         # 欢迎卡上的入口（还没选县时；手机在详情页），写着项数
         self.tab(page, 'detail')
-        assert '17' in page.text_content('.welcome [data-act="tour"]')
+        assert '18' in page.text_content('.welcome [data-act="tour"]')
         page.click('.welcome [data-act="tour"]')
         page.wait_for_selector('#help[open] .cat-g')
         page.keyboard.press('Escape')
@@ -1929,7 +2026,7 @@ class Case:
             self.top(page, '#btn-all')
             page.wait_for_selector('#help[open] .cat-g')
         open_cat()
-        assert page.locator('#help .cat-g').count() == 3 and page.locator('#help section').count() == 17
+        assert page.locator('#help .cat-g').count() == 3 and page.locator('#help section').count() == 18
         box = page.locator('#help .help-inner').bounding_box()
         assert box['x'] >= 0 and box['y'] >= 0 and box['x'] + box['width'] <= vw + 1 and box['y'] + box['height'] <= vh + 1, f'目录出屏：{box}'
         sw = page.evaluate("document.querySelector('#help .help-body').scrollWidth - document.querySelector('#help .help-body').clientWidth")
@@ -2098,9 +2195,10 @@ def plan(lang):
              ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']), ('koseki_343', 'pref=27&muni=1&m=27141&koseki=1', ['koseki_343', 'no_overflow']),
              ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340']),
              ('catalog', '', ['catalog', 'no_overflow']), ('portraits', 'bday=06-21', ['portraits', 'no_overflow']), ('portraits_more', 'rl=emperor', ['portraits_more']),
-             ('scenes', 'pref=21', ['scenes'])]
+             ('scenes', 'pref=21', ['scenes']), ('voice', '', ['voice', 'no_overflow']), ('voice_people', 'rl=shogun', ['voice_people']),
+             ('voice_koseki', 'pref=20&muni=1&m=20203&koseki=1', ['voice_koseki']), ('voice_battle', 'pref=21', ['voice_battle'])]
     if full:
-        cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
+        cases += [('voice_3d', '', ['voice_3d']), ('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),
                   ('era_stable', '', ['era_stable']), ('search_fits', '', ['search_fits']),
                   ('china', 'pref=26', ['deeplink']), ('country', 'map=nope&pref=26', ['country', 'deeplink']), ('pilgrimage', 'pref=13', ['pilgrimage']),
@@ -2169,7 +2267,7 @@ def run_all():
                    else {'latitude': 35.8313, 'longitude': 129.2144} if name == 'korea_book'
                    else {'latitude': 35.4017, 'longitude': 132.6853} if name == 'koku' else None)
             opts = dict(china=name == 'china', no_audio=name == 'audio_broken', fresh=name in ('tour', 'korea_tour'), geo=geo,
-                        korea=(name.startswith('korea') and name != 'korea_hidden') or name == 'shared')
+                        korea=(name.startswith('korea') and name != 'korea_hidden') or name == 'shared', say=name.startswith('voice'))
             err = run_case(c, hash_, steps, opts, f'{vp}-{lang}-{name}')
             # 只有超时（等元素 / 等点击 / 等加载）重跑一次：CI 上偶尔有一步卡满 30 秒，重跑就过；断言失败与页面报错不重跑
             if isinstance(err, PWTimeout):

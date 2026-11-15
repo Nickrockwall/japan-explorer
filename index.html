@@ -120,6 +120,7 @@
           <div class="layers" id="layers" role="tablist" data-i18n-aria="layers.aria" aria-label="风土图层"></div>
           <form class="search" id="search" role="search" autocomplete="off">
             <input id="search-input" type="search" enterkeyhint="search" data-i18n-ph="search.ph" placeholder="搜县名 / 古国名 / 市町村，如 武藏、丰田">
+            <button type="button" class="search-mic" id="search-mic" hidden data-i18n-title="say.mic" data-i18n-aria="say.mic" title="语音搜索" aria-label="语音搜索" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
           </form>
         </div>
         <div class="filters" id="filters" role="tablist" data-i18n-aria="filters.aria" aria-label="时空滤镜"></div>
@@ -161,6 +162,7 @@
         <div class="hud-head">
           <span class="hud-tag" data-i18n="hud.tag">合战沙盘</span>
           <b id="hud-title"></b>
+          <button type="button" class="hud-say" id="hud-say" aria-pressed="false" data-i18n-title="say.battle.on" title="朗读旁白（现在关着）">🔊</button>
           <button type="button" class="hud-fold" id="hud-fold" aria-expanded="true" data-i18n-title="hud.collapse" title="收起面板">▾</button>
           <button type="button" class="btn btn-primary hud-exit" id="hud-exit" data-i18n="hud.exit">退出合战沙盘</button>
         </div>

@@ -1,6 +1,7 @@
 // 彼时今日：几百年前的今天，日本发生了什么。数据 src/data/kako.json（tools/kako_tool.py：日文维基「N月N日」
 // 的条目，只收 Wikidata 上日期完全一致、地点在日本某县的事件）。日期按公历（1582 年以前按儒略历，与维基一致）。
 // 每人一个随机种子（只存本机），与日期一起决定当天先看到哪几条：同一人同一天刷新不变，换一天、换一个人都不同
+import { sayAllBtn } from './speak.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { ptHTML, ptCredHTML } from './portraits.js';
@@ -33,6 +34,14 @@ const pick = (o) => o?.[lang] || o?.zh || '';
 const face = (e) => (e.t ? ptHTML(e.q, pick(e.n)) : '');
 // 生卒条目带一个小标签（诞生 / 忌日）
 const tag = (e) => (e.t ? ` <em class="kk-t kk-${e.t}">${esc(t(`kk.t.${e.t}`))}</em>` : '');
+// 「听一遍」读的一条（3.46）：年份、名字、诞生 / 忌日、说明
+function sayLine(e, sub) {
+  const tg = e.t ? t(`kk.t.${e.t}`) : '';
+  if (lang === 'en') return `${e.y}. ${pick(e.n)}${tg ? `, ${tg}` : ''}. ${sub}`;
+  const sep = lang === 'ja' ? '、' : '，';
+  return `${e.y}年${sep}${pick(e.n)}${tg ? sep + tg : ''}。${sub}`;
+}
+
 export const kakoLabel = (e) => `${e.y} ${pick(e.n)}${e.t ? ` · ${t(`kk.t.${e.t}`)}` : ''}`;
 
 export function kakoHTML({ key, list, page, prefName, provName, lordOf = () => '', now = new Date() }) {
@@ -43,13 +52,13 @@ export function kakoHTML({ key, list, page, prefName, provName, lordOf = () => '
   const rows = shown.map((e) => {
     const where = [prefName(e.p), e.k ? provName(e.k) : '', lordOf(e)].filter(Boolean).join(' · ');
     const sub = lang === 'ja' ? e.s : where;
-    return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
+    return `<li data-say-line="${esc(sayLine(e, sub))}"><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
       <span class="kk-y">${e.y}<small>${esc(t('kk.ago', { n: ago(e.y) }))}</small></span>${face(e)}
       <span class="kk-main"><b>${esc(pick(e.n))}${tag(e)}</b><span>${esc(sub)}</span>${lang === 'ja' ? `<span>${esc(where)}</span>` : ''}</span></button></li>`;
   }).join('');
   const isToday = key === dayKey(now);
-  return `<section class="kako" aria-labelledby="kk-h" data-pt-scope>
-    <div class="kk-head"><div class="section-h" id="kk-h">${esc(t(isToday ? 'kk.h' : 'kk.h.day', { m, d }))}</div>
+  return `<section class="kako" aria-labelledby="kk-h" data-pt-scope data-say-scope>
+    <div class="kk-head"><div class="section-h" id="kk-h">${esc(t(isToday ? 'kk.h' : 'kk.h.day', { m, d }))}</div>${list.length ? sayAllBtn() : ''}
       <label class="kk-date" title="${esc(t('kk.pick'))}"><span>📅</span><input type="date" data-kk-date value="${now.getFullYear()}-${key}" aria-label="${esc(t('kk.pick'))}"></label></div>
     ${list.length ? `<ol class="kk-list">${rows}</ol>
       <div class="kk-foot"><span>${esc(t('kk.count', { n: list.length }))}</span>

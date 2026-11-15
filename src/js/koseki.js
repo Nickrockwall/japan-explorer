@@ -1,6 +1,7 @@
 // 古代户籍《古今人别帐》：选一个市区町村（或「我在哪」的定位点），按时代列出这里归谁管。
 // 每一栏注明精确到哪一级（市区町村 / 郡 / 县 / 国），只用已核验的数据计算，不编故事。
 // 同一份 rows 既画成对话框里的卷轴（kosekiHTML），也画到 canvas 上存成图片（kosekiImage）
+import { sayBtn } from './speak.js';
 import { t, lang, label } from './i18n.js';
 import { esc } from './detail.js';
 import { distanceKm } from './koku.js';
@@ -137,12 +138,32 @@ let myojiIdx = null;
 export function myojiLine(myoji, name) {
   if (!myoji || !name) return '';
   myojiIdx ||= Object.fromEntries(Object.keys(myoji).map((k) => [fold(k), k]));
+  const line = (ks) => t('ks.myoji', { list: ks.flatMap((k) => myoji[k] || []).slice(0, 3).map(([c, o]) => t('ks.myoji.item', { clan: c, from: o })).join(t('list.sep')) });
+  // 3.46 罗马字（Sanada Yukimura / yukimura sanada）：每个词按读音找姓，先严后松
+  if (/^[\sA-Za-zĀ-ſ'’.-]+$/.test(name.trim())) {
+    for (const loose of [false, true]) {
+      const idx = loose ? myoji._R : myoji._r;
+      for (const w of name.trim().split(/[\s.]+/)) {
+        const ks = idx?.[romajiKey(w, loose)];
+        if (ks) return line(ks);
+      }
+    }
+    return '';
+  }
   const f = fold(name.trim());
   for (let n = Math.min(3, f.length); n >= 1; n--) {
     const k = myojiIdx[f.slice(0, n)];
-    if (k) return t('ks.myoji', { list: myoji[k].slice(0, 3).map(([c, o]) => t('ks.myoji.item', { clan: c, from: o })).join(t('list.sep')) });
+    if (k && k[0] !== '_') return line([k]);
   }
   return '';
+}
+
+// 与 build_bundle.romaji_key 相同：小写、去长音符号；loose 再把 ou / oo / oh → o、uu → u、m 在 b p m 前 → n
+export function romajiKey(s, loose = true) {
+  let k = s.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+  if (!loose) return k;
+  k = k.replace(/o[uo]|oh(?![aiueo])/g, 'o').replace(/uu/g, 'u');
+  return k.replace(/m(?=[bpm])/g, 'n');
 }
 
 // 同名地名的键 → 对应的古代设施（量这里到本国那一处的距离）
@@ -405,7 +426,7 @@ export function kosekiHTML(ctx, data, name, extra = '') {
     <header class="ks-head">
       <div class="ks-kicker">${esc(t('ks.kicker'))}</div>
       <h2 id="koseki-h">${esc(t('ks.title'))}</h2>
-      <div class="ks-place">${esc(title)}</div>
+      <div class="ks-place">${esc(title)}${sayBtn(ctx.props.kana, { label: ctx.props.name })}</div>
       <label class="ks-name">${esc(t('ks.name'))}<input type="text" maxlength="16" data-ks-name value="${esc(name)}" placeholder="${esc(t('ks.name.ph'))}"></label>
       <p class="ks-myoji" data-ks-myoji>${esc(myojiLine(ctx.myoji, name))}</p>
     </header>

@@ -4,6 +4,17 @@
 
 Newest first.
 
+## 3.46 · 2026-11-15
+
+- Voice: a 🔊 next to prefecture, town, old-province and people's names (and the place in the register) reads the name in Japanese. It reads from kana — the reading in the data for places, romaji turned into kana for people — so names like Ichinomiya or Kōbe come out right; names without a reliable reading get no button
+- "On this day" can be read aloud; the 🔊 in the battle panel turns on narration (read at each phase); "A thousand years here" on the 3D map can read each year as it plays; where the browser supports it, a microphone in the search box lets you search by voice. All of this uses the voices built into your device, no outside service, and nothing plays unless you tap
+- "All features" has a new entry for voice (18 in all)
+- Portraits for 40 more people (1,924, 84%): when the first image was rejected, the tool now tries other Wikidata images and the lead images of the English and Chinese Wikipedia articles; every new one was checked by eye
+- The Battle of Toba–Fushimi now has a picture: Shōkōsai Kunihiro's 1868 print of shogunate troops falling back before the imperial army
+- The register recognises surnames typed in romaji (Sanada → 真田); 39 early-Meiji prefectures now have English names, read from the Wikipedia articles (a few with no source, such as Toyoura and Tate, stay in Japanese)
+- Portraits and old pictures go into their own cache, capped at 300 images, so they don't pile up on phones
+- Not done: still no reliable per-province source for a late-Heian 3D year; checks on a real phone are still yours
+
 ## 3.45 · 2026-11-15
 
 - Portraits for people: Born here, On this day, the birthday page and its same-age list, the register's local timeline, the emperor / shogun / regent lists and the Sengoku person cards now show small portraits for about 1,884 people (of about 2,286 on the site, 82%). All come from Wikimedia Commons, public domain or CC BY / BY-SA only, and load only when shown

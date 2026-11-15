@@ -1,10 +1,26 @@
 // 此地千年（3.37）：从平面图的古代户籍点「在立体图里看此地千年」进来（#here=经度,纬度&hn=地名），
 // 镜头停在这个地方，从 712 年一年年播到 1888 年：每到一年写这里属于哪一国（藩、府县）、归谁，累积成一张表；
 // 用户点年份、开合战、按 Esc 都会停，表留着可以点回某一年
-import { t } from './i18n.js';
+import { t, lang } from './i18n.js';
 import { YEARS } from './eras.js';
 
 const STEP_MS = 2800;
+// 边播边朗读（3.46）：浏览器自带的 speechSynthesis，开关存 je.3d.hereSay；开着时每一年读完（最多 12 秒）才播下一年
+const CAN_SAY = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+const TAG = { ja: 'ja-JP', zh: 'zh-CN', en: 'en-US' };
+const sayOn = () => { try { return CAN_SAY && localStorage.getItem('je.3d.hereSay') === '1'; } catch { return false; } };
+function sayStep(text) {
+  return new Promise((res) => {
+    const u = new window.SpeechSynthesisUtterance(text);
+    u.lang = TAG[lang] || 'zh-CN';
+    const v = speechSynthesis.getVoices().find((x) => x.lang.replace('_', '-').toLowerCase().startsWith(lang));
+    if (v) u.voice = v;
+    const done = () => { clearTimeout(tm); res(); };
+    const tm = setTimeout(done, 12000);
+    u.onend = u.onerror = done;
+    speechSynthesis.speak(u);
+  });
+}
 
 export function createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, placeAt, esc, sound, look = () => {} }) {
   const panel = document.querySelector('#here');
@@ -17,6 +33,7 @@ export function createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, pla
     panel.innerHTML = `<div class="here-head"><b>${esc(t('here.h', { name: cur.name }))}</b>
       <button type="button" data-here="look" title="${esc(t('peaks.look'))}">${esc(t('peaks.lookShort'))}</button>
       <button type="button" data-here="play" aria-pressed="${cur.playing}">${cur.playing ? '■' : '▶'}</button>
+      ${CAN_SAY ? `<button type="button" data-here="say" aria-pressed="${sayOn()}" class="${sayOn() ? 'on' : ''}" title="${esc(t('here.say'))}">🔊</button>` : ''}
       ${!cur.playing && cur.rows.length ? `<button type="button" data-here="img" title="${esc(t('here.img'))}">${esc(t('here.imgShort'))}</button>` : ''}
       <button type="button" class="x" data-here="x" aria-label="${esc(t('close'))}">×</button></div>
       <div class="here-body"><table>${rows}</table></div>
@@ -38,7 +55,11 @@ export function createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, pla
       cur.rows.push({ y, place: placeAt(cur.x, cur.z, y), h: holderAt(cur.x, cur.z, y) });
       sound('click');
       render();
-      await new Promise((r) => setTimeout(r, STEP_MS));
+      const row = cur.rows[cur.rows.length - 1];
+      const others = (row.h || []).filter((x) => x.name !== row.place).map((x) => x.name);
+      const sep = lang === 'en' ? ', ' : '，';
+      const line = `${y}${lang === 'en' ? '' : '年'}${sep}${row.place || ''}${others.length ? sep + others.join(sep) : ''}`;
+      await Promise.all([new Promise((r) => setTimeout(r, STEP_MS)), sayOn() ? sayStep(line) : null]);
       if (my !== token) return;
     }
     cur.playing = false;
@@ -53,6 +74,7 @@ export function createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, pla
   }
   function stop() {
     token++;
+    if (CAN_SAY) speechSynthesis.cancel();
     if (cur?.playing) { cur.playing = false; render(); }
   }
   function close() { stop(); cur = null; render(); }
@@ -62,6 +84,14 @@ export function createHere({ P, flyTo, setYear, eraReady, loadEra, holderAt, pla
     if (b?.dataset.here === 'x') { close(); return; }
     if (b?.dataset.here === 'look') { stop(); look(cur.x, cur.z, cur.name); return; }
     if (b?.dataset.here === 'img') { saveImage(); return; }
+    if (b?.dataset.here === 'say') {
+      const on = !sayOn();
+      try { localStorage.setItem('je.3d.hereSay', on ? '1' : '0'); } catch { /* 无痕模式 */ }
+      if (!on) speechSynthesis.cancel();
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('on', on);
+      return;
+    }
     if (b?.dataset.here === 'play') {
       if (cur.playing) stop();
       else play(cur.rows.length >= YEARS.length ? 0 : cur.rows.length);

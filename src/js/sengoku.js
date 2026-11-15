@@ -1,6 +1,7 @@
 // 战国势力图：68 国 × 6 个年份（1467 / 1560 / 1573 / 1582 / 1590 / 1600），着色、提示、图例、国别卡片与人物简卡。
 // 数据 src/data/sengoku.json 由 tools/sengoku_tool.py 生成并核对；1600 年按关原之战的站队（sides）着色。
 // 人物：sengoku.json 的 people（各年份代表人物）+ rulers.json（天皇 · 将军 · 执权）+ people.json（详写：简介、肖像、家纹、相关人物）
+import { sayBtn, personYomi } from './speak.js';
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { crestSVG } from './crests.js';
@@ -28,7 +29,7 @@ export function wikiLink(title, qid) {
 function rulerIndex(rulers) {
   const out = {};
   const add = (r, role) => {
-    const p = (out[r.wiki] ??= { ja: r.ja, zh: r.zh, en: r.en, qid: r.qid, roles: [] });
+    const p = (out[r.wiki] ??= { ja: r.ja, zh: r.zh, en: r.en, kana: r.kana, qid: r.qid, roles: [] });
     p.roles.push([role, r.n, r.from, r.to]);
   };
   for (const r of rulers?.emperors || []) add(r, 'emperor');
@@ -147,7 +148,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
     const crest = bio?.img && bio.crest ? `<span class="sg-mon">${crestSVG(bio.crest)}</span>` : '';
     const rel = (bio?.related || []).filter(base).map((r) => `<button type="button" class="sg-rel" data-person="${esc(r)}">${esc(personName(r))}</button>`).join('');
     return `<button type="button" class="sg-back" data-act="sg-back">‹ ${esc(clan ? clanName(year, clan) : focus ? provName(focus) : t('sg.back'))}</button>
-      <div class="sg-head">${face}<div><div class="muni-name">${esc(personName(title))}${crest}</div>
+      <div class="sg-head">${face}<div><div class="muni-name">${esc(personName(title))}${crest}${sayBtn(personYomi({ ...p, ...(rulerBy[title] || {}) }), { label: title })}</div>
       <div class="muni-meta">${esc(sub)}</div></div></div>
       <div class="kr-body">${bio ? `<p class="sg-bio">${esc(pick(bio.bio))}</p>` : ''}
       <ol class="sg-rows sg-roles">${roles}</ol>

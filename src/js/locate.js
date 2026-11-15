@@ -1,5 +1,6 @@
 // 「我在哪」：用浏览器定位，告诉你此刻身在哪个令制国、今天的哪个县与市区町村、明治的哪个郡。
 // 位置只在本机计算（县界 japan.json + 该县的市区町村边界），不发往任何服务器。
+import { sayBtn } from './speak.js';
 import { MAP } from './country.js';
 import { fetchGeo } from './store.js';
 import { t, lang } from './i18n.js';
@@ -66,7 +67,7 @@ export function locCard({ props, provinces }, prefLabel, accuracy, extra) {
     <div class="loc-kicker">📍 ${esc(t('loc.h'))}</div>
     <div class="muni-name">${esc(prov)}</div>
     ${partial ? `<div class="muni-sub">${esc(partial)}</div>` : ''}
-    <div class="muni-row"><span>${esc(t('loc.today'))}</span><b>${esc(prefLabel)} ${esc(muni)}${props.kana && lang !== 'en' ? ` <i>${esc(props.kana)}</i>` : ''}</b></div>
+    <div class="muni-row"><span>${esc(t('loc.today'))}</span><b>${esc(prefLabel)} ${esc(muni)}${props.kana && lang !== 'en' ? ` <i>${esc(props.kana)}</i>` : ''}${sayBtn(props.kana, { label: props.name })}</b></div>
     ${gun ? `<div class="muni-row"><span>${esc(t('muni.old'))}</span><b>${esc(gun)}</b></div>` : ''}
     <div class="loc-actions">
       <button type="button" class="btn" data-act="loc-koseki">${esc(t('ks.open'))}</button>

@@ -166,8 +166,11 @@ def wikidata_en(titles):
 
 # 1871 年县名的英文（3.37）：Wikidata 没有、藩名也改了的那些，读音有出处的才写：
 # ① 条目里写了「X県（よみ）」的（READ_EV：条目 → 那段原文）；② 县名就是藩厅所在的城下町、也就是今天同名的市（CITY_SAME），
-# 用 municipalities 里那个市的读音。其余（大泉、斗南、館……）读音没有可靠出处，照旧写「… Domain → prefecture」
+# 用 municipalities 里那个市的读音。③ 见 HAN_EV。其余（豊浦、館）读音没有可靠出处，照旧写「… Domain → prefecture」
 READ_EV = {'舞鶴県': ('丹後田辺藩', 'まいづる'), '松岡県': ('常陸松岡藩', 'まつおか'), '松山県': ('石鉄県', 'まつやま')}
+# ③（3.46）县由同名的藩直接改称：藩条目开头写了「X藩'''（よみはん）」
+HAN_EV = {'中村県': ('中村藩', 'なかむら'), '厳原県': ('厳原藩', 'いづはら'), '真島県': ('真島藩', 'ましま'), '豊津県': ('豊津藩', 'とよつ'),
+          '大泉県': ('大泉藩', 'おおいずみ'), '斗南県': ('斗南藩', 'となみ'), '松嶺県': ('松嶺藩', 'まつみね'), '岩崎県': ('岩崎藩', 'いわさき')}
 CITY_SAME = {'豊橋県': '豊橋市', '亀岡県': '亀岡市', '亀山県': '亀山市', '飯田県': '飯田市', '高梁県': '高梁市', '金沢県': '金沢市', '田辺県': '田辺市'}
 
 
@@ -180,6 +183,12 @@ def fill_ken_en(features):
         txt = texts[title]['revisions'][0]['slots']['main']['content']
         if not re.search(re.escape(ken) + r"(?:\]\]|'{3})?\s*[（(]" + yomi + 'けん[）)、，,：:]', txt):
             raise SystemExit(f'READ_EV {ken}：{title} 里没有「{ken}（{yomi}けん）」')
+        kana[ken] = yomi
+    texts = pages([t for t, _ in HAN_EV.values()], 'revisions', rvprop='content', rvslots='main')
+    for ken, (title, yomi) in HAN_EV.items():
+        txt = texts[title]['revisions'][0]['slots']['main']['content']
+        if not re.search(re.escape(ken[:-1]) + r"藩'''\s*[（(]" + yomi + 'はん', txt):
+            raise SystemExit(f'HAN_EV {ken}：{title} 里没有「{ken[:-1]}藩（{yomi}はん）」')
         kana[ken] = yomi
     city = {}
     for pid in range(1, 48):

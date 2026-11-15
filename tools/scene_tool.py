@@ -37,7 +37,8 @@ SKIP = re.compile(r'\.(svg|gif|tiff?|pdf|ogg|webm)$|map|地図|location|紋|cres
 
 # 人工看过总览图后选的：键 → (Commons 文件名, 中文, English, 日本語)
 PICK = {
-    # ── 合战（鸟羽·伏见：条目里的三幅文件页没写画的是什么、几时画的，不收）──
+    # ── 合战（鸟羽·伏见 3.46 补上：Commons 分类里昇光斋国广这一幅文件页写明了画的是什么、1868 年）──
+    'b-tobafushimi': ('Battle-of-Toba-Fushimi-Government-Victory-Shokosai-Kunihiro-1868.png', '鸟羽·伏见之战：幕府军在官军面前败退，后方是淀城（昇光斋国广绘，1868 年）', 'Toba–Fushimi: shogunate troops falling back before the imperial army, with Yodo Castle behind (Shōkōsai Kunihiro, 1868)', '鳥羽・伏見の戦い。官軍の前に退く幕府軍、奥に淀城（昇光斎国広画、1868年）'),
     'b-okehazama': ('Bishū Okehazama-gassen.jpg', '桶狭间合战的浮世绘（明治 15 年出版）', 'Ukiyo-e of the Battle of Okehazama (published 1882)', '桶狭間の戦いを描いた浮世絵（明治15年出版）'),
     'b-kawanakajima': ('BattleKawanakajima.jpg', '川中岛之战：左为武田信玄，右为上杉谦信（1845 年）', 'Kawanakajima: Takeda Shingen on the left, Uesugi Kenshin on the right (1845)', '川中島の戦い。左が武田信玄、右が上杉謙信（1845年）'),
     'b-sekigahara': ('Sekigahara Kassen Byōbu-zu (Gifu History Museum).jpg', '《关原合战屏风》（江户时代后期，岐阜市历史博物馆）', 'Sekigahara battle screen (late Edo period, Gifu City Museum of History)', '『関ヶ原合戦屏風』（江戸時代後期、岐阜市歴史博物館）'),

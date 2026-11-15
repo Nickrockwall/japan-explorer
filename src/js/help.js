@@ -29,6 +29,7 @@ export const CATALOG = [
     { k: 'book', go: [['book']] },
     { k: 'guide', go: [['guide']] },
     { k: 'search', go: [['search']] },
+    { k: 'voice', go: [['voice', 'cat.go.voice']] },
   ] },
 ];
 export const CATALOG_N = CATALOG.reduce((n, g) => n + g.items.length, 0);

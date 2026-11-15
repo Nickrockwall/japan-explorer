@@ -1,4 +1,5 @@
 // 右下：AI 历史向导（时空案内人）
+import { sayNarration, stopSay } from './speak.js';
 import { esc } from './detail.js';
 import { t, lang, label, prefName, joinList, PERSONA_TEXT, PROMPT_RULES } from './i18n.js';
 
@@ -657,10 +658,12 @@ export function createGuide(els, { getConfig, openSettings, initialMode = 'schol
       finishTyping?.();
       addMsg('sys', esc(t('g.b.phase', { i: i + 1, n: total, title: phase.title, time: phase.time })));
       typeOut(`${phase.line}\n\n【${phase.title}】${phase.desc}`);
+      sayNarration(`${phase.line}\n${phase.title}。${phase.desc}`);
     },
     endBattle() {
       if (!battle) return;
       battle = null;
+      stopSay();
       if (pref) load(esc(t('g.b.exit', { name: prefName(pref) })));
       else showIntro();
     },

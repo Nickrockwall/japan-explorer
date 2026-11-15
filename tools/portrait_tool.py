@@ -138,6 +138,49 @@ NOT_PORTRAIT = {
     'Yume de Aritai.1962.jpg',
     'YushimaSeidoL8644.jpg',
     'Ōno Harunaga cropped from the siege of Osaka castle.jpg',
+    # 3.46 备选图（英文 / 中文条目首图等）人工看过不收的
+    "00006_l.jpg",
+    "150425_Katsumi_Nishikawa_Film_Museum_Chizu_Tottori_pref_Japan01n.jpg",
+    "72nd_Shinbu_1945_Kamikaze.jpg",
+    "Archives_of_American_Art_-_Eitaro_Ishigaki_-_2985.jpg",
+    "Bundesarchiv_Bild_183-1987-0530-016,_Berlin,_Besuch_Delegationen_aus_Japan.jpg",
+    "Edo-Tokyo_Museum.jpg",
+    "Emperor_Go-Ichijo.jpg",
+    "Esaki_Dve_divky_hraji_na_koto_CS12238.jpg",
+    "Fujikots-en.png",
+    "Hayashi_Tadahiko_at_a_hotel_in_LA_-_1955_(3x4_cropped)_(cropped).png",
+    "Hiroshima_Dome_1945.gif",
+    "Hollanders_op_stap_op_een_vrije_dag_in_Yokohama_Yokohama_kyujitsu_Oranda-jin_yuko_(serietitel),_NG-663-3.jpg",
+    "JeanneCalmentaged40.jpg",
+    "Kanokogi_Takeshiro_Study_for_Beach_in_Normandy_1907.jpg",
+    "Kinema-Junpo-1964-March-late-1.jpg",
+    "Kiyoshi_Saito,_Titled_Autumn,_Aizu_Yanaizu,_Fukushima_-_1965.jpg",
+    "Kobayashi_Eitaku_-_Izanami_and_Izanagi_Creating_the_Japanese_Islands.jpg",
+    "Kodayu-Isokichi_Two_Japanese_casteways_returned_by_Laxman_1792.jpg",
+    "Konosumiyama_Castle_zenkei.JPG",
+    "Kumamoto_Castle_oldphoto_1874.jpg",
+    "Maruyama Gontazaemon.jpg",
+    "Miyamoto_Iori_cropped.jpg",
+    "Murata_Hideo_museum.jpg",
+    "Nihon-Josei-Undo-Shiryo-Shusei-volume-8-4.jpg",
+    "Poem_of_Mistuo_Aida_inscribed.jpg",
+    "Ryukoji-C7229.jpg",
+    "Sengai_3.jpg",
+    "Tamechika-Kemari.jpg",
+    "Tenjinyama_Castle_02.JPG",
+    "Tokyo_Tower_20060211.JPG",
+    "Yoshio_Mikami_book_1913-001.jpg",
+    "Yume_de_Aritai.1962_(Kyoko_Enami).jpg",
+    "©2025_TEICHIKU_ENTERTAINMENT,INC._Minamiharuo_artist_photo.jpg",
+    "Érable entouré d'herbes d'automne (détail) par Hasegawa Tōhaku.jpg",
+    "一遍上人像.jpg",
+    "延平郡王祠太妃祠02.2023-05-17.jpg",
+    "狩野永徳《檜図屏風》1590年、16世紀、桃山時代、東京国立博物館.jpg",
+    "Sengai_Gibon_-_Kanzan_and_Jittoku.jpg",
+    "Kobayashi_Izanami_and_Izanagi.jpg",
+    "Sales_Room_at_Foreign_Trade_Building_Yokohama_MET_DP147653.jpg",
+    "Kano_Eitoku_002.jpg",
+    "Eishōzan_Honpo-ji_(Kyoto_Kamigyo-ku)_Temple_hdsr_S5_11.jpg",
     '大山のぶ代と砂川啓介.png',
     '山名持豊.jpg',
     '楊心古流の演武.png',
@@ -282,6 +325,44 @@ def drawn(date):
     return None, None
 
 
+def alternates(qs, cache):
+    """ent[q]['alt']：Wikidata 全部 P18（第一张之后的）+ 英文 / 中文维基条目首图。"""
+    ent = cache['ent']
+    todo = [q for q in qs if 'alt' not in ent[q]]
+    for i in range(0, len(todo), 50):
+        part = todo[i:i + 50]
+        d = api('https://www.wikidata.org/w/api.php', {'action': 'wbgetentities', 'ids': '|'.join(part),
+                                                       'props': 'claims|sitelinks', 'sitefilter': 'enwiki|zhwiki'})
+        links = {}
+        for q, e in d.get('entities', {}).items():
+            p18 = [x['mainsnak'].get('datavalue', {}).get('value') for x in e.get('claims', {}).get('P18', [])]
+            ent[q]['alt'] = [f for f in p18 if f]
+            if ent[q].get('pageimage') and ent[q]['pageimage'] not in ent[q]['alt']:
+                ent[q]['alt'].append(ent[q]['pageimage'])
+            links[q] = {k: v['title'] for k, v in e.get('sitelinks', {}).items()}
+        time.sleep(0.5)
+        for q in part:  # 第一次只给没有 P18 的取过日文条目首图
+            if ent[q].get('title') and 'pageimage' not in ent[q]:
+                links.setdefault(q, {})['jawiki'] = ent[q]['title']
+        for site, host in (('jawiki', 'ja'), ('enwiki', 'en'), ('zhwiki', 'zh')):
+            ts = {q: l[site] for q, l in links.items() if site in l}
+            if not ts:
+                continue
+            d = api(f'https://{host}.wikipedia.org/w/api.php', {'action': 'query', 'titles': '|'.join(ts.values()),
+                                                                'prop': 'pageimages', 'piprop': 'name', 'redirects': 1,
+                                                                'formatversion': 2})
+            names = {pg['title']: pg.get('pageimage') for pg in d['query']['pages']}
+            alias = {r['from']: r['to'] for r in d['query'].get('redirects', []) + d['query'].get('normalized', [])}
+            for q, t in ts.items():
+                f = names.get(alias.get(t, t))
+                if f and f not in ent[q]['alt']:
+                    ent[q]['alt'].append(f)
+            time.sleep(0.5)
+        for q in part:
+            ent[q].setdefault('alt', [])
+        print(f'  备选 {i + len(part)}/{len(todo)}', flush=True)
+
+
 def thumb(q, url):
     dest = os.path.join(IMG, f'{q}.webp')
     if os.path.exists(dest):
@@ -356,26 +437,58 @@ def main():
     info = cache['file']
     out, why = {}, {}
     order = []
-    for q, f in pick.items():
+
+    def accept(q, f):
+        """试一张图：收下返回 None，不收返回原因。"""
         c = info.get(f, {})
         lic = (c.get('license') or '').lower()
         free = lic.startswith(FREE)
-        if f in NOT_PORTRAIT or NOT_KW.search(f):
-            why[q] = 'not-portrait'
-        elif re.search(r'\.(svg|pdf|tiff?|webm|ogv|djvu)$', f, re.I) or c.get('missing') or not c.get('thumb'):
-            why[q] = 'file'
-        elif not (free or (lic.startswith(ATTRIB) and c.get('author'))):
-            why[q] = 'license'
-        elif not thumb(q, c['thumb']):
-            why[q] = 'download'
-        else:
-            died = ent[q].get('died')
-            label, y = drawn(c.get('date'))
-            later = None
-            if died and died < 1860:
-                later = 1 if (y and y > died + 10) else (0 if y else 2)
-            out[q] = [c['license'], '' if free else c['author'], f, label, later]
-            order.append(q)
+        if f.replace('_', ' ') in NOT_PORTRAIT or f in NOT_PORTRAIT or NOT_KW.search(f):  # pageimage 给的名字用下划线
+            return 'not-portrait'
+        if re.search(r'\.(svg|pdf|tiff?|webm|ogv|djvu)$', f, re.I) or c.get('missing') or not c.get('thumb'):
+            return 'file'
+        if not (free or (lic.startswith(ATTRIB) and c.get('author'))):
+            return 'license'
+        made = cache.setdefault('made', {})  # 已下载的小图是哪个文件：换了文件就重新下载（3.46 以前同一个人换图会沿用旧图）
+        if made.get(q) != f and os.path.exists(os.path.join(IMG, f'{q}.webp')):
+            os.remove(os.path.join(IMG, f'{q}.webp'))
+        if not thumb(q, c['thumb']):
+            return 'download'
+        died = ent[q].get('died')
+        label, y = drawn(c.get('date'))
+        later = None
+        if died and died < 1860:
+            later = 1 if (y and y > died + 10) else (0 if y else 2)
+        made[q] = f
+        out[q] = [c['license'], '' if free else c['author'], f, label, later]
+        order.append(q)
+        return None
+
+    for q, f in pick.items():
+        r = accept(q, f)
+        if r:
+            why[q] = r
+    # 3.46 备选：第一张不收或没有图的，再试 Wikidata 的其余 P18 与英文 / 中文维基条目首图
+    miss = [q for q in sorted(want) if q in ent and q not in out]
+    try:
+        alternates(miss, cache)
+    finally:
+        json.dump(cache, open(cpath, 'w', encoding='utf-8'), ensure_ascii=False)
+    tried = {q: {pick.get(q)} for q in miss}
+    cand = {q: [f for f in ent[q].get('alt', []) if f not in tried[q]] for q in miss}
+    try:
+        commons({f for fs in cand.values() for f in fs}, cache)
+    finally:
+        json.dump(cache, open(cpath, 'w', encoding='utf-8'), ensure_ascii=False)
+    alt_got = []
+    for q in miss:
+        for f in cand[q]:
+            if not accept(q, f):
+                why.pop(q, None)
+                alt_got.append(q)
+                break
+    json.dump(alt_got, open(os.path.join(CACHE, 'alt.json'), 'w'))
+    print(f'备选补上 {len(alt_got)} 人')
     for name in os.listdir(IMG):  # 后来判定不收的（NOT_PORTRAIT 等）删掉已下载的图
         if name[:-5] not in out:
             os.remove(os.path.join(IMG, name))

@@ -2038,3 +2038,44 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
 .pt-dlg { overflow: auto; }
 .pt-dlg .book-close { position: absolute; top: 12px; right: 12px; }
 .pt-dlg h2 { padding-right: 44px; }
+
+/* ── 语音（3.46，speak.js）：🔊 读音按钮、「听一遍」、合战旁白开关、搜索框麦克风 ── */
+.say {
+  display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; flex: none;
+  width: 26px; height: 26px; margin-left: 4px; padding: 0; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--kin);
+}
+.say svg { width: 15px; height: 15px; }
+.say:hover, .say:focus-visible { border-color: var(--kin); background: rgba(122,87,25,.08); }
+.say.saying { background: var(--kin); color: #fff; border-color: var(--kin); animation: say-pulse 1s ease-in-out infinite; }
+@keyframes say-pulse { 50% { box-shadow: 0 0 0 4px rgba(122,87,25,.18); } }
+.modern-title .say { align-self: center; }
+.prov .say { width: 22px; height: 22px; margin-left: 2px; }
+.prov .say svg { width: 13px; height: 13px; }
+.say-all {
+  flex: none; display: inline-flex; align-items: center; gap: 2px; padding: 3px 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--kin); font-size: 12px; min-height: 28px;
+}
+.say-all.saying { background: var(--kin); color: #fff; border-color: var(--kin); }
+.kk-head .section-h { flex: 1; }
+.hud-say {
+  flex: none; width: 28px; height: 28px; border-radius: var(--r-sm); cursor: pointer; font-size: 13px; line-height: 1;
+  border: 1px solid var(--line); background: transparent; color: var(--text-2); filter: grayscale(1); opacity: .75;
+}
+.hud-say.on { filter: none; opacity: 1; border-color: var(--kin); background: rgba(122,87,25,.12); }
+.search.has-mic input { padding-right: 34px; }
+.search-mic {
+  z-index: 4; position: absolute; right: 3px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%;
+  background: transparent; color: var(--text-2); cursor: pointer;
+}
+.search-mic svg { width: 16px; height: 16px; }
+.search-mic:hover { color: var(--kin); }
+.search-mic.listening { color: #fff; background: var(--shu); animation: say-pulse 1s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .say.saying, .search-mic.listening { animation: none; } }
+/* 手机与横屏手机的搜索框平时收成放大镜：收着时不出麦克风，展开时留出位置 */
+@media (max-width: 560px), (max-height: 520px) and (orientation: landscape) {
+  .map-toolbar .search.has-mic input:focus, .map-toolbar .search.has-mic input:not(:placeholder-shown) { padding-right: 40px; }
+  .map-toolbar .search.has-mic input:placeholder-shown:not(:focus) { padding-right: 0; }
+  .map-toolbar .search:not(:focus-within) input:placeholder-shown ~ .search-mic:not(.listening) { display: none; }
+}

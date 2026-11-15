@@ -24,6 +24,7 @@
   - `je.ui.tourDone` — 看过（或跳过）新手教程；smoke 除 `tour` 场景外都预先写入，免得教程遮住页面
   - `je.ui.tips` — 第一次用到时的提示已出过哪些（3.44，`tipOnce`）；smoke 除 `catalog` 场景外都预先写入
   - `je.ui.audio` — 声音 `{muted, bgm, bgmVol, sfxVol}`（默认音效开、背景音乐关）
+  - `je.ui.sayBattle` — 合战旁白朗读开关（3.46，默认关）；立体图「此地千年」的朗读开关是 `je.3d.hereSay`（'1' / '0'）
 
 ## 目录结构
 
@@ -79,7 +80,7 @@ src/js/han.js                  详卡「江户诸藩」、藩主 ⇄ 彼时今�
 src/js/bday.js                 生日帖：某一天的全部条目、几个数字、存图
 src/data/emblems.json          47 都道府县章（tools/fetch_emblems.py：Wikidata P94 → Commons 只收公有领域 → src/assets/emblems/NN.png 透明底），详卡头像
 src/js/tour.js                 新手教程：聚光灯 + 说明气泡，步骤由 app.js 给出（首次访问自动开始）
-src/js/help.js                 全部功能（dialog#help，3.44 取代 3.36 的帮助）：CATALOG 三组 17 项、一键打开、筛选，能从头再看教程
+src/js/help.js                 全部功能（dialog#help，3.44 取代 3.36 的帮助）：CATALOG 三组 18 项（3.46 加语音）、一键打开、筛选，能从头再看教程
 tools/famous_tool.py           同乡名人（3.37）：Wikidata 出生地 → 今天的市区町村（P429，经 P1366 / P131 最多三层），已故、1930 年以前出生、按语言条目数，本人日文条目里要写着这个地名（今名、平成合并前或明治町村名，带市町村区）才收 → tools/famous.json → town bundle 的 `famous` 与 `famousCity`（政令市的区 → 市的代码，按区的 city 认）
 src/js/toc.js                  详卡目录：一行吸顶的跳转按钮（日本与半岛详卡共用）
 src/js/koseki.js               古代户籍《古今人别帐》：按市区町村 / 定位点列出各时代归谁管（卷轴 HTML + 存图 canvas）；3.37 加「合战中」（`SIDES`：桶狭间、川中岛、长篠、关原，按战国势力图那一年这块地的主人是不是交战一方）、「同乡名人」（town.famous）与去立体图「此地千年」的链接 `.ks-3d`
@@ -97,6 +98,7 @@ tools/kyudaka.json             今天各市区町村里幕末各村的领主与�
 tools/wamyo.json               《和名类聚抄》各郡的郷与读音、市区町村 → 古郡（tools/fetch_wamyo.py，奈文研「古代地名検索システム」）
 tools/codh.py                  CODH 数据的共用读法：TopoJSON → shapely、按面积对到今天的市区町村、按坐标定位、nrct 村坐标
 src/data/bundle/town/<lang>/NN.json  明治町村、地名来历、kyu、wamyo 按语言、按县打包（build_bundle 的 build_town，打开某县的户籍时才下载那一县，每份十几到几十 KB）
+src/js/speak.js                语音（3.46，见下「语音」）：🔊 读音按钮、「听一遍」、合战旁白朗读、搜索框麦克风、罗马字 → 假名
 src/js/locate.js               「我在哪」：浏览器定位 → 县（map.prefAt）→ 市区町村（该县的 municipalities 文件）→ 结果卡片
 ```
 
@@ -533,7 +535,10 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **真实足迹**（footprint.js，御朱印帐第三篇 `foot`）：在文件里找「Exif\0\0」后的 TIFF 头读 GPS（JPEG 与 HEIC 都这样），落在 824 年 68 国哪一国；`je.ui.footprint` = {p: {国: 张数}, n, k}，不存坐标。测试照片 `tests/fixtures/`。
 - **搜索**：`bundle/search.json`（build_bundle `build_search`：战国人物 + 6 世纪后天皇 / 将军 / 执权、立体图的城、藩，三语名字放一起），打开搜索框时下载；合战来自数据包。人物 → 战国图人物卡；城 → `3d.html#cs=城名`（3D 打开城卡片）；藩 → 选县并展开那一个 `details.hn-han`。
 - **人物画像**（3.45，portraits.js）：各处只输出占位——`ptHTML(QID, 名字, 日文条目名)` 是 `<i class="pt">`，`ptLineHTML` 是人物卡的署名行，`scHTML(键, thumb)` 是古画；`setupPortraits()` 用 MutationObserver 看到页面上有没换过的占位才下载 portraits.json / scenes.json，有图的换成头像（`data-ok` = QID），没有的把占位删掉（不留空圆圈）。所以画列表的函数不用等数据、也不用重画。用到的地方：彼时今日（欢迎卡、县详卡）、生日帖的诞生 / 忌日与同龄的他们（按条目名）、户籍「同乡名人」（`r.faces`，前 6 位）与此地年表、年表的天皇 / 将军 / 执权（有人物详写大图的仍用大图）、战国人物卡（没有详写肖像时）。署名：有头像的区块（`[data-pt-scope]`，没有就取所在的 dialog）里放 `ptCredHTML()`，有头像才显示，点开 `dialog#pt-dlg` 列出这块的每张图：作者、许可、Commons 链接、几时画的。CC BY / BY-SA 的作者因此都能看到。1860 年以前去世的人才注「后世所绘（年代）/ 绘于… / 绘制年代不详」（后世所绘的头像加一圈虚线 `.pt-later`）；之后的多是照片，Commons 的日期栏常是翻拍年份，不注。
-  - `tools/portrait_tool.py [--sheet]`：人 = famous.json ∪ kako 生卒 ∪ ages ∪ rulers ∪ sengoku people ∪ people.json；图 = Wikidata P18，没有取日文条目首图；许可同 people_tool；文件名带墓 / 花押 / 碑 / 铜像 / 署名 / 生家…（`NOT_KW`）的不收；`--sheet` 存 `.cache/portraits/sheet-NN.png`（编号 = `order.json` 顺序），人工看过不是本人肖像的文件名写进 `NOT_PORTRAIT`，再跑一次（已下载的会删掉）。下载要一个多小时（Commons 缩略图限速），缓存在 `.cache/portraits/`。
+  - `tools/portrait_tool.py [--sheet]`：人 = famous.json ∪ kako 生卒 ∪ ages ∪ rulers ∪ sengoku people ∪ people.json；图 = Wikidata P18，没有取日文条目首图；许可同 people_tool；文件名带墓 / 花押 / 碑 / 铜像 / 署名 / 生家…（`NOT_KW`）的不收；`--sheet` 存 `.cache/portraits/sheet-NN.png`（编号 = `order.json` 顺序），人工看过不是本人肖像的文件名写进 `NOT_PORTRAIT`，再跑一次（已下载的会删掉）。下载要一个多小时（Commons 缩略图限速），缓存在 `.cache/portraits/`。3.46 起第一张不收或没有图的再试备选（`alternates`：Wikidata 其余 P18、日 / 英 / 中文条目首图），补上的写 `.cache/portraits/alt.json`，同样要过目（`--sheet` 之外可用 `sheet()` 只画这些）；`NOT_PORTRAIT` 比对时下划线当空格（pageimage 给的名字带下划线）；`cache['made']` 记小图是哪个文件，换了文件才会重新下载（以前同一个人换图会沿用旧图）。
+  - `tools/ken_yomi_tool.py`（3.46）：bundle/ken-en.json 里还是日文的明治县名，在县条目或同名藩条目里找「X県（よみけん）」/「X藩（よみはん）」（前面不能紧跟别的汉字），写 `tools/ken_kana.json`，build_bundle `domains().ken` 转罗马字；立体图的同类补法是 build_eras3d 的 `HAN_EV`。
+  - 罗马字户主名（3.46）：myoji_tool 顺带从氏族条目开头读姓的读音 → `tools/myoji_kana.json`；`bundle/myoji-<lang>.json` 多 `_r`（只去长音符号的罗马字 → 姓）与 `_R`（ou / oo / oh 当长音），koseki.js `romajiKey` 与 build_bundle `romaji_key` 同一规则。
+  - sw.js：`src/assets/portraits|scenes/` 走单独的 `je-img` 缓存（网络优先，最多 300 张，先存的先删，不随版本清空）。
   - `tools/scene_tool.py --cand` 列出各合战 / 实权条目里用到的、Commons 上公有领域 / CC0 的图并存总览图，人工挑一张写进 `PICK`（图注三语自己写，只写文件页写着的：画的是什么、几时、哪里藏）；条目里没有合适的，在 Commons 按关键词搜过的候选存在 `.cache/scenes/extra.json`。不写进去的：鸟羽·伏见（条目里的图文件页没写画的是什么）。合战列表的卡片右边一张小图，合战面板「看这场合战的古画」（`#hud-pic`，默认收起），实权页每段一张。
 - **城的照片**：`tools/castle_photo_tool.py` → `src/assets/castles/<QID>.webp`（480px q70）与 `src/3d/castle_photos.json`（[文件, 许可, 作者, Commons 页]），许可规矩同人物肖像；`NOT_PHOTO` 是人工看过不是实景的（屏风画、版画）。登记在 LICENSE-CONTENT。
 - **合战 16 场**：新六场在 `tools/battles_more.py`（battles_tool 导入），姉川的织田·德川兵力条目没写 → 两方都不给 `men`，兵力条不画（app.js 与 3D 都要求两方都有）；unit test 的 `NO_MEN`。
@@ -562,6 +567,18 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **人物卡的两说**：age_tool `ja_year_text`（「1536/1537」「1560?」），sengoku_tool 写进 born / died（字符串）；在世检查只拿整数比。
 - smoke：`koseki`（上田 19 栏、附近的古战场第一行 1600 上田、跳转 5 个）、`koseki_343`（堺区：古坟有大仙陵与仁德、绳文的海、人口印「全市」且有小图、户主名「真田」出信浓、跳到「这片土地」）；unittest `Saigai.test_tsunami`。
 
+## 语音（3.46，speak.js）
+
+全部用浏览器自带的 `speechSynthesis` / `SpeechRecognition`，不接外部服务、不下载声音文件；只在点按时出声，再点一下停。浏览器没有就不出按钮（`CAN_SAY` / `CAN_LISTEN`）；系统没有那种语言的声音时 toast 提示一次（`say.novoice`）。
+- **🔊 读音** `sayBtn(假名, {label})`：一律读日语、按假名读（交给系统读汉字常错：一宮、神戸、伊達）。地方：县详卡标题（`name.kana`）、详卡「古国」各国（`kana + のくに`，令制外不出）、市区町村卡片与政令市卡片（`kana`，只在 full 卡片）、户籍标题 `.ks-place`、「我在哪」卡片、人物卡（sengoku.js `personYomi`：天皇 = rulers 的 `kana + てんのう`，执权有 `kana`，其余用 `en` 罗马字经 `kanaOf` 转假名，转不出不出按钮）。点击在 document 捕获阶段统一处理（`data-say` / `data-say-lang`），所以按钮不要放进别的 `<button>` 里。
+- **`kanaOf`**：修正平文式罗马字 → 平假名（长音符号 ō → おう，促音、撥音 n' / m+bp、拗音、括注去掉、NBSP 当空格）；全部战国人物、藩主名只有 10 个不是人名的转不出。
+- **「听一遍」** `sayAllBtn()`：读最近的 `[data-say-scope]` 里所有 `[data-say-line]`（按界面语言）；现在用在「彼时今日」（kako.js `sayLine`：年份、名字、诞生 / 忌日、说明）。
+- **合战旁白**：HUD 标题栏 `#hud-say`（`setupNarrationToggle`），guide.js `narrate` 换阶段时 `sayNarration`，`endBattle` 停。
+- **立体图此地千年**（src/3d/here.js 自带一小段，不 import 平面图的 speak.js）：`#here [data-here="say"]`，开着时每一年读完（最多 12 秒）才播下一年。
+- **语音搜索**：`#search-mic`（`setupVoiceSearch`，按界面语言识别，结果填进搜索框并触发 input）。`pointerdown` 阻止默认，免得手机上搜索框失焦收回；手机 / 横屏手机搜索框收着时不出麦克风（CSS `.search.has-mic`）。
+- 「全部功能」第 18 项 `voice`（动作打开京都府详卡并点读音）。
+- 测试：smoke 用 `SAY_STUB`（场景名以 `voice` 开头时注入）替换两个接口，`window.__said` 记下读了什么、语音识别直接「听到」`window.__heard`（默认「京都」）。
+
 ## 检查与测试（改完提交前先跑）
 
 - `python -X utf8 tools/check_data.py`：数据与仓库一致性——分类键取值（直接读 map.js / crests.js / guide.js，不另抄）、时间轴 6 段、译文覆盖层结构（不得含逻辑键、对象数组长度一致）、时代与合战、**数据包是否过期**（用 `build_bundle.build()` 重算比较）、市区町村字段与对照表名字、`sw.js` 的 SHELL 是否与 build_sw 算出的一致、界面词典三语的键与占位符、字体切片有无漏字、仓库里有无 `__pycache__` / 测试页等杂物。
@@ -574,6 +591,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
   - `amami_town`（龙乡町年表有 1609 / 1946 / 1953、废藩置县后属鹿儿岛县）
   - `audio_broken`（声音不可用时照常运行）
   - `portraits`（3.45：生日帖 6 月 21 日至少 3 个头像、图加载得出、没有残留占位、「画像出处」条数与头像数一致且链到 Commons）、`portraits_more`（天皇页 60 位以上有画像、后世所绘标记 ≥10）、`scenes`（合战列表 ≥12 张小图、面板「看这场合战的古画」有图注与出处；手机上面板默认收起，先展开）
+  - `voice`（3.46：彼时今日「听一遍」按界面语言读这一页、麦克风听到「京都」就搜、全部功能的语音读きょうとふ、古国读やましろのくに）、`voice_people`（足利義満 → あしかが よしみつ、孝明天皇 → こうめいてんのう）、`voice_koseki`（上田市 → うえだし、户主名 Sanada Yukimura 出信浓的真田氏、ouchi 是大内不是越智）、`voice_battle`（旁白默认关、打开后换阶段就读并记住）、`voice_3d`（中文：此地千年边播边读，信浓国）；unittest `Voice346`
   - `bday`（深链接 6 月 21 日生日帖：三格数字、条目数与数据一致、有 1582、不出屏不横向溢出、存图、换日期改地址栏、点一条选中县）
   - `china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）
   - `country`（`#map=nope` 退回日本、日本链接不带 `map=`

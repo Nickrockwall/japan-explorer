@@ -118,6 +118,7 @@ def domains(lang, chains=False, main=False):
     d = load(path)
     lords, by_title = d['lords'], d['districts']
     meiji, ken_en = d.get('meiji', {}), d.get('ken', {})
+    ken_kana = tool_json('ken_kana.json', {})
     today = {x['kanji']: x['slug'].title() for x in load(os.path.join(DATA, 'index.json'))}
 
     def ken(name):
@@ -131,7 +132,15 @@ def domains(lang, chains=False, main=False):
             if en.endswith(' Prefecture'):
                 return en
             han = lords.get(name[:-1] + '藩', {}).get('en', '')
-            return han[:-len(' Domain')] + ' Prefecture' if han.endswith(' Domain') else name
+            if han.endswith(' Domain'):
+                return han[:-len(' Domain')] + ' Prefecture'
+            yomi = ken_kana.get(name)  # 3.46：日文维基写明的读音（tools/ken_yomi_tool.py）
+            rm = romaji(yomi[0]) if yomi else None
+            if rm:
+                return f'{rm} Prefecture'
+            if '・' in name and all(x in ken_kana for x in name.split('・')):
+                return ' / '.join(ken(x) for x in name.split('・'))
+            return name
         return name
     conv = ja_to_zh_table() if lang == 'zh' else {}
     generic = {'bakufu', 'hatamoto', 'jisha', 'court', 'mixed'}
@@ -515,7 +524,28 @@ def build_myoji(lang):
     zh = lambda n: ''.join(conv.get(c, c) for c in n)  # noqa: E731
     prov = {f['properties']['key']: f['properties'] for f in load(os.path.join(DATA, 'provinces.json'))['features']}
     pn = lambda k: (prov.get(k, {}).get(lang) or k)  # noqa: E731
-    return json.dumps({k: [[zh(a), zh(b), pn(c)] for a, b, c in v] for k, v in d.items()}, ensure_ascii=False, separators=(',', ':'))
+    out = {k: [[zh(a), zh(b), pn(c)] for a, b, c in v] for k, v in d.items()}
+    # 3.46 罗马字户主名：_r = {统一写法的罗马字: [姓…]}（读音来自氏族条目开头，tools/myoji_kana.json）
+    # 先按只去掉长音符号的写法找（Ōuchi → ouchi，不与 ochi 越智混），找不到再按 _R（ou / oo / oh 都当长音）
+    r, rr = {}, {}
+    for k, kana in sorted(tool_json('myoji_kana.json', {}).items()):
+        rm = romaji(kana)
+        if k in d and rm:
+            r.setdefault(romaji_key(rm, False), []).append(k)
+            rr.setdefault(romaji_key(rm), []).append(k)
+    out['_r'], out['_R'] = r, rr
+    return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
+
+
+def romaji_key(s, loose=True):
+    """罗马字统一写法（与 koseki.js romajiKey 相同）：小写、去长音符号；loose 再把 ou / oo / oh → o、uu → u、m 在 b p m 前 → n。"""
+    import unicodedata
+    s = ''.join(c for c in unicodedata.normalize('NFD', s.lower()) if c.isascii() and c.isalpha())
+    if not loose:
+        return s
+    s = re.sub(r'o[uo]|oh(?![aiueo])', 'o', s)
+    s = re.sub(r'uu', 'u', s)
+    return re.sub(r'm(?=[bpm])', 'n', s)
 
 
 def kuni_share():

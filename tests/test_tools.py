@@ -351,5 +351,35 @@ class Saigai(unittest.TestCase):
         self.assertLess(build_bundle.quake_r(8.2), 150)
 
 
+class Voice346(unittest.TestCase):
+    """3.46：罗马字姓氏的键、氏族条目的读音、县名读音（不收前面带别的字的「伊勢亀山県」）"""
+
+    def test_romaji_key(self):
+        k = build_bundle.romaji_key
+        self.assertEqual(k('Ōuchi', False), 'ouchi')
+        self.assertNotEqual(k('Ōuchi', False), k('Ochi', False))
+        self.assertEqual({k(x) for x in ('Ōta', 'Ohta', 'Oota', 'Outa')}, {'ota'})
+        self.assertEqual(k('Shimbashi'), 'shinbashi')
+
+    def test_myoji_bundle_romaji(self):
+        d = json.loads(build_bundle.build_myoji('zh'))
+        self.assertEqual(d['_r'].get('sanada'), ['真田'])
+        self.assertEqual(d['_r'].get('ouchi'), ['大内'])
+
+    def test_clan_reading(self):
+        import myoji_tool
+        q = "'''"
+        self.assertEqual(myoji_tool.reading(f'{q}真田氏{q}（さなだし）は、', '真田氏'), 'さなだ')
+        self.assertEqual(myoji_tool.reading(f'{q}酒井家{q}（さかいけ）', '酒井家'), 'さかい')
+        self.assertIsNone(myoji_tool.reading(f'{q}源氏{q}（げんじ）', '源氏'))
+
+    def test_ken_reading(self):
+        import ken_yomi_tool
+        q = "'''"
+        self.assertIsNone(ken_yomi_tool.find('亀山県', [('亀山県', f'{q}伊勢亀山県{q}（いせかめやまけん）')]))
+        self.assertEqual(ken_yomi_tool.find('花房県', [('花房県', f'{q}花房県{q}（はなぶさけん）は')]), ('はなぶさ', '花房県'))
+        self.assertEqual(ken_yomi_tool.find('大泉県', [('大泉藩', f'{q}大泉藩{q}（おおいずみはん）は…大泉県となった')]), ('おおいずみ', '大泉藩'))
+
+
 if __name__ == '__main__':
     unittest.main()

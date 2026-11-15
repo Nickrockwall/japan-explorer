@@ -18,6 +18,7 @@ from pilgrimage_tool import api, pages  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 OUT = os.path.join(ROOT, 'tools', 'myoji.json')
+KANA_OUT = os.path.join(ROOT, 'tools', 'myoji_kana.json')  # {姓: 读音}（3.46）
 NOTE = re.compile(r'<ref[^>]*/>|<ref[^>]*>.*?</ref>|<!--.*?-->|\{\{[Ee]fn[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}', re.S)
 
 
@@ -45,11 +46,22 @@ def origin(wt):
     return (m.group(1) + m.group(2))[:20], m.group(1)
 
 
+def reading(wt, base):
+    """条目开头「'''真田氏'''（さなだし）」里的读音，去掉末尾的「し / け」→ 姓的读音（3.46，罗马字户主名用）。"""
+    body = re.sub(r'\{\{[^{}]*\}\}', '', NOTE.sub('', wt))
+    m = re.search(r"'''" + re.escape(base) + r"'''\s*[（(]\s*([ぁ-んゔー]+)\s*(?:[、,／/）)]|$)", body)
+    if not m:
+        return None
+    r = m.group(1)
+    tail = 'し' if base.endswith('氏') else 'け'
+    return r[:-1] if r.endswith(tail) and len(r) > 2 else None
+
+
 def main():
     titles = embedded()
     got = pages(titles, 'revisions', rvprop='content', rvslots='main')
     provs = {f['properties']['key'] for f in json.load(open(os.path.join(ROOT, 'src', 'data', 'provinces.json'), encoding='utf-8'))['features']}
-    out = {}
+    out, kana = {}, {}
     for t in titles:
         base = re.sub(r' \(.*\)$', '', t)
         m = re.fullmatch(r'([一-龥々ヶ]{1,3})(氏|家)', base)
@@ -61,10 +73,16 @@ def main():
         if not text or prov not in provs:
             continue
         out.setdefault(m.group(1), []).append([base, text, prov])
+        r = reading(wt, base)
+        if r:
+            kana.setdefault(m.group(1), r)
     for v in out.values():
         v.sort(key=lambda x: (x[0].endswith('家'), x[0]))
     assert any(x[0] == '真田氏' and x[2] == '信濃国' and '真田' in x[1] for x in out['真田']), out.get('真田')
     json.dump(out, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    assert kana.get('真田') == 'さなだ' and kana.get('徳川') == 'とくがわ', (kana.get('真田'), kana.get('徳川'))
+    json.dump(kana, open(KANA_OUT, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'), sort_keys=True)
+    print(f'读音 {len(kana)} 个姓')
     print(f'{len(titles)} 个氏族条目 → {len(out)} 个姓、{sum(len(v) for v in out.values())} 族写明了出身地')
 
 

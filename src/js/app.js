@@ -7,6 +7,7 @@ import { createGuide } from './guide.js';
 import { createBook } from './goshuin.js';
 import { createMuniView } from './muni.js';
 import { createSearch, loadMuniIndex } from './search.js';
+import { setupSay, setupNarrationToggle, setupVoiceSearch } from './speak.js';
 import { spotCard, pilgrimageSection } from './pilgrimage.js';
 import { provinceCard, printsOf, printRows, hiroshigeSection, createViewer } from './hiroshige.js';
 import { getPosition, placeAt, locCard, muniGeo } from './locate.js';
@@ -88,6 +89,10 @@ async function main() {
   setupMapSwitch();
   setupHudFold();
   setupSound();
+  // 语音（3.46）：🔊 读音按钮、合战旁白朗读开关、搜索框麦克风
+  setupSay((msg) => toast(msg, 5000));
+  setupNarrationToggle($('hud-say'));
+  setupVoiceSearch($('search-input'), $('search-mic'), (msg) => toast(msg));
   const menu = setupMenu();
   setupLegendCaption();
   setupSheets();
@@ -1528,6 +1533,13 @@ async function main() {
     battle: () => { if (app.battle) exitBattle(); battleDlg.showModal(); },
     book: () => bookUI.open(),
     guide: () => { if (narrow()) tabs.set('guide'); else $('chat-input').focus(); },
+    // 3.46 语音：打开京都府详卡，读音按钮闪一下
+    voice: () => {
+      if (app.battle) exitBattle();
+      map.onSelect(26);
+      if (narrow()) tabs.set('detail');
+      clickWhen('#detail .modern-title .say', 3000);
+    },
   };
   const runCat = (a) => {
     if (a.startsWith('f-')) { if (app.battle) exitBattle(); onMap(); applyFilter(a.slice(2)); return; }
