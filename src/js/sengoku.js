@@ -5,6 +5,7 @@ import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { crestSVG } from './crests.js';
 import { fixLink } from './report.js';
+import { ptHTML, ptLineHTML } from './portraits.js';
 
 const OUTSIDE = '#e4dccb';
 const DIM = [241, 234, 218]; // 聚光时褪向胡粉的陆地 #f1eada
@@ -140,8 +141,9 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       })),
     ].join('');
     const sub = [lang === 'ja' ? p.en : p.ja, data.people[title] ? life(p) : ''].filter(Boolean).join(' · ');
+    // 没有详写肖像的用 portraits.json 的小图（3.45），也没有才用家纹
     const face = bio?.img ? `<img class="sg-face" src="${bio.img}" alt="" loading="lazy">`
-      : bio?.crest ? `<span class="sg-face sg-crest">${crestSVG(bio.crest)}</span>` : '';
+      : `<span class="sg-face sg-pt">${ptHTML(p.qid, personName(title), title)}</span>${bio?.crest ? `<span class="sg-face sg-crest">${crestSVG(bio.crest)}</span>` : ''}`;
     const crest = bio?.img && bio.crest ? `<span class="sg-mon">${crestSVG(bio.crest)}</span>` : '';
     const rel = (bio?.related || []).filter(base).map((r) => `<button type="button" class="sg-rel" data-person="${esc(r)}">${esc(personName(r))}</button>`).join('');
     return `<button type="button" class="sg-back" data-act="sg-back">‹ ${esc(clan ? clanName(year, clan) : focus ? provName(focus) : t('sg.back'))}</button>
@@ -151,7 +153,7 @@ export function createSengoku(data, provinces, year = '1560', { rulers = null, b
       <ol class="sg-rows sg-roles">${roles}</ol>
       ${rel ? `<div class="sg-rels"><span>${esc(t('sg.related'))}</span>${rel}</div>` : ''}
       <a class="sg-wiki" href="${wikiLink(title, p.qid)}" target="_blank" rel="noopener">${esc(t('sg.wiki'))} ↗</a>
-      ${bio?.img ? `<p class="kr-note">${esc(bio.author ? t('sg.img.by', { author: bio.author, license: bio.license }) : t('sg.img'))}</p>` : ''}</div>`;
+      ${bio?.img ? `<p class="kr-note">${esc(bio.author ? t('sg.img.by', { author: bio.author, license: bio.license }) : t('sg.img'))}</p>${ptLineHTML(bio.qid || p.qid, title, true)}` : ptLineHTML(p.qid, title)}</div>`;
   }
 
   // ── 势力总览：一家在所选年份的领国、按 1598 年太阁检地国高折算的石高、名次、各年份的消长、接壤的势力 ──

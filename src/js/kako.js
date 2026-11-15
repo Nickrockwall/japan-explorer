@@ -3,6 +3,7 @@
 // 每人一个随机种子（只存本机），与日期一起决定当天先看到哪几条：同一人同一天刷新不变，换一天、换一个人都不同
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
+import { ptHTML, ptCredHTML } from './portraits.js';
 
 export const PER_PAGE = 3;
 
@@ -28,6 +29,8 @@ export function dayOrder(list, key, seed, visited = new Set()) {
 }
 
 const pick = (o) => o?.[lang] || o?.zh || '';
+// 诞生 / 忌日条目带人物画像的占位（portraits.js 有图才换成小头像）
+const face = (e) => (e.t ? ptHTML(e.q, pick(e.n)) : '');
 // 生卒条目带一个小标签（诞生 / 忌日）
 const tag = (e) => (e.t ? ` <em class="kk-t kk-${e.t}">${esc(t(`kk.t.${e.t}`))}</em>` : '');
 export const kakoLabel = (e) => `${e.y} ${pick(e.n)}${e.t ? ` · ${t(`kk.t.${e.t}`)}` : ''}`;
@@ -41,18 +44,18 @@ export function kakoHTML({ key, list, page, prefName, provName, lordOf = () => '
     const where = [prefName(e.p), e.k ? provName(e.k) : '', lordOf(e)].filter(Boolean).join(' · ');
     const sub = lang === 'ja' ? e.s : where;
     return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
-      <span class="kk-y">${e.y}<small>${esc(t('kk.ago', { n: ago(e.y) }))}</small></span>
+      <span class="kk-y">${e.y}<small>${esc(t('kk.ago', { n: ago(e.y) }))}</small></span>${face(e)}
       <span class="kk-main"><b>${esc(pick(e.n))}${tag(e)}</b><span>${esc(sub)}</span>${lang === 'ja' ? `<span>${esc(where)}</span>` : ''}</span></button></li>`;
   }).join('');
   const isToday = key === dayKey(now);
-  return `<section class="kako" aria-labelledby="kk-h">
+  return `<section class="kako" aria-labelledby="kk-h" data-pt-scope>
     <div class="kk-head"><div class="section-h" id="kk-h">${esc(t(isToday ? 'kk.h' : 'kk.h.day', { m, d }))}</div>
       <label class="kk-date" title="${esc(t('kk.pick'))}"><span>📅</span><input type="date" data-kk-date value="${now.getFullYear()}-${key}" aria-label="${esc(t('kk.pick'))}"></label></div>
     ${list.length ? `<ol class="kk-list">${rows}</ol>
       <div class="kk-foot"><span>${esc(t('kk.count', { n: list.length }))}</span>
         ${pages > 1 ? `<button type="button" class="kk-more" data-act="kk-more">${esc(t('kk.more'))} ↻</button>` : ''}
         ${isToday ? '' : `<button type="button" class="kk-more" data-act="kk-today">${esc(t('kk.back'))}</button>`}
-        <button type="button" class="kk-more kk-bd" data-act="kk-bday">${esc(t('bd.open'))}</button></div>`
+        <button type="button" class="kk-more kk-bd" data-act="kk-bday">${esc(t('bd.open'))}</button>${ptCredHTML()}</div>`
     : `<p class="kk-none">${esc(t('kk.none'))}</p>`}
     <p class="kk-note">${esc(t('kk.note'))}</p></section>`;
 }
@@ -74,8 +77,8 @@ export function kakoPrefHTML(all, pid, now = new Date()) {
   const rows = mine.map(({ key, e, n }) => {
     const [m, d] = key.split('-').map(Number);
     return `<li><button type="button" class="kk-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}" data-key="${key}">
-      <span class="kk-y">${esc(t('kk.md', { m, d }))}<small>${esc(n === 0 ? t('kk.today') : t('kk.in', { n }))}</small></span>
+      <span class="kk-y">${esc(t('kk.md', { m, d }))}<small>${esc(n === 0 ? t('kk.today') : t('kk.in', { n }))}</small></span>${face(e)}
       <span class="kk-main"><b>${esc(pick(e.n))}${tag(e)}</b><span>${e.y}</span></span></button></li>`;
   }).join('');
-  return `<div class="kk-prefhead"><div class="section-h">${esc(t('kk.pref'))}</div>${back}</div><ol class="kk-list kk-pref">${rows}</ol>`;
+  return `<div data-pt-scope><div class="kk-prefhead"><div class="section-h">${esc(t('kk.pref'))}</div>${back}</div><ol class="kk-list kk-pref">${rows}</ol>${ptCredHTML()}</div>`;
 }

@@ -66,6 +66,9 @@ tools/ou_units.py              上面这些分区的定义：明治旧郡 → �
 src/assets/crests/<键>.png     家纹旗用的家纹（白色图案透明底 96px，tools/crest_tool.py 生成；出处与许可在 tools/clan_crests.json）
 src/data/rulers.json           天皇 126 代 · 将军 · 镰仓执权的代数与在位年份（tools/rulers_tool.py）
 src/data/people.json           人物详写：三语简介、相关人物、家纹、肖像（tools/people_tool.py；肖像在 src/assets/people/QID.jpg）
+src/data/portraits.json        人物画像（3.45，tools/portrait_tool.py）：{q: {QID: [许可, 作者, Commons 文件, 画的年份 / 世纪 / 时代, 后世所绘 1 · 当时 0 · 不详 2 · 不注 null]}, w: {日文条目名: QID}}；图在 src/assets/portraits/QID.webp
+src/data/scenes.json           合战与「实权」各段的古画（3.45，tools/scene_tool.py）：{b-合战键 / r-实权键: [图, Commons 文件, 许可, 三语图注]}；图在 src/assets/scenes/
+src/js/portraits.js            画像与古画的占位 → 小头像 / 图（MutationObserver，见下「人物画像」），「画像出处」对话框
 src/js/sengoku.js              战国势力：着色、提示、图例、国别卡片与人物卡
 src/js/rulers.js               年表对话框：实权（各时期名义 / 实际掌权者）· 天皇 · 将军 · 执权
 src/data/regimes.json          「实权」20 段（tools/regimes_tool.py：三语自写，年份与人名对日文维基核对）
@@ -529,6 +532,9 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - **生日帖出生年**（bday.js `wareki` / `eto` / `sameAge`，`je.ui.bdayYear` 只存本机，1873 年以后）：同龄的他们读 `src/data/ages.json` ← `tools/age_tool.py`（Wikidata 生卒年，精确到年；事件只用本站已核对的：即位 / 任将军 / 任执权 / 合战领军 / 去世；岁数 = 年份相减）。生日帖对话框代码在 bday-dialog.js（3.40 从 app.js 拆出；app.js 其余各段共用会被重新赋值的状态，没有再拆）。
 - **真实足迹**（footprint.js，御朱印帐第三篇 `foot`）：在文件里找「Exif\0\0」后的 TIFF 头读 GPS（JPEG 与 HEIC 都这样），落在 824 年 68 国哪一国；`je.ui.footprint` = {p: {国: 张数}, n, k}，不存坐标。测试照片 `tests/fixtures/`。
 - **搜索**：`bundle/search.json`（build_bundle `build_search`：战国人物 + 6 世纪后天皇 / 将军 / 执权、立体图的城、藩，三语名字放一起），打开搜索框时下载；合战来自数据包。人物 → 战国图人物卡；城 → `3d.html#cs=城名`（3D 打开城卡片）；藩 → 选县并展开那一个 `details.hn-han`。
+- **人物画像**（3.45，portraits.js）：各处只输出占位——`ptHTML(QID, 名字, 日文条目名)` 是 `<i class="pt">`，`ptLineHTML` 是人物卡的署名行，`scHTML(键, thumb)` 是古画；`setupPortraits()` 用 MutationObserver 看到页面上有没换过的占位才下载 portraits.json / scenes.json，有图的换成头像（`data-ok` = QID），没有的把占位删掉（不留空圆圈）。所以画列表的函数不用等数据、也不用重画。用到的地方：彼时今日（欢迎卡、县详卡）、生日帖的诞生 / 忌日与同龄的他们（按条目名）、户籍「同乡名人」（`r.faces`，前 6 位）与此地年表、年表的天皇 / 将军 / 执权（有人物详写大图的仍用大图）、战国人物卡（没有详写肖像时）。署名：有头像的区块（`[data-pt-scope]`，没有就取所在的 dialog）里放 `ptCredHTML()`，有头像才显示，点开 `dialog#pt-dlg` 列出这块的每张图：作者、许可、Commons 链接、几时画的。CC BY / BY-SA 的作者因此都能看到。1860 年以前去世的人才注「后世所绘（年代）/ 绘于… / 绘制年代不详」（后世所绘的头像加一圈虚线 `.pt-later`）；之后的多是照片，Commons 的日期栏常是翻拍年份，不注。
+  - `tools/portrait_tool.py [--sheet]`：人 = famous.json ∪ kako 生卒 ∪ ages ∪ rulers ∪ sengoku people ∪ people.json；图 = Wikidata P18，没有取日文条目首图；许可同 people_tool；文件名带墓 / 花押 / 碑 / 铜像 / 署名 / 生家…（`NOT_KW`）的不收；`--sheet` 存 `.cache/portraits/sheet-NN.png`（编号 = `order.json` 顺序），人工看过不是本人肖像的文件名写进 `NOT_PORTRAIT`，再跑一次（已下载的会删掉）。下载要一个多小时（Commons 缩略图限速），缓存在 `.cache/portraits/`。
+  - `tools/scene_tool.py --cand` 列出各合战 / 实权条目里用到的、Commons 上公有领域 / CC0 的图并存总览图，人工挑一张写进 `PICK`（图注三语自己写，只写文件页写着的：画的是什么、几时、哪里藏）；条目里没有合适的，在 Commons 按关键词搜过的候选存在 `.cache/scenes/extra.json`。不写进去的：鸟羽·伏见（条目里的图文件页没写画的是什么）。合战列表的卡片右边一张小图，合战面板「看这场合战的古画」（`#hud-pic`，默认收起），实权页每段一张。
 - **城的照片**：`tools/castle_photo_tool.py` → `src/assets/castles/<QID>.webp`（480px q70）与 `src/3d/castle_photos.json`（[文件, 许可, 作者, Commons 页]），许可规矩同人物肖像；`NOT_PHOTO` 是人工看过不是实景的（屏风画、版画）。登记在 LICENSE-CONTENT。
 - **合战 16 场**：新六场在 `tools/battles_more.py`（battles_tool 导入），姉川的织田·德川兵力条目没写 → 两方都不给 `men`，兵力条不画（app.js 与 3D 都要求两方都有）；unit test 的 `NO_MEN`。
 - **第二轮核对**：`tools/recheck_tool.py`（方言例句先在方言条目里找、再全文检索，地酒按日文名找条目，拉面看「ご当地ラーメン」）；维基没有的再查 Kotobank（`.cache/kotobank/`）。日文维基方言条目把重音写成粗体（ぶ'''んに'''），找字前要去掉 `'''`。
@@ -567,6 +573,7 @@ src/js/locate.js               「我在哪」：浏览器定位 → 县（map.p
 - 新增功能时在 `tests/smoke.py` 里补一个场景。现有回归场景（按场景名排序）：
   - `amami_town`（龙乡町年表有 1609 / 1946 / 1953、废藩置县后属鹿儿岛县）
   - `audio_broken`（声音不可用时照常运行）
+  - `portraits`（3.45：生日帖 6 月 21 日至少 3 个头像、图加载得出、没有残留占位、「画像出处」条数与头像数一致且链到 Commons）、`portraits_more`（天皇页 60 位以上有画像、后世所绘标记 ≥10）、`scenes`（合战列表 ≥12 张小图、面板「看这场合战的古画」有图注与出处；手机上面板默认收起，先展开）
   - `bday`（深链接 6 月 21 日生日帖：三格数字、条目数与数据一致、有 1582、不出屏不横向溢出、存图、换日期改地址栏、点一条选中县）
   - `china`（屏蔽 jsdelivr / unpkg / Google Fonts 后仍能打开）
   - `country`（`#map=nope` 退回日本、日本链接不带 `map=`

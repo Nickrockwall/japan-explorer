@@ -4,6 +4,15 @@
 
 Newest first.
 
+## 3.45 · 2026-11-15
+
+- Portraits for people: Born here, On this day, the birthday page and its same-age list, the register's local timeline, the emperor / shogun / regent lists and the Sengoku person cards now show small portraits for about 1,884 people (of about 2,286 on the site, 82%). All come from Wikimedia Commons, public domain or CC BY / BY-SA only, and load only when shown
+- Every place with portraits has a “Picture credits” link listing each picture's author, license and Commons page
+- Old portraits were mostly painted long afterwards: for people who died before 1860 the credit says “Painted later (Edo period)”, “Painted in 1590” or “Date of painting unknown”, from the Commons file page; later paintings get a thin extra ring
+- Graves, monuments, statues, signatures, group photos, buildings and the like were removed by file name and by looking at every picture (127 removed)
+- Old pictures for battles and periods: 15 of the 16 battles have a battle screen or ukiyo-e (on the battle list and under “Old picture of this battle” in the battle panel), and each of the 20 periods on the Who held power page has one (screens, scrolls, prints and early photos). Captions say what is shown, when it was made and where it is kept. Toba–Fushimi has none: its file pages don't say what they show
+- Left from last time: dialect phrases stay as changed in 3.40; app.js stays as it is; photo footprints and the other phone features still need a try on a real phone
+
 ## 3.44 · 2026-11-14
 
 - New “All features” list: 17 features in three groups — My hometown, All of Japan, Play & collect — each with one line on what it does and a button that opens it (the ancestral register can show Ueda as an example, the province rankings open straight to the Towns or Rivals page, and each theme map has its own button). A box at the top filters the list. It is the first item in the menu at the top right, and there is a button under “Start here” on the welcome page. The old Help page is folded into it

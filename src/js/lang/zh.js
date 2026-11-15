@@ -513,4 +513,9 @@ export default {
   'tip.muni': `点卡片上的「📜 古代户籍」，看这里一千多年来归谁管`,
   'tip.circuit': `点一个古国，看广重笔下的它，以及今天还带着这个国名的东西`,
   'tip.power': `卡片上方还有「市町村」逆袭榜和「宿敌 PK」`,
+  // ── 人物画像与配图（3.45，portraits.js / scenes）──
+  'pt.cred': `画像出处`, 'pt.cred.h': `画像出处`, 'pt.cred.note': `图都来自 Wikimedia Commons，只收公有领域与 CC BY / BY-SA 的。照相术传入以前的人，画像多是后人画的，并不是本人的样子；画的年代按 Commons 文件页写的日期。`,
+  'pt.by': `画像：{by}`, 'pt.y': `{y} 年`, 'pt.c': `{c} 世纪`, 'pt.later': `后世所绘（{when}）`, 'pt.drawn': `绘于 {when}`, 'pt.unknown': `绘制年代不详`,
+  'pt.era.asuka': `飞鸟时代`, 'pt.era.nara': `奈良时代`, 'pt.era.heian': `平安时代`, 'pt.era.kamakura': `镰仓时代`, 'pt.era.nanboku': `南北朝时代`, 'pt.era.muromachi': `室町时代`, 'pt.era.sengoku': `战国时代`, 'pt.era.momoyama': `安土桃山时代`, 'pt.era.edo': `江户时代`, 'pt.era.meiji': `明治时代`, 'pt.era.taisho': `大正时代`, 'pt.era.showa': `昭和时代`,
+  'sc.pic': `看这场合战的古画`, 'sc.by': `图：{license}，Wikimedia Commons`,
 };

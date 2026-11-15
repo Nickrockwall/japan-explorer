@@ -6,6 +6,7 @@
 import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { fixLink } from './report.js';
+import { ptHTML, ptCredHTML, scHTML } from './portraits.js';
 
 export const RULER_TABS = ['power', 'emperor', 'shogun', 'shikken'];
 const BAKUFU_ERA = { 鎌倉: 'kamakura', 室町: 'muromachi', 江戸: 'edo' };
@@ -23,7 +24,8 @@ function eraOf(eras, from) {
 
 function row(r, bios, extra = '') {
   const bio = bios[r.wiki];
-  const face = bio?.img ? `<img src="${esc(bio.img)}" alt="" loading="lazy">` : bio ? '<i class="rl-dot"></i>' : '';
+  // 有详写的用人物卡的大图；没有的用 portraits.json（3.45），也没有就是圆点（有详写）或空
+  const face = bio?.img ? `<img src="${esc(bio.img)}" alt="" loading="lazy">` : ptHTML(r.qid, pick(r), r.wiki) + (bio ? '<i class="rl-dot"></i>' : '');
   return `<li data-person="${esc(r.wiki)}" class="${bio ? 'has-bio' : ''}"><span class="rl-n">${r.n}</span>
     <span class="rl-name">${esc(pick(r))}${extra}</span><span class="rl-y">${yr(r.from)}–${yr(r.to)}</span><span class="rl-face">${face}</span></li>`;
 }
@@ -33,6 +35,7 @@ function powerHTML(regimes) {
   const P = (o) => o[lang] || o.zh;
   return regimes.periods.map((p, i) => `<section class="rl-group rl-pw" data-rl-g="${i}" data-pw="${p.key}" data-from="${p.from}">
     <h3>${esc(P(p.y))}${p.from < 300 ? '' : `<small>${esc(t('pw.years', { n: spanOf(regimes, i) }))}</small>`}</h3>
+    ${scHTML(`r-${p.key}`)}
     <dl class="pw-dl"><dt>${esc(t('pw.real'))}</dt><dd class="pw-real">${esc(P(p.real))}</dd>
       <dt>${esc(t('pw.nominal'))}</dt><dd>${esc(P(p.nominal))}</dd>
       <dt>${esc(t('pw.seat'))}</dt><dd>${esc(P(p.seat))}</dd></dl>
@@ -115,6 +118,6 @@ export function rulersHTML(rulers, eras, bios, tab, regimes = null) {
     <div class="rl-jumpwrap"><button type="button" class="rl-arr" data-rl-arr="-1" aria-label="${esc(t('rl.prev'))}">‹</button>
       <nav class="rl-jump" aria-label="${esc(t('rl.jump'))}">${jump.map((x, i) => `<button type="button" data-rl-jump="${i}">${esc(x)}</button>`).join('')}</nav>
       <button type="button" class="rl-arr" data-rl-arr="1" aria-label="${esc(t('rl.next'))}">›</button></div>
-    <div class="rl-body">${body}<p class="rl-note">${esc(t(tab === 'power' ? 'pw.note' : 'rl.note'))}</p>
+    <div class="rl-body" data-pt-scope>${body}<p class="rl-note">${tab === 'power' ? '' : `${ptCredHTML()} `}${esc(t(tab === 'power' ? 'pw.note' : 'rl.note'))}</p>
       <p class="fix-row">${fixLink(t('fix.w.rl', { tab: t(`rl.tab.${tab}`) }))}</p></div></div>`;
 }

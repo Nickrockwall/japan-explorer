@@ -2040,6 +2040,48 @@ class Case:
             assert page.is_visible(sel), f'切到 {name} 后 {sel} 不可见'
 
 
+    def portraits(self, page):
+        # 人物画像（3.45）：生日帖 6 月 21 日的诞生 / 忌日有小头像，图都加载得出来；「画像出处」列出作者与许可、Commons 链接；
+        # 没有图的占位都去掉了（不留空圆圈）
+        page.wait_for_selector('#bday[open] .bd-item .pt[data-ok]', timeout=20000)
+        page.wait_for_function("!document.querySelector('#bday i.pt:not([data-ok])')", timeout=10000)
+        n = page.locator('#bday .bd-item .pt[data-ok]').count()
+        assert n >= 3, f'6 月 21 日应至少 3 人有画像：{n}'
+        page.locator('#bday .bd-item .pt[data-ok] img').first.scroll_into_view_if_needed()
+        page.wait_for_function("[...document.querySelectorAll('#bday .bd-item .pt[data-ok] img')].slice(0, 3).every((i) => i.complete && i.naturalWidth > 0)", timeout=15000)
+        page.click('#bday [data-pt-cred]')
+        page.wait_for_selector('#pt-dlg[open] .pt-list li', timeout=5000)
+        assert page.locator('#pt-dlg .pt-list li').count() == len(set(page.eval_on_selector_all('#bday .pt[data-ok]', 'els => els.map((e) => e.dataset.ok)')))
+        assert page.locator('#pt-dlg a[href^="https://commons.wikimedia.org/wiki/File:"]').count() >= n
+        page.click('#pt-dlg [data-pt-close]')
+        assert not page.is_visible('#pt-dlg')
+
+    def portraits_more(self, page):
+        # 年表的天皇页：大半有画像，后世所绘的带虚线圈（推古天皇）；户籍「同乡名人」有头像（上田）
+        page.wait_for_selector('#rulers[open] .rl-face .pt[data-ok]', timeout=20000)
+        page.wait_for_function("!document.querySelector('#rulers i.pt:not([data-ok])')", timeout=10000)
+        n = page.locator('#rulers .rl-face .pt[data-ok]').count()
+        assert n >= 60, f'天皇页应有 60 位以上有画像：{n}'
+        assert page.locator('#rulers .pt.pt-later').count() >= 10, '应有后世所绘的标记'
+        assert page.is_visible('#rulers [data-pt-cred]')
+
+    def scenes(self, page):
+        # 合战与实权的古画（3.45）：合战列表的卡片多数有小图；进合战后面板里「看这场合战的古画」展开有图注与出处；
+        # 实权页各段有图
+        self.top(page, '#btn-battle')
+        page.wait_for_selector('#battles[open] .battle-card .sc[data-ok]', timeout=20000)
+        n = page.locator('#battles .battle-card .sc[data-ok]').count()
+        assert n >= 12, f'合战列表应有 12 场以上有图：{n}'
+        assert page.evaluate("document.querySelector('#battle-list').scrollWidth <= document.querySelector('#battle-list').clientWidth + 1"), '合战列表不应横向溢出'
+        page.locator('#battles .battle-card').first.click()
+        page.wait_for_selector('#hud-pic:not([hidden])', state='attached', timeout=15000)
+        if page.evaluate("document.querySelector('#battle-hud').classList.contains('folded')"):  # 手机上面板默认收起
+            page.click('#hud-fold')
+        page.click('#hud-pic summary')
+        page.wait_for_function("(() => { const i = document.querySelector('#hud-pic img'); return i && i.complete && i.naturalWidth > 0; })()", timeout=15000)
+        assert 'Wikimedia Commons' in page.text_content('#hud-pic .sc-cap')
+
+
 def plan(lang):
     full = lang == 'zh'
     cases = [('deeplink', 'pref=26', ['deeplink', 'no_overflow', 'fonts']), ('korea_switch', '', ['korea_switch']), ('korea_hidden', 'map=korea', ['korea_hidden']), ('korea', 'map=korea&pref=1', ['korea', 'no_overflow']), ('korea_dispute', 'map=korea', ['korea_dispute']), ('korea_counties', 'map=korea&pref=4', ['korea_counties']), ('korea_eras', 'map=korea', ['korea_eras']), ('korea_locate', 'map=korea', ['korea_locate']), ('korea_tour', 'map=korea', ['korea_tour']), ('korea_guide', 'map=korea&pref=16', ['korea_guide']), ('korea_sul', 'map=korea&pref=14', ['korea_sul']), ('korea_book', 'map=korea&pref=14', ['korea_book']), ('korea_daedong', 'map=korea&pref=17', ['korea_daedong']), ('korea_power', 'map=korea', ['korea_power']), ('korea_battle', 'map=korea', ['korea_battle']), ('shared', '', ['shared']), ('korea_koseki', 'map=korea', ['korea_koseki']), ('disputed_split', '', ['disputed_split']), ('disputed_jp', '', ['disputed_jp']), ('locate_kurils', '', ['locate_kurils']), ('disputed_muni', 'pref=1&muni=1', ['disputed_muni']), ('muni', 'pref=23&muni=1&m=23211', ['muni', 'no_overflow']),
@@ -2055,7 +2097,8 @@ def plan(lang):
              ('guide_power', 'pref=26', ['guide_power']), ('guide_town', 'pref=20&muni=1&m=20203', ['guide_town']),
              ('koseki_340', 'pref=9&muni=1&m=09204&koseki=1', ['koseki_340']), ('koseki_kuni', 'pref=18&muni=1&m=18204&koseki=1', ['koseki_kuni']), ('koseki_saigai', 'pref=28&muni=1&m=28110&koseki=1', ['koseki_saigai']), ('koseki_343', 'pref=27&muni=1&m=27141&koseki=1', ['koseki_343', 'no_overflow']),
              ('koseki_sennen', 'pref=20&muni=1&m=20201&koseki=1', ['koseki_sennen']), ('search_340', '', ['search_340']),
-             ('catalog', '', ['catalog', 'no_overflow'])]
+             ('catalog', '', ['catalog', 'no_overflow']), ('portraits', 'bday=06-21', ['portraits', 'no_overflow']), ('portraits_more', 'rl=emperor', ['portraits_more']),
+             ('scenes', 'pref=21', ['scenes'])]
     if full:
         cases += [('battle', 'pref=21', ['battle']), ('era', '', ['era']), ('sengoku_era', '', ['sengoku_era']), ('stamp', 'pref=13', ['stamp']),
                   ('guide', 'pref=26', ['guide']), ('tabs', 'pref=26', ['tabs']), ('phone_ui', 'pref=26', ['phone_ui', 'no_overflow']),

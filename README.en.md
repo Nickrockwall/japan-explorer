@@ -92,7 +92,7 @@ Everything has a source where possible and is checked by script — that coordin
 - **CODH** (CC BY 4.0): municipal boundaries of 1920, 1985 and 1995, and village coordinates from the *Nihon Rekishi Chimei Taikei* data set.
 - **Nara National Research Institute for Cultural Properties, ancient place-name search**: the townships of each district in the *Wamyō Ruijushō*.
 - **Wikidata** (CC0): readings, populations, English names, coordinates of castles and people, and dates and places for On this day.
-- **Images**: Hiroshige's prints and the prefectural emblems are public domain; portraits, crests and castle photos are public domain or CC BY / BY-SA (credited on the card), all from Wikimedia Commons.
+- **Images**: Hiroshige's prints, the prefectural emblems and the old pictures of battles and periods are public domain; portraits, crests and castle photos are public domain or CC BY / BY-SA (credited on the card or under "Picture credits"), all from Wikimedia Commons.
 
 Coloring shows only the dominant power in a province or district and is approximate; uncertain points are marked "one account says". It's meant for enjoyable browsing, not as an academic source.
 

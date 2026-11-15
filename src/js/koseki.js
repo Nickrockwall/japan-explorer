@@ -7,6 +7,7 @@ import { distanceKm } from './koku.js';
 import { fmtPeople } from './kokuryoku.js';
 import { findHan, kosekiHanHTML } from './han.js';
 import { fixLink } from './report.js';
+import { ptHTML, ptCredHTML } from './portraits.js';
 import { fold } from './search.js';
 
 const WALK_KM = 30; // 估算步行天数：一天约 30 公里
@@ -318,7 +319,7 @@ export function kosekiRows({ pref, props, provNames, pt, sites, domains, mainGun
   const fam = town?.famous?.[props.code] || famCity;
   if (fam?.length) {
     const life = (b, d) => (lang === 'en' ? ` (${b ?? '?'}–${d ?? '?'})` : `（${b ?? '?'}–${d ?? '?'}）`);
-    rows.push({ k: 'famous', seal: famCity ? 'city' : 'muni', main: fam.slice(0, 3).map(([, n, b, d]) => `${n}${life(b, d)}`).join(t('list.sep')), sub: [fam.length > 3 ? fam.slice(3).map(([, n]) => n).join(t('list.sep')) : '', t('ks.famous.note')].filter(Boolean).join(' · ') });
+    rows.push({ k: 'famous', seal: famCity ? 'city' : 'muni', faces: fam.slice(0, 6).map(([q, n]) => [q, n]), main: fam.slice(0, 3).map(([, n, b, d]) => `${n}${life(b, d)}`).join(t('list.sep')), sub: [fam.length > 3 ? fam.slice(3).map(([, n]) => n).join(t('list.sep')) : '', t('ks.famous.note')].filter(Boolean).join(' · ') });
   }
   // 地名来历（town.yurai）：政令市的区用市名的来历（印「全市」），其余按本市区町村
   const yd = town?.yurai?.[pref.id];
@@ -395,8 +396,8 @@ export function kosekiHTML(ctx, data, name, extra = '') {
   const body = rows.map((r, i) => `${r.g && r.g !== rows[i - 1]?.g ? `<h3 class="ks-grp" data-ks-grp="${r.g}">${esc(t(`ks.g.${r.g}`))}</h3>` : ''}
     <div class="ks-row" data-k="${r.k}">
       <div class="ks-k">${esc(t(`ks.r.${r.k}`))}<i class="ks-seal" title="${esc(t(`ks.p.${r.seal}.t`))}">${esc(t(`ks.p.${r.seal}`))}</i></div>
-      <div class="ks-v"><b>${esc(r.main)}</b>${r.spark ? sparkSVG(r.spark) : ''}${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
-        ${r.voice ? `<button type="button" class="ks-voice" data-act="ks-voice">${esc(t('ks.voice'))}</button>` : ''}</div>
+      <div class="ks-v">${r.faces ? `<span class="ks-faces">${r.faces.map(([q, n]) => ptHTML(q, n)).join('')}</span>` : ''}<b>${esc(r.main)}</b>${r.spark ? sparkSVG(r.spark) : ''}${r.sub ? `<span>${esc(r.sub)}</span>` : ''}${r.hans?.length ? kosekiHanHTML(r.hans) : ''}
+        ${r.voice ? `<button type="button" class="ks-voice" data-act="ks-voice">${esc(t('ks.voice'))}</button>` : ''}${r.faces ? ptCredHTML() : ''}</div>
     </div>`).join('');
   const art = print ? `<button type="button" class="ks-art" data-act="art" data-no="${print.no}"><img src="${esc(print.img)}" alt="" loading="lazy"><span>${esc(t('ks.art', { title: print.title_t || print.title }))}</span></button>` : '';
   return `

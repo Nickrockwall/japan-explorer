@@ -509,4 +509,9 @@ export default {
   'tip.muni': `カードの「📜 古代の戸籍」で、ここが千年あまり誰の支配下にあったかがわかります`,
   'tip.circuit': `国を選ぶと、広重が描いたその国と、いまも国名を残すものが見られます`,
   'tip.power': `カードの上には「市町村」のランキングと「宿敵対決」もあります`,
+  // ── 人物画像と挿絵（3.45）──
+  'pt.cred': `画像の出典`, 'pt.cred.h': `画像の出典`, 'pt.cred.note': `画像はすべて Wikimedia Commons から、パブリックドメインと CC BY / BY-SA のものだけを使っています。写真が伝わる前の人の肖像は後世に描かれたものが多く、本人の姿そのものではありません。描かれた年代は Commons のファイルページの日付によります。`,
+  'pt.by': `画像：{by}`, 'pt.y': `{y}年`, 'pt.c': `{c}世紀`, 'pt.later': `後世の作（{when}）`, 'pt.drawn': `{when}の作`, 'pt.unknown': `制作年代不詳`,
+  'pt.era.asuka': `飛鳥時代`, 'pt.era.nara': `奈良時代`, 'pt.era.heian': `平安時代`, 'pt.era.kamakura': `鎌倉時代`, 'pt.era.nanboku': `南北朝時代`, 'pt.era.muromachi': `室町時代`, 'pt.era.sengoku': `戦国時代`, 'pt.era.momoyama': `安土桃山時代`, 'pt.era.edo': `江戸時代`, 'pt.era.meiji': `明治時代`, 'pt.era.taisho': `大正時代`, 'pt.era.showa': `昭和時代`,
+  'sc.pic': `この合戦の古い絵`, 'sc.by': `画像：{license}、Wikimedia Commons`,
 };

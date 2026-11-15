@@ -28,6 +28,7 @@ import { splitDisputed, disputedAt, disputeCard } from './disputed.js';
 import { openShared } from './shared.js';
 import { NARROW, SHORT, setupTabs, setupBattleVoice, setupHudFold, legacyCopy, toast, setupSettings, setupSound, setupSplitter, setupLangSwitch, setupMapSwitch, setupMenu, setupLegendCaption, setupSheets, watchCards, setupScrollHints } from './shell.js';
 import { addToc } from './toc.js';
+import { setupPortraits, scHTML } from './portraits.js';
 import { lang, t, label, prefName, deepMerge, applyStatic, stateHash } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -91,6 +92,7 @@ async function main() {
   setupLegendCaption();
   setupSheets();
   setupScrollHints();
+  setupPortraits(); // 人物画像：页面上出现占位才下载 portraits.json（3.45）
   $('settings-legal').innerHTML = legalHTML();
   let data;
   try {
@@ -1241,7 +1243,7 @@ async function main() {
   // ── 合战沙盘 ──
   const battleDlg = $('battles');
   $('battle-list').innerHTML = battles.map((b, i) => `
-    <button type="button" class="battle-card" data-i="${i}">
+    <button type="button" class="battle-card" data-i="${i}">${scHTML(`b-${b.key}`, true)}
       <span class="bc-year">${b.year}</span>
       <span class="bc-name">${esc(b.name.replace(/\s*\(.*\)$/, ''))}</span>
       <span class="bc-field">⚔ ${esc(b.battlefield.name)}</span>
@@ -1325,6 +1327,10 @@ async function main() {
     deb.hidden = !b.debate;
     deb.open = false;
     if (b.debate) { deb.querySelector('summary').textContent = `${t('hud.debate')}：${b.debate.q}`; deb.querySelector('p').textContent = b.debate.a; }
+    // 这场合战的古画（3.45，scenes.json）：有图才显示，默认收起
+    $('hud-pic').hidden = true;
+    $('hud-pic').open = false;
+    $('hud-pic').querySelector('div').innerHTML = scHTML(`b-${b.key}`);
     phaseBox.innerHTML = b.phases.map((ph, k) =>
       `<li data-i="${k}"><span class="ph-n">${k + 1}</span><span class="ph-t">${esc(ph.title)}</span></li>`).join('');
     $('battle-hud').hidden = false;

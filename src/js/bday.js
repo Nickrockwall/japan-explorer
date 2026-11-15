@@ -4,6 +4,7 @@ import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { wrap } from './koseki.js';
 import { fixLink } from './report.js';
+import { ptHTML, ptCredHTML } from './portraits.js';
 
 const pick = (o) => o?.[lang] || o?.zh || '';
 
@@ -79,7 +80,7 @@ export function youHTML(you, ages, battles) {
     if (x[3] === 'bat') return t('bd.age.bat', { b: (battles.find((b) => b.key === x[4])?.name || '').replace(/\s*[（(]\d+[)）]$/, '') });
     return t(`bd.age.${x[3]}`);
   };
-  const items = sa.list.map((x) => `<li><b>${esc(pname(ages.p[x[0]]))}</b>${esc(t('bd.age.item', { age: x[2], y: x[1], what: what(x) }))}</li>`).join('');
+  const items = sa.list.map((x) => `<li>${ptHTML('', pname(ages.p[x[0]]), ages.p[x[0]][0])}<b>${esc(pname(ages.p[x[0]]))}</b>${esc(t('bd.age.item', { age: x[2], y: x[1], what: what(x) }))}</li>`).join('');
   const head = sa.age === age ? t('bd.age.h', { age }) : t('bd.age.near', { age, a: sa.age });
   return `<section class="bd-you">
     <div class="bd-facts"><div class="bd-fact"><span>${esc(t('bd.y.k'))}</span><b>${esc(gengo || String(you.y))}</b><small>${esc(etoTxt)}</small>${early}</div>
@@ -95,7 +96,7 @@ export function bdayHTML(d, { prefName, lordOf, name, you, ages, battles }) {
     const rows = d[g];
     if (!rows.length) return '';
     const items = rows.map((e) => `<li><button type="button" class="bd-item" data-kako="${esc(e.q)}" data-kt="${e.t || ''}">
-      <span class="bd-y">${e.y}<small>${esc(t('kk.ago', { n: d.year - e.y }))}</small></span>
+      <span class="bd-y">${e.y}<small>${esc(t('kk.ago', { n: d.year - e.y }))}</small></span>${e.t ? ptHTML(e.q, pick(e.n)) : ''}
       <span class="bd-main"><b>${esc(pick(e.n))}</b><span>${esc(subOf(e, prefName, lordOf))}</span></span></button></li>`).join('');
     return `<section class="bd-group"><h3>${esc(t(`bd.g.${g}`, { n: rows.length }))}</h3><ol>${items}</ol></section>`;
   };
@@ -111,7 +112,7 @@ export function bdayHTML(d, { prefName, lordOf, name, you, ages, battles }) {
     ${youHTML(you, ages, battles || [])}
     <div class="bd-facts">${fact}</div>
     ${d.total ? GROUPS.map(group).join('') : `<p class="kk-none">${esc(t('kk.none'))}</p>`}
-    <p class="ks-note">${esc(t('bd.note'))}</p>
+    <p class="ks-note">${esc(t('bd.note'))} ${ptCredHTML()}</p>
     <div class="ks-actions">
       <button type="button" class="btn" data-act="bd-image">${esc(t('ks.image'))}</button>
       <button type="button" class="btn btn-ghost" data-act="bd-link">${esc(t('ks.link'))}</button>

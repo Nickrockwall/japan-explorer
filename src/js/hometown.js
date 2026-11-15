@@ -6,6 +6,7 @@ import { t, lang } from './i18n.js';
 import { esc } from './detail.js';
 import { findHan } from './han.js';
 import { heiseiOf } from './koseki.js';
+import { ptHTML } from './portraits.js';
 
 const SG_YEARS = ['1467', '1560', '1573', '1582', '1590', '1600'];
 const MAX_KAKO = 20; // 大城市的区能有几十条：事件优先，其余按年份取前面的
@@ -161,7 +162,7 @@ export function hometownItems({ pref, props, provNames, sengoku, domains, mainGu
 export function hometownHTML({ items, more, people }) {
   const li = items.map((x) => {
     const tag = x.tag ? `<em class="kk-t kk-${x.tag}">${esc(t(`kk.t.${x.tag}`))}</em>` : '';
-    const body = `<span class="ht-y">${esc(x.yl)}</span><span class="ht-m"><b>${esc(x.main)}${tag}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</span>`;
+    const body = `<span class="ht-y">${esc(x.yl)}</span>${x.q && x.tag ? ptHTML(x.q, x.main) : ''}<span class="ht-m"><b>${esc(x.main)}${tag}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</span>`;
     return `<li class="ht-${x.kind}">${x.q ? `<button type="button" class="ht-r ht-kk" data-kako="${esc(x.q)}" data-kt="${x.tag || ''}">${body}</button>` : `<div class="ht-r">${body}</div>`}</li>`;
   }).join('');
   return `<section class="ht" aria-labelledby="ht-h">

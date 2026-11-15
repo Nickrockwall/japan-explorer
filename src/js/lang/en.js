@@ -511,4 +511,9 @@ export default {
   'tip.muni': `Tap “📜 Ancestral register” on the card to see who ruled this place over a thousand years`,
   'tip.circuit': `Tap a province to see it as Hiroshige painted it, and what still carries its name today`,
   'tip.power': `The card also has “Towns” rankings and “Rivals” at the top`,
+  // ── Portraits and pictures (3.45) ──
+  'pt.cred': `Picture credits`, 'pt.cred.h': `Picture credits`, 'pt.cred.note': `All pictures come from Wikimedia Commons, public domain or CC BY / BY-SA only. For people who lived before photography, portraits were often painted long after their death and do not show what they really looked like; dates follow the Commons file page.`,
+  'pt.by': `Portrait: {by}`, 'pt.y': `{y}`, 'pt.c': `{c}th century`, 'pt.later': `Painted later ({when})`, 'pt.drawn': `Painted in {when}`, 'pt.unknown': `Date of painting unknown`,
+  'pt.era.asuka': `Asuka period`, 'pt.era.nara': `Nara period`, 'pt.era.heian': `Heian period`, 'pt.era.kamakura': `Kamakura period`, 'pt.era.nanboku': `Nanboku-chō period`, 'pt.era.muromachi': `Muromachi period`, 'pt.era.sengoku': `Sengoku period`, 'pt.era.momoyama': `Azuchi–Momoyama period`, 'pt.era.edo': `Edo period`, 'pt.era.meiji': `Meiji era`, 'pt.era.taisho': `Taishō era`, 'pt.era.showa': `Shōwa era`,
+  'sc.pic': `Old picture of this battle`, 'sc.by': `Picture: {license}, Wikimedia Commons`,
 };

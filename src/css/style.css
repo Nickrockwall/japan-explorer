@@ -1979,3 +1979,62 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
 .help-body .cat-go .cat-main { background: #3a1f1c; border-color: #3a1f1c; color: #f3ead9; }
 .help-body .cat-go .cat-main:hover:not(:disabled) { background: #2a1513; color: #fff; border-color: #2a1513; }
 .help-body .cat-none { padding: 16px 0; color: #6b5a44; }
+
+/* ── 人物画像（3.45，portraits.js）：小圆头像；后世所绘的加一圈虚线；署名按钮与清单 ── */
+.pt { display: inline-block; flex: none; width: 34px; height: 34px; border-radius: 50%; overflow: hidden; vertical-align: middle;
+  background: var(--panel-2); box-shadow: 0 0 0 1px var(--line); }
+.pt:not([data-ok]) { visibility: hidden; }
+.pt img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.pt.pt-later { box-shadow: 0 0 0 1px var(--line), 0 0 0 2.5px var(--panel), 0 0 0 3.5px rgba(160,120,60,.55); }
+.kk-item:has(> .pt), .bd-item:has(> .pt) { grid-template-columns: 64px 34px minmax(0, 1fr); }
+.ht-r:has(> .pt) { grid-template-columns: 84px 30px minmax(0, 1fr); }
+.ht-r > .pt { width: 30px; height: 30px; }
+.kk-item > .pt, .bd-item > .pt { align-self: center; }
+.bd-age li { display: flex; align-items: center; gap: 8px; }
+.bd-age li .pt { width: 30px; height: 30px; }
+.ks-faces { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.ks-faces:not(:has(.pt)) { display: none; }
+.ks-faces .pt { width: 40px; height: 40px; }
+.rl-face .pt { width: 24px; height: 30px; border-radius: var(--r-sm); }
+.rl-face .pt[data-ok] + .rl-dot { display: none; }
+.sg-pt { display: block; overflow: hidden; padding: 0; }
+.sg-pt .pt { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
+.sg-pt:not(:has(.pt)) { display: none; }
+.sg-pt:has(.pt[data-ok]) + .sg-crest { display: none; }
+.pt-cred { border: 0; background: none; padding: 0 2px; font: inherit; font-size: 12px; color: var(--muted); text-decoration: underline dotted; cursor: pointer; }
+.pt-cred:hover { color: var(--ink); }
+.pt-dlg { width: min(520px, calc(100vw - 32px)); max-height: min(80vh, 760px); padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--card-bg, var(--panel)); color: var(--ink); }
+.pt-dlg::backdrop { background: rgba(20,16,12,.45); }
+.pt-dlg h2 { margin: 0 0 6px; font: 700 18px var(--serif); }
+.pt-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+.pt-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; align-items: start; }
+.pt-list img { width: 56px; height: 70px; object-fit: cover; object-position: top; border-radius: var(--r-sm); border: 1px solid var(--line); }
+.pt-list b { display: block; font-family: var(--serif); }
+.pt-list span { display: block; font-size: 12.5px; color: var(--muted); }
+.pt-list .pt-later-t { color: #9a6a2a; }
+.pt-list small { display: block; font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+.pt-list a { color: inherit; }
+
+/* ── 合战与「实权」的古画（3.45，scenes.json）── */
+.sc { display: block; }
+.sc:not([data-ok]) { display: none; }
+.sc img { display: block; width: 100%; height: auto; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--panel-2); }
+.sc-cap { display: block; margin-top: 4px; font-size: 11.5px; line-height: 1.5; color: var(--muted); }
+.sc-cap a { color: inherit; }
+.battle-card:has(> .sc[data-ok]) { grid-template-columns: 58px minmax(0, 1fr) 124px; }
+.battle-card > .sc-thumb { grid-column: 3; grid-row: 1 / span 4; align-self: center; }
+.battle-card > .sc-thumb img { aspect-ratio: 4 / 3; object-fit: cover; }
+@media (max-width: 560px) { .battle-card:has(> .sc[data-ok]) { grid-template-columns: 44px minmax(0, 1fr) 80px; } }
+.hud-pic { margin: 0 0 8px; font-size: 12.5px; }
+.hud-pic summary { cursor: pointer; font: 600 13px var(--serif); }
+.hud-pic .sc { margin-top: 6px; }
+.hud-pic .sc img { max-height: 34vh; object-fit: contain; }
+.battle-hud.folded .hud-pic { display: none; }
+/* 实权页：先占好固定高度（图 160 + 两行图注），图到之前和之后版面不动——跳到某一段（openRulers、rlSpy）靠的是各段位置 */
+.rl-pw .sc, .rl-pw .sc:not([data-ok]) { display: block; height: 204px; margin: 4px 0 8px; overflow: hidden; }
+.rl-pw .sc img { width: auto; max-width: 100%; height: 160px; object-fit: contain; object-position: left center; border: 0; background: none; }
+.rl-pw .sc-cap { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pt-dlg { overflow: auto; }
+.pt-dlg .book-close { position: absolute; top: 12px; right: 12px; }
+.pt-dlg h2 { padding-right: 44px; }
