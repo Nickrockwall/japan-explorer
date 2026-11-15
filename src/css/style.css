@@ -668,7 +668,7 @@ body:not(.time-travel) .tb-track input[type="range"] { opacity: .55; }
 @keyframes hud-in { from { transform: translate(-50%, -16px); opacity: 0; } }
 .hud-head { display: flex; align-items: center; gap: 10px; }
 .hud-tag { font-size: 11px; padding: 1px 8px; border-radius: var(--r); background: var(--shu); color: #fff; flex: none; }
-.hud-head b { flex: 1; font: 900 17px var(--serif); letter-spacing: .06em; }
+.hud-head b { flex: 1; min-width: 0; font: 900 17px var(--serif); letter-spacing: .06em; }
 .hud-exit { padding: 5px 12px; font-size: 12.5px; flex: none; }
 .hud-sides { display: flex; align-items: stretch; gap: 10px; margin: 10px 0 8px; }
 .hud-sides em { align-self: center; font: 900 14px var(--serif); color: var(--kin); font-style: normal; }
@@ -2079,3 +2079,4 @@ body.sheets .muni-card .muni-card-x { top: 10px; right: 10px; z-index: 3; }
   .map-toolbar .search.has-mic input:placeholder-shown:not(:focus) { padding-right: 0; }
   .map-toolbar .search:not(:focus-within) input:placeholder-shown ~ .search-mic:not(.listening) { display: none; }
 }
+@media (max-width: 560px) { .hud-head { gap: 6px; } .hud-head .hud-tag { display: none; } } /* 3.46 加了旁白开关，手机上让位给标题 */
